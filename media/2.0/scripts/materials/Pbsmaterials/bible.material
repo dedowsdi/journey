@@ -1,0 +1,11 @@
+hlms vertexDiffuse_unlit unlit
+{
+    diffuse 1 1 1
+}
+
+hlms singleCube pbs
+{
+    diffuse 1 1 1
+    specular 1 1 1
+    roughness 0.4
+}

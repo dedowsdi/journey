@@ -1,0 +1,2 @@
+[Sdl2]
+FileSystem=@OGRE_MEDIA_DIR_REL@/font
