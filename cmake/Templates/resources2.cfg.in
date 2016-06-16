@@ -9,8 +9,6 @@ Zip=@OGRE_MEDIA_DIR_REL@/packs/DebugPack.zip
 FileSystem=@OGRE_MEDIA_DIR_REL@/2.0/scripts/Compositors
 FileSystem=@OGRE_MEDIA_DIR_REL@/2.0/scripts/materials/Pbsmaterials
 FileSystem=@OGRE_MEDIA_DIR_REL@/models
-FileSystem=@OGRE_MEDIA_DIR_REL@/materials/textures
-FileSystem=@OGRE_MEDIA_DIR_REL@/materials/textures/Cubemaps
 FileSystem=@OGRE_MEDIA_DIR_REL@/textures
 
 # Do not load this as a resource. It's here merely to tell the code where

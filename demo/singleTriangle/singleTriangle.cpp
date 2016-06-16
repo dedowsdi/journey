@@ -1,5 +1,6 @@
 #include <CameraController.h>
 #include "BaseManager.h"
+#include <OgreManualObject2.h>
 
 namespace Demo {
 
@@ -7,7 +8,7 @@ class SingleTriangleGameState : public DemoGameState {
 public:
   SingleTriangleGameState() : DemoGameState(
           "a manual triangle\n"
-          "if you mv your camera away, this point should diapeared because of frustum cull\n"
+          "if you turn your camera away, this triangle will diapeared because of frustum cull\n"
           ) {}
 
   virtual void createScene01(void) {

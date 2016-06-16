@@ -2,12 +2,6 @@ cmake_minimum_required (VERSION 2.8)
 
 project (Ogre2)
 
-set(OGRE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/Ogre)
-#prerequisite
-IF(NOT EXISTS ${OGRE_SOURCE_DIR})
-    message(FATAL_ERROR "dependencies/Ogre not found")
-ENDIF()
-
 set(CMAKE_MODULE_PATH
     "${CMAKE_SOURCE_DIR}/cmake"
     "${OGRE_SOURCE_DIR}/CMake"

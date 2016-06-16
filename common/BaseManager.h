@@ -42,6 +42,7 @@ public:
     App##GameState state;                                                    \
     App app(&state);                                                         \
     state._notifyGraphicsSystem(&app);                                       \
+    app.initialize(#App);                                                    \
     app.go();                                                                \
   }
 #else
@@ -51,6 +52,7 @@ public:
     App##GameState state;              \
     App app(&state);                   \
     state._notifyGraphicsSystem(&app); \
+    app.initialize(#App);              \
     app.go();                          \
   }
 #endif

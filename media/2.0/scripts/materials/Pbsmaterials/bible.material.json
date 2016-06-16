@@ -1,0 +1,274 @@
+{
+    "samplers" :
+    {
+        "lll_www" :
+        {
+            "min" : "linear", "mag" : "linear", "mip" : "linear",
+            "u" : "wrap", "v" : "wrap", "w" : "wrap"
+        },
+        "ppp_ppp" :
+        {
+            "min" : "point", "mag" : "point", "mip" : "point",
+            "u" : "point", "v" : "point", "w" : "point"
+        },
+        "aaa_aaa" :
+        {
+            "min" : "anisotropic", "mag" : "anisotropic", "mip" : "anisotropic",
+            "u" : "anisotropic", "v" : "anisotropic", "w" : "anisotropic"
+        }
+    },
+    "macroblocks" :
+    {
+        "solid" :
+        {
+            "polygon_mode" :"solid"
+        }
+    },
+    "pbs" :
+    {
+        "Ogre/Earring" :
+        {
+            "macroblock" : "solid",
+            "diffuse" :
+            {
+                "value" : [0.7, 0.7, 0],
+                "texture" : "spheremap.png",
+                "sampler" : "lll_www"
+            },
+            "roughness" :
+            {
+                "value" : 0.01
+            },
+            "fresnel" :
+            {
+                "value" : [0.1, 0.1, 0.1]
+            }
+        },
+        "Ogre/Skin" :
+        {
+            "macroblock" : "solid",
+            "diffuse" :
+            {
+                "texture" : "GreenSkin.jpg",
+                "sampler" : "lll_www"
+            },
+            "roughness" :
+            {
+                "value" : 0.3
+            },
+            "fresnel" :
+            {
+                "value" : [0.2, 0.2, 0.2]
+            }
+        },
+        "Ogre/Tusks" :
+        {
+            "macroblock" : "solid",
+            "diffuse" :
+            {
+                "texture" : "tusk.jpg",
+                "sampler" : "lll_www"
+            },
+            "roughness" :
+            {
+                "value" : 0.1
+            },
+            "fresnel" :
+            {
+                "value" : [0.1, 0.1, 0.1]
+            }
+        },
+        "Ogre/Eyes" :
+        {
+            "macroblock" : "solid",
+            "diffuse" :
+            {
+                "value": [1, 0.7, 0]
+            },
+            "roughness" :
+            {
+                "value" : 0.5
+            },
+            "fresnel" :
+            {
+                "value" : [0.1, 0.1, 0.1]
+            }
+        },
+        "Sinbad/Body":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_body.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.4
+            },
+            "fresnel" :
+            {
+                "value" : [0.3, 0.3, 0.3]
+            }
+        },
+        "Sinbad/Gold":
+        {
+            "diffuse" :
+            {
+                "value" : [ 0.8, 0.8, 0.8 ],
+                "texture": "sinbad_clothes.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.01
+            },
+            "fresnel" :
+            {
+                "value" : [0.1, 0.1, 0.1]
+            }
+        },
+        "Sinbad/Sheaths":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_sword.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.3
+            },
+            "fresnel" :
+            {
+                "value" : [0.5, 0.5, 0.5]
+            }
+        },
+        "Sinbad/Clothes":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_clothes.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.3
+            },
+            "fresnel" :
+            {
+                "value" : [0.2, 0.2, 0.2]
+            }
+        },
+        "Sinbad/Teeth":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_body.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.3
+            },
+            "fresnel" :
+            {
+                "value" : [0.2, 0.2, 0.2]
+            }
+        },
+        "Sinbad/Eyes":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_body.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.3
+            },
+            "fresnel" :
+            {
+                "value" : [0.2, 0.2, 0.2]
+            }
+        },
+        "Sinbad/Spikes":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_clothes.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.2
+            },
+            "fresnel" :
+            {
+                "value" : [0.1, 0.1, 0.1]
+            }
+        },
+        "Sinbad/Blade":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_sword.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.01
+            },
+            "fresnel" :
+            {
+                "value" : [0.1, 0.1, 0.1]
+            }
+        },
+        "Sinbad/Ruby":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_sword.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.01
+            },
+            "fresnel" :
+            {
+                "value" : [0.1, 0.1, 0.1]
+            }
+        },
+        "Sinbad/Hilt":
+        {
+            "diffuse":
+            {
+                "value": [0.8, 0.8, 0.8],
+                "texture": "sinbad_sword.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.01
+            },
+            "fresnel" :
+            {
+                "value" : [0.2, 0.2, 0.2]
+            }
+        },
+        "Sinbad/Handle":
+        {
+            "diffuse":
+            {
+                "value": [1, 1, 1],
+                "texture": "sinbad_sword.tga"
+            },
+            "roughness" :
+            {
+                "value" : 0.01
+            },
+            "fresnel" :
+            {
+                "value" : [0.2, 0.2, 0.2]
+            }
+        }
+    }
+}

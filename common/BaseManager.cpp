@@ -38,10 +38,6 @@ BaseManager::BaseManager(GameState* gs) : GraphicsSystem(gs) {}
 
 //------------------------------------------------------------------------------
 void BaseManager::go() {
-  static_cast<TutorialGameState*>(mCurrentGameState)
-      ->_notifyGraphicsSystem(this);
-
-  this->initialize("a single point");
 
   if (this->getQuit()) {
     this->deinitialize();

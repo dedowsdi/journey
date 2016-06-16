@@ -21,6 +21,9 @@ set(demos
     scissor
     multipleViewport
     plane
+    ogrehead
+    rectDiffuse
+    sinbad
     )
 
 foreach(demo ${demos})
