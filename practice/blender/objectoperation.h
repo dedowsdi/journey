@@ -4,6 +4,9 @@
 #include <osgGA/GUIEventHandler>
 #include "axisconstrainer.h"
 #include "auxiliary.h"
+#include "common.h"
+#include <osg/LineStipple>
+#include <osg/io_utils>
 
 namespace zxd {
 
@@ -23,10 +26,9 @@ protected:
   osg::Matrix mInvProjWnd;
   osg::Matrix mPivot;  // TODO
 
-  osg::Vec2 mStartWindowPos;
+  osg::Vec2 mWndPivot;
   osg::Vec2 mLastCursor;
   osg::Vec2 mCurrentCursor;
-  osg::Vec2 mStartCursor;
 
   osg::ref_ptr<zxd::BlenderObject> mTarget;
 
@@ -56,16 +58,9 @@ protected:
             break;
         }
         break;
-      case osgGA::GUIEventAdapter::PUSH:
-        if (ea.getButton() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON)
-          cancel();
-        else if (ea.getButton() == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)
-          confirm();
-        break;
-      case osgGA::GUIEventAdapter::DRAG: {
-        mCurrentCursor.x() = ea.getX();
-        mCurrentCursor.y() = ea.getY();
-        update();
+      case osgGA::GUIEventAdapter::MOVE: {
+        setCurrentCursor(osg::Vec2(ea.getX(), ea.getY()));
+        update(ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_LEFT_SHIFT);
         mLastCursor = mCurrentCursor;
       } break;
 
@@ -76,7 +71,38 @@ protected:
   }
 
 public:
-  ObjectOperation() {
+  // ObjectOperation() {}
+
+  // ObjectOperation(const ObjectOperation& copy,
+  // const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
+  //: osg::GUIEventHandler(copy, copyop) {}
+  //~ObjectOperation() {}
+  // META_Object(zxd, ObjectOperation);
+
+  AxisConstrainer* getAxisConstrainer() const { return mAxisConstrainer; }
+  void setAxisConstrainer(AxisConstrainer* v) { mAxisConstrainer = v; }
+
+  // reset transform
+  void cancel() {
+    mTarget->setMatrix(mModel);
+    std::cout << mModel << std::endl;
+    clean();
+  }
+  // confirm transform
+  void confirm() { clean(); }
+  // x y in window frame
+  virtual void update(bool shiftDown) {
+    doUpdate(shiftDown);
+    updateText();
+  }
+
+  inline osg::Vec2 getCurrentCursor() const { return mCurrentCursor; }
+  inline void setCurrentCursor(osg::Vec2 v) { mCurrentCursor = v; }
+
+  virtual void doUpdate(bool shiftDown) {}
+  virtual void updateText() {}
+
+  virtual void init(osg::Camera* camera, osg::Vec2 v) {
     mView = camera->getViewMatrix();
     mInvView.invert(mView);
 
@@ -94,55 +120,35 @@ public:
     mModel = mTarget->getMatrix();
 
     osg::Vec3 p = mModel.getTrans() * mViewProjWnd;
-    mStartWindowPos.x() = p.x();
-    mStartWindowPos.y() = p.y();
+    mWndPivot.x() = p.x();
+    mWndPivot.y() = p.y();
+    mCurrentCursor = v;
+
+    doInit();
   }
-
-  ObjectOperation(const ObjectOperation& copy,
-    const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
-      : osg::Object(copy, copyop) {}
-  ~ObjectOperation() {}
-  META_Object(zxd, osg::GuiEventHandler);
-
-  AxisConstrainer* getAxisConstrainer() const { return mAxisConstrainer; }
-  void setAxisConstrainer(AxisConstrainer* v) { mAxisConstrainer = v; }
-
-  // reset transform
-  void cancel() {
-    mTarget->setMatrix(mModel);
-    clean();
-  }
-  // confirm transform
-  void confirm() {
-    currentOperation = 0;
-    viewer->removeEventHandler(this);
-    clean() :
-  }
-  // x y in window frame
-  virtual void update(bool shiftDown = false) {
-    doUpdate(shiftDown);
-    updateText();
-  }
-
-  virtual void doUpdate(bool shiftDown = false) {}
-  virtual void updateText() {}
-
-  osg::Vec2 getStartCursor() const { return mStartCursor; }
-  virtual void setStartCursor(osg::Vec2 v) { mStartCursor = v; }
+  virtual void doInit() {}
 
   osg::ref_ptr<zxd::BlenderObject> getTarget() const { return mTarget; }
   void setTarget(osg::ref_ptr<zxd::BlenderObject> v) { mTarget = v; }
 
   // clean help stuff: like handle during scale
   virtual void clean() {
-    if(mAxisConstrainer->getNumParents() != 0)
-      mAxisConstrainer->getParent(0)->removeChild(mAxisConstrainer):
-    osg::Node* handle = getHandle();
-    if(handle->getNumParents() != 0)
-      handle->getParent(0)->handle(handle):
+    // remove axis constrainer and handle from scene
+    zxd::removeNodeParents(mAxisConstrainer);
+    OSG_NOTICE << "clear axis constrainer" << std::endl;
 
+    osg::Node* handle = getHandle();
+    if (handle) {
+      zxd::removeNodeParents(handle);
+      OSG_NOTICE << "clear handle" << std::endl;
+    }
   }
   virtual osg::Node* getHandle() { return 0; }
+
+  void getHandlePosition(osg::Vec3& v0, osg::Vec3& v1) {
+    v0 = osg::Vec3(osg::Vec3(mWndPivot.x(), mWndPivot.y(), 0));
+    v1 = osg::Vec3(osg::Vec3(mCurrentCursor.x(), mCurrentCursor.y(), 0));
+  }
 };
 
 class GrabOperation : public ObjectOperation {};
@@ -151,28 +157,49 @@ protected:
   float mInitalHandleLength;
   float mLastHandleLength;
   float mScale;  // used to store current operation scale
-  osg::ref_ptr<zxd::DirectionArrow> mHandle;
+  osg::ref_ptr<osg::Group> mHandle;
 
 public:
   ScaleOperation() : ObjectOperation(), mScale(1.0f) {}
-  virtual void setStartCursor(osg::Vec2 v) {
-    mStartCursor = v;
-    mInitalHandleLength = (mStartCursor - mStartWindowPos).length();
+  virtual void doInit() {
+    mInitalHandleLength = (mCurrentCursor - mWndPivot).length();
+    OSG_NOTICE << "initial handle length " << mInitalHandleLength << std::endl;
     mLastHandleLength = mInitalHandleLength;
 
     // create handle
-    mHandle = new DirectionArrow();
-    mHandle->setMatrix(
-      osg::Matrix::translate(mStartCursor.x(), mStartCursor.y(), 0));
+    mHandle = new osg::Group();
+
+    // handle line
+    osg::ref_ptr<zxd::LineSegmentNode> lsn = new zxd::LineSegmentNode();
+    osg::Vec3 v0, v1;
+    getHandlePosition(v0, v1);
+    lsn->setPosition(v0, v1);
+
+    osg::StateSet* ss = lsn->getOrCreateStateSet();
+    ss->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+    ss->setAttributeAndModes(new osg::LineStipple(1.0f, 0xF0F0));
+
+    // position direction arrow at cursor place
+    osg::ref_ptr<zxd::DirectionArrow> da = new zxd::DirectionArrow();
+    da->setMatrix(osg::Matrix::translate(v1));
+    da->setDirection(0, mCurrentCursor - mWndPivot);
+    da->setDirection(1, mWndPivot - mCurrentCursor);
+
+    mHandle->addChild(lsn);
+    mHandle->addChild(da);
+
+    OSG_NOTICE << "create scale handle" << std::endl;
   }
   virtual osg::Node* getHandle() { return mHandle; }
 
 protected:
-  virtual void doUpdate(bool shiftDown = false) {
+  virtual void doUpdate(bool shiftDown) {
     // get scale change
-    GLfloat curHandleLength = (mCurrentCursor - mStartCursor).length();
+    GLfloat curHandleLength = (mCurrentCursor - mWndPivot).length();
     GLfloat dtScale =
       (curHandleLength - mLastHandleLength) / mInitalHandleLength;
+    mLastHandleLength = curHandleLength;
+    
     mScale += shiftDown ? dtScale * 0.1f : dtScale;
 
     osg::Vec3 scaleVector;
@@ -198,6 +225,8 @@ protected:
       case AxisConstrainer::CT_XY:
         scaleVector = osg::Vec3(mScale, mScale, 1);
         break;
+      default:
+        throw std::runtime_error("unknown constrain type");
     }
 
     osg::Matrix scaleMatrix = osg::Matrix::scale(scaleVector);
@@ -206,9 +235,24 @@ protected:
       mTarget->setMatrix(scaleMatrix * mModel);
     else
       mTarget->setMatrix(mModel * scaleMatrix);
+
+    // change handle and arrow direction
+    zxd::LineSegmentNode* lsn =
+      static_cast<zxd::LineSegmentNode*>(mHandle->getChild(0));
+    zxd::DirectionArrow* da =
+      static_cast<zxd::DirectionArrow*>(mHandle->getChild(1));
+
+    osg::Vec3 v0, v1;
+    getHandlePosition(v0, v1);
+
+    lsn->setEndPosition(v1);
+    //OSG_NOTICE << "set handle end position : " << v1 << std::endl;
+    
+    da->setMatrix(osg::Matrix::translate(v1));
+    da->setDirection(0, mCurrentCursor - mWndPivot);
+    da->setDirection(1, mWndPivot - mCurrentCursor);
   }
 
-  virtual void clean() {}
 };
 class RotateOperation : public ObjectOperation {};
 }

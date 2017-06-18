@@ -225,31 +225,85 @@ void Dot::setColor(const osg::Vec4& v) {
 //------------------------------------------------------------------------------
 InfiniteLine::InfiniteLine(const osg::Vec3& v /*= osg::X_AXIS*/,
   const osg::Vec3& color /*= osg::X_AXIS*/) {
-  mInfiniteLine = new osg::Geometry;
+  mGeometry = new osg::Geometry;
+
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
   osg::ref_ptr<osg::Vec3Array> colors = new osg::Vec3Array();
   colors->setBinding(osg::Array::BIND_OVERALL);
 
-  mInfiniteLine->setVertexArray(vertices);
-  mInfiniteLine->setColorArray(colors);
+  mGeometry->setVertexArray(vertices);
+  mGeometry->setColorArray(colors);
 
-  vertices->push_back(-v * 0.5f * FLT_MAX);
-  vertices->push_back(v * 0.5f * FLT_MAX);
+  //FLT_MAX cause trouble, don't know y
+  vertices->push_back(-v * 0.5f * 1000000);
+  vertices->push_back(v * 0.5f * 1000000);
+  colors->push_back(color);
 
-  mInfiniteLine->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 0, 2));
-  osg::StateSet* ss = mInfiniteLine->getOrCreateStateSet();
+  mGeometry->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 0, 2));
+  osg::StateSet* ss = mGeometry->getOrCreateStateSet();
   ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
   ss->setAttributeAndModes(new osg::LineWidth(1.5f));
 
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
-  leaf->addDrawable(mInfiniteLine);
+  leaf->addDrawable(mGeometry);
   addChild(leaf);
 }
 
 //------------------------------------------------------------------------------
-DirectionArrow::DirectionArrow(GLfloat size /*= 32.0f*/) : mSize(size), mOffset(15.0f) {
-   osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D();
-   texture->setImage(osgDB::readImageFile("Images/arrow.png"));
+LineSegmentNode::LineSegmentNode() {
+  mGeometry = new osg::Geometry;
+  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+  osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+  colors->setBinding(osg::Array::BIND_OVERALL);
+
+  vertices->push_back(osg::Vec3());
+  vertices->push_back(osg::X_AXIS);
+
+  colors->push_back(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+  mGeometry->setVertexArray(vertices);
+  mGeometry->setColorArray(colors);
+
+  mGeometry->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 0, 2));
+
+  osg::StateSet* ss = mGeometry->getOrCreateStateSet();
+  ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+
+  osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
+  leaf->addDrawable(mGeometry);
+  addChild(leaf);
+}
+
+//------------------------------------------------------------------------------
+void LineSegmentNode::setPosition(const osg::Vec3& v0, const osg::Vec3& v1) {
+  setStartPosition(v0);
+  setEndPosition(v1);
+}
+
+//------------------------------------------------------------------------------
+void LineSegmentNode::setStartPosition(const osg::Vec3& v) {
+  osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>(mGeometry->getVertexArray());
+  vertices->at(0) = v;
+  vertices->dirty();
+  mGeometry->dirtyBound();
+  mGeometry->dirtyDisplayList();
+}
+
+//------------------------------------------------------------------------------
+void LineSegmentNode::setEndPosition(const osg::Vec3& v) {
+  osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>(mGeometry->getVertexArray());
+  vertices->at(1) = v;
+  vertices->dirty();
+  mGeometry->dirtyBound();
+  mGeometry->dirtyDisplayList();
+}
+
+
+//------------------------------------------------------------------------------
+DirectionArrow::DirectionArrow(GLfloat size /*= 32.0f*/)
+    : mSize(size), mOffset(15.0f) {
+  osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D();
+  texture->setImage(osgDB::readImageFile("Images/arrow.png"));
 
   // mGeometry = new osg::Geometry;
   // osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
@@ -318,10 +372,10 @@ DirectionArrow::DirectionArrow(GLfloat size /*= 32.0f*/) : mSize(size), mOffset(
   ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
   ss->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
   ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-  //ss->setAttributeAndModes(new osg::Point(mSize));
-  //osg::ref_ptr<osg::PointSprite> ps = new osg::PointSprite();
-  //ps->setCoordOriginMode(osg::PointSprite::LOWER_LEFT);
-  //ss->setTextureAttributeAndModes(0, ps);
+  // ss->setAttributeAndModes(new osg::Point(mSize));
+  // osg::ref_ptr<osg::PointSprite> ps = new osg::PointSprite();
+  // ps->setCoordOriginMode(osg::PointSprite::LOWER_LEFT);
+  // ss->setTextureAttributeAndModes(0, ps);
   ss->setTextureAttributeAndModes(0, texture);
 }
 

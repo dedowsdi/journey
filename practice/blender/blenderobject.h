@@ -9,12 +9,12 @@ protected:
   osg::ref_ptr<osg::Switch> mSwitch;      // 0 normal, 1 outline
   osg::ref_ptr<osgFX::Outline> mOutline;  // 2nd child of switch
   osg::ref_ptr<osg::Group> mModel;        // direct parent of loaded file node
-  osg::ref_ptr<osg::Group> mLoadPoint;
+  osg::ref_ptr<osg::Group> mLoadPoint; //child of help stuff
 
 public:
   BlenderObject() {
     mOutline = new osgFX::Outline;
-    mOutline->setColor(outlineColor);
+    mOutline->setColor(osg::Vec4(1.0f,0.5f,0.0f,1.0f));
     osg::ref_ptr<osg::Group> plain = new osg::Group;  // paralleo to outline
     mSwitch = new osg::Switch;
     mModel = new osg::Group;
@@ -38,7 +38,8 @@ public:
   ~BlenderObject() {}
   META_Object(zxd, BlenderObject);
 
-  void select() {
+  //need camera to create axes
+  void select(osg::Camera* camera) {
     mSwitch->setValue(0, 0);
     mSwitch->setValue(1, 1);
 

@@ -6,6 +6,7 @@
 #include <osg/MatrixTransform>
 #include <osgGA/GUIEventHandler>
 #include <osgUtil/LineSegmentIntersector>
+#include <osg/io_utils>
 
 namespace zxd {
 
@@ -70,18 +71,27 @@ public:
     osg::Matrix matView = mCamera->getViewMatrix();
     osg::Matrix matWorld = osg::computeLocalToWorld(nv->getNodePath());
 
-    // assume no scale exists in both matrix
-    osg::Vec3 translate =
-      osg::Vec3(matWorld(3, 0), matWorld(3, 1), matWorld(3, 2)) * matView;
-    // assume no scale in both view and world
-    GLfloat l = translate.length();
+    osg::Vec3 translation;
+    osg::Quat rotation;
+    osg::Vec3 scale;
+    osg::Quat so;
+
+    matWorld.decompose(translation, rotation, scale, so);
+
+    // assume no scale exists in view
+    osg::Vec3 t = translation * matView;
+    GLfloat l = t.length();
 
     if (l == 0) return;
 
-    GLfloat scale = l / mDistance;
+    GLfloat s = l / mDistance;
+
+    scale.x() = s / scale.x();
+    scale.y() = s / scale.y();
+    scale.z() = s / scale.z();
 
     osg::MatrixTransform* mt = node->asTransform()->asMatrixTransform();
-    mt->setMatrix(osg::Matrix::scale(osg::Vec3(scale, scale, scale)));
+    mt->postMult(osg::Matrix::scale(scale));
 
     traverse(node, nv);
   }
@@ -273,7 +283,7 @@ public:
  */
 class InfiniteLine : public osg::MatrixTransform {
 protected:
-  osg::ref_ptr<osg::Geometry> mInfiniteLine;
+  osg::ref_ptr<osg::Geometry> mGeometry;
 
 public:
   InfiniteLine(
@@ -285,6 +295,24 @@ public:
   META_Object(zxd, InfiniteLine);
 };
 
+class LineSegmentNode : public osg::MatrixTransform {
+protected:
+  osg::ref_ptr<osg::Geometry> mGeometry;
+
+public:
+  LineSegmentNode();
+  LineSegmentNode(const LineSegmentNode& copy,
+    const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
+      : osg::MatrixTransform(copy, copyop) {}
+  ~LineSegmentNode() {}
+  META_Object(zxd, LineSegmentNode);
+
+  // reset start and end point
+  void setPosition(const osg::Vec3& v0, const osg::Vec3& v1);
+  void setStartPosition(const osg::Vec3& v);
+  void setEndPosition(const osg::Vec3& v);
+};
+
 /*
  * point to +- y direction by default.
  * This should be used with an orthogonal camera.
@@ -294,7 +322,7 @@ public:
 class DirectionArrow : public osg::MatrixTransform {
 protected:
   GLfloat mSize;
-  GLfloat mOffset; //offset from center, along y
+  GLfloat mOffset;  // offset from center, along y
   osg::ref_ptr<osg::Geometry> mGeometry;
   osg::ref_ptr<osg::MatrixTransform> mTransform0;
   osg::ref_ptr<osg::MatrixTransform> mTransform1;
@@ -307,11 +335,11 @@ public:
   ~DirectionArrow() {}
   META_Object(zxd, DirectionArrow);
 
+  // d need not be normalized
   void setDirection(GLuint index, osg::Vec2 d);
 
   GLfloat getOffset() const { return mOffset; }
-  void setOffset( GLfloat v){mOffset = v;}
-
+  void setOffset(GLfloat v) { mOffset = v; }
 };
 }
 

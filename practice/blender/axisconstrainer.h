@@ -27,7 +27,7 @@ protected:
   osg::Matrix mPivot;  // current object initial transform
 
 public:
-  AxisConstrainer() {}
+  AxisConstrainer() : mConstrainType(CT_NONE), mConstrainFrame(CF_WORLD) {}
   AxisConstrainer(const AxisConstrainer& copy,
     const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
       : osg::Group(copy, copyop) {}
@@ -71,12 +71,7 @@ public:
     }
   }
 
-  osg::ref_ptr<zxd::BlenderObject> getTarget() const { return mTarget; }
-  void setTarget(osg::ref_ptr<zxd::BlenderObject> v) { mTarget = v; }
-
 protected:
-  ~AxisConstrainer();
-
   void resetConstrainLines() {
     removeChildren(0, getNumChildren());
     osg::ref_ptr<osg::Vec3Array> lines = new osg::Vec3Array();

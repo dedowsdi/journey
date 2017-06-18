@@ -16,6 +16,7 @@
 #include "objectoperation.h"
 #include "axisconstrainer.h"
 #include "blenderobject.h"
+#include "common.h"
 
 osg::Camera* camera;
 osg::Camera* hudCamera;
@@ -69,36 +70,59 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
         break;
 
       case osgGA::GUIEventAdapter::PUSH:
-        if (ea.getButton() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON) {
-          // select current object
-          // pick object
-          osgUtil::IntersectionVisitor iv;
-          osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
-            new osgUtil::LineSegmentIntersector(
-              osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
-          iv.setIntersector(lsi);
 
-          camera->accept(iv);
+        if (currentOperation) {
+          // operation confirm or cancel
 
-          if (lsi->containsIntersections()) {
-            const osgUtil::LineSegmentIntersector::Intersection& result =
-              *lsi->getIntersections().begin();
-
-            for (GLuint i = 0; i < result.nodePath.size(); ++i) {
-              osg::Node* node = result.nodePath[i];
-              bool isBLenderObject = false;
-              if (node->getUserValue("BlenderObject", isBLenderObject)) {
-                if (currentObject && currentObject != node)
-                  currentObject->deselect();
-                currentObject = static_cast<BlenderObject*>(node);
-                currentObject->select();
-                break;
-              }
-            }
-
+          if (ea.getButton() == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON) {
+            OSG_NOTICE << "confirm operation" << std::endl;
+            currentOperation->confirm();
           } else {
-            // do nothing if nothing hitten
-            // currentObject->deselect();
+            currentOperation->cancel();
+            OSG_NOTICE << "cancel operation" << std::endl;
+          }
+          viewer->removeEventHandler(currentOperation);
+          //currentOperation->unref(); //this is useless, _ptr won't be set to 0
+          currentOperation = osg::ref_ptr<zxd::ObjectOperation>();
+#ifdef _DEBUG
+          if (currentOperation)
+            throw std::runtime_error(
+              "current operation should be 0 after cancel or confirm");
+#endif
+
+        } else {
+          // select object
+          if (ea.getButton() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON) {
+            // select current object
+            // pick object
+            osgUtil::IntersectionVisitor iv;
+            osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
+              new osgUtil::LineSegmentIntersector(
+                osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
+            iv.setIntersector(lsi);
+
+            camera->accept(iv);
+
+            if (lsi->containsIntersections()) {
+              const osgUtil::LineSegmentIntersector::Intersection& result =
+                *lsi->getIntersections().begin();
+
+              for (GLuint i = 0; i < result.nodePath.size(); ++i) {
+                osg::Node* node = result.nodePath[i];
+                bool isBLenderObject = false;
+                if (node->getUserValue("BlenderObject", isBLenderObject)) {
+                  if (currentObject && currentObject != node)
+                    currentObject->deselect();
+                  currentObject = static_cast<zxd::BlenderObject*>(node);
+                  currentObject->select(camera);
+                  break;
+                }
+              }
+
+            } else {
+              // do nothing if nothing hitten
+              // currentObject->deselect();
+            }
           }
         }
     }
@@ -107,9 +131,15 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
 
   template <typename T>
   void createNewOperation(const osgGA::GUIEventAdapter& ea) {
+    if (!currentObject) return;
+
+    OSG_NOTICE << "create new operation " << std::endl;
+
     if (currentOperation) {
       // do nothing if curreng operation is the same tyep as T
-      if (dynamic_cast<T*>(*currentOperation) != NULL) return;
+      if (dynamic_cast<T*>(currentOperation.get()) != NULL) return;
+
+      OSG_NOTICE << "reuse last constrainer " << std::endl;
 
       // create new operation, use current axis constrainer
       osg::ref_ptr<zxd::AxisConstrainer> ac =
@@ -125,12 +155,17 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
       currentOperation->setAxisConstrainer(new zxd::AxisConstrainer());
     }
     currentOperation->setTarget(currentObject);
-    currentOperation->setStartCursor(osg::Vec2(ea.getX(), ea.getY()));
-    root->addChild(currentOperation->getAxisConstrainer());
+    currentOperation->init(camera, osg::Vec2(ea.getX(), ea.getY()));
 
-    osg::Node* handle = currentOperation->getHandle() ;
-    if(handle)
-      root->addChild(handle);
+    root->addChild(currentOperation->getAxisConstrainer());
+    OSG_NOTICE << "add constrainer to scene" << std::endl;
+    osg::Node* handle = currentOperation->getHandle();
+    if (handle) {
+      hudCamera->addChild(handle);
+      OSG_NOTICE << "add handle to hud camera" << std::endl;
+    }
+
+    viewer->addEventHandler(currentOperation);
   }
 };
 
@@ -152,7 +187,11 @@ int main(int argc, char* argv[]) {
 
   osgViewer::Viewer v;
   viewer = &v;
-  viewer->addEventHandler(new osgViewer::StatsHandler);
+  osg::ref_ptr<osgViewer::StatsHandler> sh = new osgViewer::StatsHandler();
+  sh->setKeyEventTogglesOnScreenStats(osgGA::GUIEventAdapter::KEY_I);
+  // sh->setKeyEventPrintsOutStats(osgGA::GUIEventAdapter::KEY_J);
+  // sh->setKeyEventPrintsOutStats('i');
+  viewer->addEventHandler(sh);
   viewer->setSceneData(root);
   osg::ref_ptr<zxd::BlenderManipulator> manipulator =
     new zxd::BlenderManipulator();
@@ -161,6 +200,9 @@ int main(int argc, char* argv[]) {
 
   camera->setCullingMode(
     camera->getCullingMode() & ~osg::CullSettings::SMALL_FEATURE_CULLING);
+
+  hudCamera = zxd::createHUDCamera();
+  root->addChild(hudCamera);
 
   viewer->addEventHandler(new BlendGuiEventhandler);
 

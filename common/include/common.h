@@ -47,6 +47,8 @@ extern osg::Matrix randomMatrix(float min, float max);
 // M = matrix.makerotate(z, y, x)
 osg::Vec3 getEulerXYZ(const osg::Matrixf& m);
 
+void removeNodeParents(osg::Node* node, GLuint count = -1);
+
 inline osg::Matrix transpose(const osg::Matrix& m) {
   return osg::Matrix(                    //
     m(0, 0), m(1, 0), m(2, 0), m(3, 0),  // 0

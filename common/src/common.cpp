@@ -184,6 +184,16 @@ osg::Vec3 getEulerXYZ(const osg::Matrixf& mat) {
 }
 
 //------------------------------------------------------------------------------
+void removeNodeParents(osg::Node* node, GLuint count) {
+  GLuint numParent = node->getNumParents();
+  numParent = std::min(numParent, count);
+
+  if (numParent == 0) return;
+
+  while (numParent--) node->getParent(0)->removeChild(node);
+}
+
+//------------------------------------------------------------------------------
 osg::Matrix arcball(
   const osg::Vec2& np0, const osg::Vec2& np1, GLfloat radius /*= 0.8*/) {
   // get camera point
@@ -219,12 +229,9 @@ osg::Vec3 cameraToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
 }
 
 //------------------------------------------------------------------------------
-osg::Geometry* createPolygonLine(const osg::Vec3& v, GLfloat size)
-{
-  //create polygn line with triangle cut
+osg::Geometry* createPolygonLine(const osg::Vec3& v, GLfloat size) {
+  // create polygn line with triangle cut
   osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry;
-
-
 
   return geometry.release();
 }

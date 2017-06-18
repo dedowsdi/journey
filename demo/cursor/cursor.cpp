@@ -53,5 +53,7 @@ int main(int argc, char* argv[]) {
 
   root->addChild(hudCamera);
 
+  root->addChild(new zxd::InfiniteLine());
+
   return viewer.run();
 }
