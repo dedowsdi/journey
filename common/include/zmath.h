@@ -4,6 +4,7 @@
 #include <osg/Vec3>
 #include <osg/Vec2>
 #include <utility>
+#include <osg/Plane>
 
 namespace zxd {
 
@@ -11,6 +12,7 @@ typedef std::pair<int, std::pair<osg::Vec3, osg::Vec3>> LineRelPair;
 typedef std::pair<int, osg::Vec3> LinePlaneRelPair;
 
 class Math {
+public:
   /**
    * get relation of two lines
    * return:
@@ -18,7 +20,7 @@ class Math {
    *   <1, (ip0,ip1)> if intersect
    *   <2, (sp0,sp1)> if skew
    */
-  LineRelPair getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
+  static LineRelPair getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
     const osg::Vec3& p1, const osg::Vec3& d1);
 
   /**
@@ -27,8 +29,8 @@ class Math {
    *   <0, (0,0,0)> if parallel
    *   <1, ip> if intersect
    */
-  LinePlaneRelPair getLinePlaneRelation(
-    const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec3& n, float d);
+  static LinePlaneRelPair getLinePlaneRelation(
+    const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane);
 };
 }
 

@@ -124,8 +124,10 @@ extern osgText::Text* createText(osg::ref_ptr<osgText::Font> font,
   text->setPosition(pos);
   text->setText(content);
   text->setCharacterSize(size);
-
+  text->setDataVariance(osg::Object::DYNAMIC);
   text->setAxisAlignment(osgText::TextBase::XY_PLANE);
+  osg::StateSet* ss = text->getOrCreateStateSet();
+  ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
   return text.release();
 }
 

@@ -17,34 +17,23 @@
 #include "axisconstrainer.h"
 #include "blenderobject.h"
 #include "common.h"
+#include "gridfloor.h"
 
 osg::Camera* camera;
 osg::Camera* hudCamera;
 osg::ref_ptr<zxd::ObjectOperation> currentOperation;
 osg::ref_ptr<zxd::BlenderObject> currentObject;
 osg::ref_ptr<osg::Group> root;
+osg::ref_ptr<zxd::GridFloor> gridFloor;
+osg::ref_ptr<osgText::Font> font;
+osg::ref_ptr<osgText::Text> opText;  // operation text
 osgViewer::Viewer* viewer;
+
+GLfloat fontSize = 12.0f;
 
 osg::Vec4 outlineColor = osg::Vec4(1.0f, 0.5f, 0.0f, 1.0f);
 
-class GrabEventHandler : public osgGA::GUIEventHandler {
-  virtual bool handle(
-    const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) {
-    switch (ea.getEventType()) {
-      case osgGA::GUIEventAdapter::KEYDOWN:
-        switch (ea.getKey()) {
-          case osgGA::GUIEventAdapter::KEY_X:
-            break;
-          default:
-            break;
-        }
-        break;
-      default:
-        break;
-    }
-    return false;  // return true will stop event
-  }
-};
+GLuint selectMask = 1 << 0;
 
 class BlendGuiEventhandler : public osgGA::GUIEventHandler {
   osg::ref_ptr<zxd::ObjectOperation> operation;
@@ -54,13 +43,46 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
       case osgGA::GUIEventAdapter::KEYDOWN:
         switch (ea.getKey()) {
           case osgGA::GUIEventAdapter::KEY_G:
-            createNewOperation<zxd::GrabOperation>(ea);
+            if (currentObject &&
+                ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT) {
+              // clear translation
+              const osg::Matrix& m = currentObject->getMatrix();
+              currentObject->postMult(osg::Matrix::translate(-m.getTrans()));
+            } else {
+              createNewOperation<zxd::GrabOperation>(ea);
+            }
             break;
           case osgGA::GUIEventAdapter::KEY_S:
-            createNewOperation<zxd::ScaleOperation>(ea);
+            if (currentObject &&
+                ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT) {
+              // clear scale
+              osg::Vec3 translation;
+              osg::Quat rotation;
+              osg::Vec3 scale;
+              osg::Quat so;
+              currentObject->getMatrix().decompose(
+                translation, rotation, scale, so);
+              currentObject->setMatrix(osg::Matrix::rotate(rotation) *
+                                       osg::Matrix::translate(translation));
+            } else {
+              createNewOperation<zxd::ScaleOperation>(ea);
+            }
             break;
           case osgGA::GUIEventAdapter::KEY_R:
-            createNewOperation<zxd::RotateOperation>(ea);
+            if (currentObject &&
+                ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT) {
+              // clear orientation
+              osg::Vec3 translation;
+              osg::Quat rotation;
+              osg::Vec3 scale;
+              osg::Quat so;
+              currentObject->getMatrix().decompose(
+                translation, rotation, scale, so);
+              currentObject->setMatrix(osg::Matrix::scale(scale) *
+                                       osg::Matrix::translate(translation));
+            } else {
+              createNewOperation<zxd::RotateOperation>(ea);
+            }
             break;
           default:
             break;
@@ -82,7 +104,8 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
             OSG_NOTICE << "cancel operation" << std::endl;
           }
           viewer->removeEventHandler(currentOperation);
-          //currentOperation->unref(); //this is useless, _ptr won't be set to 0
+          // currentOperation->unref(); //this is useless, _ptr won't be set to
+          // 0
           currentOperation = osg::ref_ptr<zxd::ObjectOperation>();
 #ifdef _DEBUG
           if (currentOperation)
@@ -94,12 +117,12 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
           // select object
           if (ea.getButton() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON) {
             // select current object
-            // pick object
             osgUtil::IntersectionVisitor iv;
             osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
               new osgUtil::LineSegmentIntersector(
                 osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
             iv.setIntersector(lsi);
+            iv.setTraversalMask(selectMask);
 
             camera->accept(iv);
 
@@ -155,12 +178,16 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
       currentOperation->setAxisConstrainer(new zxd::AxisConstrainer());
     }
     currentOperation->setTarget(currentObject);
+    currentOperation->setInfoText(opText);
     currentOperation->init(camera, osg::Vec2(ea.getX(), ea.getY()));
 
-    root->addChild(currentOperation->getAxisConstrainer());
+    zxd::AxisConstrainer* ac = currentOperation->getAxisConstrainer();
+    ac->setNodeMask(-1 & ~selectMask);
+    root->addChild(ac);
     OSG_NOTICE << "add constrainer to scene" << std::endl;
     osg::Node* handle = currentOperation->getHandle();
     if (handle) {
+      handle->setNodeMask(-1 & ~selectMask);
       hudCamera->addChild(handle);
       OSG_NOTICE << "add handle to hud camera" << std::endl;
     }
@@ -178,6 +205,10 @@ int main(int argc, char* argv[]) {
   // load object
   osg::ref_ptr<osg::Node> node = osgDB::readNodeFiles(ap);
   if (!node) node = osgDB::readNodeFile("cessna.osg");
+
+  font = osgText::readFontFile("fonts/arial.ttf");
+  opText = zxd::createText(
+    font, osg::Vec3(10.0f, fontSize + 10.0f, 0.0f), "", fontSize);
 
   root = new osg::Group;
 
@@ -198,11 +229,21 @@ int main(int argc, char* argv[]) {
   viewer->setCameraManipulator(manipulator);
   camera = viewer->getCamera();
 
-  camera->setCullingMode(
-    camera->getCullingMode() & ~osg::CullSettings::SMALL_FEATURE_CULLING);
+  // camera->setCullingMode(
+  // camera->getCullingMode() & ~osg::CullSettings::SMALL_FEATURE_CULLING);
+  camera->setCullingMode(osg::CullSettings::NO_CULLING);
 
   hudCamera = zxd::createHUDCamera();
+  osg::ref_ptr<osg::Geode> opLeaf = new osg::Geode();
+  opLeaf->addDrawable(opText);
+  hudCamera->addChild(opLeaf);
   root->addChild(hudCamera);
+
+  gridFloor = new zxd::GridFloor();
+  gridFloor->setScale(5);
+  gridFloor->rebuild();
+  gridFloor->setNodeMask(-1 & ~selectMask);
+  root->addChild(gridFloor);
 
   viewer->addEventHandler(new BlendGuiEventhandler);
 

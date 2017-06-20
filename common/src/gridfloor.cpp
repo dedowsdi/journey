@@ -164,13 +164,13 @@ void GridFloor::rebuildSubdivisions() {
 //------------------------------------------------------------------------------
 osg::Geometry* GridFloor::createAxis(
   const osg::Vec3& axis, const osg::Vec4& color) {
-  GLint halfGirdTiles = mLines / 2;
+  GLfloat halfSize = mLines * mScale / 2;
 
   osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry();
 
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
-  vertices->push_back(axis * halfGirdTiles);
-  vertices->push_back(-axis * halfGirdTiles);
+  vertices->push_back(axis * halfSize);
+  vertices->push_back(-axis * halfSize);
   osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
   colors->push_back(color);
 

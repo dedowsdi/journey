@@ -7,6 +7,7 @@
 
 namespace zxd {
 
+
 class AxisConstrainer : public osg::Group {
 public:
   enum ConstrainType {
@@ -60,15 +61,21 @@ public:
 
   // none => world x => local x => none
   void addConstrain(ConstrainType type) {
-    if (mConstrainType == CT_NONE)  // none => x
-      setConstrainType(type);
-    else if (mConstrainFrame == CF_WORLD)  // world => local
-      setConstrainFrame(CF_LOCAL);
-    else  // yz => none
-    {
-      setConstrainType(CT_NONE);
+    if (mConstrainType != type || mConstrainType == CT_NONE) {
+      // none => world
       setConstrainFrame(CF_WORLD);
+      setConstrainType(type);
+    } else if (mConstrainFrame == CF_WORLD) {
+      // world => local
+      setConstrainFrame(CF_LOCAL);
+    } else {
+      // local => none
+      setConstrainFrame(CF_WORLD);
+      setConstrainType(CT_NONE);
     }
+
+    OSG_NOTICE << "change constrain type  to " << mConstrainType << std::endl;
+    OSG_NOTICE << "change constrain frame  to " << mConstrainFrame << std::endl;
   }
 
 protected:
@@ -114,6 +121,17 @@ protected:
       });
   }
 };
+
+std::string toString(AxisConstrainer::ConstrainFrame frame) {
+  switch (frame) {
+    case zxd::AxisConstrainer::CF_LOCAL:
+      return "local";
+    case zxd::AxisConstrainer::CF_WORLD:
+      return "world";
+    default:
+      return "";
+  }
+}
 }
 
 #endif /* AXISCONSTRAINER_H */
