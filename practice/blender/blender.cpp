@@ -81,7 +81,16 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
               currentObject->setMatrix(osg::Matrix::scale(scale) *
                                        osg::Matrix::translate(translation));
             } else {
-              createNewOperation<zxd::RotateOperation>(ea);
+              if (currentObject) {
+                osg::ref_ptr<zxd::RotateOperation> ro =
+                  osg::dynamic_pointer_cast<zxd::RotateOperation>(
+                    currentObject);
+                if(ro)
+                  ro->setMode(ro->getMode()^1);
+              }else{
+                createNewOperation<zxd::RotateOperation>(ea);
+              }
+
             }
             break;
           default:

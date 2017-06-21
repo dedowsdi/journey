@@ -22,28 +22,28 @@ public:
   enum ConstrainFrame { CF_LOCAL, CF_WORLD };
 
 protected:
-  ConstrainType mConstrainType;
-  ConstrainFrame mConstrainFrame;
+  ConstrainType mType;
+  ConstrainFrame mFrame;
   osg::ref_ptr<osg::MatrixTransform> mTarget;
   osg::Matrix mPivot;  // current object initial transform
 
 public:
-  AxisConstrainer() : mConstrainType(CT_NONE), mConstrainFrame(CF_WORLD) {}
+  AxisConstrainer() : mType(CT_NONE), mFrame(CF_WORLD) {}
   AxisConstrainer(const AxisConstrainer& copy,
     const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
       : osg::Group(copy, copyop) {}
   ~AxisConstrainer() {}
   META_Object(zxd, AxisConstrainer);
 
-  ConstrainType getConstrainType() const { return mConstrainType; }
-  void setConstrainType(ConstrainType v) {
-    mConstrainType = v;
+  ConstrainType getType() const { return mType; }
+  void settype(ConstrainType v) {
+    mType = v;
     resetConstrainLines();
   }
 
-  ConstrainFrame getConstrainFrame() const { return mConstrainFrame; }
-  void setConstrainFrame(ConstrainFrame v) {
-    mConstrainFrame = v;
+  ConstrainFrame getFrame() const { return mFrame; }
+  void setFrame(ConstrainFrame v) {
+    mFrame = v;
     resetConstrainLines();
   }
 
@@ -56,26 +56,23 @@ public:
     mPivot = mTarget->getMatrix();
   }
 
-  // type should be x y or z
-  osg::Vec3 getConstrainAxis(ConstrainType type);
-
   // none => world x => local x => none
   void addConstrain(ConstrainType type) {
-    if (mConstrainType != type || mConstrainType == CT_NONE) {
+    if (mType != type || mType == CT_NONE) {
       // none => world
-      setConstrainFrame(CF_WORLD);
-      setConstrainType(type);
-    } else if (mConstrainFrame == CF_WORLD) {
+      setFrame(CF_WORLD);
+      settype(type);
+    } else if (mFrame == CF_WORLD) {
       // world => local
-      setConstrainFrame(CF_LOCAL);
+      setFrame(CF_LOCAL);
     } else {
       // local => none
-      setConstrainFrame(CF_WORLD);
-      setConstrainType(CT_NONE);
+      setFrame(CF_WORLD);
+      settype(CT_NONE);
     }
 
-    OSG_NOTICE << "change constrain type  to " << mConstrainType << std::endl;
-    OSG_NOTICE << "change constrain frame  to " << mConstrainFrame << std::endl;
+    OSG_NOTICE << "change constrain type  to " << mType << std::endl;
+    OSG_NOTICE << "change constrain frame  to " << mFrame << std::endl;
   }
 
 protected:
@@ -83,7 +80,7 @@ protected:
     removeChildren(0, getNumChildren());
     osg::ref_ptr<osg::Vec3Array> lines = new osg::Vec3Array();
 
-    switch (mConstrainType) {
+    switch (mType) {
       case CT_NONE:
         break;
       case CT_X:
@@ -109,7 +106,7 @@ protected:
         break;
     }
 
-    osg::Matrix m = mConstrainFrame == CF_LOCAL
+    osg::Matrix m = mFrame == CF_LOCAL
                       ? mPivot
                       : osg::Matrix::translate(mPivot.getTrans());
 

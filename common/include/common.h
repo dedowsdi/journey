@@ -49,6 +49,10 @@ osg::Vec3 getEulerXYZ(const osg::Matrixf& m);
 
 void removeNodeParents(osg::Node* node, GLuint count = -1);
 
+inline GLfloat angle(const osg::Vec3& v0, const osg::Vec3& v1) {
+  return acosf((v0 * v1) / (v0.length() * v1.length()));
+}
+
 inline osg::Matrix transpose(const osg::Matrix& m) {
   return osg::Matrix(                    //
     m(0, 0), m(1, 0), m(2, 0), m(3, 0),  // 0
@@ -62,7 +66,7 @@ osg::Matrix arcball(
   const osg::Vec2& np0, const osg::Vec2& np1, GLfloat radius = 0.8);
 osg::Vec2 screenToNdc(GLfloat x, GLfloat y, GLfloat cx, GLfloat cy);
 osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny);
-osg::Vec3 cameraToSphere(const osg::Vec2& np0, GLfloat radius = 0.9f);
+osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius = 0.9f);
 
 osg::Geometry* createPolygonLine(const osg::Vec3& v, GLfloat size);
 

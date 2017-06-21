@@ -199,11 +199,11 @@ void removeNodeParents(osg::Node* node, GLuint count) {
 osg::Matrix arcball(
   const osg::Vec2& np0, const osg::Vec2& np1, GLfloat radius /*= 0.8*/) {
   // get camera point
-  osg::Vec3 sp0 = cameraToSphere(np0, radius);
-  osg::Vec3 sp1 = cameraToSphere(np1, radius);
+  osg::Vec3 sp0 = ndcToSphere(np0, radius);
+  osg::Vec3 sp1 = ndcToSphere(np1, radius);
   GLfloat rpRadius = 1 / radius;
   // get rotate axis in camera space
-  osg::Vec3 axis = (sp0 ^ sp1) * rpRadius;
+  osg::Vec3 axis = sp0 ^ sp1;
   GLfloat theta = acosf(sp0 * sp1 * rpRadius * rpRadius);
 
   return osg::Matrix::rotate(theta, axis);
@@ -219,8 +219,9 @@ osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny) {
   return osg::Vec2(2 * nx - 1, 2 * ny - 1);
 }
 
+
 //------------------------------------------------------------------------------
-osg::Vec3 cameraToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
+osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
   GLfloat len2 = np0.length2();
   GLfloat radius2 = radius * radius;
   if (len2 >= radius2) {

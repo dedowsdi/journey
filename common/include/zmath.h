@@ -1,7 +1,7 @@
 #ifndef ZMATH_H
 #define ZMATH_H
 
-#include <osg/Vec3>
+#include <osg/Matrix>
 #include <osg/Vec2>
 #include <utility>
 #include <osg/Plane>
