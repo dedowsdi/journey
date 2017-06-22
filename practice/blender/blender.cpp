@@ -27,6 +27,7 @@ osg::ref_ptr<osg::Group> root;
 osg::ref_ptr<zxd::GridFloor> gridFloor;
 osg::ref_ptr<osgText::Font> font;
 osg::ref_ptr<osgText::Text> opText;  // operation text
+osg::ref_ptr<zxd::Cursor> cursor;
 osgViewer::Viewer* viewer;
 
 GLfloat fontSize = 12.0f;
@@ -36,7 +37,107 @@ osg::Vec4 outlineColor = osg::Vec4(1.0f, 0.5f, 0.0f, 1.0f);
 GLuint selectMask = 1 << 0;
 
 class BlendGuiEventhandler : public osgGA::GUIEventHandler {
+protected:
   osg::ref_ptr<zxd::ObjectOperation> operation;
+
+protected:
+  void clearRotation() {
+    // clear orientation
+    osg::Vec3 translation;
+    osg::Quat rotation;
+    osg::Vec3 scale;
+    osg::Quat so;
+    currentObject->getMatrix().decompose(translation, rotation, scale, so);
+    currentObject->setMatrix(
+      osg::Matrix::scale(scale) * osg::Matrix::translate(translation));
+  }
+  void clearTranslation() {
+    // clear translation
+    const osg::Matrix& m = currentObject->getMatrix();
+    currentObject->postMult(osg::Matrix::translate(-m.getTrans()));
+  }
+  void clearScale() {
+    osg::Vec3 translation;
+    osg::Quat rotation;
+    osg::Vec3 scale;
+    osg::Quat so;
+    currentObject->getMatrix().decompose(translation, rotation, scale, so);
+    currentObject->setMatrix(
+      osg::Matrix::rotate(rotation) * osg::Matrix::translate(translation));
+  }
+
+  void selectObject(const osgGA::GUIEventAdapter& ea) {
+    // select current object
+    osgUtil::IntersectionVisitor iv;
+    osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
+      new osgUtil::LineSegmentIntersector(
+        osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
+    iv.setIntersector(lsi);
+    iv.setTraversalMask(selectMask);
+
+    camera->accept(iv);
+
+    if (lsi->containsIntersections()) {
+      const osgUtil::LineSegmentIntersector::Intersection& result =
+        *lsi->getIntersections().begin();
+
+      for (GLuint i = 0; i < result.nodePath.size(); ++i) {
+        osg::Node* node = result.nodePath[i];
+        bool isBLenderObject = false;
+        if (node->getUserValue("BlenderObject", isBLenderObject)) {
+          if (currentObject && currentObject != node) currentObject->deselect();
+          currentObject = static_cast<zxd::BlenderObject*>(node);
+          currentObject->select(camera);
+          break;
+        }
+      }
+
+    } else {
+      // do nothing if nothing hitten
+      // currentObject->deselect();
+    }
+  }
+
+  void placeCursor(const osgGA::GUIEventAdapter& ea) {
+    osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
+      new osgUtil::LineSegmentIntersector(
+        osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
+    osgUtil::IntersectionVisitor iv(lsi);
+    camera->accept(iv);
+
+    if (lsi->containsIntersections()) {
+      const osgUtil::LineSegmentIntersector::Intersection& intersection =
+        *lsi->getIntersections().begin();
+
+      // get intersection point in view space
+      osg::Vec3 pos = intersection.localIntersectionPoint *
+                      osg::computeLocalToWorld(intersection.nodePath);
+      cursor->setMatrix(osg::Matrix::translate(pos));
+    } else {
+      const osg::Matrix& matView = camera->getViewMatrix();
+      // get original cursor position in view space
+      osg::Vec3 origPos = cursor->getMatrix().getTrans() * matView;
+
+      // get camera ray intersection with near plane
+      osg::Matrix matrix;
+      if (camera->getViewport())
+        matrix.preMult(camera->getViewport()->computeWindowMatrix());
+      matrix.preMult(camera->getProjectionMatrix());
+      matrix.invert(matrix);
+
+      // point on near plane in view space
+      osg::Vec3 p = osg::Vec3(ea.getX(), ea.getY(), 0) * matrix;
+
+      // scale according z to place p at plane that contain origin cursor
+      p *= origPos.z() / p.z();
+
+      // now get final world position
+      osg::Matrix matInvView = osg::Matrix::inverse(matView);
+
+      cursor->setMatrix(osg::Matrix::translate(p * matInvView));
+    }
+  }
+
   virtual bool handle(
     const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) {
     switch (ea.getEventType()) {
@@ -45,9 +146,7 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
           case osgGA::GUIEventAdapter::KEY_G:
             if (currentObject &&
                 ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT) {
-              // clear translation
-              const osg::Matrix& m = currentObject->getMatrix();
-              currentObject->postMult(osg::Matrix::translate(-m.getTrans()));
+              clearTranslation();
             } else {
               createNewOperation<zxd::GrabOperation>(ea);
             }
@@ -55,15 +154,7 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
           case osgGA::GUIEventAdapter::KEY_S:
             if (currentObject &&
                 ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT) {
-              // clear scale
-              osg::Vec3 translation;
-              osg::Quat rotation;
-              osg::Vec3 scale;
-              osg::Quat so;
-              currentObject->getMatrix().decompose(
-                translation, rotation, scale, so);
-              currentObject->setMatrix(osg::Matrix::rotate(rotation) *
-                                       osg::Matrix::translate(translation));
+              clearScale();
             } else {
               createNewOperation<zxd::ScaleOperation>(ea);
             }
@@ -71,15 +162,7 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
           case osgGA::GUIEventAdapter::KEY_R:
             if (currentObject &&
                 ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT) {
-              // clear orientation
-              osg::Vec3 translation;
-              osg::Quat rotation;
-              osg::Vec3 scale;
-              osg::Quat so;
-              currentObject->getMatrix().decompose(
-                translation, rotation, scale, so);
-              currentObject->setMatrix(osg::Matrix::scale(scale) *
-                                       osg::Matrix::translate(translation));
+              clearRotation();
             } else {
               if (currentOperation) {
                 osg::ref_ptr<zxd::RotateOperation> ro =
@@ -104,7 +187,6 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
 
         if (currentOperation) {
           // operation confirm or cancel
-
           if (ea.getButton() == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON) {
             OSG_NOTICE << "confirm operation" << std::endl;
             currentOperation->confirm();
@@ -113,48 +195,16 @@ class BlendGuiEventhandler : public osgGA::GUIEventHandler {
             OSG_NOTICE << "cancel operation" << std::endl;
           }
           viewer->removeEventHandler(currentOperation);
-          // currentOperation->unref(); //this is useless, _ptr won't be set to
-          // 0
           currentOperation = osg::ref_ptr<zxd::ObjectOperation>();
-#ifdef _DEBUG
-          if (currentOperation)
-            throw std::runtime_error(
-              "current operation should be 0 after cancel or confirm");
-#endif
 
         } else {
           // select object
           if (ea.getButton() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON) {
-            // select current object
-            osgUtil::IntersectionVisitor iv;
-            osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
-              new osgUtil::LineSegmentIntersector(
-                osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
-            iv.setIntersector(lsi);
-            iv.setTraversalMask(selectMask);
-
-            camera->accept(iv);
-
-            if (lsi->containsIntersections()) {
-              const osgUtil::LineSegmentIntersector::Intersection& result =
-                *lsi->getIntersections().begin();
-
-              for (GLuint i = 0; i < result.nodePath.size(); ++i) {
-                osg::Node* node = result.nodePath[i];
-                bool isBLenderObject = false;
-                if (node->getUserValue("BlenderObject", isBLenderObject)) {
-                  if (currentObject && currentObject != node)
-                    currentObject->deselect();
-                  currentObject = static_cast<zxd::BlenderObject*>(node);
-                  currentObject->select(camera);
-                  break;
-                }
-              }
-
-            } else {
-              // do nothing if nothing hitten
-              // currentObject->deselect();
-            }
+            selectObject(ea);
+          } else if (ea.getButton() ==
+                     osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON) {
+            // re place cursor
+            placeCursor(ea);
           }
         }
     }
@@ -243,6 +293,10 @@ int main(int argc, char* argv[]) {
   camera->setCullingMode(osg::CullSettings::NO_CULLING);
 
   hudCamera = zxd::createHUDCamera();
+
+  cursor = new zxd::Cursor();
+  root->addChild(cursor);
+
   osg::ref_ptr<osg::Geode> opLeaf = new osg::Geode();
   opLeaf->addDrawable(opText);
   hudCamera->addChild(opLeaf);

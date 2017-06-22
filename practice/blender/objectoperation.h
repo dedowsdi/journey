@@ -18,6 +18,9 @@ class ObjectOperation : public osgGA::GUIEventHandler {
 protected:
   osg::Matrix mModel;
   osg::Matrix mInvModel;
+  osg::Matrix mModelRS;
+  osg::Matrix mInvModelRS;
+  osg::Matrix mModelT;
   osg::Matrix mViewProj;
   osg::Matrix mViewProjWnd;
   osg::Matrix mInvViewProjWnd;
@@ -25,6 +28,8 @@ protected:
   osg::Matrix mInvWnd;
   osg::Matrix mView;
   osg::Matrix mInvView;
+  osg::Matrix mViewRS;
+  osg::Matrix mInvViewRS;
   osg::Matrix mModelView;
   osg::Matrix mInvModelView;
   osg::Matrix mModelViewProjWnd;
@@ -71,8 +76,15 @@ public:
     mModel = mTarget->getMatrix();
     mInvModel.invert(mModel);
 
+    mModelRS = zxd::Math::getMatRS(mModel);
+    mInvModelRS = zxd::Math::getMatRS(mInvModel);
+    mModelT = zxd::Math::getMatT(mModel);
+
     mView = camera->getViewMatrix();
     mInvView.invert(mView);
+
+    mViewRS = zxd::Math::getMatRS(mView);
+    mInvViewRS = zxd::Math::getMatRS(mInvView);
 
     mCameraPos = mInvView.getTrans();
 
@@ -644,7 +656,7 @@ protected:
     if (mAc->getFrame() == AxisConstrainer::CF_LOCAL)
       mTarget->setMatrix(scaleMatrix * mModel);
     else
-      mTarget->setMatrix(mModel * scaleMatrix);
+      mTarget->setMatrix(mModelRS * scaleMatrix * mModelT);
   }
 
   virtual void applyAxisConstrainerChange() { scaleObject(); }
@@ -683,7 +695,7 @@ protected:
 };
 class RotateOperation : public ObjectOperation {
 protected:
-  GLfloat mRot;  // accumulated rotation
+  GLfloat mRot;  // accumulated rotation in xyz mode
   osg::Vec3 mAxis;
   osg::Vec2 mPivot;            // handle window pivot
   osg::Vec2 mTrackballCursor;  // cursor position when enabling trackball
@@ -696,7 +708,7 @@ protected:
 
 public:
   RotateOperation()
-      : mSign(1.0f), mMode(0), mRadius(0.9f), mYaw(0.0f), mPitch(0.0f) {}
+      : mRot(0), mSign(1.0f), mMode(0), mRadius(0.9f), mYaw(0.0f), mPitch(0.0f) {}
   virtual osg::Node* getHandle() { return mHandle; }
 
   GLfloat getRadius() const { return mRadius; }
@@ -707,6 +719,7 @@ public:
     mMode = v;
     // clear transform during switch
     mTarget->setMatrix(mModel);
+    mRot = 0;
     if (mMode == 0)
       applyAxisConstrainerChange();
     else
@@ -840,6 +853,8 @@ protected:
   }
 
   virtual void doUpdateTrackball(bool shiftDown) {
+    // yaw pitch object, in view frames without translation
+
     // osg::Vec2 ndc0(mEa0->getXnormalized(), mEa0->getYnormalized());
     // osg::Vec2 ndc1(mEa1->getXnormalized(), mEa1->getYnormalized());
 
@@ -856,8 +871,8 @@ protected:
     osg::Matrix matYaw = osg::Matrix::rotate(mYaw, osg::Y_AXIS);
     osg::Matrix matPitch = osg::Matrix::rotate(mPitch, osg::X_AXIS);
 
-    mTarget->setMatrix(mModel * zxd::Math::clearTrans(mView) * matPitch *
-                       matYaw * zxd::Math::clearTrans(mInvView));
+    mTarget->setMatrix(
+      mModelRS * mViewRS * matPitch * matYaw * mInvViewRS * mModelT);
   }
   virtual void updateText() {
     if (mMode == 0)
@@ -953,7 +968,7 @@ protected:
     if (mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL)
       mTarget->setMatrix(osg::Matrix::rotate(mRot, mAxis) * mModel);
     else
-      mTarget->setMatrix(mModel * osg::Matrix::rotate(mRot, mAxis));
+      mTarget->setMatrix(mModelRS * osg::Matrix::rotate(mRot, mAxis) * mModelT);
   }
 };
 }
