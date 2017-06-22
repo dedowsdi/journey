@@ -9,6 +9,7 @@
 #include <osg/io_utils>
 #include "zmath.h"
 #include <iomanip>
+#include "zmath.h"
 
 namespace zxd {
 
@@ -684,8 +685,10 @@ class RotateOperation : public ObjectOperation {
 protected:
   GLfloat mRot;  // accumulated rotation
   osg::Vec3 mAxis;
-  osg::Vec2 mPivot;  // handle window pivot
+  osg::Vec2 mPivot;            // handle window pivot
+  osg::Vec2 mTrackballCursor;  // cursor position when enabling trackball
   osg::ref_ptr<osg::Group> mHandle;
+  osg::ref_ptr<osg::Switch> mHandleSwitch;
   GLfloat mSign;
   int mMode;        // 0 as xyz, 1 as trackball
   GLfloat mRadius;  // trackball radius
@@ -704,15 +707,40 @@ public:
     mMode = v;
     // clear transform during switch
     mTarget->setMatrix(mModel);
-    if (mMode == 0) applyAxisConstrainerChange();
+    if (mMode == 0)
+      applyAxisConstrainerChange();
+    else
+      mTrackballCursor = mCurrentCursor;
+
+    mHandleSwitch->setSingleChildOn(mMode);
   }
 
 protected:
   void updateHandle() {
+    if (mMode == 0)
+      updateHandleXYZ();
+    else
+      updateHandleTrackball();
+  }
+  void updateHandleTrackball() {
+    osg::Group* handle = mHandleSwitch->getChild(1)->asGroup();
+
+    zxd::DirectionArrow* da0 =
+      static_cast<zxd::DirectionArrow*>(handle->getChild(0));
+    zxd::DirectionArrow* da1 =
+      static_cast<zxd::DirectionArrow*>(handle->getChild(1));
+    osg::Vec3 v0, v1;
+    getHandlePosition(v0, v1);
+    da0->setMatrix(osg::Matrix::translate(v1));
+    da1->setMatrix(osg::Matrix::translate(v1));
+  }
+  void updateHandleXYZ() {
+    osg::Group* handle = mHandleSwitch->getChild(0)->asGroup();
+
     zxd::LineSegmentNode* lsn =
-      static_cast<zxd::LineSegmentNode*>(mHandle->getChild(0));
+      static_cast<zxd::LineSegmentNode*>(handle->getChild(0));
     zxd::DirectionArrow* da =
-      static_cast<zxd::DirectionArrow*>(mHandle->getChild(1));
+      static_cast<zxd::DirectionArrow*>(handle->getChild(1));
 
     // update handle line
     osg::Vec3 v0, v1;
@@ -732,23 +760,54 @@ protected:
 
     // create handle
     mHandle = new osg::Group;
+    mHandleSwitch = new osg::Switch;
 
-    // handle line
-    osg::ref_ptr<zxd::LineSegmentNode> lsn = new zxd::LineSegmentNode();
     osg::Vec3 v0, v1;
     getHandlePosition(v0, v1);
-    lsn->setPosition(v0, v1);
 
-    osg::StateSet* ss = lsn->getOrCreateStateSet();
-    ss->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
-    ss->setAttributeAndModes(new osg::LineStipple(1.0f, 0xF0F0));
+    // create xyz handle
+    {
+      osg::ref_ptr<osg::Group> xyzHandle = new osg::Group();
+      // handle line
+      osg::ref_ptr<zxd::LineSegmentNode> lsn = new zxd::LineSegmentNode();
+      lsn->setPosition(v0, v1);
 
-    // position direction arrow at cursor place
-    osg::ref_ptr<zxd::DirectionArrow> da = new zxd::DirectionArrow();
-    da->setMatrix(osg::Matrix::translate(v1));
+      osg::StateSet* ss = lsn->getOrCreateStateSet();
+      ss->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+      ss->setAttributeAndModes(new osg::LineStipple(1.0f, 0xF0F0));
 
-    mHandle->addChild(lsn);
-    mHandle->addChild(da);
+      // position direction arrow at cursor place
+      osg::ref_ptr<zxd::DirectionArrow> da = new zxd::DirectionArrow();
+      da->setMatrix(osg::Matrix::translate(v1));
+
+      xyzHandle->addChild(lsn);
+      xyzHandle->addChild(da);
+      mHandleSwitch->addChild(xyzHandle, mMode == 0);
+    }
+
+    // create trackball handle
+    {
+      osg::ref_ptr<osg::Group> tbHandle = new osg::Group();
+      // handle line
+
+      // position direction arrow at cursor place
+      osg::ref_ptr<zxd::DirectionArrow> da0 = new zxd::DirectionArrow();
+      osg::ref_ptr<zxd::DirectionArrow> da1 = new zxd::DirectionArrow();
+
+      da0->setDirection(0, osg::Vec2(1.0f, 0.0f));
+      da0->setDirection(1, osg::Vec2(-1.0f, 0.0f));
+      da1->setDirection(0, osg::Vec2(0.0f, 1.0f));
+      da1->setDirection(1, osg::Vec2(0.0f, -1.0f));
+
+      da0->setMatrix(osg::Matrix::translate(v1));
+      da1->setMatrix(osg::Matrix::translate(v1));
+
+      tbHandle->addChild(da0);
+      tbHandle->addChild(da1);
+      mHandleSwitch->addChild(tbHandle, mMode == 1);
+    }
+
+    mHandle->addChild(mHandleSwitch);
 
     updateHandle();
 
@@ -781,14 +840,24 @@ protected:
   }
 
   virtual void doUpdateTrackball(bool shiftDown) {
-    osg::Vec2 ndc0(mEa0->getXnormalized(), mEa0->getYnormalized());
-    osg::Vec2 ndc1(mEa1->getXnormalized(), mEa1->getYnormalized());
+    // osg::Vec2 ndc0(mEa0->getXnormalized(), mEa0->getYnormalized());
+    // osg::Vec2 ndc1(mEa1->getXnormalized(), mEa1->getYnormalized());
 
     // get sphere point
-    osg::Vec3 sp0 = zxd::ndcToSphere(ndc0, mRadius);
-    osg::Vec3 sp1 = zxd::ndcToSphere(ndc1, mRadius);
+    // osg::Vec3 sp0 = zxd::ndcToSphere(ndc0, mRadius);
+    // osg::Vec3 sp1 = zxd::ndcToSphere(ndc1, mRadius);
 
     // get yaw and pitch to rotate sp0 to sp1. sp0 * pitch * yaw = sp1
+    GLfloat scale = shiftDown ? 0.1f : 1.0f;
+    osg::Vec2 cursorOffset = mCurrentCursor - mLastCursor;
+    mYaw += scale * cursorOffset.x() / 100.0f;
+    mPitch += scale * -cursorOffset.y() / 100.0f;
+
+    osg::Matrix matYaw = osg::Matrix::rotate(mYaw, osg::Y_AXIS);
+    osg::Matrix matPitch = osg::Matrix::rotate(mPitch, osg::X_AXIS);
+
+    mTarget->setMatrix(mModel * zxd::Math::clearTrans(mView) * matPitch *
+                       matYaw * zxd::Math::clearTrans(mInvView));
   }
   virtual void updateText() {
     if (mMode == 0)
@@ -796,7 +865,16 @@ protected:
     else
       updateTextTrackball();
   }
-  virtual void updateTextTrackball() {}
+  virtual void updateTextTrackball() {
+    if (mInfoText) {
+      std::stringstream ss;
+      ss.setf(std::ios_base::fixed);
+      ss.precision(4);
+      ss << "Trackball " << osg::RadiansToDegrees(mPitch) << " "
+         << osg::RadiansToDegrees(mYaw);
+      mInfoText->setText(ss.str());
+    }
+  }
 
   virtual void updateTextXYZ() {
     std::string frame = zxd::toString(mAc->getFrame());
@@ -804,7 +882,7 @@ protected:
     ss.setf(std::ios_base::fixed);
     ss.precision(4);
 
-    ss << "Rot " << mRot << " ";
+    ss << "Rot " << osg::RadiansToDegrees(mRot) << " ";
 
     static const char* axes[] = {"X", "Y", "Z"};
 

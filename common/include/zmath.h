@@ -31,6 +31,15 @@ public:
    */
   static LinePlaneRelPair getLinePlaneRelation(
     const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane);
+
+  /*
+   * return matrix without rotation
+   */
+  static osg::Matrix clearTrans(const osg::Matrix& m) {
+    osg::Matrix nm(m);
+    nm(3, 0) = nm(3, 1) = nm(3, 2) = 0;
+    return nm;
+  }
 };
 }
 

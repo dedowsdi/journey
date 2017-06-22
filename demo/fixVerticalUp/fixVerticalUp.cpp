@@ -6,6 +6,11 @@
 #include <osgGA/StandardManipulator>
 #include <ctime>
 
+/*
+ * this function will change forward direction, what's the meanning? it's a copy
+ * of StandardManipulator::fixVerticalAxis. 
+ * TODO understand
+ */
 void fixVerticalAxis(
   osg::Quat& rotation, const osg::Vec3& localUp, bool disallowFlipOver) {
   // camera direction vectors
