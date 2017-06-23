@@ -7,7 +7,8 @@ set (DEMOES
 
 foreach(DEMO ${DEMOES})
     message("add ${DEMO}")
-    add_executable(${DEMO} ${DEMO}/${DEMO}.cpp)
+    addCppDirect(./${DEMO} ${DEMO}_SRCS)
+    add_executable(${DEMO} ${${DEMO}_SRCS})
     set_target_properties(${DEMO} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
     target_link_libraries(${DEMO}
         ${OPENTHREADS_LIBRARY}

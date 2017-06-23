@@ -4,11 +4,11 @@
 #include <osg/Group>
 #include "common.h"
 #include "blenderobject.h"
+#include <algorithm>
 
 namespace zxd {
 
-
-class AxisConstrainer : public osg::Group {
+class AxisConstrainer : public osg::MatrixTransform {
 public:
   enum ConstrainType {
     CT_NONE,  // 0
@@ -24,14 +24,12 @@ public:
 protected:
   ConstrainType mType;
   ConstrainFrame mFrame;
-  osg::ref_ptr<osg::MatrixTransform> mTarget;
-  osg::Matrix mPivot;  // current object initial transform
 
 public:
   AxisConstrainer() : mType(CT_NONE), mFrame(CF_WORLD) {}
   AxisConstrainer(const AxisConstrainer& copy,
     const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
-      : osg::Group(copy, copyop) {}
+      : osg::MatrixTransform(copy, copyop) {}
   ~AxisConstrainer() {}
   META_Object(zxd, AxisConstrainer);
 
@@ -45,15 +43,6 @@ public:
   void setFrame(ConstrainFrame v) {
     mFrame = v;
     resetConstrainLines();
-  }
-
-  const osg::ref_ptr<osg::MatrixTransform>& getTarget() const {
-    return mTarget;
-  }
-
-  void setTarget(const osg::ref_ptr<osg::MatrixTransform>& v) {
-    mTarget = v;
-    mPivot = mTarget->getMatrix();
   }
 
   // none => world x => local x => none
@@ -76,6 +65,7 @@ public:
   }
 
 protected:
+  // recreate lines, reset rotations, but leave translation alone
   void resetConstrainLines() {
     removeChildren(0, getNumChildren());
     osg::ref_ptr<osg::Vec3Array> lines = new osg::Vec3Array();
@@ -106,29 +96,15 @@ protected:
         break;
     }
 
-    osg::Matrix m = mFrame == CF_LOCAL
-                      ? mPivot
-                      : osg::Matrix::translate(mPivot.getTrans());
-
     std::for_each(
       lines->begin(), lines->end(), [&](decltype(*lines->begin()) v) {
         osg::ref_ptr<zxd::InfiniteLine> il = new zxd::InfiniteLine(v, v * 0.9f);
-        il->setMatrix(m);
         addChild(il);
       });
   }
 };
 
-std::string toString(AxisConstrainer::ConstrainFrame frame) {
-  switch (frame) {
-    case zxd::AxisConstrainer::CF_LOCAL:
-      return "local";
-    case zxd::AxisConstrainer::CF_WORLD:
-      return "world";
-    default:
-      return "";
-  }
-}
+std::string toString(AxisConstrainer::ConstrainFrame frame);
 }
 
 #endif /* AXISCONSTRAINER_H */

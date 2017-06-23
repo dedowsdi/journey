@@ -32,11 +32,20 @@ public:
   static LinePlaneRelPair getLinePlaneRelation(
     const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane);
 
-  // return matrix without rotation
+  // return matrix without translation
   static osg::Matrix getMatRS(const osg::Matrix& m) {
     osg::Matrix nm(m);
     nm(3, 0) = nm(3, 1) = nm(3, 2) = 0;
     return nm;
+  }
+
+  static osg::Matrix getMatR(const osg::Matrix& m) {
+    osg::Vec3 translation;
+    osg::Quat rotation;
+    osg::Vec3 scale;
+    osg::Quat so;
+    m.decompose(translation, rotation, scale, so);
+    return osg::Matrix(rotation);
   }
 
   // return matrix with only translation

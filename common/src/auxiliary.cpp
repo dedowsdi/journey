@@ -82,7 +82,7 @@ Cursor::Cursor() {
   mCursor->addPrimitiveSet(new osg::DrawArrays(GL_POINTS, 0, 1));
   colors->setBinding(osg::Array::BIND_OVERALL);
 
-  osg::StateSet* ss = getOrCreateStateSet();
+  osg::StateSet* ss = mCursor->getOrCreateStateSet();
   ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
   ss->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
   ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);

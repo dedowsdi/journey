@@ -1,8 +1,13 @@
 #ifndef BLENDEROBJECT_H
 #define BLENDEROBJECT_H
+#include <osg/MatrixTransform>
+#include <osgFX/Outline>
+#include <osg/Switch>
+#include "auxiliary.h"
+#include <osg/ValueObject>
+
 namespace zxd {
 
-#include <osg/MatrixTransform>
 
 class BlenderObject : public osg::MatrixTransform {
 protected:
@@ -39,12 +44,11 @@ public:
   META_Object(zxd, BlenderObject);
 
   //need camera to create axes
-  void select(osg::Camera* camera) {
+  void select() {
     mSwitch->setValue(0, 0);
     mSwitch->setValue(1, 1);
 
     mLoadPoint->removeChildren(0, mLoadPoint->getNumChildren());
-    mLoadPoint->addChild(new zxd::Axes(camera));
     mLoadPoint->addChild(new zxd::Dot);
   }
 
