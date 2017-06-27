@@ -183,6 +183,7 @@ void ObjectOperation::clean() {
     zxd::removeNodeParents(handle);
     OSG_NOTICE << "clear handle" << std::endl;
   }
+  mBlender->getMainView()->removeEventHandler(this);
 }
 
 //------------------------------------------------------------------------------
@@ -579,6 +580,7 @@ void RotateOperation::setMode(int v) {
     mTrackballCursor = mCurrentCursor;
 
   mHandleSwitch->setSingleChildOn(mMode);
+  updateHandle();
 }
 
 //------------------------------------------------------------------------------
@@ -654,6 +656,7 @@ void RotateOperation::doInit() {
     // position direction arrow at cursor place
     osg::ref_ptr<zxd::DirectionArrow> da0 = new zxd::DirectionArrow();
     osg::ref_ptr<zxd::DirectionArrow> da1 = new zxd::DirectionArrow();
+    da1->setColor(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
     da0->setDirection(0, osg::Vec2(1.0f, 0.0f));
     da0->setDirection(1, osg::Vec2(-1.0f, 0.0f));
@@ -716,8 +719,9 @@ void RotateOperation::doUpdateTrackball(bool shiftDown) {
   osg::Matrix matYaw = osg::Matrix::rotate(mYaw, osg::Y_AXIS);
   osg::Matrix matPitch = osg::Matrix::rotate(mPitch, osg::X_AXIS);
 
+  //pitch is applied after yaw, which means it's always "looks right"
   mTarget->setMatrix(
-    mModelRS * mViewRS * matPitch * matYaw * mInvViewRS * mModelT);
+    mModelRS * mViewRS * matYaw * matPitch * mInvViewRS * mModelT);
 }
 
 //------------------------------------------------------------------------------

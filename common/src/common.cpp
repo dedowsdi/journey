@@ -76,7 +76,8 @@ osg::Camera* createHUDCamera(
   // clear depth only, make sure text render on current graph
   camera->setClearMask(GL_DEPTH_BUFFER_BIT);
   camera->setRenderOrder(osg::Camera::POST_RENDER);
-  camera->setProjectionMatrix(osg::Matrix::ortho2D(left, right, bottom, top));
+  //camera->setProjectionMatrix(osg::Matrix::ortho2D(left, right, bottom, top));
+  camera->setProjectionMatrix(osg::Matrix::ortho(left, right, bottom, top, -10.0f, 10.0f));
 
   return camera.release();
 }

@@ -171,12 +171,16 @@ osg::Geode* createArrow() {
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
   osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry();
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+  osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+  colors->setBinding(osg::Array::BIND_OVERALL);
+
+  colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
   geometry->setVertexArray(vertices);
 
   osg::Vec3 p0(width * 0.1f, -height * 0.4f, 0);
   osg::Vec3 p1(p0.x(), height * 0.2f, 0);
-  osg::Vec3 p2(width * 0.45f, height * 0.1f, 0);
-  osg::Vec3 p3(width * 0.5f, height * 0.3f, 0);
+  osg::Vec3 p2(width * 0.38f, height * 0.1f, 0);
+  osg::Vec3 p3(width * 0.42f, height * 0.3f, 0);
   osg::Vec3 p4(0, height * 0.5f, 0);
   osg::Vec3 p5(-p3.x(), p3.y(), 0);
   osg::Vec3 p6(-p2.x(), p2.y(), 0);

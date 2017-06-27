@@ -6,6 +6,10 @@
 
 namespace zxd {
 
+/*
+ * basic grid is drawn with GL_QUADS with 1,1 polygon offset
+ * subdivisions and axis are plain GL_LINES
+ */
 class GridFloor : public osg::Geode {
 protected:
   GLuint mLines;  // it's actually tiles,  named after blender style

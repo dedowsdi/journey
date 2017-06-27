@@ -8,6 +8,7 @@
 #include <osgGA/OrbitManipulator>
 #include "common.h"
 
+#include <osg/AutoTransform>
 int main(int argc, char* argv[]) {
   osg::ref_ptr<osg::Group> root = new osg::Group();
   osg::ref_ptr<zxd::Cursor> cursor = new zxd::Cursor();

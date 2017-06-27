@@ -10,11 +10,53 @@
 #include <osg/LineWidth>
 #include <osg/TexMat>
 #include "common.h"
+#include <osgText/Text>
 
 namespace zxd {
 
 //------------------------------------------------------------------------------
-Axes::Axes(osg::Camera* camera /*= 0*/) : mAxisSize(30.0f) {
+CameraViewCallback::CameraViewCallback(
+  osg::Camera* camera, const osg::Matrix& toViewMat)
+    : mCamera(camera), mToViweMat(toViewMat) {
+  const osg::Matrix& fromViweMat = mCamera->getViewMatrix();
+  osg::Vec3 scale;
+  osg::Quat so;
+
+  fromViweMat.decompose(mFromPos, mFromQuat, scale, so);
+  toViewMat.decompose(mToPos, mToQuat, scale, so);
+
+  mMotion = new osgAnimation::InOutCubicMotion();
+}
+
+void CameraViewCallback::operator()(osg::Node* node, osg::NodeVisitor* nv) {
+  static GLfloat lt = nv->getFrameStamp()->getReferenceTime();
+  GLfloat t = nv->getFrameStamp()->getReferenceTime();
+  GLfloat dt = t - lt;
+
+  mMotion->update(dt);
+
+
+  if (mMotion->getTime() >= 1.0f) {
+    mCamera->setViewMatrix(mToViweMat);
+    mCamera->removeUpdateCallback(this);
+  } else {
+    osg::Quat q;
+    osg::Vec3 v;
+    GLfloat i = mMotion->getValue();
+    q.slerp(i, mFromQuat, mToQuat);
+    v = mFromPos * (1 - i) + mToPos * i;
+    if(mCamMan){
+      mCamMan->setRotation(q);
+      mCamMan->setDistance(v.length());
+    }else{
+      mCamera->setViewMatrix(osg::Matrix::rotate(q) * osg::Matrix::translate(v));
+    }
+  }
+  traverse(node, nv);
+}
+
+//------------------------------------------------------------------------------
+Axes::Axes() {
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
   {
     // create axes
@@ -42,23 +84,74 @@ Axes::Axes(osg::Camera* camera /*= 0*/) : mAxisSize(30.0f) {
     colors->setBinding(osg::Array::BIND_PER_VERTEX);
 
     mAxes->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 0, 6));
-    // mAxes->setDrawCallback(new FixDistanceDrawCalback(3));
     mAxes->setUseDisplayList(false);
   }
 
   leaf->addDrawable(mAxes);
-
   addChild(leaf);
 
-  osg::StateSet* ss = getOrCreateStateSet();
+  osg::StateSet* ss = leaf->getOrCreateStateSet();
   ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
   ss->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
   ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-  ss->setAttributeAndModes(new osg::Depth(osg::Depth::LESS, 0.0f, 1.0f, false));
-  mFixSizeCallback = new FixSizeCallback(10.0f);
-  mFixSizeCallback->setCamera(camera);
+}
 
-  this->setUpdateCallback(mFixSizeCallback);
+//------------------------------------------------------------------------------
+void Axes::setLabel(bool b) {
+  if (b) {
+    if (!mLabelX) {
+      // create leabels
+      mLabelX = createLabel(osg::X_AXIS, "X");
+      mLabelY = createLabel(osg::Y_AXIS, "Y");
+      mLabelZ = createLabel(osg::Z_AXIS, "Z");
+    }
+
+    if (mLabelX->getNumParents() != 0) return;
+
+    addChild(mLabelX);
+    addChild(mLabelY);
+    addChild(mLabelZ);
+  } else {
+    if (!mLabelX) return;
+
+    mLabelX->getParent(0)->removeChild(mLabelX);
+    mLabelY->getParent(0)->removeChild(mLabelY);
+    mLabelZ->getParent(0)->removeChild(mLabelZ);
+  }
+}
+
+//------------------------------------------------------------------------------
+void Axes::setLineWidth(GLfloat w) {
+  osg::StateSet* ss = mAxes->getOrCreateStateSet();
+  ss->setAttributeAndModes(new osg::LineWidth(w));
+}
+
+//------------------------------------------------------------------------------
+GLfloat Axes::getLineWidth() {
+  osg::StateSet* ss = mAxes->getOrCreateStateSet();
+  osg::LineWidth* lw = static_cast<osg::LineWidth*>(
+    ss->getAttribute(osg::StateAttribute::LINEWIDTH));
+  return lw ? lw->getWidth() : 1.0f;
+}
+
+//------------------------------------------------------------------------------
+osg::ref_ptr<osg::AutoTransform> Axes::createLabel(
+  const osg::Vec3& v, const std::string& label) {
+  static osg::ref_ptr<osgText::Font> font = osgText::readFontFile("arial.ttf");
+
+  osg::ref_ptr<osg::AutoTransform> at = new osg::AutoTransform();
+  at->setPosition(v);
+  at->setAutoRotateMode(osg::AutoTransform::ROTATE_TO_SCREEN);
+
+  osg::ref_ptr<osgText::Text> text =
+    zxd::createText(font, osg::Vec3(), label, 0.35f);
+  text->setColor(osg::Vec4(v, 1.0f));
+
+  osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
+  leaf->addDrawable(text);
+
+  at->addChild(text);
+  return at;
 }
 
 //------------------------------------------------------------------------------
@@ -234,7 +327,7 @@ InfiniteLine::InfiniteLine(const osg::Vec3& v /*= osg::X_AXIS*/,
   mGeometry->setVertexArray(vertices);
   mGeometry->setColorArray(colors);
 
-  //FLT_MAX cause trouble, don't know y
+  // FLT_MAX cause trouble, don't know y
   vertices->push_back(-v * 0.5f * 1000000);
   vertices->push_back(v * 0.5f * 1000000);
   colors->push_back(color);
@@ -282,7 +375,8 @@ void LineSegmentNode::setPosition(const osg::Vec3& v0, const osg::Vec3& v1) {
 
 //------------------------------------------------------------------------------
 void LineSegmentNode::setStartPosition(const osg::Vec3& v) {
-  osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>(mGeometry->getVertexArray());
+  osg::Vec3Array* vertices =
+    static_cast<osg::Vec3Array*>(mGeometry->getVertexArray());
   vertices->at(0) = v;
   vertices->dirty();
   mGeometry->dirtyBound();
@@ -291,68 +385,31 @@ void LineSegmentNode::setStartPosition(const osg::Vec3& v) {
 
 //------------------------------------------------------------------------------
 void LineSegmentNode::setEndPosition(const osg::Vec3& v) {
-  osg::Vec3Array* vertices = static_cast<osg::Vec3Array*>(mGeometry->getVertexArray());
+  osg::Vec3Array* vertices =
+    static_cast<osg::Vec3Array*>(mGeometry->getVertexArray());
   vertices->at(1) = v;
   vertices->dirty();
   mGeometry->dirtyBound();
   mGeometry->dirtyDisplayList();
 }
 
-
 //------------------------------------------------------------------------------
 DirectionArrow::DirectionArrow(GLfloat size /*= 32.0f*/)
-    : mSize(size), mOffset(15.0f) {
+    : mSize(size), mOffset(12.0f) {
   osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D();
   texture->setImage(osgDB::readImageFile("Images/arrow.png"));
-
-  // mGeometry = new osg::Geometry;
-  // osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
-  // osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
-  // colors->setBinding(osg::Array::BIND_OVERALL);
-
-  // vertices->push_back(osg::Vec3());
-  // colors->push_back(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-  // mGeometry->setVertexArray(vertices);
-  // mGeometry->setColorArray(colors);
-  // mGeometry->addPrimitiveSet(new osg::DrawArrays(GL_POINTS, 0, 1));
-
-  // osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
-  // leaf->addDrawable(mGeometry);
-
-  // const char* vsSource =
-  //" #version 120                                          \n"
-  //"                                                       \n "
-  //" void main()                                           \n "
-  //" {                                                     \n "
-  //"   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;  \n "
-  //" }                                                     \n ";
-
-  // const char* fsSource =
-  //" #version 120                                          \n"
-  //" uniform mat4 texMat;                                  \n "
-  //" uniform sampler2D tex;                                \n "
-  //"                                                       \n "
-  //" void main()                                           \n "
-  //" {                                                     \n "
-  //"   vec4 texCoord = texMat * vec4(gl_PointCoord, 0, 1); \n "
-  //"   gl_FragColor = texture2D(tex, texCoord.xy);         \n "
-  //" }                                                     \n ";
-
-  //// need shader to rotate point sprite
-  // osg::ref_ptr<osg::Program> program = new osg::Program();
-  // osg::ref_ptr<osg::Shader> fs =
-  // new osg::Shader(osg::Shader::FRAGMENT, fsSource);
-  // osg::ref_ptr<osg::Shader> vs = new osg::Shader(osg::Shader::VERTEX,
-  // vsSource);
-  // program->addShader(vs);
-  // program->addShader(fs);
-
-  // leaf->getOrCreateStateSet()->setAttributeAndModes(program);
-
   mGeometry =
     osg::createTexturedQuadGeometry(osg::Vec3(-mSize * 0.5f, -mSize * 0.5f, 0),
       osg::X_AXIS * mSize, osg::Y_AXIS * mSize);
+  texture->setFilter(
+    osg::Texture::MIN_FILTER, osg::Texture::NEAREST_MIPMAP_LINEAR);
+  texture->setFilter(osg::Texture::MAG_FILTER, osg::Texture::LINEAR);
+
+  osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+  colors->setBinding(osg::Array::BIND_OVERALL);
+  colors->push_back(osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  mGeometry->setColorArray(colors);
+
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
   leaf->addDrawable(mGeometry);
 
@@ -372,10 +429,6 @@ DirectionArrow::DirectionArrow(GLfloat size /*= 32.0f*/)
   ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
   ss->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
   ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-  // ss->setAttributeAndModes(new osg::Point(mSize));
-  // osg::ref_ptr<osg::PointSprite> ps = new osg::PointSprite();
-  // ps->setCoordOriginMode(osg::PointSprite::LOWER_LEFT);
-  // ss->setTextureAttributeAndModes(0, ps);
   ss->setTextureAttributeAndModes(0, texture);
 }
 
@@ -398,5 +451,13 @@ void DirectionArrow::setDirection(GLuint index, osg::Vec2 d) {
   ////texMat = zxd::transpose(texMat);
   // osg::StateSet* ss = tf->getOrCreateStateSet();
   // ss->getOrCreateUniform("texMat", osg::Uniform::FLOAT_MAT4)->set(texMat);
+}
+
+//------------------------------------------------------------------------------
+void DirectionArrow::setColor(const osg::Vec4& color) {
+  osg::Vec4Array* colors =
+    static_cast<osg::Vec4Array*>(mGeometry->getColorArray());
+  (*colors)[0] = color;
+  mGeometry->dirtyDisplayList();
 }
 }

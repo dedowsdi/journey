@@ -7,9 +7,12 @@
 #include <osgGA/GUIEventHandler>
 #include "pivot.h"
 #include <osgViewer/Viewer>
+#include <osg/AutoTransform>
 #include "objectoperation.h"
 #include "blenderobject.h"
 #include "gridfloor.h"
+#include <osgViewer/CompositeViewer>
+#include "zmath.h"
 
 namespace zxd {
 
@@ -18,6 +21,39 @@ class BlenderObject;
 class GridFloor;
 class Cursor;
 class Pivot;
+
+/*
+ * copy world axes in target camera rotation
+ */
+class MiniAxesCallback : public osg::NodeCallback {
+protected:
+  osg::Camera* mTargetCamera;
+
+public:
+  osg::Camera* getTargetCamera() const { return mTargetCamera; }
+  void setTargetCamera(osg::Camera* v) { mTargetCamera = v; }
+
+protected:
+  virtual void operator()(osg::Node* node, osg::NodeVisitor* nv) {
+    osg::MatrixTransform* mt = node->asTransform()->asMatrixTransform();
+
+    osg::Matrix targetView = zxd::Math::getMatR(mTargetCamera->getViewMatrix());
+
+    osg::Matrix m = mt->getMatrix();
+    osg::Vec3 translation;
+    osg::Quat rotation;
+    osg::Vec3 scale;
+    osg::Quat so;
+    m.decompose(translation, rotation, scale, so);
+
+    // copy rotation, reserve translation and scale
+    m = osg::Matrix::scale(scale) * zxd::Math::getMatR(targetView) *
+        osg::Matrix::translate(translation);
+    mt->setMatrix(m);
+
+    traverse(node, nv);
+  }
+};
 
 class Blender : public osg::Group {
 protected:
@@ -29,13 +65,18 @@ protected:
   osg::ref_ptr<osgText::Text> mPivotText;
   osg::ref_ptr<zxd::Cursor> mCursor;
   osg::ref_ptr<zxd::Pivot> mPivot;
-  osg::ref_ptr<zxd::Axes> mPivotAxes;  // always global, not so useful right now
+  osg::ref_ptr<osg::AutoTransform> mPivotAxes;
   osg::Vec4 mOutLineColor;
   osg::Camera* mCamera;
   osg::Camera* mHudCamera;
-  osgViewer::Viewer* mViewer;
+  osgViewer::CompositeViewer* mViewer;
+  osg::ref_ptr<osgViewer::View> mMainView;
   GLfloat mFontSize;
   GLuint mSelectMask;
+  // axes
+  osg::ref_ptr<zxd::Axes> mMiniAxes;
+
+  GLfloat mMiniAxesSize;  // scale size
 
 public:
   Blender();
@@ -54,6 +95,9 @@ public:
   void clearOperation() {
     mCurOperation = osg::ref_ptr<zxd::ObjectOperation>();
   }
+
+  // create mini axes, it's child of hud camera.
+  void createMiniAxes();
 
   osg::ref_ptr<zxd::BlenderObject> getCurObject() const { return mCurObject; }
   void setCurObject(osg::ref_ptr<zxd::BlenderObject> v) {
@@ -85,8 +129,14 @@ public:
   GLuint getSelectMask() const { return mSelectMask; }
   void setSelectMask(GLuint v) { mSelectMask = v; }
 
-  osgViewer::Viewer* getViewer() const { return mViewer; }
-  void setViewer(osgViewer::Viewer* v) { mViewer = v; }
+  osgViewer::CompositeViewer* getViewer() const { return mViewer; }
+  void setViewer(osgViewer::CompositeViewer* v) { mViewer = v; }
+
+  osgViewer::View* getMainView() const { return mMainView; }
+  void setMainView(osgViewer::View* v) { mMainView = v; }
+
+  GLfloat getMiniAxesSize() const { return mMiniAxesSize; }
+  void setMiniAxesSize(GLfloat v) { mMiniAxesSize = v; }
 
   osg::ref_ptr<osgText::Text> getOpText() const { return mOpText; }
 };

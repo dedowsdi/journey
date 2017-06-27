@@ -6,6 +6,8 @@
 #include "gridfloor.h"
 #include "objectoperation.h"
 #include <osg/ValueObject>
+#include <osgDB/ReadFile>
+#include <osg/CullFace>
 
 namespace zxd {
 
@@ -15,8 +17,8 @@ Blender::Blender()
       mCamera(0),
       mHudCamera(0),
       mFontSize(12.0f),
-      mSelectMask(1 << 0)
-
+      mSelectMask(1 << 0),
+      mMiniAxesSize(30.0f)
 {
   mHudCamera = zxd::createHUDCamera();
 
@@ -45,13 +47,17 @@ Blender::Blender()
   mPivot = new zxd::Pivot();
   mPivot->setText(mPivotText);
   mPivot->setBlender(this);
-  mPivotAxes = new zxd::Axes();
+  mPivotAxes = new osg::AutoTransform();
+  mPivotAxes->setAutoScaleToScreen(true);
+  osg::ref_ptr<zxd::Axes> axes = new zxd::Axes();
+  axes->setMatrix(osg::Matrix::scale(50.0f, 50.0f, 50.0f));
+  mPivotAxes->addChild(axes);
   mPivot->updateText();
 
   addChild(mGridFloor);
 }
 
-//------------------------------------------------------------------------------
+//-------------------------------------------------Sekurosufia-----------------------------
 void Blender::reputPivotAxes() {
   zxd::removeNodeParents(mPivotAxes);
 
@@ -71,10 +77,33 @@ void Blender::reputPivotAxes() {
 }
 
 //------------------------------------------------------------------------------
-void Blender::setCamera(osg::Camera* v) {
-  mCamera = v;
-  mPivotAxes->setCamera(v);
+void Blender::createMiniAxes() {
+  // TODO text become invisible in some angle, don't know why
+
+  // create mini axes
+  mMiniAxes = new zxd::Axes;
+  mMiniAxes->setLabel(true);
+  mMiniAxes->setLineWidth(1.5f);
+  // place it at low left corner
+  mMiniAxes->setMatrix(
+    osg::Matrix::scale(mMiniAxesSize, mMiniAxesSize, mMiniAxesSize) *
+    osg::Matrix::translate(mMiniAxesSize * 1.35f, mMiniAxesSize + 1.35f, 0));
+
+  osg::ref_ptr<MiniAxesCallback> cb = new MiniAxesCallback();
+  cb->setTargetCamera(mCamera);
+  mMiniAxes->setUpdateCallback(cb);
+
+  osg::StateSet* ss = mMiniAxes->getOrCreateStateSet();
+  // osg::ref_ptr<osg::CullFace> cf  = new osg::CullFace();
+  // cf->setMode(osg::CullFace::BACK);
+
+  // ss->setMode(GL_CULL_FACE, osg::StateAttribute::OFF);
+
+  mHudCamera->addChild(mMiniAxes);
 }
+
+//------------------------------------------------------------------------------
+void Blender::setCamera(osg::Camera* v) { mCamera = v; }
 
 //------------------------------------------------------------------------------
 void BlendGuiEventhandler::clearRotation() {
@@ -235,7 +264,7 @@ bool BlendGuiEventhandler::handle(
 
           break;
         case osgGA::GUIEventAdapter::KEY_Comma:
-          //disallow pivot cange during operation
+          // disallow pivot cange during operation
           if (mBlender->getCurOperation()) break;
           mBlender->getPivot()->setType(zxd::Pivot::PT_ACTIVEELEMENT);
           break;
@@ -243,6 +272,23 @@ bool BlendGuiEventhandler::handle(
           if (mBlender->getCurOperation()) break;
           mBlender->getPivot()->setType(zxd::Pivot::PT_3DCURSOR);
           break;
+
+        // view
+        case osgGA::GUIEventAdapter::KEY_1: {
+          osg::Camera* camera = mBlender->getCamera();
+          const osg::Matrix& viewMat = camera->getViewMatrix();
+          GLfloat l = viewMat.getTrans().length();
+          osg::Vec3 eye(-l, 0, 0);
+          osg::Matrix targetView =
+            osg::Matrix::lookAt(eye, osg::Vec3(), osg::Z_AXIS);
+          osg::ref_ptr<zxd::CameraViewCallback> cb =
+            new zxd::CameraViewCallback(camera, targetView);
+
+          cb->setCamMan(static_cast<osgGA::OrbitManipulator*>(
+            mBlender->getMainView()->getCameraManipulator()));
+          camera->addUpdateCallback(cb);
+
+        } break;
 
         default:
           break;
@@ -262,7 +308,7 @@ bool BlendGuiEventhandler::handle(
           getCurOperation()->cancel();
           OSG_NOTICE << "cancel operation" << std::endl;
         }
-        mBlender->getViewer()->removeEventHandler(getCurOperation());
+        mBlender->getMainView()->removeEventHandler(getCurOperation());
         // clear operation
         mBlender->clearOperation();
 
@@ -317,6 +363,6 @@ void BlendGuiEventhandler::createNewOperation(
     mBlender->getHudCamera()->addChild(handle);
   }
 
-  mBlender->getViewer()->addEventHandler(op);
+  mBlender->getMainView()->addEventHandler(op);
 }
 }

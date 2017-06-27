@@ -96,7 +96,7 @@ void GridFloor::rebuildGrid() {
 
 //------------------------------------------------------------------------------
 void GridFloor::rebuildSubdivisions() {
-  // build subdivisions as lines, exnore center lines if xy axes are visible.
+  // build subdivisions as lines, ignore center lines if xy axes are visible.
   if (mGridSubdivisions) removeDrawable(mGridSubdivisions);
 
   mGridSubdivisions = new osg::Geometry;

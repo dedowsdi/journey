@@ -7,6 +7,9 @@
 #include <osgGA/GUIEventHandler>
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/io_utils>
+#include <osg/AutoTransform>
+#include <osgAnimation/EaseMotion>
+#include <osgGA/OrbitManipulator>
 
 namespace zxd {
 
@@ -17,110 +20,48 @@ class MyDrawableCullCallback : public osg::Drawable::CullCallback {
   }
 };
 
-class FixDistanceDrawCalback : public osg::Drawable::DrawCallback {
+/*
+ * rotate and translate camera to new position
+ */
+class CameraViewCallback : public osg::NodeCallback {
 protected:
-  GLfloat mDistance;
-
-public:
-  FixDistanceDrawCalback(GLfloat distance) : mDistance(distance) {}
-
-  virtual void drawImplementation(
-    osg::RenderInfo& renderInfo, const osg::Drawable* drawable) const {
-    // pre draw implementation
-
-    osg::State* state = renderInfo.getState();
-    const osg::Matrix& modelView = state->getModelViewMatrix();
-    osg::Vec3 translate =
-      osg::Vec3(modelView(3, 0), modelView(3, 1), modelView(3, 2));
-
-    GLfloat l = translate.length();
-
-    if (l == 0) {
-      translate = -osg::Z_AXIS * mDistance;
-    } else {
-      translate = translate * (mDistance / l);
-    }
-
-    osg::Matrix m(modelView);
-    m(3, 0) = translate[0];
-    m(3, 1) = translate[1];
-    m(3, 2) = translate[2];
-    state->applyModelViewMatrix(m);
-
-    drawable->drawImplementation(renderInfo);
-
-    // recover modelView
-    state->applyModelViewMatrix(modelView);
-    // post draw Implementation
-  }
-
-  GLfloat getDistance() const { return mDistance; }
-  void setDistance(GLfloat v) { mDistance = v; }
-};
-
-class FixSizeCallback : public osg::NodeCallback {
-protected:
-  GLfloat mDistance;
+  osg::ref_ptr<osgAnimation::InOutCubicMotion> mMotion;
+  osg::Matrix mToViweMat;
+  osg::Quat mFromQuat, mToQuat;
+  osg::Vec3 mFromPos, mToPos;
   osg::Camera* mCamera;
+  osg::ref_ptr<osgGA::OrbitManipulator> mCamMan;
 
 public:
-  FixSizeCallback(GLfloat distance) : mDistance(distance), mCamera(0) {}
-  virtual void operator()(osg::Node* node, osg::NodeVisitor* nv) {
-    if (!mCamera) return;
+  CameraViewCallback(osg::Camera* camera, const osg::Matrix& toViewMat);
 
-    osg::Matrix matView = mCamera->getViewMatrix();
-    osg::Matrix matWorld = osg::computeLocalToWorld(nv->getNodePath());
+  virtual void operator()(osg::Node* node, osg::NodeVisitor* nv); 
 
-    osg::Vec3 translation;
-    osg::Quat rotation;
-    osg::Vec3 scale;
-    osg::Quat so;
+  osg::ref_ptr<osgGA::OrbitManipulator> getCamMan() const { return mCamMan; }
+  void setCamMan( osg::ref_ptr<osgGA::OrbitManipulator> v){mCamMan = v;}
 
-    matWorld.decompose(translation, rotation, scale, so);
-
-    // assume no scale exists in view
-    osg::Vec3 t = translation * matView;
-    GLfloat l = t.length();
-
-    if (l == 0) return;
-
-    GLfloat s = l / mDistance;
-
-    scale.x() = s / scale.x();
-    scale.y() = s / scale.y();
-    scale.z() = s / scale.z();
-
-    osg::MatrixTransform* mt = node->asTransform()->asMatrixTransform();
-    mt->postMult(osg::Matrix::scale(scale));
-
-    traverse(node, nv);
-  }
-
-  GLfloat getDistance() const { return mDistance; }
-  void setDistance(GLfloat v) { mDistance = v; }
-
-  osg::Camera* getCamera() const { return mCamera; }
-  void setCamera(osg::Camera* v) { mCamera = v; }
 };
 
+/*
+ * TODO label disappeared sometimes
+ */
 class Axes : public osg::MatrixTransform {
 protected:
-  GLfloat mAxisSize;
-
   osg::ref_ptr<osg::Geometry> mAxes;
-  osg::ref_ptr<FixSizeCallback> mFixSizeCallback;
+  osg::ref_ptr<osg::AutoTransform> mLabelX;
+  osg::ref_ptr<osg::AutoTransform> mLabelY;
+  osg::ref_ptr<osg::AutoTransform> mLabelZ;
 
 public:
-  Axes(osg::Camera* camera = 0);
-  Axes(const Axes& copy, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
-      : osg::MatrixTransform(copy, copyop) {}
-  ~Axes() {}
-  META_Object(zxd, Axes);
+  Axes();
+  void setLabel(bool b);
+  bool getLabel() { return mLabelX && mLabelX->getNumParents() != 0; }
+  void setLineWidth(GLfloat w);
+  GLfloat getLineWidth();
 
-  GLfloat getAxisSize() const { return mAxisSize; }
-  void setAxisSize(GLfloat v) { mAxisSize = v; }
-
-  void setCamera(osg::Camera* camera) { mFixSizeCallback->setCamera(camera); }
+protected:
+  osg::ref_ptr<osg::AutoTransform> createLabel(
+    const osg::Vec3& v, const std::string& label);
 };
 
 /*
@@ -340,6 +281,8 @@ public:
 
   GLfloat getOffset() const { return mOffset; }
   void setOffset(GLfloat v) { mOffset = v; }
+
+  void setColor(const osg::Vec4& color);
 };
 }
 

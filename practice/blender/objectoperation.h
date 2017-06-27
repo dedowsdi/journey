@@ -256,7 +256,7 @@ protected:
 public:
   ScaleOperation() : ObjectOperation(), mScale(1.0f) {}
   virtual const std::string& getType() {
-    static std::string s = "rotate";
+    static std::string s = "scale";
     return s;
   };
   virtual void doInit();
