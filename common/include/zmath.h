@@ -81,7 +81,18 @@ public:
     return res;
   }
 
-  static inline void copyRS(const osg::Matrix& from, osg::Matrix& to) {
+  static inline float angle(const osg::Vec3& v0, const osg::Vec3& v1) {
+    return acos(v0 * v1 / (v0.length() * v1.length()));
+  }
+
+  // get angle which denote rotate alone rotAxis from  v0 to v1,
+  static inline float angleSigned(
+    const osg::Vec3& v0, const osg::Vec3& v1, const osg::Vec3& rotAxis) {
+    float a = angle(v0, v1);
+    return (v0 ^ v1) * rotAxis >= 0 ? a : -a;
+  }
+
+  inline void copyRS(const osg::Matrix& from, osg::Matrix& to) {
     to(0, 0) = from(0, 0);
     to(0, 1) = from(0, 1);
     to(0, 2) = from(0, 2);
@@ -96,7 +107,7 @@ public:
   }
 
   // scale along arbitary vector
-  static inline osg::Matrix scaleAlong(const osg::Vec3& v, float k) {
+  inline osg::Matrix scaleAlong(const osg::Vec3& v, float k) {
     float k1 = k - 1;
     return osg::Matrix(
       1 + k1 * v[0] * v[0], k1 * v[0] * v[1], k1 * v[0] * v[2], 0,  // 0
@@ -107,7 +118,7 @@ public:
   }
 
   // scale along arbitary plane normal, the d part doesn't matter
-  static inline osg::Matrix scaleAlongPlane(const osg::Vec3& n, float k) {
+  inline osg::Matrix scaleAlongPlane(const osg::Vec3& n, float k) {
     float k1 = 1 - k;
     return osg::Matrix(
       k + k1 * n[0] * n[0], k1 * n[0] * n[1], k1 * n[0] * n[2], 0,  // 0
@@ -118,15 +129,35 @@ public:
   }
 
   // project on plane that pass origin with normal v
-  static inline osg::Matrix projectAlong(const osg::Vec3& v) {
+  inline osg::Matrix projectAlong(const osg::Vec3& v) {
     return scaleAlong(v, 0);
   }
 
   // reflect along arbitary vector
-  static inline osg::Matrix reflectAlong(const osg::Vec3& v) {
+  inline osg::Matrix reflectAlong(const osg::Vec3& v) {
     return scaleAlong(v, -1);
   }
 
+  // Gram-Schmidt
+  static osg::Matrix orthogonalizBiased(
+    const osg::Matrix& m, uint startIndex = 0);
+  // recursive
+  static osg::Matrix orthogonalizIterate(
+    const osg::Matrix& m, uint startIndex = 0, uint times = 4, float f = 0.25f);
+
+  template <typename T>
+  static inline T linearInterpolate(const T& t0, const T& t1, float f) {
+    return t0 * (1 - f) + t1 * f;
+  }
+
+  static inline bool isAboutf(
+    const float& t0, const float& t1, float epsilon = 0.0001f) {
+    return std::abs(t0 - t1) <= epsilon;
+  }
+  static inline bool isAboutd(
+    const double& t0, const double& t1, double epsilon = 0.0001f) {
+    return std::abs(t0 - t1) <= epsilon;
+  }
 };
 }
 

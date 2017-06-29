@@ -57,7 +57,6 @@ int main(int argc, char* argv[]) {
   osgViewer::CompositeViewer viewer;
   osg::ref_ptr<osgViewer::View> mainView = new osgViewer::View();
   viewer.addView(mainView);
-  mainView->setCameraManipulator(new zxd::BlenderManipulator());
 
   osg::ref_ptr<osgViewer::StatsHandler> sh = new osgViewer::StatsHandler();
   sh->setKeyEventTogglesOnScreenStats(osgGA::GUIEventAdapter::KEY_I);
@@ -77,6 +76,10 @@ int main(int argc, char* argv[]) {
   blender->setMainView(mainView);
   blender->createMiniAxes();
   root->addChild(blender);
+
+  osg::ref_ptr<zxd::BlenderManipulator>  camMan = new zxd::BlenderManipulator();
+  camMan->setBlender(blender);
+  mainView->setCameraManipulator(camMan);
 
   mainView->addEventHandler(blenderHandler);
 

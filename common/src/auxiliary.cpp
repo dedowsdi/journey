@@ -146,6 +146,7 @@ osg::ref_ptr<osg::AutoTransform> Axes::createLabel(
   osg::ref_ptr<osgText::Text> text =
     zxd::createText(font, osg::Vec3(), label, 0.35f);
   text->setColor(osg::Vec4(v, 1.0f));
+  //text->setAutoRotateToScreen(true);
 
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
   leaf->addDrawable(text);

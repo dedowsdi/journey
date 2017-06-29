@@ -18,16 +18,22 @@ Blender::Blender()
       mHudCamera(0),
       mFontSize(12.0f),
       mSelectMask(1 << 0),
-      mMiniAxesSize(30.0f)
-{
+      mMiniAxesSize(30.0f) {
   mHudCamera = zxd::createHUDCamera();
+  osg::Vec2ui screenSize;
+  zxd::getScreenResolution(screenSize[0], screenSize[1]);
+  mHudCamera->setProjectionMatrixAsOrtho(
+    0, screenSize[0], 0, screenSize[1], -50.0f, 50.0f);
+  // compute near far will ignore text
+  mHudCamera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 
   mFont = osgText::readFontFile("fonts/arial.ttf");
   mOpText = zxd::createText(
     mFont, osg::Vec3(10.0f, mFontSize + 10.0f, 0.0f), "", mFontSize);
-
   mPivotText = zxd::createText(
     mFont, osg::Vec3(500.0f, mFontSize + 10.0f, 0.0f), "", mFontSize);
+  mViewText = zxd::createText(mFont,
+    osg::Vec3(5.0f, screenSize[1] - 5.0f - mFontSize, 0.0f), "", mFontSize);
 
   mCursor = new zxd::Cursor();
   addChild(mCursor);
@@ -35,6 +41,7 @@ Blender::Blender()
   osg::ref_ptr<osg::Geode> textLeaf = new osg::Geode();
   textLeaf->addDrawable(mOpText);
   textLeaf->addDrawable(mPivotText);
+  textLeaf->addDrawable(mViewText);
 
   mHudCamera->addChild(textLeaf);
   addChild(mHudCamera);
@@ -93,7 +100,7 @@ void Blender::createMiniAxes() {
   cb->setTargetCamera(mCamera);
   mMiniAxes->setUpdateCallback(cb);
 
-  osg::StateSet* ss = mMiniAxes->getOrCreateStateSet();
+  // osg::StateSet* ss = mMiniAxes->getOrCreateStateSet();
   // osg::ref_ptr<osg::CullFace> cf  = new osg::CullFace();
   // cf->setMode(osg::CullFace::BACK);
 
@@ -220,7 +227,7 @@ bool BlendGuiEventhandler::handle(
   const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) {
   switch (ea.getEventType()) {
     case osgGA::GUIEventAdapter::KEYDOWN:
-      switch (ea.getKey()) {
+      switch (ea.getUnmodifiedKey()) {
         case osgGA::GUIEventAdapter::KEY_G:
           if (!getCurObject()) break;
 
@@ -272,23 +279,6 @@ bool BlendGuiEventhandler::handle(
           if (mBlender->getCurOperation()) break;
           mBlender->getPivot()->setType(zxd::Pivot::PT_3DCURSOR);
           break;
-
-        // view
-        case osgGA::GUIEventAdapter::KEY_1: {
-          osg::Camera* camera = mBlender->getCamera();
-          const osg::Matrix& viewMat = camera->getViewMatrix();
-          GLfloat l = viewMat.getTrans().length();
-          osg::Vec3 eye(-l, 0, 0);
-          osg::Matrix targetView =
-            osg::Matrix::lookAt(eye, osg::Vec3(), osg::Z_AXIS);
-          osg::ref_ptr<zxd::CameraViewCallback> cb =
-            new zxd::CameraViewCallback(camera, targetView);
-
-          cb->setCamMan(static_cast<osgGA::OrbitManipulator*>(
-            mBlender->getMainView()->getCameraManipulator()));
-          camera->addUpdateCallback(cb);
-
-        } break;
 
         default:
           break;

@@ -13,6 +13,7 @@
 #include "gridfloor.h"
 #include <osgViewer/CompositeViewer>
 #include "zmath.h"
+#include "blendermanipulator.h"
 
 namespace zxd {
 
@@ -61,7 +62,8 @@ protected:
   osg::ref_ptr<zxd::BlenderObject> mCurObject;
   osg::ref_ptr<zxd::GridFloor> mGridFloor;
   osg::ref_ptr<osgText::Font> mFont;
-  osg::ref_ptr<osgText::Text> mOpText;  // operation text
+  osg::ref_ptr<osgText::Text> mOpText;    // operation text
+  osg::ref_ptr<osgText::Text> mViewText;  // view text
   osg::ref_ptr<osgText::Text> mPivotText;
   osg::ref_ptr<zxd::Cursor> mCursor;
   osg::ref_ptr<zxd::Pivot> mPivot;
@@ -138,7 +140,14 @@ public:
   GLfloat getMiniAxesSize() const { return mMiniAxesSize; }
   void setMiniAxesSize(GLfloat v) { mMiniAxesSize = v; }
 
+  zxd::BlenderManipulator* getManipulator() {
+    return static_cast<zxd::BlenderManipulator*>(
+      mMainView->getCameraManipulator());
+  }
+
   osg::ref_ptr<osgText::Text> getOpText() const { return mOpText; }
+  osg::ref_ptr<osgText::Text> getViewText() const { return mViewText; }
+
 };
 
 class BlendGuiEventhandler : public osgGA::GUIEventHandler {

@@ -77,7 +77,8 @@ osg::Camera* createHUDCamera(
   camera->setClearMask(GL_DEPTH_BUFFER_BIT);
   camera->setRenderOrder(osg::Camera::POST_RENDER);
   //camera->setProjectionMatrix(osg::Matrix::ortho2D(left, right, bottom, top));
-  camera->setProjectionMatrix(osg::Matrix::ortho(left, right, bottom, top, -10.0f, 10.0f));
+  camera->setProjectionMatrix(osg::Matrix::ortho(left, right, bottom, top, -1, 1));
+  camera->setViewMatrix(osg::Matrix::identity());
 
   return camera.release();
 }
