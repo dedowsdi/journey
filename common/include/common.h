@@ -45,6 +45,9 @@ extern osg::Matrix randomMatrix(float min, float max);
 // becareful this returns intrinsic rotation order.
 // M = M(z)M(y)M(x)
 // M = matrix.makerotate(z, y, x)
+// 0 <= x <= 2pi
+// 0 <= y <= pi/2 || 3pi/2 <= y <= 2pi
+// 0 <= z <= 2pi
 osg::Vec3 getEulerXYZ(const osg::Matrixf& m);
 
 void removeNodeParents(osg::Node* node, GLuint count = -1);

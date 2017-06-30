@@ -19,6 +19,12 @@ void BlenderManipulator::BlenderAnimationData::init(
 }
 
 //------------------------------------------------------------------------------
+void BlenderManipulator::clampAngle() {
+  mYaw = zxd::Math::clampAngle(mYaw);
+  mPitch = zxd::Math::clampAngle(mPitch);
+}
+
+//------------------------------------------------------------------------------
 bool BlenderManipulator::handleKeyDown(
   const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& us) {
   switch (ea.getUnmodifiedKey()) {
@@ -99,7 +105,7 @@ bool BlenderManipulator::handleKeyDown(
       }
     } break;
 
-    case osgGA::GUIEventAdapter::KEY_KP_Begin: //this is 5 in key pad
+    case osgGA::GUIEventAdapter::KEY_KP_Begin:  // this is 5 in key pad
       toggleProjectionType();
       break;
 
@@ -253,6 +259,31 @@ void BlenderManipulator::viewInverse(const osgGA::GUIEventAdapter& ea) {
 }
 
 //------------------------------------------------------------------------------
+void BlenderManipulator::animRotView(
+  float destPitch, float destYaw, float time) {
+  // clamp angle, avoid circle rotation
+  destPitch = zxd::Math::clampAngle(destPitch);
+  destYaw = zxd::Math::clampAngle(destYaw);
+  OSG_INFO << "start animation. destPitch : " << destPitch
+           << ", destYaw : " << destYaw << std::endl;
+  auto ad = getBlenderAnimData();
+  ad->init(this);
+  ad->mDestPitch = destPitch;
+  ad->mDestYaw = destYaw;
+  ad->start(time);
+}
+
+//------------------------------------------------------------------------------
+inline void BlenderManipulator::animPanZoom(
+  float destDistance, const osg::Vec3& destCenter, float time) {
+  auto ad = getBlenderAnimData();
+  ad->init(this);
+  ad->mDestDistance = destDistance;
+  ad->mDestCenter = destCenter;
+  ad->start(time);
+}
+
+//------------------------------------------------------------------------------
 void BlenderManipulator::yaw(GLfloat v) {
   mYaw += v;
   clampAngle();
@@ -271,33 +302,11 @@ void BlenderManipulator::toggleProjectionType() {
   // becareful fovy not in radian
   osg::Camera* camera = mBlender->getCamera();
 
-  // becareful fovy not in radian
-  double fovy, aspectRatio, zNear, zFar;
-  if (camera->getProjectionMatrixAsPerspective(
-        fovy, aspectRatio, zNear, zFar)) {
-    mPerspFovy = fovy;
-    mPerspAspectRatio = aspectRatio;
-    mPerspZNear = zNear;
-    mPerspZFar = zFar;
-
-    camera->setProjectionMatrixAsOrtho(
-      mOrthoLeft, mOrthoRight, mOrthoTop, mOrthoBottom, mOrthoNear, mOrthoFar);
-
-  } else {
-    double left, right, top, bottom, near, far;
-    if (camera->getProjectionMatrixAsOrtho(
-          left, right, top, bottom, near, far)) {
-      mOrthoLeft = left;
-      mOrthoRight = right;
-      mOrthoTop = top;
-      mOrthoBottom = bottom;
-      mOrthoNear = near;
-      mOrthoFar = far;
-
-      camera->setProjectionMatrixAsPerspective(
-        mPerspFovy, mPerspAspectRatio, mPerspZNear, mPerspZFar);
-    }
-  }
+  const osg::Matrix& proj = camera->getProjectionMatrix();
+  osg::Matrix nextProj;
+  if (zxd::Math::perspToOrtho(proj, _distance, nextProj) ||
+      zxd::Math::orthoToPersp(proj, mPerspFovy, nextProj))
+    camera->setProjectionMatrix(nextProj);
 
   updateText();
 }
@@ -307,30 +316,15 @@ void BlenderManipulator::setBlender(Blender* v) {
   mBlender = v;
   setViewText(mBlender->getViewText());
 
-  osg::Camera* camera = mBlender->getCamera();
+  // osg::Camera* camera = mBlender->getCamera();
 
   osg::DisplaySettings* ds = osg::DisplaySettings::instance();
   double height = ds->getScreenHeight();
-  double width = ds->getScreenWidth();
+  // double width = ds->getScreenWidth();
   double distance = ds->getScreenDistance();  // what's this
   double vfov = osg::RadiansToDegrees(atan2(height / 2.0f, distance) * 2.0);
 
-  if (!camera->getProjectionMatrixAsPerspective(
-        mPerspFovy, mPerspAspectRatio, mPerspZNear, mPerspZFar)) {
-    mPerspFovy = vfov;
-    mPerspAspectRatio = width / height;
-    mPerspZNear = 1.0f;
-    mPerspZFar = 10000.0f;
-  }
-
-  if (!camera->getProjectionMatrixAsOrtho(mOrthoLeft, mOrthoRight, mOrthoTop,
-        mOrthoBottom, mOrthoNear, mOrthoFar)) {
-    mOrthoLeft = -width * 0.5f;
-    mOrthoRight = width * 0.5f;
-    mOrthoBottom = -height * 0.5f;
-    mOrthoTop = height * 0.5f;
-    mOrthoNear = -10000.0f;
-    mOrthoFar = 10000.0f;
-  }
+  // need this transfrom from ortho to persp
+  mPerspFovy = vfov;
 }
 }

@@ -70,6 +70,7 @@ int main(int argc, char* argv[]) {
   camera->setCullingMode(osg::CullSettings::NO_CULLING);
   camera->setGraphicsContext(gc);
   camera->setViewport(0, 0, width, height);
+  //camera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 
   blender->setCamera(camera);
   blender->setViewer(&viewer);

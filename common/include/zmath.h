@@ -158,6 +158,96 @@ public:
     const double& t0, const double& t1, double epsilon = 0.0001f) {
     return std::abs(t0 - t1) <= epsilon;
   }
+
+  // wrap v between 2pi - positiveLimit and positiveLimit
+  static inline double clampAngle(
+    double v, double minValue = 0.0f, double maxValue = osg::PI * 2) {
+    v = fmod(v, osg::PI * 2);
+    if (v < minValue)
+      v += osg::PI * 2;
+    else if (v > maxValue)
+      v -= osg::PI * 2;
+
+    return v;
+  }
+
+  /*
+   * let cut plane which contains (0,0,-distance) be the focus plane.
+   * (intersection plane between persp and ortho)
+   */
+  static bool perspToOrtho(
+    const osg::Matrix& m, double distance, osg::Matrix& om) {
+    double left, right, bottom, top, near, far;
+    if (!m.getFrustum(left, right, bottom, top, near, far)) return false;
+
+    // get symettric top, aspectRatio
+    double smTop = (std::abs(bottom) + std::abs(top)) / 2.0f;
+    double smRight = (std::abs(left) + std::abs(right)) / 2.0f;
+    double aspectRatio = smRight / smTop;
+
+    // scale to focus plane
+    double distanceScale = distance / near;
+
+    // center offset
+    double offsetX = distanceScale * (left + right) / 2.0f;
+    double offsetY = distanceScale * (bottom + top) / 2.0f;
+
+    // get symettric ortho l r t b
+    double orthoTop = distanceScale * smTop;
+    double orthoBottom = -orthoTop;
+    double orthoRight = orthoTop * aspectRatio;
+    double orthoLeft = -orthoRight;
+
+    // apply offset
+    orthoTop += offsetY;
+    orthoBottom += offsetY;
+    orthoLeft += offsetX;
+    orthoRight += offsetX;
+
+    om.makeOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, near, far);
+
+    return true;
+  }
+
+  /*
+   * reverse of perspToOrtho, except use fovy instead of distance, distance
+   * always changes, but fovy is kuai stable
+   */
+  static bool orthoToPersp(const osg::Matrix& m, double fovy, osg::Matrix& om) {
+    double left, right, bottom, top, near, far;
+    if (!m.getOrtho(left, right, bottom, top, near, far)) return false;
+
+    // get symettric top, aspectRatio
+    double smTop = (std::abs(bottom) + std::abs(top)) / 2.0f;
+    double smRight = (std::abs(left) + std::abs(right)) / 2.0f;
+    double aspectRatio = smRight / smTop;
+
+    // scale to near plane of persp
+    // double distanceScale =
+    // near / (smTop / std::tan(osg::DegreesToRadians(fovy * 0.5f)));
+    double distanceScale =
+      near * std::tan(osg::DegreesToRadians(fovy * 0.5f)) / smTop;
+
+    // center offset
+    double offsetX = distanceScale * (left + right) / 2.0f;
+    double offsetY = distanceScale * (bottom + top) / 2.0f;
+
+    // get symettric ortho l r t b
+    double perspTop = distanceScale * smTop;
+    double perspBottom = -perspTop;
+    double perspRight = perspTop * aspectRatio;
+    double perspLeft = -perspRight;
+
+    // apply offset
+    perspTop += offsetY;
+    perspBottom += offsetY;
+    perspLeft += offsetX;
+    perspRight += offsetX;
+
+    om.makeFrustum(perspLeft, perspRight, perspBottom, perspTop, near, far);
+
+    return true;
+  }
 };
 }
 

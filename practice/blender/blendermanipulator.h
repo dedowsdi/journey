@@ -29,9 +29,7 @@ protected:
   osg::ref_ptr<osgText::Text> mViewText;
 
   // becareful fovy not in radian
-  double mPerspFovy, mPerspAspectRatio, mPerspZNear, mPerspZFar;
-  double mOrthoLeft, mOrthoRight, mOrthoTop, mOrthoBottom, mOrthoNear,
-    mOrthoFar;
+  double mPerspFovy; 
 
 public:
   BlenderManipulator()
@@ -92,24 +90,10 @@ public:
   // toggle left right, back front, bottom top
   void viewInverse(const osgGA::GUIEventAdapter& ea);
 
-  inline void animRotView(float destPitch, float destYaw, float time) {
-    OSG_NOTICE << "start animation. destPitch : " << destPitch
-               << ", destYaw : " << destYaw << std::endl;
-    auto ad = getBlenderAnimData();
-    ad->init(this);
-    ad->mDestPitch = destPitch;
-    ad->mDestYaw = destYaw;
-    ad->start(time);
-  }
+  void animRotView(float destPitch, float destYaw, float time) ;
 
-  inline void animPanZoom(
-    float destDistance, const osg::Vec3& destCenter, float time) {
-    auto ad = getBlenderAnimData();
-    ad->init(this);
-    ad->mDestDistance = destDistance;
-    ad->mDestCenter = destCenter;
-    ad->start(time);
-  }
+  void animPanZoom(
+    float destDistance, const osg::Vec3& destCenter, float time) ;
 
   void yaw(GLfloat v);
   void pitch(GLfloat v);
@@ -149,13 +133,7 @@ protected:
   }
 
   // clamp yaw pitch to 0-2pi
-  void clampAngle() {
-    static float twoPi = osg::PI * 2;
-    mYaw = std::fmod(mYaw, twoPi);
-    mPitch = std::fmod(mPitch, twoPi);
-    if (mYaw < 0) mYaw += twoPi;
-    if (mPitch < 0) mPitch += twoPi;
-  }
+  void clampAngle() ;
 
   // virtual void rotateWithFixedVertical( const float dx, const float dy );
 };
