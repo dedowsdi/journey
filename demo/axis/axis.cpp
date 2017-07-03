@@ -46,9 +46,9 @@ int main(int argc, char* argv[]) {
   camera->setViewMatrix(osg::Matrix::identity());
   camera->setGraphicsContext(gc);
   camera->setViewport(0, 0, width, height);
-  osg::ref_ptr<osgText::Text> text = zxd::createText(osg::Vec3(), "text", 20);
+  osg::ref_ptr<osgText::Text> text = zxd::createText(osg::Vec3(), "text", 50);
 
-  camera->addChild(text);
+  root->addChild(text);
 
   /*
    * compute near far doesn't include text, it must be canceled

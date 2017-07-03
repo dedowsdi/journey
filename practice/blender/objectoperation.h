@@ -12,6 +12,7 @@
 #include "zmath.h"
 #include <sstream>
 #include "axisconstrainer.h"
+#include <osgViewer/View>
 
 namespace zxd {
 
@@ -64,7 +65,6 @@ protected:
 
   osg::ref_ptr<zxd::BlenderObject> mTarget;
   osg::Camera* mCamera;
-  zxd::Blender* mBlender;
   Pivot* mPivot;
   osg::Vec2 mWndPivot;        // operation handle like scale or rotate need this
   osg::Vec3 mWorldPivot;      // pivot in world space
@@ -74,11 +74,15 @@ protected:
   osg::Matrix mLocalToPivot;     // local to local pivot
   osg::Matrix mInvLocalToPivot;  // local to local pivot
 
+  osgViewer::View* mBlenderView;
+
+  bool mOrtho;  // whether current camera proj is ortho
+
 protected:
   osg::ref_ptr<AxisConstrainer> mAc;
 
 public:
-  ObjectOperation() : mBlender(0) {}
+  ObjectOperation() {}
 
   // ObjectOperation(const ObjectOperation& copy,
   // const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY)
@@ -86,7 +90,7 @@ public:
   //~ObjectOperation() {}
   // META_Object(zxd, ObjectOperation);
 
-  virtual void init(osg::Vec2 v);
+  virtual void init(osgViewer::View* view, osg::Vec2 v);
 
   virtual osg::Node* getHandle() { return 0; }
 
@@ -103,9 +107,6 @@ public:
   // x y in window frame
   virtual void update(bool shiftDown);
 
-  Blender* getBlender() const { return mBlender; }
-  void setBlender(Blender* v);
-
   inline osg::Vec2 getCurrentCursor() const { return mCurrentCursor; }
   inline void setCurrentCursor(osg::Vec2 v) { mCurrentCursor = v; }
 
@@ -119,6 +120,14 @@ public:
     static std::string s("blank");
     return s;
   };
+
+  osg::Camera* getCamera() const { return mCamera; }
+  void setCamera(osg::Camera* v) { mCamera = v; }
+
+  osgViewer::View* getBlenderView() const { return mBlenderView; }
+  void setBlenderView(osgViewer::View* v) { mBlenderView = v; }
+
+  bool getOrtho() const { return mOrtho; }
 
 protected:
   virtual bool handle(
@@ -189,8 +198,8 @@ protected:
     return mWndStartObject + cursorOffset;
   }
 
-  // get ray end in world or local space
-  inline osg::Vec3 getRayEnd(const osg::Vec2& wndPos) {
+  // get ray end in world or local space. works for both ortho and persp
+  inline osg::Vec3 wndToCurrent(const osg::Vec2& wndPos) {
     // get world ray end
     osg::Vec3 end = osg::Vec3(wndPos.x(), wndPos.y(), 0) * mInvViewProjWnd;
 
@@ -200,10 +209,26 @@ protected:
              : end;
   }
 
-  inline osg::Vec3 getRayStart() {
+  // only for persp
+  inline osg::Vec3 getPerspRayStart() {
     return mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL
              ? mCameraPos * mInvCurModel
              : mCameraPos;
+  }
+
+  void getCameraRay(osg::Vec3& rayStart, osg::Vec3& dir) {
+    if (getOrtho()) {
+      rayStart = wndToCurrent(getWndEndPos());
+      //-z is ray dir in ortho
+      dir = mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL
+              ? osg::Matrix::transform3x3(-osg::Z_AXIS, mInvModelView)
+              : osg::Matrix::transform3x3(-osg::Z_AXIS, mInvView);
+
+    } else {
+      rayStart = getPerspRayStart();
+      dir = wndToCurrent(getWndEndPos()) - rayStart;
+    }
+    dir.normalize();
   }
 
   inline osg::Vec3 getObjectStart() {
@@ -220,11 +245,15 @@ protected:
   virtual void onShiftDown() { mOffsetShift = mOffset; }
 
   osg::Plane getConstrainPlane();
+  void getConstrainPlaneAxes(osg::Vec3& v0, osg::Vec3& v1);
 
   osg::Vec3 getConstrainAxis();
 
   // get final offset in local or world space
   void computeOffset(bool shiftDown);
+
+  osg::Vec3 cameraRayTestSingleAxis(
+    const osg::Vec3& rayStart, const osg::Vec3& dir, const osg::Vec3& axis);
 
   virtual void doUpdate(bool shiftDown);
 

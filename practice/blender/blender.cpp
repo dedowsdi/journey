@@ -8,60 +8,176 @@
 #include <osg/ValueObject>
 #include <osgDB/ReadFile>
 #include <osg/CullFace>
+#include <osgViewer/ViewerEventHandlers>
+#include "prerequisite.h"
 
 namespace zxd {
 
 //------------------------------------------------------------------------------
 Blender::Blender()
     : mOutLineColor(osg::Vec4(1.0f, 0.5f, 0.0f, 1.0f)),
-      mCamera(0),
-      mHudCamera(0),
       mFontSize(12.0f),
       mSelectMask(1 << 0),
-      mMiniAxesSize(30.0f) {
-  mHudCamera = zxd::createHUDCamera();
-  osg::Vec2ui screenSize;
-  zxd::getScreenResolution(screenSize[0], screenSize[1]);
-  mHudCamera->setProjectionMatrixAsOrtho(
-    0, screenSize[0], 0, screenSize[1], -50.0f, 50.0f);
-  // compute near far will ignore text
-  mHudCamera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+      mInfoHeight(30.0f),
+      mGridLines(16),
+      mGridScale(5.0f),
+      mGridSubdivisions(4) {}
 
+//------------------------------------------------------------------------------
+void Blender::init(osgViewer::CompositeViewer* viewer, osg::Node* node) {
+
+  setViewer(viewer);
   mFont = osgText::readFontFile("fonts/arial.ttf");
-  mOpText = zxd::createText(
-    mFont, osg::Vec3(10.0f, mFontSize + 10.0f, 0.0f), "", mFontSize);
-  mPivotText = zxd::createText(
-    mFont, osg::Vec3(500.0f, mFontSize + 10.0f, 0.0f), "", mFontSize);
-  mViewText = zxd::createText(mFont,
-    osg::Vec3(5.0f, screenSize[1] - 5.0f - mFontSize, 0.0f), "", mFontSize);
+
+  mRoot = new osg::Group();
+  osg::ref_ptr<zxd::BlenderObject> bo = new zxd::BlenderObject();
+  bo->getModel()->addChild(node);
+  mRoot->addChild(bo);
+
+  createViews();
 
   mCursor = new zxd::Cursor();
-  addChild(mCursor);
-
-  osg::ref_ptr<osg::Geode> textLeaf = new osg::Geode();
-  textLeaf->addDrawable(mOpText);
-  textLeaf->addDrawable(mPivotText);
-  textLeaf->addDrawable(mViewText);
-
-  mHudCamera->addChild(textLeaf);
-  addChild(mHudCamera);
-
-  mGridFloor = new zxd::GridFloor();
-  mGridFloor->setScale(5);
-  mGridFloor->rebuild();
-  mGridFloor->setNodeMask(-1 & ~mSelectMask);
+  mRoot->addChild(mCursor);
 
   mPivot = new zxd::Pivot();
-  mPivot->setText(mPivotText);
+  mPivot->setText(mInfoView->getPivotText());
   mPivot->setBlender(this);
+
   mPivotAxes = new osg::AutoTransform();
   mPivotAxes->setAutoScaleToScreen(true);
   osg::ref_ptr<zxd::Axes> axes = new zxd::Axes();
   axes->setMatrix(osg::Matrix::scale(50.0f, 50.0f, 50.0f));
   mPivotAxes->addChild(axes);
-  mPivot->updateText();
 
-  addChild(mGridFloor);
+  mPivot->updateText();
+}
+
+//------------------------------------------------------------------------------
+void Blender::createViews() {
+
+  osg::GraphicsContext* gc = createGraphicsContext();
+  createUserView(gc);
+  createInfoView(gc);
+
+  /*
+   * it's not allowed to add or remove views during frame with CompositeViewer,
+   * you can only set camera mask = 0 or set gc to 0
+   */
+  mFrontView = createOrthoView(gc);
+  mRightView = createOrthoView(gc);
+  mTopView = createOrthoView(gc);
+
+  //"hide" them
+  mFrontView->getCamera()->setNodeMask(0);
+  mRightView->getCamera()->setNodeMask(0);
+  mTopView->getCamera()->setNodeMask(0);
+
+  // add only user view  and info view by default
+  mViewer->addView(mUserView);
+  mViewer->addView(mInfoView);
+  mViewer->addView(mFrontView);
+  mViewer->addView(mRightView);
+  mViewer->addView(mTopView);
+
+  const osg::GraphicsContext::Traits* gct = gc->getTraits();
+
+  GLint width = gct->width;
+  GLint height = gct->height;
+  //GLint x = gct->x;
+  //GLint y = gct->y;
+
+  mUserView->setViewport(0, 0 + mInfoHeight, width, height - mInfoHeight);
+  mInfoView->setViewport(0, 0, width, mInfoHeight);
+}
+
+//------------------------------------------------------------------------------
+void Blender::toggleQuadView() {
+  // adjust size
+  osg::Viewport* vp = mUserView->getCamera()->getViewport();
+  GLint x = vp->x();
+  GLint y = vp->y();
+  GLint width = vp->width();
+  GLint height = vp->height();
+
+  if (mFrontView->getCamera()->getNodeMask() != 0) {
+    mFrontView->getCamera()->setNodeMask(0);
+    mRightView->getCamera()->setNodeMask(0);
+    mTopView->getCamera()->setNodeMask(0);
+
+    mUserView->setViewport(x - width, y - height, width * 2, height * 2);
+
+  } else {
+    mFrontView->getCamera()->setNodeMask(-1);
+    mRightView->getCamera()->setNodeMask(-1);
+    mTopView->getCamera()->setNodeMask(-1);
+
+    osg::Matrix orthoProj;
+
+    zxd::BlenderManipulator* camMan =
+      static_cast<zxd::BlenderManipulator*>(mUserView->getCameraManipulator());
+
+    double distance = camMan->getDistance();
+    const osg::Vec3& center = camMan->getCenter();
+
+    // adjust ortho matrix
+    if (!zxd::Math::perspToOrtho(
+          mUserView->getCamera()->getProjectionMatrix(), distance, orthoProj))
+      OSG_FATAL
+        << "failed to convert perspect to ortho during quad view toggling"
+        << std::endl;
+
+    mFrontView->getCamera()->setProjectionMatrix(orthoProj);
+    mTopView->getCamera()->setProjectionMatrix(orthoProj);
+    mRightView->getCamera()->setProjectionMatrix(orthoProj);
+
+    osg::Matrix translate = osg::Matrix::translate(-center);
+    // distance doesn't matter for ortho projection
+    mFrontView->getCamera()->setViewMatrix(
+      translate * osg::Matrix::rotate(-osg::PI_2, osg::X_AXIS));
+    {
+      camMan = static_cast<zxd::BlenderManipulator*>(
+        mFrontView->getCameraManipulator());
+      camMan->setCenter(center);
+      camMan->setDistance(distance);
+      camMan->setRotation(osg::PI_2, 0);
+    }
+    {
+      camMan = static_cast<zxd::BlenderManipulator*>(
+        mRightView->getCameraManipulator());
+      camMan->setCenter(center);
+      camMan->setDistance(distance);
+      camMan->setRotation(osg::PI_2, osg::PI_2);
+    }
+    {
+      camMan =
+        static_cast<zxd::BlenderManipulator*>(mTopView->getCameraManipulator());
+      camMan->setCenter(center);
+      camMan->setDistance(distance);
+      camMan->setRotation(0, 0);
+    }
+
+    // mTopView->getCamera()->setViewMatrix(translate);
+
+    // mRightView->getCamera()->setViewMatrix(
+    // translate * osg::Matrix::rotate(-osg::PI_2, osg::X_AXIS) *
+    // osg::Matrix::rotate(-osg::PI_2, osg::Y_AXIS));
+
+    GLdouble halfWidth = 0.5f * width;
+    GLdouble halfHeight = 0.5f * height;
+
+    mFrontView->setViewport(x, y, halfWidth, halfHeight);
+    mRightView->setViewport(x + halfWidth, y, halfWidth, halfHeight);
+    mTopView->setViewport(x, y + halfHeight, halfWidth, halfHeight);
+    mUserView->setViewport(
+      x + halfWidth, y + halfHeight, halfWidth, halfHeight);
+
+    mFrontView->setGridFloor(
+      createOrthoGridFloor(osg::X_AXIS, osg::Z_AXIS, mFrontView->getCamera()));
+    mRightView->setGridFloor(
+      createOrthoGridFloor(osg::Y_AXIS, osg::Z_AXIS, mRightView->getCamera()));
+    mTopView->setGridFloor(
+      createOrthoGridFloor(osg::X_AXIS, osg::Y_AXIS, mTopView->getCamera()));
+  }
 }
 
 //-------------------------------------------------Sekurosufia-----------------------------
@@ -84,36 +200,132 @@ void Blender::reputPivotAxes() {
 }
 
 //------------------------------------------------------------------------------
-void Blender::createMiniAxes() {
-  // TODO text become invisible in some angle, don't know why
+osg::GraphicsContext* Blender::createGraphicsContext() {
+  // create graphics context
+  osg::ref_ptr<osg::GraphicsContext::Traits> traits =
+    new osg::GraphicsContext::Traits();
 
-  // create mini axes
-  mMiniAxes = new zxd::Axes;
-  mMiniAxes->setLabel(true);
-  mMiniAxes->setLineWidth(1.5f);
-  // place it at low left corner
-  mMiniAxes->setMatrix(
-    osg::Matrix::scale(mMiniAxesSize, mMiniAxesSize, mMiniAxesSize) *
-    osg::Matrix::translate(mMiniAxesSize * 1.35f, mMiniAxesSize + 1.35f, 0));
+  GLuint width = 800, height = 600;
+  osg::GraphicsContext::WindowingSystemInterface* wsi =
+    osg::GraphicsContext::getWindowingSystemInterface();
+  if (!wsi) OSG_FATAL << "failed to get window system interface " << std::endl;
+  wsi->getScreenResolution(
+    osg::GraphicsContext::ScreenIdentifier(0), width, height);
 
-  osg::ref_ptr<MiniAxesCallback> cb = new MiniAxesCallback();
-  cb->setTargetCamera(mCamera);
-  mMiniAxes->setUpdateCallback(cb);
+  traits->x = 0;
+  traits->y = 0;
+  traits->width = width;
+  traits->height = height;
+  traits->doubleBuffer = true;
+  traits->sharedContext = 0;
+  traits->windowDecoration = false;
 
-  // osg::StateSet* ss = mMiniAxes->getOrCreateStateSet();
-  // osg::ref_ptr<osg::CullFace> cf  = new osg::CullFace();
-  // cf->setMode(osg::CullFace::BACK);
+  osg::GraphicsContext* gc =
+    osg::GraphicsContext::createGraphicsContext(traits);
+  if (!gc) OSG_FATAL << "failed to creaate graphics context " << std::endl;
 
-  // ss->setMode(GL_CULL_FACE, osg::StateAttribute::OFF);
-
-  mHudCamera->addChild(mMiniAxes);
+  return gc;
 }
 
 //------------------------------------------------------------------------------
-void Blender::setCamera(osg::Camera* v) { mCamera = v; }
+void Blender::createUserView(osg::GraphicsContext* gc) {
+  mUserView = new zxd::BlenderView(gc, zxd::BlenderView::VT_USER);  // main view
+
+  osg::ref_ptr<osgViewer::StatsHandler> sh = new osgViewer::StatsHandler();
+  sh->setKeyEventTogglesOnScreenStats(osgGA::GUIEventAdapter::KEY_I);
+  // add stats handler and cam man to user view
+  mUserView->addEventHandler(sh);
+
+  osg::ref_ptr<zxd::OperationEventHandler> opHandler =
+    new zxd::OperationEventHandler();
+  opHandler->setView(mUserView);
+  mUserView->addEventHandler(opHandler);
+
+  osg::ref_ptr<zxd::GridFloor> gf =
+    new zxd::GridFloor(osg::X_AXIS, osg::Y_AXIS);
+  gf->setScale(mGridScale);
+  gf->setLines(mGridLines);
+  gf->setSubDivisions(mGridSubdivisions);
+  gf->rebuild();
+  gf->setNodeMask(~sgBlender->getSelectMask());
+  mUserView->setGridFloor(gf);
+
+  osg::ref_ptr<zxd::BlenderManipulator> camMan = new zxd::BlenderManipulator();
+  camMan->setCamera(mUserView->getCamera());
+  camMan->setViewText(mUserView->getText());
+  camMan->setOrtho(false);
+  mUserView->setCameraManipulator(camMan);
+
+  mUserView->getRoot()->addChild(mRoot);
+}
 
 //------------------------------------------------------------------------------
-void BlendGuiEventhandler::clearRotation() {
+void Blender::createInfoView(osg::GraphicsContext* gc) {
+  mInfoView = new zxd::TextView(gc);  // operation information
+}
+
+//------------------------------------------------------------------------------
+zxd::BlenderView* Blender::createOrthoView(osg::GraphicsContext* gc) {
+  osg::ref_ptr<zxd::BlenderView> view =
+    new zxd::BlenderView(gc, zxd::BlenderView::VT_ORTHO);  // main view
+
+  osg::ref_ptr<zxd::OperationEventHandler> opHandler =
+    new zxd::OperationEventHandler();
+  opHandler->setView(view);
+  view->addEventHandler(opHandler);
+
+  osg::ref_ptr<zxd::BlenderManipulator> camMan = new zxd::BlenderManipulator();
+  camMan->setCamera(view->getCamera());
+  camMan->setViewText(view->getText());
+  view->setCameraManipulator(camMan);
+  camMan->setOrtho(true);
+
+  view->getRoot()->addChild(mRoot);
+
+  return view.release();
+}
+
+//------------------------------------------------------------------------------
+zxd::GridFloor* Blender::createOrthoGridFloor(
+  const osg::Vec3& v0, const osg::Vec3& v1, osg::Camera* camera) {
+  double left, right, bottom, top, near, far;
+
+  if (!camera->getProjectionMatrixAsOrtho(left, right, bottom, top, near, far))
+    OSG_FATAL << "failed to get ortho from camera " << camera << std::endl;
+
+  double width = right - left;
+  double height = top - bottom;
+  double l = std::max(width, height);
+
+  osg::ref_ptr<zxd::GridFloor> gridfloor = new zxd::GridFloor(v0, v1);
+  gridfloor->setScale(mGridScale);
+  gridfloor->setSubDivisions(mGridSubdivisions);
+  gridfloor->setLines(std::ceil(l / mGridScale));
+  gridfloor->rebuild();
+
+  gridfloor->setNodeMask(~getSelectMask());
+
+  return gridfloor.release();
+}
+
+//------------------------------------------------------------------------------
+inline BlenderObject* OperationEventHandler::getCurObject() {
+  return sgBlender->getCurObject();
+}
+
+//------------------------------------------------------------------------------
+inline ObjectOperation* OperationEventHandler::getCurOperation() {
+  return sgBlender->getCurOperation();
+}
+
+//------------------------------------------------------------------------------
+void OperationEventHandler::setView(zxd::BlenderView* v) {
+  mView = v;
+  setCamera(mView->getCamera());
+}
+
+//------------------------------------------------------------------------------
+void OperationEventHandler::clearRotation() {
   // clear orientation
   osg::Vec3 translation;
   osg::Quat rotation;
@@ -125,14 +337,14 @@ void BlendGuiEventhandler::clearRotation() {
 }
 
 //------------------------------------------------------------------------------
-void BlendGuiEventhandler::clearTranslation() {
+void OperationEventHandler::clearTranslation() {
   // clear translation
   const osg::Matrix& m = getCurObject()->getMatrix();
   getCurObject()->postMult(osg::Matrix::translate(-m.getTrans()));
 }
 
 //------------------------------------------------------------------------------
-void BlendGuiEventhandler::clearScale() {
+void OperationEventHandler::clearScale() {
   osg::Vec3 translation;
   osg::Quat rotation;
   osg::Vec3 scale;
@@ -143,16 +355,16 @@ void BlendGuiEventhandler::clearScale() {
 }
 
 //------------------------------------------------------------------------------
-void BlendGuiEventhandler::selectObject(const osgGA::GUIEventAdapter& ea) {
+void OperationEventHandler::selectObject(const osgGA::GUIEventAdapter& ea) {
   // select current object
   osgUtil::IntersectionVisitor iv;
   osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
     new osgUtil::LineSegmentIntersector(
       osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
   iv.setIntersector(lsi);
-  iv.setTraversalMask(mBlender->getSelectMask());
+  iv.setTraversalMask(sgBlender->getSelectMask());
 
-  mBlender->getCamera()->accept(iv);
+  mCamera->accept(iv);
 
   if (lsi->containsIntersections()) {
     const osgUtil::LineSegmentIntersector::Intersection& result =
@@ -167,7 +379,7 @@ void BlendGuiEventhandler::selectObject(const osgGA::GUIEventAdapter& ea) {
         if (curObj && curObj != node) curObj->deselect();
         curObj = static_cast<zxd::BlenderObject*>(node);
         curObj->select();
-        mBlender->setCurObject(curObj);
+        sgBlender->setCurObject(curObj);
         break;
       }
     }
@@ -179,15 +391,14 @@ void BlendGuiEventhandler::selectObject(const osgGA::GUIEventAdapter& ea) {
 }
 
 //------------------------------------------------------------------------------
-void BlendGuiEventhandler::placeCursor(const osgGA::GUIEventAdapter& ea) {
+void OperationEventHandler::placeCursor(const osgGA::GUIEventAdapter& ea) {
   osg::ref_ptr<osgUtil::LineSegmentIntersector> lsi =
     new osgUtil::LineSegmentIntersector(
       osgUtil::Intersector::WINDOW, ea.getX(), ea.getY());
   osgUtil::IntersectionVisitor iv(lsi);
-  iv.setTraversalMask(mBlender->getSelectMask());
-  mBlender->getCamera()->accept(iv);
-  osg::ref_ptr<zxd::Cursor> cursor = mBlender->getCursor();
-  osg::Camera* camera = mBlender->getCamera();
+  iv.setTraversalMask(sgBlender->getSelectMask());
+  mCamera->accept(iv);
+  osg::ref_ptr<zxd::Cursor> cursor = sgBlender->getCursor();
 
   if (lsi->containsIntersections()) {
     const osgUtil::LineSegmentIntersector::Intersection& intersection =
@@ -198,15 +409,15 @@ void BlendGuiEventhandler::placeCursor(const osgGA::GUIEventAdapter& ea) {
                     osg::computeLocalToWorld(intersection.nodePath);
     cursor->setMatrix(osg::Matrix::translate(pos));
   } else {
-    const osg::Matrix& matView = camera->getViewMatrix();
+    const osg::Matrix& matView = mCamera->getViewMatrix();
     // get original cursor position in view space
     osg::Vec3 origPos = cursor->getMatrix().getTrans() * matView;
 
     // get camera ray intersection with near plane
     osg::Matrix matrix;
-    if (camera->getViewport())
-      matrix.preMult(camera->getViewport()->computeWindowMatrix());
-    matrix.preMult(camera->getProjectionMatrix());
+    if (mCamera->getViewport())
+      matrix.preMult(mCamera->getViewport()->computeWindowMatrix());
+    matrix.preMult(mCamera->getProjectionMatrix());
     matrix.invert(matrix);
 
     // point on near plane in view space
@@ -223,7 +434,7 @@ void BlendGuiEventhandler::placeCursor(const osgGA::GUIEventAdapter& ea) {
 }
 
 //------------------------------------------------------------------------------
-bool BlendGuiEventhandler::handle(
+bool OperationEventHandler::handle(
   const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) {
   switch (ea.getEventType()) {
     case osgGA::GUIEventAdapter::KEYDOWN:
@@ -272,12 +483,23 @@ bool BlendGuiEventhandler::handle(
           break;
         case osgGA::GUIEventAdapter::KEY_Comma:
           // disallow pivot cange during operation
-          if (mBlender->getCurOperation()) break;
-          mBlender->getPivot()->setType(zxd::Pivot::PT_ACTIVEELEMENT);
+          if (sgBlender->getCurOperation()) break;
+          sgBlender->getPivot()->setType(zxd::Pivot::PT_ACTIVEELEMENT);
           break;
         case osgGA::GUIEventAdapter::KEY_Period:
-          if (mBlender->getCurOperation()) break;
-          mBlender->getPivot()->setType(zxd::Pivot::PT_3DCURSOR);
+          if (sgBlender->getCurOperation()) break;
+          sgBlender->getPivot()->setType(zxd::Pivot::PT_3DCURSOR);
+          break;
+
+        case osgGA::GUIEventAdapter::KEY_Q:
+
+          if (sgBlender->getCurOperation()) break;
+
+          if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL &&
+              ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_ALT) {
+            sgBlender->toggleQuadView();
+          }
+
           break;
 
         default:
@@ -298,9 +520,9 @@ bool BlendGuiEventhandler::handle(
           getCurOperation()->cancel();
           OSG_NOTICE << "cancel operation" << std::endl;
         }
-        mBlender->getMainView()->removeEventHandler(getCurOperation());
+        mView->removeEventHandler(getCurOperation());
         // clear operation
-        mBlender->clearOperation();
+        sgBlender->clearOperation();
 
       } else {
         // select object
@@ -317,7 +539,7 @@ bool BlendGuiEventhandler::handle(
 }
 
 //------------------------------------------------------------------------------
-void BlendGuiEventhandler::createNewOperation(
+void OperationEventHandler::createNewOperation(
   const osgGA::GUIEventAdapter& ea, ObjectOperation* op) {
   OSG_NOTICE << "create new operation " << std::endl;
   ObjectOperation* curOp = getCurOperation();
@@ -336,23 +558,19 @@ void BlendGuiEventhandler::createNewOperation(
   } else {
     op->setAxisConstrainer(new zxd::AxisConstrainer());
   }
-  op->setTarget(getCurObject());
-  op->setInfoText(mBlender->getOpText());
-  op->setBlender(mBlender);
 
-  op->init(osg::Vec2(ea.getX(), ea.getY()));
+  op->init(mView, osg::Vec2(ea.getX(), ea.getY()));
 
+  // add axis constrainer to scene
   zxd::AxisConstrainer* ac = op->getAxisConstrainer();
-  ac->setNodeMask(-1 & ~mBlender->getSelectMask());
-  mBlender->addChild(ac);
-  mBlender->setCurOperation(op);
+  ac->setNodeMask(-1 & ~sgBlender->getSelectMask());
+  sgBlender->getRoot()->addChild(ac);
+  sgBlender->setCurOperation(op);
   OSG_NOTICE << "add constrainer to scene" << std::endl;
   osg::Node* handle = op->getHandle();
   if (handle) {
-    handle->setNodeMask(-1 & ~mBlender->getSelectMask());
-    mBlender->getHudCamera()->addChild(handle);
+    handle->setNodeMask(-1 & ~sgBlender->getSelectMask());
+    mView->getHudCamera()->addChild(handle);
   }
-
-  mBlender->getMainView()->addEventHandler(op);
 }
 }

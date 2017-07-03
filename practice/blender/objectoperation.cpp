@@ -2,13 +2,21 @@
 #include "blender.h"
 #include "pivot.h"
 #include "zmath.h"
+#include "prerequisite.h"
 
 namespace zxd {
 
 //------------------------------------------------------------------------------
-void ObjectOperation::init(osg::Vec2 v) {
-  if (!mBlender)
-    throw std::runtime_error("0 blender object in current operation");
+void ObjectOperation::init(osgViewer::View* view, osg::Vec2 v) {
+  setBlenderView(view);
+  setCamera(mBlenderView->getCamera());
+  mBlenderView->addEventHandler(this);
+
+  mOrtho = zxd::Math::isOrthoProj(mCamera->getProjectionMatrix());
+
+  setPivot(sgBlender->getPivot());
+  setTarget(sgBlender->getCurObject());
+  setInfoText(sgBlender->getInfoView()->getOpText());
 
   mModel = mTarget->getMatrix();
   mInvModel.invert(mModel);
@@ -102,13 +110,6 @@ void ObjectOperation::update(bool shiftDown) {
 }
 
 //------------------------------------------------------------------------------
-void ObjectOperation::setBlender(Blender* v) {
-  mBlender = v;
-  mCamera = mBlender->getCamera();
-  setPivot(mBlender->getPivot());
-}
-
-//------------------------------------------------------------------------------
 void ObjectOperation::setTarget(osg::ref_ptr<zxd::BlenderObject> v) {
   mTarget = v;
 }
@@ -167,7 +168,8 @@ bool ObjectOperation::handle(
 void ObjectOperation::retransfromAxisConstrainer() {
   // rotate and translate to pivot point
   if (mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL)
-    mAc->setMatrix(zxd::Math::getMatR(mModel) * osg::Matrix::translate(mWorldPivot));
+    mAc->setMatrix(
+      zxd::Math::getMatR(mModel) * osg::Matrix::translate(mWorldPivot));
   else
     mAc->setMatrix(osg::Matrix::translate(mWorldPivot));
 }
@@ -183,7 +185,7 @@ void ObjectOperation::clean() {
     zxd::removeNodeParents(handle);
     OSG_NOTICE << "clear handle" << std::endl;
   }
-  mBlender->getMainView()->removeEventHandler(this);
+  mBlenderView->removeEventHandler(this);
 }
 
 //------------------------------------------------------------------------------
@@ -209,6 +211,26 @@ osg::Plane GrabOperation::getConstrainPlane() {
     return osg::Plane(v, 0);
   } else {
     return osg::Plane(v, mWorldStartObject);
+  }
+}
+
+//------------------------------------------------------------------------------
+void GrabOperation::getConstrainPlaneAxes(osg::Vec3& v0, osg::Vec3& v1) {
+  switch (mAc->getType()) {
+    case zxd::AxisConstrainer::CT_XY:
+      v0 = osg::X_AXIS;
+      v1 = osg::Y_AXIS;
+      break;
+    case zxd::AxisConstrainer::CT_YZ:
+      v0 = osg::Y_AXIS;
+      v1 = osg::Z_AXIS;
+      break;
+    case zxd::AxisConstrainer::CT_ZX:
+      v0 = osg::Z_AXIS;
+      v1 = osg::X_AXIS;
+      break;
+    default:
+      throw std::runtime_error("unknown constrain type");
   }
 }
 
@@ -241,7 +263,14 @@ void GrabOperation::computeOffset(bool shiftDown) {
       osg::Vec2 wndEndPos = getWndEndPos();
       osg::Vec3 npEndPos =
         osg::Vec3(wndEndPos.x(), wndEndPos.y(), 0) * mInvProjWnd;
-      osg::Vec3 viewEndPos = npEndPos * (mViewStartObject.z() / -mNear);
+
+      osg::Vec3 viewEndPos = npEndPos;
+
+      if (getOrtho())
+        viewEndPos.z() = mViewStartObject.z();
+      else
+        viewEndPos *= (mViewStartObject.z() / -mNear);
+
       endPos = viewEndPos * mInvView;
     } break;
 
@@ -249,50 +278,41 @@ void GrabOperation::computeOffset(bool shiftDown) {
     case zxd::AxisConstrainer::CT_Y:
     case zxd::AxisConstrainer::CT_Z: {
       // get camera ray in world or local frame, skew with constrained axis
-      osg::Vec2 wndEndPos = getWndEndPos();
-      osg::Vec3 rayStart = getRayStart();
-      osg::Vec3 rayEnd = getRayEnd(wndEndPos);
-      osg::Vec3 objStart = getObjectStart();
-
-      osg::Vec3 dir = rayEnd - rayStart;
-      dir.normalize();
-
+      osg::Vec3 rayStart, dir;
+      getCameraRay(rayStart, dir);
       // get target world and wnd axis
       osg::Vec3 constrainAxis = getConstrainAxis();
 
-      zxd::LineRelPair res =
-        zxd::Math::getLineRelation(rayStart, dir, objStart, constrainAxis);
-
-      // if camera ray and constrain axis parallel to each other, just clear
-      // translation
-      if (res.first)
-        endPos = res.second.second;
-      else
-        endPos = mTarget->getMatrix().getTrans();
+      endPos = cameraRayTestSingleAxis(rayStart, dir, constrainAxis);
     } break;
 
     case zxd::AxisConstrainer::CT_YZ:
     case zxd::AxisConstrainer::CT_ZX:
     case zxd::AxisConstrainer::CT_XY: {
       // get camra ray in world or local frame, interset with constrained
-      osg::Vec2 wndEndPos = getWndEndPos();
-      osg::Vec3 rayStart = getRayStart();
-      osg::Vec3 rayEnd = getRayEnd(wndEndPos);
-
-      osg::Vec3 dir = rayEnd - rayStart;
-      dir.normalize();
+      osg::Vec3 rayStart, dir;
+      getCameraRay(rayStart, dir);
 
       osg::Plane constrainPlane = getConstrainPlane();
       // find intersection between ray and constrain plane
-      zxd::LinePlaneRelPair res = zxd::Math::getLinePlaneRelation(
-        mCameraPos, dir, constrainPlane.asVec4());
+      zxd::RayPlaneRel res =
+        zxd::Math::getLinePlaneRelation(rayStart, dir, constrainPlane.asVec4());
 
-      // if camera ray and constrain plane parallel to each other, clear
-      // translation
-      if (res.first)
-        endPos = res.second;
-      else
-        endPos = mTarget->getMatrix().getTrans();
+      if (res.type && res.t > 0.0001f)
+        endPos = res.ip;
+      else {
+        // no intersection found, this happens when constrain plane parallel to
+        // camera ray. Use the axis that has bigger angle with camera ray ,and
+        // find
+        // the skew point. eg: X, top ortho view
+        osg::Vec3 axis0, axis1, *axis;
+        getConstrainPlaneAxes(axis0, axis1);
+        axis =
+          zxd::Math::angleLine(axis0, dir) > zxd::Math::angleLine(axis1, dir)
+            ? &axis0
+            : &axis1;
+        endPos = cameraRayTestSingleAxis(rayStart, dir, *axis);
+      }
 
     } break;
     default:
@@ -302,6 +322,29 @@ void GrabOperation::computeOffset(bool shiftDown) {
   mOffset = endPos - getObjectStart();
   if (shiftDown) {
     mOffset = mOffsetShift + (mOffset - mOffsetShift) * 0.1f;
+  }
+}
+
+//------------------------------------------------------------------------------
+osg::Vec3 GrabOperation::cameraRayTestSingleAxis(
+  const osg::Vec3& rayStart, const osg::Vec3& dir, const osg::Vec3& axis) {
+  osg::Vec3 objStart = getObjectStart();
+
+  zxd::RayRel res =
+    zxd::Math::getLineRelation(rayStart, dir, objStart, axis);
+
+  if (res.type && res.t0 > 0.0001f)
+    return res.sk1;
+  else {
+    // endPos = mTarget->getMatrix().getTrans();
+
+    // if camera ray and constrain axis parallel to each other or they intersect
+    // at near rayStart(only happen for persp camPos for persp) simply use
+    // vertical offset to decide translation. eg: z top view in both persp
+    // and ortho
+
+    float dy = mCurrentCursor[1] - mStartCursor[1];
+    return objStart + axis * dy;
   }
 }
 
@@ -719,7 +762,7 @@ void RotateOperation::doUpdateTrackball(bool shiftDown) {
   osg::Matrix matYaw = osg::Matrix::rotate(mYaw, osg::Y_AXIS);
   osg::Matrix matPitch = osg::Matrix::rotate(mPitch, osg::X_AXIS);
 
-  //pitch is applied after yaw, which means it's always "looks right"
+  // pitch is applied after yaw, which means it's always "looks right"
   mTarget->setMatrix(
     mModelRS * mViewRS * matYaw * matPitch * mInvViewRS * mModelT);
 }

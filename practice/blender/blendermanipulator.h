@@ -5,6 +5,7 @@
 #include <osgGA/OrbitManipulator>
 #include <osgAnimation/EaseMotion>
 #include <osgText/Text>
+#include "blenderview.h"
 
 namespace zxd {
 
@@ -20,26 +21,21 @@ class Blender;
 
 class BlenderManipulator : public osgGA::OrbitManipulator {
 protected:
+  bool mOrtho; //only 9 works in ortho view
   osg::Vec2 mStartCursor;
   osg::Quat mStartRotation;
   float mYaw, mPitch;
   float mRotateStep;  // yaw, pitch step of numpad
   float mPanStep;     // yaw, pitch step of numpad
-  Blender* mBlender;
   osg::ref_ptr<osgText::Text> mViewText;
 
   // becareful fovy not in radian
-  double mPerspFovy; 
+  double mPerspFovy;
+
+  osg::Camera* mCamera;
 
 public:
-  BlenderManipulator()
-      : mYaw(0.0f),
-        mPitch(0.0f),
-        mRotateStep(osg::PI_2 / 6.0f),
-        mPanStep(0.06f) {
-    setAnimationTime(0.2f);
-    setAllowThrow(false);
-  }
+  BlenderManipulator();
   virtual bool handleKeyDown(
     const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& us);
 
@@ -90,21 +86,29 @@ public:
   // toggle left right, back front, bottom top
   void viewInverse(const osgGA::GUIEventAdapter& ea);
 
-  void animRotView(float destPitch, float destYaw, float time) ;
+  void animRotView(float destPitch, float destYaw, float time);
 
-  void animPanZoom(
-    float destDistance, const osg::Vec3& destCenter, float time) ;
+  void animPanZoom(float destDistance, const osg::Vec3& destCenter, float time);
 
   void yaw(GLfloat v);
   void pitch(GLfloat v);
 
   void toggleProjectionType();
 
-  Blender* getBlender() const { return mBlender; }
-  void setBlender(Blender* v);
-
   osg::ref_ptr<osgText::Text> getViewText() const { return mViewText; }
   void setViewText(osg::ref_ptr<osgText::Text> v) { mViewText = v; }
+
+  osg::Camera* getCamera() const { return mCamera; }
+  void setCamera(osg::Camera* v) { mCamera = v; }
+
+  bool getOrtho() const { return mOrtho; }
+  void setOrtho( bool v){mOrtho = v;}
+
+  bool isOrthoType();
+
+  float getDistance(){return _distance;}
+
+  void setRotation(GLfloat pitch, float yaw);
 
 protected:
   class BlenderAnimationData
@@ -133,7 +137,7 @@ protected:
   }
 
   // clamp yaw pitch to 0-2pi
-  void clampAngle() ;
+  void clampAngle();
 
   // virtual void rotateWithFixedVertical( const float dx, const float dy );
 };

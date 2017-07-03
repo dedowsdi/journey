@@ -57,6 +57,23 @@ public:
               center - lookDir * _distance, center, up);
           }
           break;
+
+        case osgGA::GUIEventAdapter::KEYDOWN:
+          {
+            switch (ea.getUnmodifiedKey()) {
+              /*
+               * only one view will trigger this event. The one that owns the
+               * cursor.
+               */
+              case osgGA::GUIEventAdapter::KEY_E:
+                OSG_NOTICE << "test notice" << std::endl;
+                break;
+              default:
+                break;
+            }
+          }
+
+          break;
         default:
           break;
       }

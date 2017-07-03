@@ -12,25 +12,26 @@ namespace zxd {
 typedef std::pair<int, std::pair<osg::Vec3, osg::Vec3>> LineRelPair;
 typedef std::pair<int, osg::Vec3> LinePlaneRelPair;
 
+struct RayRel {
+  int type;  // 0 parallel, 1 intersect, 2 skew
+  float t0;  // v0 + dir0 * t0 = sk0
+  float t1;  // v1 + dir1 * t1 = sk1
+  osg::Vec3 sk0;
+  osg::Vec3 sk1;
+};
+
+struct RayPlaneRel {
+  int type;  // 0 parallel, 1 intersect
+  float t;  // v + dir * t = ip
+  osg::Vec3 ip;
+};
+
 class Math {
 public:
-  /**
-   * get relation of two lines
-   * return:
-   *   <0, <(0,0,0),(0,0,0)>> if parallel
-   *   <1, (ip0,ip1)> if intersect
-   *   <2, (sp0,sp1)> if skew
-   */
-  static LineRelPair getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
+  static RayRel getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
     const osg::Vec3& p1, const osg::Vec3& d1);
 
-  /**
-   * get relation of line and plane
-   * @return :
-   *   <0, (0,0,0)> if parallel
-   *   <1, ip> if intersect
-   */
-  static LinePlaneRelPair getLinePlaneRelation(
+  static RayPlaneRel getLinePlaneRelation(
     const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane);
 
   // return matrix without translation
@@ -83,6 +84,12 @@ public:
 
   static inline float angle(const osg::Vec3& v0, const osg::Vec3& v1) {
     return acos(v0 * v1 / (v0.length() * v1.length()));
+  }
+
+  // [0,pi/2]
+  static inline float angleLine(const osg::Vec3& v0, const osg::Vec3& v1) {
+    float vecAngle = angle(v0, v1);
+    return vecAngle > osg::PI_2 ? osg::PI - vecAngle : vecAngle;
   }
 
   // get angle which denote rotate alone rotAxis from  v0 to v1,
@@ -157,6 +164,11 @@ public:
   static inline bool isAboutd(
     const double& t0, const double& t1, double epsilon = 0.0001f) {
     return std::abs(t0 - t1) <= epsilon;
+  }
+  static inline bool isAboutf(
+    const osg::Vec3& t0, const osg::Vec3& t1, float epsilon = 0.0001f) {
+    return isAboutf(t0[0], t0[1], epsilon) && isAboutf(t0[0], t0[1], epsilon) &&
+           isAboutf(t0[0], t0[1], epsilon);
   }
 
   // wrap v between 2pi - positiveLimit and positiveLimit
@@ -247,6 +259,11 @@ public:
     om.makeFrustum(perspLeft, perspRight, perspBottom, perspTop, near, far);
 
     return true;
+  }
+
+  static inline bool isOrthoProj(const osg::Matrix& m) {
+    double left, right, bottom, top, near, far;
+    return m.getOrtho(left, right, bottom, top, near, far);
   }
 };
 }

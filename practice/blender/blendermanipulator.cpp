@@ -4,8 +4,32 @@
 #include "blenderobject.h"
 #include "blender.h"
 #include <osg/ComputeBoundsVisitor>
+#include "prerequisite.h"
 
 namespace zxd {
+
+//------------------------------------------------------------------------------
+BlenderManipulator::BlenderManipulator()
+    : mYaw(0.0f),
+      mPitch(0.0f),
+      mRotateStep(osg::PI_2 / 6.0f),
+      mPanStep(0.06f),
+      mCamera(0),
+      mOrtho(false) {
+  setAnimationTime(0.2f);
+  setAllowThrow(false);
+
+  // osg::Camera* camera = mBlender->getCamera();
+
+  osg::DisplaySettings* ds = osg::DisplaySettings::instance();
+  double height = ds->getScreenHeight();
+  // double width = ds->getScreenWidth();
+  double distance = ds->getScreenDistance();  // what's this
+  double vfov = osg::RadiansToDegrees(atan2(height / 2.0f, distance) * 2.0);
+
+  // need this transfrom from ortho to persp
+  mPerspFovy = vfov;
+}
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::BlenderAnimationData::init(
@@ -85,7 +109,7 @@ bool BlenderManipulator::handleKeyDown(
 
     case osgGA::GUIEventAdapter::KEY_KP_Delete: {
       // zoom to selection
-      zxd::BlenderObject* bo = mBlender->getCurObject();
+      zxd::BlenderObject* bo = sgBlender->getCurObject();
       if (bo) {
         // osg::ComputeBoundsVisitor cbVisitor;
         // bo->accept(cbVisitor);
@@ -96,7 +120,7 @@ bool BlenderManipulator::handleKeyDown(
         const osg::BoundingSphere& bs = bo->getBound();
 
         float fovy, aspectRatio, zNear, zFar;
-        mBlender->getCamera()->getProjectionMatrix().getPerspective(
+        mCamera->getProjectionMatrix().getPerspective(
           fovy, aspectRatio, zNear, zFar);
 
         float destDistance =
@@ -118,6 +142,10 @@ bool BlenderManipulator::handleKeyDown(
 //------------------------------------------------------------------------------
 bool BlenderManipulator::performMovementMiddleMouseButton(
   const double eventTimeDelta, const double dx, const double dy) {
+
+  if(getOrtho())
+    return true;
+
   // check shift status
   if (_ga_t0->getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT) {
     // pan model
@@ -205,13 +233,14 @@ void BlenderManipulator::updateRotation() {
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::updateText() {
-  // update text
+  if (!mCamera) return;
 
+  // update text
   std::string projType, rotType("User");
 
   double left, right, top, bottom, near, far;
-  bool isPerspective = mBlender->getCamera()->getProjectionMatrixAsFrustum(
-    left, right, top, bottom, near, far);
+  bool isPerspective =
+    mCamera->getProjectionMatrixAsFrustum(left, right, top, bottom, near, far);
   projType = isPerspective ? "Persp" : "Ortho";
 
   if (zxd::Math::isAboutf(mPitch, osg::PI_2)) {
@@ -255,12 +284,29 @@ void BlenderManipulator::viewInverse(const osgGA::GUIEventAdapter& ea) {
     destYaw = curDestYaw + osg::PI;
   }
 
-  animRotView(destPitch, destYaw, ea.getTime());
+  // clamp angle, avoid circle rotation
+  destPitch = zxd::Math::clampAngle(destPitch);
+  destYaw = zxd::Math::clampAngle(destYaw);
+
+  if (getOrtho()) {
+    // no animation
+    setRotation(destPitch, destYaw);
+
+  } else {
+    OSG_INFO << "start animation. destPitch : " << destPitch
+             << ", destYaw : " << destYaw << std::endl;
+    ad->init(this);
+    ad->mDestPitch = destPitch;
+    ad->mDestYaw = destYaw;
+    ad->start(ea.getTime());
+  }
 }
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::animRotView(
   float destPitch, float destYaw, float time) {
+  if (getOrtho()) return;
+
   // clamp angle, avoid circle rotation
   destPitch = zxd::Math::clampAngle(destPitch);
   destYaw = zxd::Math::clampAngle(destYaw);
@@ -276,6 +322,8 @@ void BlenderManipulator::animRotView(
 //------------------------------------------------------------------------------
 inline void BlenderManipulator::animPanZoom(
   float destDistance, const osg::Vec3& destCenter, float time) {
+  if (getOrtho()) return;
+
   auto ad = getBlenderAnimData();
   ad->init(this);
   ad->mDestDistance = destDistance;
@@ -285,6 +333,8 @@ inline void BlenderManipulator::animPanZoom(
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::yaw(GLfloat v) {
+  if (getOrtho()) return;
+
   mYaw += v;
   clampAngle();
   updateRotation();
@@ -292,6 +342,8 @@ void BlenderManipulator::yaw(GLfloat v) {
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::pitch(GLfloat v) {
+  if (getOrtho()) return;
+
   mPitch += v;
   clampAngle();
   updateRotation();
@@ -300,31 +352,21 @@ void BlenderManipulator::pitch(GLfloat v) {
 //------------------------------------------------------------------------------
 void BlenderManipulator::toggleProjectionType() {
   // becareful fovy not in radian
-  osg::Camera* camera = mBlender->getCamera();
 
-  const osg::Matrix& proj = camera->getProjectionMatrix();
+  const osg::Matrix& proj = mCamera->getProjectionMatrix();
   osg::Matrix nextProj;
   if (zxd::Math::perspToOrtho(proj, _distance, nextProj) ||
       zxd::Math::orthoToPersp(proj, mPerspFovy, nextProj))
-    camera->setProjectionMatrix(nextProj);
+    mCamera->setProjectionMatrix(nextProj);
 
   updateText();
 }
 
 //------------------------------------------------------------------------------
-void BlenderManipulator::setBlender(Blender* v) {
-  mBlender = v;
-  setViewText(mBlender->getViewText());
-
-  // osg::Camera* camera = mBlender->getCamera();
-
-  osg::DisplaySettings* ds = osg::DisplaySettings::instance();
-  double height = ds->getScreenHeight();
-  // double width = ds->getScreenWidth();
-  double distance = ds->getScreenDistance();  // what's this
-  double vfov = osg::RadiansToDegrees(atan2(height / 2.0f, distance) * 2.0);
-
-  // need this transfrom from ortho to persp
-  mPerspFovy = vfov;
+void BlenderManipulator::setRotation(GLfloat pitch, float yaw) {
+  mPitch = pitch;
+  mYaw = yaw;
+  clampAngle();
+  updateRotation();
 }
 }

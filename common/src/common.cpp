@@ -76,8 +76,10 @@ osg::Camera* createHUDCamera(
   // clear depth only, make sure text render on current graph
   camera->setClearMask(GL_DEPTH_BUFFER_BIT);
   camera->setRenderOrder(osg::Camera::POST_RENDER);
-  //camera->setProjectionMatrix(osg::Matrix::ortho2D(left, right, bottom, top));
-  camera->setProjectionMatrix(osg::Matrix::ortho(left, right, bottom, top, -1, 1));
+  // camera->setProjectionMatrix(osg::Matrix::ortho2D(left, right, bottom,
+  // top));
+  camera->setProjectionMatrix(
+    osg::Matrix::ortho(left, right, bottom, top, -1, 1));
   camera->setViewMatrix(osg::Matrix::identity());
 
   return camera.release();
@@ -221,7 +223,6 @@ osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny) {
   return osg::Vec2(2 * nx - 1, 2 * ny - 1);
 }
 
-
 //------------------------------------------------------------------------------
 osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
   GLfloat len2 = np0.length2();
@@ -231,6 +232,16 @@ osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
   } else {
     return osg::Vec3(np0, std::sqrt(radius2 - len2));
   }
+}
+
+//------------------------------------------------------------------------------
+double getBestFovy() {
+  osg::DisplaySettings* ds = osg::DisplaySettings::instance();
+  double height = ds->getScreenHeight();
+  // double width = ds->getScreenWidth();
+  double distance = ds->getScreenDistance();  // what's this
+  double vfov = osg::RadiansToDegrees(atan2(height / 2.0f, distance) * 2.0);
+  return vfov;
 }
 
 //------------------------------------------------------------------------------

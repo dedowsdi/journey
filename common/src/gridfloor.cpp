@@ -6,13 +6,22 @@
 namespace zxd {
 
 //------------------------------------------------------------------------------
-GridFloor::GridFloor()
+GridFloor::GridFloor(const osg::Vec3& rowVector, const osg::Vec3& colVector)
     : mLines(16),
       mScale(1.0f),
       mSubdivisions(4),
       mAxesMask(0b110),
       mGridLineColor(0.35f, 0.35f, 0.35f, 1.0f),
-      mGridSubdivisionColor(0.45f, 0.45f, 0.45f, 1.0f) {
+      mGridSubdivisionColor(0.5f, 0.5f, 0.5f, 1.0f),
+      mRowVector(rowVector),
+      mColVector(colVector),
+      mRowAxisColor(osg::Vec4(rowVector, 1.0f)),
+      mColAxisColor(osg::Vec4(colVector, 1.0f)),
+      mShowRowAxis(true),
+      mShowColAxis(true),
+      mShowNormalAxis(false)
+
+{
   osg::StateSet* ss = getOrCreateStateSet();
   ss->setAttributeAndModes(new osg::PolygonMode(
     osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE));
@@ -22,20 +31,16 @@ GridFloor::GridFloor()
 
 //------------------------------------------------------------------------------
 void GridFloor::rebuild() {
-  // create axes
-  if (!mAxisX) {
-    mAxisX = createAxis(osg::X_AXIS, osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    mAxisY = createAxis(osg::Y_AXIS, osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-    mAxisZ = createAxis(osg::Z_AXIS, osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-    addDrawable(mAxisX);
-    addDrawable(mAxisY);
-    addDrawable(mAxisZ);
-  }
+  while (this->getNumDrawables() != 0) removeDrawable(0);
 
-  // reset axes visibility
-  mAxisX->setNodeMask(mAxesMask & 0b100 ? -1 : 0);
-  mAxisY->setNodeMask(mAxesMask & 0b010 ? -1 : 0);
-  mAxisZ->setNodeMask(mAxesMask & 0b001 ? -1 : 0);
+  // reset all geometry
+  mAxisRow = createAxis(mRowVector, mRowAxisColor);
+  mAxisCol = createAxis(mColVector, mColAxisColor);
+  mAxisNormal = createAxis(mNormalVector, mNormalAxisColor);
+
+  if (mShowRowAxis) addDrawable(mAxisRow);
+  if (mShowColAxis) addDrawable(mAxisCol);
+  if (mShowNormalAxis) addDrawable(mAxisNormal);
 
   rebuildGrid();
   rebuildSubdivisions();
@@ -43,8 +48,6 @@ void GridFloor::rebuild() {
 
 //------------------------------------------------------------------------------
 void GridFloor::rebuildGrid() {
-  if (mGrid) removeDrawable(mGrid);
-
   // build grid as quads
   mGrid = new osg::Geometry;
 
@@ -53,17 +56,20 @@ void GridFloor::rebuildGrid() {
   osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
   colors->push_back(mGridLineColor);
 
-  GLint numGirdTiles = mLines - mLines % 2;  // downcast to even
+  GLint numGirdTiles = getNumTiles();  // downcast to even
   GLint numGridLines = numGirdTiles + 1;
 
   GLfloat tileSize = mScale;
-  GLfloat left = -numGirdTiles * tileSize / 2;
-  GLfloat bottom = left;
+  osg::Vec3 stepRow = mColVector * tileSize;
+  osg::Vec3 stepCol = mRowVector * tileSize;
+
+  float halfSize = numGirdTiles * tileSize / 2.0f;
+  osg::Vec3 leftBottom = mRowVector * -halfSize + mColVector * -halfSize;
 
   for (int row = 0; row < numGridLines; ++row) {
-    GLfloat startY = bottom + row * tileSize;
+    osg::Vec3 startCol = leftBottom + stepRow * row;
     for (int col = 0; col < numGridLines; ++col) {
-      vertices->push_back(osg::Vec3(left + col * tileSize, startY, 0));
+      vertices->push_back(startCol + stepCol * col);
     }
   }
 
@@ -96,9 +102,6 @@ void GridFloor::rebuildGrid() {
 
 //------------------------------------------------------------------------------
 void GridFloor::rebuildSubdivisions() {
-  // build subdivisions as lines, ignore center lines if xy axes are visible.
-  if (mGridSubdivisions) removeDrawable(mGridSubdivisions);
-
   mGridSubdivisions = new osg::Geometry;
 
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
@@ -106,59 +109,66 @@ void GridFloor::rebuildSubdivisions() {
   osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
   colors->push_back(mGridSubdivisionColor);
 
-  GLint numGirdTiles = mLines - mLines % 2;  // downcast to even
-  GLint numGridLines = numGirdTiles + 1;
+  GLint numGirdTiles = getNumTiles();  // downcast to even
+  // GLint numGridLines = numGirdTiles + 1;
   GLint numSubTile = numGirdTiles / mSubdivisions;
+  numSubTile -= numSubTile % 2;  // must be even number
+  GLint numSubLines = numSubTile + 1;
+  GLint numHalfSubLines = numSubLines / 2;
+  GLint numHalfSubTile = numSubTile / 2;
 
   GLfloat tileSize = mScale;
   GLfloat subdivisionSize = mScale * mSubdivisions;
-  GLfloat left = -numGirdTiles * tileSize / 2;
-  GLfloat bottom = left;
 
-  GLint halfSubLines = numSubTile / 2 + 1;
+  osg::Vec3 stepRow = mColVector * subdivisionSize;
+  osg::Vec3 stepCol = mRowVector * subdivisionSize;
 
-  for (int i = 0; i < halfSubLines; ++i) {
-    // row
-    if (i != 0 || !(mAxesMask & 0b100)) {
-      for (int j = 0; j < numGridLines; ++j)
-        vertices->push_back(
-          osg::Vec3(left + j * tileSize, i * subdivisionSize, 0));
-    }
-    // flip
-    if (i != 0)
-      std::transform(vertices->end() - numGridLines, vertices->end(),
-        std::back_inserter(*vertices),
-        [&](decltype(*vertices->begin()) v) -> osg::Vec3 {
-          return osg::Vec3(v.x(), -v.y(), v.z());
-        });
+  float halfSize = numGirdTiles * tileSize / 2.0f;
+  // osg::Vec3 leftBottom = mRowVector * -halfSize + mColVector * -halfSize;
+  osg::Vec3 left = mRowVector * -halfSize;
+  osg::Vec3 bottom = mColVector * -halfSize;
+  osg::Vec3 width = -left * 2;
+  osg::Vec3 height = -bottom * 2;
 
-    // col
-    if (i != 0 || !(mAxesMask & 0b010)) {
-      for (int j = 0; j < numGridLines; ++j)
-        vertices->push_back(
-          osg::Vec3(i * subdivisionSize, bottom + j * tileSize, 0));
-    }
-    // flip
-    if (i != 0)
-      std::transform(vertices->end() - numGridLines, vertices->end(),
-        std::back_inserter(*vertices),
-        [&](decltype(*vertices->begin()) v) -> osg::Vec3 {
-          return osg::Vec3(-v.x(), v.y(), v.z());
-        });
-  }
+  osg::Vec3 rowBottom = stepRow * -numHalfSubTile;
+  osg::Vec3 colLeft = stepCol * -numHalfSubTile;
 
-  mGridSubdivisions->setVertexArray(vertices);
-  mGridSubdivisions->setColorArray(colors);
-  mGridSubdivisions->setColorBinding(osg::Geometry::BIND_OVERALL);
-
-  GLint numSubLines = vertices->size() / numGridLines;
-
+  osg::Vec3 v0, v1;
   for (int i = 0; i < numSubLines; ++i) {
-    mGridSubdivisions->addPrimitiveSet(
-      new osg::DrawArrays(GL_LINE_STRIP, numGridLines * i, numGridLines));
-  }
+    /*
+     * there is no way to avoid  z fight between lines. If axis exists,
+     * corresponding subline in the same position will not exist
+     */
 
-  addDrawable(mGridSubdivisions);
+    // row
+    if (i != numHalfSubLines || !mShowRowAxis) {
+      {
+        v0 = rowBottom + stepRow * i + left;
+        v1 = v0 + width;
+        vertices->push_back(v0);
+        vertices->push_back(v1);
+      }
+
+      if (i != numHalfSubLines || !mShowColAxis) {
+        // col
+        v0 = colLeft + stepCol * i + bottom;
+        v1 = v0 + height;
+        vertices->push_back(v0);
+        vertices->push_back(v1);
+      }
+    }
+
+    mGridSubdivisions->setVertexArray(vertices);
+    mGridSubdivisions->setColorArray(colors);
+    mGridSubdivisions->setColorBinding(osg::Geometry::BIND_OVERALL);
+
+    for (int i = 0; i < numSubLines; ++i) {
+      mGridSubdivisions->addPrimitiveSet(
+        new osg::DrawArrays(GL_LINES, 0, vertices->size()));
+    }
+
+    addDrawable(mGridSubdivisions);
+  }
 }
 
 //------------------------------------------------------------------------------

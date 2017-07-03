@@ -71,6 +71,8 @@ osg::Vec2 screenToNdc(GLfloat x, GLfloat y, GLfloat cx, GLfloat cy);
 osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny);
 osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius = 0.9f);
 
+double getBestFovy();
+
 osg::Geometry* createPolygonLine(const osg::Vec3& v, GLfloat size);
 
 class PickHandler : public osgGA::GUIEventHandler {
@@ -80,6 +82,7 @@ public:
   virtual void doUserOperations(
     osgUtil::LineSegmentIntersector::Intersection& result) = 0;
 };
+
 
 const osg::Vec3f ORIGIN(0.0f, 0.0f, 0.0f);
 }

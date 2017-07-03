@@ -4,44 +4,54 @@
 namespace zxd {
 
 //------------------------------------------------------------------------------
-LineRelPair Math::getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
+RayRel Math::getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
   const osg::Vec3& p1, const osg::Vec3& d1) {
   static float epsilon = 0.0005f;
 
   osg::Vec3 v01 = p1 - p0;
   osg::Vec3 c01 = d0 ^ d1;
 
+  RayRel rr;
+
   // check parallel
-  if (c01.length2() < epsilon)
-    return std::make_pair(0, std::make_pair(osg::Vec3(), osg::Vec3()));
+  if (c01.length2() < epsilon) {
+    rr.type = 0;
+    return rr;
+  }
 
   float rpl2 = 1 / c01.length2();
 
-  float t0 = ((v01 ^ d1) * c01) * rpl2;
-  float t1 = ((v01 ^ d0) * c01) * rpl2;
+  rr.t0 = ((v01 ^ d1) * c01) * rpl2;
+  rr.t1 = ((v01 ^ d0) * c01) * rpl2;
 
-  osg::Vec3 ip0 = p0 + d0 * t0;
-  osg::Vec3 ip1 = p1 + d1 * t1;
+  rr.sk0 = p0 + d0 * rr.t0;
+  rr.sk1 = p1 + d1 * rr.t1;
 
   // check skew or intersectiosg::Node
-  int result = (ip0 - ip1).length2() > epsilon ? 2 : 1;
+  rr.type = (rr.sk0 - rr.sk1).length2() > epsilon ? 2 : 1;
 
-  return std::make_pair(result, std::make_pair(ip0, ip1));
+  return rr;
 }
 
 //------------------------------------------------------------------------------
-LinePlaneRelPair Math::getLinePlaneRelation(
+RayPlaneRel Math::getLinePlaneRelation(
   const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane) {
+  RayPlaneRel rpr;
   static float epsilon = 0.0005f;
 
   osg::Vec3 n(plane.x(), plane.y(), plane.z());
   float d = plane.w();
 
   float dotDN = d0 * n;
-  if (std::abs(dotDN) < epsilon) return std::make_pair(0, osg::Vec3());
+  if (std::abs(dotDN) < epsilon) {
+    rpr.type = 0;
+    return rpr;
+  }
 
-  float t = (-d - p0 * n) / dotDN;
-  return std::make_pair(1, osg::Vec3(p0 + d0 * t));
+  rpr.type = 1;
+  rpr.t = (-d - p0 * n) / dotDN;
+  rpr.ip = p0 + d0 * rpr.t;
+  return rpr;
 }
 
 //------------------------------------------------------------------------------
@@ -49,9 +59,9 @@ inline osg::Matrix Math::orthogonalizBiased(
   const osg::Matrix& m, uint startIndex /*= 0*/) {
   int i = startIndex;
   osg::Vec3 e0(m(i, 0), m(i, 1), m(i, 2));
-  i = (startIndex+1) % 3;
+  i = (startIndex + 1) % 3;
   osg::Vec3 e1(m(i, 0), m(i, 1), m(i, 2));
-  i = (startIndex+2) % 3;
+  i = (startIndex + 2) % 3;
   osg::Vec3 e2(m(i, 0), m(i, 1), m(i, 2));
 
   float l2e0 = e0.length2();
