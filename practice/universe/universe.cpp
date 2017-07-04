@@ -14,6 +14,7 @@
 #include <osgParticle/LinearInterpolator>
 #include "common.h"
 #include <osg/io_utils>
+#include "zmath.h"
 
 namespace zxd {
 
@@ -40,7 +41,7 @@ class UniverseCullCallback : public osg::Drawable::CullCallback {
             z.x(), z.y(), z.z(), 0,
             0, 0, 0, 1
             );
-        osg::Vec3 xyz = zxd::getEulerXYZ(m);
+        osg::Vec3 xyz = zxd::Math::getEulerXYZ(m);
         const_cast<osgParticle::Particle*>(particle)->setAngle(osg::Vec3(xyz.z(), xyz.y(), xyz.x()));
       }
 
@@ -62,9 +63,9 @@ public:
     const osgParticle::Particle* ptemplate) {
     osgParticle::Particle* particle =
       osgParticle::ParticleSystem::createParticle(ptemplate);
-    osg::Vec4 v0 = zxd::randomVector4(0.0f, 1.0f);
+    osg::Vec4 v0 = zxd::Math::randomVector4(0.0f, 1.0f);
     v0.w() = 1.0f;
-    osg::Vec4 v1 = zxd::randomVector4(0.0f, 1.0f);
+    osg::Vec4 v1 = zxd::Math::randomVector4(0.0f, 1.0f);
     v1.w() = 1.0f;
     particle->setColorRange(osgParticle::rangev4(v0, v1));
     return particle;

@@ -25,7 +25,6 @@ Blender::Blender()
 
 //------------------------------------------------------------------------------
 void Blender::init(osgViewer::CompositeViewer* viewer, osg::Node* node) {
-
   setViewer(viewer);
   mFont = osgText::readFontFile("fonts/arial.ttf");
 
@@ -54,7 +53,6 @@ void Blender::init(osgViewer::CompositeViewer* viewer, osg::Node* node) {
 
 //------------------------------------------------------------------------------
 void Blender::createViews() {
-
   osg::GraphicsContext* gc = createGraphicsContext();
   createUserView(gc);
   createInfoView(gc);
@@ -74,17 +72,17 @@ void Blender::createViews() {
 
   // add only user view  and info view by default
   mViewer->addView(mUserView);
-  mViewer->addView(mInfoView);
   mViewer->addView(mFrontView);
   mViewer->addView(mRightView);
   mViewer->addView(mTopView);
+  mViewer->addView(mInfoView);
 
   const osg::GraphicsContext::Traits* gct = gc->getTraits();
 
   GLint width = gct->width;
   GLint height = gct->height;
-  //GLint x = gct->x;
-  //GLint y = gct->y;
+  // GLint x = gct->x;
+  // GLint y = gct->y;
 
   mUserView->setViewport(0, 0 + mInfoHeight, width, height - mInfoHeight);
   mInfoView->setViewport(0, 0, width, mInfoHeight);
@@ -301,7 +299,10 @@ zxd::GridFloor* Blender::createOrthoGridFloor(
   gridfloor->setScale(mGridScale);
   gridfloor->setSubDivisions(mGridSubdivisions);
   gridfloor->setLines(std::ceil(l / mGridScale));
+  gridfloor->setGridColor(osg::Vec4(0.25f, 0.35f, 0.35f, 1.0f));
+  gridfloor->setSubdivisionColor(osg::Vec4(0.4f, 0.4f, 0.4f, 1.0f));
   gridfloor->rebuild();
+
 
   gridfloor->setNodeMask(~getSelectMask());
 
@@ -409,27 +410,22 @@ void OperationEventHandler::placeCursor(const osgGA::GUIEventAdapter& ea) {
                     osg::computeLocalToWorld(intersection.nodePath);
     cursor->setMatrix(osg::Matrix::translate(pos));
   } else {
-    const osg::Matrix& matView = mCamera->getViewMatrix();
-    // get original cursor position in view space
-    osg::Vec3 origPos = cursor->getMatrix().getTrans() * matView;
+    // no intersection found, place cursor at the same depth as original one
 
-    // get camera ray intersection with near plane
-    osg::Matrix matrix;
+    osg::Matrix matWorldToWnd;
     if (mCamera->getViewport())
-      matrix.preMult(mCamera->getViewport()->computeWindowMatrix());
-    matrix.preMult(mCamera->getProjectionMatrix());
-    matrix.invert(matrix);
+      matWorldToWnd.preMult(mCamera->getViewport()->computeWindowMatrix());
+    matWorldToWnd.preMult(mCamera->getProjectionMatrix());
+    matWorldToWnd.preMult(mCamera->getViewMatrix());
 
-    // point on near plane in view space
-    osg::Vec3 p = osg::Vec3(ea.getX(), ea.getY(), 0) * matrix;
+    // get original cursor position in window space
+    osg::Vec3 p0 = cursor->getMatrix().getTrans() * matWorldToWnd;
 
-    // scale according z to place p at plane that contain origin cursor
-    p *= origPos.z() / p.z();
+    osg::Matrix matWndToWorld = osg::Matrix::inverse(matWorldToWnd);
 
-    // now get final world position
-    osg::Matrix matInvView = osg::Matrix::inverse(matView);
+    osg::Vec3 p1 = osg::Vec3(ea.getX(), ea.getY(), p0[2]) * matWndToWorld;
 
-    cursor->setMatrix(osg::Matrix::translate(p * matInvView));
+    cursor->setMatrix(osg::Matrix::translate(p1));
   }
 }
 

@@ -46,9 +46,9 @@ protected:
   osg::Matrix mInvProjWnd;
 
   osg::Vec2 mStartCursor;
-  osg::Vec2 mWndStartObject;
   osg::Vec2 mLastCursor;
   osg::Vec2 mCurrentCursor;
+  osg::Vec3 mWndStartObject;
   osg::Vec3 mViewStartObject;  // object position in view
   osg::Vec3 mWorldStartObject;
   osg::Vec3 mNearPlaneStartCursor;
@@ -195,39 +195,19 @@ protected:
 
   osg::Vec2 getWndEndPos() {
     osg::Vec2 cursorOffset = mCurrentCursor - mStartCursor;
-    return mWndStartObject + cursorOffset;
-  }
-
-  // get ray end in world or local space. works for both ortho and persp
-  inline osg::Vec3 wndToCurrent(const osg::Vec2& wndPos) {
-    // get world ray end
-    osg::Vec3 end = osg::Vec3(wndPos.x(), wndPos.y(), 0) * mInvViewProjWnd;
-
-    // transform back to local if necessary, becareful, world is changing
-    return mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL
-             ? end * mInvCurModel
-             : end;
-  }
-
-  // only for persp
-  inline osg::Vec3 getPerspRayStart() {
-    return mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL
-             ? mCameraPos * mInvCurModel
-             : mCameraPos;
+    return osg::Vec2(mWndStartObject[0], mWndStartObject[1]) + cursorOffset;
   }
 
   void getCameraRay(osg::Vec3& rayStart, osg::Vec3& dir) {
-    if (getOrtho()) {
-      rayStart = wndToCurrent(getWndEndPos());
-      //-z is ray dir in ortho
-      dir = mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL
-              ? osg::Matrix::transform3x3(-osg::Z_AXIS, mInvModelView)
-              : osg::Matrix::transform3x3(-osg::Z_AXIS, mInvView);
+    osg::Vec3 p0, p1;
+    const osg::Matrix* invMat =
+      mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL ? &mInvModelViewProjWnd
+                                                        : &mInvViewProjWnd;
 
-    } else {
-      rayStart = getPerspRayStart();
-      dir = wndToCurrent(getWndEndPos()) - rayStart;
-    }
+    zxd::Math::getCameraRay(mCurrentCursor,  *invMat, p0, p1);
+
+    rayStart = p0;
+    dir = p1 - p0;
     dir.normalize();
   }
 

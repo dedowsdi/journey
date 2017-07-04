@@ -109,4 +109,70 @@ osg::Matrix Math::orthogonalizIterate(const osg::Matrix& m,
 
   return om;
 }
+
+//------------------------------------------------------------------------------
+osg::Vec3 Math::getEulerXYZ(const osg::Matrixf& mat) {
+  // http://www.j3d.org/matrix_faq/
+  GLfloat angle_y, D, C, trx, _try, angle_x, angle_z;
+  angle_y = D = asin(mat(2, 0)); /* Calculate Y-axis angle */
+  C = cos(angle_y);
+  // angle_y    *=  RADIANS;
+  if (fabs(C) > 0.005) /* Gimball lock? */
+  {
+    trx = mat(2, 2) / C; /* No, so get X-axis angle */
+    _try = -mat(2, 1) / C;
+    angle_x = atan2(_try, trx);
+    trx = mat(0, 0) / C; /* Get Z-axis angle */
+    _try = -mat(1, 0) / C;
+    angle_z = atan2(_try, trx);
+  } else /* Gimball lock has occurred */
+  {
+    angle_x = 0;     /* Set X-axis angle to zero */
+    trx = mat(1, 1); /* And calculate Z-axis angle */
+    _try = mat(0, 1);
+    angle_z = atan2(_try, trx);
+  }
+
+  /* return only positive angles in [0,360] */
+  if (angle_x < 0) angle_x += osg::PI * 2;
+  if (angle_y < 0) angle_y += osg::PI * 2;
+  if (angle_z < 0) angle_z += osg::PI * 2;
+
+  return osg::Vec3(angle_x, angle_y, angle_z);
+}
+
+//------------------------------------------------------------------------------
+osg::Matrix Math::arcball(
+  const osg::Vec2& np0, const osg::Vec2& np1, GLfloat radius /*= 0.8*/) {
+  // get camera point
+  osg::Vec3 sp0 = ndcToSphere(np0, radius);
+  osg::Vec3 sp1 = ndcToSphere(np1, radius);
+  GLfloat rpRadius = 1 / radius;
+  // get rotate axis in camera space
+  osg::Vec3 axis = sp0 ^ sp1;
+  GLfloat theta = acosf(sp0 * sp1 * rpRadius * rpRadius);
+
+  return osg::Matrix::rotate(theta, axis);
+}
+
+//------------------------------------------------------------------------------
+osg::Vec2 Math::screenToNdc(GLfloat x, GLfloat y, GLfloat cx, GLfloat cy) {
+  return osg::Vec2((2 * x - cx) / cx, (cy - 2 * y) / cy);
+}
+
+//------------------------------------------------------------------------------
+osg::Vec2 Math::screenToNdc(GLfloat nx, GLfloat ny) {
+  return osg::Vec2(2 * nx - 1, 2 * ny - 1);
+}
+
+//------------------------------------------------------------------------------
+osg::Vec3 Math::ndcToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
+  GLfloat len2 = np0.length2();
+  GLfloat radius2 = radius * radius;
+  if (len2 >= radius2) {
+    return osg::Vec3(np0 * (radius / std::sqrt(len2)), 0);
+  } else {
+    return osg::Vec3(np0, std::sqrt(radius2 - len2));
+  }
+}
 }

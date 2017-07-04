@@ -6,6 +6,7 @@
 #include <osgGA/StandardManipulator>
 #include <ctime>
 
+#include "zmath.h"
 /*
  * this function will change forward direction, what's the meanning? it's a copy
  * of StandardManipulator::fixVerticalAxis. 
@@ -68,7 +69,7 @@ int main(int argc, char* argv[]) {
   osg::Vec3 localUp = osg::Vec3(0, 0, 1);
 
   osg::Vec3 zAxis = eye - center;
-  osg::Vec3 rightAixs = zxd::randomVector(0, 1);
+  osg::Vec3 rightAixs = zxd::Math::randomVector(0, 1);
   rightAixs.normalize();
   osg::Vec3 upAxis = zAxis ^ rightAixs;
   upAxis.normalize();

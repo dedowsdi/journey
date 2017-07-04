@@ -135,59 +135,6 @@ extern osgText::Text* createText(osg::ref_ptr<osgText::Font> font,
   return text.release();
 }
 
-float randomValue(float min, float max) {
-  return (min + (float)rand() / (RAND_MAX + 1.0f) * (max - min));
-}
-
-osg::Vec3 randomVector(float min, float max) {
-  return osg::Vec3(
-    randomValue(min, max), randomValue(min, max), randomValue(min, max));
-}
-
-//------------------------------------------------------------------------------
-extern osg::Vec4 randomVector4(float min, float max) {
-  return osg::Vec4(randomValue(min, max), randomValue(min, max),
-    randomValue(min, max), randomValue(min, max));
-}
-
-osg::Matrix randomMatrix(float min, float max) {
-  osg::Vec3 rot = randomVector(-osg::PI, osg::PI);
-  osg::Vec3 pos = randomVector(min, max);
-  return osg::Matrix::rotate(
-           rot[0], osg::X_AXIS, rot[1], osg::Y_AXIS, rot[2], osg::Z_AXIS) *
-         osg::Matrix::translate(pos);
-}
-
-//------------------------------------------------------------------------------
-osg::Vec3 getEulerXYZ(const osg::Matrixf& mat) {
-  // http://www.j3d.org/matrix_faq/
-  GLfloat angle_y, D, C, trx, _try, angle_x, angle_z;
-  angle_y = D = asin(mat(2, 0)); /* Calculate Y-axis angle */
-  C = cos(angle_y);
-  // angle_y    *=  RADIANS;
-  if (fabs(C) > 0.005) /* Gimball lock? */
-  {
-    trx = mat(2, 2) / C; /* No, so get X-axis angle */
-    _try = -mat(2, 1) / C;
-    angle_x = atan2(_try, trx);
-    trx = mat(0, 0) / C; /* Get Z-axis angle */
-    _try = -mat(1, 0) / C;
-    angle_z = atan2(_try, trx);
-  } else /* Gimball lock has occurred */
-  {
-    angle_x = 0;     /* Set X-axis angle to zero */
-    trx = mat(1, 1); /* And calculate Z-axis angle */
-    _try = mat(0, 1);
-    angle_z = atan2(_try, trx);
-  }
-
-  /* return only positive angles in [0,360] */
-  if (angle_x < 0) angle_x += osg::PI * 2;
-  if (angle_y < 0) angle_y += osg::PI * 2;
-  if (angle_z < 0) angle_z += osg::PI * 2;
-
-  return osg::Vec3(angle_x, angle_y, angle_z);
-}
 
 //------------------------------------------------------------------------------
 void removeNodeParents(osg::Node* node, GLuint count) {
@@ -199,40 +146,6 @@ void removeNodeParents(osg::Node* node, GLuint count) {
   while (numParent--) node->getParent(0)->removeChild(node);
 }
 
-//------------------------------------------------------------------------------
-osg::Matrix arcball(
-  const osg::Vec2& np0, const osg::Vec2& np1, GLfloat radius /*= 0.8*/) {
-  // get camera point
-  osg::Vec3 sp0 = ndcToSphere(np0, radius);
-  osg::Vec3 sp1 = ndcToSphere(np1, radius);
-  GLfloat rpRadius = 1 / radius;
-  // get rotate axis in camera space
-  osg::Vec3 axis = sp0 ^ sp1;
-  GLfloat theta = acosf(sp0 * sp1 * rpRadius * rpRadius);
-
-  return osg::Matrix::rotate(theta, axis);
-}
-
-//------------------------------------------------------------------------------
-osg::Vec2 screenToNdc(GLfloat x, GLfloat y, GLfloat cx, GLfloat cy) {
-  return osg::Vec2((2 * x - cx) / cx, (cy - 2 * y) / cy);
-}
-
-//------------------------------------------------------------------------------
-osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny) {
-  return osg::Vec2(2 * nx - 1, 2 * ny - 1);
-}
-
-//------------------------------------------------------------------------------
-osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
-  GLfloat len2 = np0.length2();
-  GLfloat radius2 = radius * radius;
-  if (len2 >= radius2) {
-    return osg::Vec3(np0 * (radius / std::sqrt(len2)), 0);
-  } else {
-    return osg::Vec3(np0, std::sqrt(radius2 - len2));
-  }
-}
 
 //------------------------------------------------------------------------------
 double getBestFovy() {

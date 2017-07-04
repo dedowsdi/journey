@@ -11,8 +11,8 @@ GridFloor::GridFloor(const osg::Vec3& rowVector, const osg::Vec3& colVector)
       mScale(1.0f),
       mSubdivisions(4),
       mAxesMask(0b110),
-      mGridLineColor(0.35f, 0.35f, 0.35f, 1.0f),
-      mGridSubdivisionColor(0.5f, 0.5f, 0.5f, 1.0f),
+      mGridColor(0.35f, 0.35f, 0.35f, 1.0f),
+      mSubdivisionColor(0.5f, 0.5f, 0.5f, 1.0f),
       mRowVector(rowVector),
       mColVector(colVector),
       mRowAxisColor(osg::Vec4(rowVector, 1.0f)),
@@ -54,7 +54,7 @@ void GridFloor::rebuildGrid() {
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
 
   osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
-  colors->push_back(mGridLineColor);
+  colors->push_back(mGridColor);
 
   GLint numGirdTiles = getNumTiles();  // downcast to even
   GLint numGridLines = numGirdTiles + 1;
@@ -107,7 +107,7 @@ void GridFloor::rebuildSubdivisions() {
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
 
   osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
-  colors->push_back(mGridSubdivisionColor);
+  colors->push_back(mSubdivisionColor);
 
   GLint numGirdTiles = getNumTiles();  // downcast to even
   // GLint numGridLines = numGirdTiles + 1;

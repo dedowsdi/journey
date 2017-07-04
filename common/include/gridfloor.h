@@ -27,6 +27,9 @@ protected:
   osg::Vec3 mColVector;
   osg::Vec3 mNormalVector;  // row ^ col
 
+  osg::Vec4 mGridColor;
+  osg::Vec4 mSubdivisionColor;
+
   osg::Vec4 mRowAxisColor;
   osg::Vec4 mColAxisColor;
   osg::Vec4 mNormalAxisColor;
@@ -36,9 +39,6 @@ protected:
   osg::ref_ptr<osg::Geometry> mAxisRow;
   osg::ref_ptr<osg::Geometry> mAxisCol;
   osg::ref_ptr<osg::Geometry> mAxisNormal;
-
-  osg::Vec4 mGridLineColor;
-  osg::Vec4 mGridSubdivisionColor;
 
 public:
   GridFloor(const osg::Vec3& rowVector, const osg::Vec3& colVector);
@@ -54,12 +54,6 @@ public:
 
   GLubyte getAxesMask() const { return mAxesMask; }
   void setAxesMask(GLubyte v) { mAxesMask = v; }
-
-  osg::Vec4 getGridLineColor() const { return mGridLineColor; }
-  void setGridLineColor(osg::Vec4 v) { mGridLineColor = v; }
-
-  osg::Vec4 getGridSubdivisionColor() const { return mGridSubdivisionColor; }
-  void setGridSubdivisionColor(osg::Vec4 v) { mGridSubdivisionColor = v; }
 
   void rebuild();
 
@@ -80,6 +74,12 @@ public:
 
   const osg::Vec4& getNormalAxisColor() const { return mNormalAxisColor; }
   void setNormalAxisColor(const osg::Vec4& v) { mNormalAxisColor = v; }
+
+  const osg::Vec4& getGridColor() const { return mGridColor; }
+  void setGridColor( const osg::Vec4& v){mGridColor = v;}
+
+  const osg::Vec4& getSubdivisionColor() const { return mSubdivisionColor; }
+  void setSubdivisionColor( const osg::Vec4& v){mSubdivisionColor = v;}
 
   inline GLuint getNumTiles() { return mLines - mLines % 2; }
   inline float getSize() { return getNumTiles() * mScale; }

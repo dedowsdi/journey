@@ -6,6 +6,7 @@
 #include <utility>
 #include <osg/Plane>
 #include <algorithm>
+#include <osg/Camera>
 
 namespace zxd {
 
@@ -22,7 +23,7 @@ struct RayRel {
 
 struct RayPlaneRel {
   int type;  // 0 parallel, 1 intersect
-  float t;  // v + dir * t = ip
+  float t;   // v + dir * t = ip
   osg::Vec3 ip;
 };
 
@@ -265,6 +266,66 @@ public:
     double left, right, bottom, top, near, far;
     return m.getOrtho(left, right, bottom, top, near, far);
   }
+
+  static inline void getCameraRay(const osg::Vec2& cursor, const osg::Matrix& m,
+    osg::Vec3& p0, osg::Vec3& p1) {
+    p0 = osg::Vec3(cursor, 0);
+    p1 = osg::Vec3(cursor, 1);
+    p0 = p0 * m;
+    p1 = p1 * m;
+  }
+
+  static inline void getCameraRay(const osg::Vec2& cursor, osg::Camera* camera,
+    osg::Vec3& p0, osg::Vec3& p1) {
+    osg::Matrix m = camera->getViewMatrix() * camera->getProjectionMatrix() *
+                    camera->getViewport()->computeWindowMatrix();
+    m.invert(m);
+    getCameraRay(cursor, m, p0, p1);
+  }
+
+  inline osg::Matrix transpose(const osg::Matrix& m) {
+    return osg::Matrix(                    //
+      m(0, 0), m(1, 0), m(2, 0), m(3, 0),  // 0
+      m(0, 1), m(1, 1), m(2, 1), m(3, 1),  // 1
+      m(0, 2), m(1, 2), m(2, 2), m(3, 2),  // 2
+      m(0, 3), m(1, 3), m(2, 3), m(3, 3)   // 3
+      );
+  }
+
+  // becareful this returns intrinsic rotation order.
+  // M = M(z)M(y)M(x)
+  // M = matrix.makerotate(z, y, x)
+  // 0 <= x <= 2pi
+  // 0 <= y <= pi/2 || 3pi/2 <= y <= 2pi
+  // 0 <= z <= 2pi
+  static osg::Vec3 getEulerXYZ(const osg::Matrixf& m);
+
+  static inline float randomValue(float min, float max) {
+    return (min + (float)rand() / (RAND_MAX + 1.0f) * (max - min));
+  }
+
+  static inline osg::Vec3 randomVector(float min, float max) {
+    return osg::Vec3(
+      randomValue(min, max), randomValue(min, max), randomValue(min, max));
+  }
+  static inline osg::Vec4 randomVector4(float min, float max) {
+    return osg::Vec4(randomValue(min, max), randomValue(min, max),
+      randomValue(min, max), randomValue(min, max));
+  }
+
+  static inline osg::Matrix randomMatrix(float min, float max) {
+    osg::Vec3 rot = randomVector(-osg::PI, osg::PI);
+    osg::Vec3 pos = randomVector(min, max);
+    return osg::Matrix::rotate(
+             rot[0], osg::X_AXIS, rot[1], osg::Y_AXIS, rot[2], osg::Z_AXIS) *
+           osg::Matrix::translate(pos);
+  }
+
+  static osg::Matrix arcball(
+    const osg::Vec2& np0, const osg::Vec2& np1, GLfloat radius = 0.8);
+  static osg::Vec2 screenToNdc(GLfloat x, GLfloat y, GLfloat cx, GLfloat cy);
+  static osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny);
+  static osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius = 0.9f);
 };
 }
 

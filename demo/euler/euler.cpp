@@ -33,6 +33,7 @@
 #include <osgText/Font3D>
 #include <osg/io_utils>
 #include <osgAnimation/EaseMotion>
+#include "zmath.h"
 
 class AnimCallback;
 
@@ -268,7 +269,7 @@ void createScene() {
 void play() {
   if (playing) return;
 
-  xyz = zxd::getEulerXYZ(targetFrame->getMatrix());
+  xyz = zxd::Math::getEulerXYZ(targetFrame->getMatrix());
   animFrame->setMatrix(osg::Matrix());
   animFrame->setUpdateCallback(animCallbcak);
   animFrame->setNodeMask(-1);
@@ -336,7 +337,7 @@ class EulerGuiEventHandler : public osgGA::GUIEventHandler {
       case osgGA::GUIEventAdapter::DRAG: {
         if (rotateTargetFrame && rotating) {
           osg::Vec2 p1 = osg::Vec2(ea.getXnormalized(), ea.getYnormalized());
-          targetFrame->postMult(zxd::arcball(p0, p1, 0.8f));
+          targetFrame->postMult(zxd::Math::arcball(p0, p1, 0.8f));
           p0 = p1;
         }
         break;

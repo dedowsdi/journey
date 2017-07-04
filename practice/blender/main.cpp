@@ -15,8 +15,9 @@ int main(int argc, char* argv[]) {
   osg::ref_ptr<zxd::Blender> blender = zxd::Blender::instance();
 
   osgViewer::CompositeViewer viewer;
-  
+
   blender->init(&viewer, node);
-  
+  osg::DisplaySettings::instance()->setNumMultiSamples(4);
+
   return viewer.run();
 }

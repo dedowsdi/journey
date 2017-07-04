@@ -54,9 +54,7 @@ void ObjectOperation::init(osgViewer::View* view, osg::Vec2 v) {
 
   mWorldStartObject = mModel.getTrans();
 
-  osg::Vec3 p = mWorldStartObject * mViewProjWnd;
-  mWndStartObject.x() = p.x();
-  mWndStartObject.y() = p.y();
+  mWndStartObject = mWorldStartObject * mViewProjWnd;
 
   mWorldPivot = mPivot->getPivot();
   mLocalPivot = mWorldPivot * mInvModel;
@@ -258,20 +256,14 @@ void GrabOperation::computeOffset(bool shiftDown) {
   osg::Vec3 endPos;  // endPos in local or world
   switch (mAc->getType()) {
     case zxd::AxisConstrainer::CT_NONE: {
-      // get near plane final projection place, than scale to get view
-      // position
+      // simply place object at the same depth as original one
+
       osg::Vec2 wndEndPos = getWndEndPos();
-      osg::Vec3 npEndPos =
-        osg::Vec3(wndEndPos.x(), wndEndPos.y(), 0) * mInvProjWnd;
+      osg::Vec3 p(wndEndPos, mWndStartObject.z());
 
-      osg::Vec3 viewEndPos = npEndPos;
-
-      if (getOrtho())
-        viewEndPos.z() = mViewStartObject.z();
-      else
-        viewEndPos *= (mViewStartObject.z() / -mNear);
-
-      endPos = viewEndPos * mInvView;
+      endPos = p * (mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL
+                       ? mInvModelViewProjWnd
+                       : mInvViewProjWnd);
     } break;
 
     case zxd::AxisConstrainer::CT_X:
@@ -330,8 +322,7 @@ osg::Vec3 GrabOperation::cameraRayTestSingleAxis(
   const osg::Vec3& rayStart, const osg::Vec3& dir, const osg::Vec3& axis) {
   osg::Vec3 objStart = getObjectStart();
 
-  zxd::RayRel res =
-    zxd::Math::getLineRelation(rayStart, dir, objStart, axis);
+  zxd::RayRel res = zxd::Math::getLineRelation(rayStart, dir, objStart, axis);
 
   if (res.type && res.t0 > 0.0001f)
     return res.sk1;
@@ -478,7 +469,9 @@ void GrabOperation::translateObject() {
 
 //------------------------------------------------------------------------------
 void ScaleOperation::doInit() {
-  mInitalHandleLength = (mCurrentCursor - mWndStartObject).length();
+  mInitalHandleLength =
+    (mCurrentCursor - osg::Vec2(mWndStartObject[0], mWndStartObject[1]))
+      .length();
   OSG_NOTICE << "initial handle length " << mInitalHandleLength << std::endl;
   mLastHandleLength = mInitalHandleLength;
 
@@ -527,7 +520,9 @@ void ScaleOperation::updateHandle() {
 //------------------------------------------------------------------------------
 void ScaleOperation::doUpdate(bool shiftDown) {
   // get scale change
-  GLfloat curHandleLength = (mCurrentCursor - mWndStartObject).length();
+  GLfloat curHandleLength =
+    (mCurrentCursor - osg::Vec2(mWndStartObject[0], mWndStartObject[1]))
+      .length();
   GLfloat dtScale = (curHandleLength - mLastHandleLength) / mInitalHandleLength;
   mLastHandleLength = curHandleLength;
 
@@ -730,12 +725,12 @@ void RotateOperation::doUpdateXYZ(bool shiftDown) {
   ac[0] = mCurrentCursor[0] - mWndPivot[0];
   ac[1] = mCurrentCursor[1] - mWndPivot[1];
 
-  // check sign
+  // check handle rotation sign
   int sign = (ab ^ ac) * osg::Z_AXIS;
   if (sign == 0) return;  // no rotation
   sign = sign > 0 ? 1 : -1;
 
-  GLfloat dtScale = zxd::angle(ab, ac) * sign;
+  GLfloat dtScale = zxd::Math::angle(ab, ac) * sign;
   dtScale *= shiftDown ? 0.1f : 1.0f;
   mRot += dtScale * mSign;
 

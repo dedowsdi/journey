@@ -35,11 +35,10 @@ protected:
 public:
   CameraViewCallback(osg::Camera* camera, const osg::Matrix& toViewMat);
 
-  virtual void operator()(osg::Node* node, osg::NodeVisitor* nv); 
+  virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
   osg::ref_ptr<osgGA::OrbitManipulator> getCamMan() const { return mCamMan; }
-  void setCamMan( osg::ref_ptr<osgGA::OrbitManipulator> v){mCamMan = v;}
-
+  void setCamMan(osg::ref_ptr<osgGA::OrbitManipulator> v) { mCamMan = v; }
 };
 
 /*
@@ -102,27 +101,22 @@ public:
                             osg::computeLocalToWorld(intersection.nodePath);
             mCursor->setMatrix(osg::Matrix::translate(pos));
           } else {
-            const osg::Matrix& matView = mCamera->getViewMatrix();
-            // get original cursor position in view space
-            osg::Vec3 origPos = mCursor->getMatrix().getTrans() * matView;
-
-            // get camera ray intersection with near plane
-            osg::Matrix matrix;
+            osg::Matrix matWorldToWnd;
             if (mCamera->getViewport())
-              matrix.preMult(mCamera->getViewport()->computeWindowMatrix());
-            matrix.preMult(mCamera->getProjectionMatrix());
-            matrix.invert(matrix);
+              matWorldToWnd.preMult(
+                mCamera->getViewport()->computeWindowMatrix());
+            matWorldToWnd.preMult(mCamera->getProjectionMatrix());
+            matWorldToWnd.preMult(mCamera->getViewMatrix());
 
-            // point on near plane in view space
-            osg::Vec3 p = osg::Vec3(ea.getX(), ea.getY(), 0) * matrix;
+            // get original cursor position in window space
+            osg::Vec3 p0 = mCursor->getMatrix().getTrans() * matWorldToWnd;
 
-            // scale according z to place p at plane that contain origin cursor
-            p *= origPos.z() / p.z();
+            osg::Matrix matWndToWorld = osg::Matrix::inverse(matWorldToWnd);
 
-            // now get final world position
-            osg::Matrix matInvView = osg::Matrix::inverse(matView);
+            osg::Vec3 p1 =
+              osg::Vec3(ea.getX(), ea.getY(), p0[2]) * matWndToWorld;
 
-            mCursor->setMatrix(osg::Matrix::translate(p * matInvView));
+            mCursor->setMatrix(osg::Matrix::translate(p1));
           }
         }
 

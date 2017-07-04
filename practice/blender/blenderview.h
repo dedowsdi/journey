@@ -25,6 +25,36 @@ public:
 
 protected:
   virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+
+};
+
+class BlenderViewBase : public osgViewer::View {
+protected:
+  osg::Vec4 mBorderColor;
+  osg::ref_ptr<osg::Camera> mHudCamera;
+  osg::ref_ptr<osg::Group> mRoot;
+  osg::ref_ptr<osg::Geode> mBorder;
+  osg::ref_ptr<osg::Geometry> mGmBorder;
+
+public:
+  BlenderViewBase(osg::GraphicsContext* gc);
+  osg::Vec4 getBorderColor() const { return mBorderColor; }
+  void setBorderColor(osg::Vec4 v) { mBorderColor = v; }
+
+  void setBorder(bool b);
+  bool getBorder() { return mBorder && mBorder->getNumParents() != 0; }
+
+  osg::ref_ptr<osg::Group> getRoot() const { return mRoot; }
+  void setRoot(osg::ref_ptr<osg::Group> v) { mRoot = v; }
+
+  osg::ref_ptr<osg::Camera> getHudCamera() const { return mHudCamera; }
+  void setHudCamera(osg::ref_ptr<osg::Camera> v) { mHudCamera = v; }
+
+  void setViewport(float x, float y, float width, float height);
+  virtual void doSetViewport(float x, float y, float width, float height){}
+
+private:
+  void createBorder();
 };
 
 /*
@@ -34,18 +64,17 @@ protected:
  * Ortho view is fixed, you can only reverse it. (eg : front to back)
  */
 
-class BlenderView : public osgViewer::View {
+class BlenderView : public BlenderViewBase {
 public:
   enum ViewType { VT_ORTHO, VT_USER };
 
 protected:
   GLfloat mMiniAxesSize;  // scale size
+  osg::Vec4 mBorderColor;
 
-  osg::ref_ptr<osg::Camera> mHudCamera;
   osg::ref_ptr<osgText::Text> mText;
   osg::ref_ptr<zxd::Axes> mMiniAxes;
   osg::ref_ptr<zxd::GridFloor> mGridFloor;
-  osg::ref_ptr<osg::Group> mRoot;
   ViewType mViewType;
 
 public:
@@ -53,10 +82,7 @@ public:
 
   void setText(const std::string& s);
 
-  void setViewport(float x, float y, float width, float height);
-
-  osg::ref_ptr<osg::Camera> getHudCamera() const { return mHudCamera; }
-  void setHudCamera(osg::ref_ptr<osg::Camera> v) { mHudCamera = v; }
+  virtual void doSetViewport(float x, float y, float width, float height);
 
   GLfloat getMiniAxesSize() const { return mMiniAxesSize; }
   void setMiniAxesSize(GLfloat v) { mMiniAxesSize = v; }
@@ -66,9 +92,6 @@ public:
 
   osg::ref_ptr<osgText::Text> getText() const { return mText; }
   void setText(osg::ref_ptr<osgText::Text> v) { mText = v; }
-
-  osg::ref_ptr<osg::Group> getRoot() const { return mRoot; }
-  void setRoot(osg::ref_ptr<osg::Group> v) { mRoot = v; }
 
   ViewType getViewType() const { return mViewType; }
   void setViewType(ViewType v) { mViewType = v; }
@@ -100,12 +123,10 @@ protected:
 };
 
 // bottom text information view
-class TextView : public osgViewer::View {
+class TextView : public BlenderViewBase{
 protected:
   osg::ref_ptr<osgText::Text> mOpText;  // operation text
   osg::ref_ptr<osgText::Text> mPivotText;
-  // osg::ref_ptr<osg::Camera> mHudCamera;
-  osg::ref_ptr<osg::Group> mRoot;
 
 public:
   TextView(osg::GraphicsContext* gc);
@@ -116,13 +137,7 @@ public:
   osg::ref_ptr<osgText::Text> getPivotText() const { return mPivotText; }
   void setPivotText(osg::ref_ptr<osgText::Text> v) { mPivotText = v; }
 
-  void setViewport(float x, float y, float width, float height);
-
-  // osg::ref_ptr<osg::Camera> getHudCamera() const { return mHudCamera; }
-  // void setHudCamera(osg::ref_ptr<osg::Camera> v) { mHudCamera = v; }
-
-  osg::ref_ptr<osg::Group> getRoot() const { return mRoot; }
-  void setRoot(osg::ref_ptr<osg::Group> v) { mRoot = v; }
+  virtual void doSetViewport(float x, float y, float width, float height);
 };
 }
 
