@@ -10,9 +10,6 @@
 
 namespace zxd {
 
-typedef std::pair<int, std::pair<osg::Vec3, osg::Vec3>> LineRelPair;
-typedef std::pair<int, osg::Vec3> LinePlaneRelPair;
-
 struct RayRel {
   int type;  // 0 parallel, 1 intersect, 2 skew
   float t0;  // v0 + dir0 * t0 = sk0
@@ -25,6 +22,11 @@ struct RayPlaneRel {
   int type;  // 0 parallel, 1 intersect
   float t;   // v + dir * t = ip
   osg::Vec3 ip;
+};
+
+struct Circle {
+  double radius;
+  osg::Vec3 center;
 };
 
 class Math {
@@ -115,7 +117,7 @@ public:
   }
 
   // scale along arbitary vector
-  inline osg::Matrix scaleAlong(const osg::Vec3& v, float k) {
+  inline osg::Matrix scaleAlongVector(const osg::Vec3& v, float k) {
     float k1 = k - 1;
     return osg::Matrix(
       1 + k1 * v[0] * v[0], k1 * v[0] * v[1], k1 * v[0] * v[2], 0,  // 0
@@ -125,7 +127,7 @@ public:
       );
   }
 
-  // scale along arbitary plane normal, the d part doesn't matter
+  // scale along arbitary plane, the d part doesn't matter
   inline osg::Matrix scaleAlongPlane(const osg::Vec3& n, float k) {
     float k1 = 1 - k;
     return osg::Matrix(
@@ -136,14 +138,20 @@ public:
       );
   }
 
-  // project on plane that pass origin with normal v
-  inline osg::Matrix projectAlong(const osg::Vec3& v) {
-    return scaleAlong(v, 0);
+  osg::Vec3 projectPointOnPlane(const osg::Plane& plane, osg::Vec3 p){
+    return p - plane.getNormal() * plane.distance(p);
   }
 
-  // reflect along arbitary vector
-  inline osg::Matrix reflectAlong(const osg::Vec3& v) {
-    return scaleAlong(v, -1);
+  // project on arbitary plane, plane normal must be normalized
+  inline osg::Matrix projectOnPlane(const osg::Plane& p) {
+    return scaleAlongVector(p.getNormal(), 0) *
+           osg::Matrix::translate(p.getNormal() * -p[3]);
+  }
+
+  // reflect along arbitary plane, plane normal must be normalized
+  inline osg::Matrix reflectOnPlane(const osg::Plane& p) {
+    return scaleAlongPlane(p.getNormal(), 0) *
+           osg::Matrix::translate(p.getNormal() * p[3]);
   }
 
   // Gram-Schmidt
@@ -170,6 +178,11 @@ public:
     const osg::Vec3& t0, const osg::Vec3& t1, float epsilon = 0.0001f) {
     return isAboutf(t0[0], t0[1], epsilon) && isAboutf(t0[0], t0[1], epsilon) &&
            isAboutf(t0[0], t0[1], epsilon);
+  }
+  static inline bool isAboutd(
+    const osg::Vec3& t0, const osg::Vec3& t1, float epsilon = 0.0001f) {
+    return isAboutd(t0[0], t0[1], epsilon) && isAboutd(t0[0], t0[1], epsilon) &&
+           isAboutd(t0[0], t0[1], epsilon);
   }
 
   // wrap v between 2pi - positiveLimit and positiveLimit
@@ -326,6 +339,47 @@ public:
   static osg::Vec2 screenToNdc(GLfloat x, GLfloat y, GLfloat cx, GLfloat cy);
   static osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny);
   static osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius = 0.9f);
+
+  // xMin += min(a,b) xMax+= max(a,b)
+  static inline void addMinMax(double& xMin, double& xMax, double a, double b) {
+    if (a >= b) {
+      xMin += b;
+      xMax += a;
+    } else {
+      xMin += a;
+      xMax += b;
+    }
+  }
+
+  static osg::BoundingBox transformAABB(
+    const osg::BoundingBox& aabb, const osg::Matrix& m);
+
+  static osg::Plane getBestFitPlane(const osg::Vec3Array& vertices);
+
+  // get triangle areay by Heron's formula
+  static inline double heronArea(double l0, double l1, double l2) {
+    double s = (l0 + l1 + l2) / 2;
+    return std::sqrt(s * (s - l0) * (s - l1) * (s - l2));
+  }
+
+  static osg::Vec3 getBarycentric(const osg::Vec3& a, const osg::Vec3& b,
+    const osg::Vec3& c, const osg::Vec3& p);
+
+  static osg::Vec3 getCentroid(
+    const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c) {
+    return (a + b + c) / 3;
+  }
+
+  static Circle getInscribeCircle(
+    const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c);
+
+  static Circle getCircumscribeCircle(
+    const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c);
+
+  static bool colinear(
+    const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c);
+
+  static bool isConvex(const osg::Vec3Array& vertices);
 };
 }
 

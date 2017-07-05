@@ -175,4 +175,165 @@ osg::Vec3 Math::ndcToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
     return osg::Vec3(np0, std::sqrt(radius2 - len2));
   }
 }
+
+//------------------------------------------------------------------------------
+osg::BoundingBox Math::transformAABB(
+  const osg::BoundingBox& aabb, const osg::Matrix& m) {
+  // it's not necessary to transfrom all 8 vertices to get result aabb
+  // every component of matrix will times min or max element of bounding box
+  // corner
+  double xMin = 0.0f, xMax = 0.0f, yMin = 0.0f, yMax = 0.0f, zMin = 0.0f,
+         zMax = 0.0f;
+
+  addMinMax(xMin, xMax, aabb.xMin() * m(0, 0), aabb.xMax() * m(0, 0));
+  addMinMax(xMin, xMax, aabb.yMin() * m(1, 0), aabb.yMax() * m(1, 0));
+  addMinMax(xMin, xMax, aabb.zMin() * m(2, 0), aabb.zMax() * m(2, 0));
+
+  addMinMax(yMin, yMax, aabb.xMin() * m(0, 1), aabb.xMax() * m(0, 1));
+  addMinMax(yMin, yMax, aabb.yMin() * m(1, 1), aabb.yMax() * m(1, 1));
+  addMinMax(yMin, yMax, aabb.zMin() * m(2, 1), aabb.zMax() * m(2, 1));
+
+  addMinMax(zMin, zMax, aabb.xMin() * m(0, 2), aabb.xMax() * m(0, 2));
+  addMinMax(zMin, zMax, aabb.yMin() * m(1, 2), aabb.yMax() * m(1, 2));
+  addMinMax(zMin, zMax, aabb.zMin() * m(2, 2), aabb.zMax() * m(2, 2));
+
+  // translate
+  xMin += m(4, 0);
+  xMax += m(4, 0);
+
+  yMin += m(4, 1);
+  yMax += m(4, 1);
+
+  zMin += m(4, 2);
+  zMax += m(4, 2);
+
+  return osg::BoundingBox(xMin, xMax, yMin, yMax, zMin, zMax);
+}
+
+//------------------------------------------------------------------------------
+osg::Plane Math::getBestFitPlane(const osg::Vec3Array& vertices) {
+  // TODO understand this
+  osg::Vec3 n;
+  double d = 0.0f;
+  GLuint size = vertices.size();
+  for (GLuint i = 0; i < size; ++i) {
+    const osg::Vec3& v0 = vertices[i];
+    const osg::Vec3& v1 = vertices[(i + 1) % size];
+    n.x() += (v0[2] + v1[2]) * (v0[1] - v1[1]);
+    n.y() += (v0[0] + v1[0]) * (v0[2] - v1[2]);
+    n.z() += (v0[1] + v1[1]) * (v0[0] - v1[0]);
+  }
+
+  n.normalize();
+  for (GLuint i = 0; i < size; ++i) {
+    d -= n * vertices[i];
+  }
+  d /= size;
+
+  return osg::Plane(n, d);
+}
+
+//------------------------------------------------------------------------------
+osg::Vec3 Math::getBarycentric(const osg::Vec3& a, const osg::Vec3& b,
+  const osg::Vec3& c, const osg::Vec3& p) {
+  // use are property to get barientric of P
+
+  osg::Vec3 ab = b - a;
+  osg::Vec3 ac = c - a;
+  osg::Vec3 bc = c - b;
+  osg::Vec3 ca = -ac;
+  osg::Vec3 ap = p - a;
+  osg::Vec3 bp = p - b;
+  osg::Vec3 cp = p - c;
+
+  osg::Vec3 n = ab ^ ac;
+  double abc = n.normalize();
+
+  if (abc == 0) {
+    throw std::runtime_error("invalid triangle");
+  }
+
+  double abp = (ab ^ ap) * n;
+  double bcp = (bc ^ bp) * n;
+  double cap = (ca ^ cp) * n;
+
+  return osg::Vec3(bcp / abc, cap / abc, abp / abc);
+}
+
+//------------------------------------------------------------------------------
+Circle Math::getInscribeCircle(
+  const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c) {
+  Circle circle;
+
+  osg::Vec3 ab = b - a;
+  osg::Vec3 ac = c - a;
+  osg::Vec3 bc = c - b;
+
+  // barycentric of incenter is (lbc/p, lac/p, lab/p)
+  double lab = ab.length();
+  double lac = ac.length();
+  double lbc = bc.length();
+
+  double perimeter = lab + lac + lbc;
+  circle.center = (a * lbc + b * lac + c * lab) / perimeter;
+  double area = (ab ^ ac).length();
+  circle.radius = area / perimeter;
+
+  return circle;
+}
+
+//------------------------------------------------------------------------------
+Circle Math::getCircumscribeCircle(
+  const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c) {
+  // barcentric of circummcenter is (sin(2alpha) : sin02beta0 : sin(2gamma))
+  // or sin(alpha)cos(alpha) : sin(alpha)cos(alpha) : sin(alpha)cos(alpha)
+
+  Circle circle;
+
+  double l2a = (b - c).length2();
+  double l2b = (a - c).length2();
+  double l2c = (a - b).length2();
+  // baricentric of circumcenter
+  double b0 = l2a * (l2b + l2c - l2a);
+  double b1 = l2b * (l2a + l2c - l2b);
+  double b2 = l2c * (l2a + l2b - l2c);
+  // normalize it
+  double f = 1 / (b0 + b1 + b2);
+  b0 *= f;
+  b1 *= f;
+  b2 *= f;
+
+  circle.center = a * b0 + b * b1 + c * b2;
+  circle.radius = (circle.center - a).length();
+
+  return circle;
+}
+
+//------------------------------------------------------------------------------
+bool Math::colinear(
+  const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c) {
+  return isAboutd((a - b) ^ (a - c), osg::Vec3());
+}
+
+//------------------------------------------------------------------------------
+bool Math::isConvex(const osg::Vec3Array& vertices) {
+  // sum of all smaller angle between tow edges must be (n-2)*180.
+  // concave will break this rule
+
+  double total = 0;
+  GLuint size = vertices.size();
+
+  if (size < 3)
+    throw std::runtime_error("polygon must has at least 3 vertices");
+  for (GLuint i = 0; i < size; ++i) {
+    const osg::Vec3& v0 = vertices[i];                      // corner vertex
+    const osg::Vec3& v1 = vertices[(i + 1) % size];         // next vertex
+    const osg::Vec3& v2 = vertices[(i + size - 1) % size];  // previous vertex
+    osg::Vec3 e0 = v1 - v0;
+    osg::Vec3 e1 = v2 - v0;
+    total += angle(e0, e1);
+  }
+
+  return isAboutd(total, (size - 2) * osg::PI);
+}
 }
