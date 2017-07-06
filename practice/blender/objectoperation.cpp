@@ -287,7 +287,7 @@ void GrabOperation::computeOffset(bool shiftDown) {
 
       osg::Plane constrainPlane = getConstrainPlane();
       // find intersection between ray and constrain plane
-      zxd::RayPlaneRel res =
+      zxd::LinePlaneRel res =
         zxd::Math::getLinePlaneRelation(rayStart, dir, constrainPlane.asVec4());
 
       if (res.type && res.t > 0.0001f)
@@ -322,7 +322,7 @@ osg::Vec3 GrabOperation::cameraRayTestSingleAxis(
   const osg::Vec3& rayStart, const osg::Vec3& dir, const osg::Vec3& axis) {
   osg::Vec3 objStart = getObjectStart();
 
-  zxd::RayRel res = zxd::Math::getLineRelation(rayStart, dir, objStart, axis);
+  zxd::LineRel res = zxd::Math::getLineRelation(rayStart, dir, objStart, axis);
 
   if (res.type && res.t0 > 0.0001f)
     return res.sk1;

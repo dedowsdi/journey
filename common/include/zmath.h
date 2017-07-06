@@ -7,10 +7,12 @@
 #include <osg/Plane>
 #include <algorithm>
 #include <osg/Camera>
+#include <osg/BoundingBox>
+#include "osg/BoundingSphere"
 
 namespace zxd {
 
-struct RayRel {
+struct LineRel {
   int type;  // 0 parallel, 1 intersect, 2 skew
   float t0;  // v0 + dir0 * t0 = sk0
   float t1;  // v1 + dir1 * t1 = sk1
@@ -18,10 +20,18 @@ struct RayRel {
   osg::Vec3 sk1;
 };
 
-struct RayPlaneRel {
+struct LinePlaneRel {
   int type;  // 0 parallel, 1 intersect
   float t;   // v + dir * t = ip
   osg::Vec3 ip;
+};
+
+struct LineShpereRel {
+  int type;  // 0 not intersect, 1 tangent, 2 intersect
+  double t0;
+  double t1;
+  osg::Vec3 ip0;
+  osg::Vec3 ip1;
 };
 
 struct Circle {
@@ -31,10 +41,19 @@ struct Circle {
 
 class Math {
 public:
-  static RayRel getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
+  static inline osg::Vec3f vec3fMull(
+    const osg::Vec3f& v0, const osg::Vec3f& v1) {
+    return osg::Vec3f(v0[0] * v1[0], v0[1] * v1[1], v0[2] * v1[2]);
+  }
+  static inline osg::Vec3d vec3dMull(
+    const osg::Vec3d& v0, const osg::Vec3d& v1) {
+    return osg::Vec3d(v0[0] * v1[0], v0[1] * v1[1], v0[2] * v1[2]);
+  }
+
+  static LineRel getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
     const osg::Vec3& p1, const osg::Vec3& d1);
 
-  static RayPlaneRel getLinePlaneRelation(
+  static LinePlaneRel getLinePlaneRelation(
     const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane);
 
   // return matrix without translation
@@ -138,8 +157,48 @@ public:
       );
   }
 
-  osg::Vec3 projectPointOnPlane(const osg::Plane& plane, osg::Vec3 p){
+  // normal must be normalized
+  osg::Vec3 projectPointOnPlane(const osg::Plane& plane, osg::Vec3 p) {
     return p - plane.getNormal() * plane.distance(p);
+  }
+  // dir must be normalized
+  osg::Vec3 projectPointOnLine(
+    const osg::Vec3& origin, const osg::Vec3& dir, const osg::Vec3& p) {
+    double t = (p - origin) * dir;
+    return origin + dir * t;
+  }
+
+  // as close as possible
+  osg::Vec3 projectPointOnRay(const osg::Vec3& origin, const osg::Vec3& dir,
+    double maxT, const osg::Vec3& p) {
+    double t = (p - origin) * dir;
+    t = fmax(fmin(maxT, t), 0);
+    return origin + dir * t;
+  }
+
+  // always return point on sphere, no matter p is in or out of phere.
+  // if p concidie with origin, return point on +x
+  osg::Vec3 projectPointOnSphere(
+    const osg::BoundingSphere& sphere, const osg::Vec3& p) {
+    osg::Vec3 pointToCenter = sphere.center() - p;
+    double l = 0;
+
+    // check if point overlap with origin
+    if (pointToCenter == osg::Vec3()) {
+      pointToCenter = -osg::X_AXIS;
+    } else {
+      l = pointToCenter.normalize();
+    }
+    return p + pointToCenter * (l - sphere.radius());
+  }
+
+  // closest point on aabb to p
+  osg::Vec3 projectPointOnAABB(const osg::BoundingBox& bb, const osg::Vec3& p) {
+    osg::Vec3 v;
+    v[0] = p[0] <= bb.xMin() ? bb.xMin() : bb.xMax();
+    v[1] = p[1] <= bb.yMin() ? bb.yMin() : bb.yMax();
+    v[2] = p[2] <= bb.zMin() ? bb.zMin() : bb.zMax();
+    return v;
   }
 
   // project on arbitary plane, plane normal must be normalized
@@ -340,6 +399,20 @@ public:
   static osg::Vec2 screenToNdc(GLfloat nx, GLfloat ny);
   static osg::Vec3 ndcToSphere(const osg::Vec2& np0, GLfloat radius = 0.9f);
 
+  // upper corner times n must be new max, lower corner times n must be new min
+  static inline void getBBCorner(
+    const osg::Vec3& n, GLuint& upper, GLuint& lower) {
+    upper = (n[0] >= 0 ? 1 : 0) | (n[1] >= 0 ? 2 : 0) * (n[2] >= 0 ? 4 : 0);
+    lower = (~upper) & 7;
+    getBBCorner(n[0], n[1], n[2], upper, lower);
+  }
+
+  static inline void getBBCorner(
+    double x, double y, double z, GLuint& upper, GLuint& lower) {
+    upper = (x >= 0 ? 1 : 0) | (y >= 0 ? 2 : 0) * (z >= 0 ? 4 : 0);
+    lower = (~upper) & 7;
+  }
+
   // xMin += min(a,b) xMax+= max(a,b)
   static inline void addMinMax(double& xMin, double& xMax, double a, double b) {
     if (a >= b) {
@@ -355,6 +428,14 @@ public:
     const osg::BoundingBox& aabb, const osg::Matrix& m);
 
   static osg::Plane getBestFitPlane(const osg::Vec3Array& vertices);
+
+  // interection point of 3 point
+  static std::pair<bool, osg::Vec3> intersect(
+    const osg::Plane& p0, const osg::Plane& p1, const osg::Plane& p2);
+
+  //dir must be normalized
+  LineShpereRel intersect(const osg::BoundingSphere& sphere,
+    const osg::Vec3& p, const osg::Vec3& dir);
 
   // get triangle areay by Heron's formula
   static inline double heronArea(double l0, double l1, double l2) {

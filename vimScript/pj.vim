@@ -38,6 +38,8 @@ let g:mycppExeArgs = {
       \ "infoVisitor" : "cessnafire.osg"
       \ }
 
+nnoremap <leader>oI :call osg#include()<CR>
+
 " abbrivation
 au BufNewFile,BufRead * 
       \ if &ft == '' && match(expand('%:p'), 'OpenSceneGraph/include\|include/osg') != -1   | set ft=cpp | endif

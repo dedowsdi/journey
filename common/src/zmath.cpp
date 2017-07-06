@@ -4,14 +4,14 @@
 namespace zxd {
 
 //------------------------------------------------------------------------------
-RayRel Math::getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
+LineRel Math::getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
   const osg::Vec3& p1, const osg::Vec3& d1) {
   static float epsilon = 0.0005f;
 
   osg::Vec3 v01 = p1 - p0;
   osg::Vec3 c01 = d0 ^ d1;
 
-  RayRel rr;
+  LineRel rr;
 
   // check parallel
   if (c01.length2() < epsilon) {
@@ -34,9 +34,9 @@ RayRel Math::getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
 }
 
 //------------------------------------------------------------------------------
-RayPlaneRel Math::getLinePlaneRelation(
+LinePlaneRel Math::getLinePlaneRelation(
   const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane) {
-  RayPlaneRel rpr;
+  LinePlaneRel rpr;
   static float epsilon = 0.0005f;
 
   osg::Vec3 n(plane.x(), plane.y(), plane.z());
@@ -179,23 +179,26 @@ osg::Vec3 Math::ndcToSphere(const osg::Vec2& np0, GLfloat radius /*= 0.9f*/) {
 //------------------------------------------------------------------------------
 osg::BoundingBox Math::transformAABB(
   const osg::BoundingBox& aabb, const osg::Matrix& m) {
-  // it's not necessary to transfrom all 8 vertices to get result aabb
-  // every component of matrix will times min or max element of bounding box
-  // corner
   double xMin = 0.0f, xMax = 0.0f, yMin = 0.0f, yMax = 0.0f, zMin = 0.0f,
          zMax = 0.0f;
 
-  addMinMax(xMin, xMax, aabb.xMin() * m(0, 0), aabb.xMax() * m(0, 0));
-  addMinMax(xMin, xMax, aabb.yMin() * m(1, 0), aabb.yMax() * m(1, 0));
-  addMinMax(xMin, xMax, aabb.zMin() * m(2, 0), aabb.zMax() * m(2, 0));
+  osg::Vec3 xAxis(m(0, 0), m(1, 0), m(2, 0));
+  osg::Vec3 yAxis(m(0, 1), m(1, 1), m(2, 1));
+  osg::Vec3 zAxis(m(0, 2), m(1, 2), m(2, 2));
 
-  addMinMax(yMin, yMax, aabb.xMin() * m(0, 1), aabb.xMax() * m(0, 1));
-  addMinMax(yMin, yMax, aabb.yMin() * m(1, 1), aabb.yMax() * m(1, 1));
-  addMinMax(yMin, yMax, aabb.zMin() * m(2, 1), aabb.zMax() * m(2, 1));
+  GLuint upperInndex, lowerIndex;
 
-  addMinMax(zMin, zMax, aabb.xMin() * m(0, 2), aabb.xMax() * m(0, 2));
-  addMinMax(zMin, zMax, aabb.yMin() * m(1, 2), aabb.yMax() * m(1, 2));
-  addMinMax(zMin, zMax, aabb.zMin() * m(2, 2), aabb.zMax() * m(2, 2));
+  getBBCorner(xAxis, upperInndex, lowerIndex);
+  xMax = aabb.corner(upperInndex) * xAxis;
+  xMin = aabb.corner(lowerIndex) * xAxis;
+
+  getBBCorner(yAxis, upperInndex, lowerIndex);
+  yMax = aabb.corner(upperInndex) * yAxis;
+  yMin = aabb.corner(lowerIndex) * yAxis;
+
+  getBBCorner(zAxis, upperInndex, lowerIndex);
+  zMax = aabb.corner(upperInndex) * zAxis;
+  zMin = aabb.corner(lowerIndex) * zAxis;
 
   // translate
   xMin += m(4, 0);
@@ -231,6 +234,47 @@ osg::Plane Math::getBestFitPlane(const osg::Vec3Array& vertices) {
   d /= size;
 
   return osg::Plane(n, d);
+}
+
+//------------------------------------------------------------------------------
+std::pair<bool, osg::Vec3> Math::intersect(
+  const osg::Plane& p0, const osg::Plane& p1, const osg::Plane& p2) {
+  double d = (p0.getNormal() ^ p1.getNormal()) * p2.getNormal();
+
+  // check parallel plane
+  if (isAboutd(d, 0)) return std::make_pair(false, osg::Vec3());
+
+  osg::Vec3 p = (p1.getNormal() ^ p2.getNormal()) * p0[3] +
+                (p2.getNormal() ^ p0.getNormal()) * p1[3] +
+                (p0.getNormal() ^ p1.getNormal()) * p2[3];
+  p = p / d;
+  return std::make_pair(true, p);
+}
+
+//------------------------------------------------------------------------------
+LineShpereRel Math::intersect(
+  const osg::BoundingSphere& sphere, const osg::Vec3& p, const osg::Vec3& dir) {
+  LineShpereRel lsr;
+
+  osg::Vec3 pointToCenter = p - sphere.center();
+  double tProj = pointToCenter * dir;
+  double r2 = sphere.radius2();
+  double centerDistance2 = pointToCenter.length2() - tProj * tProj;
+  if (centerDistance2 < r2) {
+    lsr.type = 0;
+  } else if (centerDistance2 == r2) {
+    lsr.type = 2;
+    lsr.t0 = lsr.t1 = tProj;
+    lsr.ip0 = lsr.ip1 = p + dir * tProj;
+  } else {
+    lsr.type = 1;
+    double tProjToIntersect = std::sqrt(centerDistance2 - r2);
+    lsr.t0 = tProj - tProjToIntersect;
+    lsr.t1 = tProj + tProjToIntersect;
+    lsr.ip0 = dir * lsr.t0;
+    lsr.ip1 = dir * lsr.t1;
+  }
+  return lsr;
 }
 
 //------------------------------------------------------------------------------
