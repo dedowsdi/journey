@@ -55,6 +55,7 @@ public:
         osg::BoundingBox bb = result.drawable->getBoundingBox();
         osg::Vec3 worldCenter =
           bb.center() * osg::computeLocalToWorld(result.nodePath);
+        //assume no rotation
         _selectionBox->setMatrix(
           osg::Matrix::scale(bb.xMax() - bb.xMin(), bb.yMax() - bb.yMin(),
             bb.zMax() - bb.zMin()) *

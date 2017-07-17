@@ -67,8 +67,8 @@ osg::Camera* createRTTCamera(
   return camera.release();
 }
 
-osg::Camera* createHUDCamera(
-  double left, double right, double bottom, double top) {
+osg::Camera* createHUDCamera(double left, double right, double bottom,
+  double top, double near, double far) {
   osg::ref_ptr<osg::Camera> camera = new osg::Camera();
 
   camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
@@ -79,17 +79,18 @@ osg::Camera* createHUDCamera(
   // camera->setProjectionMatrix(osg::Matrix::ortho2D(left, right, bottom,
   // top));
   camera->setProjectionMatrix(
-    osg::Matrix::ortho(left, right, bottom, top, -1, 1));
+    osg::Matrix::ortho(left, right, bottom, top, near, far));
   camera->setViewMatrix(osg::Matrix::identity());
 
   return camera.release();
 }
 
 //------------------------------------------------------------------------------
-osg::Camera* createHUDCamera(GLuint screenIdentifier /*= 0*/) {
+osg::Camera* createHUDCamera(
+  GLuint screenIdentifier /*= 0*/, double near /*= 0*/, double far /*= 100*/) {
   GLuint width = 800, height = 600;
   getScreenResolution(width, height);
-  return createHUDCamera(0, width, 0, height);
+  return createHUDCamera(0, width, 0, height, near, far);
 }
 
 osg::Geode* createScreenQuad(float width, float height, float scale) {
@@ -135,7 +136,6 @@ extern osgText::Text* createText(osg::ref_ptr<osgText::Font> font,
   return text.release();
 }
 
-
 //------------------------------------------------------------------------------
 void removeNodeParents(osg::Node* node, GLuint count) {
   GLuint numParent = node->getNumParents();
@@ -145,7 +145,6 @@ void removeNodeParents(osg::Node* node, GLuint count) {
 
   while (numParent--) node->getParent(0)->removeChild(node);
 }
-
 
 //------------------------------------------------------------------------------
 double getBestFovy() {
@@ -185,6 +184,8 @@ bool PickHandler::handle(
       osgUtil::LineSegmentIntersector::Intersection result =
         *(intersector->getIntersections().begin());
       doUserOperations(result);
+    }else{
+      doNoHit();
     }
   }
   return false;

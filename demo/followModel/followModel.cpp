@@ -6,6 +6,8 @@
 
 #include "common.h"
 
+//camera manipulator will translate camera along it's local z, then rotate ,
+//then place it at center
 class FollowUpdater : public osgGA::GUIEventHandler {
 public:
   FollowUpdater(osg::Node* node) : _target(node) {}

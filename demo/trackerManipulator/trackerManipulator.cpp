@@ -8,6 +8,8 @@
 
 #include "common.h"
 
+//not working so well during camman switching. there might be a bug in
+//NodeTrackerManipulator::setByMatrix, it should be setByInverseMatrix.
 int main(int argc, char** argv) {
 
   //create scene
@@ -30,7 +32,7 @@ int main(int argc, char** argv) {
   osg::ref_ptr<osgGA::NodeTrackerManipulator> nodeTracker =
     new osgGA::NodeTrackerManipulator;
   nodeTracker->setHomePosition(
-    osg::Vec3(0, -10.0, 0), osg::Vec3(), osg::Z_AXIS);
+    osg::Vec3(0, -500, 0), osg::Vec3(), osg::Z_AXIS);
   nodeTracker->setTrackerMode(
     osgGA::NodeTrackerManipulator::NODE_CENTER_AND_ROTATION);
   nodeTracker->setRotationMode(osgGA::NodeTrackerManipulator::TRACKBALL);

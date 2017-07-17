@@ -22,7 +22,7 @@ public:
 
       case osgGA::GUIEventAdapter::FRAME:
         if (_count % 100 == 0) {
-          //trigger timer event every 100 frames
+          //trigger timer event manually every 100 frames
           osgViewer::Viewer* viewer = dynamic_cast<osgViewer::Viewer*>(&aa);
           if (viewer) {
             viewer->getEventQueue()->userEvent(new TimerInfo(_count));

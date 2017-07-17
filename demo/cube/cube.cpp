@@ -6,6 +6,7 @@
 #include <osg/NodeCallback>
 #include <osg/FrameStamp>
 
+//rotate light
 class LightNodeCallback : public osg::NodeCallback {
 public:
   LightNodeCallback() {}

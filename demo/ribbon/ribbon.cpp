@@ -7,8 +7,8 @@
 
 #include "common.h"
 
-const unsigned int g_numPoints = 400;
-const float g_halfWidth = 4.0f;
+const unsigned int g_numPoints = 400; //points of ribbon
+const float g_halfWidth = 4.0f; //half width of ribbon
 
 osg::Geometry* createRibbon(const osg::Vec3& colorRGB) {
 
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 
   osg::ref_ptr<osg::MatrixTransform> cessna = new osg::MatrixTransform;
   cessna->addChild(osgDB::readNodeFile("cessna.osg.0,0,90.rot"));
-  cessna->addUpdateCallback(zxd::createAnimationPathCallback(50.0f, 6.0f));
+  cessna->addUpdateCallback(zxd::createAnimationPathCallback(300.0f, 6.0f));
   cessna->addUpdateCallback(new TrailerCallback(geometry));
 
   osg::ref_ptr<osg::Group> root = new osg::Group;

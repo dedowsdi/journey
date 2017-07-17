@@ -10,12 +10,15 @@ osg::ref_ptr<osgText::Font3D> g_font3D =
 osgText::Text3D* createText3D(
   const osg::Vec3& pos, const std::string& content, float size, float depth) {
   osg::ref_ptr<osgText::Text3D> text = new osgText::Text3D;
+  text->setAxisAlignment(osgText::TextBase::XZ_PLANE);
+
   text->setFont(g_font3D.get());
   text->setCharacterSize(size);
   text->setCharacterDepth(depth);
-  text->setAxisAlignment(osgText::TextBase::XZ_PLANE);
+
   text->setPosition(pos);
   text->setText(content);
+
   return text.release();
 }
 

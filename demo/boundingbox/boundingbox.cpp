@@ -23,6 +23,8 @@ public:
       node->accept(cbbv);
 
       osg::BoundingBox localBB = cbbv.getBoundingBox();
+
+      //careful, getParentalNodePaths include self
       osg::Matrix localToWorld =
         osg::computeLocalToWorld(node->getParent(0)->getParentalNodePaths()[0]);
 

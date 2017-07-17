@@ -28,9 +28,9 @@ int main(int argc, char* argv[]) {
   root->addChild(model.get());
 
   osg::Node* light0 = createLightSource(
-    0, osg::Vec3(-20.0f, 0.0f, 0.0f), osg::Vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    0, osg::Vec3(-20.0f, 0.0f, 0.0f), osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
   osg::Node* light1 = createLightSource(
-    1, osg::Vec3(0.0f, -20.0f, 0.0f), osg::Vec4(0.0f, 1.0f, 1.0f, 1.0f));
+    1, osg::Vec3(0.0f, -20.0f, 0.0f), osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
   root->getOrCreateStateSet()->setMode(GL_LIGHT0, osg::StateAttribute::ON);
   root->getOrCreateStateSet()->setMode(GL_LIGHT1, osg::StateAttribute::ON);

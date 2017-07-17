@@ -6,6 +6,7 @@
 #include <osgDB/ReadFile>
 #include <osgViewer/Viewer>
 
+//change alpha at state attribute callback
 class AlphaFadingCallback : public osg::StateAttributeCallback {
 public:
   AlphaFadingCallback() {
@@ -15,7 +16,7 @@ public:
   virtual void operator()(osg::StateAttribute* sa, osg::NodeVisitor* nv) {
     osg::Material* material = static_cast<osg::Material*>(sa);
     if (material) {
-      _motion->update(_fadein ? 0.005 : -0.005);
+      _motion->update(_fadein ? 0.001 : -0.001);
       float alpha = _motion->getValue();
       material->setDiffuse(
         osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f, 1.0f, 1.0f, alpha));

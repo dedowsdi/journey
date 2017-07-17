@@ -6,25 +6,25 @@
 
 osg::Image* createSpotLight(const osg::Vec4& centerColor,
   const osg::Vec4& bgColor, unsigned int size, float power) {
-
   osg::ref_ptr<osg::Image> image = new osg::Image;
   image->allocateImage(size, size, 1, GL_RGBA, GL_UNSIGNED_BYTE);
 
-  float mid = (float(size) - 1) * 0.5f;
-  float div = 2.0f / float(size);
+  float center = (size - 1) * 0.5f;  // circle center
+  float div = 2.0f / size;
 
   for (unsigned int r = 0; r < size; ++r) {
     unsigned char* ptr = image->data(0, r);
 
     for (unsigned int c = 0; c < size; ++c) {
 
-      //assume mid as origin
-      float dx = (float(c) - mid) * div;
-      float dy = (float(r) - mid) * div;
-      float r = powf(1.0f - sqrtf(dx * dx + dy * dy), power);
-      if (r < 0.0f) r = 0.0f;
+      float dx = (float(c) - center) * div;
+      float dy = (float(r) - center) * div;
 
-      osg::Vec4 color = centerColor * r + bgColor * (1.0f - r);
+      //get interpolator factor
+      float f = powf(1.0f - sqrtf(dx * dx + dy * dy), power);
+      if (f < 0.0f) f = 0.0f; //no color on corner area
+
+      osg::Vec4 color = centerColor * f + bgColor * (1.0f - f);
       *ptr++ = (unsigned char)((color[0]) * 255.0f);
       *ptr++ = (unsigned char)((color[1]) * 255.0f);
       *ptr++ = (unsigned char)((color[2]) * 255.0f);
@@ -35,7 +35,6 @@ osg::Image* createSpotLight(const osg::Vec4& centerColor,
 }
 
 int main(int argc, char* argv[]) {
-
   osg::Vec4 centerColor(1.0f, 1.0f, 0.0f, 1.0f);
   osg::Vec4 bgColor(0.0f, 0.0f, 0.0f, 1.0f);
 

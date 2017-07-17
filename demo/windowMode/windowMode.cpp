@@ -3,6 +3,7 @@
 #include <osg/Geometry>
 #include <osgDB/ReadFile>
 #include <osg/MatrixTransform>
+#include <osgViewer/config/SingleWindow>
 
 int main(int argc, char* argv[]) {
    
@@ -13,6 +14,7 @@ int main(int argc, char* argv[]) {
   viewer.setSceneData(node);
 
   viewer.setUpViewInWindow(50, 50, 800, 600);
+  viewer.apply(osgViewer::SingleWindow(50, 50, 800, 600));
 
   return viewer.run();
 }

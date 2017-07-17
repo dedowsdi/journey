@@ -9,7 +9,6 @@ public:
 
   virtual bool handle(
     const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) {
-
     if (!_model) return false;
 
     osg::Matrix matrix = _model->getMatrix();
@@ -41,7 +40,7 @@ public:
       default:
         break;
     }
-    return false; //return true will stop event
+    return false;  // return true will stop event
   }
 
 protected:
@@ -49,7 +48,6 @@ protected:
 };
 
 int main(int argc, char* argv[]) {
-
   osg::ref_ptr<osg::Node> model = osgDB::readNodeFile("cessna.osg");
   osg::ref_ptr<osg::MatrixTransform> mt = new osg::MatrixTransform;
   mt->addChild(model.get());
@@ -64,10 +62,9 @@ int main(int argc, char* argv[]) {
 
   viewer.getCamera()->setViewMatrixAsLookAt(
     osg::Vec3(0.0f, -100.0f, 0.0f), osg::Vec3(), osg::Z_AXIS);
-  //disalbe default camera event
+  // disalbe default camera event
   viewer.getCamera()->setAllowEventFocus(false);
 
   viewer.setSceneData(root.get());
   return viewer.run();
-
 }

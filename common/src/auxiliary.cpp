@@ -35,7 +35,6 @@ void CameraViewCallback::operator()(osg::Node* node, osg::NodeVisitor* nv) {
 
   mMotion->update(dt);
 
-
   if (mMotion->getTime() >= 1.0f) {
     mCamera->setViewMatrix(mToViweMat);
     mCamera->removeUpdateCallback(this);
@@ -45,11 +44,12 @@ void CameraViewCallback::operator()(osg::Node* node, osg::NodeVisitor* nv) {
     GLfloat i = mMotion->getValue();
     q.slerp(i, mFromQuat, mToQuat);
     v = mFromPos * (1 - i) + mToPos * i;
-    if(mCamMan){
+    if (mCamMan) {
       mCamMan->setRotation(q);
       mCamMan->setDistance(v.length());
-    }else{
-      mCamera->setViewMatrix(osg::Matrix::rotate(q) * osg::Matrix::translate(v));
+    } else {
+      mCamera->setViewMatrix(
+        osg::Matrix::rotate(q) * osg::Matrix::translate(v));
     }
   }
   traverse(node, nv);
@@ -146,7 +146,7 @@ osg::ref_ptr<osg::AutoTransform> Axes::createLabel(
   osg::ref_ptr<osgText::Text> text =
     zxd::createText(font, osg::Vec3(), label, 0.35f);
   text->setColor(osg::Vec4(v, 1.0f));
-  //text->setAutoRotateToScreen(true);
+  // text->setAutoRotateToScreen(true);
 
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
   leaf->addDrawable(text);
@@ -195,6 +195,7 @@ Cursor::Cursor() {
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
   addChild(leaf);
   leaf->addDrawable(mCursor);
+  mCursor->setInitialBound(osg::BoundingBox(-5, -5, -5, 5, 5, 5));
 }
 
 //------------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 #include <osgViewer/Viewer>
 #include <iostream>
 
+//read user input in another thread in console.
 class DataReceiverThread : public OpenThreads::Thread {
 protected:
   OpenThreads::Mutex _mutex;

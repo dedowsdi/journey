@@ -1,6 +1,7 @@
 #include <osg/Switch>
 #include <osgDB/ReadFile>
 #include <osgViewer/Viewer>
+#include <osgViewer/ViewerEventHandlers>
 
 /*
  *switch every 60 frames
@@ -14,7 +15,7 @@ public:
   META_Node(osg, AnimatingSwitch);
 
   virtual void traverse(osg::NodeVisitor& nv) {
-    if (!((++_count) % 60)) {
+    if (!((++_count) % 600)) {
       setValue(0, !getValue(0));
       setValue(1, !getValue(1));
     }
@@ -35,5 +36,7 @@ int main(int argc, char* argv[]) {
 
   osgViewer::Viewer viewer;
   viewer.setSceneData(root.get());
+  viewer.addEventHandler(new osgViewer::StatsHandler());
+
   return viewer.run();
 }

@@ -16,16 +16,19 @@ public:
 
   //init triangle face geometry
   osg::Geode* createFaceSelector() {
+    _selector = new osg::Geometry;
+
+    _selector->setVertexArray(new osg::Vec3Array(3));
+
     osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(1);
     (*colors)[0] = selectedColor;
+    _selector->setColorArray(colors.get());
+    colors->setBinding(osg::Array::Binding::BIND_OVERALL);
+    _selector->setColorBinding(osg::Geometry::BIND_OVERALL);
 
-    _selector = new osg::Geometry;
     _selector->setDataVariance(osg::Object::DYNAMIC);
     _selector->setUseDisplayList(false);
     _selector->setUseVertexBufferObjects(true);
-    _selector->setVertexArray(new osg::Vec3Array(3));
-    _selector->setColorArray(colors.get());
-    _selector->setColorBinding(osg::Geometry::BIND_OVERALL);
     _selector->addPrimitiveSet(new osg::DrawArrays(GL_TRIANGLES, 0, 3));
 
     osg::ref_ptr<osg::Geode> geode = new osg::Geode;
@@ -68,6 +71,7 @@ protected:
   osg::ref_ptr<osg::Geometry> _selector;
 };
 
+//create a cube
 osg::Geometry* createSimpleGeometry() {
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array(8);
   (*vertices)[0].set(-0.5f, -0.5f, -0.5f);

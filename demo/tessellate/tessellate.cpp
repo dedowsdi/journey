@@ -35,6 +35,4 @@ int main(int argc, char *argv[]) {
   osgViewer::Viewer viewer;
   viewer.setSceneData(root.get());
   return viewer.run();
-
-  return 0;
 }

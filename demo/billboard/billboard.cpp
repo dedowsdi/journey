@@ -19,16 +19,14 @@ osg::Geometry* createQuad() {
 
 int main(int argc, char* argv[]) {
   osg::ref_ptr<osg::Billboard> geode = new osg::Billboard;
-  //the drawable will rotate to face the viewer and  keep z axis upright in the
-  //rendering window.
+  //simply transform -y(billoard normal) to ev
   geode->setMode(osg::Billboard::POINT_ROT_WORLD);
 
   osg::Geometry* quad = createQuad();
 
   for (unsigned int i = 0; i < 10; ++i) {
-    float id = (float)i;
-    geode->addDrawable(quad, osg::Vec3(-2.5f + 0.2f * id, id, 0.0f));
-    geode->addDrawable(quad, osg::Vec3(2.5f - 0.2f * id, id, 0.0f));
+    geode->addDrawable(quad, osg::Vec3(-2.5f + 0.2f * i, i, 0.0f));
+    geode->addDrawable(quad, osg::Vec3(2.5f - 0.2f * i, i, 0.0f));
 
     // All quad textures' backgrounds are automatically cleared because of the
     // alpha test, which is performed internally in the osgdb_png plugin. That

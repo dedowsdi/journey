@@ -6,6 +6,11 @@
 #include <osgUtil/SmoothingVisitor>
 #include "common.h"
 
+/*
+ * osg use SRC_ALPHA, ONE_MINUS_SRC_ALPHA as defult blend func. GL use GL_ONE
+ * GL_ZERO.
+ */
+
 const osg::Vec4 normalColor(1.0f, 1.0f, 1.0f, 1.0f);
 const osg::Vec4 selectedColor(1.0f, 0.0f, 0.0f, 0.5f);
 
@@ -24,6 +29,12 @@ public:
       _lastDrawable = geom;
     }
   }
+  virtual void doNoHit() {
+    if (_lastDrawable.valid()) {
+      setDrawableColor(_lastDrawable.get(), normalColor);
+      _lastDrawable = NULL;
+    }
+  }
   void setDrawableColor(osg::Geometry* geom, const osg::Vec4& color) {
     osg::Vec4Array* colors =
       dynamic_cast<osg::Vec4Array*>(geom->getColorArray());
@@ -37,7 +48,7 @@ protected:
   osg::observer_ptr<osg::Geometry> _lastDrawable;
 };
 
-//create a simple cube
+// create a simple cube
 osg::Geometry* createSimpleGeometry() {
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array(8);
   (*vertices)[0].set(-0.5f, -0.5f, -0.5f);
@@ -79,13 +90,16 @@ osg::Geometry* createSimpleGeometry() {
   (*indices)[23] = 7;
   osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
 
-  geom->setDataVariance(osg::Object::DYNAMIC); //is this necessary ?
-  geom->setUseDisplayList(false);
-  geom->setUseVertexBufferObjects(true);
   geom->setVertexArray(vertices.get());
   geom->setColorArray(colors.get());
   geom->setColorBinding(osg::Geometry::BIND_OVERALL);
   geom->addPrimitiveSet(indices.get());
+
+  geom->setDataVariance(osg::Object::DYNAMIC);
+
+  geom->setUseDisplayList(false);
+  geom->setUseVertexBufferObjects(true);
+
   osgUtil::SmoothingVisitor::smooth(*geom);
   return geom.release();
 }

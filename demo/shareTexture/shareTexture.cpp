@@ -8,7 +8,6 @@
 #define RAND(min, max) ((min) + (float)rand() / RAND_MAX * ((max) - (min)))
 osg::Geode* createMassiveQuads(
   unsigned int number, const std::string& imageFile) {
-
   osg::ref_ptr<osg::Geode> geode = new osg::Geode;
   for (unsigned int i = 0; i < number; ++i) {
     osg::Vec3 randomCenter;
@@ -54,21 +53,20 @@ protected:
 };
 
 int main(int argc, char* argv[]) {
-
-  //you can comment first 2 sentencies to check the memory useage
+  // you can comment first 2 sentencies to check the memory useage
   osgDB::Registry::instance()->setReadFileCallback(
     new ReadAndShareImageCallback);
-  //used for maximizing the reuse of textures and state sets.
-  osgDB::Registry::instance()->getOrCreateSharedStateManager(); 
+  // used for maximizing the reuse of textures and state sets.
+  osgDB::Registry::instance()->getOrCreateSharedStateManager();
 
   osg::ref_ptr<osg::Group> root = new osg::Group;
   root->addChild(createMassiveQuads(5000, "Images/lz.rgb"));
-  root->addChild( createMassiveQuads(5000, "Images/osg64.png") );
+  root->addChild(createMassiveQuads(5000, "Images/osg64.png"));
 
   osgDB::SharedStateManager* ssm =
     osgDB::Registry::instance()->getSharedStateManager();
-  //State sets and textures with the same attributes and data will be combined
-  //into one
+  // State sets and textures with the same attributes and data will be combined
+  // into one
   if (ssm) ssm->share(root.get());
 
   osgViewer::Viewer viewer;

@@ -27,9 +27,9 @@ int main(int argc, char *argv[]) {
   osg::ref_ptr<osg::Geometry> quad = new osg::Geometry;
   quad->setVertexArray(vertices.get());
   quad->setNormalArray(normals.get());
-  quad->setNormalBinding(osg::Geometry::BIND_OVERALL);
+  normals->setBinding(osg::Array::Binding::BIND_OVERALL);
   quad->setColorArray(colors.get());
-  quad->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
+  colors->setBinding(osg::Array::Binding::BIND_PER_VERTEX);
 
   //decide draw method
   quad->addPrimitiveSet(new osg::DrawArrays(GL_QUADS, 0, 4));
@@ -41,6 +41,4 @@ int main(int argc, char *argv[]) {
   viewer.setSceneData(root.get());
 
   return viewer.run();
-
-  return 0;
 }

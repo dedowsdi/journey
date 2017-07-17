@@ -27,8 +27,6 @@ int main(int argc, char* argv[]) {
   osg::ref_ptr<zxd::GridFloor> gridFloor1 =
     new zxd::GridFloor(osg::X_AXIS, osg::Z_AXIS);
   gridFloor1->setScale(2.0f);
-  gridFloor1->setLines(44);
-  gridFloor1->setScale(5);
   gridFloor1->rebuild();
   mt1->addChild(gridFloor1);
   mt1->setMatrix(

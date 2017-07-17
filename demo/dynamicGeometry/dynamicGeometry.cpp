@@ -39,9 +39,11 @@ public:
       static_cast<osg::Vec3Array*>(quad->getVertexArray());
     if (!vertices) return;
 
-    osg::Quat quat(osg::PI * 0.01, osg::X_AXIS);
+    osg::Quat quat(osg::PI * 0.001, osg::X_AXIS);
     vertices->back() = quat * vertices->back();
-    vertices->dirty(); //don't forget this!!
+
+    //don't forget this
+    vertices->dirty(); 
     quad->dirtyDisplayList();
     quad->dirtyBound();
   }
@@ -51,8 +53,10 @@ int main(int argc, char* argv[]) {
 
   osg::Geometry* quad = createQuad();
 
-  //dynamic data variance
+  //dynamic data variance. data variance value can be used by routines such as
+  //optimization codes that wish wo share static data.
   quad->setDataVariance(osg::Object::DYNAMIC);
+
   quad->setUpdateCallback(new DynamicQuadCallback);
 
   osg::ref_ptr<osg::Geode> root = new osg::Geode;

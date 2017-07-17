@@ -8,6 +8,11 @@
 #include <osgUtil/CullVisitor>
 #include <osgViewer/Viewer>
 
+/*
+ * be caerful here. This call back is used to tell billboard node(usually a
+ * matrix transform) to cancel parent rotation, it must be added to parent of
+ * billboard node.
+ */
 class BillboardCallback : public osg::NodeCallback {
 public:
   BillboardCallback(osg::MatrixTransform* billboard)
@@ -35,14 +40,14 @@ protected:
 
 int main(int argc, char** argv) {
 
-  osg::ref_ptr<osg::MatrixTransform> billboardNode = new osg::MatrixTransform;
-  billboardNode->addChild(osgDB::readNodeFile("cessna.osg"));
-
   osg::ref_ptr<osg::Group> root = new osg::Group;
-  root->addChild(billboardNode.get());
+
+  osg::ref_ptr<osg::MatrixTransform> billboardNode = new osg::MatrixTransform;
   root->addChild(osgDB::readNodeFile("lz.osg"));
-  //callback is added to root, not billboardNode!
-  root->addCullCallback(new BillboardCallback(billboardNode.get()));
+  billboardNode->addChild(osgDB::readNodeFile("cessna.osg"));
+  root->addCullCallback(new BillboardCallback(billboardNode));
+
+  root->addChild(billboardNode.get());
 
   osgViewer::Viewer viewer;
   viewer.setSceneData(root.get());

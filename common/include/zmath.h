@@ -209,8 +209,8 @@ public:
 
   // reflect along arbitary plane, plane normal must be normalized
   inline osg::Matrix reflectOnPlane(const osg::Plane& p) {
-    return scaleAlongPlane(p.getNormal(), 0) *
-           osg::Matrix::translate(p.getNormal() * p[3]);
+    return scaleAlongVector(p.getNormal(), -1) *
+           osg::Matrix::translate(p.getNormal() * (p[3] * 2));
   }
 
   // Gram-Schmidt

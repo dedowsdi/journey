@@ -56,6 +56,7 @@ osg::Node* createNeedle(float w, float h, float depth, const osg::Vec4& color,
   return trans.release();
 }
 
+//create circle on xz plane
 osg::Node* createFace(float radius) {
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array(66);
   (*vertices)[0].set(0.0f, 0.0f, 0.0f);
@@ -94,8 +95,8 @@ int main(int argc, char** argv) {
 
   osg::ref_ptr<osg::Group> root = new osg::Group;
   root->addChild(hour);
-  root->addChild(minute);
   root->addChild(second);
+  root->addChild(minute);
   root->addChild(createFace(10.0f));
 
   osgViewer::Viewer viewer;

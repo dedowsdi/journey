@@ -36,11 +36,11 @@ int main(int argc, char* argv[]) {
   // create 10 billboards with different transform
   for (GLuint i = 0; i < NUM_TREES; i += NUM_TREES / 20) {
     osg::ref_ptr<osg::Billboard> bb = new osg::Billboard();
+    // face camera,  keep z up
     bb->setMode(osg::Billboard::POINT_ROT_EYE);
 
     bb->setNormal(osg::Vec3(random(-0.1f, 0.1f), -1.0f, random(-0.1f, 0.1f)));
 
-    // don't use MatrixTransform to scale billboard, it will break it.
     osg::Geometry* quad = createQuad(random(1, 5), random(0.5, 10));
 
     for (unsigned int j = 0; j < NUM_TREES / 10; ++j) {
@@ -49,15 +49,17 @@ int main(int argc, char* argv[]) {
       bb->addDrawable(quad,
         osg::Vec3(random(0, GROUND_WIDTH), random(0, GROUND_HEIGHT), 0.0f));
 
-      // All quad textures' backgrounds are automatically cleared because of the
-      // alpha test, which is performed internally in the osgdb_png plugin. That
-      // means we have to set correct rendering order of all the drawables to
-      // ensure that the entire process is working properly
-
       osg::StateSet* ss = bb->getOrCreateStateSet();
       ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
     }
 
+    // don't use MatrixTransform to scale billboard, it will break it.
+    //osg::ref_ptr<osg::MatrixTransform> mt = new osg::MatrixTransform();
+    //mt->setMatrix(osg::Matrix::scale(osg::Vec3(
+      //random(0.2f, 5.0f), random(0.2f, 5.0f), random(0.2f, 5.0f))));
+    //mt->addChild(bb);
+
+    //root->addChild(mt);
     root->addChild(bb);
   }
 

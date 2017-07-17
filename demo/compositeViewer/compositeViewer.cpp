@@ -1,13 +1,12 @@
 #include <osgDB/ReadFile>
 #include <osgViewer/CompositeViewer>
 
-/*
- * looks like multiple window 
- */
+//each view has it's own graphic context
 osgViewer::View* createView(int x, int y, int w, int h, osg::Node* scene) {
   osg::ref_ptr<osgViewer::View> view = new osgViewer::View;
   view->setSceneData(scene);
-  view->setUpViewInWindow(x, y, w, h);
+  view->setUpViewInWindow(x, y, w, h); //deprecated
+  //view->apply(new osgViewer::SingeWindow(x, y, w, h));
   return view.release();
 }
 

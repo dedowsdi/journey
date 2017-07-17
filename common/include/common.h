@@ -21,9 +21,9 @@ extern osg::Camera* createRTTCamera(osg::Camera::BufferComponent buffer,
   osg::Texture* tex, bool isAbsolute = false);
 
 osg::Camera* createHUDCamera(
-  double left, double right, double bottom, double top);
+  double left, double right, double bottom, double top, double near, double far);
 // create 1:1 hud camera
-osg::Camera* createHUDCamera(GLuint screenIdentifier = 0);
+osg::Camera* createHUDCamera(GLuint screenIdentifier = 0, double near = -1, double far = 1);
 
 extern osg::Geode* createScreenQuad(
   float width, float height, float scale = 1.0f);
@@ -47,6 +47,7 @@ public:
     const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
   virtual void doUserOperations(
     osgUtil::LineSegmentIntersector::Intersection& result) = 0;
+  virtual void doNoHit(){};
 };
 
 

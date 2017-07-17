@@ -16,16 +16,18 @@ public:
   SelectModelHandler(osg::Camera* camera) : _selector(0), _camera(camera) {}
 
   osg::Geode* createPointSelector() {
+    _selector = new osg::Geometry;
+
+    _selector->setVertexArray(new osg::Vec3Array(1));
+
     osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array(1);
     (*colors)[0] = selectedColor;
+    _selector->setColorArray(colors.get());
+    _selector->setColorBinding(osg::Geometry::BIND_OVERALL);
 
-    _selector = new osg::Geometry;
     _selector->setDataVariance(osg::Object::DYNAMIC);
     _selector->setUseDisplayList(false);
     _selector->setUseVertexBufferObjects(true);
-    _selector->setVertexArray(new osg::Vec3Array(1));
-    _selector->setColorArray(colors.get());
-    _selector->setColorBinding(osg::Geometry::BIND_OVERALL);
     _selector->addPrimitiveSet(new osg::DrawArrays(GL_POINTS, 0, 1));
 
     osg::ref_ptr<osg::Geode> geode = new osg::Geode;
@@ -63,6 +65,8 @@ public:
     //corresponding point is "picked up".  To note, the distance values and the
     //threshold are computed with regard to the projection coordinate system
     osg::Matrix matrix = osg::computeLocalToWorld(result.nodePath);
+
+    //will it be better if we computle in window space?
 
     const std::vector<unsigned int>& selIndices = result.indexList;
     for (unsigned int i = 0; i < 3 && i < selIndices.size(); ++i) {
