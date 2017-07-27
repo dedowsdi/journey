@@ -34,6 +34,23 @@ LineRel Math::getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
 }
 
 //------------------------------------------------------------------------------
+float Math::getLineDistance(const osg::Vec3& p0, const osg::Vec3& d0,
+  const osg::Vec3& p1, const osg::Vec3& d1) {
+  static float epsilon = 0.0005f;
+  osg::Vec3 c01 = d0 ^ d1;
+
+  // check parallel
+  if (c01.length2() < epsilon) {
+    // just return line point distance
+    return getLinePointDistance(p0, d0, p1);
+  }
+
+  // any line segment between two lines proj on c01 will be our distance
+  c01.normalize();
+  return std::abs((p1 - p0) * c01);
+}
+
+//------------------------------------------------------------------------------
 LinePlaneRel Math::getLinePlaneRelation(
   const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane) {
   LinePlaneRel rpr;

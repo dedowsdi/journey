@@ -53,6 +53,15 @@ public:
   static LineRel getLineRelation(const osg::Vec3& p0, const osg::Vec3& d0,
     const osg::Vec3& p1, const osg::Vec3& d1);
 
+  static float getLineDistance(const osg::Vec3& p0, const osg::Vec3& d0,
+    const osg::Vec3& p1, const osg::Vec3& d1);
+
+  static inline float getLinePointDistance(
+    const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec3& p1) {
+    osg::Vec3 v01 = p1 - p0;
+    return (v01 - d0 * (v01 * d0)).length();
+  }
+
   static LinePlaneRel getLinePlaneRelation(
     const osg::Vec3& p0, const osg::Vec3& d0, const osg::Vec4& plane);
 
@@ -433,9 +442,9 @@ public:
   static std::pair<bool, osg::Vec3> intersect(
     const osg::Plane& p0, const osg::Plane& p1, const osg::Plane& p2);
 
-  //dir must be normalized
-  LineShpereRel intersect(const osg::BoundingSphere& sphere,
-    const osg::Vec3& p, const osg::Vec3& dir);
+  // dir must be normalized
+  LineShpereRel intersect(const osg::BoundingSphere& sphere, const osg::Vec3& p,
+    const osg::Vec3& dir);
 
   // get triangle areay by Heron's formula
   static inline double heronArea(double l0, double l1, double l2) {
@@ -461,6 +470,23 @@ public:
     const osg::Vec3& a, const osg::Vec3& b, const osg::Vec3& c);
 
   static bool isConvex(const osg::Vec3Array& vertices);
+
+  static uint factorial(uint n) {
+    uint res = 1;
+    while (n > 1) res *= n--;
+    return res;
+  }
+
+  static uint binomial(uint n, uint k) {
+    uint no = 1;
+    uint den = 1;
+
+    while (k > 0) {
+      no *= n--;
+      den *= k--;
+    }
+    return no / den;
+  }
 };
 }
 

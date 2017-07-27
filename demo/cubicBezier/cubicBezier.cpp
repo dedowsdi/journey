@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
   osg::ref_ptr<osg::Geode> geode = new osg::Geode;
   geode->addDrawable(controlPoints.get());
 
-  int segments = 10;
+  int segments = 20;
   osg::ref_ptr<osg::Program> program = new osg::Program;
   program->addShader(new osg::Shader(osg::Shader::VERTEX, vertSource));
   program->addShader(new osg::Shader(osg::Shader::GEOMETRY, geomSource));

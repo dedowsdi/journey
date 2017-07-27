@@ -3,6 +3,7 @@ set (DEMOES
     universe
     createTexture
     blender
+    bezier
     )
 
 foreach(DEMO ${DEMOES})
@@ -22,6 +23,7 @@ foreach(DEMO ${DEMOES})
         ${OSGPARTICLE_LIBRARY}
         ${OSGSHADOW_LIBRARY}
         ${OSGFX_LIBRARY}
+        ${OSGWIDGET_LIBRARY}
         common
         )
 endforeach()

@@ -21,7 +21,7 @@ set (DEMOES
     texture
 	translucent
     cartoonCow
-	bezier
+	cubicBezier
     hudCamera
     loop
     compositeViewer
@@ -107,6 +107,7 @@ foreach(DEMO ${DEMOES})
         ${OSGFX_LIBRARY}
         ${OPENGL_gl_LIBRARY}
         ${OPENGL_glu_LIBRARY}
+        ${OSGWIDGET_LIBRARY}
         common
         )
 endforeach()
