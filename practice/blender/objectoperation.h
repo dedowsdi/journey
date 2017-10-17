@@ -193,6 +193,7 @@ protected:
     return npCurrentCursor - mNearPlaneStartCursor;
   }
 
+  //get final window position of target
   osg::Vec2 getWndEndPos() {
     osg::Vec2 cursorOffset = mCurrentCursor - mStartCursor;
     return osg::Vec2(mWndStartObject[0], mWndStartObject[1]) + cursorOffset;
@@ -204,7 +205,7 @@ protected:
       mAc->getFrame() == zxd::AxisConstrainer::CF_LOCAL ? &mInvModelViewProjWnd
                                                         : &mInvViewProjWnd;
 
-    zxd::Math::getCameraRay(mCurrentCursor,  *invMat, p0, p1);
+    zxd::Math::getCameraRay(getWndEndPos(),  *invMat, p0, p1);
 
     rayStart = p0;
     dir = p1 - p0;

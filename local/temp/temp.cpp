@@ -7,25 +7,44 @@
 #include <ctime>
 #include <osgDB/ReadFile>
 #include <osgGA/TrackballManipulator>
-
-
+#include "common.h"
+#include <osg/Geometry>
+#include <osg/Point>
+#include <osg/MatrixTransform>
 
 int main(int argc, char* argv[]) {
-
   osgViewer::Viewer viewer;
-  osg::Camera* camera = new osg::Camera;
 
-  osg::ref_ptr<osg::Node> node = osgDB::readNodeFile("cessna.osg");
-  camera->addChild(node);
+  osg::Camera* hudCamera = zxd::createHUDCamera();
 
-  camera->setViewMatrixAsLookAt(osg::Vec3(0, -10, 0), osg::Vec3(), osg::Y_AXIS);
-  camera->setProjectionMatrixAsPerspective(osg::PI_4, 1.0f, 0.1f, 1000.0f);
+  osg::ref_ptr<osg::Geometry> gmPoint = new osg::Geometry;
+  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+  osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+  colors->setBinding(osg::Array::BIND_OVERALL);
 
-  viewer.setSceneData(node);
-  viewer.setCameraManipulator(new osgGA::TrackballManipulator);
+  vertices->push_back(osg::Vec3(300.0f, 300.0f, 0.0f));
+  colors->push_back(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-  while(!viewer.done())
-  {
-    viewer.frame();
-  }
+  gmPoint->setVertexArray(vertices);
+  gmPoint->setColorArray(colors);
+
+  gmPoint->addPrimitiveSet(new osg::DrawArrays(GL_POINTS, 0, 1));
+
+  osg::StateSet* ss = gmPoint->getOrCreateStateSet();
+  ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+  ss->setAttributeAndModes(new osg::Point(20.0f));
+
+  osg::ref_ptr<osg::MatrixTransform> mPointNode = new osg::MatrixTransform();
+  osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
+  leaf->addDrawable(gmPoint);
+  mPointNode->addChild(osgDB::readNodeFile("cessna.osg"));
+  mPointNode->addChild(leaf);
+
+  hudCamera->addChild(mPointNode);
+
+  hudCamera->setCullingMode(hudCamera->getCullingMode() & ~osg::CullSettings::SMALL_FEATURE_CULLING);
+
+  viewer.setSceneData(hudCamera);
+
+  return viewer.run();
 }

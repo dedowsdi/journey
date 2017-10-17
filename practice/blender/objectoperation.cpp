@@ -435,6 +435,7 @@ void GrabOperation::doApplyAxisConstrainerChange() {
       break;
   }
 
+  //reserve offset shift ratio after constrainer change
   GLfloat offsetShiftRatio = 0.0f;
   if (mOffsetShift != osg::Vec3() && mOffset != osg::Vec3()) {
     offsetShiftRatio = mOffsetShift.length() / mOffset.length();
@@ -445,6 +446,7 @@ void GrabOperation::doApplyAxisConstrainerChange() {
   // reset to start position
   mTarget->setMatrix(mModel);
 
+  //recalculate offset in current constrained axes
   mOffset = osg::Vec3();
   std::for_each(axes->begin(), axes->end(), [&](decltype(*axes->begin()) axis) {
     mOffset = mOffset + axis * (offset * axis);

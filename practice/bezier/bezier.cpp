@@ -1,17 +1,3 @@
-/*
- * Create bezier curve, play bezier animation. This bezire will be drawn
- * on xy plane.
- *
- * You can change following items to generate different kinds of bezier curve:
- *
- *      degree : 1-5 // i don't think i will ever use 5+
- *      control points, grab like blender
- *      animation period
- *      animation toggle
- *      interpolate time
- *      segments
- */
-
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
 #include <osg/Geometry>
@@ -30,51 +16,94 @@
 
 class UiCallback;
 
-osg::ref_ptr<osg::Vec3Array> controlPoints;
 osg::ref_ptr<osg::Group> root;
-osg::ref_ptr<osg::Geometry> gmCurve;
-osg::ref_ptr<osg::Program> program;
-osg::ref_ptr<osg::Uniform> uniform;
-osg::ref_ptr<zxd::Bezier> bezier;
-osg::ref_ptr<osg::Geometry> intermediateLines;
+osg::ref_ptr<osg::Geode> leaf;
+osg::ref_ptr<zxd::Bezier> bezier, lc, rc;
+osg::ref_ptr<osg::Geometry> iterations;
 osg::Vec3Array* vertices;
 osg::Camera* hudCamera;
 osg::Camera* uiCamera;
-osg::Camera* camera;  // main camera
-osg::ref_ptr<UiCallback> uiCallback;
+osg::ref_ptr<osgText::Font> font;
+osg::ref_ptr<osgText::Text> text;
 
 osgViewer::Viewer* viewer;
-osgWidget::Input* editDegree;
-osgWidget::Input* editSegments;
-osgWidget::Input* editPlayAnim;
-osgWidget::Input* editPeriod;
-osgWidget::Input* editTime;
 
-void updateIntermediateLinePoints(bool);
-void rebuildIntermediateLines();
+void updateIteratoins(bool);
+void rebuildIterations();
+void updateText();
+
+bool playAnim = true;
+bool subdivided = false;
+float period = 3.0f;
+float t;
+
+void reset() {
+  t = 0;
+  subdivided = false;
+
+  leaf->removeDrawables(0, leaf->getNumDrawables());
+  leaf->addDrawable(bezier);
+
+  // reset control points
+  GLuint width, height;
+  zxd::getScreenResolution(width, height);
+
+  osg::Vec3Array* controlPoints = bezier->getControlPoints();
+  controlPoints->clear();
+  controlPoints->push_back(osg::Vec3(width * 0.25f, height * 0.25f, 0));
+  controlPoints->push_back(osg::Vec3(width * 0.35f, height * 0.75f, 0));
+  controlPoints->push_back(osg::Vec3(width * 0.65f, height * 0.75f, 0));
+  controlPoints->push_back(osg::Vec3(width * 0.75f, height * 0.25f, 0));
+
+  bezier->rebuild();
+  rebuildIterations();
+  leaf->addDrawable(iterations);
+}
+
+void subdivide() {
+  subdivided = true;
+  bezier->subdivide(t, lc, rc);
+  lc->rebuild();
+  rc->rebuild();
+  leaf->removeDrawables(0, leaf->getNumDrawables());
+  leaf->addDrawable(lc);
+  leaf->addDrawable(rc);
+}
 
 class BezierAnimCallback : public osg::NodeCallback {
   virtual void operator()(osg::Node* node, osg::NodeVisitor* nv) {
-    double t = nv->getFrameStamp()->getReferenceTime();
-    t = std::fmod(t, 3.0f) / 3.0f;
-    if (editTime) {
-      editTime->setLabel(zxd::StringUtil::toString(t));
+    // becareful here, there is only 1 frame stamp in nv, it's content keeps
+    // changing, dont try to store entire old framestamp
+
+    static GLfloat t0 = nv->getFrameStamp()->getReferenceTime();
+    if (!playAnim || subdivided) {
+      t0 = nv->getFrameStamp()->getReferenceTime();
+      return;
     }
-    updateIntermediateLinePoints(false);
+
+    GLfloat dt = nv->getFrameStamp()->getReferenceTime() - t0;
+    t += dt / period;
+    if (t > 1.0f) t -= 1.0f;
+    updateIteratoins(false);
+    updateText();
+
+    t0 = nv->getFrameStamp()->getReferenceTime();
   }
 };
 
 // control points grab handler
-class GrabHandler : public osgGA::GUIEventHandler {
+class BezierController : public osgGA::GUIEventHandler {
 protected:
   bool mGrabing;
   osg::Vec3* mPoint;  // current grabing point
   osg::Matrix mInvViewProjWnd;
   osg::Vec3 mWndPos;     // start window position with depth value
   osg::Vec2 mCursorPos;  // start cursor position
+  osg::ref_ptr<osg::Geometry> mGmPoint;
+  osg::ref_ptr<osg::MatrixTransform> mPointNode;
 
 public:
-  GrabHandler() : mGrabing(false), mPoint(0) {}
+  BezierController() : mGrabing(false), mPoint(0) {}
 
 protected:
   virtual bool handle(
@@ -86,6 +115,8 @@ protected:
         break;
       case osgGA::GUIEventAdapter::RELEASE:
         mPoint = 0;
+        if (mPointNode) mPointNode->setNodeMask(0);
+
         break;
 
       case osgGA::GUIEventAdapter::DRAG: {
@@ -96,9 +127,56 @@ protected:
         *mPoint = targetWndPos;
 
         bezier->rebuild();
-        updateIntermediateLinePoints(false);
+        updateIteratoins(false);
+
+        if (mPointNode)
+          mPointNode->setMatrix(osg::Matrix::translate(targetWndPos));
 
       } break;
+
+      case osgGA::GUIEventAdapter::KEYDOWN: {
+        switch (ea.getKey()) {
+          case osgGA::GUIEventAdapter::KEY_Up:
+            bezier->elevate();
+            bezier->rebuild();
+            updateIteratoins(true);
+            updateText();
+            break;
+          case osgGA::GUIEventAdapter::KEY_Down:
+            bezier->elevate(false);
+            bezier->rebuild();
+            updateIteratoins(true);
+            updateText();
+            break;
+          case osgGA::GUIEventAdapter::KEY_Left:
+            if (!playAnim && !subdivided) {
+              t -= 0.05f;
+              t = std::max(0.0f, t);
+              updateIteratoins(false);
+              updateText();
+            }
+            break;
+          case osgGA::GUIEventAdapter::KEY_Right:
+            if (!playAnim && !subdivided) {
+              t += 0.05f;
+              t = std::min(1.0f, t);
+              updateIteratoins(false);
+              updateText();
+            }
+            break;
+          case 'a':
+            playAnim = !playAnim;
+            break;
+          case 'd':
+            if (!subdivided) subdivide();
+            break;
+          case 'r':
+            reset();
+          default:
+            break;
+        }
+      }
+
       default:
         break;
     }
@@ -107,6 +185,7 @@ protected:
 
   void selectPoint(const osgGA::GUIEventAdapter& ea) {
     float threashold = 50.0f;
+    osg::Vec3Array* controlPoints = bezier->getControlPoints();
 
     for (unsigned int i = 0; i < controlPoints->size(); ++i) {
       osg::Vec3 wndPos = controlPoints->at(i);
@@ -122,46 +201,67 @@ protected:
     if (mPoint) {
       OSG_NOTICE << "select control point " << *mPoint << std::endl;
       mCursorPos = osg::Vec2(ea.getX(), ea.getY());
+
+      if (!mGmPoint) {
+        mGmPoint = new osg::Geometry;
+        osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+        osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+        colors->setBinding(osg::Array::BIND_OVERALL);
+
+        vertices->push_back(osg::Vec3());
+        colors->push_back(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+        mGmPoint->setVertexArray(vertices);
+        mGmPoint->setColorArray(colors);
+
+        mGmPoint->addPrimitiveSet(new osg::DrawArrays(GL_POINTS, 0, 1));
+
+        osg::StateSet* ss = mGmPoint->getOrCreateStateSet();
+        ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+        ss->setAttributeAndModes(new osg::Point(15.0f));
+
+        mPointNode = new osg::MatrixTransform();
+        osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
+        leaf->addDrawable(mGmPoint);
+        mPointNode->addChild(leaf);
+
+        hudCamera->addChild(mPointNode);
+      }
+
+      mPointNode->setNodeMask(-1);
+      mPointNode->setMatrix(osg::Matrix::translate(*mPoint));
     }
   }
 };
 
 void createScene() {
   hudCamera = zxd::createHUDCamera();
+  // need to draw single point
+  hudCamera->setCullingMode(
+    hudCamera->getCullingMode() & ~osg::CullSettings::SMALL_FEATURE_CULLING);
 
   root = new osg::Group;
+  leaf = new osg::Geode();
+  root->addChild(hudCamera);
+  hudCamera->addChild(leaf);
+
   bezier = new zxd::Bezier;
   bezier->setUseDisplayList(false);
-  bezier->osg::Drawable::setUseVertexBufferObjects(true);
+  lc = new zxd::Bezier;  // subdivided left curve
+  rc = new zxd::Bezier;  // subdivided right curve
 
   osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
   colors->push_back(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
   colors->setBinding(osg::Array::Binding::BIND_OVERALL);
   bezier->setColorArray(colors);
 
-  controlPoints = new osg::Vec3Array();
-  bezier->setControlPoints(controlPoints);
-
-  GLuint width, height;
-  zxd::getScreenResolution(width, height);
-  controlPoints->push_back(osg::Vec3(width * 0.25f, height * 0.5f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.35f, height * 0.75f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.65f, height * 0.75f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.75f, height * 0.5f, 0));
-
-  bezier->rebuild();
-  rebuildIntermediateLines();
-
-  osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
-  leaf->addDrawable(bezier);
-  bezier->addUpdateCallback(new BezierAnimCallback());
-
   osg::StateSet* ss = leaf->getOrCreateStateSet();
   ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
-  hudCamera->addChild(leaf);
+  // animate iterations
+  bezier->addUpdateCallback(new BezierAnimCallback());
 
-  root->addChild(hudCamera);
+  reset();
 }
 
 osgWidget::Input* createInput(
@@ -172,160 +272,101 @@ osgWidget::Input* createInput(
   input->setFontSize(15);
   input->setYOffset(input->calculateBestYOffset("y"));  //?
   input->setSize(100.0f, input->getText()->getCharacterHeight());
+  input->unfocus(0);
+
   return input;
 }
 
-void updateIntermediateLinePoints(bool updatePrimitiveSet = false) {
-  if (updatePrimitiveSet)
-    intermediateLines->removePrimitiveSet(
-      0, intermediateLines->getNumPrimitiveSets());
+osgWidget::Label* createLabel(
+  const std::string& name, const std::string& text) {
+  osgWidget::Label* label = new osgWidget::Label(name, text);
+  label->setFont("fonts/VeraMono.ttf");
+  label->setFontColor(0.0f, 0.0f, 0.0f, 1.0f);
+  label->setFontSize(15);
+  label->setSize(70.0f, label->getText()->getCharacterHeight());
 
-  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
-  intermediateLines->setVertexArray(vertices);
+  return label;
+}
 
-  int numLineGroups = controlPoints->size() - 1;
-  osg::ref_ptr<osg::Vec3Array> va = controlPoints;
+void updateIteratoins(bool updatePrimitiveSet = false) {
+  if (updatePrimitiveSet) {
+    iterations->removePrimitiveSet(0, iterations->getNumPrimitiveSets());
 
-  float t = 0;
-  if (editTime) t = zxd::StringUtil::parseFloat(editTime->getLabel());
+    // reset color for every vertex in iterations
+    osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+    colors->setBinding(osg::Array::Binding::BIND_PER_VERTEX);
+    iterations->setColorArray(colors);
 
-  for (int i = 0; i < numLineGroups; ++i) {
-    // std::for_each(va->begin(), va->end(),
-    //[&](decltype(*va->begin()) v) { OSG_NOTICE << v << std::endl; });
-
-    vertices->insert(vertices->end(), va->begin(), va->end());
-    if (updatePrimitiveSet)
-      intermediateLines->addPrimitiveSet(new osg::DrawArrays(
-        GL_LINE_STRIP, vertices->size() - va->size(), va->size()));
-    va = zxd::Bezier::getIntermediatePoints(va, t);
+    int numIterations = bezier->getDegree();
+    for (int i = 0; i < numIterations; ++i) {
+      colors->insert(colors->end(), numIterations - i + 1,
+        osg::Vec4(zxd::Math::randomVector(0.0f, 1.0f), 1.0f));
+    }
   }
 
-  // add current interpolate point
-  vertices->push_back(va->at(0));
+  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+  iterations->setVertexArray(vertices);
+
+  zxd::Vec3VecVec vv = zxd::Bezier::iterateAll(*bezier->getControlPoints(), t);
+  // draw all iterations, except the last one, which is a single point
+  for (unsigned int i = 0; i < vv.size(); ++i) {
+    osg::Vec3Array* va = vv[i];
+    vertices->insert(vertices->end(), va->begin(), va->end());
+    if (updatePrimitiveSet)
+      iterations->addPrimitiveSet(
+        new osg::DrawArrays(i == vv.size() - 1 ? GL_POINTS : GL_LINE_STRIP,
+          vertices->size() - va->size(), va->size()));
+  }
 
   // draw all points
   if (updatePrimitiveSet)
-    intermediateLines->addPrimitiveSet(
+    iterations->addPrimitiveSet(
       new osg::DrawArrays(GL_POINTS, 0, vertices->size()));
 }
 
-void rebuildIntermediateLines() {
-  static osg::ref_ptr<osg::Vec4Array> scolors = new osg::Vec4Array();
-  if (scolors->empty()) {
-    scolors->push_back(osg::Vec4(0.5f, 0.5f, 0.5f, 1.0f));
-    scolors->push_back(osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-    scolors->push_back(osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-    scolors->push_back(osg::Vec4(0.5f, 0.0f, 0.8f, 1.0f));
-    scolors->push_back(osg::Vec4(0.7f, 0.0f, 0.5f, 1.0f));
-    scolors->setBinding(osg::Array::Binding::BIND_PER_VERTEX);
-  }
-
-  if (!intermediateLines) {
-    intermediateLines = new osg::Geometry;
-    osg::StateSet* ss = intermediateLines->getOrCreateStateSet();
-    ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+void rebuildIterations() {
+  if (!iterations) {
+    iterations = new osg::Geometry;
+    osg::StateSet* ss = iterations->getOrCreateStateSet();
     ss->setAttributeAndModes(new osg::Point(8.0f));
-
-    osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
-    leaf->addDrawable(intermediateLines);
-    hudCamera->addChild(leaf);
   }
-  osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
-  colors->setBinding(osg::Array::Binding::BIND_PER_VERTEX);
-  intermediateLines->setColorArray(colors);
-
-  int numLineGroups = controlPoints->size() - 1;
-  for (int i = 0; i < numLineGroups; ++i) {
-    // colors->push_back(scolors->at(i));
-    colors->insert(colors->end(), numLineGroups - i + 1, scolors->at(i));
-  }
-  colors->push_back(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-
-  updateIntermediateLinePoints(true);
+  updateIteratoins(true);
 }
 
-// union of input change call back
-class UiCallback : public osg::Referenced {
-public:
-  bool onDegreeChange(osgWidget::Event& e) {
-    int degree = zxd::StringUtil::parseInt(editDegree->getLabel(), 3);
-    degree = std::max(std::min(degree, 5), 0);
-    // editDegree->getText()->setText(zxd::StringUtil::toString(degree));
+void updateText() {
+  if (!text) {
+    GLuint width, height;
+    zxd::getScreenResolution(width, height);
 
-    int curDegree = bezier->getDegree();
-    int difference = degree - curDegree;
+    font = osgText::readFontFile("fonts/arials.ttf");
 
-    if (difference > 0) {
-      // insert new vertices at the end or last second
-      osg::Vec3Array::iterator iter =
-        curDegree <= 1 ? controlPoints->end() : controlPoints->end() - 1;
-      controlPoints->insert(iter, difference, osg::Vec3());
-    } else if (difference < 0) {
-      // remove  controlPoints at the end or last second
-      osg::Vec3Array::iterator iter =
-        curDegree == 1 ? controlPoints->end() - 1 : controlPoints->end() - 2;
-      controlPoints->erase(iter, iter - difference);
-    }
-
-    bezier->rebuild();
-    return false;
+    text = zxd::createText(font, osg::Vec3(10.0f, height - 30, 0.0f), "", 12);
+    osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
+    leaf->addDrawable(text);
+    hudCamera->addChild(leaf);
   }
-};
 
-void createUi() {
-  // what's this?
-  const unsigned int MASK_2D = 0xF0000000;
-
-  GLuint width, height;
-  zxd::getScreenResolution(width, height);
-
-  osg::ref_ptr<osgWidget::WindowManager> wm = new osgWidget::WindowManager(
-    viewer, width, height, MASK_2D, osgWidget::WindowManager::WM_PICK_DEBUG);
-
-  osgWidget::Box* box = new osgWidget::Box("vbox", osgWidget::Box::VERTICAL);
-
-  editDegree = createInput("degree", "3", 20);
-  editSegments = createInput("segments", "20", 20);
-  editPlayAnim = createInput("playAnim", "1", 20);
-  editPeriod = createInput("period", "2", 20);
-  editTime = createInput("time", "0", 20);
-  uiCallback = new UiCallback;
-
-  // editDegree->addCallback(new osgWidget::Callback(
-  //&UiCallback::onDegreeChange, uiCallback.get(), osgWidget::EVENT_KEY_DOWN));
-
-  box->addWidget(editDegree);
-  box->addWidget(editSegments);
-  box->addWidget(editPlayAnim);
-  box->addWidget(editPeriod);
-  box->addWidget(editTime);
-
-  box->setOrigin(200.0f, 200);
-  wm->addChild(box);
-
-  uiCamera = wm->createParentOrthoCamera();
-
-  //viewer->addEventHandler(new osgWidget::MouseHandler(wm));
-  //viewer->addEventHandler(new osgWidget::KeyboardHandler(wm));
-  viewer->addEventHandler(new osgWidget::ResizeHandler(wm, uiCamera));
-  // viewer->addEventHandler(new osgWidget::CameraSwitchHandler(wm, uiCamera));
-  viewer->addEventHandler(new osgViewer::WindowSizeHandler());
-
-  wm->resizeAllWindows();
-
-  root->addChild(uiCamera);
+  std::stringstream ss;
+  ss << "  r : reset \n";
+  ss << "  up|down arrow : change degree \n";
+  ss << "  left|right arrow : change t if animation stopped \n";
+  ss << "  a : pause animation \n";
+  ss << "  d : subdivide. (u can only reset after this operation) \n";
+  ss << "  drag : move control points \n";
+  ss << "  degree : " << bezier->n() << std::endl;
+  ss << "  t : " << t << std::endl;
+  text->setText(ss.str());
 }
 
 int main(int argc, char* argv[]) {
   osgViewer::Viewer v;
   viewer = &v;
-  camera = v.getCamera();
 
   createScene();
-  createUi();
+  updateText();
 
   v.addEventHandler(new osgViewer::StatsHandler);
-  v.addEventHandler(new GrabHandler());
+  v.addEventHandler(new BezierController());
   v.setSceneData(root);
 
   // no camera manipulator

@@ -3,12 +3,18 @@
 #include <osgDB/ReadFile>
 #include <osgViewer/Viewer>
 #include <common.h>
+#include <stringutil.h>
+#include <osg/io_utils>
 
 const std::string helpContent =
-  " q to change wrap_s . \n"
-  " w to change wrap_t . \n"
-  " e to change min_filter . \n"
-  " r to change mag_filter . \n";
+  " q : wrap_s\n"
+  " w : wrap_t\n"
+  " e : min_filter\n"
+  " r : mag_filter\n"
+  " uU : border width\n"
+  " iI : border red\n"
+  " oO : border green\n"
+  " pP : border blue\n";
 
 std::string toString(osg::Texture::WrapMode mode) {
   switch (mode) {
@@ -47,15 +53,20 @@ std::string toString(osg::Texture::FilterMode mode) {
 }
 
 void updateTexInfo(osgText::Text* text, osg::Texture* tex) {
-  std::string s(helpContent);
-  s += "current texture param:  \n";
-  s += "    WRAP_S : " + toString(tex->getWrap(osg::Texture::WRAP_S)) + "\n";
-  s += "    WRAP_T : " + toString(tex->getWrap(osg::Texture::WRAP_T)) + "\n";
-  s += "    MIN_FILTER : " +
-       toString(tex->getFilter(osg::Texture::MIN_FILTER)) + "\n";
-  s += "    MAG_FILTER : " +
-       toString(tex->getFilter(osg::Texture::MAG_FILTER)) + "\n";
-  text->setText(s);
+  std::stringstream ss;
+  ss << helpContent << std::endl;
+  ss << "current texture param:  \n";
+  ss << "    WRAP_S : " + toString(tex->getWrap(osg::Texture::WRAP_S)) + "\n";
+  ss << "    WRAP_T : " + toString(tex->getWrap(osg::Texture::WRAP_T)) + "\n";
+  ss << "    MIN_FILTER : "
+     << toString(tex->getFilter(osg::Texture::MIN_FILTER)) + "\n";
+  ss << "    MAG_FILTER : "
+     << toString(tex->getFilter(osg::Texture::MAG_FILTER)) + "\n";
+  ss << "    border width : "
+     << zxd::StringUtil::toString(tex->getBorderWidth()) + "\n";
+  ss << "    border color : " << tex->getBorderColor();
+
+  text->setText(ss.str());
 }
 
 osg::Texture::WrapMode wrapModes[] = {osg::Texture::CLAMP,
@@ -84,7 +95,7 @@ public:
     switch (ea.getEventType()) {
       case osgGA::GUIEventAdapter::KEYDOWN:
         switch (ea.getKey()) {
-          case osgGA::GUIEventAdapter::KEY_Q: {
+          case 'q': {
             osg::Texture::WrapMode mode =
               mTexture->getWrap(osg::Texture::WRAP_S);
             auto iter = std::find(wrapModes, wrapModes + 5, mode);
@@ -93,7 +104,7 @@ public:
             updateTexInfo(mText, mTexture);
           } break;
 
-          case osgGA::GUIEventAdapter::KEY_W: {
+          case 'w': {
             osg::Texture::WrapMode mode =
               mTexture->getWrap(osg::Texture::WRAP_T);
             auto iter = std::find(wrapModes, wrapModes + 5, mode);
@@ -101,7 +112,7 @@ public:
               iter == (wrapModes + 4) ? wrapModes[0] : *++iter);
             updateTexInfo(mText, mTexture);
           } break;
-          case osgGA::GUIEventAdapter::KEY_E: {
+          case 'e': {
             osg::Texture::FilterMode mode =
               mTexture->getFilter(osg::Texture::MIN_FILTER);
             auto iter = std::find(filterModes, filterModes + 5, mode);
@@ -109,12 +120,64 @@ public:
               iter == (filterModes + 5) ? filterModes[0] : *++iter);
             updateTexInfo(mText, mTexture);
           } break;
-          case osgGA::GUIEventAdapter::KEY_R: {
+          case 'r': {
             osg::Texture::FilterMode mode =
               mTexture->getFilter(osg::Texture::MAG_FILTER);
             mTexture->setFilter(osg::Texture::MAG_FILTER,
               mode == osg::Texture::NEAREST ? osg::Texture::LINEAR
                                             : osg::Texture::NEAREST);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'j': {
+            mTexture->setBorderWidth(mTexture->getBorderWidth() ^ 0x1);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'u': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.r() = osg::clampTo(color.r() + 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'U': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.r() = osg::clampTo(color.r() - 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'i': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.g() = osg::clampTo(color.g() + 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'I': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.g() = osg::clampTo(color.g() - 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'o': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.b() = osg::clampTo(color.b() + 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'O': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.b() = osg::clampTo(color.b() - 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'p': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.a() = osg::clampTo(color.a() + 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
+            updateTexInfo(mText, mTexture);
+          } break;
+          case 'P': {
+            osg::Vec4 color = mTexture->getBorderColor();
+            color.a() = osg::clampTo(color.a() - 0.1f, 0.0f, 1.0f);
+            mTexture->setBorderColor(color);
             updateTexInfo(mText, mTexture);
           } break;
         }
@@ -149,8 +212,7 @@ osg::Geode* createHelp() {
   text->setDataVariance(osg::Object::DYNAMIC);
   osg::ref_ptr<osg::Geode> help = new osg::Geode();
   help->addDrawable(text);
-  help->getOrCreateStateSet()->setMode(
-    GL_LIGHTING, osg::StateAttribute::OFF);
+  help->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
   return help.release();
 }
@@ -158,7 +220,7 @@ osg::Geode* createHelp() {
 int main(int argc, char* argv[]) {
   osg::ref_ptr<osg::Geometry> gm =
     osg::createTexturedQuadGeometry(osg::Vec3(-0.5f, 0, -0.5f),
-      osg::Vec3(1.0f, 0.0f, 0.0f), osg::Vec3(0.0f, 0.0f, 1.0f), 5.0f, 5.0f);
+      osg::Vec3(1.0f, 0.0f, 0.0f), osg::Vec3(0.0f, 0.0f, 1.0f), 3.0f, 3.0f);
 
   osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
   osg::ref_ptr<osg::Image> image = osgDB::readImageFile("Images/lz.rgb");
@@ -169,7 +231,8 @@ int main(int argc, char* argv[]) {
   gm->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get());
 
   osg::Camera* camera = zxd::createHUDCamera();
-  //camera->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+  // camera->getOrCreateStateSet()->setMode(GL_LIGHTING,
+  // osg::StateAttribute::OFF);
   osg::Geode* help = createHelp();
   osgText::Text* text = static_cast<osgText::Text*>(help->getDrawable(0));
   camera->addChild(help);

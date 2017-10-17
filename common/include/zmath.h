@@ -477,7 +477,13 @@ public:
     return res;
   }
 
+  //doesn't work if n or k is too big
   static uint binomial(uint n, uint k) {
+    if (k == 0 || k == n) return 1;
+
+    // make sure k < n/2
+    if (k > n / 2) k = n - k;
+
     uint no = 1;
     uint den = 1;
 
@@ -486,6 +492,15 @@ public:
       den *= k--;
     }
     return no / den;
+  }
+
+  static inline float sigma(float a0, float d, uint n) {
+    return (a0 + (n - 1) * d / 2) * n;
+  }
+  static inline float pi(float a0, float d, uint n) {
+    float m = 1;
+    while (n--) m *= a0 + n * d;  // reverse order of pi
+    return m;
   }
 };
 }
