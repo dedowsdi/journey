@@ -4,6 +4,7 @@ set (DEMOES
     createTexture
     blender
     bezier
+    spline
     )
 
 foreach(DEMO ${DEMOES})

@@ -60,6 +60,9 @@ ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 #generate cfg file
 
+#copy data faile
+FILE(COPY data/spline.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 add_subdirectory(common)
 set(COMMON_LIBS common)
 add_subdirectory(demo)

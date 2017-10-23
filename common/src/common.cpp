@@ -3,6 +3,7 @@
 #include <osgViewer/View>
 
 #include "common.h"
+#include <osg/Point>
 
 namespace zxd {
 
@@ -137,6 +138,34 @@ extern osgText::Text* createText(osg::ref_ptr<osgText::Font> font,
 }
 
 //------------------------------------------------------------------------------
+osg::ref_ptr<osg::Geometry> createSingleDot(GLfloat pointSize, const osg::Vec4& color) {
+  osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry;
+  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+
+  osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+  colors->setBinding(osg::Array::BIND_OVERALL);
+
+  geometry->setVertexArray(vertices);
+  geometry->setColorArray(colors);
+
+  vertices->push_back(osg::Vec3());
+  colors->push_back(color);
+
+  geometry->addPrimitiveSet(new osg::DrawArrays(GL_POINTS, 0, 1));
+
+  osg::StateSet* ss = geometry->getOrCreateStateSet();
+  ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+
+  if (pointSize != 1.0f) {
+    osg::ref_ptr<osg::Point> point = new osg::Point();
+    point->setSize(pointSize);
+    ss->setAttributeAndModes(point);
+  }
+
+  return geometry;
+}
+
+//------------------------------------------------------------------------------
 void removeNodeParents(osg::Node* node, GLuint count) {
   GLuint numParent = node->getNumParents();
   numParent = std::min(numParent, count);
@@ -184,7 +213,7 @@ bool PickHandler::handle(
       osgUtil::LineSegmentIntersector::Intersection result =
         *(intersector->getIntersections().begin());
       doUserOperations(result);
-    }else{
+    } else {
       doNoHit();
     }
   }

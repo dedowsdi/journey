@@ -92,8 +92,8 @@ public:
                           (mControlPoints->at(i) * (1 - i * rcpNplus1)));
       }
     } else {
-      // degree drop. Graph might be changed as lower degree can't entirely
-      // represent higher degree bezier
+      // degree drop, unstable. Graph might be changed as lower degree can't
+      // entirely represent higher degree bezier
       GLuint r = n - 1;
       points->reserve(r + 1);
       GLfloat rcpN = 1.0 / n;
@@ -211,16 +211,24 @@ public:
     osg::Vec3Array::iterator beg, osg::Vec3Array::iterator end, GLfloat t) {
     t = std::max(std::min(t, 1.0f), 0.0f);
 
-    GLuint degree = end - beg - 1;
+    GLuint p = end - beg - 1;
     float oneMinusT = 1 - t;
-    osg::Vec3 p;
 
-    for (uint i = 0; i <= degree; ++i) {
-      p += *(beg + i) * ((std::pow(oneMinusT, degree - i) * std::pow(t, i) *
-                          zxd::Math::binomial(degree, i)));
+    // get by definition, binomial might cause problem as degree gets too bigger
+    // for (uint i = 0; i <= degree; ++i) {
+    // p += *(beg + i) * ((std::pow(oneMinusT, degree - i) * std::pow(t, i) *
+    // zxd::Math::binomial(degree, i)));
+    //}
+
+    // get by de Casteljau's algorithm
+    osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array(beg, end);
+    for (unsigned int i = 0; i < p; ++i) {
+      for (unsigned int j = 0; j < p - i; ++j) {
+        points->at(j) = points->at(j) * oneMinusT + points->at(j + 1) * t;
+      }
     }
 
-    return p;
+    return points->front();
   }
 
 private:

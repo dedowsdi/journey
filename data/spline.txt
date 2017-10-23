@@ -1,0 +1,25 @@
+"control points" and "knots" are used to mark start line of control points and
+knots, degree is not included in this file, u can compute it by m-n-1. Control
+points is assued to be created in 100*100 .
+
+control points:
+25 25 0
+27 45 0
+35 65 0
+50 75 0
+65 65 0
+73 45 0
+75 25 0
+
+knots:
+0
+0
+0
+0
+0.25
+0.5
+0.75
+1
+1
+1
+1

@@ -5,7 +5,7 @@
 #include <osg/MatrixTransform>
 #include <osgWidget/WindowManager>
 #include <osgWidget/Input>
-#include "bezier.h"
+#include "spline.h"
 #include "stringutil.h"
 #include <osgWidget/ViewerEventHandlers>
 #include <osgText/String>
@@ -13,12 +13,15 @@
 #include "common.h"
 #include <osg/Point>
 #include <osg/io_utils>
+#include <iomanip>
+#include <fstream>
 
 class UiCallback;
 
 osg::ref_ptr<osg::Group> root;
 osg::ref_ptr<osg::Geode> leaf;
-osg::ref_ptr<zxd::Bezier> bezier, lc, rc;
+osg::ref_ptr<osg::Group> knotGroup;
+osg::ref_ptr<zxd::Spline> spline, lc, rc;
 osg::ref_ptr<osg::Geometry> iterations;
 osg::Vec3Array* vertices;
 osg::Camera* hudCamera;
@@ -31,46 +34,113 @@ osgViewer::Viewer* viewer;
 void updateIteratoins(bool);
 void rebuildIterations();
 void updateText();
+void updateKnotsLable();
 
 bool playAnim = true;
 bool subdivided = false;
-float period = 3.0f;
-float t;
+GLdouble period = 5.0f;
+GLdouble t = 0;  // normalized time
 
 void reset() {
   t = 0;
   subdivided = false;
 
   leaf->removeDrawables(0, leaf->getNumDrawables());
-  leaf->addDrawable(bezier);
+  leaf->addDrawable(spline);
 
   // reset control points
   GLuint width, height;
   zxd::getScreenResolution(width, height);
 
-  osg::Vec3Array* controlPoints = bezier->getControlPoints();
+  osg::Vec3Array* controlPoints = spline->getControlPoints();
   controlPoints->clear();
-  controlPoints->push_back(osg::Vec3(width * 0.25f, height * 0.25f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.35f, height * 0.75f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.65f, height * 0.75f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.75f, height * 0.25f, 0));
+  osg::DoubleArray* knots = spline->getKnots();
+  knots->clear();
 
-  bezier->rebuild();
+  // read control points and knots from spline.txt
+  std::ifstream ifs("spline.txt");
+  if (ifs.fail()) {
+    OSG_FATAL << "failed to read open spline.txt" << std::endl;
+    return;
+  }
+
+  std::string line;
+  // read until "control points"
+  while (std::getline(ifs, line)) {
+    if (line.size() >= 14 && line.substr(0, 14) == "control points") break;
+  }
+
+  while (std::getline(ifs, line)) {
+    if (line.size() >= 5 && line.substr(0, 5) == "knots") break;
+    if (line.empty()) continue;
+
+    std::stringstream ss(line);
+    osg::Vec3 v;
+    ss >> v[0];
+    ss >> v[1];
+    ss >> v[2];
+    controlPoints->push_back(v * 10);
+    OSG_NOTICE << v << std::endl;
+  }
+
+  GLfloat knot;
+  while (ifs >> knot) knots->push_back(knot);
+
+  spline->updateDegree();
+  OSG_NOTICE << "read " << controlPoints->size() << " control points, "
+             << knots->size() << " knots " << std::endl;
+
+  spline->rebuild();
+
   rebuildIterations();
+  updateKnotsLable();
   leaf->addDrawable(iterations);
+}
+
+// draw knot dot, index and it's value
+void updateKnotsLable() {
+  if (!knotGroup) {
+    knotGroup = new osg::Group;
+    hudCamera->addChild(knotGroup);
+  }
+
+  knotGroup->removeChildren(0, knotGroup->getNumChildren());
+
+  static osg::ref_ptr<osg::Geometry> dot =
+    zxd::createSingleDot(4.0f, osg::Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
+  osg::DoubleArray* knots = spline->getKnots();
+  for (unsigned int i = 0; i < knots->size(); ++i) {
+    GLfloat u = knots->at(i);
+    osg::Vec3 p = spline->get(u);
+    osg::ref_ptr<osg::MatrixTransform> mt = new osg::MatrixTransform();
+    mt->setMatrix(osg::Matrix::translate(p));
+    osg::ref_ptr<osg::Geode> l = new osg::Geode();
+    // add dot, and text
+    l->addDrawable(dot);
+    std::stringstream ss;
+    ss << i << " : " << std::fixed << std::setprecision(3) << u;
+    l->addDrawable(zxd::createText(font, osg::Vec3(0, 5, 0), ss.str(), 12));
+
+    mt->addChild(l);
+    knotGroup->addChild(mt);
+  }
 }
 
 void subdivide() {
   subdivided = true;
-  bezier->subdivide(t, lc, rc);
+  spline->subdivide(t, *lc, *rc);
+  lc->setDegree(spline->getDegree());
+  rc->setDegree(spline->getDegree());
   lc->rebuild();
   rc->rebuild();
   leaf->removeDrawables(0, leaf->getNumDrawables());
   leaf->addDrawable(lc);
   leaf->addDrawable(rc);
+  knotGroup->removeChildren(0, knotGroup->getNumChildren());
 }
 
-class BezierAnimCallback : public osg::NodeCallback {
+class SplineAnimCallback : public osg::NodeCallback {
   virtual void operator()(osg::Node* node, osg::NodeVisitor* nv) {
     // becareful here, there is only 1 frame stamp in nv, it's content keeps
     // changing, dont try to store entire old framestamp
@@ -126,8 +196,9 @@ protected:
         osg::Vec3 targetWndPos = mWndPos + osg::Vec3(offset, 0);
         *mPoint = targetWndPos;
 
-        bezier->rebuild();
+        spline->rebuild();
         updateIteratoins(false);
+        updateKnotsLable();
 
         if (mPointNode)
           mPointNode->setMatrix(osg::Matrix::translate(targetWndPos));
@@ -136,30 +207,18 @@ protected:
 
       case osgGA::GUIEventAdapter::KEYDOWN: {
         switch (ea.getKey()) {
-          case osgGA::GUIEventAdapter::KEY_Up:
-            bezier->elevate();
-            bezier->rebuild();
-            updateIteratoins(true);
-            updateText();
-            break;
-          case osgGA::GUIEventAdapter::KEY_Down:
-            bezier->elevate(false);
-            bezier->rebuild();
-            updateIteratoins(true);
-            updateText();
-            break;
           case osgGA::GUIEventAdapter::KEY_Left:
             if (!playAnim && !subdivided) {
-              t -= 0.05f;
-              t = std::max(0.0f, t);
+              t -= 0.05;
+              t = std::max(0.0, t);
               updateIteratoins(false);
               updateText();
             }
             break;
           case osgGA::GUIEventAdapter::KEY_Right:
             if (!playAnim && !subdivided) {
-              t += 0.05f;
-              t = std::min(1.0f, t);
+              t += 0.05;
+              t = std::min(1.0, t);
               updateIteratoins(false);
               updateText();
             }
@@ -185,7 +244,7 @@ protected:
 
   void selectPoint(const osgGA::GUIEventAdapter& ea) {
     float threashold = 50.0f;
-    osg::Vec3Array* controlPoints = bezier->getControlPoints();
+    osg::Vec3Array* controlPoints = spline->getControlPoints();
 
     for (unsigned int i = 0; i < controlPoints->size(); ++i) {
       osg::Vec3 wndPos = controlPoints->at(i);
@@ -245,16 +304,16 @@ void createScene() {
   root->addChild(hudCamera);
   hudCamera->addChild(leaf);
 
-  bezier = new zxd::Bezier;
-  bezier->setUseDisplayList(false);
-  lc = new zxd::Bezier;  // subdivided left curve
-  rc = new zxd::Bezier;  // subdivided right curve
+  spline = new zxd::Spline;
+  spline->setUseDisplayList(false);
+  lc = new zxd::Spline;  // subdivided left curve
+  rc = new zxd::Spline;  // subdivided right curve
 
   {
     osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
     colors->push_back(osg::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
     colors->setBinding(osg::Array::Binding::BIND_OVERALL);
-    bezier->setColorArray(colors);
+    spline->setColorArray(colors);
   }
   {
     osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
@@ -273,7 +332,7 @@ void createScene() {
   ss->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
   // animate iterations
-  bezier->addUpdateCallback(new BezierAnimCallback());
+  spline->addUpdateCallback(new SplineAnimCallback());
 
   reset();
 }
@@ -303,6 +362,17 @@ osgWidget::Label* createLabel(
 }
 
 void updateIteratoins(bool updatePrimitiveSet = false) {
+  // sometimes t is negative,  cuased by computer double precision problem?
+  GLdouble nt = std::min(std::max(0.0, t), 1.0);
+  GLdouble u = spline->getMinKnot() * (1 - nt) + spline->getMaxKnot() * nt;
+
+  GLuint k = spline->getKnotSpan(u);  // knot span
+  GLuint p = spline->getDegree();
+
+  // find iterations for from k-p to p, don't care about multiplicity
+  zxd::Vec3ArrayVec vec = spline->iterate(k - p, k + 1, u, p);
+  osg::Vec3Array* points = spline->getControlPoints();
+
   if (updatePrimitiveSet) {
     iterations->removePrimitiveSet(0, iterations->getNumPrimitiveSets());
 
@@ -311,8 +381,11 @@ void updateIteratoins(bool updatePrimitiveSet = false) {
     colors->setBinding(osg::Array::Binding::BIND_PER_VERTEX);
     iterations->setColorArray(colors);
 
-    int numIterations = bezier->getDegree() + 1;
-    for (int i = 0; i < numIterations; ++i) {
+    int numIterations = vec.size();
+    // colors for 1st iteration
+    colors->insert(colors->end(), points->size(), zxd::Math::randomRGB4());
+
+    for (int i = 1; i < numIterations; ++i) {
       colors->insert(colors->end(), numIterations - i,
         osg::Vec4(zxd::Math::randomVector(0.0f, 1.0f), 1.0f));
     }
@@ -320,16 +393,22 @@ void updateIteratoins(bool updatePrimitiveSet = false) {
 
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
   iterations->setVertexArray(vertices);
+  vertices->reserve(
+    (points->size() + 1) * points->size() / 2);  // more than enough
 
-  zxd::Vec3ArrayVec vv =
-    zxd::Bezier::iterateAll(*bezier->getControlPoints(), t);
-  // draw all iterations, except the last one, which is a single point
-  for (unsigned int i = 0; i < vv.size(); ++i) {
-    osg::Vec3Array* va = vv[i];
+  // vertices for 1st iteration
+  vertices->assign(points->begin(), points->end());
+  if (updatePrimitiveSet)
+    iterations->addPrimitiveSet(
+      new osg::DrawArrays(GL_LINE_STRIP, 0, vertices->size()));
+
+  // vertices for other iterations
+  for (unsigned int i = 1; i < vec.size(); ++i) {
+    osg::Vec3Array* va = vec[i];
     vertices->insert(vertices->end(), va->begin(), va->end());
     if (updatePrimitiveSet)
       iterations->addPrimitiveSet(
-        new osg::DrawArrays(i == vv.size() - 1 ? GL_POINTS : GL_LINE_STRIP,
+        new osg::DrawArrays(i == vec.size() - 1 ? GL_POINTS : GL_LINE_STRIP,
           vertices->size() - va->size(), va->size()));
   }
 
@@ -363,18 +442,18 @@ void updateText() {
 
   std::stringstream ss;
   ss << "  r : reset \n";
-  ss << "  up|down arrow : change degree \n";
   ss << "  left|right arrow : change t if animation stopped \n";
   ss << "  a : pause animation \n";
   ss << "  d : subdivide. (u can only reset after this operation) \n";
   ss << "  drag : move control points \n";
-  ss << "  degree : " << bezier->n() << std::endl;
+  ss << "  degree : " << spline->getDegree() << std::endl;
+  ss << "  n p m : " << spline->n() << " " << spline->p() << " " << spline->m()
+     << std::endl;
   ss << "  t : " << t << std::endl;
   text->setText(ss.str());
 }
 
 int main(int argc, char* argv[]) {
-  std::srand(std::time(0));
   osgViewer::Viewer v;
   viewer = &v;
 

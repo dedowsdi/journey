@@ -385,6 +385,18 @@ public:
     return (min + (float)rand() / (RAND_MAX + 1.0f) * (max - min));
   }
 
+  static inline osg::Vec3 randomRGB3() {
+    return osg::Vec3(randomValue(0, 1), randomValue(0, 1), randomValue(0, 1));
+  }
+
+  static inline osg::Vec4 randomRGB4() {
+    return osg::Vec4(
+      randomValue(0, 1), randomValue(0, 1), randomValue(0, 1), 1);
+  }
+  static inline osg::Vec4 randomRGBA() {
+    return osg::Vec4(randomValue(0, 1), randomValue(0, 1), randomValue(0, 1),
+      randomValue(0, 1));
+  }
   static inline osg::Vec3 randomVector(float min, float max) {
     return osg::Vec3(
       randomValue(min, max), randomValue(min, max), randomValue(min, max));
@@ -477,7 +489,7 @@ public:
     return res;
   }
 
-  //doesn't work if n or k is too big
+  // doesn't work if n or k is too big
   static uint binomial(uint n, uint k) {
     if (k == 0 || k == n) return 1;
 
