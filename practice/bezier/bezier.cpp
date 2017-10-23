@@ -50,10 +50,28 @@ void reset() {
 
   osg::Vec3Array* controlPoints = bezier->getControlPoints();
   controlPoints->clear();
-  controlPoints->push_back(osg::Vec3(width * 0.25f, height * 0.25f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.35f, height * 0.75f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.65f, height * 0.75f, 0));
-  controlPoints->push_back(osg::Vec3(width * 0.75f, height * 0.25f, 0));
+
+  // read control points and knots from spline.txt
+  std::ifstream ifs("bezier.txt");
+  if (ifs.fail()) {
+    OSG_FATAL << "failed to read open spline.txt" << std::endl;
+    return;
+  }
+
+  std::string line;
+  // read until "control points"
+  while (std::getline(ifs, line)) {
+    if (line.empty()) continue;
+    std::stringstream ss(line);
+    osg::Vec3 v;
+    ss >> v[0];
+    ss >> v[1];
+    ss >> v[2];
+    // assume control points in bezier.txt was created in 100*100
+    controlPoints->push_back(v * 10);
+  }
+  OSG_NOTICE << "read " << controlPoints->size() << " control points "
+             << std::endl;
 
   bezier->rebuild();
   rebuildIterations();
