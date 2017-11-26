@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pntandcnt/study/c++/common/src/common.cpp
+common.h
+/home/pntandcnt/study/c++/common/src/common.h
+
+common/include/common.h
+string
+-
+iostream
+-
+random
+-
+
