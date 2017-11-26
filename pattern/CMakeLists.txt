@@ -1,8 +1,13 @@
 set (PROJECTS
-    visitor
-    adapter
+    builder
     factory
     abstract_factory
+	prototype
+    singleton
+    visitor
+    adapter
+    facade
+    template_method
     )
 
 foreach(PROJECT ${PROJECTS})
