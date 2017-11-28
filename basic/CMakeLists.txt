@@ -1,4 +1,4 @@
-set (DEMOES
+set (PROJECTS
     mask
     stream
     traits
@@ -6,8 +6,9 @@ set (DEMOES
     exception
     )
 
-foreach(DEMO ${DEMOES})
-    message("add basic : ${DEMO}")
-    add_executable(${DEMO} ${DEMO}/${DEMO}.cpp)
-    target_link_libraries(${DEMO} ${COMMON_LIBS})
+foreach(PROJECT ${PROJECTS})
+    message("add basic : ${PROJECT}")
+    add_executable(${PROJECT} ${PROJECT}/${PROJECT}.cpp)
+    set_target_properties(${PROJECT} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+    target_link_libraries(${PROJECT} ${COMMON_LIBS})
 endforeach()

@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++11 -pthread -Wall -Wno-unused-local-typedef -Wno-overloaded-virtual -Wno-inconsistent-missing-override -Wno-switch-bool -Wno-int-to-void-pointer-cast -Wno-unused-function -D_LINUX -g -DDEBUG -D_DEBUG   CMakeFiles/mask.dir/mask/mask.cpp.o  -o ../bin/mask -rdynamic ../lib/libcommond.a 
