@@ -17,6 +17,11 @@ set (PROJECTS
     mixin
     command
     memento
+    interpreter
+    mediator
+    observer
+    state
+    strategy
     )
 
 foreach(PROJECT ${PROJECTS})
