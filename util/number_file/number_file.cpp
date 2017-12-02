@@ -12,13 +12,13 @@ namespace po = boost::program_options;
 std::string algorithm;
 std::string file;
 std::vector<int> data;
-int start, end;
+int start, end, count;
 double abde = 5;
 
 void randomData() {
   std::mt19937 mt;
   std::uniform_int_distribution<> dist(start, end);
-  for (int i = start; i <= end; ++i) {
+  while (count--) {
     data.push_back(dist(mt));
   }
 }
@@ -34,16 +34,16 @@ void sequenceData() {
   }
 }
 
-
 int main(int argc, char *argv[]) {
   po::options_description desc("Allowed options");
 
   // clang-format off
   desc.add_options()
-    ("help,h", "produce help essage")
-    ("type,t", po::value<std::string>(&algorithm)->default_value("sequence"), "random,sequence,randomSorted")
-    ("start", po::value<int>(&start)->default_value(0), "start number, included")
-    ("end", po::value<int>(&end)->default_value(100), "end number, included")
+    ("help", "produce help essage")
+    ("type", po::value<std::string>(&algorithm)->default_value("sequence"), "random,sequence,randomSorted")
+    ("start", po::value<int>(&start)->default_value(0), "start number, included if count omited")
+    ("end", po::value<int>(&end)->default_value(100), "end number, included if count omited")
+    ("count", po::value<int>(&count)->default_value(100), "number counts")
     ("file", po::value<std::string>(&file)->default_value("number"),
     "target file name");
   // clang-format on
@@ -54,10 +54,19 @@ int main(int argc, char *argv[]) {
   pod.add("file", 1);
 
   po::variables_map vm;
-  po::store(
-    po::command_line_parser(argc, argv).options(desc).positional(pod).run(),
+  // disable short to allow negative number
+  po::store(po::command_line_parser(argc, argv)
+              .options(desc)
+              .positional(pod)
+              .style(po::command_line_style::unix_style ^
+                     po::command_line_style::allow_short)
+              .run(),
     vm);
   po::notify(vm);
+
+  if (!vm.count("count")) {
+    count = end - start;
+  }
 
   // overwrite existign one
   std::ofstream ofs(file, std::ios::out | std::ios::trunc);
@@ -66,7 +75,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  data.reserve(end - start + 1);
+  data.reserve(count);
   if (algorithm == "randomSorted") {
     randomSortData();
   } else if (algorithm == "sequence") {
@@ -74,6 +83,5 @@ int main(int argc, char *argv[]) {
   } else if (algorithm == "random") {
     randomData();
   }
-  std::copy(
-    data.begin(), data.end(), std::ostream_iterator<int>(ofs, "\n"));
+  std::copy(data.begin(), data.end(), std::ostream_iterator<int>(ofs, "\n"));
 }

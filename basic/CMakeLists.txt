@@ -4,6 +4,12 @@ set (PROJECTS
     traits
     chrono
     exception
+    variadic_function
+    sizeof
+    data_align
+    template_overload
+    template_nontype
+    function_pointer
     )
 
 foreach(PROJECT ${PROJECTS})

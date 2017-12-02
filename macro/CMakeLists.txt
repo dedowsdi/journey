@@ -1,14 +1,10 @@
 set (PROJECTS
-    binary_search
-    insert_sort
-    merge_sort
-    bubble_sort
-    heap_sort
-    max_subarray
+    stringizing
+    variadic_macro
     )
 
 foreach(PROJECT ${PROJECTS})
-    message("add algorithm : ${PROJECT}")
+    message("add macro : ${PROJECT}")
     add_executable(${PROJECT} ${PROJECT}/${PROJECT}.cpp)
     set_target_properties(${PROJECT} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
     target_link_libraries(${PROJECT} ${COMMON_LIBS} ${Boost_LIBRARIES})

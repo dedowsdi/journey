@@ -17,9 +17,13 @@ void maxHeapify(_It beg, _It end, _It cur) {
   _It l = beg + ((i << 1) + 1);
   _It r = l + 1;
 
-  _It it = *l > *r ? l : r;
+  _It it = l;
 
-  if (*cur < *it) {
+  if (r < end) { 
+    it = *r > *l ? r : l;
+  }
+
+  if (it < end && *cur < *it) {
     std::swap(*cur, *it);
     maxHeapify(beg, end, it);
   }
@@ -91,6 +95,16 @@ protected:
     }
   }
 };
+
+template <typename _It>
+void heapSort(_It beg, _It end) {
+  buildMaxHeap(beg, end);
+  for (_It iter = end - 1; iter > beg; --iter) {
+    // move current max to the end
+    std::swap(*beg, *end);
+    maxHeapify(beg, iter, beg);
+  }
+}
 }
 
 #endif /* HEAP_H */
