@@ -4,14 +4,13 @@
 #include <vector>
 #include <stdexcept>
 #include <functional>
+#include "common.h"
 
 namespace zxd {
 
-template <typename _It>
-void maxHeapify(_It beg, _It end, _It cur) {
-  if (cur >= end) {
-    throw new std::out_of_range("index out of range");
-  }
+template <typename _It, typename CompareClass>
+inline void heapify(_It beg, _It end, _It cur, const CompareClass& cmp) {
+  if (cur >= end) throw new std::out_of_range("index out of range");
 
   unsigned i = cur - beg;
   _It l = beg + ((i << 1) + 1);
@@ -19,92 +18,96 @@ void maxHeapify(_It beg, _It end, _It cur) {
 
   _It it = l;
 
-  if (r < end) { 
-    it = *r > *l ? r : l;
+  if (r < end) {
+    it = cmp(*r, *l) ? r : l;
   }
 
-  if (it < end && *cur < *it) {
+  if (it < end && cmp(*it, *cur)) {
     std::swap(*cur, *it);
-    maxHeapify(beg, end, it);
+    heapify(beg, end, it, cmp);
   }
 }
 
-template <typename _It>
-void buildMaxHeap(_It beg, _It end) {
+template <typename _It, typename CompareClass>
+inline void buildHeap(_It beg, _It end, const CompareClass& cmp) {
   unsigned size = end - beg;
   if (size == 0) return;
 
   // get last node that has child
   _It mid = beg + (size / 2 - 1);
   for (_It it = mid; it >= beg; --it) {
-    maxHeapify(beg, end, it);
+    heapify(beg, end, it, cmp);
   }
 }
 
-template <typename T>
-class MaxHeap {
+template <typename _It>
+void heapSort(_It beg, _It end) {
+  std::greater<typename _It::value_type> cmp;
+  buildHeap(beg, end, cmp);
+  //zxd::printBinaryIntTree(beg, end);
+  for (_It iter = end - 1; iter > beg; --iter) {
+    // move current max to the end
+    std::swap(*beg, *iter);
+    heapify(beg, iter, beg, cmp);
+  }
+}
+
+
+template <typename T, typename Compare = std::less<T>>
+class Heap {
 protected:
-  std::vector<T> mHeap;
   unsigned mSize;
+  std::vector<T> mHeap;
+  Compare mCmp;
+
+public:
+  typedef typename std::vector<T>::iterator iterator;
 
 public:
   unsigned size() { return mSize; }
 
-  inline T& at(unsigned i) { return mHeap[i]; }
-
-  inline T* parent(unsigned i) {
-    i >>= 1;
-    return i >= 1 ? at(i) : 0;
+  inline T& at(unsigned i) {
+    if (i >= mSize) throw new std::out_of_range("index out of range");
+    return mHeap[i];
   }
-
-  inline T* left(unsigned i) {
-    i <<= 1;
-    return i <= mSize ? at(i) : 0;
-  }
-
-  inline T* right(unsigned i) {
-    i = (i << 1) + 1;
-    return i <= mSize ? at(i) : 0;
-  }
-
   inline bool empty() { return mSize == 0; }
 
   inline T& top() {
-    throwEmpty();
-    return at(1);
+    if (mSize == 0) throw new std::out_of_range("index out of range");
+    return at(0);
+  }
+
+  iterator begin() { return mHeap.begin(); }
+  iterator end() { return mHeap.begin() + mSize(); }
+
+  template <typename _It>
+  void assign(_It beg, _It end) {
+    mHeap.assign(beg, end);
+    mSize = end - beg;
+    buildHeap(beg, end, mCmp);
+  }
+
+  T pop() {
+    --mSize;
+    // get top value
+    iterator beg = begin();
+    T value = *beg;
+    // swap top and tail, then reheapify
+    iterator tail = end() - 1;
+    std::swap(*beg, *tail);
+    heapify(beg);
+
+    return value;
   }
 
 protected:
-  void heapify(unsigned i) {
-    unsigned l = i << 1;
-    unsigned r = (i << 1) + 1;
-    T& iv = at(i);
-
-    if (l <= mSize && at(l) > iv) {
-      std::swap(at(l), iv);
-      heapify(l);
-    } else if (r <= mSize && at(r) > iv) {
-      std::swap(at(r), iv);
-      heapify(r);
-    }
+  inline void heapify(unsigned i) {
+    zxd::heapify(begin(), end(), begin() + i, mCmp);
   }
-
-  inline void throwEmpty() {
-    if (mSize == 0) {
-      throw std::out_of_range("empty heap");
-    }
+  inline void heapify(iterator iter) {
+    zxd::heapify(begin(), end(), iter, mCmp);
   }
 };
-
-template <typename _It>
-void heapSort(_It beg, _It end) {
-  buildMaxHeap(beg, end);
-  for (_It iter = end - 1; iter > beg; --iter) {
-    // move current max to the end
-    std::swap(*beg, *end);
-    maxHeapify(beg, iter, beg);
-  }
-}
 }
 
 #endif /* HEAP_H */

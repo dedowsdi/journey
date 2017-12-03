@@ -5,6 +5,9 @@ set (PROJECTS
     bubble_sort
     heap_sort
     max_subarray
+    quick_sort
+    nth_element
+    count_sort
     )
 
 foreach(PROJECT ${PROJECTS})

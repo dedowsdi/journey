@@ -3,54 +3,83 @@
 #include <boost/program_options.hpp>
 #include "common.h"
 #include "timer.h"
+#include <random>
 
 namespace po = boost::program_options;
 std::string inputFile;
 std::string outputFile;
 std::vector<int> data;
 
+// assume pivot at begin
 template <typename _It>
-void merge(_It beg, _It mid, _It end) {
+inline _It partition(_It beg, _It end) {
+  // create iterater at both ends
+  typename _It::value_type key = *beg;
+  _It left = beg + 1;
+  _It right = end - 1;
 
-  std::vector<typename _It::value_type> lhs(beg, mid);
-  std::vector<typename _It::value_type> rhs(mid, end);
-  _It iterLeft = lhs.begin();  // index of left part
-  _It iterLeftEnd = lhs.end();
-  _It iterRight = rhs.begin();  // index of right part
-  _It iterRightEnd = rhs.end();
-  _It iter = beg;   // index of total part
+  while (true) {
+    // find greater one at left part
+    while (*left < key) ++left;
+    // find lesser one at right part
+    while (*right > key) --right;
 
-  while (iter < end) {
-    if (iterLeft == iterLeftEnd) {
-      *iter++ = *iterRight++;
-    } else if (iterRight == iterRightEnd) {
-      *iter++ = *iterLeft++;
-    } else if (*iterLeft <= *iterRight) {
-      *iter++ = *iterLeft++;
-    } else {
-      *iter++ = *iterRight++;
-    }
+    if (left >= right)  // is > necessary ?
+      break;
+
+    // swap side
+    std::swap(*left, *right);
+    ++left;
+    --right;
   }
+
+  // place pivot
+  std::swap(*beg, *right);
+  return right;
 }
 
 template <typename _It>
-void _sort(_It beg, _It end) {
-  if (beg == end) return;
+inline void quickSort(_It beg, _It end) {
 
   unsigned int size = end - beg;
 
-  if (size <= 1) return;
-  if (size == 2) {
+  if (size <= 1)
+    return;
+  else if (size == 2) {
     _It next = beg + 1;
     if (*beg > *next) std::swap(*beg, *next);
     return;
   }
 
-  // divide and conquer
-  _It mid = beg + (size / 2);
-  _sort(beg, mid);
-  _sort(mid, end);
-  merge(beg, mid, end);
+  // prepare pivot
+  if (size >= 3) {
+    _It third = beg + size * zxd::randomFloat();
+    _It tail = end - 1;
+
+    //find middle of 3
+    _It pivot = beg;
+    if (*third > *beg ^ *third > *tail) {
+      pivot = third;
+    } else if (*tail > *beg ^ *tail > *third) {
+      pivot = tail;
+    }
+
+    //swap pivot to begin
+    if (pivot != beg) {
+      std::swap(*beg, *pivot);
+    }
+  }
+
+  _It p = partition(beg, end);
+
+  // std::cout << "left ";
+  // zxd::print(beg, mid, " ");
+  // std::cout << " pivot " << *mid << " right ";
+  // zxd::print(mid + 1, end, " ");
+  // std::cout << std::endl;
+
+  quickSort(beg, p);
+  quickSort(p + 1, end);
 }
 
 int main(int argc, char *argv[]) {
@@ -81,11 +110,13 @@ int main(int argc, char *argv[]) {
 
   data = zxd::readFileToVector<int>(inputFile);
   zxd::Timer timer;
-  _sort(data.begin(), data.end());
+  quickSort(data.begin(), data.end());
   std::cout << "sort tooks " << timer.time() << " seconds " << std::endl;
+
   if (!std::is_sorted(data.begin(), data.end())) {
     throw std::runtime_error("sort failed");
   }
+
   zxd::writeFileFromVector(outputFile, data.begin(), data.end());
 
   return 0;

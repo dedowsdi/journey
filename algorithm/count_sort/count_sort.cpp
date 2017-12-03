@@ -3,12 +3,39 @@
 #include <boost/program_options.hpp>
 #include "common.h"
 #include "timer.h"
-#include "heap.h"
 
 namespace po = boost::program_options;
 std::string inputFile;
 std::string outputFile;
 std::vector<int> data;
+
+// works only for non negative int type
+template <typename _It>
+void countSort(_It beg, _It end) {
+  if (beg == end) return;
+
+  std::vector<typename _It::value_type> copy(beg, end);
+
+  // init count vector
+  typename _It::value_type k = *zxd::getMaximum(beg, end);
+  std::vector<typename _It::value_type> count(k + 1, 0);  //+1 for maximum
+
+  // set count[i] = number of value i in A
+  std::for_each(
+    copy.begin(), copy.end(), [&](decltype(*copy.begin()) v) { ++count[v]; });
+
+  // set count[i] = number of value <= i in A
+  for (int i = 1; i < count.size(); ++i) {
+    count[i] += count[i - 1];
+  }
+
+  // place value one by one according to value of count[i]
+  std::for_each(copy.begin(), copy.end(), [&](decltype(*copy.begin()) v) {
+    // there are count[v] values <= v in current copied array
+    *(beg + count[v] - 1) = v;
+    --count[v];
+  });
+}
 
 int main(int argc, char *argv[]) {
   po::options_description desc("Allowed options");
@@ -38,7 +65,7 @@ int main(int argc, char *argv[]) {
 
   data = zxd::readFileToVector<int>(inputFile);
   zxd::Timer timer;
-  zxd::heapSort(data.begin(), data.end());
+  countSort(data.begin(), data.end());
   std::cout << "sort tooks " << timer.time() << " seconds " << std::endl;
   zxd::writeFileFromVector(outputFile, data.begin(), data.end());
   if (!std::is_sorted(data.begin(), data.end())) {

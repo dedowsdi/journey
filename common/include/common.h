@@ -63,6 +63,20 @@ void print(_It beg, _It end, const std::string& delim = "\n") {
   std::for_each(beg, end, [&](decltype(*beg) v) { std::cout << v << delim; });
 }
 
+template <typename _It>
+struct ContainerWrapper {
+  _It beg, end;
+  std::string delim;
+  ContainerWrapper(_It b, _It e, const std::string& d = "\n")
+      : beg(b), end(e), delim(d) {}
+};
+
+template <typename _It>
+std::ostream& operator<<(std::ostream& os, const ContainerWrapper<_It>& w) {
+  std::for_each(w.beg, w.end, [&](decltype(*w.beg) v) { os << v << w.delim; });
+  return os;
+}
+
 std::string centerText(
   const std::string& text, unsigned size, char fill = ' ') {
   if (text.size() > size) return text;
@@ -104,6 +118,35 @@ void printBinaryIntTree(_It beg, _It end) {
     }
     std::cout << std::endl;
   }
+}
+
+// get random in [min, max)
+inline float randomFloat(float min = 0, float max = 1) {
+  static std::mt19937 engine;
+  std::uniform_real_distribution<float> dist(min, max);
+  return dist(engine);
+}
+
+// get min or max
+template <typename _It, typename Compare>
+inline _It getExtremeElement(_It beg, _It end, const Compare& cmp) {
+  _It res = beg;
+  for (_It iter = beg; iter != end; ++iter) {
+    if (cmp(*iter, *res)) {
+      res = iter;
+    }
+  }
+  return res;
+}
+
+template <typename _It>
+inline _It getMaximum(_It beg, _It end) {
+  return getExtremeElement(beg, end, std::greater<typename _It::value_type>());
+}
+
+template <typename _It>
+inline _It getMinimum(_It beg, _It end) {
+  return getExtremeElement(beg, end, std::greater<typename _It::value_type>());
 }
 }
 
