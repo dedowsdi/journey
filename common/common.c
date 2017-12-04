@@ -26,6 +26,33 @@ const GLchar *getExtensions() {
   return version;
 }
 
+//--------------------------------------------------------------------
+GLchar *readFile(const char *file) {
+  FILE *f = fopen(file, "r");
+  if (f == NULL) {
+    printf("faied to open file %s", file);
+    exit(EXIT_FAILURE);
+  }
+
+  // get file character size
+  fseek(f, 0, SEEK_END);
+  int size = ftell(f);
+  rewind(f);
+
+  GLchar *s = malloc(sizeof(GLchar *) * size + 1);
+  GLuint len = fread(s, sizeof(GLchar), size, f);
+  if (len == 0) {
+    char str[512];
+    sprintf(str, "faied to read file %s", file);
+    perror(str);
+    exit(EXIT_FAILURE);
+  } else {
+    s[len] = 0;
+  }
+
+  return s;
+}
+
 //------------------------------------------------------------------------------
 GLboolean queryExtension(char *extName) {
   char *p = (char *)glGetString(GL_EXTENSIONS);
@@ -110,6 +137,14 @@ GLboolean invertMatrixd(GLdouble m[16]) {
 GLenum rotateEnum(GLenum val, GLenum begin, GLuint size) {
   return begin + (val + 1 - begin) % size;
 }
+
+//--------------------------------------------------------------------
+void attachShaderFile(GLuint prog, GLenum type, const char *file) {
+  char *s = readFile(file);
+  attachShaderSource(prog, type, s);
+  free(s);
+}
+
 //------------------------------------------------------------------------------
 void attachShaderSource(GLuint prog, GLenum type, const char *source) {
   GLuint sh;
@@ -134,21 +169,19 @@ void attachShaderSource(GLuint prog, GLenum type, const char *source) {
   ZCGE(glDeleteShader(sh));
 }
 
-//------------------------------------------------------------------------------
-void attachShaderFile(GLuint prog, GLenum type, const char *source) {
-  FILE *fp = fopen(source, "r");
-  if (!fp) {
-    char s[512];
-    sprintf(s, "failed to open %s\n", source);
-    perror(s); 
-    return;
+//--------------------------------------------------------------------
+void setUnifomLocation(GLint *loc, GLint program, const char *name) {
+  ZCGE(*loc = glGetUniformLocation(program, name));
+  if (*loc == -1) {
+    printf("failed to get uniform location : %s", name);
+    exit(EXIT_FAILURE);
   }
-  fseek(fp, 0, SEEK_END);
-  GLuint size = ftell(fp);
-  rewind(fp);
+}
 
-  char *str = malloc(size);
-  fread(str, 1, size, fp);
-  attachShaderSource(prog, type, str);
-  free(str);
+//--------------------------------------------------------------------
+GLfloat getTime() { return glutGet(GLUT_ELAPSED_TIME) / 1000.0; }
+
+//--------------------------------------------------------------------
+GLfloat getNormalizedTime() {
+  return glutGet(GLUT_ELAPSED_TIME) % 1000 / 1000.0f;
 }

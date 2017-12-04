@@ -38,9 +38,10 @@ IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")
 ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-file(COPY Data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 #generate cfg file
 
 add_subdirectory(common)
 add_subdirectory(demo)
+add_subdirectory(effect)

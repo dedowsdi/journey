@@ -3,11 +3,12 @@
 
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
+#include <GL/glut.h>
 #include <stdio.h>
 #include <GL/glu.h>
 #include "string.h"
 
-#define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + (bytes))
+#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
 #define ENABLE_GL_CHECK 1
 
@@ -44,17 +45,25 @@
 #define ZCGE ZXD_CHECK_GL_ERROR
 #define ZCGEA ZXD_CHECK_GL_ERROR_AFTER
 
-const GLchar *getVersions() ;
+const GLchar *getVersions();
 
-const GLchar *getExtensions() ;
+const GLchar *getExtensions();
 
-GLboolean queryExtension(char *extName) ;
+// you must free the string by your self
+GLchar *readFile(const char *file);
 
-GLboolean invertMatrixd(GLdouble m[16]) ;
+GLboolean queryExtension(char *extName);
 
-GLenum rotateEnum(GLenum val, GLenum begin, GLuint size) ;
+GLboolean invertMatrixd(GLdouble m[16]);
 
+GLenum rotateEnum(GLenum val, GLenum begin, GLuint size);
+
+void attachShaderFile(GLuint prog, GLenum type, const char *file);
 void attachShaderSource(GLuint prog, GLenum type, const char *source);
-void attachShaderFile(GLuint prog, GLenum type, const char *source);
+// exit if not found
+void setUnifomLocation(GLint* loc, GLint program, const char* name);
+
+GLfloat getTime();
+GLfloat getNormalizedTime();
 
 #endif /* COMMON_H */
