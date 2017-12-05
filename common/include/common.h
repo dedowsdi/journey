@@ -148,6 +148,7 @@ template <typename _It>
 inline _It getMinimum(_It beg, _It end) {
   return getExtremeElement(beg, end, std::greater<typename _It::value_type>());
 }
+
 }
 
 #endif /* COMMON_H */

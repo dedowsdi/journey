@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 #include <osg/Notify>
+#include <algorithm>
+#include <climits>
+#include <cstring>
 
 namespace zxd {
 
@@ -66,6 +69,48 @@ public:
   static inline double parseDouble(
     const std::string& val, double falseValue = -1) {
     return parse<double>(val, falseValue);
+  }
+
+  // in reverse order of memory
+  template <typename T>
+  static std::string toBinaryString(const T& t) {
+    size_t numBytes = sizeof(t);
+
+    std::stringstream ss;
+
+    const char* p = reinterpret_cast<const char*>(&t);
+    for (int i = 0; i < numBytes; ++i) {
+      for (int j = 0; j < CHAR_BIT; ++j) {
+        ss << ((p[i] >> j) & 1);
+      }
+    }
+
+    std::string s(ss.str());
+    std::reverse(s.begin(), s.end());
+    return s;
+  }
+
+  template <typename T>
+  static T fromBinaryString(const std::string& s) {
+    T t;
+    std::memset(&t, 0, sizeof(t));
+
+    char* p = reinterpret_cast<char*>(&t);
+
+    int numBytes = std::ceil(s.size() / 8.0);
+
+    // loop starts from least significant byte
+    for (int i = 0; i < numBytes; ++i) {
+      char c = 0;
+      // loop starts from least significant bit(last char of s).
+      for (int j = 0, k = s.size() - 8 * i - 1; j < 8 && k >= 0; ++j, --k) {
+        if (s[k] == '1') {
+          c |= 1 << j;
+        }
+      }
+      p[i] = c;
+    }
+    return t;
   }
 };
 }

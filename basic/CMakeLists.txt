@@ -1,6 +1,7 @@
 set (PROJECTS
     mask
     stream
+    fstream
     traits
     chrono
     exception
@@ -10,6 +11,7 @@ set (PROJECTS
     template_overload
     template_nontype
     function_pointer
+    float
     )
 
 foreach(PROJECT ${PROJECTS})
