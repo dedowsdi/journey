@@ -185,3 +185,26 @@ GLfloat getTime() { return glutGet(GLUT_ELAPSED_TIME) / 1000.0; }
 GLfloat getNormalizedTime() {
   return glutGet(GLUT_ELAPSED_TIME) % 1000 / 1000.0f;
 }
+
+//--------------------------------------------------------------------
+GLfloat updateFps() {
+  static GLfloat fps = 0;
+  static GLuint lastTime = 0;
+  static GLuint time = 0;
+  static GLuint count = 0;
+
+  GLuint curTime = glutGet(GLUT_ELAPSED_TIME);
+
+  time += curTime - lastTime;
+  ++count;
+
+  if (time >= 1000) {
+    fps = count; 
+    time %= 1000;
+    count = 0;
+  }
+
+  lastTime = curTime;
+
+  return fps;
+}

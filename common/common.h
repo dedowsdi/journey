@@ -65,5 +65,7 @@ void setUnifomLocation(GLint* loc, GLint program, const char* name);
 
 GLfloat getTime();
 GLfloat getNormalizedTime();
+// only work if get called exactly once per frame
+GLfloat updateFps();
 
 #endif /* COMMON_H */

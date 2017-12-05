@@ -16,6 +16,7 @@ GLint height = 576;
 
 GLfloat time_scale = 5;
 GLfloat length_scale = 60;
+GLfloat fps = 0;
 GLint follow_mouse = 0;
 
 void init(void) {
@@ -48,10 +49,11 @@ void display(void) {
   glWindowPos2i(10, height - 20);
   GLchar info[512];
   sprintf(info,
+    "fps : %.2f\n"
     "qQ : length scale %.2f\n"
     "wW : time scale %.2f\n"
     "e : toggle follow_mouse %d",
-    length_scale, time_scale, follow_mouse);
+    updateFps(), length_scale, time_scale, follow_mouse);
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
   glUseProgram(program);
 
