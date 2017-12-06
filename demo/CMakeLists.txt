@@ -87,6 +87,7 @@ set (DEMOES
     fragtest
     occlusion
     shader
+    gamma
     )
 
 foreach(DEMO ${DEMOES})

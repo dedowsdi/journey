@@ -1,4 +1,11 @@
 set(COMMON_SRCS 
     common.c
     )
-add_library(common ${COMMON_SRCS})
+add_library(common 
+    ${COMMON_SRCS}
+    )
+target_link_libraries(common
+    ${OPENGL_gl_LIBRARY}
+    ${OPENGL_glu_LIBRARY}
+    ${GLUT_LIBRARIES}
+    )
