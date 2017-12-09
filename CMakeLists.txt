@@ -17,6 +17,19 @@ endif()
 #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
 
 
+IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILE_ID STREQUAL "Clang++")
+    add_compile_options(-fstandalone-debug)
+    add_compile_options(-pthread)
+    add_compile_options(-Wall)
+    add_compile_options(-Wno-unused-function)
+    add_compile_options(-Wno-switch-bool)
+ENDIF()
+
+IF(CMAKE_CXX_COMPILE_ID STREQUAL "Clang++")
+    add_compile_options(-std=c++11)
+ENDIF()
+
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

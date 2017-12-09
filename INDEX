@@ -37,7 +37,8 @@ Chapter 5: Lighting
 	material.c	(1.0)
 	colormat.c	(1.1)
 	scene.c		(1.0)
-    gamma
+    gamma.c
+    normalmap.c
 
 qChapter 6: Blending, Antialiasing, Fog, and Polygon Offset
 

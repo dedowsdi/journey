@@ -1,0 +1,1 @@
+/usr/bin/clang     CMakeFiles/circular.dir/circular.c.o  -o ../bin/circular -rdynamic -lGL -lGLU -lglut -lXmu -lXi -lm ../lib/libcommon.a -lGL -lGLU -lglut -lXmu -lXi 

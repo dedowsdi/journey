@@ -1,11 +1,6 @@
-/* gamma.c
+/* normalmap.c
  *
- * Monitor will apply pow(color, gamma) to transform color from linear space to
- * srgb space. Gamma correction is ued to compensate this, it's done by
- * pow(color, 1/gamma). Lots of textures(such as diffuse) is created directly in
- * srgb space which means it doesn't need gamma correction, make sure it's
- * internalFormat is sRGB, opengl will apply pow(color, gamma) to it to
- * cancel gomma correction.
+ * Used to give high detail to low quality geomety.
  */
 #define GL_GLEXT_PROTOTYPES
 #include <GL/glut.h>
@@ -14,63 +9,76 @@
 #include <memory.h>
 #include "common.h"
 
-#define imageWidth 64
-#define imageHeight 64
-static GLubyte image[imageHeight][imageWidth][1];
-static GLuint texName;
-GLint intensity = 120;
-GLint program;
-GLboolean srgbTexture = 0;
-GLint loc_iamge;
+#define imageWidth 256
+#define imageHeight 256
 
-void makeImage(void) {
-  memset(image, intensity, imageHeight * imageWidth * sizeof(GLubyte));
+static GLubyte image[imageHeight][imageWidth][3];
+static GLuint texName;
+GLint generate_normalmap_program;
+GLint normalmap_program;
+
+GLuint buffer;
+
+GLfloat vertices[5][9] = {
+  {-1, -1, 1},
+};
+
+void generateNormalMap() {
+  // render high detail geometry to generate normal map
+  glViewport(0, 0, imageWidth, imageHeight);
+  glMatrixMode(GL_PROJECTION);
+  glOrtho(-100, 100, -100, 100, -100, 100);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
 }
 
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
+
   glShadeModel(GL_FLAT);
   glEnable(GL_DEPTH_TEST);
 
-  makeImage();
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+  generate_normalmap_program = glCreateProgram();
+  attachShaderFile(generate_normalmap_program, GL_VERTEX_SHADER,
+    "generate_normallmap.vs.glsl");
+  attachShaderFile(generate_normalmap_program, GL_VERTEX_SHADER,
+    "generate_normallmap.fs.glsl");
+
+  // create normal map
+  generateNormalMap();
+
+  return;
+
+  normalmap_program = glCreateProgram();
+  attachShaderFile(normalmap_program, GL_VERTEX_SHADER, "normalmap.vs.glsl");
+  attachShaderFile(normalmap_program, GL_FRAGMENT_SHADER, "normalmap.fs.glsl");
+
+  // texture for normal map
   glGenTextures(1, &texName);
   glBindTexture(GL_TEXTURE_2D, texName);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0,
-    GL_LUMINANCE, GL_UNSIGNED_BYTE, image);
-
-  program = glCreateProgram();
-  attachShaderFile(program, GL_FRAGMENT_SHADER, "data/shader/gamma.fs.glsl");
-  ZCGE(glLinkProgram(program));
-  setUnifomLocation(&loc_iamge, program, "image");
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  /*glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0,*/
+  /*GL_LUMINANCE, GL_UNSIGNED_BYTE, 0);*/
+  glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, imageWidth, imageHeight, 0);
 }
 
 void display(void) {
+  glViewport(imageWidth, imageHeight, imageWidth, imageHeight);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glUseProgram(normalmap_program);
   glEnable(GL_TEXTURE_2D);
-
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
   glBindTexture(GL_TEXTURE_2D, texName);
 
+  // draw low quality geometry
   glBegin(GL_QUADS);
-
-  glTexCoord2i(0, 0);
-  glVertex2i(-1, -1);
-
-  glTexCoord2i(1, 0);
-  glVertex2i(1, -1);
-
-  glTexCoord2i(1, 1);
-  glVertex2i(1, 1);
-
-  glTexCoord2i(0, 1);
-  glVertex2i(-1, 1);
 
   glEnd();
 
@@ -78,16 +86,9 @@ void display(void) {
   glColor3f(1.0f, 1.0f, 1.0f);
   glWindowPos2i(10, 492);
   GLchar info[256];
-  GLint currentProgram;
-  glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
-  glUseProgram(0);
-  sprintf(info,
-    " q : toggle gamma correction : %d\n"
-    " w : toggle sRGB texture : %d\n"
-    " eE : change intensity : %d",
-    currentProgram != 0, srgbTexture, intensity);
+
+  sprintf(info, " \n");
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
-  glUseProgram(currentProgram);
   glEnable(GL_TEXTURE_2D);
 
   glFlush();
@@ -96,15 +97,10 @@ void display(void) {
 void reshape(int w, int h) {
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
   glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
+  gluPerspective(45, 1, 1, 100);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-}
-
-void updateTexture() {
-  GLenum internalFormat = srgbTexture ? GL_SRGB : GL_RGB;
-  glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, imageWidth, imageHeight, 0,
-    GL_LUMINANCE, GL_UNSIGNED_BYTE, image);
+  gluLookAt(0, 2, 2, 0, 0, 0, 0, 1, 0);
 }
 
 void keyboard(unsigned char key, int x, int y) {
@@ -159,7 +155,7 @@ void keyboard(unsigned char key, int x, int y) {
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(512, 512);
+  glutInitWindowSize(512, 256);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
   init();
