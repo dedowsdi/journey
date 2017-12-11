@@ -1,5 +1,6 @@
 set(COMMON_SRCS 
-    common.c
+    common.cpp
+    glm.cpp
     )
 add_library(common 
     ${COMMON_SRCS}
@@ -8,4 +9,5 @@ target_link_libraries(common
     ${OPENGL_gl_LIBRARY}
     ${OPENGL_glu_LIBRARY}
     ${GLUT_LIBRARIES}
+    ${GLEW_LIBRARIES}
     )

@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include "common.h"
 #include "stdlib.h"
 #include "glEnumString.h"
@@ -39,7 +40,7 @@ GLchar *readFile(const char *file) {
   int size = ftell(f);
   rewind(f);
 
-  GLchar *s = malloc(sizeof(GLchar *) * size + 1);
+  GLchar *s = (GLchar *)malloc(sizeof(GLchar *) * size + 1);
   GLuint len = fread(s, sizeof(GLchar), size, f);
   if (len == 0) {
     char str[512];
@@ -141,12 +142,13 @@ GLenum rotateEnum(GLenum val, GLenum begin, GLuint size) {
 //--------------------------------------------------------------------
 void attachShaderFile(GLuint prog, GLenum type, const char *file) {
   char *s = readFile(file);
-  attachShaderSource(prog, type, s);
+  if (!attachShaderSource(prog, type, s))
+    printf("failed to compile file %s\n", file);
   free(s);
 }
 
 //------------------------------------------------------------------------------
-void attachShaderSource(GLuint prog, GLenum type, const char *source) {
+bool attachShaderSource(GLuint prog, GLenum type, const char *source) {
   GLuint sh;
 
   sh = glCreateShader(type);
@@ -160,21 +162,22 @@ void attachShaderSource(GLuint prog, GLenum type, const char *source) {
     GLsizei len;
     glGetShaderiv(sh, GL_INFO_LOG_LENGTH, &len);
 
-    GLchar *log = malloc(len + 1);
+    GLchar *log = (GLchar *)malloc(len + 1);
     glGetShaderInfoLog(sh, len, &len, log);
     printf("%s  compilation failed: %s", glShaderTypeToString(type), log);
     free(log);
+    return false;
   }
   ZCGE(glAttachShader(prog, sh));
   ZCGE(glDeleteShader(sh));
+  return true;
 }
 
 //--------------------------------------------------------------------
 void setUnifomLocation(GLint *loc, GLint program, const char *name) {
   ZCGE(*loc = glGetUniformLocation(program, name));
   if (*loc == -1) {
-    printf("failed to get uniform location : %s", name);
-    exit(EXIT_FAILURE);
+    printf("failed to get uniform location : %s\n", name);
   }
 }
 
@@ -199,7 +202,7 @@ GLfloat updateFps() {
   ++count;
 
   if (time >= 1000) {
-    fps = count; 
+    fps = count;
     time %= 1000;
     count = 0;
   }
@@ -207,4 +210,28 @@ GLfloat updateFps() {
   lastTime = curTime;
 
   return fps;
+}
+
+//--------------------------------------------------------------------
+void initExtension() {
+  GLenum err = glewInit();
+  if (GLEW_OK != err) {
+    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+  }
+  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+  if (!GLEW_ARB_vertex_array_object) {
+    fprintf(stdout, "vertex_array_object not supported");
+  }
+  if (!GLEW_VERSION_2_1) {
+    fprintf(stdout, "OpenGL2.1 not supported");
+  }
+
+  // combined check
+  //if (glewIsSupported("GL_VERSION_1_4  GL_ARB_point_sprite")) {
+    /* Great, we have OpenGL 1.4 + point sprites. */
+  //}
+  
+  //if (WGLEW_extension)  //check WGL extension
+  //if (GLXEW_extension)  //check GLX extension
+
 }

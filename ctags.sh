@@ -16,4 +16,7 @@ ctags \
     /usr/include/GL/glext.h \
     /usr/include/GL/glut.h \
     /usr/include/GL/glu.h \
-    /usr/include/GL/freeglut_ext.h
+    /usr/include/GL/freeglut_ext.h \
+    /usr/include/glm
+
+    

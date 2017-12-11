@@ -17,7 +17,7 @@ endif()
 #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
 
 
-IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILE_ID STREQUAL "Clang++")
+IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(-fstandalone-debug)
     add_compile_options(-pthread)
     add_compile_options(-Wall)
@@ -25,7 +25,7 @@ IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILE_ID STREQUAL "Clang+
     add_compile_options(-Wno-switch-bool)
 ENDIF()
 
-IF(CMAKE_CXX_COMPILE_ID STREQUAL "Clang++")
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(-std=c++11)
 ENDIF()
 
@@ -39,13 +39,14 @@ set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it'
 #becareful cmake prebuilt find## use smallcase
 FIND_PACKAGE(GLUT REQUIRED)
 FIND_PACKAGE(OpenGL REQUIRED)
+FIND_PACKAGE(GLEW REQUIRED)
 
 include_directories(
     ${GLUT_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIR}
     common
     )
-message("dir ${OPENGL_INCLUDE_DIR}")
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")

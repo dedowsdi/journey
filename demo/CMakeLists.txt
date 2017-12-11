@@ -93,8 +93,7 @@ set (DEMOES
 
 foreach(DEMO ${DEMOES})
     message("add ${DEMO}")
-    SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/${DEMO}.c PROPERTIES LANGUAGE CXX )
-    add_executable(${DEMO} ${CMAKE_CURRENT_SOURCE_DIR}/${DEMO}.c)
+    add_executable(${DEMO} ${CMAKE_CURRENT_SOURCE_DIR}/${DEMO}.cpp)
     set_target_properties(${DEMO} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
     target_link_libraries(${DEMO}
         ${OPENGL_gl_LIBRARY}

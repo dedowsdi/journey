@@ -59,7 +59,7 @@ GLboolean invertMatrixd(GLdouble m[16]);
 GLenum rotateEnum(GLenum val, GLenum begin, GLuint size);
 
 void attachShaderFile(GLuint prog, GLenum type, const char *file);
-void attachShaderSource(GLuint prog, GLenum type, const char *source);
+bool attachShaderSource(GLuint prog, GLenum type, const char *source);
 // exit if not found
 void setUnifomLocation(GLint* loc, GLint program, const char* name);
 
@@ -67,5 +67,7 @@ GLfloat getTime();
 GLfloat getNormalizedTime();
 // only work if get called exactly once per frame
 GLfloat updateFps();
+
+void initExtension();
 
 #endif /* COMMON_H */
