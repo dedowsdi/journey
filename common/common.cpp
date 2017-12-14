@@ -220,18 +220,49 @@ void initExtension() {
   }
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
   if (!GLEW_ARB_vertex_array_object) {
-    fprintf(stdout, "vertex_array_object not supported");
+    fprintf(stdout, "ARB_vertex_array_object not supported");
+  }
+  if (!GLEW_ARB_framebuffer_object) {
+    fprintf(stdout, "ARB_framebuffer_object not supported");
+  }
+  if (!GLEW_ARB_texture_stencil8) {
+    fprintf(stdout, "ARB_texture_stencil8 not supported");
+  }
+  if (!GLEW_ARB_texture_float) {
+    fprintf(stdout, "ARB_texture_float not supported");
+  }
+  if (!GLEW_EXT_packed_depth_stencil) {
+    fprintf(stdout, "EXT_packed_depth_stencil not supported");
   }
   if (!GLEW_VERSION_2_1) {
     fprintf(stdout, "OpenGL2.1 not supported");
   }
 
   // combined check
-  //if (glewIsSupported("GL_VERSION_1_4  GL_ARB_point_sprite")) {
-    /* Great, we have OpenGL 1.4 + point sprites. */
+  // if (glewIsSupported("GL_VERSION_1_4  GL_ARB_point_sprite")) {
+  /* Great, we have OpenGL 1.4 + point sprites. */
   //}
-  
-  //if (WGLEW_extension)  //check WGL extension
-  //if (GLXEW_extension)  //check GLX extension
 
+  // if (WGLEW_extension)  //check WGL extension
+  // if (GLXEW_extension)  //check GLX extension
 }
+
+//--------------------------------------------------------------------
+void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1) {
+  glBegin(GL_QUADS);
+
+  glTexCoord2f(0, 0);
+  glVertex2f(x0, y0);
+
+  glTexCoord2f(1, 0);
+  glVertex2f(x1, y0);
+
+  glTexCoord2f(1, 1);
+  glVertex2f(x1, y1);
+
+  glTexCoord2f(0, 1);
+  glVertex2f(x0, y1);
+
+  glEnd();
+}
+

@@ -47,7 +47,7 @@ void CALLBACK vertexCallback(GLvoid *vertex) {
 
   pointer = (GLdouble *)vertex;
   glColor3dv(pointer + 3);
-  glVertex3dv(vertex);
+  glVertex3dv(pointer);
 }
 
 /*  combineCallback is used to create a new vertex when edges
@@ -99,10 +99,10 @@ void init(void) {
   startList = glGenLists(2);
 
   tobj = gluNewTess();
-  gluTessCallback(tobj, GLU_TESS_VERTEX, glVertex3dv);
-  gluTessCallback(tobj, GLU_TESS_BEGIN, beginCallback);
-  gluTessCallback(tobj, GLU_TESS_END, endCallback);
-  gluTessCallback(tobj, GLU_TESS_ERROR, errorCallback);
+  gluTessCallback(tobj, GLU_TESS_VERTEX, reinterpret_cast<_GLUfuncptr>(glVertex3dv));
+  gluTessCallback(tobj, GLU_TESS_BEGIN, reinterpret_cast<_GLUfuncptr>(beginCallback));
+  gluTessCallback(tobj, GLU_TESS_END, reinterpret_cast<_GLUfuncptr>(endCallback));
+  gluTessCallback(tobj, GLU_TESS_ERROR, reinterpret_cast<_GLUfuncptr>(errorCallback));
 
   /*  rectangle with triangular hole inside  */
   glNewList(startList, GL_COMPILE);  // use list to cache tessllator result
@@ -124,11 +124,11 @@ void init(void) {
   gluTessEndPolygon(tobj);
   glEndList();
 
-  gluTessCallback(tobj, GLU_TESS_VERTEX, vertexCallback);
-  gluTessCallback(tobj, GLU_TESS_BEGIN, beginCallback);
-  gluTessCallback(tobj, GLU_TESS_END, endCallback);
-  gluTessCallback(tobj, GLU_TESS_ERROR, errorCallback);
-  gluTessCallback(tobj, GLU_TESS_COMBINE, combineCallback);
+  gluTessCallback(tobj, GLU_TESS_VERTEX, reinterpret_cast<_GLUfuncptr>(vertexCallback));
+  gluTessCallback(tobj, GLU_TESS_BEGIN, reinterpret_cast<_GLUfuncptr>(beginCallback));
+  gluTessCallback(tobj, GLU_TESS_END, reinterpret_cast<_GLUfuncptr>(endCallback));
+  gluTessCallback(tobj, GLU_TESS_ERROR, reinterpret_cast<_GLUfuncptr>(errorCallback));
+  gluTessCallback(tobj, GLU_TESS_COMBINE, reinterpret_cast<_GLUfuncptr>(combineCallback));
 
   /*  smooth shaded, self-intersecting star  */
   glNewList(startList + 1, GL_COMPILE);

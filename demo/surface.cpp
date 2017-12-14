@@ -83,7 +83,7 @@ void init(void) {
   gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 25.0);
 
   gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
-  gluNurbsCallback(theNurb, GLU_ERROR, nurbsError);
+  gluNurbsCallback(theNurb, GLU_ERROR, reinterpret_cast<_GLUfuncptr>(nurbsError));
 }
 
 void display(void) {

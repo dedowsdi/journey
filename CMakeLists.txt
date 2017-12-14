@@ -27,6 +27,7 @@ ENDIF()
 
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(-std=c++11)
+    add_compile_options(-Wno-missing-braces)
 ENDIF()
 
 

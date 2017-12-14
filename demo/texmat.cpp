@@ -1,6 +1,6 @@
 /*
  *  sprite.c
- *  This program demonstrates point sprite
+ *  This program demonstrates tex matrix
  */
 #define GL_GLEXT_PROTOTYPES
 #include <GL/glut.h>

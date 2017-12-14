@@ -50,7 +50,7 @@ void init(void) {
    */
   startList = glGenLists(4);
   qobj = gluNewQuadric();
-  gluQuadricCallback(qobj, GLU_ERROR, errorCallback);
+  gluQuadricCallback(qobj, GLU_ERROR, reinterpret_cast<_GLUfuncptr>(errorCallback));
 
   gluQuadricDrawStyle(qobj, GLU_FILL);  /* smooth shaded */
   gluQuadricNormals(qobj, GLU_SMOOTH);  // one normal per vertex

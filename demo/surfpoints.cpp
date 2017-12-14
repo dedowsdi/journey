@@ -136,10 +136,10 @@ void init(void) {
   gluNurbsProperty(theNurb, GLU_NURBS_MODE, GLU_NURBS_TESSELLATOR);
   gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 25.0);
   gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
-  gluNurbsCallback(theNurb, GLU_ERROR, nurbsError);
-  gluNurbsCallback(theNurb, GLU_NURBS_BEGIN, beginCallback);
-  gluNurbsCallback(theNurb, GLU_NURBS_VERTEX, vertexCallback);
-  gluNurbsCallback(theNurb, GLU_NURBS_NORMAL, normalCallback);
+  gluNurbsCallback(theNurb, GLU_ERROR, reinterpret_cast<_GLUfuncptr>(nurbsError));
+  gluNurbsCallback(theNurb, GLU_NURBS_BEGIN, reinterpret_cast<_GLUfuncptr>(beginCallback));
+  gluNurbsCallback(theNurb, GLU_NURBS_VERTEX, reinterpret_cast<_GLUfuncptr>(vertexCallback));
+  gluNurbsCallback(theNurb, GLU_NURBS_NORMAL, reinterpret_cast<_GLUfuncptr>(normalCallback));
   gluNurbsCallback(theNurb, GLU_NURBS_END, endCallback);
 }
 

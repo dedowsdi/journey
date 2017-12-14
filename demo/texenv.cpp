@@ -111,7 +111,7 @@ void keyboard(unsigned char key, int x, int y) {
     case 'q': {
       GLint mode;
       glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &mode);
-      GLint i;
+      GLint i = 0;
       while (texFunctions[i] != mode) ++i;
       glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, texFunctions[(++i) % 6]);
       glutPostRedisplay();

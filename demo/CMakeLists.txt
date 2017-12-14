@@ -51,7 +51,6 @@ set (DEMOES
     polyoff
     polys
     quadric
-    readImage
     robot
     scene
     select
@@ -89,6 +88,7 @@ set (DEMOES
     shader
     gamma
     normalmap
+    rtt
     )
 
 foreach(DEMO ${DEMOES})

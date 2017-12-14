@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <GL/glu.h>
 #include "string.h"
+#include <algorithm>
+#include <iostream>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
@@ -61,7 +63,7 @@ GLenum rotateEnum(GLenum val, GLenum begin, GLuint size);
 void attachShaderFile(GLuint prog, GLenum type, const char *file);
 bool attachShaderSource(GLuint prog, GLenum type, const char *source);
 // exit if not found
-void setUnifomLocation(GLint* loc, GLint program, const char* name);
+void setUnifomLocation(GLint *loc, GLint program, const char *name);
 
 GLfloat getTime();
 GLfloat getNormalizedTime();
@@ -69,5 +71,19 @@ GLfloat getNormalizedTime();
 GLfloat updateFps();
 
 void initExtension();
+
+void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1);
+
+// print gigantic array
+template <typename _It>
+void printArray(_It beg, _It end, unsigned itemsPerLine) {
+  int i = 0;
+  std::for_each(beg, end, [&](decltype(*beg) v) {
+    std::cout << v << ", ";
+    if (++i % itemsPerLine == 0) {
+      std::cout << std::endl;
+    }
+  });
+}
 
 #endif /* COMMON_H */

@@ -73,7 +73,7 @@ void init(void) {
 }
 
 //use byte value as list index
-void printString(char *s) {
+void printString(const char *s) {
   //reserve list bese after finish printing string
   glPushAttrib(GL_LIST_BIT);
   glListBase(fontOffset);

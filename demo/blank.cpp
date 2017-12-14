@@ -17,7 +17,6 @@ void init(void) {
 }
 
 void display(void) {
-  int i;
 
   glClear(GL_COLOR_BUFFER_BIT);
 

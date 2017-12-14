@@ -10,7 +10,7 @@
  */
 #include <GL/glut.h>
 #include <stdlib.h>
-#include "readImage.c"
+#include "readImage.cpp"
 
 extern GLubyte* readImage(const char*, GLsizei*, GLsizei*);
 

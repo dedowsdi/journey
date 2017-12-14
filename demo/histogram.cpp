@@ -6,7 +6,7 @@
 
 #include <GL/glut.h>
 #include <stdlib.h>
-#include "readImage.c"
+#include "readImage.cpp"
 
 #define HISTOGRAM_SIZE 256 /* Must be a power of 2 */
 

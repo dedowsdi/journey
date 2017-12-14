@@ -80,12 +80,6 @@ vec2 texcoords1[4] = {
 void generateNormalMap() {
   // render high detail geometry to generate normal map
   glViewport(0, 0, imageWidth, imageHeight);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(-2, 2, -2, 2, -2, 2);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-
   glBindVertexArray(vaos[VAO_HIGH]);
 
   // glEnable(GL_TEXTURE_2D);

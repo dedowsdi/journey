@@ -24,7 +24,6 @@
 #include <GL/freeglut_ext.h>
 #include "common.h"
 
-#define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + (bytes))
 GLuint skyboxSize = 50;
 
 // clang-format off

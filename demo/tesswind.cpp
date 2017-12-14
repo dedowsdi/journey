@@ -159,11 +159,11 @@ void init(void) {
   glShadeModel(GL_FLAT);
 
   tobj = gluNewTess();
-  gluTessCallback(tobj, GLU_TESS_VERTEX, glVertex3dv);
-  gluTessCallback(tobj, GLU_TESS_BEGIN, beginCallback);
-  gluTessCallback(tobj, GLU_TESS_END, endCallback);
-  gluTessCallback(tobj, GLU_TESS_ERROR, errorCallback);
-  gluTessCallback(tobj, GLU_TESS_COMBINE, combineCallback);
+  gluTessCallback(tobj, GLU_TESS_VERTEX, reinterpret_cast<_GLUfuncptr>(glVertex3dv));
+  gluTessCallback(tobj, GLU_TESS_BEGIN, reinterpret_cast<_GLUfuncptr>(beginCallback));
+  gluTessCallback(tobj, GLU_TESS_END, reinterpret_cast<_GLUfuncptr>(endCallback));
+  gluTessCallback(tobj, GLU_TESS_ERROR, reinterpret_cast<_GLUfuncptr>(errorCallback));
+  gluTessCallback(tobj, GLU_TESS_COMBINE, reinterpret_cast<_GLUfuncptr>(combineCallback));
 
   list = glGenLists(4);
   makeNewLists();

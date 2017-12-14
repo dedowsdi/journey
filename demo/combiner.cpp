@@ -66,7 +66,6 @@ void makeImages(void) {
 }
 
 void init(void) {
-  GLint numunits[1];
 
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_SMOOTH);

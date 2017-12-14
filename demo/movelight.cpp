@@ -19,7 +19,7 @@
 #include <GL/freeglut_ext.h>
 
 static int spin = 0;
-static double translation = 1.5f;
+static float translation = 1.5f;
 
 /*  Initialize material property, light source, lighting model,
  *  and depth buffer.

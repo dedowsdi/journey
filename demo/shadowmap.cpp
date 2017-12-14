@@ -268,7 +268,6 @@ void drawObjects(GLboolean shadowRender) {
 
   // avoid shadow map take effect on 1st pass depth buffer
   if (shadowRender) glDisable(GL_TEXTURE_2D);
-  GLdouble model[16];
 
   if (!shadowRender) {
     // draw ground

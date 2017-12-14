@@ -140,11 +140,11 @@ static void init(void) {
   glEndList();
 }
 
-char *test1 = "A SPARE SERAPE APPEARS AS";
-char *test2 = "APES PREPARE RARE PEPPERS";
+const char *test1 = "A SPARE SERAPE APPEARS AS";
+const char *test2 = "APES PREPARE RARE PEPPERS";
 
 //use char in string as display list index
-static void printStrokedString(char *s) {
+static void printStrokedString(const char *s) {
   GLsizei len = strlen(s);
   glCallLists(len, GL_BYTE, (GLbyte *)s);
 }
