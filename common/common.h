@@ -15,28 +15,28 @@
 #define ENABLE_GL_CHECK 1
 
 #if ENABLE_GL_CHECK
-#define ZXD_CHECK_GL_ERROR(glFunc)                                          \
-  {                                                                         \
-    int e = glGetError();                                                   \
-    if (e != 0) {                                                           \
-      printf("missing openGL error %x %s in %s before line %d for %s\n", e, \
-        gluErrorString(e), __PRETTY_FUNCTION__, __LINE__, #glFunc);         \
-    }                                                                       \
-    glFunc;                                                                 \
-    e = glGetError();                                                       \
-    if (e != 0) {                                                           \
-      printf("found openGL error %x %s in %s at line %d for %s\n", e,       \
-        gluErrorString(e), __PRETTY_FUNCTION__, __LINE__, #glFunc);         \
-    }                                                                       \
+#define ZXD_CHECK_GL_ERROR(glFunc)                                             \
+  {                                                                            \
+    int e = glGetError();                                                      \
+    if (e != 0) {                                                              \
+      printf("missing openGL error %x %s in %s before %s:line %d for %s\n", e, \
+        gluErrorString(e), __PRETTY_FUNCTION__, __FILE__, __LINE__, #glFunc);  \
+    }                                                                          \
+    glFunc;                                                                    \
+    e = glGetError();                                                          \
+    if (e != 0) {                                                              \
+      printf("found openGL error %x %s in %s at %s:line %d for %s\n", e,       \
+        gluErrorString(e), __PRETTY_FUNCTION__, __FILE__, __LINE__, #glFunc);  \
+    }                                                                          \
   }
 
-#define ZXD_CHECK_GL_ERROR_AFTER                                     \
-  {                                                                  \
-    int e = glGetError();                                            \
-    if (e != 0) {                                                    \
-      printf("missing openGL error %x %s in %s before line %d\n", e, \
-        gluErrorString(e), __PRETTY_FUNCTION__, __LINE__);           \
-    }                                                                \
+#define ZXD_CHECK_GL_ERROR_AFTER                                        \
+  {                                                                     \
+    int e = glGetError();                                               \
+    if (e != 0) {                                                       \
+      printf("missing openGL error %x %s in %s before %s:line %d\n", e, \
+        gluErrorString(e), __PRETTY_FUNCTION__, __FILE__, __LINE__);    \
+    }                                                                   \
   }
 #else
 #define ZXD_CHECK_GL_ERROR(glFunc) \
@@ -61,7 +61,9 @@ GLboolean invertMatrixd(GLdouble m[16]);
 GLenum rotateEnum(GLenum val, GLenum begin, GLuint size);
 
 void attachShaderFile(GLuint prog, GLenum type, const char *file);
-bool attachShaderSource(GLuint prog, GLenum type, const char *source);
+void attachShaderSourceAndFile(
+  GLuint prog, GLenum type, GLuint count, char **source, const char *file);
+bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source);
 // exit if not found
 void setUnifomLocation(GLint *loc, GLint program, const char *name);
 
@@ -73,6 +75,8 @@ GLfloat updateFps();
 void initExtension();
 
 void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1);
+
+void detachAllShaders(GLuint program);
 
 // print gigantic array
 template <typename _It>

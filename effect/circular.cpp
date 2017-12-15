@@ -1,4 +1,4 @@
-#define GL_GLEXT_PROTOTYPES
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
@@ -127,6 +127,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(width, height);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  initExtension();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

@@ -1,6 +1,8 @@
 set (PROJECTS
     circular
     hdr
+    bloom
+    gaussianblur
     )
 
 foreach(PROJECT ${PROJECTS})

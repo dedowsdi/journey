@@ -19,7 +19,7 @@
  * attribute of a set of attributes aliased to the same location.
  *
  */
-#define GL_GLEXT_PROTOTYPES
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include <stdlib.h>
 #include "common.h"
@@ -52,8 +52,8 @@ void init(void) {
     "}                                                         \n" ;
 
   program = glCreateProgram();
-  attachShaderSource(program, GL_VERTEX_SHADER, vs);
-  attachShaderSource(program, GL_FRAGMENT_SHADER, fs);
+  attachShaderSource(program, GL_VERTEX_SHADER, 1, &vs);
+  attachShaderSource(program, GL_FRAGMENT_SHADER, 1, &fs);
   ZCGE(glLinkProgram(program));
   ZCGE(locColor = glGetAttribLocation(program, "color"));
   ZCGE(glVertexAttribPointer(locColor, 2, GL_FLOAT, 0, 0, colors));
@@ -106,6 +106,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  initExtension();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

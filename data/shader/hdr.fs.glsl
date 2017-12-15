@@ -3,10 +3,10 @@
 uniform int method = 0;
 uniform float exposure = 1;
 
-uniform sampler2D imageMap;
+uniform sampler2D colorMap;
 
 void main(void) {
-  vec4 color = texture2D(imageMap, gl_TexCoord[0].xy);
+  vec4 color = texture2D(colorMap, gl_TexCoord[0].xy);
 
   if (method == 0) {
     // Reinhard toon map

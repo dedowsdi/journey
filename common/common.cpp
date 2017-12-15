@@ -2,6 +2,7 @@
 #include "common.h"
 #include "stdlib.h"
 #include "glEnumString.h"
+#include <cstring>
 
 //------------------------------------------------------------------------------
 const GLchar *getVersions() {
@@ -31,7 +32,7 @@ const GLchar *getExtensions() {
 GLchar *readFile(const char *file) {
   FILE *f = fopen(file, "r");
   if (f == NULL) {
-    printf("faied to open file %s", file);
+    printf("faied to open file %s\n", file);
     exit(EXIT_FAILURE);
   }
 
@@ -142,17 +143,51 @@ GLenum rotateEnum(GLenum val, GLenum begin, GLuint size) {
 //--------------------------------------------------------------------
 void attachShaderFile(GLuint prog, GLenum type, const char *file) {
   char *s = readFile(file);
-  if (!attachShaderSource(prog, type, s))
+  if (!attachShaderSource(prog, type, 1, &s))
     printf("failed to compile file %s\n", file);
   free(s);
 }
 
+//--------------------------------------------------------------------
+void attachShaderSourceAndFile(
+  GLuint prog, GLenum type, GLuint count, char **source, const char *file) {
+  // string array to combine source and file
+  char **combinedSource = (char **)malloc(count + 1);
+  int i = 0;
+  while (i < count) {
+    combinedSource[i] = (char *)malloc(strlen(*(source + i)) + 1);
+    strcpy(combinedSource[i], source[i]);
+    ++i;
+  }
+
+  ++count;
+
+  // combine file at last
+  char *s = readFile(file);
+  combinedSource[i] = (char *)malloc(strlen(s) + 1);
+  strcpy(combinedSource[i], s);
+
+  if (!attachShaderSource(prog, type, count, combinedSource)) {
+    i = 0;
+    while (i < count - 1) printf("failed to compile %s\n", source[i++]);
+
+    printf("failed to compile file %s\n", file);
+  }
+
+  // clean up
+  i = 0;
+  while (i < count) {
+    free(combinedSource[i++]);
+  }
+  free(combinedSource);
+}
+
 //------------------------------------------------------------------------------
-bool attachShaderSource(GLuint prog, GLenum type, const char *source) {
+bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source) {
   GLuint sh;
 
   sh = glCreateShader(type);
-  ZCGE(glShaderSource(sh, 1, &source, NULL));
+  ZCGE(glShaderSource(sh, count, source, NULL));
   ZCGE(glCompileShader(sh));
 
   GLint compiled;
@@ -234,6 +269,9 @@ void initExtension() {
   if (!GLEW_EXT_packed_depth_stencil) {
     fprintf(stdout, "EXT_packed_depth_stencil not supported");
   }
+  if (!GLEW_EXT_gpu_shader4) {
+    fprintf(stdout, "EXT_gpu_shader4 not supported");
+  }
   if (!GLEW_VERSION_2_1) {
     fprintf(stdout, "OpenGL2.1 not supported");
   }
@@ -266,3 +304,12 @@ void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1) {
   glEnd();
 }
 
+//--------------------------------------------------------------------
+void detachAllShaders(GLuint program) {
+  GLuint shaders[256];
+  GLsizei count;
+  glGetAttachedShaders(program, 256, &count, shaders);
+  while (count) {
+    glDetachShader(program, shaders[--count]);
+  }
+}
