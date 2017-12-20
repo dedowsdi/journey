@@ -112,7 +112,7 @@ void init(void) {
   attachShaderFile(
     normalmap_program, GL_FRAGMENT_SHADER, "data/shader/normalmap.fs.glsl");
   ZCGE(glLinkProgram(normalmap_program));
-  setUnifomLocation(&loc_normalMap, normalmap_program, "normalMap");
+  setUniformLocation(&loc_normalMap, normalmap_program, "normalMap");
 
   // init mesh data
   zxd::generateFaceNormals(vertices0, vertices0 + 12, normals0);

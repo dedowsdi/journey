@@ -1,18 +1,18 @@
 /* shadowmap.c
  *
+ * This is directional shadow map, only works for directional light.
+ *
  * create shadow texture:
  *   use ortho projection to create shadow map for dir light
- *   use fovy of spot light as fovy of projection matrix for spot light
- *   use manual fovy for point light ?
  *
  *   record depthBSVP = bias * scale * lightProj * lightView
  *
- *   bias and scale are sued to transform ndc to [0,1]
+ *   bias and scale are used to transform ndc to [0,1]
  *
  *   copy depth texture to iamge.
  *
  * use shadow texture:
- *  
+ *
  *  (s,t,r,q)^t = bias * scale * lightProj * lightView * model * objVertex
  *
  *  method 1: generate in object space
@@ -22,8 +22,9 @@
  *    texgen for every renderable, it's tedious.
  *
  *  method 2: generate in eye space
- *    (s,t,r,q) = bias * scale * lightProj * lightView * worldVertex 
- *              = bias * scale * lightProj * lightView * invCameraView * cameraVertex
+ *    (s,t,r,q) = bias * scale * lightProj * lightView * worldVertex
+ *              = bias * scale * lightProj * lightView * invCameraView *
+ * cameraVertex
  *    As glTexGen in eye space use following equation:
  *
  *        p^t * invModelView * eyeVertex
@@ -33,10 +34,10 @@
  *
  *
  *   In both method, after we obtain the preceding matrix M, call:
- *     glTexGen(GL_TEX_ENV, ... , row0 of M)
- *     glTexGen(GL_TEX_ENV, ... , row1 of M)
- *     glTexGen(GL_TEX_ENV, ... , row2 of M)
- *     glTexGen(GL_TEX_ENV, ... , row3 of M)
+ *     glTexGen(GL_S, ... , row0 of M)
+ *     glTexGen(GL_T, ... , row1 of M)
+ *     glTexGen(GL_R, ... , row2 of M)
+ *     glTexGen(GL_Q, ... , row3 of M)
  *
  * reult:
  *
@@ -54,34 +55,25 @@
 
 #define GL_GLEXT_PROTOTYPES
 
+#include <GL/glew.h>
 #include <stdio.h>
 #include <GL/glut.h>
 #include <GL/glext.h>
 #include <math.h>
 #include <GL/freeglut_ext.h>
-#include "common.h"
-/*#include "helpers.h"*/
-
-/*#ifdef GL_ARB_shadow*/
-/*#define GL_TEXTURE_COMPARE_MODE GL_TEXTURE_COMPARE_MODE_ARB*/
-/*#define GL_TEXTURE_COMPARE_FUNC GL_TEXTURE_COMPARE_FUNC_ARB*/
-/*#define GL_DEPTH_TEXTURE_MODE GL_DEPTH_TEXTURE_MODE_ARB*/
-/*#define GL_COMPARE_R_TO_TEXTURE GL_COMPARE_R_TO_TEXTURE_ARB*/
-/*#endif*/
-
 #define SHADOW_MAP_WIDTH 256
 #define SHADOW_MAP_HEIGHT 256
+#include "common.h"
 
 #define PI 3.14159265359
 
 GLdouble fovy = 60.0;
 GLdouble nearPlane = 10.0;
 GLdouble farPlane = 100.0;
-GLdouble lightFovy = 80, lightAspect = 1.0, lightNear = 1, lightFar = 50;
-GLdouble lightOrthoBottom = -30, lightOrthoTop = 30;
+GLdouble lightAspect = 1.0, lightNear = 1, lightFar = 80;
+GLdouble lightTop = 8;
 GLdouble depthBSVP[16];  // depth bias * scale * proj * view
 GLdouble matView[16];
-GLboolean useDirLight = GL_FALSE;
 
 GLfloat angle = 0.0;
 GLfloat torusAngle = 0.0;
@@ -202,19 +194,34 @@ void keyboard(unsigned char key, int x, int y) {
         glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
       }
     } break;
-
     case 'i':
-      if (lightFovy < 180) {
-        lightFovy += 5;
-        glutPostRedisplay();
-      }
+      lightTop += 0.5;
+      glutPostRedisplay();
       break;
 
     case 'I':
-      if (lightFovy > 5) {
-        lightFovy -= 5;
-        glutPostRedisplay();
-      }
+      lightTop -= 0.5;
+      glutPostRedisplay();
+      break;
+
+    case 'j':
+      lightNear += 0.5;
+      glutPostRedisplay();
+      break;
+
+    case 'J':
+      lightNear -= 0.5;
+      glutPostRedisplay();
+      break;
+
+    case 'k':
+      lightFar += 0.5;
+      glutPostRedisplay();
+      break;
+
+    case 'K':
+      lightFar -= 0.5;
+      glutPostRedisplay();
       break;
 
     case 'o': {
@@ -226,8 +233,7 @@ void keyboard(unsigned char key, int x, int y) {
       alignCameraToLight = !alignCameraToLight;
       glutPostRedisplay();
     } break;
-    case 'j':
-      useDirLight = !useDirLight;
+    default:
       break;
   }
 
@@ -248,7 +254,6 @@ void transposeMatrix(GLdouble m[16]) {
   Swap(m[11], m[14]);
 #undef Swap
 }
-
 
 void setupTexGen() {
   glEnable(GL_TEXTURE_GEN_S);
@@ -273,7 +278,7 @@ void drawObjects(GLboolean shadowRender) {
     // draw ground
     glNormal3f(0, 0, 1);
     glColor3f(1, 1, 1);
-    glRectf(-20.0, -20.0, 20.0, 20.0);
+    glRectf(-30.0, -30.0, 30.0, 30.0);
   }
   // get model matrix
 
@@ -308,7 +313,6 @@ void drawObjects(GLboolean shadowRender) {
 
 void generateShadowMap(void) {
   GLint viewport[4];
-  ZCGEA;
 
   // set viewport size to shadow map size
   glGetIntegerv(GL_VIEWPORT, viewport);
@@ -330,11 +334,9 @@ void generateShadowMap(void) {
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadIdentity();
-  if (useDirLight)
-    glOrtho(lightOrthoBottom * lightAspect, lightOrthoTop * lightAspect,
-      lightOrthoBottom, lightOrthoTop, lightNear, lightFar);
-  else
-    gluPerspective(lightFovy, lightAspect, lightNear, lightFar);
+
+  glOrtho(-lightTop * lightAspect, lightTop * lightAspect, -lightTop, lightTop,
+    lightNear, lightFar);
 
   gluLookAt(lightPos[0], lightPos[1], lightPos[2], lookat[0], lookat[1],
     lookat[2], up[0], up[1], up[2]);
@@ -377,14 +379,6 @@ void generateShadowMap(void) {
     glReadPixels(0, 0, SHADOW_MAP_WIDTH, SHADOW_MAP_HEIGHT, GL_DEPTH_COMPONENT,
       GL_FLOAT, depthImage);
     glWindowPos2f(viewport[2] / 2, 0);
-    /*for (int i = 0; i < 256; ++i) {*/
-    /*for (int j = 0; j < 256; ++j) {*/
-    /*if (depthImage[i][j] != 1) {*/
-    /*printf(" %.5f", depthImage[i][j]);*/
-    /*}*/
-    /*}*/
-    /*}*/
-    /*printf("\n ------------------------------------\n");*/
 
     glDrawPixels(SHADOW_MAP_WIDTH, SHADOW_MAP_HEIGHT, GL_DEPTH_COMPONENT,
       GL_FLOAT, depthImage);
@@ -433,7 +427,7 @@ void display(void) {
   drawObjects(GL_FALSE);
   glPopMatrix();
 
-  glColor3f(1.0f, 1.0f, 1.0f);
+  glColor3f(1.0f, 0.0f, 0.0f);
   glWindowPos2i(10, 492);
   char info[512];
   sprintf(info,
@@ -442,11 +436,13 @@ void display(void) {
     "e : toggle GL_TEXTURE_COMPARE_FUNC\n"
     "r : toggle scene depth alpha color views(ccw)\n"
     "u : toggle GL_DEPTH_TEXTURE_MODE\n"
-    "iI : light fovy : %3.4f\n"
+    "iI: lightTop : %.2f\n"
+    "jJ: lightNear : %.2f\n"
+    "KK: lightFar : %.2f\n"
     "o : toggle animation\n"
-    "p : align camera to light\n"
-    "j : toggle use dir light\n",
-    lightFovy);
+    "o : toggle animation\n"
+    "p : align camera to light\n",
+    lightTop, lightNear, lightFar);
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
 
   glutSwapBuffers();
@@ -459,6 +455,7 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
 
+  initExtension();
   init();
 
   glutDisplayFunc(display);

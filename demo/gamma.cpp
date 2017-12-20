@@ -48,7 +48,7 @@ void init(void) {
   program = glCreateProgram();
   attachShaderFile(program, GL_FRAGMENT_SHADER, "data/shader/gamma.fs.glsl");
   ZCGE(glLinkProgram(program));
-  setUnifomLocation(&loc_iamge, program, "image");
+  setUniformLocation(&loc_iamge, program, "image");
 }
 
 void display(void) {

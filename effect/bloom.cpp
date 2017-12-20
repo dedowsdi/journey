@@ -120,21 +120,21 @@ void init(void) {
   attachShaderFile(filterBrightessProgram, GL_FRAGMENT_SHADER,
     "data/shader/filter_brightness.fs.glsl");
   ZCGE(glLinkProgram(filterBrightessProgram));
-  setUnifomLocation(&loc_threshold, filterBrightessProgram, "threshold");
+  setUniformLocation(&loc_threshold, filterBrightessProgram, "threshold");
 
   blurProgram = glCreateProgram();
   attachShaderFile(blurProgram, GL_FRAGMENT_SHADER,
     "data/shader/gaussian_blur_0_1_0.5_4.fs.glsl");
   ZCGE(glLinkProgram(blurProgram));
-  setUnifomLocation(&loc_horizontal, blurProgram, "horizontal");
+  setUniformLocation(&loc_horizontal, blurProgram, "horizontal");
 
   bloomProgram = glCreateProgram();
   attachShaderFile(
     bloomProgram, GL_FRAGMENT_SHADER, "data/shader/bloom.fs.glsl");
   ZCGE(glLinkProgram(bloomProgram));
-  setUnifomLocation(&loc_exposure, bloomProgram, "exposure");
-  setUnifomLocation(&loc_hdrMap, bloomProgram, "hdrMap");
-  setUnifomLocation(&loc_brightnessMap, bloomProgram, "brightnessMap");
+  setUniformLocation(&loc_exposure, bloomProgram, "exposure");
+  setUniformLocation(&loc_hdrMap, bloomProgram, "hdrMap");
+  setUniformLocation(&loc_brightnessMap, bloomProgram, "brightnessMap");
 }
 
 void display(void) {

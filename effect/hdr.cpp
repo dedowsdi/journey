@@ -138,8 +138,8 @@ void init(void) {
   program = glCreateProgram();
   attachShaderFile(program, GL_FRAGMENT_SHADER, "data/shader/hdr.fs.glsl");
   ZCGE(glLinkProgram(program));
-  setUnifomLocation(&loc_method, program, "method");
-  setUnifomLocation(&loc_exposure, program, "exposure");
+  setUniformLocation(&loc_method, program, "method");
+  setUniformLocation(&loc_exposure, program, "exposure");
 
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_SMOOTH);

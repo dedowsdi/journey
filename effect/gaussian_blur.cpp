@@ -65,10 +65,10 @@ void compileProgram() {
   attachShaderSourceAndFile(
     program, GL_FRAGMENT_SHADER, 1, &s, "data/shader/gaussian_blur.fs.glsl");
   ZCGE(glLinkProgram(program));
-  setUnifomLocation(&loc_mean, program, "mean");
-  setUnifomLocation(&loc_deviation, program, "deviation");
-  setUnifomLocation(&loc_horizontal, program, "horizontal");
-  setUnifomLocation(&loc_gaussianStep, program, "gaussianStep");
+  setUniformLocation(&loc_mean, program, "mean");
+  setUniformLocation(&loc_deviation, program, "deviation");
+  setUniformLocation(&loc_horizontal, program, "horizontal");
+  setUniformLocation(&loc_gaussianStep, program, "gaussianStep");
 }
 
 void init(void) {

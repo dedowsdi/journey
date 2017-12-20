@@ -65,7 +65,7 @@ void attachShaderSourceAndFile(
   GLuint prog, GLenum type, GLuint count, char **source, const char *file);
 bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source);
 // exit if not found
-void setUnifomLocation(GLint *loc, GLint program, const char *name);
+void setUniformLocation(GLint *loc, GLint program, const char *name);
 
 GLfloat getTime();
 GLfloat getNormalizedTime();
@@ -76,7 +76,16 @@ void initExtension();
 
 void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1);
 
+void drawXZRect(GLfloat x0, GLfloat z0, GLfloat x1, GLfloat z1);
+
+void drawXYPlane(
+  GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, 
+  GLuint slices = 1
+  );
+
 void detachAllShaders(GLuint program);
+
+void getModelViewProj(GLfloat *p);
 
 // print gigantic array
 template <typename _It>

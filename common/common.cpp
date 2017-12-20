@@ -209,7 +209,7 @@ bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source) {
 }
 
 //--------------------------------------------------------------------
-void setUnifomLocation(GLint *loc, GLint program, const char *name) {
+void setUniformLocation(GLint *loc, GLint program, const char *name) {
   ZCGE(*loc = glGetUniformLocation(program, name));
   if (*loc == -1) {
     printf("failed to get uniform location : %s\n", name);
@@ -305,6 +305,36 @@ void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1) {
 }
 
 //--------------------------------------------------------------------
+void drawXZRect(GLfloat x0, GLfloat z0, GLfloat x1, GLfloat z1) {
+  glBegin(GL_QUADS);
+  glVertex3f(x0, 0, z0);
+  glVertex3f(x1, 0, z0);
+  glVertex3f(x1, 0, z1);
+  glVertex3f(x0, 0, z1);
+  glEnd();
+}
+
+//--------------------------------------------------------------------
+void drawXYPlane(
+  GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, GLuint slices /* = 1
+*/) {
+  GLfloat dx = (x1 - x0) / slices;
+  GLfloat dy = (y1 - y0) / slices;
+  for (int i = 0; i < slices; ++i) {
+    glBegin(GL_QUAD_STRIP);
+    GLfloat _y0 = y0 + dy * i;
+    GLfloat _y1 = _y0 + dy;
+    // loop from end to start to keep ccw order
+    for (int j = slices; j >= 0; ++j) {
+      GLfloat x = x0 + dx * j;
+      glVertex2f(x, _y0);
+      glVertex2f(x, _y1);
+    }
+    glEnd();
+  }
+}
+
+//--------------------------------------------------------------------
 void detachAllShaders(GLuint program) {
   GLuint shaders[256];
   GLsizei count;
@@ -312,4 +342,21 @@ void detachAllShaders(GLuint program) {
   while (count) {
     glDetachShader(program, shaders[--count]);
   }
+}
+
+//--------------------------------------------------------------------
+void getModelViewProj(GLfloat *p) {
+  GLint mode;
+  glGetIntegerv(GL_MATRIX_MODE, &mode);
+
+  glGetFloatv(GL_MODELVIEW_MATRIX, p);
+
+  // place resultin projection matrix, then get it.
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glMultMatrixf(p);
+  glGetFloatv(GL_PROJECTION_MATRIX, p);
+  glPopMatrix();
+
+  glMatrixMode(mode);
 }

@@ -26,12 +26,12 @@ void init(void) {
   program = glCreateProgram();
   attachShaderFile(program, GL_FRAGMENT_SHADER, "data/shader/circular.fs.glsl");
   ZCGE(glLinkProgram(program))
-  setUnifomLocation(&loc_time, program, "time");
-  setUnifomLocation(&loc_resolution, program, "resolution");
-  setUnifomLocation(&loc_time_scale, program, "time_scale");
-  setUnifomLocation(&loc_length_scale, program, "length_scale");
-  setUnifomLocation(&loc_origin, program, "origin");
-  setUnifomLocation(&loc_use_origin, program, "use_origin");
+  setUniformLocation(&loc_time, program, "time");
+  setUniformLocation(&loc_resolution, program, "resolution");
+  setUniformLocation(&loc_time_scale, program, "time_scale");
+  setUniformLocation(&loc_length_scale, program, "length_scale");
+  setUniformLocation(&loc_origin, program, "origin");
+  setUniformLocation(&loc_use_origin, program, "use_origin");
 
   glUseProgram(program);
   glUniform1f(loc_length_scale, length_scale);

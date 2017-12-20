@@ -21,11 +21,11 @@ float weights[radius+1];
 
 void main(void) {
   float r = 1.0 / sqrt(2.0 * pi);
-  vec2 texStep = 1.0 / textureSize2D(colorMap, 0);
+  vec2 texelStep = 1.0 / textureSize2D(colorMap, 0);
   if (horizontal) {
-    texStep.y = 0.0;
+    texelStep.y = 0.0;
   } else {
-    texStep.x = 0.0;
+    texelStep.x = 0.0;
   }
   float rd = 1.0 / deviation;
 
@@ -44,9 +44,9 @@ void main(void) {
   vec4 color = weights[0] * rw * texture2D(colorMap, gl_TexCoord[0].xy);
   for (int i = 1; i <= radius; i++) {
     color +=
-      weights[i] * rw * texture2D(colorMap, gl_TexCoord[0].xy + texStep * i);
+      weights[i] * rw * texture2D(colorMap, gl_TexCoord[0].xy + texelStep * i);
     color +=
-      weights[i] * rw * texture2D(colorMap, gl_TexCoord[0].xy - texStep * i);
+      weights[i] * rw * texture2D(colorMap, gl_TexCoord[0].xy - texelStep * i);
   }
   gl_FragColor = color;
 }
