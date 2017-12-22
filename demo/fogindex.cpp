@@ -45,7 +45,7 @@
  *  This program draws 5 wireframe spheres, each at
  *  a different z distance from the eye, in linear fog.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>

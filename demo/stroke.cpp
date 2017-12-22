@@ -6,7 +6,7 @@
  *  correspond to the ASCII values of the characters.
  *  Use of glCallLists() is demonstrated.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <string.h>
 

@@ -4,7 +4,7 @@
  *  A single light source illuminates the objects.
  */
 #include <stdlib.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 GLuint teapotList;
 

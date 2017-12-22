@@ -11,7 +11,7 @@
  *    tP*v < 0   out
  *
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 /*#include <stdlib.h>  */
 
 double yaw = 0.0f;

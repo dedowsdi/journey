@@ -4,8 +4,10 @@
  *  Pressing the left mouse button rotates the rectangle.
  *  Pressing the middle mouse button stops the rotation.
  */
-#include <GL/glut.h>
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 static GLfloat spin = 0.0;
 
@@ -72,8 +74,10 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowSize(250, 250);
   glutInitWindowPosition(100, 100);
+  glutInitContextFlags(GLUT_DEBUG);
   glutCreateWindow(argv[0]);
   init();
+  initExtension();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);

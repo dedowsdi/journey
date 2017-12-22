@@ -20,7 +20,7 @@
  *
  */
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GL/freeglutt.h>
 #include <stdlib.h>
 #include "common.h"
 
@@ -105,6 +105,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
+  glutInitContextFlags(GLUT_DEBUG);
   glutCreateWindow(argv[0]);
   initExtension();
   init();

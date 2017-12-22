@@ -3,7 +3,7 @@
  * This program demonstrates smooth shading.
  * A smooth shaded polygon is drawn in a 2-D projection.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 void init(void) {

@@ -11,7 +11,7 @@
  *  always rect(it becomes round if antialiasing is enabled, either rgba or
  *  multisample).
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>

@@ -4,7 +4,7 @@
  *  display list.  Note that attributes, such as current
  *  color and matrix, are changed.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 GLuint listName;

@@ -7,7 +7,7 @@
  *  You don't need to use the same r for 3d tex coord of primitives.
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>

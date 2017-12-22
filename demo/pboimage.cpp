@@ -3,7 +3,7 @@
  *  drawing, copying and zooming pixel data stored in a buffer object
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + (bytes))

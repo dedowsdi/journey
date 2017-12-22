@@ -29,7 +29,7 @@
  *
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
 #include <GL/freeglut_ext.h>

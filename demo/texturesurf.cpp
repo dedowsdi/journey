@@ -3,7 +3,7 @@
  *  surface and automatically generated texture coordinates.
  */
 
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <math.h>
 

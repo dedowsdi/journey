@@ -49,7 +49,7 @@
  *  the viewing volume is at the same position, each time.  In
  *  this case, the gold teapot remains in focus.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <math.h>
 #include "jitter.h"

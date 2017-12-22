@@ -7,7 +7,7 @@
  *  Note that texture proxies dont't care if there are still enough texture
  *  resources to be used.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

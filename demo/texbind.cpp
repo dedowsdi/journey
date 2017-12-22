@@ -2,7 +2,7 @@
  *  This program demonstrates using glBindTexture() by
  *  creating and managing two textures.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

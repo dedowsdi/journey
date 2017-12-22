@@ -7,7 +7,7 @@
  *
  *  A-Z is represented by a 8 * 13 bitmap 
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <string.h>
 

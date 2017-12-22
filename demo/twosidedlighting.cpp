@@ -6,7 +6,7 @@
  *  TODO the graph is all white, really not so 3d, couldn't figure the geometry
  *  at all.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 void init(void) {

@@ -3,7 +3,7 @@
  *  using two-dimensional evaluators.
  */
 #include <stdlib.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 // clang-format off
 GLfloat ctrlpoints[4][4][3] = {

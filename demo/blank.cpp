@@ -2,7 +2,7 @@
  *  blank.c
  *  Tmp program, always wipe clean after you experiment
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 #define drawOneLine(x1, y1, x2, y2) \

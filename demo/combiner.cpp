@@ -32,7 +32,7 @@
  *  operand of arg must be specified with glTexEnv(GL_TEX_ENV, GL_OPERANDi_, ...)
  *
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "common.h"

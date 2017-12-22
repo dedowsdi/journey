@@ -15,7 +15,7 @@
  *  becoming right again if you chagne any other materials.
  *
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
 #include <stdio.h>

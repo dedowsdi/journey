@@ -15,7 +15,7 @@
  *  Any function that result in [0,1] should work.
  */
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
 #include <GL/freeglut_ext.h>

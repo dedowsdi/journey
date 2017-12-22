@@ -2,7 +2,7 @@
  *  Use the accumulation buffer to do full-scene antialiasing
  *  on a scene with orthographic parallel projection.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include "jitter.h"
 

@@ -11,7 +11,7 @@
  *  parameter to do the job. It scale and fade point based on attenuation.
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>

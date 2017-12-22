@@ -4,7 +4,7 @@
  *  Objects are drawn using a grey material characteristic.
  *  A single light source illuminates the objects.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 /*  Initialize material property and light source.

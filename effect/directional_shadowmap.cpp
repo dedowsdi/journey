@@ -54,7 +54,7 @@
  */
 
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
 #include "common.h"
@@ -502,9 +502,10 @@ void passiveMotion(int x, int y) {}
 
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH );
   glutInitWindowSize(WINDOWS_WIDTH, WINDOWS_HEIGHT);
   glutInitWindowPosition(100, 100);
+  glutInitContextFlags(GLUT_DEBUG);
   glutCreateWindow(argv[0]);
   initExtension();
   init();

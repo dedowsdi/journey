@@ -16,7 +16,7 @@
  *  three vertices of the triangle.
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>

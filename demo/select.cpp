@@ -23,7 +23,7 @@
  *     contents of name stack, bottom to top.
  *
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

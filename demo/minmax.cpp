@@ -3,7 +3,7 @@
  *  Determine the minimum and maximum values of a group of pixels.
  *  This demonstrates use of the glMinmax() call.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "readImage.cpp"

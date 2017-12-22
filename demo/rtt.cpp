@@ -12,7 +12,7 @@
  * renderbuffer, then read depth component and stencil index.
  */
 #include <GL/glew.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
 #include <GL/freeglut_ext.h>

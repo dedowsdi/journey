@@ -7,7 +7,7 @@
  *  same buffer as position or in a seperated buffer.
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 #define COLORS 2

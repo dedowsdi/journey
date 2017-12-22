@@ -2,7 +2,7 @@
  *  polys.c
  *  This program demonstrates polygon stippling.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 /*

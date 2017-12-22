@@ -3,7 +3,7 @@
 
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdio.h>
 #include <GL/glu.h>
 #include "string.h"
@@ -12,7 +12,7 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
-#define ENABLE_GL_CHECK 1
+#define ENABLE_GL_CHECK 0
 
 #if ENABLE_GL_CHECK
 #define ZXD_CHECK_GL_ERROR(glFunc)                                             \
@@ -60,7 +60,7 @@ GLboolean invertMatrixd(GLdouble m[16]);
 
 GLenum rotateEnum(GLenum val, GLenum begin, GLuint size);
 
-//c ctyle attach
+// c ctyle attach
 void attachShaderFile(GLuint prog, GLenum type, char *file);
 void attachShaderSourceAndFile(
   GLuint prog, GLenum type, GLuint count, char **source, char *file);
@@ -74,15 +74,16 @@ GLfloat getNormalizedTime();
 GLfloat updateFps();
 
 void initExtension();
+void initDebugOutput();
+void glDebugOutput(GLenum source, GLenum type, GLuint id,
+  GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
 
 void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1);
 
 void drawXZRect(GLfloat x0, GLfloat z0, GLfloat x1, GLfloat z1);
 
 void drawXYPlane(
-  GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, 
-  GLuint slices = 1
-  );
+  GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, GLuint slices = 1);
 
 void detachAllShaders(GLuint program);
 

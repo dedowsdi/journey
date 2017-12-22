@@ -9,7 +9,7 @@
  *  Antialiasing is sometimes easier to see when objects are rendered over a
  *  contrasting background.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

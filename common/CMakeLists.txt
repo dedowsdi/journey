@@ -2,6 +2,7 @@ set(COMMON_SRCS
     common.cpp
     program.cpp
     glm.cpp
+    glEnumString.cpp
     )
 add_library(common 
     ${COMMON_SRCS}

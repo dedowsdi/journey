@@ -6,7 +6,7 @@
  * alters the rotation of the robot arm.
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
 

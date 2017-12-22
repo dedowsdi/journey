@@ -18,7 +18,7 @@
  * pass through   GL_PASS_THROUGH_TOKEN        user defined float number
  *
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

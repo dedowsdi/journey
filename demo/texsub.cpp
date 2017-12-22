@@ -4,7 +4,7 @@
  *  the texture coordinates fall outside 0.0 and 1.0.
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>

@@ -10,7 +10,7 @@
  *
  */
 #include <stdlib.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdio.h>
 
 #ifndef CALLBACK

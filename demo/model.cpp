@@ -23,7 +23,7 @@
  *  T can also be used to transform local frame into parent node frame.
  *
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 void init(void) {

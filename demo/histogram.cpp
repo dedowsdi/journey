@@ -4,7 +4,7 @@
  *  use of the glHistogram() function.
  */
 
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include "readImage.cpp"
 

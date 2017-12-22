@@ -4,7 +4,7 @@
  *  glEdgeFlag don't work for strip type primitives.
  *  glEdgeFlag only works under GL_LINE or GL_POINT polygon mode.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
 

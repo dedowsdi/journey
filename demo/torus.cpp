@@ -13,7 +13,7 @@
  */
 
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>

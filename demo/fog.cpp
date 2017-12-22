@@ -8,7 +8,7 @@
  *  as fixed start and end values for the linear fog.
  */
 #define GL_GLEXT_PROTOTYPES
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>

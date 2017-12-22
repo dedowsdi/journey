@@ -47,7 +47,7 @@
  *  is typed in the window, the lines are rotated in opposite
  *  directions.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 
 #define RAMPSIZE 16

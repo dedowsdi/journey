@@ -11,7 +11,7 @@
 //macro to introduce glMultiDraw*
 #define GL_GLEXT_PROTOTYPES
 
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>

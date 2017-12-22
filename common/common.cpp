@@ -247,9 +247,9 @@ GLfloat updateFps() {
   return fps;
 }
 
-#define checkExtension(name)                 \
-  if (!GLEW_##name) {                        \
-    fprintf(stdout, "##name not supported"); \
+#define checkExtension(name)                   \
+  if (!GLEW_##name) {                          \
+    fprintf(stdout, "##name not supported\n"); \
   }
 
 //--------------------------------------------------------------------
@@ -265,6 +265,8 @@ void initExtension() {
   checkExtension(ARB_texture_stencil8);
   checkExtension(ARB_texture_float);
   checkExtension(ARB_geometry_shader4);
+  checkExtension(ARB_debug_output);
+  checkExtension(KHR_debug);
   checkExtension(EXT_packed_depth_stencil);
   checkExtension(EXT_gpu_shader4);
 
@@ -279,6 +281,36 @@ void initExtension() {
 
   // if (WGLEW_extension)  //check WGL extension
   // if (GLXEW_extension)  //check GLX extension
+
+  initDebugOutput();
+}
+
+//--------------------------------------------------------------------
+void initDebugOutput() {
+   glEnable(GL_DEBUG_OUTPUT);
+   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+  // 4.3+
+  // GLint flag;
+  // glGetIntegerv(GL_CONTEXT_FLAGS, &flag);
+  // if (!(flag & GL_CONTEXT_FLAG_DEBUG_BIT)) {
+  // printf("faled to create debug context\n");
+  // return;
+  //}
+  // glEnable(GL_DEBUG_OUTPUT);
+
+  glDebugMessageCallback(glDebugOutput, 0);
+}
+
+//--------------------------------------------------------------------
+void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
+  GLsizei length, const GLchar *message, const void *userParam) {
+  const char *debugSource = glDebugSourceToString(source);
+  const char *debugType = glDebugTypeToString(type);
+  const char *debugSeverity = glDebugSeverityToString(severity);
+
+  printf("%s : %s : %s : %d : %.*s\n", debugSeverity, debugSource, debugType,
+    id, length, message);
 }
 
 //--------------------------------------------------------------------

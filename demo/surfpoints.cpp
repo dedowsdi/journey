@@ -19,7 +19,7 @@
  *      gluNurbsCallback(theNurb, GLU_NURBS_NORMAL, normalCallback);
  *      gluNurbsCallback(theNurb, GLU_NURBS_END, endCallback);
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

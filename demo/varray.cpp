@@ -7,7 +7,7 @@
  *
  *  If you enable some array, but don't use it, you will be screwed!
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

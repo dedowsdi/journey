@@ -57,7 +57,7 @@
 
 #include <GL/glew.h>
 #include <stdio.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <GL/glext.h>
 #include <math.h>
 #include <GL/freeglut_ext.h>

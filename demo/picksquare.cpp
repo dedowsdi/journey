@@ -5,7 +5,7 @@
  * button is pressed, all squares under the cursor position
  * have their color changed.
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 

@@ -8,7 +8,7 @@
  *    Blue  -> Red
  *
  */
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include "readImage.cpp"
 
