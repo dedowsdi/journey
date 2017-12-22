@@ -12,6 +12,9 @@ set (PROJECTS
     template_nontype
     function_pointer
     float
+    cast
+    value
+    functional
     )
 
 foreach(PROJECT ${PROJECTS})

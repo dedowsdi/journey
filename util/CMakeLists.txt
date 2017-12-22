@@ -1,5 +1,6 @@
 set (PROJECTS
     number_file
+    gaussian
     )
 
 foreach(PROJECT ${PROJECTS})
