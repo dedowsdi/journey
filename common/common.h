@@ -60,12 +60,13 @@ GLboolean invertMatrixd(GLdouble m[16]);
 
 GLenum rotateEnum(GLenum val, GLenum begin, GLuint size);
 
-void attachShaderFile(GLuint prog, GLenum type, const char *file);
+//c ctyle attach
+void attachShaderFile(GLuint prog, GLenum type, char *file);
 void attachShaderSourceAndFile(
-  GLuint prog, GLenum type, GLuint count, char **source, const char *file);
+  GLuint prog, GLenum type, GLuint count, char **source, char *file);
 bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source);
 // exit if not found
-void setUniformLocation(GLint *loc, GLint program, const char *name);
+void setUniformLocation(GLint *loc, GLint program, char *name);
 
 GLfloat getTime();
 GLfloat getNormalizedTime();

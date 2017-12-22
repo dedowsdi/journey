@@ -141,7 +141,7 @@ GLenum rotateEnum(GLenum val, GLenum begin, GLuint size) {
 }
 
 //--------------------------------------------------------------------
-void attachShaderFile(GLuint prog, GLenum type, const char *file) {
+void attachShaderFile(GLuint prog, GLenum type, char *file) {
   char *s = readFile(file);
   if (!attachShaderSource(prog, type, 1, &s))
     printf("failed to compile file %s\n", file);
@@ -150,7 +150,7 @@ void attachShaderFile(GLuint prog, GLenum type, const char *file) {
 
 //--------------------------------------------------------------------
 void attachShaderSourceAndFile(
-  GLuint prog, GLenum type, GLuint count, char **source, const char *file) {
+  GLuint prog, GLenum type, GLuint count, char **source, char *file) {
   // string array to combine source and file
   char **combinedSource = (char **)malloc(count + 1);
   int i = 0;
@@ -209,7 +209,7 @@ bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source) {
 }
 
 //--------------------------------------------------------------------
-void setUniformLocation(GLint *loc, GLint program, const char *name) {
+void setUniformLocation(GLint *loc, GLint program, char *name) {
   ZCGE(*loc = glGetUniformLocation(program, name));
   if (*loc == -1) {
     printf("failed to get uniform location : %s\n", name);
@@ -247,6 +247,11 @@ GLfloat updateFps() {
   return fps;
 }
 
+#define checkExtension(name)                 \
+  if (!GLEW_##name) {                        \
+    fprintf(stdout, "##name not supported"); \
+  }
+
 //--------------------------------------------------------------------
 void initExtension() {
   GLenum err = glewInit();
@@ -254,24 +259,15 @@ void initExtension() {
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
   }
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-  if (!GLEW_ARB_vertex_array_object) {
-    fprintf(stdout, "ARB_vertex_array_object not supported");
-  }
-  if (!GLEW_ARB_framebuffer_object) {
-    fprintf(stdout, "ARB_framebuffer_object not supported");
-  }
-  if (!GLEW_ARB_texture_stencil8) {
-    fprintf(stdout, "ARB_texture_stencil8 not supported");
-  }
-  if (!GLEW_ARB_texture_float) {
-    fprintf(stdout, "ARB_texture_float not supported");
-  }
-  if (!GLEW_EXT_packed_depth_stencil) {
-    fprintf(stdout, "EXT_packed_depth_stencil not supported");
-  }
-  if (!GLEW_EXT_gpu_shader4) {
-    fprintf(stdout, "EXT_gpu_shader4 not supported");
-  }
+
+  checkExtension(ARB_vertex_array_object);
+  checkExtension(ARB_framebuffer_object);
+  checkExtension(ARB_texture_stencil8);
+  checkExtension(ARB_texture_float);
+  checkExtension(ARB_geometry_shader4);
+  checkExtension(EXT_packed_depth_stencil);
+  checkExtension(EXT_gpu_shader4);
+
   if (!GLEW_VERSION_2_1) {
     fprintf(stdout, "OpenGL2.1 not supported");
   }

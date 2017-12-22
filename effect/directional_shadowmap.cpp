@@ -59,6 +59,7 @@
 #include <stdlib.h>
 #include "common.h"
 #include "glm.h"
+#include "program.h"
 
 using namespace glm;
 
@@ -77,42 +78,86 @@ mat4 lightBSVP;  // bias * scale * lightProj * lightView
 
 GLuint fbo;
 GLuint depthMap, shadowMap;
-GLint useShadowProgram, renderShadowProgram;
-
-mat4 viewMatrix, projMatrix;
 
 const char* filterStrings[] = {"NEAREST", "LINEAR"};
 GLenum filters[] = {GL_NEAREST, GL_LINEAR};
 GLint filter = 0;
-
-struct {
-  GLint modelViewProjMatrix;
-} render_loc;
-
-struct {
-  GLint eye;       // model space
-  GLint lightDir;  // to light
-  GLint lightMatrix;
-  GLint modelViewProjMatrix;
-  GLint bias;
-  GLint useSampler2DShadow;
-  GLint depthMap;
-  GLint shadowMap;
-} use_loc;
 
 vec4 light_position0(-8, 8, 8, 0);
 vec3 cameraPos = vec3(5, -20, 20);
 
 GLboolean cameraAtLight = GL_FALSE;
 
-void configureUniform(const mat4& modelMatrix, const mat4& viewMatrix,
-  const mat4& projMatrix, bool isRenderShadow) {
-  mat4 modelViewProjMatrix = projMatrix * viewMatrix * modelMatrix;
-
-  if (isRenderShadow) {
+struct RenderProgram : public zxd::Program {
+  virtual void doUpdateModel() {
+    modelViewProjMatrix = projMatrix * viewMatrix * modelMatrix;
     glUniformMatrix4fv(
-      render_loc.modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
-  } else {
+      loc_modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
+  }
+  virtual void doUpdateFrame() {
+    glActiveTexture(GL_TEXTURE0);
+    glDisable(GL_TEXTURE_2D);
+    glActiveTexture(GL_TEXTURE1);
+    glDisable(GL_TEXTURE_2D);
+
+    GLdouble right = lightTop * wndAspect;
+    GLdouble left = -right;
+
+    projMatrix =
+      glm::ortho(left, right, -lightTop, lightTop, lightNear, lightFar);
+    viewMatrix =
+      glm::lookAt(light_position0.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+
+    lightBSVP = glm::translate(vec3(0.5, 0.5, 0.5)) *
+                glm::scale(vec3(0.5, 0.5, 0.5)) * projMatrix * viewMatrix;
+  }
+  virtual void attachShaders() {
+    // render shadow program
+    attachShaderFile(
+      GL_VERTEX_SHADER, "data/shader/render_directional_shadowmap.vs.glsl");
+    attachShaderFile(
+      GL_FRAGMENT_SHADER, "data/shader/render_directional_shadowmap.fs.glsl");
+  }
+  virtual void bindLocations() {
+    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
+  }
+
+} renderProgram;
+
+struct UseProgram : public zxd::Program {
+  GLint loc_eye;       // model space
+  GLint loc_lightDir;  // to light
+  GLint loc_lightMatrix;
+  GLint loc_bias;
+  GLint loc_useSampler2DShadow;
+  GLint loc_depthMap;
+  GLint loc_shadowMap;
+
+  virtual void doUpdateFrame() {
+    glActiveTexture(GL_TEXTURE0);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+
+    glActiveTexture(GL_TEXTURE1);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, shadowMap);
+
+    if (cameraAtLight)
+      viewMatrix =
+        glm::lookAt(light_position0.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+    else
+      viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
+
+    projMatrix = glm::perspective<GLfloat>(45.0, wndAspect, 0.1, 100);
+
+    glUniform1f(loc_bias, bias);
+    glUniform1i(loc_useSampler2DShadow, useSampler2DShadow);
+    glUniform1i(loc_depthMap, 0);
+    glUniform1i(loc_shadowMap, 1);
+  }
+
+  void doUpdateModel() {
+    modelViewProjMatrix = projMatrix * viewMatrix * modelMatrix;
     mat4 modelMatrixInverse = glm::inverse(modelMatrix);
     mat4 lightMatrix = lightBSVP * modelMatrix;
 
@@ -126,74 +171,65 @@ void configureUniform(const mat4& modelMatrix, const mat4& viewMatrix,
     vec3 localLightDir = vec3(glm::transpose(modelMatrix) * light_position0);
     localLightDir = glm::normalize(localLightDir);
 
-    glUniform3fv(use_loc.eye, 1, &localEye[0]);
-    glUniform3fv(use_loc.lightDir, 1, &localLightDir[0]);
-    glUniformMatrix4fv(use_loc.lightMatrix, 1, 0, &lightMatrix[0][0]);
+    glUniform3fv(loc_eye, 1, &localEye[0]);
+    glUniform3fv(loc_lightDir, 1, &localLightDir[0]);
+    glUniformMatrix4fv(loc_lightMatrix, 1, 0, &lightMatrix[0][0]);
     glUniformMatrix4fv(
-      use_loc.modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
-    glUniform1f(use_loc.bias, bias);
-    glUniform1i(use_loc.useSampler2DShadow, useSampler2DShadow);
-    glUniform1i(use_loc.depthMap, 0);
-    glUniform1i(use_loc.shadowMap, 1);
+      loc_modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
   }
-}
-
-void render(bool isRenderShadow) {
-  if (isRenderShadow) {
-    glActiveTexture(GL_TEXTURE0);
-    glDisable(GL_TEXTURE_2D);
-    glActiveTexture(GL_TEXTURE1);
-    glDisable(GL_TEXTURE_2D);
-  } else {
-    glActiveTexture(GL_TEXTURE0);
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
-
-    glActiveTexture(GL_TEXTURE1);
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
+  virtual void attachShaders() {
+    // useProgram
+    attachShaderFile(
+      GL_VERTEX_SHADER, "data/shader/use_directional_shadowmap.vs.glsl");
+    attachShaderFile(
+      GL_FRAGMENT_SHADER, "data/shader/use_directional_shadowmap.fs.glsl");
   }
+  virtual void bindLocations() {
+    setUniformLocation(&loc_eye, "eye");
+    setUniformLocation(&loc_lightDir, "lightDir");
+    setUniformLocation(&loc_lightMatrix, "lightMatrix");
+    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
+    setUniformLocation(&loc_bias, "bias");
+    setUniformLocation(&loc_depthMap, "depthMap");
+    setUniformLocation(&loc_shadowMap, "shadowMap");
+    setUniformLocation(&loc_useSampler2DShadow, "useSampler2DShadow");
+  }
+
+} useProgram;
+
+void render(zxd::Program& program) {
 
   mat4 modelMatrix(1);
 
   modelMatrix = glm::translate(vec3(0, 0, 3));
-  configureUniform(modelMatrix, viewMatrix, projMatrix, isRenderShadow);
+  program.updateModel(modelMatrix);
   glutSolidSphere(2, 16, 16);
 
   modelMatrix = mat4(1);
-  configureUniform(modelMatrix, viewMatrix, projMatrix, isRenderShadow);
+  program.updateModel(modelMatrix);
   glNormal3f(0, 0, 1);
   glRecti(-10, -10, 10, 10);
 
   // create a wall
   modelMatrix =
     glm::translate(vec3(-10, 0, 0)) * glm::rotate(90.f, vec3(0, 1, 0));
-  configureUniform(modelMatrix, viewMatrix, projMatrix, isRenderShadow);
+  program.updateModel(modelMatrix);
   glNormal3f(0, 0, 1);
   glRecti(-6, -10, 0, 10);
 
   glFlush();
 }
 void renderShadowmap() {
-  GLdouble right = lightTop * wndAspect;
-  GLdouble left = -right;
-  projMatrix =
-    glm::ortho(left, right, -lightTop, lightTop, lightNear, lightFar);
-  viewMatrix = glm::lookAt(light_position0.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
-
-  lightBSVP = glm::translate(vec3(0.5, 0.5, 0.5)) *
-              glm::scale(vec3(0.5, 0.5, 0.5)) * projMatrix * viewMatrix;
-
   glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
   glViewport(0, 0, shadowWidth, shadowHeight);
   glClear(GL_DEPTH_BUFFER_BIT);
 
-  glUseProgram(renderShadowProgram);
   glCullFace(GL_FRONT);
 
+  renderProgram.updateFrame();
   // copy texture
-  render(true);
+  render(renderProgram);
 
   // You can use the same depth texture for both sample2D and sample2DShadow,
   // although opengl will complain sampler type and depth compare discrapancy.
@@ -204,13 +240,7 @@ void renderShadowmap() {
     GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 0, 0, shadowWidth, shadowHeight, 0);
 }
 
-void setupCamera() {
-  if (cameraAtLight)
-    viewMatrix =
-      glm::lookAt(light_position0.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
-  else
-    viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
-}
+void setupCamera() {}
 
 void display(void) {
   renderShadowmap();
@@ -222,18 +252,15 @@ void display(void) {
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, depthMap);
 
-  glUseProgram(useShadowProgram);
-  setupCamera();
-  projMatrix = glm::perspective<GLfloat>(45.0, wndAspect, 0.1, 100);
-
   glCullFace(GL_BACK);
-  render(false);
+  useProgram.updateFrame();
+  render(useProgram);
 
   glUseProgram(0);
   glColor3f(1.0f, 0.0f, 0.0f);
   glWindowPos2i(10, 492);
-  GLchar info[256];
 
+  GLchar info[512];
   sprintf(info,
     "q  : place camera at light \n"
     "wW : camera position : %.2f %.2f %.2f\n"
@@ -301,7 +328,7 @@ void init(void) {
     GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
   glDrawBuffer(GL_NONE);
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    printf("incomplete frame buffer");
+    printf("incomplete frame buffer\n");
 
   // dir light
   GLfloat light_diffuse0[] = {1.0, 1.0, 1.0, 1.0};
@@ -325,41 +352,13 @@ void init(void) {
   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat_emission);
   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
 
-  // render shadow program
-  renderShadowProgram = glCreateProgram();
-  attachShaderFile(renderShadowProgram, GL_VERTEX_SHADER,
-    "data/shader/render_directional_shadowmap.vs.glsl");
-  attachShaderFile(renderShadowProgram, GL_FRAGMENT_SHADER,
-    "data/shader/render_directional_shadowmap.fs.glsl");
-  ZCGE(glLinkProgram(renderShadowProgram));
-
-  setUniformLocation(&render_loc.modelViewProjMatrix, renderShadowProgram,
-    "modelViewProjMatrix");
-
-  // useShadowProgram
-  useShadowProgram = glCreateProgram();
-  attachShaderFile(
-    useShadowProgram, GL_VERTEX_SHADER, "data/shader/use_directional_shadowmap.vs.glsl");
-  attachShaderFile(
-    useShadowProgram, GL_FRAGMENT_SHADER, "data/shader/use_directional_shadowmap.fs.glsl");
-  ZCGE(glLinkProgram(useShadowProgram));
-
-  setUniformLocation(&use_loc.eye, useShadowProgram, "eye");
-  setUniformLocation(&use_loc.lightDir, useShadowProgram, "lightDir");
-  setUniformLocation(&use_loc.lightMatrix, useShadowProgram, "lightMatrix");
-  setUniformLocation(
-    &use_loc.modelViewProjMatrix, useShadowProgram, "modelViewProjMatrix");
-  setUniformLocation(&use_loc.bias, useShadowProgram, "bias");
-  setUniformLocation(&use_loc.depthMap, useShadowProgram, "depthMap");
-  setUniformLocation(&use_loc.shadowMap, useShadowProgram, "shadowMap");
-  setUniformLocation(
-    &use_loc.useSampler2DShadow, useShadowProgram, "useSampler2DShadow");
+  renderProgram.init();
+  useProgram.init();
 }
 
 void reshape(int w, int h) {
   wndAspect = static_cast<double>(w) / h;
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  setupCamera();
 }
 
 void mouse(int button, int state, int x, int y) {
@@ -412,7 +411,7 @@ void keyboard(unsigned char key, int x, int y) {
     case 'f':
       shadowWidth *= 2;
       shadowHeight *= 2;
-      //reset texture size
+      // reset texture size
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, depthMap);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadowWidth,
@@ -423,7 +422,7 @@ void keyboard(unsigned char key, int x, int y) {
     case 'F':
       shadowWidth /= 2;
       shadowHeight /= 2;
-      //reset texture size
+      // reset texture size
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, depthMap);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadowWidth,

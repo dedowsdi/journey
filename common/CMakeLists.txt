@@ -1,5 +1,6 @@
 set(COMMON_SRCS 
     common.cpp
+    program.cpp
     glm.cpp
     )
 add_library(common 

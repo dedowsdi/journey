@@ -1,0 +1,3 @@
+file omni_shadowmapd
+breakpoint set --file omni_shadowmap.cpp --line 34
+process launch

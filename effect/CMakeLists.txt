@@ -4,6 +4,7 @@ set (PROJECTS
     bloom
     gaussian_blur
     directional_shadowmap
+    omni_shadowmap
     )
 
 foreach(PROJECT ${PROJECTS})
