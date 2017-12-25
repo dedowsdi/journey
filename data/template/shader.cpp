@@ -10,15 +10,22 @@ using namespace glm;
 
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
+GLfloat wndAspect = 1;
 
 struct MyProgram : public zxd::Program{
   virtual void doUpdateFrame(){
-    projMatrix =
-      glm::ortho(left, right, -lightTop, lightTop, lightNear, lightFar);
+    projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
     viewMatrix =
       glm::lookAt(vec3(0, -5, 0), vec3(0, 0, 0), vec3(0, 0, 1));
   }
   virtual void doUpdateModel(){
+
+  }
+  virtual void attachShaders() {
+
+  }
+  virtual void bindUniformLocations(){
+
   }
 } myProgram;
 
@@ -33,7 +40,7 @@ void render(zxd::Program& program){
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
 
-  glUseProgram(myProgram);
+  render(myProgram);
   
   glDisable(GL_TEXTURE_2D);
 
@@ -52,9 +59,6 @@ void init(void) {
   glShadeModel(GL_FLAT);
 
   myProgram.object = glCreateProgram();
-  attachShaderFile(myProgram, GL_VERTEX_SHADER, "data/shadder/name.vs.glsl");
-  attachShaderFile(myProgram, GL_FRAGMENT_SHADER, "data/shadder/name.fs.glsl");
-  attachShaderFile(myProgram, GL_GEOMETRY_SHADER, "data/shadder/name.gs.glsl");
   ZCGE(glLinkProgram(myProgram));
 
 }

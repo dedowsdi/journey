@@ -20,7 +20,7 @@
  *
  */
 #include <GL/glew.h>
-#include <GL/freeglutt.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
 

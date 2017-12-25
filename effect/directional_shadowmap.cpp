@@ -118,7 +118,7 @@ struct RenderProgram : public zxd::Program {
     attachShaderFile(
       GL_FRAGMENT_SHADER, "data/shader/render_directional_shadowmap.fs.glsl");
   }
-  virtual void bindLocations() {
+  virtual void bindUniformLocations() {
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
   }
 
@@ -184,7 +184,7 @@ struct UseProgram : public zxd::Program {
     attachShaderFile(
       GL_FRAGMENT_SHADER, "data/shader/use_directional_shadowmap.fs.glsl");
   }
-  virtual void bindLocations() {
+  virtual void bindUniformLocations() {
     setUniformLocation(&loc_eye, "eye");
     setUniformLocation(&loc_lightDir, "lightDir");
     setUniformLocation(&loc_lightMatrix, "lightMatrix");

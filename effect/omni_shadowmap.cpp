@@ -56,7 +56,7 @@ struct RenderProgram : public zxd::Program {
     resetLightPosition();
   }
 
-  void bindLocations() {
+  void bindUniformLocations() {
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
     setUniformLocation(&loc_nearPlane, "nearPlane");
     setUniformLocation(&loc_farPlane, "farPlane");
@@ -151,7 +151,7 @@ struct UseProgram : public zxd::Program {
       GL_FRAGMENT_SHADER, "data/shader/use_omni_shadowmap.fs.glsl");
   }
 
-  virtual void bindLocations() {
+  virtual void bindUniformLocations() {
     setUniformLocation(&loc_modelMatrix, "modelMatrix");
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
     setUniformLocation(&loc_bias, "bias");

@@ -217,6 +217,11 @@ void setUniformLocation(GLint *loc, GLint program, char *name) {
 }
 
 //--------------------------------------------------------------------
+void setUniformLocation(GLint *loc, GLint program, const std::string &name) {
+  setUniformLocation(loc, program, (char *)name.c_str());
+}
+
+//--------------------------------------------------------------------
 GLfloat getTime() { return glutGet(GLUT_ELAPSED_TIME) / 1000.0; }
 
 //--------------------------------------------------------------------
@@ -287,8 +292,8 @@ void initExtension() {
 
 //--------------------------------------------------------------------
 void initDebugOutput() {
-   glEnable(GL_DEBUG_OUTPUT);
-   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
   // 4.3+
   // GLint flag;
@@ -300,6 +305,9 @@ void initDebugOutput() {
   // glEnable(GL_DEBUG_OUTPUT);
 
   glDebugMessageCallback(glDebugOutput, 0);
+  // disable notification
+  glDebugMessageControl(
+    GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, 0, GL_FALSE);
 }
 
 //--------------------------------------------------------------------

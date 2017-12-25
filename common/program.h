@@ -22,6 +22,18 @@ public:
   glm::mat4 modelViewMatrix;
   glm::mat4 viewProjMatrix;
   glm::mat4 modelViewProjMatrix;
+  glm::mat4 viewMatrixInverse;
+  glm::mat4 projMatrixInverse;
+  glm::mat4 modelMatrixInverse;
+  glm::mat4 modelViewMatrixInverse;
+  glm::mat4 viewProjMatrixInverse;
+  glm::mat4 modelViewProjMatrixInverse;
+  glm::mat4 viewMatrixInverseTranspose;
+  glm::mat4 projMatrixInverseTranspose;
+  glm::mat4 modelMatrixInverseTranspose;
+  glm::mat4 modelViewMatrixInverseTranspose;
+  glm::mat4 viewProjMatrixInverseTranspose;
+  glm::mat4 modelViewProjMatrixInverseTranspose;
 
   // some popular location
   GLint loc_modelMatrix;
@@ -30,6 +42,18 @@ public:
   GLint loc_modelViewMatrix;
   GLint loc_viwProjMatrix;
   GLint loc_modelViewProjMatrix;
+  GLint loc_modelMatrixInverse;
+  GLint loc_viewMatrixInverse;
+  GLint loc_projMatrixInverse;
+  GLint loc_modelViewMatrixInverse;
+  GLint loc_viwProjMatrixInverse;
+  GLint loc_modelViewProjMatrixInverse;
+  GLint loc_modelMatrixInverseTranspose;
+  GLint loc_viewMatrixInverseTranspose;
+  GLint loc_projMatrixInverseTranspose;
+  GLint loc_modelViewMatrixInverseTranspose;
+  GLint loc_viwProjMatrixInverseTranspose;
+  GLint loc_modelViewProjMatrixInverseTranspose;
 
 public:
   Program() {}
@@ -60,11 +84,11 @@ public:
     if (!status) {
       printf("failed to link program %d", object);
     }
-    bindLocations();
+    bindUniformLocations();
   }
 
   virtual void attachShaders() = 0;
-  virtual void bindLocations(){};
+  virtual void bindUniformLocations(){};
 
   // some wrapper
   void setUniformLocation(GLint* location, const std::string& name);

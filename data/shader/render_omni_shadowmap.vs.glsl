@@ -2,9 +2,7 @@ uniform mat4 modelViewProjMatrix;
 //uniform mat4 modelViewMatrix;
 uniform float nearPlane;
 uniform float farPlane;
-
 varying float zDistance; // in eye space
-
 void main(void)
 {
   gl_Position = modelViewProjMatrix * gl_Vertex;

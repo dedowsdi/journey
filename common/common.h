@@ -67,6 +67,7 @@ void attachShaderSourceAndFile(
 bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source);
 // exit if not found
 void setUniformLocation(GLint *loc, GLint program, char *name);
+void setUniformLocation(GLint *loc, GLint program, const std::string& name);
 
 GLfloat getTime();
 GLfloat getNormalizedTime();

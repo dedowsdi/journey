@@ -1,2 +1,1 @@
-echo 'adfadfdaf'
-call misc#loadAbbreviation('opengl', 'cpp')
+call myvim#loadAbbreviation('opengl', 'cpp')

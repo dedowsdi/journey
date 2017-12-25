@@ -5,6 +5,7 @@ set (PROJECTS
     gaussian_blur
     directional_shadowmap
     omni_shadowmap
+    blinnphong
     )
 
 foreach(PROJECT ${PROJECTS})
