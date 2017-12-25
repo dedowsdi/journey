@@ -52,8 +52,8 @@ void init(void) {
     "}                                                         \n" ;
 
   program = glCreateProgram();
-  attachShaderSource(program, GL_VERTEX_SHADER, 1, (char**)&vs);
-  attachShaderSource(program, GL_FRAGMENT_SHADER, 1, (char**)&fs);
+  attachShaderSource(program, GL_VERTEX_SHADER,  vs);
+  attachShaderSource(program, GL_FRAGMENT_SHADER, fs);
   ZCGE(glLinkProgram(program));
   ZCGE(locColor = glGetAttribLocation(program, "color"));
   ZCGE(glVertexAttribPointer(locColor, 2, GL_FLOAT, 0, 0, colors));

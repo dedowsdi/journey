@@ -6,6 +6,7 @@ set (PROJECTS
     directional_shadowmap
     omni_shadowmap
     blinnphong
+    rim
     )
 
 foreach(PROJECT ${PROJECTS})
@@ -20,4 +21,3 @@ foreach(PROJECT ${PROJECTS})
         common
         )
 endforeach()
-

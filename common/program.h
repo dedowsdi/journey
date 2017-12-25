@@ -22,12 +22,21 @@ public:
   glm::mat4 modelViewMatrix;
   glm::mat4 viewProjMatrix;
   glm::mat4 modelViewProjMatrix;
+
   glm::mat4 viewMatrixInverse;
   glm::mat4 projMatrixInverse;
   glm::mat4 modelMatrixInverse;
   glm::mat4 modelViewMatrixInverse;
   glm::mat4 viewProjMatrixInverse;
   glm::mat4 modelViewProjMatrixInverse;
+
+  glm::mat4 viewMatrixTranspose;
+  glm::mat4 projMatrixTranspose;
+  glm::mat4 modelMatrixTranspose;
+  glm::mat4 modelViewMatrixTranspose;
+  glm::mat4 viewProjMatrixTranspose;
+  glm::mat4 modelViewProjMatrixTranspose;
+
   glm::mat4 viewMatrixInverseTranspose;
   glm::mat4 projMatrixInverseTranspose;
   glm::mat4 modelMatrixInverseTranspose;
@@ -42,12 +51,21 @@ public:
   GLint loc_modelViewMatrix;
   GLint loc_viwProjMatrix;
   GLint loc_modelViewProjMatrix;
+
   GLint loc_modelMatrixInverse;
   GLint loc_viewMatrixInverse;
   GLint loc_projMatrixInverse;
   GLint loc_modelViewMatrixInverse;
   GLint loc_viwProjMatrixInverse;
   GLint loc_modelViewProjMatrixInverse;
+
+  GLint loc_modelMatrixTranspose;
+  GLint loc_viewMatrixTranspose;
+  GLint loc_projMatrixTranspose;
+  GLint loc_modelViewMatrixTranspose;
+  GLint loc_viwProjMatrixTranspose;
+  GLint loc_modelViewProjMatrixTranspose;
+
   GLint loc_modelMatrixInverseTranspose;
   GLint loc_viewMatrixInverseTranspose;
   GLint loc_projMatrixInverseTranspose;
@@ -82,7 +100,7 @@ public:
     GLint status;
     glGetProgramiv(object, GL_LINK_STATUS, &status);
     if (!status) {
-      printf("failed to link program %d", object);
+      printf("failed to link program %d\n", object);
     }
     bindUniformLocations();
   }
@@ -93,8 +111,8 @@ public:
   // some wrapper
   void setUniformLocation(GLint* location, const std::string& name);
   void attachShaderFile(GLenum type, const std::string& file);
-  void attachShaderSource(GLenum type, StringVector& sources);
-  void attachShaderSourceAndFile(GLenum type, StringVector& sources, const std::string& file);
+  void attachShaderSource(GLenum type, const StringVector& source);
+  void attachShaderSourceAndFile(GLenum type, StringVector& source, const std::string& file);
 };
 }
 

@@ -14,15 +14,17 @@ using namespace glm;
 #define WINDOWS_HEIGHT 512
 GLfloat wndAspect = 1;
 
-GLboolean useProgram = GL_TRUE;
 vec3 cameraPos = vec3(0, -3, 3);
+vec3 rimColor = vec3(1, 0, 0);
+GLfloat rimPower = 10.0f;
 
 std::vector<zxd::LightSource> lights;
 zxd::LightModel lightModel;
 zxd::Material material;
 
 struct MyProgram : public zxd::Program {
-  // GLint loc_eye;
+  GLint loc_rimColor;
+  GLint loc_rimPower;
 
   virtual void doUpdateFrame() {
     projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
@@ -34,6 +36,9 @@ struct MyProgram : public zxd::Program {
     for (int i = 0; i < lights.size(); ++i) {
       lights[i].updateUniforms(viewMatrix, viewMatrixInverseTranspose);
     }
+
+    glUniform3fv(loc_rimColor, 1, value_ptr(rimColor));
+    glUniform1f(loc_rimPower, rimPower);
   }
   virtual void doUpdateModel() {
     // modelMatrixInverse = glm::inverse(modelMatrix);
@@ -54,7 +59,7 @@ struct MyProgram : public zxd::Program {
     sv.push_back("#define LIGHT_COUNT 8\n");
     sv.push_back(readFile("data/shader/blinn.frag"));
     attachShaderSourceAndFile(
-      GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
+      GL_FRAGMENT_SHADER, sv, "data/shader/rim.fs.glsl");
   }
   virtual void bindUniformLocations() {
     lightModel.bindUniformLocations(object, "lightModel");
@@ -70,31 +75,15 @@ struct MyProgram : public zxd::Program {
     setUniformLocation(
       &loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
+    setUniformLocation(&loc_rimColor, "rimColor");
+    setUniformLocation(&loc_rimPower, "rimPower");
   }
 } myProgram;
 
 void render(zxd::Program& program) {
   mat4 model = mat4(1.0f);
-  if (useProgram) {
-    myProgram.updateFrame();
-    myProgram.updateModel(model);
-  } else {
-    // setup matrix
-    glUseProgram(0);
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(value_ptr(myProgram.projMatrix));
-
-    mat4 modelViewMatrix = model * myProgram.viewMatrix;
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(value_ptr(modelViewMatrix));
-
-    // set up light and material
-    lightModel.pipeline();
-    for (int i = 0; i < lights.size(); ++i) {
-      lights[i].pipeline(i, myProgram.viewMatrix);
-    }
-    material.pipeline();
-  }
+  myProgram.updateFrame();
+  myProgram.updateModel(model);
   glutSolidSphere(1, 64, 64);
 }
 
@@ -114,21 +103,9 @@ void display(void) {
 
   // clang-format off
   sprintf(info, 
-      " q  : use program : %d \n"
-      " w  : local viewer : %d \n"
-      " eE : light model ambient viewer : %.2f %.2f %.2f %.2f \n"
-      " jJ : material emission : %.2f %.2f %.2f %.2f \n"
-      " kK : material diffuse : %.2f %.2f %.2f %.2f \n" 
-      " lL : material specular : %.2f %.2f %.2f %.2f \n" 
-      " ;: : material ambient : %.2f %.2f %.2f %.2f \n" 
-      " mM : material shininess : %.2f \n" ,
-      useProgram, lightModel.localViewer, 
-      lightModel.ambient[0], lightModel.ambient[1], lightModel.ambient[2], lightModel.ambient[3], 
-      material.emission[0], material.emission[1], material.emission[2], material.emission[3], 
-      material.diffuse[0], material.diffuse[1], material.diffuse[2], material.diffuse[3], 
-      material.specular[0], material.specular[1], material.specular[2], material.specular[3], 
-      material.ambient[0], material.ambient[1], material.ambient[2], material.ambient[3], 
-      material.shininess
+      "qQ : rimPower : %.2f\n"
+      "w : rimColor : %.2f %.2f %.2f \n",
+      rimPower, rimColor[0], rimColor[1], rimColor[2]
       );
   // clang-format on
 
@@ -145,28 +122,12 @@ void init(void) {
   glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
 
-  zxd::LightSource dirLight;
-  dirLight.position = vec4(1, 0, 0, 0);
-  dirLight.diffuse = vec4(1, 1, 1, 1);
-  dirLight.specular = vec4(1, 1, 1, 1);
-
   zxd::LightSource pointLight;
   pointLight.position = vec4(0, 0, 5, 0);
-  pointLight.diffuse = vec4(0, 1, 0, 1);
+  pointLight.diffuse = vec4(1, 1, 1, 1);
   pointLight.specular = vec4(1, 1, 1, 1);
 
-  zxd::LightSource spotLight;
-  spotLight.position = vec4(-5, 0, 0, 1);
-  spotLight.diffuse = vec4(0, 0, 1, 1);
-  spotLight.specular = vec4(0, 0, 1, 1);
-  spotLight.spotDirection = vec3(vec3(0) - spotLight.position.xyz());
-  spotLight.spotCutoff = 30;
-  spotLight.spotCosCutoff = std::cos(spotLight.spotCutoff);
-  spotLight.spotExponent = 3;
-
-  lights.push_back(dirLight);
   lights.push_back(pointLight);
-  lights.push_back(spotLight);
 
   material.shininess = 80;
   material.specular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -189,84 +150,30 @@ void mouse(int button, int state, int x, int y) {
 
 void keyboard(unsigned char key, int x, int y) {
   switch (key) {
-    case 'q': {
-      useProgram = !useProgram;
-      glutPostRedisplay();
-    } break;
-
-    case 'w':
-      lightModel.localViewer ^= 1;
-      glutPostRedisplay();
-      break;
-
-    case 'e':
-      lightModel.ambient += 0.05;
-      lightModel.ambient = glm::clamp(lightModel.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'E':
-      lightModel.ambient -= 0.05;
-      lightModel.ambient = glm::clamp(lightModel.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-
-    case 'j':
-      material.emission += 0.05;
-      material.emission = glm::clamp(material.emission, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'J':
-      material.emission -= 0.05;
-      material.emission = glm::clamp(material.emission, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-
-    case 'k':
-      material.diffuse += 0.05;
-      material.diffuse = glm::clamp(material.diffuse, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'K':
-      material.diffuse -= 0.05;
-      material.diffuse = glm::clamp(material.diffuse, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-
-    case 'l':
-      material.specular += 0.05;
-      material.specular = glm::clamp(material.specular, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'L':
-      material.specular -= 0.05;
-      material.specular = glm::clamp(material.specular, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-
-    case ';':
-      material.ambient += 0.05;
-      material.ambient = glm::clamp(material.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-
-    case ':':
-      material.ambient -= 0.05;
-      material.ambient = glm::clamp(material.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-
-    case 'm':
-      material.shininess += 5;
-      material.shininess = glm::clamp(material.shininess, 0.0f, 1000.0f);
-      glutPostRedisplay();
-      break;
-    case 'M':
-      material.shininess -= 5;
-      material.shininess = glm::clamp(material.shininess, 0.0f, 1000.0f);
-      glutPostRedisplay();
-      break;
     case 27:
       exit(0);
+      break;
+    case 'q':
+      rimPower += 1;
+      glutPostRedisplay();
+      break;
+
+    case 'Q':
+      rimPower -= 1;
+      if (rimPower < 0) {
+        rimPower = 0;
+      }
+      glutPostRedisplay();
+      break;
+
+    case 'w':
+    case 'W':
+      rimColor = glm::linearRand(vec3(0), vec3(1));
+      glutPostRedisplay();
+      break;
+
+
+    default:
       break;
   }
 }

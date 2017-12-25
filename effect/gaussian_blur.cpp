@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include "common.h"
 #include <GL/freeglut_ext.h>
+#include <sstream>
 
 /*	Create checkerboard texture	*/
 #define checkImageWidth 128
@@ -55,15 +56,14 @@ void makeCheckImage(void) {
 
 void compileProgram() {
   detachAllShaders(program);
-  char preprocessor[256];
-  sprintf(preprocessor,
-    "#version 120\n"
-    "#define radius %d\n",
-    radius);
-  char* s = preprocessor;
+
+  std::stringstream ss;
+  ss << "#version 120\n#define radius " << radius << "\n";
+  StringVector sv;
+  sv.push_back(ss.str());
 
   attachShaderSourceAndFile(
-    program, GL_FRAGMENT_SHADER, 1, &s, "data/shader/gaussian_blur.fs.glsl");
+    program, GL_FRAGMENT_SHADER, sv, "data/shader/gaussian_blur.fs.glsl");
   ZCGE(glLinkProgram(program));
   setUniformLocation(&loc_mean, program, "mean");
   setUniformLocation(&loc_deviation, program, "deviation");

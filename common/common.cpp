@@ -3,6 +3,10 @@
 #include "stdlib.h"
 #include "glEnumString.h"
 #include <cstring>
+#include <fstream>
+#include <sstream>
+#include <iterator>
+#include <functional>
 
 //------------------------------------------------------------------------------
 const GLchar *getVersions() {
@@ -29,28 +33,24 @@ const GLchar *getExtensions() {
 }
 
 //--------------------------------------------------------------------
-GLchar *readFile(const char *file) {
-  FILE *f = fopen(file, "r");
-  if (f == NULL) {
-    printf("faied to open file %s\n", file);
-    exit(EXIT_FAILURE);
+std::string readFile(const std::string &filepath) {
+  std::ifstream ifs(filepath);
+  if (!ifs) {
+    std::stringstream ss;
+    ss << "failed to open file " << filepath << std::endl;
+    throw std::runtime_error(ss.str());
   }
 
-  // get file character size
-  fseek(f, 0, SEEK_END);
-  int size = ftell(f);
-  rewind(f);
+  // approximate size
+  ifs.seekg(std::ios::end);
+  GLuint size = ifs.tellg();
+  ifs.seekg(std::ios::beg);
 
-  GLchar *s = (GLchar *)malloc(sizeof(GLchar *) * size + 1);
-  GLuint len = fread(s, sizeof(GLchar), size, f);
-  if (len == 0) {
-    char str[512];
-    sprintf(str, "faied to read file %s", file);
-    perror(str);
-    exit(EXIT_FAILURE);
-  } else {
-    s[len] = 0;
-  }
+  std::string s;
+  s.reserve(size);
+
+  std::copy(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>(),
+    std::back_inserter(s));
 
   return s;
 }
@@ -141,53 +141,33 @@ GLenum rotateEnum(GLenum val, GLenum begin, GLuint size) {
 }
 
 //--------------------------------------------------------------------
-void attachShaderFile(GLuint prog, GLenum type, char *file) {
-  char *s = readFile(file);
-  if (!attachShaderSource(prog, type, 1, &s))
-    printf("failed to compile file %s\n", file);
-  free(s);
+void attachShaderFile(GLuint prog, GLenum type, const std::string &file) {
+  std::string s = readFile(file);
+  StringVector sv;
+  sv.push_back(s);
+  if (!attachShaderSource(prog, type, sv))
+    printf("failed to compile file %s\n", file.c_str());
 }
 
 //--------------------------------------------------------------------
 void attachShaderSourceAndFile(
-  GLuint prog, GLenum type, GLuint count, char **source, char *file) {
-  // string array to combine source and file
-  char **combinedSource = (char **)malloc(count + 1);
-  int i = 0;
-  while (i < count) {
-    combinedSource[i] = (char *)malloc(strlen(*(source + i)) + 1);
-    strcpy(combinedSource[i], source[i]);
-    ++i;
-  }
-
-  ++count;
-
-  // combine file at last
-  char *s = readFile(file);
-  combinedSource[i] = (char *)malloc(strlen(s) + 1);
-  strcpy(combinedSource[i], s);
-
-  if (!attachShaderSource(prog, type, count, combinedSource)) {
-    i = 0;
-    while (i < count - 1) printf("failed to compile %s\n", source[i++]);
-
-    printf("failed to compile file %s\n", file);
-  }
-
-  // clean up
-  i = 0;
-  while (i < count) {
-    free(combinedSource[i++]);
-  }
-  free(combinedSource);
+  GLuint prog, GLenum type, StringVector &source, const std::string &file) {
+  source.push_back(readFile(file));
+  attachShaderSource(prog, type, source);
 }
 
 //------------------------------------------------------------------------------
-bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source) {
+bool attachShaderSource(GLuint prog, GLenum type, const StringVector &source) {
   GLuint sh;
 
   sh = glCreateShader(type);
-  ZCGE(glShaderSource(sh, count, source, NULL));
+
+  CStringVector csv;
+  std::transform(source.begin(), source.end(), std::back_inserter(csv),
+    std::mem_fn(&std::string::c_str));
+
+  ZCGE(glShaderSource(sh, csv.size(), &csv[0], NULL));
+
   ZCGE(glCompileShader(sh));
 
   GLint compiled;
@@ -209,16 +189,18 @@ bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source) {
 }
 
 //--------------------------------------------------------------------
-void setUniformLocation(GLint *loc, GLint program, char *name) {
-  ZCGE(*loc = glGetUniformLocation(program, name));
-  if (*loc == -1) {
-    printf("failed to get uniform location : %s\n", name);
-  }
+bool attachShaderSource(GLuint prog, GLenum type, const std::string &source) {
+  StringVector sv;
+  sv.push_back(source);
+  return attachShaderSource(prog, type, sv);
 }
 
 //--------------------------------------------------------------------
 void setUniformLocation(GLint *loc, GLint program, const std::string &name) {
-  setUniformLocation(loc, program, (char *)name.c_str());
+  *loc = glGetUniformLocation(program, name.c_str());
+  if (*loc == -1) {
+    printf("failed to get uniform location : %s\n", name.c_str());
+  }
 }
 
 //--------------------------------------------------------------------

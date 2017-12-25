@@ -10,6 +10,9 @@
 #include <algorithm>
 #include <iostream>
 
+typedef std::vector<std::string> StringVector;
+typedef std::vector<const char *> CStringVector;
+
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
 #define ENABLE_GL_CHECK 0
@@ -51,8 +54,7 @@ const GLchar *getVersions();
 
 const GLchar *getExtensions();
 
-// you must free the string by your self
-GLchar *readFile(const char *file);
+std::string readFile(const std::string &filepath);
 
 GLboolean queryExtension(char *extName);
 
@@ -61,13 +63,15 @@ GLboolean invertMatrixd(GLdouble m[16]);
 GLenum rotateEnum(GLenum val, GLenum begin, GLuint size);
 
 // c ctyle attach
-void attachShaderFile(GLuint prog, GLenum type, char *file);
+void attachShaderFile(GLuint prog, GLenum type, const std::string &file);
+// combine source and file
 void attachShaderSourceAndFile(
-  GLuint prog, GLenum type, GLuint count, char **source, char *file);
-bool attachShaderSource(GLuint prog, GLenum type, GLuint count, char **source);
+  GLuint prog, GLenum type, StringVector &source, const std::string &file);
+bool attachShaderSource(GLuint prog, GLenum type, const StringVector &source);
+bool attachShaderSource(GLuint prog, GLenum type, const std::string& source);
 // exit if not found
 void setUniformLocation(GLint *loc, GLint program, char *name);
-void setUniformLocation(GLint *loc, GLint program, const std::string& name);
+void setUniformLocation(GLint *loc, GLint program, const std::string &name);
 
 GLfloat getTime();
 GLfloat getNormalizedTime();
@@ -76,8 +80,8 @@ GLfloat updateFps();
 
 void initExtension();
 void initDebugOutput();
-void glDebugOutput(GLenum source, GLenum type, GLuint id,
-  GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
+void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
+  GLsizei length, const GLchar *message, const void *userParam);
 
 void drawTexRect(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1);
 
