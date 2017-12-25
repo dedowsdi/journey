@@ -40,7 +40,7 @@ const char* filterStrings[] = {"NEAREST", "LINEAR"};
 GLenum filters[] = {GL_NEAREST, GL_LINEAR};
 GLint filter = 0;
 
-vec4 light_position0(0, 0, 8, 0);
+vec4 light_position0(0, 0, 8, 1);
 vec3 cameraPos = vec3(0, -15, 15);
 
 struct RenderProgram : public zxd::Program {
@@ -107,8 +107,7 @@ struct RenderProgram : public zxd::Program {
 RenderProgram renderProgram;
 
 struct UseProgram : public zxd::Program {
-  GLint loc_eye;
-  GLint loc_localLightPos;
+  GLint loc_viewLightPos;
   GLint loc_worldLightPos;
   GLint loc_depthCubeMap;
   GLint loc_bias;
@@ -116,25 +115,29 @@ struct UseProgram : public zxd::Program {
   GLint loc_farPlane;
 
   virtual void doUpdateFrame() {
-    viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 1, 0));
+    viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
     projMatrix = glm::perspective<GLfloat>(45.0, wndAspect, 0.1, 100);
+
+    vec3 viewLightPos = (viewMatrix * light_position0).xyz();
+    glUniform3fv(loc_viewLightPos, 1, &viewLightPos[0]);
 
     glUniform1f(loc_bias, bias);
     glUniform1i(loc_depthCubeMap, 0);
   }
   virtual void doUpdateModel() {
-    modelViewProjMatrix = projMatrix * viewMatrix * modelMatrix;
-    mat4 modelMatrixInverse = glm::inverse(modelMatrix);
-
-    vec3 localEye = zxd::transformPosition(modelMatrixInverse, cameraPos);
-    vec3 localLightPos = (modelMatrixInverse * light_position0).xyz();
+    modelViewMatrix = viewMatrix * modelMatrix;
+    modelViewMatrixInverseTranspose = glm::inverse(glm::transpose(modelViewMatrix));
+    modelViewProjMatrix = projMatrix * modelViewMatrix;
+    //mat4 modelMatrixInverse = glm::inverse(modelMatrix);
 
     glUniformMatrix4fv(loc_modelMatrix, 1, 0, &modelMatrix[0][0]);
     glUniformMatrix4fv(
+      loc_modelViewMatrix, 1, 0, &modelViewMatrix[0][0]);
+    glUniformMatrix4fv(
       loc_modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
+    glUniformMatrix4fv(
+      loc_modelViewMatrixInverseTranspose, 1, 0, &modelViewMatrixInverseTranspose[0][0]);
 
-    glUniform3fv(loc_eye, 1, &localEye[0]);
-    glUniform3fv(loc_localLightPos, 1, &localLightPos[0]);
     glUniform3f(loc_worldLightPos, light_position0[0], light_position0[1],
       light_position0[2]);
     glUniform1i(loc_depthCubeMap, 0);
@@ -153,10 +156,11 @@ struct UseProgram : public zxd::Program {
 
   virtual void bindUniformLocations() {
     setUniformLocation(&loc_modelMatrix, "modelMatrix");
+    setUniformLocation(&loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
+    setUniformLocation(&loc_modelViewMatrix, "modelViewMatrix");
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
     setUniformLocation(&loc_bias, "bias");
-    setUniformLocation(&loc_eye, "eye");
-    setUniformLocation(&loc_localLightPos, "localLightPos");
+    setUniformLocation(&loc_viewLightPos, "viewLightPos");
     setUniformLocation(&loc_worldLightPos, "worldLightPos");
     setUniformLocation(&loc_depthCubeMap, "depthCubeMap");
     setUniformLocation(&loc_bias, "bias");

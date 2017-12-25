@@ -1,16 +1,19 @@
+#version 120
+
+uniform mat4 modelViewMatrix;
 uniform mat4 modelViewProjMatrix;
+uniform mat4 modelViewMatrixInverseTranspose;
 uniform mat4 modelMatrix;
 
-varying vec3 localVertex;  
+varying vec3 viewVertex;  
 varying vec3 worldVertex; 
 varying vec3 normal;  // local
 
 void main(void) {
   gl_Position = modelViewProjMatrix * gl_Vertex;
 
-  localVertex = gl_Vertex.xyz;
-  vec4 pos = modelMatrix * gl_Vertex;
-  worldVertex = pos.xyz / pos.w;
+  worldVertex = (modelMatrix * gl_Vertex).xyz;
   
-  normal = gl_Normal;
+  normal = mat3(modelViewMatrixInverseTranspose) * gl_Normal;
+  viewVertex = (modelViewMatrix * gl_Vertex).xyz;
 }

@@ -125,7 +125,6 @@ struct RenderProgram : public zxd::Program {
 } renderProgram;
 
 struct UseProgram : public zxd::Program {
-  GLint loc_eye;       // model space
   GLint loc_lightDir;  // to light
   GLint loc_lightMatrix;
   GLint loc_bias;
@@ -157,25 +156,23 @@ struct UseProgram : public zxd::Program {
   }
 
   void doUpdateModel() {
-    modelViewProjMatrix = projMatrix * viewMatrix * modelMatrix;
-    mat4 modelMatrixInverse = glm::inverse(modelMatrix);
+    modelViewMatrix = viewMatrix * modelMatrix;
+    modelViewMatrixInverseTranspose = glm::inverse(glm::transpose(modelViewMatrix));
+    modelViewProjMatrix = projMatrix * modelViewMatrix;
+    //mat4 modelMatrixInverse = glm::inverse(modelMatrix);
     mat4 lightMatrix = lightBSVP * modelMatrix;
 
-    vec3 localEye;
-    if (cameraAtLight) {
-      localEye =
-        zxd::transformPosition(modelMatrixInverse, light_position0.xyz());
-    } else {
-      localEye = zxd::transformPosition(modelMatrixInverse, cameraPos);
-    }
-    vec3 localLightDir = vec3(glm::transpose(modelMatrix) * light_position0);
-    localLightDir = glm::normalize(localLightDir);
+    vec3 viewLightDir = (viewMatrix * light_position0).xyz();
+    viewLightDir = glm::normalize(viewLightDir);
 
-    glUniform3fv(loc_eye, 1, &localEye[0]);
-    glUniform3fv(loc_lightDir, 1, &localLightDir[0]);
+    glUniform3fv(loc_lightDir, 1, &viewLightDir[0]);
     glUniformMatrix4fv(loc_lightMatrix, 1, 0, &lightMatrix[0][0]);
     glUniformMatrix4fv(
+      loc_modelViewMatrix, 1, 0, &modelViewMatrix[0][0]);
+    glUniformMatrix4fv(
       loc_modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
+    glUniformMatrix4fv(
+      loc_modelViewMatrixInverseTranspose, 1, 0, &modelViewMatrixInverseTranspose[0][0]);
   }
   virtual void attachShaders() {
     // useProgram
@@ -185,9 +182,10 @@ struct UseProgram : public zxd::Program {
       GL_FRAGMENT_SHADER, "data/shader/use_directional_shadowmap.fs.glsl");
   }
   virtual void bindUniformLocations() {
-    setUniformLocation(&loc_eye, "eye");
     setUniformLocation(&loc_lightDir, "lightDir");
     setUniformLocation(&loc_lightMatrix, "lightMatrix");
+    setUniformLocation(&loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
+    setUniformLocation(&loc_modelViewMatrix, "modelViewMatrix");
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
     setUniformLocation(&loc_bias, "bias");
     setUniformLocation(&loc_depthMap, "depthMap");
