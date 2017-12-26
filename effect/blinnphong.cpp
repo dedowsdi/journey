@@ -151,7 +151,7 @@ void init(void) {
   dirLight.specular = vec4(1, 1, 1, 1);
 
   zxd::LightSource pointLight;
-  pointLight.position = vec4(0, 0, 5, 0);
+  pointLight.position = vec4(0, 0, 5, 1);
   pointLight.diffuse = vec4(0, 1, 0, 1);
   pointLight.specular = vec4(1, 1, 1, 1);
 

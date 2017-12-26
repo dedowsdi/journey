@@ -4,12 +4,12 @@ uniform mat4 modelViewProjMatrix;
 uniform mat4 modelViewMatrix;
 uniform mat4 modelViewMatrixInverseTranspose;
 
-varying vec3 normal; // view space
-varying vec3 vertex; // view space
+varying vec3 viewNormal; // view space
+varying vec3 viewVertex; // view space
 
 void main(void)
 {
-  normal = mat3(modelViewMatrixInverseTranspose) * gl_Normal;
-  vertex = (modelViewMatrix * gl_Vertex).xyz;
+  viewNormal = mat3(modelViewMatrixInverseTranspose) * gl_Normal;
+  viewVertex = (modelViewMatrix * gl_Vertex).xyz;
   gl_Position = modelViewProjMatrix * gl_Vertex;
 }

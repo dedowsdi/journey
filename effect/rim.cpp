@@ -14,7 +14,7 @@ using namespace glm;
 #define WINDOWS_HEIGHT 512
 GLfloat wndAspect = 1;
 
-vec3 cameraPos = vec3(0, -3, 3);
+vec3 cameraPos = vec3(0, 0, 3);
 vec3 rimColor = vec3(1, 0, 0);
 GLfloat rimPower = 10.0f;
 
@@ -28,7 +28,7 @@ struct MyProgram : public zxd::Program {
 
   virtual void doUpdateFrame() {
     projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
-    viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
+    viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 1, 0));
     viewMatrixInverseTranspose = glm::inverse(glm::transpose(viewMatrix));
 
     material.updateUniforms();
@@ -84,7 +84,8 @@ void render(zxd::Program& program) {
   mat4 model = mat4(1.0f);
   myProgram.updateFrame();
   myProgram.updateModel(model);
-  glutSolidSphere(1, 64, 64);
+  glutSolidSphere(1, 32, 32);
+
 }
 
 void display(void) {

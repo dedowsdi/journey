@@ -94,6 +94,11 @@ void detachAllShaders(GLuint program);
 
 void getModelViewProj(GLfloat *p);
 
+// only works with array buffer
+void matrixAttribPointer(GLint index, GLuint divisor = 1,  GLboolean normalize = GL_FALSE);
+
+GLint getAttribLocation(GLuint program, const std::string& name);
+
 // print gigantic array
 template <typename _It>
 void printArray(_It beg, _It end, unsigned itemsPerLine) {

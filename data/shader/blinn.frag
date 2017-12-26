@@ -41,8 +41,8 @@ uniform LightModel lightModel;
 uniform LightSource lights[LIGHT_COUNT];
 uniform Material material;
 
-varying vec3 normal;  // view space
-varying vec3 vertex;  // view space
+varying vec3 viewNormal;  // view space
+varying vec3 viewVertex;  // view space
 
 void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
   Material material, out LightProduct product) {
@@ -99,7 +99,7 @@ vec4 blinn(vec3 v2e, vec3 normal){
 
   for (int i = 0; i < LIGHT_COUNT; i++) {
     LightProduct currentProduct = LightProduct(vec4(0),vec4(0),vec4(0));
-    light(vertex, normal, v2e, lights[i], material, currentProduct);
+    light(viewVertex, normal, v2e, lights[i], material, currentProduct);
     product.diffuse += currentProduct.diffuse;
     product.specular += currentProduct.specular;
     product.ambient += currentProduct.ambient;
@@ -111,8 +111,8 @@ vec4 blinn(vec3 v2e, vec3 normal){
 }
 
 vec4 blinn(){
-  vec3 v2e = lightModel.localViewer ? normalize(-vertex) : vec3(0,0,1);
-  vec3 normal = normalize(normal);
+  vec3 v2e = lightModel.localViewer ? normalize(-viewVertex) : vec3(0,0,1);
+  vec3 normal = normalize(viewNormal);
   return blinn(v2e, normal);
 }
 

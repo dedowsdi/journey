@@ -4,10 +4,13 @@ set(COMMON_SRCS
     glm.cpp
     glEnumString.cpp
     light.cpp
+    sphere.cpp
     )
+
 add_library(common 
     ${COMMON_SRCS}
     )
+
 target_link_libraries(common
     ${OPENGL_gl_LIBRARY}
     ${OPENGL_glu_LIBRARY}

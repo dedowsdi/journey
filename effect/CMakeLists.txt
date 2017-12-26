@@ -7,6 +7,7 @@ set (PROJECTS
     omni_shadowmap
     blinnphong
     rim
+    instance
     )
 
 foreach(PROJECT ${PROJECTS})

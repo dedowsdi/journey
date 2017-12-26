@@ -7,6 +7,9 @@
 #include <sstream>
 #include <iterator>
 #include <functional>
+#include "glm.h"
+
+using namespace glm;
 
 //------------------------------------------------------------------------------
 const GLchar *getVersions() {
@@ -49,8 +52,8 @@ std::string readFile(const std::string &filepath) {
   std::string s;
   s.reserve(size);
 
-  std::copy(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>(),
-    std::back_inserter(s));
+  std::copy(std::istreambuf_iterator<char>(ifs),
+    std::istreambuf_iterator<char>(), std::back_inserter(s));
 
   return s;
 }
@@ -253,7 +256,9 @@ void initExtension() {
   checkExtension(ARB_texture_float);
   checkExtension(ARB_geometry_shader4);
   checkExtension(ARB_debug_output);
+  checkExtension(ARB_debug_output);
   checkExtension(KHR_debug);
+  checkExtension(ARB_draw_instanced);
   checkExtension(EXT_packed_depth_stencil);
   checkExtension(EXT_gpu_shader4);
 
@@ -377,4 +382,37 @@ void getModelViewProj(GLfloat *p) {
   glPopMatrix();
 
   glMatrixMode(mode);
+}
+
+//--------------------------------------------------------------------
+void matrixAttribPointer(
+  GLint index, GLuint divisor /* = 1*/, GLboolean normalize /* = GL_FALSE*/) {
+
+  glVertexAttribPointer(
+    index + 0, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), BUFFER_OFFSET(0));
+  glVertexAttribPointer(
+    index + 1, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), BUFFER_OFFSET(16));
+  glVertexAttribPointer(
+    index + 2, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), BUFFER_OFFSET(32));
+  glVertexAttribPointer(
+    index + 3, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), BUFFER_OFFSET(48));
+
+  glEnableVertexAttribArray(index + 0);
+  glEnableVertexAttribArray(index + 1);
+  glEnableVertexAttribArray(index + 2);
+  glEnableVertexAttribArray(index + 3);
+
+  glVertexAttribDivisor(index + 0, 1);
+  glVertexAttribDivisor(index + 1, 1);
+  glVertexAttribDivisor(index + 2, 1);
+  glVertexAttribDivisor(index + 3, 1);
+}
+
+//--------------------------------------------------------------------
+GLint getAttribLocation(GLuint program, const std::string &name) {
+  GLint location = glGetAttribLocation(program, name.c_str());
+  if (location == -1) {
+    std::cout << "failed to get attribute location : " << name << std::endl;
+  }
+  return location;
 }

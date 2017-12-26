@@ -8,8 +8,8 @@ vec3 rim(vec3 v, vec3 n){
 
 void main(void)
 {
-  vec3 v = normalize(-vertex);
-  vec3 n = normalize(normal);
+  vec3 v = normalize(-viewVertex);
+  vec3 n = normalize(viewNormal);
   gl_FragColor = blinn(v, n);
 
   gl_FragColor.xyz = gl_FragColor.xyz + rim(n, v);
