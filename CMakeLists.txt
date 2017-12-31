@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 2.6)
 project (gl2)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
-#include(util)
+include(util)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
 
@@ -11,11 +11,6 @@ if( CMAKE_BUILD_TYPE STREQUAL ""  )
     set( CMAKE_BUILD_TYPE Debug CACHE STRING "One of: Debug Release
     RelWithDebInfo MinSizeRel." FORCE  )
 endif()
-
-#flag
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wall -Wno-unused-local-typedef -Wno-overloaded-virtual -Wno-inconsistent-missing-override -Wno-switch-bool -Wno-int-to-void-pointer-cast -Wno-unused-function -Wno-reorder")
-#SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
-
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(-fstandalone-debug)
@@ -29,6 +24,7 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(-std=c++11)
     add_compile_options(-Wno-missing-braces)
     add_compile_options(-Wno-writable-strings)
+    add_compile_options(-Wno-reorder)
 ENDIF()
 
 
@@ -42,11 +38,18 @@ set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it'
 FIND_PACKAGE(GLUT REQUIRED)
 FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(GLEW REQUIRED)
+FIND_PACKAGE(Freetype REQUIRED)
+
+findLibraryRequird(FIP_LIBS freeimageplus)
+findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)
 
 include_directories(
     ${GLUT_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIR}
     ${GLEW_INCLUDE_DIR}
+    ${FREETYPE_INCLUDE_DIR}
+    ${FREETYPE_INCLUDE_DIR_ft2build}
+    ${FIP_INCLUDE_DIR}
     common
     )
 

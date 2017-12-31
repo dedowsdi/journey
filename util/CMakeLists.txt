@@ -1,5 +1,6 @@
 set (PROJECTS
     matrix
+    bitmap_font
     )
 
 foreach(PROJECT ${PROJECTS})

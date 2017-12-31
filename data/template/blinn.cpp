@@ -22,7 +22,8 @@ zxd::Material material;
 
 struct MyProgram : public zxd::Program {
   // GLint loc_eye;
-
+  MyProgram(){
+  }
   virtual void doUpdateFrame() {
     projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
     viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
@@ -69,6 +70,9 @@ struct MyProgram : public zxd::Program {
     setUniformLocation(
       &loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
+  }
+  virtual void bindAttribLocations(){
+
   }
 } myProgram;
 

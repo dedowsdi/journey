@@ -6,6 +6,11 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
+GLint Program::getAttribLocation(const std::string& name) {
+  return ::getAttribLocation(object, name);
+}
+
+//--------------------------------------------------------------------
 void Program::setUniformLocation(GLint* location, const std::string& name) {
   ::setUniformLocation(location, object, name);
 }

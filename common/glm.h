@@ -27,12 +27,12 @@
 namespace zxd {
 using namespace glm;
 
-typedef std::vector<mat2> Mat2Vec;
-typedef std::vector<mat3> Mat3Vec;
-typedef std::vector<mat4> Mat4Vec;
-typedef std::vector<vec2> Vec2Vec;
-typedef std::vector<vec3> Vec3Vec;
-typedef std::vector<vec4> Vec4Vec;
+typedef std::vector<mat2> Mat2Vector;
+typedef std::vector<mat3> Mat3Vector;
+typedef std::vector<mat4> Mat4Vector;
+typedef std::vector<vec2> Vec2Vector;
+typedef std::vector<vec3> Vec3Vector;
+typedef std::vector<vec4> Vec4Vector;
 
 // follow convention of glm, always return
 
@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& os, const vec4& v);
 std::ostream& operator<<(std::ostream& os, const mat2& m);
 std::ostream& operator<<(std::ostream& os, const mat3& m);
 std::ostream& operator<<(std::ostream& os, const mat4& m);
-std::ostream& operator<<(std::ostream& os, const Vec3Vec& v);
+std::ostream& operator<<(std::ostream& os, const Vec3Vector& v);
 
 //--------------------------------------------------------------------
 inline vec3 makeFloor(const vec3& lhs, const vec3& rhs) {

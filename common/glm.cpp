@@ -87,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, const mat4& m) {
 }
 
 //------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const Vec3Vec& v) {
+std::ostream& operator<<(std::ostream& os, const Vec3Vector& v) {
   auto size = v.size();
   for (size_t i = 0; i < size; ++i) {
     os << v[i] << std::endl;

@@ -12,36 +12,45 @@ using namespace glm;
 #define WINDOWS_HEIGHT 512
 GLfloat wndAspect = 1;
 
-struct MyProgram : public zxd::Program{
-  virtual void doUpdateFrame(){
+struct MyProgram : public zxd::Program {
+  MyProgram() {
     projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
-    viewMatrix =
-      glm::lookAt(vec3(0, -5, 0), vec3(0, 0, 0), vec3(0, 0, 1));
+    viewMatrix = glm::lookAt(vec3(0, -5, 0), vec3(0, 0, 0), vec3(0, 0, 1));
   }
-  virtual void doUpdateModel(){
+
+  virtual void doUpdateFrame() {
 
   }
+
+  virtual void doUpdateModel() {
+
+  }
+
   virtual void attachShaders() {
 
   }
-  virtual void bindUniformLocations(){
+
+  virtual void bindUniformLocations() {
+
+  }
+
+  virtual void bindAttribLocations() {
 
   }
 } myProgram;
 
-void render(zxd::Program& program){
+void render(zxd::Program& program) {
   myProgram.updateFrame();
 
   mat4 model;
   myProgram.updateModel(model);
-
 }
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
 
   render(myProgram);
-  
+
   glDisable(GL_TEXTURE_2D);
 
   glColor3f(1.0f, 1.0f, 1.0f);
@@ -58,23 +67,12 @@ void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_FLAT);
 
-  myProgram.object = glCreateProgram();
-  ZCGE(glLinkProgram(myProgram));
-
+  myProgram.init();
 }
 
 void reshape(int w, int h) {
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  if (w <= h)
-    glOrtho(-10.0, 10.0, -10.0 * (GLfloat)h / (GLfloat)w,
-      10.0 * (GLfloat)h / (GLfloat)w, -1.0, 1.0);
-  else
-    glOrtho(-10.0 * (GLfloat)w / (GLfloat)h, 10.0 * (GLfloat)w / (GLfloat)h,
-      -10.0, 10.0, -1.0, 1.0);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
+  wndAspect = GLfloat(w) / h;
 }
 
 void mouse(int button, int state, int x, int y) {

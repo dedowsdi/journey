@@ -74,24 +74,10 @@ public:
   GLint loc_modelViewProjMatrixInverseTranspose;
 
 public:
-  Program() {}
+  Program(): object(-1) {}
   virtual ~Program() {}
 
   operator GLuint() { return object; }
-
-  // per model
-  virtual void updateModel(const glm::mat4& model) {
-    modelMatrix = model;
-    doUpdateModel();
-  }
-  virtual void doUpdateModel() = 0;
-
-  // per frame
-  void updateFrame() {
-    glUseProgram(object);
-    doUpdateFrame();
-  }
-  virtual void doUpdateFrame() {}
 
   virtual void init() {
     object = glCreateProgram();
@@ -103,16 +89,36 @@ public:
       printf("failed to link program %d\n", object);
     }
     bindUniformLocations();
+    bindAttribLocations();
   }
 
   virtual void attachShaders() = 0;
   virtual void bindUniformLocations(){};
+  virtual void bindAttribLocations(){};
+
+  GLint getAttribLocation(const std::string& name);
 
   // some wrapper
   void setUniformLocation(GLint* location, const std::string& name);
   void attachShaderFile(GLenum type, const std::string& file);
   void attachShaderSource(GLenum type, const StringVector& source);
-  void attachShaderSourceAndFile(GLenum type, StringVector& source, const std::string& file);
+  void attachShaderSourceAndFile(
+    GLenum type, StringVector& source, const std::string& file);
+
+  // per model
+  virtual void updateModel(const glm::mat4& model) {
+    modelMatrix = model;
+    doUpdateModel();
+  }
+  virtual void doUpdateModel(){};
+
+  // per frame
+  void updateFrame() {
+    glUseProgram(object);
+    doUpdateFrame();
+  }
+  virtual void doUpdateFrame() {}
+
 };
 }
 

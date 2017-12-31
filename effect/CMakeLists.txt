@@ -8,6 +8,8 @@ set (PROJECTS
     blinnphong
     rim
     instance
+    bitmap_text
+    freetype_text
     )
 
 foreach(PROJECT ${PROJECTS})

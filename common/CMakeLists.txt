@@ -5,6 +5,11 @@ set(COMMON_SRCS
     glEnumString.cpp
     light.cpp
     sphere.cpp
+    texutil.cpp
+    bitmap_text.cpp
+    freetype_text.cpp
+    quad.cpp
+    stringutil.cpp
     )
 
 add_library(common 
@@ -16,4 +21,6 @@ target_link_libraries(common
     ${OPENGL_glu_LIBRARY}
     ${GLUT_LIBRARIES}
     ${GLEW_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
+    ${FIP_LIBS}
     )
