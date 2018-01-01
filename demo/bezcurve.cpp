@@ -4,6 +4,7 @@
  *  You can assign any float to u1 and u2, 
  *  the real u is calculated by (u - u1) / (u2 - u1)
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"

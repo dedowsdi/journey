@@ -11,7 +11,7 @@
  * If you need to render both stencil and depth , attach a depth stencil
  * renderbuffer, then read depth component and stencil index.
  */
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
@@ -253,7 +253,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(IMAGE_WIDTH * 2, IMAGE_HEIGHT * 2);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

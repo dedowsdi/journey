@@ -4,7 +4,7 @@
  *  to demonstrate the effect order has on alpha blending results.
  *  Use the 't' key to toggle the order of drawing polygons.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>

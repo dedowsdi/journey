@@ -2,7 +2,7 @@
  *  pboimage.c
  *  drawing, copying and zooming pixel data stored in a buffer object
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 

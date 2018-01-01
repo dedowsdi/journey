@@ -16,7 +16,7 @@
  *  glDrawPixel
  *
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>

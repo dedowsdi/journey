@@ -3,7 +3,7 @@
  *  on a scene with perspective projection, using the special
  *  routines accFrustum() and accPerspective().
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>

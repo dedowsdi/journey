@@ -12,7 +12,7 @@
  *
  */
 
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <math.h>

@@ -5,7 +5,7 @@
  *  each with very different contours.  When the w key is pressed,
  *  the objects are drawn with a different winding rule.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>

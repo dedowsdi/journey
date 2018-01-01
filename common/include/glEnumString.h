@@ -1,9 +1,7 @@
 #ifndef GLENUMSTRING_H
 #define GLENUMSTRING_H
 
-#include <GL/gl.h>
-#include "string.h"
-#include <GL/glu.h>
+#include "glad/glad.h"
 
 const char* glTexEnvModeToString(GLenum e);
 GLenum glTexEnvModeFromString(const char* s);

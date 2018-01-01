@@ -9,6 +9,7 @@
  *	 	Vertex-array specification (if needed, through glClintActivateTexture)
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -73,7 +74,7 @@ void init(void) {
 
   /*  Use the two texture objects to define two texture units
    *  for use in multitexturing  */
-  glActiveTextureARB(GL_TEXTURE0_ARB);
+  glActiveTexture(GL_TEXTURE0);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texNames[0]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -84,7 +85,7 @@ void init(void) {
   glTranslatef(-0.5f, -0.5f, 0.0f);
   glMatrixMode(GL_MODELVIEW);
 
-  glActiveTextureARB(GL_TEXTURE1_ARB);
+  glActiveTexture(GL_TEXTURE1);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texNames[1]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -93,14 +94,14 @@ void init(void) {
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBegin(GL_TRIANGLES);
-  glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 1.0, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE0, 0.0, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE1, 1.0, 0.0);
   glVertex2f(0.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.5, 1.0);
-  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.5, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE0, 0.5, 1.0);
+  glMultiTexCoord2f(GL_TEXTURE1, 0.5, 0.0);
   glVertex2f(50.0, 100.0);
-  glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 1.0, 1.0);
+  glMultiTexCoord2f(GL_TEXTURE0, 1.0, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE1, 1.0, 1.0);
   glVertex2f(100.0, 0.0);
   glEnd();
   glFlush();

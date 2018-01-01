@@ -10,7 +10,7 @@
  *  You can not call glPointSize betwen glBegin and glEnd, you need to use point
  *  parameter to do the job. It scale and fade point based on attenuation.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -51,10 +51,10 @@ void init(void) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  glGetFloatv(GL_POINT_SIZE_MAX_EXT, pmax);
+  glGetFloatv(GL_POINT_SIZE_MAX, pmax);
 
-  glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT, linear);
-  glPointParameterfEXT(GL_POINT_FADE_THRESHOLD_SIZE_EXT, 2.0);
+  glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, linear);
+  glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, 2.0);
 }
 
 void display(void) {
@@ -99,15 +99,15 @@ void keyboard(unsigned char key, int x, int y) {
       glutPostRedisplay();
       break;
     case 'q':
-      glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT, constant);
+      glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, constant);
       glutPostRedisplay();
       break;
     case 'w':
-      glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT, linear);
+      glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, linear);
       glutPostRedisplay();
       break;
     case 'e':
-      glPointParameterfvEXT(GL_DISTANCE_ATTENUATION_EXT, quadratic);
+      glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, quadratic);
       glutPostRedisplay();
       break;
     case 'r':
@@ -121,10 +121,10 @@ void keyboard(unsigned char key, int x, int y) {
       glutPostRedisplay();
       break;
     case 'u':
-      if (glIsEnabled(GL_MULTISAMPLE_ARB)) 
-        glDisable(GL_MULTISAMPLE_ARB);
+      if (glIsEnabled(GL_MULTISAMPLE)) 
+        glDisable(GL_MULTISAMPLE);
       else
-        glEnable(GL_MULTISAMPLE_ARB);
+        glEnable(GL_MULTISAMPLE);
       glutPostRedisplay();
       break;
     case 27:

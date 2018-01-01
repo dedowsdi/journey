@@ -10,7 +10,7 @@
  *  you can seperate color and alpha if you want.
  */
 
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>

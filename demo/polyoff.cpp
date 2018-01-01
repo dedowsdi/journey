@@ -8,7 +8,7 @@
  *  or point polygon mode, and enable GL_POLYGON_OFFSET_FILL,
  *  GL_POLYGON_OFFSET_LINE or GL_POLYGON_OFFSET_POINT
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <stdlib.h>

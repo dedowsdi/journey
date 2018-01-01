@@ -5,7 +5,7 @@
  *  Interaction:  pressing the d and y keys (day and year)
  *  alters the rotation of the planet around the sun.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>

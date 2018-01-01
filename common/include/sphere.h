@@ -1,7 +1,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include "glm.h"
 
 namespace zxd {

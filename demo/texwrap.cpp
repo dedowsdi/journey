@@ -23,7 +23,7 @@
  *    clamp_to_border : 2*2 array use border and texels at the edge.
  *
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>

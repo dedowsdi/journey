@@ -4,9 +4,9 @@
  *  program distribution.
  */
 
+#include "glad/glad.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <GL/gl.h>
 
 // from big endian to small endian
 static unsigned int byteToUInt32(const unsigned char buf[4]) {

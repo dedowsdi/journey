@@ -53,12 +53,11 @@
  *
  */
 
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <stdio.h>
 #include <GL/freeglut.h>
-#include <GL/glext.h>
 #include <math.h>
 #include <GL/freeglut_ext.h>
 #define SHADOW_MAP_WIDTH 256
@@ -455,7 +454,7 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
 
-  initExtension();
+  loadGL();
   init();
 
   glutDisplayFunc(display);

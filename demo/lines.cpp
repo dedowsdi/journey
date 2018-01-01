@@ -3,6 +3,7 @@
  *  This program demonstrates geometric primitives and
  *  their attributes.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"

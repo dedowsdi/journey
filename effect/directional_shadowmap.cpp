@@ -53,7 +53,7 @@
  *
  */
 
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
@@ -505,9 +505,8 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(100, 100);
   glutInitContextFlags(GLUT_DEBUG);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
-  printf("%s", getVersions());
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);

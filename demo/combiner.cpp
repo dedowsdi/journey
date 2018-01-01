@@ -32,6 +32,7 @@
  *  operand of arg must be specified with glTexEnv(GL_TEX_ENV, GL_OPERANDi_, ...)
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -94,20 +95,20 @@ void init(void) {
   /*  smooth-shaded polygon with multiple texture coordinates  */
   glNewList(1, GL_COMPILE);
   glBegin(GL_QUADS);
-  glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE0, 0.0, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE1, 0.0, 0.0);
   glColor3f(0.5, 1.0, 0.25);
   glVertex3f(0.0, 0.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0, 2.0);
-  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0, 2.0);
+  glMultiTexCoord2f(GL_TEXTURE0, 0.0, 2.0);
+  glMultiTexCoord2f(GL_TEXTURE1, 0.0, 2.0);
   glColor3f(1.0, 1.0, 1.0);
   glVertex3f(0.0, 1.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 2.0, 2.0);
-  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 2.0, 2.0);
+  glMultiTexCoord2f(GL_TEXTURE0, 2.0, 2.0);
+  glMultiTexCoord2f(GL_TEXTURE1, 2.0, 2.0);
   glColor3f(1.0, 1.0, 1.0);
   glVertex3f(1.0, 1.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 2.0, 0.0);
-  glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 2.0, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE0, 2.0, 0.0);
+  glMultiTexCoord2f(GL_TEXTURE1, 2.0, 0.0);
   glColor3f(1.0, 0.5, 0.25);
   glVertex3f(1.0, 0.0, 0.0);
   glEnd();
@@ -143,43 +144,43 @@ void display(void) {
 
   /*  different combine modes enabled; 1 texture unit
    *  defaults are:
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
    */
   glBindTexture(GL_TEXTURE_2D, texName[0]);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_REPLACE);
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
   glPushMatrix();
   glTranslatef(1.0, 4.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_MODULATE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
   //GL_PREVIOUS works the same as GL_PRIMARY_COLOR here, as there are only 1 texture unit
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB); 
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS); 
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
   glPushMatrix();
   glTranslatef(2.0, 4.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_ADD);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD);
   glPushMatrix();
   glTranslatef(3.0, 4.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_ADD_SIGNED_ARB);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
   glPushMatrix();
   glTranslatef(4.0, 4.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_SUBTRACT_ARB);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_SUBTRACT);
   glPushMatrix();
   glTranslatef(5.0, 4.0, 0.0);
   glCallList(1);
@@ -188,24 +189,24 @@ void display(void) {
   /*  interpolate combine with constant color; 1 texture unit
    *  use different alpha values for constant color
    *  defaults are:
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE2_RGB_ARB, GL_CONSTANT_ARB);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND2_RGB_ARB, GL_SRC_ALPHA);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
    */
   constColor[3] = 0.2; //this alpha will be used as arg2
   glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
   glBindTexture(GL_TEXTURE_2D, texName[0]);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_INTERPOLATE_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE2_RGB_ARB, GL_CONSTANT_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND2_RGB_ARB, GL_SRC_ALPHA);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
   glPushMatrix();
   glTranslatef(1.0, 3.0, 0.0);
   glCallList(1);
@@ -234,41 +235,41 @@ void display(void) {
 
   /*  combine textures 0 & 1
    *  defaults are:
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS);
+   *  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
    */
 
-  glActiveTextureARB(GL_TEXTURE0_ARB);
+  glActiveTexture(GL_TEXTURE0);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texName[0]);
   //reset tex env mode of tex unit 0 to default
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-  glActiveTextureARB(GL_TEXTURE1_ARB);
+  glActiveTexture(GL_TEXTURE1);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texName[1]);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 
   /*int i;*/
-  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, &i);*/
+  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_SOURCE0_RGB, &i);*/
   /*printf("SOURCE0_RGB : %x\n", i);*/
-  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, &i);*/
+  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_OPERAND0_RGB, &i);*/
   /*printf("OPERAND0_RGB : %x\n\n", i);*/
-  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, &i);*/
+  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_SOURCE1_RGB, &i);*/
   /*printf("SOURCE1_RGB : %x\n", i);*/
-  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, &i);*/
+  /*glGetTexEnviv(GL_TEXTURE_ENV, GL_OPERAND1_RGB, &i);*/
   /*printf("OPERAND1_RGB : %x\n", i);*/
 
   // reset source and operand to default.(which will be changed later in
   // display)
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_TEXTURE);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_PREVIOUS_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_REPLACE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
 
   glPushMatrix();
   glTranslatef(1.0, 2.0, 0.0);
@@ -276,25 +277,25 @@ void display(void) {
   glPopMatrix();
 
   /*  try different combiner modes of texture unit 1  */
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_MODULATE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
   glPushMatrix();
   glTranslatef(2.0, 2.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_ADD);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD);
   glPushMatrix();
   glTranslatef(3.0, 2.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_ADD_SIGNED_ARB);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
   glPushMatrix();
   glTranslatef(4.0, 2.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_SUBTRACT_ARB);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_SUBTRACT);
   glPushMatrix();
   glTranslatef(5.0, 2.0, 0.0);
   glCallList(1);
@@ -303,36 +304,36 @@ void display(void) {
   /*  some experiments */
 
   /*  see the effect of RGB_SCALE   */
-  glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 2.0);
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_REPLACE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, 2.0);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
   glPushMatrix();
   glTranslatef(1.0, 1.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_MODULATE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
   glPushMatrix();
   glTranslatef(2.0, 1.0, 0.0);
   glCallList(1);
   glPopMatrix();
-  glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 1.0);
+  glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, 1.0);
 
   /*  using SOURCE0 and SOURCE1, reverse the order of subtraction Arg1-Arg0  */
 
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_ARB, GL_SUBTRACT_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB_ARB, GL_PREVIOUS_ARB);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB_ARB, GL_SRC_COLOR);
-  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB_ARB, GL_TEXTURE);
-  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB_ARB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_SUBTRACT);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_TEXTURE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
   glPushMatrix();
   glTranslatef(5.0, 1.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glActiveTextureARB(GL_TEXTURE1_ARB); /*  deactivate multitexturing  */
+  glActiveTexture(GL_TEXTURE1); /*  deactivate multitexturing  */
   glDisable(GL_TEXTURE_2D);
-  glActiveTextureARB(GL_TEXTURE0_ARB); /*  activate single texture unit  */
+  glActiveTexture(GL_TEXTURE0); /*  activate single texture unit  */
 
   glFlush();
 }

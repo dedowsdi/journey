@@ -9,7 +9,7 @@
  *    3. blend(add) hdr map and brightness map, tone map back to ldr.
  *
  */
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -66,7 +66,7 @@ void init(void) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, checkImageWidth, checkImageHeight,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F_ARB, checkImageWidth, checkImageHeight,
     0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 
   glGenTextures(1, &colorTex);
@@ -249,7 +249,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(512, 512);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

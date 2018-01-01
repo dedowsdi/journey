@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
@@ -328,7 +328,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(wndWidth, wndHeight);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

@@ -7,7 +7,7 @@
  *  In this program, there is a fixed density value, as well
  *  as fixed start and end values for the linear fog.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <math.h>
 #include <stdlib.h>

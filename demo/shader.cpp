@@ -19,7 +19,7 @@
  * attribute of a set of attributes aliased to the same location.
  *
  */
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(100, 100);
   glutInitContextFlags(GLUT_DEBUG);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

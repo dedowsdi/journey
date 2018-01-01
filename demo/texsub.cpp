@@ -3,7 +3,7 @@
  *  two rectangles.  This program clamps the texture, if
  *  the texture coordinates fall outside 0.0 and 1.0.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>

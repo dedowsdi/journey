@@ -9,7 +9,8 @@
  *  change u step will change the surface slightly even the sample mothed is not
  *  domain distance.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>

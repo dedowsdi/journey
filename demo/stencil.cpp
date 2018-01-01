@@ -16,6 +16,7 @@
  *     stencil pass, depth pass
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"

@@ -7,7 +7,7 @@
  * internalFormat is sRGB, opengl will apply pow(color, gamma) to it to
  * cancel gomma correction.
  */
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
@@ -162,7 +162,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(512, 512);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

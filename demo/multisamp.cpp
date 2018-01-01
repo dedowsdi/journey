@@ -82,13 +82,13 @@ void display(void) {
 
   if (bgtoggle) glCallList(2);
 
-  glEnable(GL_MULTISAMPLE_ARB);
+  glEnable(GL_MULTISAMPLE);
   glPushMatrix();
   glTranslatef(-1.0, 0.0, 0.0);
   glCallList(1);
   glPopMatrix();
 
-  glDisable(GL_MULTISAMPLE_ARB);
+  glDisable(GL_MULTISAMPLE);
   glPushMatrix();
   glTranslatef(1.0, 0.0, 0.0);
   glCallList(1);

@@ -38,5 +38,11 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "omni_shadowmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

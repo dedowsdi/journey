@@ -17,10 +17,10 @@
  *
  */
 
-#define GL_GLEXT_PROTOTYPES
-#include <GL/freeglut.h>
+#include "glad/glad.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include "common.h"
 
@@ -126,32 +126,32 @@ void init(void) {
 
   makeImages();
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT, GL_TEXTURE_WRAP_R, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT, 0, GL_RGBA, imageSize,
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, imageSize,
     imageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, image1);
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X_EXT, 0, GL_RGBA, imageSize,
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, imageSize,
     imageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, image4);
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y_EXT, 0, GL_RGBA, imageSize,
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, imageSize,
     imageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, image2);
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_EXT, 0, GL_RGBA, imageSize,
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, imageSize,
     imageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, image5);
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z_EXT, 0, GL_RGBA, imageSize,
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, imageSize,
     imageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, image3);
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT, 0, GL_RGBA, imageSize,
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, imageSize,
     imageSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, image6);
 
   // generate s,t,r texture, use normal in view space as texcoord
-  glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP_EXT);
-  glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP_EXT);
-  glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP_EXT);
+  glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+  glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+  glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
 
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-  glEnable(GL_TEXTURE_CUBE_MAP_EXT);
+  glEnable(GL_TEXTURE_CUBE_MAP);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_AUTO_NORMAL);
@@ -217,7 +217,7 @@ void display(void) {
 
   glPopMatrix();
 
-  glDisable(GL_TEXTURE_CUBE_MAP_EXT);
+  glDisable(GL_TEXTURE_CUBE_MAP);
   glDisable(GL_LIGHTING);
   glColor3f(0.3f, 0.3f, 0.3f);
   glWindowPos2i(20, 480);
@@ -232,7 +232,7 @@ void display(void) {
     "pP : polygon mode\n";
   glutBitmapString(GLUT_BITMAP_9_BY_15, info);
   glEnable(GL_LIGHTING);
-  glEnable(GL_TEXTURE_CUBE_MAP_EXT);
+  glEnable(GL_TEXTURE_CUBE_MAP);
 
   glutSwapBuffers();
 }
@@ -250,16 +250,16 @@ void keyboard(unsigned char key, int x, int y) {
   switch (key) {
     case 'q':
     case 'Q':
-      glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP_EXT);
-      glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP_EXT);
-      glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP_EXT);
+      glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+      glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+      glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
       glutPostRedisplay();
       break;
     case 'w':
     case 'W':
-      glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_EXT);
-      glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_EXT);
-      glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_EXT);
+      glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+      glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
+      glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
       glutPostRedisplay();
       break;
     case 'e':

@@ -4,7 +4,7 @@
  *  Pressing the left mouse button rotates the rectangle.
  *  Pressing the middle mouse button stops the rotation.
  */
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
   glutInitContextFlags(GLUT_DEBUG);
   glutCreateWindow(argv[0]);
   init();
-  initExtension();
+  loadGL();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);

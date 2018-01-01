@@ -1,6 +1,7 @@
 #ifndef GLM_H
 #define GLM_H
 #define GLM_SWIZZLE
+#include "glad/glad.h"
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -19,7 +20,6 @@
 
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
-#include <GL/gl.h>
 #include <vector>
 #include <iostream>
 #include <utility>

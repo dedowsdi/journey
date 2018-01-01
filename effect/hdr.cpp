@@ -14,7 +14,7 @@
  *
  *  Any function that result in [0,1] should work.
  */
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
@@ -130,7 +130,7 @@ void init(void) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexImage2D(
-    GL_TEXTURE_2D, 0, GL_RGBA16F, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    GL_TEXTURE_2D, 0, GL_RGBA16F_ARB, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
   glGenFramebuffers(1, &fbo);
 
@@ -245,7 +245,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(512, 512);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

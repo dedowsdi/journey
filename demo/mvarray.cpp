@@ -9,10 +9,8 @@
  */
 
 //macro to introduce glMultiDraw*
-#define GL_GLEXT_PROTOTYPES
-
+#include "glad/glad.h"
 #include <GL/freeglut.h>
-#include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -51,7 +49,7 @@ void display(void) {
 
   glClear(GL_COLOR_BUFFER_BIT);
   glColor3f(1.0, 1.0, 1.0);
-  glMultiDrawElementsEXT(GL_LINE_STRIP, count, GL_UNSIGNED_BYTE, indices, 2);
+  glMultiDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_BYTE, indices, 2);
   glFlush();
 }
 

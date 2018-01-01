@@ -1,11 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
+#include <glad/glad.h>
 #include <GL/freeglut.h>
 #include <stdio.h>
-#include <GL/glu.h>
 #include "string.h"
 #include <algorithm>
 #include <iostream>
@@ -50,7 +48,7 @@ typedef std::vector<const char *> CStringVector;
 #define ZCGE ZXD_CHECK_GL_ERROR
 #define ZCGEA ZXD_CHECK_GL_ERROR_AFTER
 
-const GLchar *getVersions();
+void printGLVersion();
 
 const GLchar *getExtensions();
 
@@ -78,7 +76,7 @@ GLfloat getNormalizedTime();
 // only work if get called exactly once per frame
 GLfloat updateFps();
 
-void initExtension();
+void loadGL();
 void initDebugOutput();
 void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
   GLsizei length, const GLchar *message, const void *userParam);

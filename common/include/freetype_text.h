@@ -1,7 +1,7 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <string>
 #include "glm.h"
 #include "program.h"

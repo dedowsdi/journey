@@ -128,13 +128,13 @@ void Sphere::draw(GLuint primcount /* = 1*/) {
     }
     glDrawArrays(GL_TRIANGLE_FAN, next, numVertPole);
   } else {
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, numVertPole, primcount);
+    glDrawArraysInstancedARB(GL_TRIANGLE_FAN, 0, numVertPole, primcount);
 
     GLuint next = numVertPole;
     for (int i = 0; i < mStack - 2; ++i, next += numVertCenter) {
-      glDrawArraysInstanced(GL_QUAD_STRIP, next, numVertCenter, primcount);
+      glDrawArraysInstancedARB(GL_QUAD_STRIP, next, numVertCenter, primcount);
     }
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, next, numVertPole, primcount);
+    glDrawArraysInstancedARB(GL_TRIANGLE_FAN, next, numVertPole, primcount);
   }
 }
 

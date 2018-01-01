@@ -15,7 +15,7 @@
  *  subtract from the fog coordinate values at one of the
  *  three vertices of the triangle.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <math.h>
 #include <stdlib.h>
@@ -37,7 +37,7 @@ static void init(void) {
   glFogfv(GL_FOG_COLOR, fogColor);
   glFogf(GL_FOG_DENSITY, 0.25);
   glHint(GL_FOG_HINT, GL_DONT_CARE);
-  glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT);
+  glFogi(GL_FOG_COORDINATE_SOURCE, GL_FOG_COORDINATE);
   glClearColor(0.0, 0.25, 0.25, 1.0); /* fog color */
 }
 
@@ -48,11 +48,11 @@ void display(void) {
 
   glColor3f(1.0f, 0.75f, 0.0f);
   glBegin(GL_TRIANGLES);
-  glFogCoordfEXT(f1);
+  glFogCoordf(f1);
   glVertex3f(2.0f, -2.0f, 0.0f);
-  glFogCoordfEXT(f2);
+  glFogCoordf(f2);
   glVertex3f(-2.0f, 0.0f, -5.0f);
-  glFogCoordfEXT(f3);
+  glFogCoordf(f3);
   glVertex3f(0.0f, 2.0f, -10.0f);
   glEnd();
 
@@ -87,10 +87,10 @@ void keyboard(unsigned char key, int x, int y) {
     case 'q': {
       int i;
       glGetIntegerv(GL_FOG_COORD_SRC, &i);
-      if (i == GL_FRAGMENT_DEPTH_EXT)
-        glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT);
+      if (i == GL_FRAGMENT_DEPTH)
+        glFogi(GL_FOG_COORDINATE_SOURCE, GL_FOG_COORDINATE);
       else
-        glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FRAGMENT_DEPTH_EXT);
+        glFogi(GL_FOG_COORDINATE_SOURCE, GL_FRAGMENT_DEPTH);
     }
       glutPostRedisplay();
       break;

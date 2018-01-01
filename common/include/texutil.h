@@ -1,6 +1,6 @@
 #ifndef TEXUTIL_H
 #define TEXUTIL_H
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <string>
 #include <FreeImagePlus.h>
 

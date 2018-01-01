@@ -3,7 +3,7 @@
  *  Use various 2D convolutions filters to find edges in an image.
  *
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <stdlib.h>

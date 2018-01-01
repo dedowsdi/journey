@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include "common.h"
 #include "stdlib.h"
 #include "glEnumString.h"
@@ -12,17 +11,17 @@
 using namespace glm;
 
 //------------------------------------------------------------------------------
-const GLchar *getVersions() {
-  static GLchar version[512];
-  sprintf(version,
+void printGLVersion() {
+  printf(
     "GL_VERSION : %s\n"
+    "GL_SHADING_LANGUAGE_VERSION : %s\n"
     "GL_RENDERER : %s\n"
     "GL_VENDOR : %s\n"
     "GL_SHADING_LANGUAGE_VERSION : %s\n"
     "GLU_VERSION : %s\n",
-    glGetString(GL_VERSION), glGetString(GL_RENDERER), glGetString(GL_VENDOR),
+    glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION),
+    glGetString(GL_RENDERER), glGetString(GL_VENDOR),
     glGetString(GL_SHADING_LANGUAGE_VERSION), gluGetString(GLU_VERSION));
-  return version;
 }
 
 //------------------------------------------------------------------------------
@@ -237,43 +236,18 @@ GLfloat updateFps() {
   return fps;
 }
 
-#define checkExtension(name)                   \
-  if (!GLEW_##name) {                          \
-    fprintf(stdout, "##name not supported\n"); \
-  }
-
 //--------------------------------------------------------------------
-void initExtension() {
-  GLenum err = glewInit();
-  if (GLEW_OK != err) {
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-  }
-  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-
-  checkExtension(ARB_vertex_array_object);
-  checkExtension(ARB_framebuffer_object);
-  checkExtension(ARB_texture_stencil8);
-  checkExtension(ARB_texture_float);
-  checkExtension(ARB_geometry_shader4);
-  checkExtension(ARB_debug_output);
-  checkExtension(ARB_debug_output);
-  checkExtension(KHR_debug);
-  checkExtension(ARB_draw_instanced);
-  checkExtension(EXT_packed_depth_stencil);
-  checkExtension(EXT_gpu_shader4);
-
-  if (!GLEW_VERSION_2_1) {
-    fprintf(stdout, "OpenGL2.1 not supported");
+void loadGL() {
+  if (!gladLoadGL()) {
+    printf("glad failed to load gl");
+    return;
   }
 
-  // combined check
-  // if (glewIsSupported("GL_VERSION_1_4  GL_ARB_point_sprite")) {
-  /* Great, we have OpenGL 1.4 + point sprites. */
-  //}
+  if (GLVersion.major < 2) {
+    printf("Your system doesn't support OpenGL >= 2!\n");
+  }
 
-  // if (WGLEW_extension)  //check WGL extension
-  // if (GLXEW_extension)  //check GLX extension
-
+  printGLVersion();
   initDebugOutput();
 }
 
@@ -281,15 +255,6 @@ void initExtension() {
 void initDebugOutput() {
   glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-
-  // 4.3+
-  // GLint flag;
-  // glGetIntegerv(GL_CONTEXT_FLAGS, &flag);
-  // if (!(flag & GL_CONTEXT_FLAG_DEBUG_BIT)) {
-  // printf("faled to create debug context\n");
-  // return;
-  //}
-  // glEnable(GL_DEBUG_OUTPUT);
 
   glDebugMessageCallback(glDebugOutput, 0);
   // disable notification
@@ -387,7 +352,6 @@ void getModelViewProj(GLfloat *p) {
 //--------------------------------------------------------------------
 void matrixAttribPointer(
   GLint index, GLuint divisor /* = 1*/, GLboolean normalize /* = GL_FALSE*/) {
-
   glVertexAttribPointer(
     index + 0, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), BUFFER_OFFSET(0));
   glVertexAttribPointer(
@@ -402,10 +366,10 @@ void matrixAttribPointer(
   glEnableVertexAttribArray(index + 2);
   glEnableVertexAttribArray(index + 3);
 
-  glVertexAttribDivisor(index + 0, 1);
-  glVertexAttribDivisor(index + 1, 1);
-  glVertexAttribDivisor(index + 2, 1);
-  glVertexAttribDivisor(index + 3, 1);
+  glVertexAttribDivisorARB(index + 0, 1);
+  glVertexAttribDivisorARB(index + 1, 1);
+  glVertexAttribDivisorARB(index + 2, 1);
+  glVertexAttribDivisorARB(index + 3, 1);
 }
 
 //--------------------------------------------------------------------

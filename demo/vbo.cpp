@@ -6,7 +6,7 @@
  *  If you want to use texcoord or other vertex dates, you can place them in the
  *  same buffer as position or in a seperated buffer.
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 

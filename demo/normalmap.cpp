@@ -16,8 +16,8 @@
  * In order to render normal map, i use tex*2 - 1 as ndc, so the corresponding
  * normal will be rendered at resolution * tex.
  */
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glew.h>
+#include "glad/glad.h"
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
@@ -274,7 +274,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(512, 256);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  initExtension();
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

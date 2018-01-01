@@ -3,7 +3,8 @@
  *  demo of GL_TEXTURE_ENV_MODE
  *
  */
-#define GL_GLEXT_PROTOTYPES
+#include "glad/glad.h"
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
