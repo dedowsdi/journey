@@ -94,6 +94,7 @@ Chapter 10: The Framebuffer
 
     fragtest.c 
 	stencil.c	(1.0)
+    outline.c
     stencilcap.c
     occlusion.c
 	accpersp.c	(1.0)

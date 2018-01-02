@@ -44,5 +44,11 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "outline": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

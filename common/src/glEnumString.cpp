@@ -249,3 +249,25 @@ GLenum glDebugSeverityFromString(const char* s) {
     return GL_DEBUG_SEVERITY_NOTIFICATION;
   return 0;
 }
+
+//--------------------------------------------------------------------
+const char* glPolygonModeToString(GLenum e) {
+  switch (e) {
+    case GL_POINT:
+      return "GL_POINT";
+    case GL_LINE:
+      return "GL_LINE";
+    case GL_FILL:
+      return "GL_FILL";
+    default:
+      return "";
+  }
+}
+
+//--------------------------------------------------------------------
+GLenum glPolygonModeFromString(const char* s) {
+  if (strcmp(s, "GL_POINT") == 0) return GL_POINT;
+  if (strcmp(s, "GL_LINE") == 0) return GL_LINE;
+  if (strcmp(s, "GL_FILL") == 0) return GL_FILL;
+  return 0;
+}

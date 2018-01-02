@@ -89,6 +89,7 @@ set (DEMOES
     gamma
     normalmap
     rtt
+    outline
     )
 
 foreach(DEMO ${DEMOES})
