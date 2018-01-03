@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>510</x>
+      <y>110</y>
+      <w>360</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Array
+--
+Array(arrayType, dataSize, dataType, bindType)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>590</x>
+      <y>590</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>StateSet</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1060</x>
+      <y>460</y>
+      <w>290</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>TemplateAttributeDispatch&lt;dataType&gt;
+--
++_array;
+_functionPtr
+_stride;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1060</x>
+      <y>210</y>
+      <w>230</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>AttributeDispatchMap
+--
++dispatcher(array:Array)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>690</x>
+      <y>450</y>
+      <w>290</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Geometry
+--
+DrawImplemention()
+DrawVertexArraysImplemention()
+DrawPrimitivesImplemention()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>770</x>
+      <y>30</y>
+      <w>220</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>State
+--
+setVertexPointer()
+bindVertexBufferObject()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>810</x>
+      <y>290</y>
+      <w>170</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Drawable
+--
+draw(renderinfo)
+compileGLObjects()
+/DrawImplemention()/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1060</x>
+      <y>30</y>
+      <w>290</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>ArrayDispatchers
+--
+_activeDispatchList:ActiveDispatchList
+_vertexDispatchers:AttributeDispatchMap
+_normalDispatchers
+--
+
+dispatch(bindType, index)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1090</x>
+      <y>330</y>
+      <w>230</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>AttributeDispach
+--
+assign(GLvoid*);
+operator()(uint);</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>530</x>
+      <y>410</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>MixinVector</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>500</x>
+      <y>240</y>
+      <w>440</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>TemplateArray&lt;elemType, arrayType, dataSize, dataType&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1180</x>
+      <y>150</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=n
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1190</x>
+      <y>400</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>570</y>
+      <w>500</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>Vertex buffer object:
+
+All array in geometry shares an VertexBufferObject.
+During set***Pointer in drawVertexArrasImplemention,
+An GLBufforOBject will be created via this VertexBUfferOBject,
+Then in state::bind**Pointer, this gl obj will be compiled,
+vertex buffer data will be populated, and pointer of vertex,
+normal, balabala will be setup.
+
+bg=blue
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>490</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>If you draw with displaylist:
+Drawable::draw will set up displaylist generation, 
+child class only need to implement drawImplemention.
+Geometry::drawImplemention 1st call drawVertexArrayImplemention
+to prepare vertex data, than call drawPrimitivesImplemention 
+to setup primitives.
+
+There three kinds of data binding:overall, primitive, vertex
+After activate dispatchers in state, overall binding attribute
+will be dispatched immediately, then vertex binding data will be
+set up as array in state, finally primitive binding will be 
+dispatched at drawPrimitivesImplemention
+
+
+bg=blue
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1180</x>
+      <y>260</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=n
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>630</x>
+      <y>180</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>570</x>
+      <y>260</y>
+      <w>90</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;150.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>830</x>
+      <y>360</y>
+      <w>70</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>980</x>
+      <y>60</y>
+      <w>100</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=n
+</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>720</x>
+      <y>180</y>
+      <w>40</w>
+      <h>290</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=n
+</panel_attributes>
+    <additional_attributes>20.0;270.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>580</y>
+      <w>230</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>BufferObject
+--
+getOrCreaateGLBufferObject</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>880</x>
+      <y>700</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>VertexBufferObject</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>720</y>
+      <w>140</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>GLBufferOBject
+--
+compileBuffer()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1120</x>
+      <y>580</y>
+      <w>230</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>GLBufferOBjectManager
+--
+createGLBufferObject</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1100</x>
+      <y>720</y>
+      <w>250</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>GLBufferOBjectSet
+--
+takeOrGenerate(bufferObject)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>940</x>
+      <y>630</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>720</x>
+      <y>630</y>
+      <w>250</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>230.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>270</y>
+      <w>500</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>ArrayDispatcher is used to dispatch vertex attribute to opengl.
+eg: dispatch data in Vec3Array through glColor3f.
+
+It usees function object AttributeDispatch and it's derived class
+TemplateAttributeDispatch to dispatch the array data to opengl
+eventually.
+
+AttributeDispatchMap stores AttributeDispatch for all kinds of
+needed arrayType. ArrayDispatcher build maps for vertex, normal,
+color....at init, and looks for the related dispatch by arrayType
+for each kind of array through these maps.
+
+ArrayDispatcher holds an array of AttributeDispatch for each
+kind of array bindType, it's mainly used to dispatch overall
+ array attribute and primitive array attribute.
+
+
+
+
+
+
+
+bg=blue
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1210</x>
+      <y>640</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>

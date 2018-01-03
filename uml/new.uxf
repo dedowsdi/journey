@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>860</x>
+      <y>150</y>
+      <w>340</w>
+      <h>430</h>
+    </coordinates>
+    <panel_attributes>State
+--
+apply()
+applyMode(mode, value, modeStack)
+applyModeMap(modeMap)
+applyAttributeMap(attributeMap)
+applyAttributeList(modeMap)
+applyDefineMap(defineMap)
+applyDefineList(defineMap, defineList)
+pushStateSet(dstate)
+popStateSet()
+pushModeList(modeMap, modeList)
+popModeList(modeMap, modeList)
+pushAttributeList(attributeMap, attributeList)
+popAttributeList(attributeMap, attributeList)
+pushDefineList(defineMap, defineList)
+popDefineList(defineMap, defineList)
+--
+_stateStateStack
+_modeMap
+_attributeMap
+_uniformMap
+_defineMap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>980</x>
+      <y>690</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>StateSet</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1030</x>
+      <y>570</y>
+      <w>30</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>590</x>
+      <y>390</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>ModeStack</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>560</x>
+      <y>460</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>AttributeStack</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>560</x>
+      <y>590</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>UniformStack</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>650</x>
+      <y>720</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>DefineStack</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>160</x>
+      <y>190</y>
+      <w>230</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>StateAttribute
+--
+getTypeMemberPair()
+getMember()
+apply()</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
