@@ -1,22 +1,23 @@
-#ifndef SPLINE_H
-#define SPLINE_H
+#ifndef NURB_H
+#define NURB_H
 
 #include <osg/Geometry>
 #include <algorithm>
 #include "common.h"
+#include "zmath.h"
 
 namespace zxd {
 // clamped b-spline
-class Spline : public osg::Geometry {
+class Nurb : public osg::Geometry {
 protected:
-  osg::ref_ptr<osg::Vec3Array> mControlPoints;
+  osg::ref_ptr<osg::Vec4Array> mControlPoints;
   osg::ref_ptr<osg::DoubleArray> mKnots;
   GLuint mDegree;
   unsigned int mSegments;  // number of segments
 
 public:
-  Spline() : mSegments(50) {
-    mControlPoints = new osg::Vec3Array;
+  Nurb() : mSegments(50) {
+    mControlPoints = new osg::Vec4Array;
     mKnots = new osg::DoubleArray;
   }
 
@@ -27,7 +28,7 @@ public:
       return;
     }
 
-    osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+    osg::ref_ptr<osg::Vec4Array> vertices = new osg::Vec4Array();
     vertices->reserve(mSegments + 1);
     setVertexArray(vertices);
 
@@ -49,10 +50,10 @@ public:
   void setDegree(GLuint v) { mDegree = v; }
   void updateDegree() { mDegree = m() - n() - 1; }
 
-  osg::ref_ptr<osg::Vec3Array> getControlPoints() const {
+  osg::ref_ptr<osg::Vec4Array> getControlPoints() const {
     return mControlPoints;
   }
-  void setControlPoints(osg::ref_ptr<osg::Vec3Array> v) { mControlPoints = v; }
+  void setControlPoints(osg::ref_ptr<osg::Vec4Array> v) { mControlPoints = v; }
 
   GLfloat getKnot(GLuint index) const { return mKnots->at(index); }
   osg::ref_ptr<osg::DoubleArray> getKnots() const { return mKnots; }
@@ -62,7 +63,7 @@ public:
   void setSegments(unsigned int v) { mSegments = v; }
 
   // get point by De Boor's algorithm
-  osg::Vec3 get(GLdouble u) {
+  osg::Vec4 get(GLdouble u) {
     u = std::max(std::min(u, mKnots->back()), mKnots->front());
     // early check
     if (u == mKnots->front())
@@ -84,8 +85,8 @@ public:
       // use de Boor's algoritm to create a knot of multiplicity p to get point
 
       // init columns 0
-      osg::ref_ptr<osg::Vec3Array> points =
-        new osg::Vec3Array(mControlPoints->begin() + kMinusP,
+      osg::ref_ptr<osg::Vec4Array> points =
+        new osg::Vec4Array(mControlPoints->begin() + kMinusP,
           mControlPoints->begin() + (kMinusS + 1));
       GLuint h = points->size();
       // iterate p-s times. leave only 1 element at last column
@@ -100,9 +101,9 @@ public:
   }
 
   // compute pointer directly by b-spline formula
-  osg::Vec3 getByCoefs(GLdouble u) {
+  osg::Vec4 getByCoefs(GLdouble u) {
     osg::ref_ptr<osg::DoubleArray> coefs = computeCoefficients(u);
-    osg::Vec3 p;
+    osg::Vec4 p;
     for (unsigned int i = 0; i < mControlPoints->size(); ++i) {
       p += mControlPoints->at(i) * coefs->at(i);
     }
@@ -110,7 +111,7 @@ public:
   }
 
   void insertKnot(GLdouble u, GLuint times = 1) {
-    osg::ref_ptr<osg::Vec3Array> points = new osg::Vec3Array();
+    osg::ref_ptr<osg::Vec4Array> points = new osg::Vec4Array();
 
     GLuint k = getKnotSpan(u);                                   // knot span
     GLuint s = u == mKnots->at(k) ? getKnotMultiplicity(k) : 0;  // multiplicity
@@ -121,7 +122,7 @@ public:
 
     if (s >= p) {
       // most simple case, just repeat P_k_p multiple times
-      osg::Vec3Array::iterator iter = points->begin() + kMinusP;
+      osg::Vec4Array::iterator iter = points->begin() + kMinusP;
       points->insert(iter, times, *iter);
     } else {
       // seperate insert to two partes if s + times is greater than p
@@ -130,7 +131,7 @@ public:
       GLuint end = k - s + 1;
 
       // iterate related points to generate new points
-      Vec3ArrayVec vec = iterate(beg, end, u, h);
+      Vec4ArrayVec vec = iterate(beg, end, u, h);
 
       // construct new control points by 5 parts
       // part 1, original [0,k-p]
@@ -154,7 +155,7 @@ public:
 
       // second part of this condition
       if (s + times >= p) {
-        osg::Vec3Array::iterator iter = points->begin() + kMinusP;
+        osg::Vec4Array::iterator iter = points->begin() + kMinusP;
         points->insert(iter, times - (p - s), *iter);
       }
 
@@ -172,7 +173,8 @@ public:
   // a knot span is [u_k, u_k+1), there are at most m-2p spans in clamped b
   // spline
   GLuint getKnotSpan(GLdouble u) {
-    // special case. Is it right to put um at the last valid span [u_m-p-1, u_m) ????
+    // special case. Is it right to put um at the last valid span [u_m-p-1, u_m)
+    // ????
     if (u == mKnots->back()) return mKnots->size() - mDegree - 2;
 
     osg::DoubleArray::iterator iter =
@@ -198,7 +200,7 @@ public:
     return s;
   }
 
-  void subdivide(GLdouble u, Spline& lc, Spline& rc) {
+  void subdivide(GLdouble u, Nurb& lc, Nurb& rc) {
     GLuint k = getKnotSpan(u);                                   // knot span
     GLuint s = u == mKnots->at(k) ? getKnotMultiplicity(k) : 0;  // multiplicity
     GLuint p = mDegree;
@@ -206,13 +208,13 @@ public:
     // GLuint pMinusS = p - s;
     GLuint kMinusS = k - s;
 
-    Vec3ArrayVec vec = iterate(kMinusP, kMinusS + 1, u, p - s);
+    Vec4ArrayVec vec = iterate(kMinusP, kMinusS + 1, u, p - s);
     if (vec.back()->size() != 1) {
       OSG_NOTICE << "error, not enough iterations!" << std::endl;
       return;
     }
 
-    osg::Vec3Array* points = lc.getControlPoints();
+    osg::Vec4Array* points = lc.getControlPoints();
     osg::DoubleArray* knots = lc.getKnots();
     points->clear();
     knots->clear();
@@ -243,11 +245,11 @@ public:
     knots->insert(knots->end(), mKnots->begin() + k + 1, mKnots->end());
   }
 
-  Vec3ArrayVec iterate(GLuint beg, GLuint end, GLdouble u, GLuint times) {
-    Vec3ArrayVec vec;
+  Vec4ArrayVec iterate(GLuint beg, GLuint end, GLdouble u, GLuint times) {
+    Vec4ArrayVec vec;
 
     // init columns 0
-    vec.push_back(new osg::Vec3Array);
+    vec.push_back(new osg::Vec4Array);
     vec[0]->assign(
       mControlPoints->begin() + beg, mControlPoints->begin() + end);
 
@@ -255,11 +257,11 @@ public:
 
     for (GLuint r = 1; r <= times; ++r) {
       // init current column
-      vec.push_back(new osg::Vec3Array);
+      vec.push_back(new osg::Vec4Array);
 
       for (unsigned int i = 0; i < size - r; ++i) {
         GLfloat a = getKnotRatio(u, beg + i + r, r);
-        osg::Vec3 p = vec[r - 1]->at(i) * (1 - a) + vec[r - 1]->at(i + 1) * a;
+        osg::Vec4 p = vec[r - 1]->at(i) * (1 - a) + vec[r - 1]->at(i + 1) * a;
         vec[r]->push_back(p);
       }
     }
@@ -269,12 +271,14 @@ public:
   osg::BoundingBox getPolylineBoundingBox() {
     osg::BoundingBox bb;
     std::for_each(mControlPoints->begin(), mControlPoints->end(),
-      [&](decltype(*mControlPoints->begin()) v) { bb.expandBy(v); });
+      [&](decltype(*mControlPoints->begin()) v) {
+        bb.expandBy(zxd::Math::homoTo3d(v));
+      });
     return bb;
   }
 
 protected:
-  ~Spline() {}
+  ~Nurb() {}
 
   osg::ref_ptr<osg::DoubleArray> computeCoefficients(GLdouble u) {
     osg::ref_ptr<osg::DoubleArray> result = new osg::DoubleArray;
@@ -342,4 +346,4 @@ protected:
 };
 }
 
-#endif /* SPLINE_H */
+#endif /* NURB_H */

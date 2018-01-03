@@ -24,10 +24,12 @@ osg::ref_ptr<osg::Group> knotGroup;
 osg::ref_ptr<zxd::Spline> spline, lc, rc;
 osg::ref_ptr<osg::Geometry> iterations;
 osg::Vec3Array* vertices;
+osg::Camera* camera;
 osg::Camera* hudCamera;
 osg::Camera* uiCamera;
 osg::ref_ptr<osgText::Font> font;
 osg::ref_ptr<osgText::Text> text;
+osg::Matrix matViewProjWnd, matInvViewProjWnd;
 
 osgViewer::Viewer* viewer;
 
@@ -35,23 +37,16 @@ void updateIteratoins(bool);
 void rebuildIterations();
 void updateText();
 void updateKnotsLable();
+void readControlPoints();
 
 bool playAnim = true;
 bool subdivided = false;
 GLdouble period = 5.0f;
 GLdouble t = 0;  // normalized time
-
-void reset() {
-  t = 0;
-  subdivided = false;
-
-  leaf->removeDrawables(0, leaf->getNumDrawables());
-  leaf->addDrawable(spline);
-
-  // reset control points
-  GLuint width, height;
-  zxd::getScreenResolution(width, height);
-
+GLdouble ratio;  // ratio of project area and the entire screen. can be used to
+                 // scale text
+                 //
+void readControlPoints() {
   osg::Vec3Array* controlPoints = spline->getControlPoints();
   controlPoints->clear();
   osg::DoubleArray* knots = spline->getKnots();
@@ -79,7 +74,7 @@ void reset() {
     ss >> v[0];
     ss >> v[1];
     ss >> v[2];
-    controlPoints->push_back(v * 10);
+    controlPoints->push_back(v);
     OSG_NOTICE << v << std::endl;
   }
 
@@ -89,6 +84,32 @@ void reset() {
   spline->updateDegree();
   OSG_NOTICE << "read " << controlPoints->size() << " control points, "
              << knots->size() << " knots " << std::endl;
+}
+
+void reset() {
+  t = 0;
+  subdivided = false;
+
+  readControlPoints();
+  // setup  hudcamera projection area according to the size of spline polyline
+  const osg::BoundingBox& bb = spline->getPolylineBoundingBox();
+  osg::Vec3 center = bb.center();
+  GLdouble w = bb.xMax() - bb.xMin();
+  GLdouble h = bb.yMax() - bb.yMin();
+  GLdouble a = std::max(w, h) * 1.5;
+  zxd::setHudCameraFocus(
+    hudCamera, a, center.x(), center.y(), zxd::getScreenAspectRatio());
+
+  GLuint width, height;
+  zxd::getScreenResolution(width, height);
+  // use default identity view matrix
+  matViewProjWnd = hudCamera->getProjectionMatrix() *
+                   zxd::Math::computeWindowMatrix(0, width, 0, height);
+
+  matInvViewProjWnd = osg::Matrix::inverse(matViewProjWnd);
+
+  leaf->removeDrawables(0, leaf->getNumDrawables());
+  leaf->addDrawable(spline);
 
   spline->rebuild();
 
@@ -99,11 +120,6 @@ void reset() {
 
 // draw knot dot, index and it's value
 void updateKnotsLable() {
-  if (!knotGroup) {
-    knotGroup = new osg::Group;
-    hudCamera->addChild(knotGroup);
-  }
-
   knotGroup->removeChildren(0, knotGroup->getNumChildren());
 
   static osg::ref_ptr<osg::Geometry> dot =
@@ -112,7 +128,10 @@ void updateKnotsLable() {
   osg::DoubleArray* knots = spline->getKnots();
   for (unsigned int i = 0; i < knots->size(); ++i) {
     GLfloat u = knots->at(i);
-    osg::Vec3 p = spline->get(u);
+    // get window position as position for this knot. As uicamera is window
+    // aligned
+    osg::Vec3 p = spline->get(u) * matViewProjWnd;  
+    p.z() = 0;
     osg::ref_ptr<osg::MatrixTransform> mt = new osg::MatrixTransform();
     mt->setMatrix(osg::Matrix::translate(p));
     osg::ref_ptr<osg::Geode> l = new osg::Geode();
@@ -194,14 +213,13 @@ protected:
 
         osg::Vec2 offset = osg::Vec2(ea.getX(), ea.getY()) - mCursorPos;
         osg::Vec3 targetWndPos = mWndPos + osg::Vec3(offset, 0);
-        *mPoint = targetWndPos;
+        *mPoint = targetWndPos * matInvViewProjWnd;
 
         spline->rebuild();
         updateIteratoins(false);
         updateKnotsLable();
 
-        if (mPointNode)
-          mPointNode->setMatrix(osg::Matrix::translate(targetWndPos));
+        if (mPointNode) mPointNode->setMatrix(osg::Matrix::translate(*mPoint));
 
       } break;
 
@@ -247,7 +265,7 @@ protected:
     osg::Vec3Array* controlPoints = spline->getControlPoints();
 
     for (unsigned int i = 0; i < controlPoints->size(); ++i) {
-      osg::Vec3 wndPos = controlPoints->at(i);
+      osg::Vec3 wndPos = controlPoints->at(i) * matViewProjWnd;
       osg::Vec2 offset =
         osg::Vec2(wndPos.x() - ea.getX(), wndPos.y() - ea.getY());
       if (offset.length2() <= threashold) {
@@ -280,9 +298,9 @@ protected:
         ss->setAttributeAndModes(new osg::Point(15.0f));
 
         mPointNode = new osg::MatrixTransform();
-        osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
-        leaf->addDrawable(mGmPoint);
-        mPointNode->addChild(leaf);
+        osg::ref_ptr<osg::Geode> l = new osg::Geode();
+        l->addDrawable(mGmPoint);
+        mPointNode->addChild(l);
 
         hudCamera->addChild(mPointNode);
       }
@@ -294,15 +312,14 @@ protected:
 };
 
 void createScene() {
-  hudCamera = zxd::createHUDCamera();
+  root = new osg::Group;
+  leaf = new osg::Geode();
+  knotGroup = new osg::Group;
+  hudCamera = zxd::createHudCamera();
   // need to draw single point
   hudCamera->setCullingMode(
     hudCamera->getCullingMode() & ~osg::CullSettings::SMALL_FEATURE_CULLING);
-
-  root = new osg::Group;
-  leaf = new osg::Geode();
-  root->addChild(hudCamera);
-  hudCamera->addChild(leaf);
+  uiCamera = zxd::createHudCamera();
 
   spline = new zxd::Spline;
   spline->setUseDisplayList(false);
@@ -333,6 +350,11 @@ void createScene() {
 
   // animate iterations
   spline->addUpdateCallback(new SplineAnimCallback());
+
+  root->addChild(hudCamera);
+  uiCamera->addChild(knotGroup);
+  root->addChild(uiCamera);
+  hudCamera->addChild(leaf);
 
   reset();
 }
@@ -437,7 +459,7 @@ void updateText() {
     text = zxd::createText(font, osg::Vec3(10.0f, height - 30, 0.0f), "", 12);
     osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
     leaf->addDrawable(text);
-    hudCamera->addChild(leaf);
+    uiCamera->addChild(leaf);
   }
 
   std::stringstream ss;
@@ -456,6 +478,7 @@ void updateText() {
 int main(int argc, char* argv[]) {
   osgViewer::Viewer v;
   viewer = &v;
+  camera = viewer->getCamera();
 
   createScene();
   updateText();

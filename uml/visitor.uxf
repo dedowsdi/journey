@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>40</y>
+      <w>330</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>NodeVisitor
+--
+traverse(node)
+pushOnNodePath(node)
+popFromNodePath(node)
+apply(node)
+apply(drawable)
+...
+
+--
+_visitorType
+_traversalMode
+_traversalMask
+_nodePath
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>370</y>
+      <w>180</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>Node
+--
+accept(nv)
+asend(nv)
+traverse(nv)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>340</x>
+      <y>60</y>
+      <w>480</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>Node accept visitor:
+  check mask,
+  visitor push node path
+  visitor apply node
+    traverse node
+      node traverse
+        loop children to accept
+       node ascend
+         loop parents to accept
+  visitor pop node path
+
+Parent node always before child node in NodePath, no matter
+what traversal mode is used.
+
+By default, Visitor::apply(Node) call Visitor::apply(SuperNode)
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1000</x>
+      <y>270</y>
+      <w>70</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+accept</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+</diagram>

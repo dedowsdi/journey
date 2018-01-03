@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>749</x>
+      <y>154</y>
+      <w>238</w>
+      <h>308</h>
+    </coordinates>
+    <panel_attributes>State
+--
+apply()
+apply(stateset)
+insertStateSet(position, stateset)
+removeStateSet(stateset)
+applyMode(mode, value, modeStack)
+applyModeMap(modeMap)
+applyAttributeMap(attributeMap)
+applyAttributeList(attributeMap, attributeList)
+pushStateSet(dstate)
+popStateSet()
+pushModeList(modeMap, modeList)
+popModeList(modeMap, modeList)
+pushAttributeList(attributeMap, attributeList)
+popAttributeList(attributeMap, attributeList)
+--
+_stateStateStack
+_modeMap
+_attributeMap
+_uniformMap
+_defineMap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>798</x>
+      <y>497</y>
+      <w>105</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>StateSet
+--
+getModeList()
+getAttributeList()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>868</x>
+      <y>455</y>
+      <w>21</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>511</x>
+      <y>350</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>ModeStack</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>448</x>
+      <y>406</y>
+      <w>105</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>AttributeStack</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>553</x>
+      <y>455</y>
+      <w>161</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>StateAttribute
+--
+getTypeMemberPair()
+getMember()
+apply()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>609</y>
+      <w>322</w>
+      <h>315</h>
+    </coordinates>
+    <panel_attributes>CullVisitor tracks the current StateGraph node, When it finds a 
+StateSet in a node, it checks to see if the StateSet object
+matches any state graph node that is a child of the current
+state graph. If it does, then that state graph node becomes the 
+current state graph; otherwise, a new StateGraph child of the
+current state graph is created and becomes the current state 
+graph. After the traversal of the current scene graph node and 
+its children has finished, the current state graph reverts back
+to the parent, or former state graph. In this way the state 
+graph mimics the relationship of StateSet objects in the scene
+graph. An important result is that a StateSet object found in
+different nodes in the scene graph will be associated with a 
+single StateGraph node, as long as the chain of "parent" 
+StateSet objects is the same for each use.
+
+CullVisitor also tracks the current render bin, as specified 
+in StateSet objects, on as stack during its scene graph 
+traversal. When the traversal reaches the geometry at the 
+leaves of the scene graph, the current state graph node and
+render bin are directly used to construct a RenderLeaf that 
+will hold the geometry and its state graph, put the leaf in a
+state graph node if necessary, and then put the leaf on the
+appropriate list of the current render bin. After the 
+CullVisitor object's work is finished, the resulting 
+collection of render bins are ready to be rendered.
+
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>630</x>
+      <y>350</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>ModeMap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>595</x>
+      <y>406</y>
+      <w>105</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>AttributeMap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>182</x>
+      <y>917</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>546</x>
+      <y>406</y>
+      <w>63</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>693</x>
+      <y>350</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>693</x>
+      <y>406</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>833</x>
+      <y>651</y>
+      <w>224</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>RenderBin
+--
+draw(renderInfo, previous:RenderLeaf)
+drawImplemention(renderInof, previous)
+find_or_insert(binNum, binName)
+--
+_binNum
+_parent
+_sortMode
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>525</x>
+      <y>728</y>
+      <w>161</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>RenderLeaf
+--
+render(renderInfo, previous)
+--
+_drawable
+_projection
+_modelview</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>518</x>
+      <y>567</y>
+      <w>217</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>StateGraph
+--
+moveStateGraph(state, sgCur, sgNew)
+find_or_inosrt(stateset)
+numToTop()
+--
+_stateSet
+_parent</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>637</x>
+      <y>546</y>
+      <w>161</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+graph</panel_attributes>
+    <additional_attributes>140.0;50.0;170.0;50.0;170.0;10.0;10.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>588</x>
+      <y>665</y>
+      <w>21</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>728</x>
+      <y>616</y>
+      <w>119</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>150.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>588</x>
+      <y>658</y>
+      <w>259</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>350.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1050</x>
+      <y>672</y>
+      <w>98</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+graph</panel_attributes>
+    <additional_attributes>10.0;90.0;80.0;90.0;80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>917</x>
+      <y>455</y>
+      <w>21</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1036</x>
+      <y>497</y>
+      <w>336</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>CullVisitor
+--
+addDrawableAndDepth(drawable, modelView, depth)
+pushStateSet(ss)
+popStateSet()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>707</x>
+      <y>504</y>
+      <w>105</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>322</w>
+      <h>196</h>
+    </coordinates>
+    <panel_attributes>Osg build inner stacks for StateSet, and each mode.
+modestackes are stored in modemap, 
+
+Every time osg push a StateSet into stack, osg will get a
+modelist of this stateset, and loop every mode in this list,
+push it's value into it's mode stack if it's not overrideen by 
+parent stateset, and set chagne property of this mode stack to
+true.
+
+Then if you call State::apply, osg loop every modestack in 
+modemap, call opengl routines only if it's changed. Apply is
+this only place where osg finally change opengl state based
+on current stacks.
+
+Attribute, uniform and defines works in the same theory as
+mode.
+
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>196</y>
+      <w>322</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>
+RenderBin draw in following sequence:
+	child RenderBin whose _binNum &lt; 0 
+	fine grained render leaves.(transparent)
+	coarse grained render leaves in all it's state graphs.
+	child RenderBin whose _binNum &gt;= 0
+	
+There are mainly 2 kinds of render bin: opaque and transparent
+
+The opaque bin contains only StateGraph objects, with their 
+associated RenderLeaf objects. Its bin number is 0. 
+
+The transparent bin holds RenderLeaf objects on its 
+"fine grain" list of leaves which will be sorted back-to-front 
+before the scene is rendered. Its bin number is 10, so it
+will be renderedafter the opaque geometry. 
+
+Transparent bin also has it's own stateset which is used to
+implement alpha blending, this stateset will be inserted
+into the statestack of state temporarily during draw.
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>728</x>
+      <y>539</y>
+      <w>133</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>833</x>
+      <y>826</y>
+      <w>224</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>RenderStage
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>448</y>
+      <w>322</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>StateGraph represent a node in the StateSet tree, follow the
+tree from root to no will setup opengl state to render
+leaves  that use this graph, which means it also represent a
+specific opengl state.
+
+Note that current graph doesn't equal to current opengl state,
+unless you call State::apply().
+
+During render of RenderLeaf, osg move state graph to parent
+graph of current graph, then call apply(StateSet) with 
+StateSet of current graph, which means if the last StateSet is
+not empty, it will be pushed into stack, applyed(), then poped
+out of stark.
+
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>728</x>
+      <y>553</y>
+      <w>322</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>440.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>938</x>
+      <y>567</y>
+      <w>112</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>945</x>
+      <y>770</y>
+      <w>21</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1050</x>
+      <y>588</y>
+      <w>182</w>
+      <h>315</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>240.0;10.0;10.0;430.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>574</x>
+      <y>350</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+</diagram>

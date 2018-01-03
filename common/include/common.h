@@ -12,9 +12,14 @@
 namespace zxd {
 
 typedef std::vector<osg::ref_ptr<osg::Vec3Array>> Vec3ArrayVec;
+typedef std::vector<osg::ref_ptr<osg::Vec4Array>> Vec4ArrayVec;
 
 void getScreenResolution(
   GLuint& width, GLuint& height, GLuint screenIdentifier = 0);
+osg::Vec2ui getScreenResolution(GLuint screenIdentifier = 0);
+
+GLdouble getAspectRatio(osg::GraphicsContext* gc);
+GLdouble getScreenAspectRatio();
 
 extern osg::AnimationPathCallback* createAnimationPathCallback(
   float radius, float time);
@@ -22,11 +27,20 @@ extern osg::AnimationPathCallback* createAnimationPathCallback(
 extern osg::Camera* createRTTCamera(osg::Camera::BufferComponent buffer,
   osg::Texture* tex, bool isAbsolute = false);
 
-osg::Camera* createHUDCamera(double left, double right, double bottom,
+osg::Camera* createHudCamera(double left, double right, double bottom,
   double top, double near, double far);
 // create 1:1 hud camera
-osg::Camera* createHUDCamera(
+osg::Camera* createHudCamera(
   GLuint screenIdentifier = 0, double near = -1, double far = 1);
+
+// assume scene grpah for this camera is in a a*a square, find the smallest
+// rectangle that encapsule this square and has the same aspect ratio as
+// viewport, use it to create ortho projection matrix.
+osg::Camera* createFocusHudCamera(double a, double centerX, double centerY,
+  double aspectRatio, double near = -1, double far = 1);
+
+void setHudCameraFocus(osg::Camera* camera, double a, double centerX, double centerY,
+  double aspectRatio, double near = -1, double far = 1);
 
 extern osg::Geode* createScreenQuad(
   float width, float height, float scale = 1.0f);
@@ -44,6 +58,7 @@ osg::ref_ptr<osg::Geometry> createSingleDot(GLfloat pointSize = 1.0f,
 void removeNodeParents(osg::Node* node, GLuint count = -1);
 
 double getBestFovy();
+
 
 osg::Geometry* createPolygonLine(const osg::Vec3& v, GLfloat size);
 

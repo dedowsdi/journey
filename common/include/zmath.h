@@ -514,6 +514,32 @@ public:
     while (n--) m *= a0 + n * d;  // reverse order of pi
     return m;
   }
+
+  static osg::Matrix computeWindowMatrix(GLuint x, GLuint width, GLuint y,
+    GLuint height, GLdouble n = 0.0, GLdouble f = 1.0) {
+    GLdouble halfWidth = width * 0.5;
+    GLdouble halfHeight = height * 0.5;
+
+    return osg::Matrix(                              //
+      halfWidth, 0, 0, 0,                            // 0
+      0, halfHeight, 0, 0,                           // 1
+      0, 0, (f - n) / 2, 0,                          // 2
+      x + halfWidth, y + halfHeight, (f + n) / 2, 1  // 3
+      );
+  }
+
+  static osg::Vec3 homoTo3d(const osg::Vec4& v) {
+    if (v[3] != 0)
+      return osg::Vec3(v[0] / v[3], v[1] / v[3], v[2] / v[3]);
+    else
+      return osg::Vec3(DBL_MAX, DBL_MAX, DBL_MAX);
+  }
+
+  // scale vector4 in homo space
+  static osg::Vec4 scaleToW(const osg::Vec4& v, GLdouble w) {
+    GLdouble ratio = w / v.w();
+    return v * ratio;
+  }
 };
 }
 

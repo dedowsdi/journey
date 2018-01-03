@@ -231,6 +231,13 @@ public:
     return points->front();
   }
 
+  osg::BoundingBox getPolylineBoundingBox() {
+    osg::BoundingBox bb;
+    std::for_each(mControlPoints->begin(), mControlPoints->end(),
+      [&](decltype(*mControlPoints->begin()) v) { bb.expandBy(v); });
+    return bb;
+  }
+
 private:
   // special function used to derivative
   osg::Vec3 D(GLuint i, GLuint k) {

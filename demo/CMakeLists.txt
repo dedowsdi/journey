@@ -67,7 +67,7 @@ set (DEMOES
     backgroundImage
     billboardNode
     compass
-    nurb
+    nurbSurface
     clock
     ribbon
     selectFace

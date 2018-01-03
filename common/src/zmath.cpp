@@ -397,4 +397,5 @@ bool Math::isConvex(const osg::Vec3Array& vertices) {
 
   return isAboutd(total, (size - 2) * osg::PI);
 }
+
 }

@@ -5,6 +5,7 @@ set (DEMOES
     blender
     bezier
     spline
+    nurb
     )
 
 foreach(DEMO ${DEMOES})

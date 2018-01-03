@@ -21,6 +21,26 @@ void getScreenResolution(
     osg::GraphicsContext::ScreenIdentifier(screenIdentifier), width, height);
 }
 
+//------------------------------------------------------------------------------
+osg::Vec2ui getScreenResolution(GLuint screenIdentifier /*= 0*/) {
+  osg::Vec2ui v;
+  getScreenResolution(v.x(), v.y(), screenIdentifier);
+  return v;
+}
+
+//------------------------------------------------------------------------------
+GLdouble getAspectRatio(osg::GraphicsContext* gc) {
+  const osg::GraphicsContext::Traits* traits = gc->getTraits();
+  return (GLdouble)traits->width / traits->height;
+}
+
+//------------------------------------------------------------------------------
+GLdouble getScreenAspectRatio() {
+  GLuint width, height;
+  getScreenResolution(width, height);
+  return (double)width / height;
+}
+
 osg::ref_ptr<osgText::Font> g_font = osgText::readFontFile("fonts/arial.ttf");
 
 osg::AnimationPathCallback* createAnimationPathCallback(
@@ -68,7 +88,7 @@ osg::Camera* createRTTCamera(
   return camera.release();
 }
 
-osg::Camera* createHUDCamera(double left, double right, double bottom,
+osg::Camera* createHudCamera(double left, double right, double bottom,
   double top, double near, double far) {
   osg::ref_ptr<osg::Camera> camera = new osg::Camera();
 
@@ -87,11 +107,49 @@ osg::Camera* createHUDCamera(double left, double right, double bottom,
 }
 
 //------------------------------------------------------------------------------
-osg::Camera* createHUDCamera(
+osg::Camera* createHudCamera(
   GLuint screenIdentifier /*= 0*/, double near /*= 0*/, double far /*= 100*/) {
   GLuint width = 800, height = 600;
   getScreenResolution(width, height);
-  return createHUDCamera(0, width, 0, height, near, far);
+  return createHudCamera(0, width, 0, height, near, far);
+}
+
+//------------------------------------------------------------------------------
+osg::Camera* createFocusHudCamera(double a, double centerX, double centerY,
+  double aspectRatio, double near /*= -1*/, double far /*= 1*/) {
+  GLuint width = 800, height = 600;
+  getScreenResolution(width, height);
+
+  GLdouble halfWidth = 0.5 * a;
+  GLdouble halfHeight = 0.5 * a;
+
+  if (aspectRatio >= 1)
+    halfWidth *= aspectRatio;
+  else
+    halfHeight /= aspectRatio;
+
+  return createHudCamera(-halfWidth + centerX, halfWidth + centerX,
+    -halfHeight + centerY, halfHeight + centerY, near, far);
+}
+
+//------------------------------------------------------------------------------
+void setHudCameraFocus(osg::Camera* camera, double a, double centerX,
+  double centerY, double aspectRatio, double near /*= -1*/,
+  double far /*= 1*/) {
+  GLuint width = 800, height = 600;
+  getScreenResolution(width, height);
+
+  GLdouble halfWidth = 0.5 * a;
+  GLdouble halfHeight = 0.5 * a;
+
+  if (aspectRatio >= 1)
+    halfWidth *= aspectRatio;
+  else
+    halfHeight /= aspectRatio;
+
+  camera->setProjectionMatrix(
+    osg::Matrix::ortho(-halfWidth + centerX, halfWidth + centerX,
+      -halfHeight + centerY, halfHeight + centerY, near, far));
 }
 
 osg::Geode* createScreenQuad(float width, float height, float scale) {
@@ -138,7 +196,8 @@ extern osgText::Text* createText(osg::ref_ptr<osgText::Font> font,
 }
 
 //------------------------------------------------------------------------------
-osg::ref_ptr<osg::Geometry> createSingleDot(GLfloat pointSize, const osg::Vec4& color) {
+osg::ref_ptr<osg::Geometry> createSingleDot(
+  GLfloat pointSize, const osg::Vec4& color) {
   osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry;
   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
 
@@ -184,6 +243,7 @@ double getBestFovy() {
   double vfov = osg::RadiansToDegrees(atan2(height / 2.0f, distance) * 2.0);
   return vfov;
 }
+
 
 //------------------------------------------------------------------------------
 osg::Geometry* createPolygonLine(const osg::Vec3& v, GLfloat size) {
