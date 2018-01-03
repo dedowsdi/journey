@@ -1,0 +1,54 @@
+{
+  "bitmap_font": {
+    "args": "data/font/DejaVuSansMono.ttf 15 256",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file bitmap_font.cpp --line 136": null
+      }
+    }
+  },
+  "hello": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file hello.cpp --line 54": 1,
+        "breakpoint set --file hello.cpp --line 55": 1,
+        "breakpoint set --file hello.cpp --line 23": 1,
+        "breakpoint set --file hello.cpp --line 14": 1,
+        "breakpoint set --file hello.cpp --line 12": 1,
+        "breakpoint set --file hello.cpp --line 53": 1,
+        "breakpoint set --file hello.cpp --line 32": 1
+      }
+    }
+  },
+  "all": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "bitmap_text": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "directional_shadowmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "omni_shadowmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "outline": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  }
+}

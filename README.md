@@ -1,1 +1,1 @@
-Collection of gl2 stuff.
+# Personal coding journey.
