@@ -15,6 +15,7 @@ set (PROJECTS
     cast
     value
     functional
+    printf
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -20,7 +20,7 @@ std::string readFile(const std::string& file) {
   ifs.seekg(std::ios_base::beg);
 
   std::string s;
-  s.resize(size);
+  s.reserve(size);
 
   //don't use istream_iterator if you just want to read the file character by
   //character

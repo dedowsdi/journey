@@ -15,7 +15,7 @@
  *    bad() = iostate & badbit
  *    fail() = iostate & (failbit | badbit)
  *    eof() = isotate & eofbit
- *    operator bool() = iostate == 0 || iostate == eofbit  or !fail()
+ *    operator bool() = !fail()
  *    operator !() = !operator bool()
  */
 
