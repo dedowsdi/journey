@@ -55,7 +55,7 @@
     "args": "",
     "lldb": {
       "breakpoint": {
-        "breakpoint set --file app.cpp --line 118": null
+        "breakpoint set --file helloworld.cpp --line 23": null
       }
     }
   }

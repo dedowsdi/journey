@@ -50,5 +50,11 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "instance": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

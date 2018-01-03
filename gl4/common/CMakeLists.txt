@@ -1,6 +1,15 @@
 set(COMMON_SRCS 
     src/app.cpp
+    src/bitmap_text.cpp
+    src/common.cpp
     src/glEnumString.cpp
+    src/glm.cpp
+    src/light.cpp
+    src/program.cpp
+    src/quad.cpp
+    src/sphere.cpp
+    src/stringutil.cpp
+    src/texutil.cpp
     )
 
 add_library(common 
