@@ -90,6 +90,7 @@ set (DEMOES
     normalmap
     rtt
     outline
+    geometry
     )
 
 foreach(DEMO ${DEMOES})

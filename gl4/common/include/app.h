@@ -27,10 +27,18 @@ public:
     GLboolean debug;
   };
 
-  App(){}
+protected:
+  AppInfo mInfo;
+  GLFWwindow *mWnd;
+
+public:
+  App() {}
 
   void init();
   virtual void run();
+  inline GLfloat getWndAspect() {
+    return static_cast<GLfloat>(mInfo.wndWidth) / mInfo.wndHeight;
+  }
 
 protected:
   virtual void initInfo();
@@ -48,12 +56,8 @@ protected:
     GLFWwindow *wnd, int key, int scancode, int action, int mods);
   virtual void glfwMouseButton(
     GLFWwindow *wnd, int button, int action, int mods) {}
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y){}
-  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {}
-
-protected:
-  bool mExit;
-  AppInfo mInfo;
-  GLFWwindow *mWnd;
+  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {}
+  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+  }
 };
 }

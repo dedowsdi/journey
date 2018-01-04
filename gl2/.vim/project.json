@@ -56,5 +56,19 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "blinnphong": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "geometry": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file geometry.cpp --line 92": null
+      }
+    }
   }
 }

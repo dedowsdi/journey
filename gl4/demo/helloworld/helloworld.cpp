@@ -7,6 +7,10 @@ protected:
   BitmapText mBitmapText;
 
 public:
+  virtual void initInfo() {
+    App::initInfo();
+    mInfo.title = "hello world";
+  }
   virtual void createScene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     mBitmapText.init();
@@ -22,8 +26,8 @@ public:
     mBitmapText.print("Hello World", 10, 492);
   }
 
-  virtual void glfwResize(GLFWwindow *wnd, int w, int h){
-    App::glfwResize(wnd,w, h);
+  virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
+    App::glfwResize(wnd, w, h);
     mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
   }
 

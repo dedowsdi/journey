@@ -1,5 +1,6 @@
 set (PROJECTS
     helloworld
+    geometry
     )
 
 foreach(PROJECT ${PROJECTS})
@@ -12,4 +13,3 @@ foreach(PROJECT ${PROJECTS})
         common
         )
 endforeach()
-

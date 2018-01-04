@@ -30,9 +30,11 @@ void Sphere::buildVertex(GLuint location) {
 
     // add pole
     if (i == 0) mVertices.push_back(glm::vec3(0, 0, mRadius));
+    if (i == mStack - 1) mVertices.push_back(glm::vec3(0, 0, -mRadius));
 
     for (int j = 0; j <= mSlice; j++) {
-      GLfloat theta = thetaStep * j;
+      // loop last stack in reverse order
+      GLfloat theta = thetaStep * (i == mStack - 1 ? -j : j);
       GLfloat cosTheta = std::cos(theta);
       GLfloat sinTheta = std::sin(theta);
 
@@ -47,8 +49,6 @@ void Sphere::buildVertex(GLuint location) {
         mVertices.push_back(vec3(
           rTimesSinPhi1 * cosTheta, rTimesSinPhi1 * sinTheta, rTimesCosPhi1));
     }
-
-    if (i == mStack - 1) mVertices.push_back(glm::vec3(0, 0, -mRadius));
   }
 
   bindVertexArrayObject();

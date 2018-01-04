@@ -58,5 +58,11 @@
         "breakpoint set --file helloworld.cpp --line 23": null
       }
     }
+  },
+  "geometry": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }
