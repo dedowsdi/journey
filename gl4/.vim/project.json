@@ -64,5 +64,13 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "deferred": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file deferred.cpp --line 347": null
+      }
+    }
   }
 }

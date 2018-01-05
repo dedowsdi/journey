@@ -3,8 +3,30 @@
 #include <functional>
 #include "glEnumString.h"
 #include "common.h"
+#include <sstream>
 
 namespace zxd {
+
+//--------------------------------------------------------------------
+void Program::link() {
+  glLinkProgram(object);
+  GLint status;
+  glGetProgramiv(object, GL_LINK_STATUS, &status);
+  if (!status) {
+    GLint len;
+    glGetProgramiv(object, GL_INFO_LOG_LENGTH, &len);
+    if (len == 0) {
+      std::stringstream ss;
+      ss << "program " << object << " link failed, and has no log, good luck!"
+         << std::endl;
+      std::cout << ss.str() << std::endl;
+    } else {
+      char* log = static_cast<char*>(malloc(len + 1));
+      glGetProgramInfoLog(object, len, 0, log);
+      std::cout << log << std::endl;
+    }
+  }
+}
 
 //--------------------------------------------------------------------
 GLint Program::getAttribLocation(const std::string& name) {
@@ -27,11 +49,12 @@ void Program::setUniformLocation(GLint* location, const std::string& name) {
 void Program::attachShaderFile(GLenum type, const std::string& file) {
   StringVector sv;
   sv.push_back(readFile(file));
-  attachShaderSource(type, sv);
+  if (!attachShaderSource(type, sv))
+    std::cout << "faild to compile " << file << std::endl;
 }
 
 //--------------------------------------------------------------------
-void Program::attachShaderSource(GLenum type, const StringVector& source) {
+bool Program::attachShaderSource(GLenum type, const StringVector& source) {
   GLuint sh;
 
   sh = glCreateShader(type);
@@ -55,16 +78,18 @@ void Program::attachShaderSource(GLenum type, const StringVector& source) {
     glGetShaderInfoLog(sh, len, &len, log);
     printf("%s  compilation failed: %s", glShaderTypeToString(type), log);
     free(log);
-    return;
+    return false;
   }
   glAttachShader(object, sh);
   glDeleteShader(sh);
+  return true;
 }
 
 //--------------------------------------------------------------------
 void Program::attachShaderSourceAndFile(
   GLenum type, StringVector& source, const std::string& file) {
   source.push_back(readFile(file));
-  attachShaderSource(type, source);
+  if (!attachShaderSource(type, source))
+    std::cout << "failed to compile " << file << std::endl;
 }
 }

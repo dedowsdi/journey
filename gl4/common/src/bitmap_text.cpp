@@ -156,6 +156,7 @@ void BitmapText::print(const std::string& text, GLuint x, GLuint y,
     0, BUFFER_OFFSET(0));
   glEnableVertexAttribArray(mProgram->attrib_vertex);
 
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, mTexture);
 
   glUseProgram(*mProgram);

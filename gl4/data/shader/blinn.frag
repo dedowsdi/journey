@@ -2,11 +2,6 @@
 #define LIGHT_COUNT 8
 #endif
 
-in VS_OUT{
-  vec3 viewNormal; // view space
-  vec3 viewVertex; // view space
-} fs_in;
-
 // cauculated in view space
 // exactly the same as gl_LightSourceParameters
 struct LightSource {
@@ -83,7 +78,7 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
   float ndotl = dot(n, l);
   if (ndotl <= 0.0) return;
   ndotl = clamp(ndotl, 0.0, 1.0);
-  product.diffuse = ndotl * source.diffuse * material.diffuse;
+  product.diffuse = visibility * ndotl * source.diffuse * material.diffuse;
 
   // specular
   vec3 h = normalize(l + v);
@@ -93,28 +88,30 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
   product.specular = visibility * pow(ndoth, material.shininess) * source.specular * material.specular;
 }
 
-vec4 blinn(vec3 v2e, vec3 normal){
-  vec4 diffuse = vec4(0);
-  vec4 specular = vec4(0);
-  vec4 ambient = vec4(0);
+LightProduct getLightProduct(vec3 vertex, vec3 normal, Material material){
+  vec3 v2e = lightModel.localViewer ? normalize(-vertex) : vec3(0,0,1);
   LightProduct product = LightProduct(vec4(0),vec4(0),vec4(0));
 
   for (int i = 0; i < LIGHT_COUNT; i++) {
     LightProduct currentProduct = LightProduct(vec4(0),vec4(0),vec4(0));
-    light(fs_in.viewVertex, normal, v2e, lights[i], material, currentProduct);
+    light(vertex, normal, v2e, lights[i], material, currentProduct);
     product.diffuse += currentProduct.diffuse;
     product.specular += currentProduct.specular;
     product.ambient += currentProduct.ambient;
   }
+  return product;
+}
 
+vec4 blinn(vec3 vertex, vec3 normal){
+  LightProduct product = getLightProduct(vertex, normal, material);
   vec4 color = material.emission + lightModel.ambient * material.ambient +
     product.ambient + product.diffuse + product.specular;
   return color;
 }
 
-vec4 blinn(){
-  vec3 v2e = lightModel.localViewer ? normalize(-fs_in.viewVertex) : vec3(0,0,1);
-  vec3 normal = normalize(fs_in.viewNormal);
-  return blinn(v2e, normal);
+vec4 blinn(vec3 vertex, vec3 normal, Material material){
+  LightProduct product = getLightProduct(vertex, normal, material);
+  vec4 color = material.emission + lightModel.ambient * material.ambient +
+    product.ambient + product.diffuse + product.specular;
+  return color;
 }
-

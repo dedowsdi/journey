@@ -70,5 +70,11 @@
         "breakpoint set --file geometry.cpp --line 92": null
       }
     }
+  },
+  "rim": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

@@ -1,6 +1,7 @@
 set (PROJECTS
     helloworld
     geometry
+    deferred
     )
 
 foreach(PROJECT ${PROJECTS})

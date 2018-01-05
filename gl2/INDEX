@@ -21,6 +21,7 @@ Chapter 3: Vieweing
 
 	cube.c		(1.0)
 	model.c		(1.0)
+    geometry.c
 	clip.c		(1.0)
 	planet.c	(1.0)
 	robot.c		(1.0)

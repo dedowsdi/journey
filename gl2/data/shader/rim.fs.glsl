@@ -1,3 +1,6 @@
+varying vec3 viewVertex; // view space
+varying vec3 viewNormal; // view space
+
 uniform vec3 rimColor;
 uniform float rimPower;
 

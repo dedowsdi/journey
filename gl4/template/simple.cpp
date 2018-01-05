@@ -1,5 +1,6 @@
 #include "app.h"
 #include "bitmap_text.h"
+#include <sstream>
 
 namespace zxd {
 class HelloWorld : public App {
@@ -7,6 +8,8 @@ protected:
   BitmapText mBitmapText;
 
 public:
+  HelloWorld() {}
+
   virtual void initInfo() {
     App::initInfo();
     mInfo.title = "hello world";
@@ -22,7 +25,9 @@ public:
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    mBitmapText.print("Hello World", 10, 492);
+    std::stringstream ss;
+    ss << "Hello World" << std::endl;
+    mBitmapText.print(ss.str(), 10, 492);
     glDisable(GL_BLEND);
   }
 

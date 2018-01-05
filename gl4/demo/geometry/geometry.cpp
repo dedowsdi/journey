@@ -49,7 +49,7 @@ struct BlinnProgram : public zxd::Program {
     attrib_vertex = getAttribLocation("vertex");
     attrib_normal = getAttribLocation("normal");
   };
-} mProgram;
+};
 
 class Geometry : public App {
 protected:
@@ -59,6 +59,7 @@ protected:
   zxd::LightModel mLightModel;
   zxd::Material mMaterial;
   Sphere mSphere;
+  BlinnProgram mProgram;
 
 public:
   Geometry() : mSphere(1, 16, 16), mCameraPos(0, -3, 3) {}
@@ -82,7 +83,7 @@ public:
     mLights.push_back(dirLight);
 
     // material
-    mMaterial.shininess = 80;
+    mMaterial.shininess = 50;
     mMaterial.specular = vec4(1.0, 1.0, 1.0, 1.0);
 
     // text

@@ -86,6 +86,8 @@ void App::initWnd() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_SAMPLES, mInfo.samples);
   glfwWindowHint(GLFW_STEREO, mInfo.stereo);
+  glfwWindowHint(GLFW_DEPTH_BITS, mInfo.stereo);
+
   if (mInfo.fullscreen) {
     if (mInfo.wndWidth == 0 || mInfo.wndHeight == 0) {
       const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -180,6 +182,13 @@ void App::glfwKey(
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(mWnd, GL_TRUE);
         break;
+      case GLFW_KEY_KP_0: {
+        GLint polygonMode;
+        glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
+        glPolygonMode(
+          GL_FRONT_AND_BACK, GL_POINT + (polygonMode - GL_POINT + 1) % 3);
+      }
+
       default:
         break;
     }

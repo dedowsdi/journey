@@ -82,17 +82,14 @@ public:
   virtual void init() {
     object = glCreateProgram();
     attachShaders();
-    glLinkProgram(object);
-    GLint status;
-    glGetProgramiv(object, GL_LINK_STATUS, &status);
-    if (!status) {
-      printf("failed to link program %d\n", object);
-    }
+    link();
     bindUniformLocations();
     bindAttribLocations();
   }
 
-  virtual void attachShaders() = 0;
+  void link();
+
+  virtual void attachShaders() {};
   virtual void bindUniformLocations(){};
   virtual void bindAttribLocations(){};
 
@@ -101,7 +98,7 @@ public:
   // some wrapper
   void setUniformLocation(GLint* location, const std::string& name);
   void attachShaderFile(GLenum type, const std::string& file);
-  void attachShaderSource(GLenum type, const StringVector& source);
+  bool attachShaderSource(GLenum type, const StringVector& source);
   void attachShaderSourceAndFile(
     GLenum type, StringVector& source, const std::string& file);
 
