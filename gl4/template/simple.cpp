@@ -49,14 +49,20 @@ public:
           break;
       }
     }
+    App::glfwKey(wnd, key, scancode, action, mods);
   }
 
   virtual void glfwMouseButton(
-    GLFWwindow *wnd, int button, int action, int mods) {}
+    GLFWwindow *wnd, int button, int action, int mods) {
+    App::glfwMouseButton(wnd, button, action, mods);
+  }
 
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {}
+  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {
+    App::glfwMouseMove(wnd, x, y);
+  }
 
   virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+    App::glfwMouseWheel(wnd, xoffset, yoffset);
   }
 };
 }

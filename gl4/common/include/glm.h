@@ -9,6 +9,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include <glm/mat3x3.hpp>
 #include <glm/mat4x4.hpp>
@@ -80,6 +81,13 @@ std::ostream& operator<<(std::ostream& os, const mat2& m);
 std::ostream& operator<<(std::ostream& os, const mat3& m);
 std::ostream& operator<<(std::ostream& os, const mat4& m);
 std::ostream& operator<<(std::ostream& os, const Vec3Vector& v);
+
+inline GLfloat maxAbsComponent(const vec3& v){
+  GLfloat x = glm::abs(v[0]);
+  GLfloat y = glm::abs(v[1]);
+  GLfloat z = glm::abs(v[2]);
+  return glm::max(glm::max(x, y), z);
+}
 
 //--------------------------------------------------------------------
 inline vec3 makeFloor(const vec3& lhs, const vec3& rhs) {

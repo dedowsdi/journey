@@ -4,6 +4,7 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <string>
+#include "glm.h"
 
 namespace zxd {
 
@@ -30,15 +31,21 @@ public:
 protected:
   AppInfo mInfo;
   GLFWwindow *mWnd;
+  mat4 *mViewMatrix;
+
+  dvec2 mLastButtonPosition; //used to rotate camera when right button pressed
 
 public:
-  App() {}
+  App() : mViewMatrix(0) {}
 
   void init();
   virtual void run();
   inline GLfloat getWndAspect() {
     return static_cast<GLfloat>(mInfo.wndWidth) / mInfo.wndHeight;
   }
+
+  mat4 *getViewMatrix() const { return mViewMatrix; }
+  void setViewMatrix(mat4 *v) { mViewMatrix = v; }
 
 protected:
   virtual void initInfo();
@@ -55,9 +62,8 @@ protected:
   virtual void glfwKey(
     GLFWwindow *wnd, int key, int scancode, int action, int mods);
   virtual void glfwMouseButton(
-    GLFWwindow *wnd, int button, int action, int mods) {}
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {}
-  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
-  }
+    GLFWwindow *wnd, int button, int action, int mods) ;
+  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y);
+  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) ;
 };
 }

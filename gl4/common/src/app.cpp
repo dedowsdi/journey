@@ -187,11 +187,100 @@ void App::glfwKey(
         glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
         glPolygonMode(
           GL_FRONT_AND_BACK, GL_POINT + (polygonMode - GL_POINT + 1) % 3);
-      }
+      } break;
+
+      case GLFW_KEY_KP_1: {
+        if (mViewMatrix) {
+          GLfloat distance = glm::length((*mViewMatrix)[3].xyz());
+          GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
+          *mViewMatrix = glm::lookAt(glm::vec3(0.0f, -distance * factor, 0.0f),
+            glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        }
+      } break;
+      case GLFW_KEY_KP_3: {
+        if (mViewMatrix) {
+          GLfloat distance = glm::length((*mViewMatrix)[3].xyz());
+          GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
+          *mViewMatrix = glm::lookAt(glm::vec3(-distance * factor, 0.0f, 0.0f),
+            glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        }
+      } break;
+
+      case GLFW_KEY_KP_7: {
+        if (mViewMatrix) {
+          GLfloat distance = glm::length((*mViewMatrix)[3].xyz());
+          GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
+          *mViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, -distance * factor),
+            glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+      } break;
+
 
       default:
         break;
     }
+  }
+}
+
+//--------------------------------------------------------------------
+void App::glfwMouseButton(GLFWwindow *wnd, int button, int action, int mods) {
+  if (action == GLFW_PRESS && GLFW_MOUSE_BUTTON_MIDDLE == button) {
+    glfwGetCursorPos(mWnd, &mLastButtonPosition[0], &mLastButtonPosition[1]);
+  }
+}
+
+//--------------------------------------------------------------------
+void App::glfwMouseMove(GLFWwindow *wnd, double x, double y) {
+  if (mViewMatrix &&
+      glfwGetMouseButton(mWnd, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
+    GLdouble dtX = x - mLastButtonPosition[0];
+    GLdouble dtY = y - mLastButtonPosition[1];
+
+    // yaw world, assume z up
+    if (dtX != 0) {
+      *mViewMatrix *=
+        glm::rotate(static_cast<GLfloat>(dtX * 0.02), vec3(0, 0, 1));
+    }
+
+    // pitch camera, but reserve center
+    if (dtY != 0) {
+      //*mViewMatrix *= glm::rotate(static_cast<GLfloat>(dtX * 0.02), vec3(0, 0,
+      // 1));
+      glm::vec3 scale;
+      glm::quat rotation;
+      glm::vec3 translation;
+      glm::vec3 skew;
+      glm::vec4 perspective;
+      glm::decompose(
+        *mViewMatrix, scale, rotation, translation, skew, perspective);
+
+      // get camera rotation in world space
+      rotation = glm::inverse(glm::conjugate(rotation));
+      // translation distance along +z
+      GLfloat distance = glm::length(translation);
+
+      // final rotatoin of camera in world space
+      *mViewMatrix =
+        glm::mat4(rotation) *
+        glm::rotate(static_cast<GLfloat>(-dtY * 0.02), vec3(1, 0, 0)) *
+        glm::translate(vec3(0, 0, distance));
+      // inverse to get world to camera
+      *mViewMatrix = glm::inverse(*mViewMatrix);
+    }
+    mLastButtonPosition[0] = x;
+    mLastButtonPosition[1] = y;
+  }
+}
+
+//--------------------------------------------------------------------
+void App::glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+  std::cout << "xoffset: " << xoffset << " yoffset: " << yoffset << std::endl;
+  // yoffset is negative if you scroll toward yourself
+  if (mViewMatrix) {
+    GLfloat scale = 1 - 0.1 * yoffset;
+    (*mViewMatrix)[3][0] *= scale;
+    (*mViewMatrix)[3][1] *= scale;
+    (*mViewMatrix)[3][2] *= scale;
   }
 }
 }

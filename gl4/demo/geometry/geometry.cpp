@@ -5,6 +5,7 @@
 #include "light.h"
 #include <sstream>
 #include "glEnumString.h"
+#include "cuboid.h"
 
 namespace zxd {
 
@@ -51,7 +52,7 @@ struct BlinnProgram : public zxd::Program {
   };
 };
 
-class Geometry : public App {
+class GeometryApp : public App {
 protected:
   BitmapText mBitmapText;
   vec3 mCameraPos;
@@ -59,10 +60,11 @@ protected:
   zxd::LightModel mLightModel;
   zxd::Material mMaterial;
   Sphere mSphere;
+  Cuboid mCuboid;
   BlinnProgram mProgram;
 
 public:
-  Geometry() : mSphere(1, 16, 16), mCameraPos(0, -3, 3) {}
+  GeometryApp() : mSphere(1, 16, 16), mCameraPos(0, -6, 6) {}
 
   virtual void initInfo() {
     App::initInfo();
@@ -92,6 +94,11 @@ public:
 
     // program
     mProgram.init();
+    mProgram.projMatrix =
+      glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
+    mProgram.viewMatrix = glm::lookAt(mCameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
+    setViewMatrix(&mProgram.viewMatrix);
+
     mLightModel.bindUniformLocations(mProgram.object, "lightModel");
     for (int i = 0; i < mLights.size(); ++i) {
       std::stringstream ss;
@@ -103,6 +110,10 @@ public:
     // geometry
     mSphere.buildVertex(mProgram.attrib_vertex);
     mSphere.buildNormal(mProgram.attrib_normal);
+
+    mCuboid.buildVertex(mProgram.attrib_vertex);
+    mCuboid.buildNormal(mProgram.attrib_normal);
+
   }
 
   virtual void update() {}
@@ -112,9 +123,6 @@ public:
 
     glUseProgram(mProgram);
 
-    mProgram.projMatrix =
-      glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
-    mProgram.viewMatrix = glm::lookAt(mCameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
     mProgram.viewMatrixInverseTranspose =
       glm::inverse(glm::transpose(mProgram.viewMatrix));
 
@@ -127,8 +135,11 @@ public:
 
     mat4 model(1.0f);
     mProgram.updateModel(model);
-
     mSphere.draw();
+
+    model = glm::translate(glm::vec3(2, 0, 0));
+    mProgram.updateModel(model);
+    mCuboid.draw();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -159,26 +170,31 @@ public:
           glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
           glPolygonMode(
             GL_FRONT_AND_BACK, GL_POINT + (polygonMode - GL_POINT + 1) % 3);
-        }
-        break;
+        } break;
 
         default:
           break;
       }
     }
+    App::glfwKey(wnd, key, scancode, action, mods);
   }
 
   virtual void glfwMouseButton(
-    GLFWwindow *wnd, int button, int action, int mods) {}
+    GLFWwindow *wnd, int button, int action, int mods) {
+    App::glfwMouseButton(wnd, button, action, mods);
+  }
 
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {}
+  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {
+    App::glfwMouseMove(wnd, x, y);
+  }
 
   virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+    App::glfwMouseWheel(wnd, xoffset, yoffset);
   }
 };
 }
 
 int main(int argc, char *argv[]) {
-  zxd::Geometry app;
+  zxd::GeometryApp app;
   app.run();
 }

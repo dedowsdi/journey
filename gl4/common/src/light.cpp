@@ -57,6 +57,25 @@ void LightSource::updateUniforms(
 }
 
 //--------------------------------------------------------------------
+GLfloat LightSource::getRadius(GLfloat epsilon) {
+  if (position[3] == 0) 
+    return -1;
+
+  if (constantAttenuation == 0 && linearAttenuation == 0 &&
+      quadraticAttenuation == 0) {
+    return 0;
+  }
+
+  GLfloat mdc = maxAbsComponent(diffuse.xyz());
+
+  return -linearAttenuation +
+         std::sqrt(
+           linearAttenuation * linearAttenuation -
+           4 * quadraticAttenuation * (constantAttenuation - mdc * epsilon)) /
+           (2 * quadraticAttenuation);
+}
+
+//--------------------------------------------------------------------
 void LightModel::bindUniformLocations(GLint program, const std::string& name) {
   setUniformLocation(&loc_ambient, program, name + ".ambient");
   setUniformLocation(&loc_localViewer, program, name + ".localViewer");
@@ -93,5 +112,4 @@ void Material::updateUniforms() {
   glUniform4fv(loc_specular, 1, value_ptr(specular));
   glUniform1f(loc_shininess, shininess);
 }
-
 }

@@ -101,7 +101,6 @@ public:
   bool attachShaderSource(GLenum type, const StringVector& source);
   void attachShaderSourceAndFile(
     GLenum type, StringVector& source, const std::string& file);
-
 };
 }
 

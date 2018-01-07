@@ -7,7 +7,9 @@ set(COMMON_SRCS
     src/light.cpp
     src/program.cpp
     src/quad.cpp
+    src/geometry.cpp
     src/sphere.cpp
+    src/cuboid.cpp
     src/stringutil.cpp
     src/texutil.cpp
     )

@@ -76,5 +76,11 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "cube": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

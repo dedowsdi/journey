@@ -1,7 +1,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "glad/glad.h"
+#include "geometry.h"
 #include "glm.h"
 
 namespace zxd {
@@ -9,25 +9,23 @@ namespace zxd {
 typedef std::vector<glm::vec3> Vec3Vector;
 typedef std::vector<glm::vec2> Vec2Vector;
 
-class Sphere {
+/*
+ * build sphere with two triangle fans and a bunch of triangle strips
+ */
+class Sphere : public Geometry {
 protected:
   GLfloat mRadius;
   GLuint mSlice;  // longitiude
   GLuint mStack;  // latitude
-  GLuint mVao;
-
-  GLuint mVertexBuffer;
-  GLuint mNormalBuffer;
-  GLuint mTexcoordBuffer;
 
   Vec3Vector mVertices;
   Vec3Vector mNormals;
   Vec2Vector mTexcoords;
 
 public:
-  Sphere() : mRadius(1), mSlice(16), mStack(16), mVao(-1) {}
+  Sphere() : mRadius(1), mSlice(16), mStack(16) {}
   Sphere(GLfloat radius, GLuint slice, GLuint stack)
-      : mRadius(radius), mSlice(slice), mStack(stack), mVao(-1) {}
+      : mRadius(radius), mSlice(slice), mStack(stack) {}
 
   void buildVertex(GLuint location);
   // as i'm using strip and fan, normal should be vertex normal.
@@ -44,11 +42,6 @@ public:
 
   inline GLuint getStack() const { return mStack; }
   inline void setStack(GLuint v) { mStack = v; }
-
-  GLuint getVao() const { return mVao; }
-
-protected:
-  void bindVertexArrayObject();
 };
 }
 

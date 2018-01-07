@@ -1,6 +1,18 @@
 /*
  * N spheres and N point light. Each sphere has it's own material, each light
  * has it's own light property.
+ *
+ * Defered rendering is used to implement scenes with tons of lights.
+ * It's down in two steps:
+ *  1. Render everything you need into gbuffer.
+ *  2. Rendre a quad, extract data from gbuffer to do the lighting.
+ *
+ * In this way, no calculation wasted on failed(such as depth test) fragment.
+ *
+ * You can mix forward and defered rendering, as long as you record depth in a
+ * gbuffer, and apply it later, or simplely use glBlitFramebuffer to copy depth
+ * buffer.
+ *
  */
 
 #include "app.h"
@@ -183,7 +195,7 @@ protected:
 public:
   virtual void initInfo() {
     App::initInfo();
-    mInfo.title = "defered render";
+    mInfo.title = "defered rendering";
   }
   virtual void createScene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
@@ -314,6 +326,8 @@ public:
     mRenderGbufferProgram.viewMatrix =
       glm::lookAt(vec3(0, -25, 25), vec3(0, 0, 0), vec3(0, 0, 1));
 
+    setViewMatrix(&mRenderGbufferProgram.viewMatrix);
+
     // sphere and lights
     mSphere.buildVertex(mRenderGbufferProgram.attrib_vertex);
     mSphere.buildNormal(mRenderGbufferProgram.attrib_normal);
@@ -334,10 +348,9 @@ public:
 
       Material m;
       m.emission = glm::vec4(0);
-      m.ambient = glm::vec4(0);
+      m.ambient = glm::vec4(glm::linearRand(vec3(0.0f), vec3(0.2f)), 1);
       m.diffuse = glm::vec4(glm::linearRand(vec3(0.5f), vec3(1.0f)), 1);
-      m.specular = glm::vec4(0);
-      // m.specular = glm::vec4(glm::linearRand(vec3(0.5f), vec3(0.8f)), 1);
+      m.specular = glm::vec4(glm::linearRand(vec3(0.5f), vec3(0.8f)), 1);
       m.shininess = glm::linearRand(1, 120);
 
       m.bindUniformLocations(mRenderGbufferProgram, "material");
@@ -370,15 +383,16 @@ public:
   virtual void display() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+
     glBindFramebuffer(GL_FRAMEBUFFER, mFbo);
     renderGbuffer();
-    // if i comment this, very weird result will happen.
-    glDisable(GL_CULL_FACE);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     useGbuffer();
 
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
@@ -421,11 +435,16 @@ public:
   }
 
   virtual void glfwMouseButton(
-    GLFWwindow *wnd, int button, int action, int mods) {}
+    GLFWwindow *wnd, int button, int action, int mods) {
+    App::glfwMouseButton(wnd, button, action, mods);
+  }
 
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {}
+  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {
+    App::glfwMouseMove(wnd, x, y);
+  }
 
   virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+    App::glfwMouseWheel(wnd, xoffset, yoffset);
   }
 };
 }

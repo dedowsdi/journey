@@ -64,6 +64,7 @@ void Sphere::buildVertex(GLuint location) {
 
 //--------------------------------------------------------------------
 void Sphere::buildNormal(GLuint location) {
+  mNormals.clear();
   mNormals.reserve(mVertices.size());
   for (int i = 0; i < mVertices.size(); ++i) {
     mNormals.push_back(glm::normalize(mVertices[i]));
@@ -82,6 +83,8 @@ void Sphere::buildNormal(GLuint location) {
 
 //--------------------------------------------------------------------
 void Sphere::buildTexcoord(GLuint location) {
+  mTexcoords.clear();
+  mTexcoords.reserve(mVertices.size());
   float twoPi = 2 * glm::pi<GLfloat>();
   for (int i = 0; i < mVertices.size(); ++i) {
     GLfloat cosPhi = mVertices[i].z / mRadius;
@@ -135,11 +138,4 @@ void Sphere::draw(GLuint primcount /* = 1*/) {
   }
 }
 
-//--------------------------------------------------------------------
-void Sphere::bindVertexArrayObject() {
-  if (mVao == -1) {
-    glGenVertexArrays(1, &mVao);
-  }
-  glBindVertexArray(mVao);
-}
 }

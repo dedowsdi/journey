@@ -69,7 +69,7 @@
     "args": "",
     "lldb": {
       "breakpoint": {
-        "breakpoint set --file deferred.cpp --line 347": null
+        "breakpoint set --file app.cpp --line 201": null
       }
     }
   }
