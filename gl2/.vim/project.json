@@ -82,5 +82,17 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "lines": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "torus": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

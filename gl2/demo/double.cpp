@@ -76,8 +76,8 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(100, 100);
   glutInitContextFlags(GLUT_DEBUG);
   glutCreateWindow(argv[0]);
-  init();
   loadGL();
+  init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);
