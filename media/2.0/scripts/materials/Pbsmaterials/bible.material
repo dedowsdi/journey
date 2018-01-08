@@ -1,0 +1,45 @@
+hlms vertexDiffuse_unlit unlit
+{
+    diffuse 1 1 1
+}
+
+hlms singleCube pbs
+{
+    diffuse 1 1 1
+    specular 1 1 1
+    roughness 0.4
+}
+
+//hlms Ogre/Earring pbs
+//{
+//    diffuse 0.7 0.7 0
+//    diffuse_map spheremap.png
+//}
+//
+//hlms Ogre/Skin pbs
+//{
+//    diffuse_map GreenSkin.jpg
+//    roughness 0.1
+//}
+//
+//hlms Ogre/Tusks pbs
+//{
+//    diffuse_map tusk.jpg
+//    roughness 0.01
+//}
+//
+//hlms Ogre/Eyes pbs
+//{
+//    diffuse 1 0.7 0
+//}
+
+hlms rect_diffuse_pbs pbs
+{
+    diffuse_map ogrelogo.png
+    roughness 0.01
+}
+
+hlms rect_diffuse_unlit unlit
+{
+    diffuse_map ogrelogo.png
+}
