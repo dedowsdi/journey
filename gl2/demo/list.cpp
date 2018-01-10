@@ -4,8 +4,10 @@
  *  display list.  Note that attributes, such as current
  *  color and matrix, are changed.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 GLuint listName;
 
@@ -77,6 +79,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(800, 50);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

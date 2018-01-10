@@ -4,8 +4,8 @@
  *  draw subimage of F
  *
  *  set up subrect origin with glPixelStore:
- *    x0 : GL_UNPACK_SKIP_PIXELS
- *    y0 : GL_UNPACK_SKIP_ROWS
+ *    _x0 : GL_UNPACK_SKIP_PIXELS
+ *    _y0 : GL_UNPACK_SKIP_ROWS
  *
  *  And width and height in glDrawPixel.
  *
@@ -28,11 +28,12 @@
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
 #include <stdio.h>
+#include "common.h"
 
 GLubyte image[12 * 16 * 3];
 
 // subrect of image
-GLuint x0 = 0, y0 = 0, width = 16, height = 12;
+GLuint _x0 = 0, _y0 = 0, width = 16, height = 12;
 GLdouble redScale = 1.0, redBias = 0.0;
 
 // clang-format off
@@ -109,14 +110,14 @@ void display(void) {
   char info[512];
 
   sprintf(info,
-    "qQ : x0 : %u\n"
-    "wW : y0 : %u\n"
+    "qQ : _x0 : %u\n"
+    "wW : _y0 : %u\n"
     "eE : width : %u\n"
     "rR : height : %u\n"
     "uU : red scale : %3.2f\n"
     "iI : red bias : %3.2f\n"
     "o : toggle color map\n",
-    x0, y0, width, height, redScale, redBias);
+    _x0, _y0, width, height, redScale, redBias);
 
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
 
@@ -136,30 +137,30 @@ void keyboard(unsigned char key, int x, int y) {
     case 27:
       exit(0);
     case 'q':
-      if (x0 < 15) {
-        x0 += 1;
-        glPixelStorei(GL_UNPACK_SKIP_PIXELS, x0);
+      if (_x0 < 15) {
+        _x0 += 1;
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, _x0);
         glutPostRedisplay();
       }
       break;
     case 'Q':
-      if (x0 > 0) {
-        x0 -= 1;
-        glPixelStorei(GL_UNPACK_SKIP_PIXELS, x0);
+      if (_x0 > 0) {
+        _x0 -= 1;
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, _x0);
         glutPostRedisplay();
       }
       break;
     case 'w':
-      if (y0 < 12) {
-        y0 += 1;
-        glPixelStorei(GL_UNPACK_SKIP_ROWS, y0);
+      if (_y0 < 12) {
+        _y0 += 1;
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, _y0);
         glutPostRedisplay();
       }
       break;
     case 'W':
-      if (y0 > 0) {
-        y0 -= 1;
-        glPixelStorei(GL_UNPACK_SKIP_ROWS, y0);
+      if (_y0 > 0) {
+        _y0 -= 1;
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, _y0);
         glutPostRedisplay();
       }
       break;
@@ -239,6 +240,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

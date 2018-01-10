@@ -2,9 +2,11 @@
  *  Use the accumulation buffer to do full-scene antialiasing
  *  on a scene with orthographic parallel projection.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "jitter.h"
+#include "common.h"
 
 /*  Initialize lighting and other values.
  */
@@ -132,6 +134,7 @@ int main(int argc, char** argv)
    glutInitWindowSize (250, 250);
    glutInitWindowPosition (100, 100);
    glutCreateWindow (argv[0]);
+  loadGL();
    init();
    glutReshapeFunc(reshape);
    glutDisplayFunc(display);

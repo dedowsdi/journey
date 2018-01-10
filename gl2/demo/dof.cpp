@@ -49,10 +49,12 @@
  *  the viewing volume is at the same position, each time.  In
  *  this case, the gold teapot remains in focus.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <math.h>
 #include "jitter.h"
+#include "common.h"
 
 #define PI_ 3.14159265358979323846
 
@@ -237,6 +239,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(400, 400);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

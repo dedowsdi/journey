@@ -94,5 +94,8 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "make: *** No rule to make target help.  Stop.": {
+    "args": ""
   }
 }

@@ -23,8 +23,10 @@
  *  T can also be used to transform local frame into parent node frame.
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -98,6 +100,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

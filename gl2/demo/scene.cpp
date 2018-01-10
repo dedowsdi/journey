@@ -4,8 +4,10 @@
  *  Objects are drawn using a grey material characteristic.
  *  A single light source illuminates the objects.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 /*  Initialize material property and light source.
  */
@@ -84,6 +86,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(500, 500);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

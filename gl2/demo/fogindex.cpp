@@ -45,10 +45,12 @@
  *  This program draws 5 wireframe spheres, each at
  *  a different z distance from the eye, in linear fog.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 /*  Initialize color map and fog.  Set screen clear color
  *  to end of color ramp.
@@ -128,6 +130,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_INDEX | GLUT_DEPTH);
   glutInitWindowSize(500, 500);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

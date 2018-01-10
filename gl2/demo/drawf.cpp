@@ -19,6 +19,7 @@
 #include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 // clang-format off
 
@@ -97,6 +98,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(100, 100);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

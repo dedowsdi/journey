@@ -149,6 +149,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(200, 200);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

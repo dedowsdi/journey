@@ -7,9 +7,11 @@
  *
  *  A-Z is represented by a 8 * 13 bitmap 
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <string.h>
+#include "common.h"
 
 // clang-format off
 GLubyte space[] = 
@@ -124,6 +126,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(300, 100);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

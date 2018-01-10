@@ -13,6 +13,7 @@
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 GLuint ustride = 12;
 GLuint vstride = 3;
@@ -130,6 +131,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

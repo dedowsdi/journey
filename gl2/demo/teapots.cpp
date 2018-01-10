@@ -3,8 +3,10 @@
  *  This program demonstrates lots of material properties.
  *  A single light source illuminates the objects.
  */
+#include "glad/glad.h"
 #include <stdlib.h>
 #include <GL/freeglut.h>
+#include "common.h"
 
 GLuint teapotList;
 
@@ -153,6 +155,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(500, 600);
   glutInitWindowPosition(50, 50);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

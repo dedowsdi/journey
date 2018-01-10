@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 #ifndef CALLBACK
 #define CALLBACK
@@ -211,6 +212,7 @@ int main(int argc, char **argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(500, 500);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

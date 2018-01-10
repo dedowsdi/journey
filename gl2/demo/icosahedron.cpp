@@ -7,6 +7,7 @@
 #include <limits.h>
 #include <math.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 #define X .525731112119133606
 #define Z .850650808352039932
@@ -153,6 +154,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(800, 800);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

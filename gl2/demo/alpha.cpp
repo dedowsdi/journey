@@ -8,6 +8,7 @@
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 static int leftFirst = GL_TRUE;
 
@@ -99,6 +100,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(200, 200);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

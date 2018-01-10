@@ -11,7 +11,9 @@
  *    tP*v < 0   out
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
+#include "common.h"
 /*#include <stdlib.h>  */
 
 double yaw = 0.0f;
@@ -99,6 +101,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

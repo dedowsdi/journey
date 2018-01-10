@@ -10,6 +10,7 @@
 #include <math.h>
 #include "jitter.h"
 #include <stdio.h>
+#include "common.h"
 
 #define PI_ 3.14159265358979323846
 
@@ -202,6 +203,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(250, 250);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

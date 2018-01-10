@@ -14,6 +14,7 @@
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 void init(void) {
   glClearColor(1.0, 1.0, 0.0, 0.0);
@@ -121,6 +122,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(512, 512);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

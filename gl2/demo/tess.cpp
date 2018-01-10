@@ -11,9 +11,11 @@
  *  star.  Also note that removing the TessProperty for the
  *  star will make the interior unshaded (WINDING_ODD).
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 // empty CALLBACK makesure callback func works on both linux and windows
 #ifndef CALLBACK
@@ -168,6 +170,7 @@ int main(int argc, char **argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(500, 500);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

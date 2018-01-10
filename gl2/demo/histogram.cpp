@@ -4,9 +4,11 @@
  *  use of the glHistogram() function.
  */
 
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "readImage.cpp"
+#include "common.h"
 
 #define HISTOGRAM_SIZE 256 /* Must be a power of 2 */
 
@@ -89,6 +91,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(width, height);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

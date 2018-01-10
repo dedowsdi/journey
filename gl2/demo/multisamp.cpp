@@ -9,9 +9,11 @@
  *  Antialiasing is sometimes easier to see when objects are rendered over a
  *  contrasting background.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 static int bgtoggle = 1;
 
@@ -25,9 +27,9 @@ void init(void) {
   int i, j;
 
   glClearColor(0.0, 0.0, 0.0, 0.0);
-  glGetIntegerv(GL_SAMPLE_BUFFERS_ARB, buf);
+  glGetIntegerv(GL_SAMPLE_BUFFERS, buf);
   printf("number of sample buffers is %d\n", buf[0]);
-  glGetIntegerv(GL_SAMPLES_ARB, sbuf);
+  glGetIntegerv(GL_SAMPLES, sbuf);
   printf("number of samples is %d\n", sbuf[0]);
 
   // compile display list for pinwheel
@@ -133,6 +135,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
   glutInitWindowSize(600, 300);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

@@ -7,6 +7,7 @@
 #include <iterator>
 #include <functional>
 #include "glm.h"
+#include "common.h"
 
 using namespace glm;
 
@@ -345,7 +346,6 @@ void getModelViewProj(GLfloat *p) {
   glMultMatrixf(p);
   glGetFloatv(GL_PROJECTION_MATRIX, p);
   glPopMatrix();
-
   glMatrixMode(mode);
 }
 

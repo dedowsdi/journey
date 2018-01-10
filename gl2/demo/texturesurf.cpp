@@ -3,9 +3,11 @@
  *  surface and automatically generated texture coordinates.
  */
 
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <math.h>
+#include "common.h"
 
 // clang-format off
 GLfloat ctrlpoints[4][4][3] = {
@@ -101,6 +103,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

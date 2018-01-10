@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 #ifdef GL_VERSION_1_1
 GLuint list;

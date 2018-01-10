@@ -11,9 +11,11 @@
  *
  *  image width should be 2^m or 2^m + 2 if it has border
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 /*	Create checkerboard texture	*/
 #define checkImageWidth 64
@@ -124,6 +126,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(250, 250);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

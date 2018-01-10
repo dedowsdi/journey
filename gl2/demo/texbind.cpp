@@ -2,9 +2,11 @@
  *  This program demonstrates using glBindTexture() by
  *  creating and managing two textures.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 #ifdef GL_VERSION_1_1
 /*	Create checkerboard texture	*/
@@ -113,6 +115,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(250, 250);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

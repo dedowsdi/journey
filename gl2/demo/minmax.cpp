@@ -3,10 +3,12 @@
  *  Determine the minimum and maximum values of a group of pixels.
  *  This demonstrates use of the glMinmax() call.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "readImage.cpp"
+#include "common.h"
 
 extern GLubyte* readImage(const char*, GLsizei*, GLsizei*);
 
@@ -62,6 +64,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(width, height);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

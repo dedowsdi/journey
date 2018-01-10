@@ -1,5 +1,7 @@
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 void display(void) {
   /* clear all pixels  */
@@ -54,6 +56,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(250, 250);
   glutInitWindowPosition(100, 100);
   glutCreateWindow("hello");
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutKeyboardFunc(keyboard);

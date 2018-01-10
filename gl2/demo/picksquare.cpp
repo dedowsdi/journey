@@ -5,9 +5,11 @@
  * button is pressed, all squares under the cursor position
  * have their color changed.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 int board[3][3]; /*  amount of color for each square	*/
 
@@ -138,6 +140,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(100, 100);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

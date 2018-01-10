@@ -9,9 +9,11 @@
  *  right side of the curve will be discarded.
  *
  */
+#include "glad/glad.h"
 #include <stdlib.h>
 #include <GL/freeglut.h>
 #include <stdio.h>
+#include "common.h"
 
 #ifndef CALLBACK
 #define CALLBACK
@@ -139,6 +141,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

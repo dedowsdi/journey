@@ -3,8 +3,10 @@
  * This program demonstrates smooth shading.
  * A smooth shaded polygon is drawn in a 2-D projection.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -53,6 +55,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

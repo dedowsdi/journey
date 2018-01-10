@@ -9,6 +9,7 @@
 #include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 #define COLORS 2
 #define VERTICES 0
@@ -109,6 +110,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(800, 800);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

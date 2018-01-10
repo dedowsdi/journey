@@ -18,9 +18,11 @@
  * pass through   GL_PASS_THROUGH_TOKEN        user defined float number
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 /*  Initialize lighting.
  */
@@ -128,6 +130,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(100, 100);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutKeyboardFunc(keyboard);

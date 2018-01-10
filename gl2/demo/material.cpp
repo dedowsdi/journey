@@ -4,8 +4,10 @@
  * Several objects are drawn using different material characteristics.
  * A single light source illuminates the objects.
  */
+#include "glad/glad.h"
 #include <stdlib.h>
 #include <GL/freeglut.h>
+#include "common.h"
 
 /*  Initialize z-buffer, projection matrix, light source,
  *  and lighting model.  Do not specify a material property here.
@@ -248,6 +250,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(600, 450);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

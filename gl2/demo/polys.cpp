@@ -2,8 +2,10 @@
  *  polys.c
  *  This program demonstrates polygon stippling.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 /*
  * glPolygonStipple is window aligned, not polygon aligned, be very careful!!!
@@ -91,6 +93,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(350, 150);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

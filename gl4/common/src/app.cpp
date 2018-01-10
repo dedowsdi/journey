@@ -215,7 +215,6 @@ void App::glfwKey(
         }
       } break;
 
-
       default:
         break;
     }
@@ -244,29 +243,20 @@ void App::glfwMouseMove(GLFWwindow *wnd, double x, double y) {
 
     // pitch camera, but reserve center
     if (dtY != 0) {
-      //*mViewMatrix *= glm::rotate(static_cast<GLfloat>(dtX * 0.02), vec3(0, 0,
-      // 1));
-      glm::vec3 scale;
-      glm::quat rotation;
-      glm::vec3 translation;
-      glm::vec3 skew;
-      glm::vec4 perspective;
-      glm::decompose(
-        *mViewMatrix, scale, rotation, translation, skew, perspective);
+      glm::vec3 translation = glm::column(*mViewMatrix, 3).xyz();
 
-      // get camera rotation in world space
-      rotation = glm::inverse(glm::conjugate(rotation));
-      // translation distance along +z
-      GLfloat distance = glm::length(translation);
+      // translate world to camera
+      (*mViewMatrix)[3][0] = 0;
+      (*mViewMatrix)[3][1] = 0;
+      (*mViewMatrix)[3][2] = 0;
 
-      // final rotatoin of camera in world space
+      // rotate, translate world back
       *mViewMatrix =
-        glm::mat4(rotation) *
-        glm::rotate(static_cast<GLfloat>(-dtY * 0.02), vec3(1, 0, 0)) *
-        glm::translate(vec3(0, 0, distance));
-      // inverse to get world to camera
-      *mViewMatrix = glm::inverse(*mViewMatrix);
+        glm::translate(translation) *
+        glm::rotate(static_cast<GLfloat>(dtY * 0.02), vec3(1, 0, 0)) *
+        *mViewMatrix;
     }
+
     mLastButtonPosition[0] = x;
     mLastButtonPosition[1] = y;
   }

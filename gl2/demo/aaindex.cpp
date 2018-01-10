@@ -47,8 +47,10 @@
  *  is typed in the window, the lines are rotated in opposite
  *  directions.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 #define RAMPSIZE 16
 #define RAMP1START 32
@@ -143,6 +145,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_INDEX);
   glutInitWindowSize(200, 200);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

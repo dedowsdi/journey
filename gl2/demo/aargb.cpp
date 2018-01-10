@@ -11,10 +11,12 @@
  *  always rect(it becomes round if antialiasing is enabled, either rgba or
  *  multisample).
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 static float rotAngle = 0.;
 
@@ -149,6 +151,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(200, 200);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

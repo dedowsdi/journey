@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 #define stripeImageWidth 32
 GLubyte stripeImage[4 * stripeImageWidth];
@@ -186,6 +187,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(600, 600);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

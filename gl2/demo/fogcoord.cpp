@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 static GLfloat f1, f2, f3;
 
@@ -151,6 +152,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowSize(500, 500);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

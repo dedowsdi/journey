@@ -1,5 +1,6 @@
 #include "glm.h"
 #include <iomanip>
+#include "common.h"
 using namespace glm;
 
 namespace zxd {

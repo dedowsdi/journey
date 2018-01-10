@@ -19,9 +19,11 @@
  *      gluNurbsCallback(theNurb, GLU_NURBS_NORMAL, normalCallback);
  *      gluNurbsCallback(theNurb, GLU_NURBS_END, endCallback);
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 #ifdef GLU_VERSION_1_3
 
@@ -206,6 +208,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

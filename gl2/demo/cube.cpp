@@ -7,8 +7,10 @@
  *  gluPerspective, glFrustum takes only positive near and far plane. 
  *  glOrtho takes both positive and negative near and far plane.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -49,6 +51,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

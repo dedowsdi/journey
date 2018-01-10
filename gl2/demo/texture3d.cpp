@@ -11,9 +11,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 #ifdef GL_VERSION_1_2
-GLuint x0 = 0, y0 = 0, width = 16, height = 16, depth = 16;
+GLuint _x0 = 0, _y0 = 0, width = 16, height = 16, depth = 16;
 
 static GLubyte image[16][16][16][3];
 static GLuint texName;
@@ -91,12 +92,12 @@ void display(void) {
   char info[512];
 
   sprintf(info,
-    "qQ : pixel x0 : %u\n"
-    "wW : pixel y0 : %u\n"
+    "qQ : pixel _x0 : %u\n"
+    "wW : pixel _y0 : %u\n"
     "eE : tex width : %u\n"
     "rR : tex height : %u\n"
     "uR : skip tex images : %u\n",
-    x0, y0, width, height, 16 - depth);
+    _x0, _y0, width, height, 16 - depth);
 
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
   glEnable(GL_TEXTURE_3D);
@@ -120,33 +121,33 @@ void keyboard(unsigned char key, int x, int y) {
       exit(0);
       break;
     case 'q':
-      if (x0 < 16) {
-        x0 += 1;
-        glPixelStorei(GL_UNPACK_SKIP_PIXELS, x0);
+      if (_x0 < 16) {
+        _x0 += 1;
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, _x0);
         genTex();
         glutPostRedisplay();
       }
       break;
     case 'Q':
-      if (x0 > 0) {
-        x0 -= 1;
-        glPixelStorei(GL_UNPACK_SKIP_PIXELS, x0);
+      if (_x0 > 0) {
+        _x0 -= 1;
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, _x0);
         genTex();
         glutPostRedisplay();
       }
       break;
     case 'w':
-      if (y0 < 16) {
-        y0 += 1;
-        glPixelStorei(GL_UNPACK_SKIP_ROWS, y0);
+      if (_y0 < 16) {
+        _y0 += 1;
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, _y0);
         genTex();
         glutPostRedisplay();
       }
       break;
     case 'W':
-      if (y0 > 0) {
-        y0 -= 1;
-        glPixelStorei(GL_UNPACK_SKIP_ROWS, y0);
+      if (_y0 > 0) {
+        _y0 -= 1;
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, _y0);
         genTex();
         glutPostRedisplay();
       }
@@ -207,6 +208,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

@@ -18,6 +18,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
+#include "common.h"
 
 #define PI_ 3.14159265358979323846
 
@@ -117,6 +118,7 @@ int main(int argc, char **argv) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

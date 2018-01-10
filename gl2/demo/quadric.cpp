@@ -6,9 +6,11 @@
  *  Note that the cylinder has no top or bottom and the circle
  *  has a hole in it.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "common.h"
 
 #ifndef CALLBACK
 #define CALLBACK
@@ -134,6 +136,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

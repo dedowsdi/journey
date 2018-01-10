@@ -1,6 +1,7 @@
 #include "glEnumString.h"
 #include <GL/glu.h>
 #include <cstring>
+#include "common.h"
 
 //--------------------------------------------------------------------
 const char* glTexEnvModeToString(GLenum e) {

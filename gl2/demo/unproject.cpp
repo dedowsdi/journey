@@ -4,9 +4,11 @@
  *  reads the mouse position and determines two 3D points
  *  from which it was transformed.  Very little is displayed.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);

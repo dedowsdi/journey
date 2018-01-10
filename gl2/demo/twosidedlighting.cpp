@@ -6,8 +6,10 @@
  *  TODO the graph is all white, really not so 3d, couldn't figure the geometry
  *  at all.
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include "common.h"
 
 void init(void) {
   GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
@@ -71,6 +73,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

@@ -15,10 +15,12 @@
  *  becoming right again if you chagne any other materials.
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
 #include <stdio.h>
+#include "common.h"
 
 GLfloat lmodel_ambient[4] = {0.2, 0.2, 0.2, 1.0};
 GLfloat mat_diffuse[4] = {0.5, 0.5, 0.5, 1.0};
@@ -194,6 +196,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

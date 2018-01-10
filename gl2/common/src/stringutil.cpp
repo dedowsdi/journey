@@ -1,4 +1,5 @@
 #include "stringutil.h"
+#include "common.h"
 
 namespace zxd {
 

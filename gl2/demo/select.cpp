@@ -23,9 +23,11 @@
  *     contents of name stack, bottom to top.
  *
  */
+#include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
 
 /* draw a triangle with vertices at (x1, y1), (x2, y2)
  * and (x3, y3) at z units away from the origin.
@@ -188,6 +190,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(200, 200);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+  loadGL();
   init();
   glutDisplayFunc(display);
   glutKeyboardFunc(keyboard);
