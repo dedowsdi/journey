@@ -14,6 +14,8 @@ void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
 
 class App {
 public:
+  enum CameraMode { CM_BLEND, CM_ARCBALL };
+
   struct AppInfo {
     std::string title;
     GLuint wndWidth;
@@ -29,14 +31,15 @@ public:
   };
 
 protected:
+  CameraMode mCameraMode;
   AppInfo mInfo;
   GLFWwindow *mWnd;
   mat4 *mViewMatrix;
 
-  dvec2 mLastButtonPosition; //used to rotate camera when right button pressed
+  dvec2 mLastButtonPosition;  // used to rotate camera when right button pressed
 
 public:
-  App() : mViewMatrix(0) {}
+  App() : mCameraMode(CM_BLEND), mViewMatrix(0) {}
 
   void init();
   virtual void run();
@@ -46,6 +49,9 @@ public:
 
   mat4 *getViewMatrix() const { return mViewMatrix; }
   void setViewMatrix(mat4 *v) { mViewMatrix = v; }
+
+  CameraMode getCameraMode() const { return mCameraMode; }
+  void setCameraMode(CameraMode v) { mCameraMode = v; }
 
 protected:
   virtual void initInfo();
@@ -63,8 +69,8 @@ protected:
   virtual void glfwKey(
     GLFWwindow *wnd, int key, int scancode, int action, int mods);
   virtual void glfwMouseButton(
-    GLFWwindow *wnd, int button, int action, int mods) ;
+    GLFWwindow *wnd, int button, int action, int mods);
   virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y);
-  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) ;
+  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset);
 };
 }

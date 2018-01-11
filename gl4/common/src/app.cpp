@@ -70,8 +70,7 @@ void App::initGL() {
 }
 
 //--------------------------------------------------------------------
-void App::debugMessageControl()
-{
+void App::debugMessageControl() {
   GLuint ids[] = {131185};
 
   glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
@@ -245,26 +244,45 @@ void App::glfwMouseMove(GLFWwindow *wnd, double x, double y) {
     GLdouble dtX = x - mLastButtonPosition[0];
     GLdouble dtY = y - mLastButtonPosition[1];
 
-    // yaw world, assume z up
-    if (dtX != 0) {
-      *mViewMatrix *=
-        glm::rotate(static_cast<GLfloat>(dtX * 0.02), vec3(0, 0, 1));
-    }
+    if (mCameraMode == CM_BLEND) {
+      // yaw world, assume z up
+      if (dtX != 0) {
+        *mViewMatrix *=
+          glm::rotate(static_cast<GLfloat>(dtX * 0.02), vec3(0, 0, 1));
+      }
 
-    // pitch camera, but reserve center
-    if (dtY != 0) {
-      glm::vec3 translation = glm::column(*mViewMatrix, 3).xyz();
+      // pitch camera, but reserve center
+      if (dtY != 0) {
+        glm::vec3 translation = glm::column(*mViewMatrix, 3).xyz();
 
-      // translate world to camera
-      (*mViewMatrix)[3][0] = 0;
-      (*mViewMatrix)[3][1] = 0;
-      (*mViewMatrix)[3][2] = 0;
+        // translate world to camera
+        (*mViewMatrix)[3][0] = 0;
+        (*mViewMatrix)[3][1] = 0;
+        (*mViewMatrix)[3][2] = 0;
 
-      // rotate, translate world back
-      *mViewMatrix =
-        glm::translate(translation) *
-        glm::rotate(static_cast<GLfloat>(dtY * 0.02), vec3(1, 0, 0)) *
-        *mViewMatrix;
+        // rotate, translate world back
+        *mViewMatrix =
+          glm::translate(translation) *
+          glm::rotate(static_cast<GLfloat>(dtY * 0.02), vec3(1, 0, 0)) *
+          *mViewMatrix;
+      }
+    } else if (mCameraMode == CM_ARCBALL) {
+      if (dtX != 0 || dtY != 0) {
+        mat4 windowMatrixInverse = zxd::computeWindowMatrixInverse(
+          0, 0, mInfo.wndWidth, mInfo.wndHeight, 0, 1);
+        mat4 m = zxd::arcball(glm::vec2(mLastButtonPosition[0],
+                                mInfo.wndHeight - 1 - mLastButtonPosition[1]),
+          glm::vec2(x, mInfo.wndHeight - 1 - y), windowMatrixInverse);
+
+        glm::vec3 translation = glm::column(*mViewMatrix, 3).xyz();
+        // translate world to camera
+        (*mViewMatrix)[3][0] = 0;
+        (*mViewMatrix)[3][1] = 0;
+        (*mViewMatrix)[3][2] = 0;
+
+        // rotate, translate world back
+        *mViewMatrix = glm::translate(translation) * m * *mViewMatrix;
+      }
     }
 
     mLastButtonPosition[0] = x;

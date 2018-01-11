@@ -62,7 +62,9 @@
   "geometry": {
     "args": "",
     "lldb": {
-      "breakpoint": {}
+      "breakpoint": {
+        "breakpoint set --file glm.cpp --line 101": null
+      }
     }
   },
   "deferred": {

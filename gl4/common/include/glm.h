@@ -55,7 +55,8 @@ inline GLfloat orientedAngleAny(
 inline vec3 getFaceNormal(const vec3& v0, const vec3& v1, const vec3& v2);
 
 mat4 getTangetnBasis(const vec3& v0, const vec3& v1, const vec3& v2,
-  const vec2& texcoord0, const vec2& texcoord1, const vec2& texcoord2, const vec3* normal = 0);
+  const vec2& texcoord0, const vec2& texcoord1, const vec2& texcoord2,
+  const vec3* normal = 0);
 
 // generate normals for triangles
 template <typename _It, typename _OutIt>
@@ -68,7 +69,9 @@ inline vec3 transformPosition(const mat4& m, const vec3& v);
 inline vec3 transformVector(const mat4& m, const vec3& v);
 
 // assume w is 1
-inline vec3 operator*(const mat4& m, const vec3& v) { return transformPosition(m, v); }
+inline vec3 operator*(const mat4& m, const vec3& v) {
+  return transformPosition(m, v);
+}
 
 bool operator<(const vec3& lhs, const vec3& rhs);
 
@@ -82,7 +85,7 @@ std::ostream& operator<<(std::ostream& os, const mat3& m);
 std::ostream& operator<<(std::ostream& os, const mat4& m);
 std::ostream& operator<<(std::ostream& os, const Vec3Vector& v);
 
-inline GLfloat maxAbsComponent(const vec3& v){
+inline GLfloat maxAbsComponent(const vec3& v) {
   GLfloat x = glm::abs(v[0]);
   GLfloat y = glm::abs(v[1]);
   GLfloat z = glm::abs(v[2]);
@@ -167,6 +170,18 @@ inline vec3 transformVector(const mat4& m, const vec3& v) {
 inline bool operator>(const vec3& lhs, const vec3& rhs) {
   return lhs != rhs && !operator<(lhs, rhs);
 }
+
+// p0 and p1 is in window space
+glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
+  const glm::mat4& windowMatrixInverse, GLfloat radius = 0.8f);
+
+glm::vec3 ndcToSphere(const glm::vec2& p, GLfloat radius = 0.8f);
+
+glm::mat4 computeWindowMatrix(
+  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
+
+glm::mat4 computeWindowMatrixInverse(
+  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
 }
 
 #endif /* GLM_H */
