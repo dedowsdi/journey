@@ -2,6 +2,7 @@ set (PROJECTS
     helloworld
     geometry
     deferred
+    lines
     )
 
 foreach(PROJECT ${PROJECTS})

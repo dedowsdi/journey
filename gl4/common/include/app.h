@@ -50,6 +50,7 @@ public:
 protected:
   virtual void initInfo();
   virtual void initGL();
+  virtual void debugMessageControl();
   virtual void initWnd();
   virtual void createScene() {}
   virtual void update() {}

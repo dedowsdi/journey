@@ -1,6 +1,7 @@
 #include "app.h"
 #include "bitmap_text.h"
 #include <sstream>
+#include "common.h"
 
 namespace zxd {
 class HelloWorld : public App {

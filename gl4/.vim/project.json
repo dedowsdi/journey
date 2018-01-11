@@ -72,5 +72,13 @@
         "breakpoint set --file app.cpp --line 201": null
       }
     }
+  },
+  "lines": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file lines.cpp --line 69": null
+      }
+    }
   }
 }

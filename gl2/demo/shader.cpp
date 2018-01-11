@@ -7,9 +7,6 @@
  *   if you use glVertex.. kind stuff, use glVertexAttrib
  *   if you use vertex array, use glVertexAttribPointer.
  *
- * If you want to user vertex buffer object, you don't have to put vertex
- * attibute in the same as as vertex.
- *
  * GLSL use varing qualified variable to output variable from vertex shader.
  *
  * Applications are allowed to bind more than one user-defined attribute

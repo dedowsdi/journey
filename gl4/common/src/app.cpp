@@ -66,6 +66,16 @@ void App::initGL() {
   glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
   glDebugMessageCallback(glDebugOutput, this);
+  debugMessageControl();
+}
+
+//--------------------------------------------------------------------
+void App::debugMessageControl()
+{
+  GLuint ids[] = {131185};
+
+  glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
+    sizeof(ids) / sizeof(GLuint), ids, GL_FALSE);
 }
 
 //--------------------------------------------------------------------
@@ -99,7 +109,7 @@ void App::initWnd() {
     // glfwSwapInterval((int)mInfo.flags.vsync);
   } else {
     mWnd = glfwCreateWindow(
-      mInfo.wndWidth, mInfo.wndWidth, mInfo.title.c_str(), NULL, NULL);
+      mInfo.wndWidth, mInfo.wndHeight, mInfo.title.c_str(), NULL, NULL);
     if (!mWnd) {
       std::cerr << "Failed to open window" << std::endl;
       return;
