@@ -14,5 +14,4 @@ void main(void)
   mat3 tbn = mat3(T, B, N);
   mat3 invTbn = transpose(tbn);
   lightPos = invTbn * gl_LightSource[0].position.xyz;
-  lightPos = normalize(lightPos);
 }

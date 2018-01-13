@@ -10,5 +10,11 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "static": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

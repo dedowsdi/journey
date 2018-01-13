@@ -82,5 +82,13 @@
         "breakpoint set --file lines.cpp --line 69": null
       }
     }
+  },
+  "normalmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file normalmap.cpp --line 312": 1
+      }
+    }
   }
 }

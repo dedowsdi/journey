@@ -110,7 +110,6 @@ glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
 
   GLfloat theta = glm::orientedAngle(sp0 * rpRadius, sp1 * rpRadius, axis);
 
-
   return glm::rotate(theta, axis);
 }
 

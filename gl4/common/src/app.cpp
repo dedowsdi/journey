@@ -191,6 +191,9 @@ void App::glfwKey(
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(mWnd, GL_TRUE);
         break;
+      case GLFW_KEY_KP_SUBTRACT:
+        mCameraMode = static_cast<CameraMode>((mCameraMode + 1) % 2);
+        break;
       case GLFW_KEY_KP_0: {
         GLint polygonMode;
         glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
@@ -292,7 +295,6 @@ void App::glfwMouseMove(GLFWwindow *wnd, double x, double y) {
 
 //--------------------------------------------------------------------
 void App::glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
-  std::cout << "xoffset: " << xoffset << " yoffset: " << yoffset << std::endl;
   // yoffset is negative if you scroll toward yourself
   if (mViewMatrix) {
     GLfloat scale = 1 - 0.1 * yoffset;

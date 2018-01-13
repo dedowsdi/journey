@@ -28,7 +28,7 @@ public:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << "Hello World" << std::endl;
-    mBitmapText.print(ss.str(), 10, 492);
+    mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
     glDisable(GL_BLEND);
   }
 

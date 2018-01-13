@@ -129,8 +129,7 @@ public:
     mMaterial.updateUniforms();
     mLightModel.updateUniforms();
     for (int i = 0; i < mLights.size(); ++i) {
-      mLights[i].updateUniforms(
-        mProgram.viewMatrix, mProgram.viewMatrixInverseTranspose);
+      mLights[i].updateUniforms(mProgram.viewMatrix);
     }
 
     mat4 model(1.0f);

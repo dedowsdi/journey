@@ -3,6 +3,7 @@ set (PROJECTS
     geometry
     deferred
     lines
+    normalmap
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -37,11 +37,9 @@ void LightSource::bindUniformLocations(
 }
 
 //--------------------------------------------------------------------
-void LightSource::updateUniforms(
-  const glm::mat4& viewMatrix, const glm::mat4& viewMatrixTransposeInverse) {
-  glm::vec4 viewPosition = viewMatrix * position;
-  glm::vec3 viewSpotDirection =
-    glm::mat3(viewMatrixTransposeInverse) * spotDirection;
+void LightSource::updateUniforms( const glm::mat4& transform) {
+  glm::vec4 viewPosition = transform * position;
+  glm::vec3 viewSpotDirection = glm::mat3(transform) * spotDirection;
 
   glUniform4fv(loc_ambient, 1, value_ptr(ambient));
   glUniform4fv(loc_diffuse, 1, value_ptr(diffuse));

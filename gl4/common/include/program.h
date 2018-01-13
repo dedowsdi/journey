@@ -74,7 +74,7 @@ public:
   GLint loc_modelViewProjMatrixInverseTranspose;
 
 public:
-  Program(): object(-1) {}
+  Program() : object(-1) {}
   virtual ~Program() {}
 
   operator GLuint() { return object; }
@@ -89,7 +89,7 @@ public:
 
   void link();
 
-  virtual void attachShaders() {};
+  virtual void attachShaders(){};
   virtual void bindUniformLocations(){};
   virtual void bindAttribLocations(){};
 
@@ -100,7 +100,7 @@ public:
   void attachShaderFile(GLenum type, const std::string& file);
   bool attachShaderSource(GLenum type, const StringVector& source);
   void attachShaderSourceAndFile(
-    GLenum type, StringVector& source, const std::string& file);
+    GLenum type, const StringVector& source, const std::string& file);
 };
 }
 

@@ -16,6 +16,7 @@ set (PROJECTS
     value
     functional
     printf
+    static
     )
 
 foreach(PROJECT ${PROJECTS})

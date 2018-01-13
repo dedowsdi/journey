@@ -32,8 +32,7 @@ struct LightSource {
 
   void bindUniformLocations(GLuint program, const std::string& name);
 
-  void updateUniforms(
-    const glm::mat4& viewMatrix, const glm::mat4& viewMatrixTransposeInverse);
+  void updateUniforms( const glm::mat4& transform);
 
   void pipeline(GLuint index, const glm::mat4& viewMatrix);
 };

@@ -88,8 +88,9 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
   product.specular = visibility * pow(ndoth, material.shininess) * source.specular * material.specular;
 }
 
-LightProduct getLightProduct(vec3 vertex, vec3 normal, Material material){
-  vec3 v2e = lightModel.localViewer ? normalize(-vertex) : vec3(0,0,1);
+LightProduct getLightProduct(vec3 vertex, vec3 normal, vec3 camera, Material material,
+    LightSource lights[LIGHT_COUNT]){
+  vec3 v2e = lightModel.localViewer ? normalize(camera - vertex) : vec3(0,0,1);
   LightProduct product = LightProduct(vec4(0),vec4(0),vec4(0));
 
   for (int i = 0; i < LIGHT_COUNT; i++) {
@@ -102,15 +103,27 @@ LightProduct getLightProduct(vec3 vertex, vec3 normal, Material material){
   return product;
 }
 
+// the most simple case, in view space
 vec4 blinn(vec3 vertex, vec3 normal){
-  LightProduct product = getLightProduct(vertex, normal, material);
+  LightProduct product = getLightProduct(vertex, normal, vec3(0.0), material, lights);
   vec4 color = material.emission + lightModel.ambient * material.ambient +
     product.ambient + product.diffuse + product.specular;
   return color;
 }
 
+// some shader(such as gbuffer) get material from texture, in view space
 vec4 blinn(vec3 vertex, vec3 normal, Material material){
-  LightProduct product = getLightProduct(vertex, normal, material);
+  LightProduct product = getLightProduct(vertex, normal, vec3(0.0), material, lights);
+  vec4 color = material.emission + lightModel.ambient * material.ambient +
+    product.ambient + product.diffuse + product.specular;
+  return color;
+}
+
+// some shader(such as normal map) don't use view space light positions, in
+// whatever space excpet view
+vec4 blinn(vec3 vertex, vec3 normal, vec3 camera, LightSource lights[LIGHT_COUNT]){
+  // will this code be optimized by opengl ? only light position is from uniform
+  LightProduct product = getLightProduct(vertex, normal, camera, material, lights);
   vec4 color = material.emission + lightModel.ambient * material.ambient +
     product.ambient + product.diffuse + product.specular;
   return color;

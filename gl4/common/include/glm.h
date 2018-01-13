@@ -1,6 +1,8 @@
 #ifndef GLM_H
 #define GLM_H
 #define GLM_SWIZZLE
+#define GLM_META_PROG_HELPERS
+
 #include "glad/glad.h"
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>

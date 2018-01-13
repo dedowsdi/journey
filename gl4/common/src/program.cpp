@@ -87,9 +87,11 @@ bool Program::attachShaderSource(GLenum type, const StringVector& source) {
 
 //--------------------------------------------------------------------
 void Program::attachShaderSourceAndFile(
-  GLenum type, StringVector& source, const std::string& file) {
-  source.push_back(readFile(file));
-  if (!attachShaderSource(type, source))
+GLenum type, const StringVector& source, const std::string& file)
+{
+  StringVector combinedSource(source);
+  combinedSource.push_back(readFile(file));
+  if (!attachShaderSource(type, combinedSource))
     std::cout << "failed to compile " << file << std::endl;
 }
 }

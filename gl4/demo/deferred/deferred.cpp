@@ -184,8 +184,7 @@ protected:
 
     // update lights
     for (int i = 0; i < mLights.size(); ++i) {
-      mLights[i].updateUniforms(mRenderGbufferProgram.viewMatrix,
-        mRenderGbufferProgram.viewMatrixInverseTranspose);
+      mLights[i].updateUniforms(mRenderGbufferProgram.viewMatrix);
     }
     mLightModel.updateUniforms();
 

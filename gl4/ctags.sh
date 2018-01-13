@@ -14,5 +14,3 @@ ctags \
     --language-force=c \
     /usr/local/source/glm/glm/ \
     ./gl43/
-
-    

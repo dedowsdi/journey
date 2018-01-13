@@ -32,8 +32,7 @@ struct LightSource {
 
   void bindUniformLocations(GLuint program, const std::string& name);
 
-  void updateUniforms(
-    const glm::mat4& viewMatrix, const glm::mat4& viewMatrixTransposeInverse);
+  void updateUniforms(const glm::mat4& transform);
 
   // get volume radius for point and spot, -1 for dir
   GLfloat getRadius(GLfloat epsilon);
