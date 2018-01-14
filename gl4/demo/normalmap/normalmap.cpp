@@ -99,6 +99,8 @@ struct UseNormalMapViewProgram : public zxd::Program {
     sv.push_back(readFile("data/shader/blinn.frag"));
     attachShaderSourceAndFile(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
+
+    setName("use_normalmap_view");
   }
   virtual void bindUniformLocations() {
     // setUniformLocation(&loc_eye, "eye");
@@ -142,6 +144,8 @@ struct UseNormalMapTangentProgram : public Program {
     sv.push_back(readFile("data/shader/blinn.frag"));
     attachShaderSourceAndFile(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
+
+    setName("use_normalmap_tangent");
   }
   virtual void bindUniformLocations() {
     // setUniformLocation(&loc_eye, "eye");
@@ -235,32 +239,27 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_WIDTH, IMAGE_HEIGHT, 0, GL_RGB,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, IMAGE_WIDTH, IMAGE_HEIGHT, 0, GL_RGB,
       GL_UNSIGNED_BYTE, 0);
 
     // light
     zxd::LightSource dirLight;
-    dirLight.position = vec4(1, -1, 1, 0);
+    dirLight.position = vec4(0, -1, 1, 0);
     dirLight.diffuse = vec4(1, 1, 1, 1);
     dirLight.specular = vec4(1, 1, 1, 1);
     dirLight.linearAttenuation = 1.0f;
 
     lights.push_back(dirLight);
 
-    // material
-    material.ambient = vec4(1.0);
-    material.diffuse = vec4(1.0);
-    material.specular = vec4(1.0);
-    material.shininess = 50;
+    lightModel.localViewer = 1;
 
-    lightModel.bindUniformLocations(
-      useNormalMapViewProgram.object, "lightModel");
-    for (int i = 0; i < lights.size(); ++i) {
-      std::stringstream ss;
-      ss << "lights[" << i << "]";
-      lights[i].bindUniformLocations(useNormalMapViewProgram.object, ss.str());
-    }
-    material.bindUniformLocations(useNormalMapViewProgram.object, "material");
+    // material
+    material.ambient = vec4(0.2);
+    material.diffuse = vec4(0.8);
+    material.specular = vec4(0.8);
+    material.shininess = 30;
+
+    bindUniformLocations(useNormalMapViewProgram);
 
     setViewMatrix(&useNormalMapViewProgram.viewMatrix);
 
@@ -296,10 +295,6 @@ public:
       useNormalMapViewProgram.updateModel(mat4(1.0));
       glUniform1i(useNormalMapViewProgram.loc_normalMap, 0);
 
-      useNormalMapViewProgram.viewMatrixInverseTranspose =
-        glm::inverse(glm::transpose(useNormalMapViewProgram.viewMatrix));
-
-      lightModel.updateUniforms();
       for (int i = 0; i < lights.size(); ++i) {
         lights[i].updateUniforms(useNormalMapViewProgram.viewMatrix);
       }
@@ -314,11 +309,11 @@ public:
       glUniform3fv(
         useNormalMapTangentProgram.loc_modelCamera, 1, glm::value_ptr(camera));
 
-      lightModel.updateUniforms();
       for (int i = 0; i < lights.size(); ++i) {
         lights[i].updateUniforms(useNormalMapTangentProgram.modelMatrixInverse);
       }
     }
+    lightModel.updateUniforms();
     material.updateUniforms();
 
     glBindVertexArray(pyramid1.vao);
@@ -345,6 +340,16 @@ public:
     mBitmapText.reshape(w, h);
   }
 
+  virtual void bindUniformLocations(zxd::Program &program) {
+    lightModel.bindUniformLocations(program.object, "lightModel");
+    for (int i = 0; i < lights.size(); ++i) {
+      std::stringstream ss;
+      ss << "lights[" << i << "]";
+      lights[i].bindUniformLocations(program.object, ss.str());
+    }
+    material.bindUniformLocations(program.object, "material");
+  }
+
   virtual void glfwKey(
     GLFWwindow *wnd, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
@@ -355,13 +360,14 @@ public:
         case GLFW_KEY_Q:
           lightSpace ^= 1;
           if (lightSpace == 0) {
-            useNormalMapViewProgram.viewMatrix =
-              useNormalMapTangentProgram.viewMatrix;
+            useNormalMapViewProgram.viewMatrix = *mViewMatrix;
+              
             setViewMatrix(&useNormalMapViewProgram.viewMatrix);
+            bindUniformLocations(useNormalMapViewProgram);
           } else {
-            useNormalMapTangentProgram.projMatrix =
-              useNormalMapViewProgram.projMatrix;
+            useNormalMapTangentProgram.viewMatrix = *mViewMatrix;
             setViewMatrix(&useNormalMapTangentProgram.viewMatrix);
+            bindUniformLocations(useNormalMapTangentProgram);
           }
 
           break;

@@ -2,7 +2,6 @@
 #define LIGHT_COUNT 8
 #endif
 
-// cauculated in view space
 // exactly the same as gl_LightSourceParameters
 struct LightSource {
   vec4 ambient;
@@ -20,7 +19,7 @@ struct LightSource {
 
 struct LightModel{
   vec4 ambient;
-  bool localViewer;
+  bool localViewer; // only has meaning if lighting is in view space
 };
 
 struct LightProduct {
@@ -78,13 +77,14 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
   float ndotl = dot(n, l);
   if (ndotl <= 0.0) return;
   ndotl = clamp(ndotl, 0.0, 1.0);
-  product.diffuse = visibility * ndotl * source.diffuse * material.diffuse;
+  product.diffuse = visibility * ndotl * source.diffuse * material.diffuse; 
 
   // specular
   vec3 h = normalize(l + v);
   float ndoth = dot(h, n);
   if(ndoth <= 0.0) return;
   ndoth = clamp(ndoth, 0.0, 1.0);
+
   product.specular = visibility * pow(ndoth, material.shininess) * source.specular * material.specular;
 }
 

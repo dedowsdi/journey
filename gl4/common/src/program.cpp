@@ -17,8 +17,8 @@ void Program::link() {
     glGetProgramiv(object, GL_INFO_LOG_LENGTH, &len);
     if (len == 0) {
       std::stringstream ss;
-      ss << "program " << object << " link failed, and has no log, good luck!"
-         << std::endl;
+      ss << "program " << object << " : " << mName
+         << " link failed, and has no log, good luck!" << std::endl;
       std::cout << ss.str() << std::endl;
     } else {
       char* log = static_cast<char*>(malloc(len + 1));
@@ -32,7 +32,8 @@ void Program::link() {
 GLint Program::getAttribLocation(const std::string& name) {
   GLint location = glGetAttribLocation(object, name.c_str());
   if (location == -1) {
-    std::cout << "failed to get attribute location : " << name << std::endl;
+    std::cout << object << " : " << mName
+              << " failed to get attribute location : " << name << std::endl;
   }
   return location;
 }
@@ -41,7 +42,8 @@ GLint Program::getAttribLocation(const std::string& name) {
 void Program::setUniformLocation(GLint* location, const std::string& name) {
   *location = glGetUniformLocation(object, name.c_str());
   if (*location == -1) {
-    fprintf(stderr, "failed to get uniform location : %s\n", name.c_str());
+    std::cout << object << " : " << mName
+              << " failed to get uniform location : " << name << std::endl;
   }
 }
 
@@ -87,8 +89,7 @@ bool Program::attachShaderSource(GLenum type, const StringVector& source) {
 
 //--------------------------------------------------------------------
 void Program::attachShaderSourceAndFile(
-GLenum type, const StringVector& source, const std::string& file)
-{
+  GLenum type, const StringVector& source, const std::string& file) {
   StringVector combinedSource(source);
   combinedSource.push_back(readFile(file));
   if (!attachShaderSource(type, combinedSource))

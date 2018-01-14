@@ -73,6 +73,9 @@ public:
   GLint loc_viwProjMatrixInverseTranspose;
   GLint loc_modelViewProjMatrixInverseTranspose;
 
+protected:
+  std::string mName;
+
 public:
   Program() : object(-1) {}
   virtual ~Program() {}
@@ -101,6 +104,10 @@ public:
   bool attachShaderSource(GLenum type, const StringVector& source);
   void attachShaderSourceAndFile(
     GLenum type, const StringVector& source, const std::string& file);
+
+  std::string getName() const { return mName; }
+  void setName( std::string v){mName = v;}
+
 };
 }
 
