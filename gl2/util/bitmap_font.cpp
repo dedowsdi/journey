@@ -110,7 +110,10 @@ void display(void) {
   glEnable(GL_BLEND);
   ft1->print(info, 10, wndHeight - wndWidth - 10);
 
-  bt->print("bitmap text : When will TWOW be released", 10, 50);
+  bt->print(
+    "bitmap text : When will TWOW be released? \n"
+    "              2018? 2019? 2020?",
+    10, 50);
 
   glutSwapBuffers();
 }
@@ -307,7 +310,7 @@ void idle() {}
 void passiveMotion(int x, int y) {}
 
 int main(int argc, char** argv) {
-  if (argc <= 3) {
+  if (argc < 3) {
     std::cout << "illegal command, it should be " << argv[0]
               << " font size [numCharacters] [output name] " << std::endl;
     return 0;

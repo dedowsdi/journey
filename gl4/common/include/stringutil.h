@@ -1,6 +1,7 @@
 #ifndef STRINGUTIL_H
 #define STRINGUTIL_H
 #include <string>
+#include "glm.h"
 
 namespace zxd {
 class StringUtil {

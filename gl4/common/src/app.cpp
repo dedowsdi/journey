@@ -142,12 +142,22 @@ void App::initWnd() {
     auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
     pthis->glfwMouseWheel(wnd, xoffset, yoffset);
   };
+  auto charCallback = [](GLFWwindow *wnd, unsigned int codepoint) {
+    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfwChar(wnd, codepoint);
+  };
+  auto charmodeCallback = [](GLFWwindow *wnd, unsigned int codepoint, int mod) {
+    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfwCharmod(wnd, codepoint, mod);
+  };
 
   glfwSetWindowSizeCallback(mWnd, resizeCallback);
   glfwSetKeyCallback(mWnd, keyCallback);
   glfwSetMouseButtonCallback(mWnd, mouseButtonCallback);
   glfwSetCursorPosCallback(mWnd, cursorCallback);
   glfwSetScrollCallback(mWnd, scrollCallback);
+  glfwSetCharCallback(mWnd, charCallback);
+  glfwSetCharModsCallback(mWnd, charmodeCallback);
 }
 
 //--------------------------------------------------------------------
@@ -157,6 +167,18 @@ void App::run() {
   createScene();
   loop();
 }
+
+//--------------------------------------------------------------------
+void App::startReading() {
+  mReading = GL_TRUE;
+  mInput.clear();
+}
+
+//--------------------------------------------------------------------
+void App::stopReading() { mReading = GL_FALSE; }
+
+//--------------------------------------------------------------------
+void App::finisheReading() { mReading = GL_FALSE; }
 
 //--------------------------------------------------------------------
 void App::loop() {
@@ -186,6 +208,22 @@ void App::glfwKey(
   (void)wnd;
   (void)scancode;
   (void)mods;
+
+  if (mReading) {
+    if (action == GLFW_PRESS) {
+      switch (key) {
+        case GLFW_KEY_BACKSPACE:
+          mInput.pop_back();
+          break;
+        case GLFW_KEY_ESCAPE:
+          stopReading();
+        default:
+          break;
+      }
+    }
+    return;
+  }
+
   if (action == GLFW_PRESS) {
     switch (key) {
       case GLFW_KEY_ESCAPE:
@@ -303,4 +341,14 @@ void App::glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
     (*mViewMatrix)[3][2] *= scale;
   }
 }
+
+//--------------------------------------------------------------------
+void App::glfwChar(GLFWwindow *wnd, unsigned int codepoint) {
+  if (mReading) {
+    mInput.push_back(char(codepoint));
+  }
+}
+
+//--------------------------------------------------------------------
+void App::glfwCharmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {}
 }

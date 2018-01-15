@@ -11,6 +11,7 @@ protected:
 public:
   HelloWorld() {}
 
+protected:
   virtual void initInfo() {
     App::initInfo();
     mInfo.title = "hello world";
@@ -64,6 +65,12 @@ public:
 
   virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
     App::glfwMouseWheel(wnd, xoffset, yoffset);
+  }
+  virtual void glfwChar(GLFWwindow *wnd, unsigned int codepoint){
+    App::glfwChar(wnd, codepoint);
+  }
+  virtual void glfwCharmod(GLFWwindow *wnd, unsigned int codepoint, int mods){
+    App::glfwCharmod(wnd, codepoint, mods);
   }
 };
 }

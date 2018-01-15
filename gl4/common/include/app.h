@@ -31,6 +31,8 @@ public:
   };
 
 protected:
+  GLboolean mReading;
+  std::string mInput;
   CameraMode mCameraMode;
   AppInfo mInfo;
   GLFWwindow *mWnd;
@@ -39,7 +41,7 @@ protected:
   dvec2 mLastButtonPosition;  // used to rotate camera when right button pressed
 
 public:
-  App() : mCameraMode(CM_BLEND), mViewMatrix(0) {}
+  App() : mCameraMode(CM_BLEND), mViewMatrix(0), mReading(GL_FALSE) {}
 
   void init();
   virtual void run();
@@ -52,6 +54,9 @@ public:
 
   CameraMode getCameraMode() const { return mCameraMode; }
   void setCameraMode(CameraMode v) { mCameraMode = v; }
+  void startReading();
+  void stopReading();
+  void finisheReading();
 
 protected:
   virtual void initInfo();
@@ -72,5 +77,7 @@ protected:
     GLFWwindow *wnd, int button, int action, int mods);
   virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y);
   virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset);
+  virtual void glfwChar(GLFWwindow *wnd, unsigned int codepoint);
+  virtual void glfwCharmod(GLFWwindow *wnd, unsigned int codepoint, int mods);
 };
 }
