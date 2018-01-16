@@ -16,5 +16,11 @@
     "lldb": {
       "breakpoint": {}
     }
+  },
+  "array": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
   }
 }

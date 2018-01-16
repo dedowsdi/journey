@@ -4,6 +4,7 @@ set (PROJECTS
     deferred
     lines
     normalmap
+    parallaxmap
     )
 
 foreach(PROJECT ${PROJECTS})

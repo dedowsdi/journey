@@ -95,4 +95,12 @@ void Program::attachShaderSourceAndFile(
   if (!attachShaderSource(type, combinedSource))
     std::cout << "failed to compile " << file << std::endl;
 }
+
+//--------------------------------------------------------------------
+void Program::clear()
+{
+  if (glIsProgram(object)) {
+    glDeleteProgram(object);
+  }
+}
 }

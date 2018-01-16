@@ -108,6 +108,8 @@ public:
   std::string getName() const { return mName; }
   void setName( std::string v){mName = v;}
 
+  void clear();
+
 };
 }
 

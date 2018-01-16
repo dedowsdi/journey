@@ -278,9 +278,9 @@ protected:
   }
 
   GLfloat getQuantity(int mods) {
-    GLfloat quantity = 0.1;
-    if (mods & GLFW_MOD_CONTROL) quantity = 0.01;
-    if (mods & GLFW_MOD_ALT) quantity = 0.001;
+    GLfloat quantity = 0.01;
+    if (mods & GLFW_MOD_CONTROL) quantity = 0.001;
+    //if (mods & GLFW_MOD_ALT) quantity = 0.001;
     if (mods & GLFW_MOD_SHIFT) quantity *= -1;
     return quantity;
   }
@@ -324,18 +324,6 @@ protected:
     if (!mReading) {
       if (action == GLFW_PRESS) {
         switch (key) {
-          case GLFW_KEY_Q:
-            getCurrentPane().addRed(getQuantity(mods));
-            updatePaneColorBuffer();
-            break;
-          case GLFW_KEY_W:
-            getCurrentPane().addGreen(getQuantity(mods));
-            updatePaneColorBuffer();
-            break;
-          case GLFW_KEY_E:
-            getCurrentPane().addBlue(getQuantity(mods));
-            updatePaneColorBuffer();
-            break;
           case GLFW_KEY_UP:
             up();
             break;
@@ -365,6 +353,25 @@ protected:
               (mInputMode + 1) % (sizeof(inputModes) / sizeof(inputModes[0]));
             break;
 
+          default:
+            break;
+        }
+      }
+
+      if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+        switch (key) {
+          case GLFW_KEY_Q:
+            getCurrentPane().addRed(getQuantity(mods));
+            updatePaneColorBuffer();
+            break;
+          case GLFW_KEY_W:
+            getCurrentPane().addGreen(getQuantity(mods));
+            updatePaneColorBuffer();
+            break;
+          case GLFW_KEY_E:
+            getCurrentPane().addBlue(getQuantity(mods));
+            updatePaneColorBuffer();
+            break;
           default:
             break;
         }

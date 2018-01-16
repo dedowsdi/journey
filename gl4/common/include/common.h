@@ -44,9 +44,17 @@ void setupVertexAttrib(GLint attrib, _It beg, _It end,
   glEnableVertexAttribArray(attrib);
 }
 
-#define setupFixedVertexAttrib(attrib, array) \
+
+template<typename T>
+void setupVertexAttrib(GLint attrib, const T& t){
+  setupVertexAttrib(attrib, t.begin(), t.end());
+}
+
+
+#define setupVertexAttribBuiltinArray(attrib, array) \
   setupVertexAttrib(                          \
     attrib, array, array + sizeof(array) / sizeof(decltype(array[0])));
+
 }
 
 #endif /* COMMON_H */

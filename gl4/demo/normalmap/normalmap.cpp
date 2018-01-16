@@ -215,21 +215,21 @@ public:
     glGenVertexArrays(1, &pyramid0.vao);
     glBindVertexArray(pyramid0.vao);
 
-    setupFixedVertexAttrib(
+    setupVertexAttribBuiltinArray(
       renderNormalmapProgram.attrib_normal, pyramid0.normals);
-    setupFixedVertexAttrib(
+    setupVertexAttribBuiltinArray(
       renderNormalmapProgram.attrib_texcoord, pyramid0.texcoords);
 
     glGenVertexArrays(1, &pyramid1.vao);
     glBindVertexArray(pyramid1.vao);
 
-    setupFixedVertexAttrib(
+    setupVertexAttribBuiltinArray(
       useNormalMapViewProgram.attrib_vertex, pyramid1.vertices);
-    setupFixedVertexAttrib(
+    setupVertexAttribBuiltinArray(
       useNormalMapViewProgram.attrib_normal, pyramid1.normals);
-    setupFixedVertexAttrib(
+    setupVertexAttribBuiltinArray(
       useNormalMapViewProgram.attrib_tangent, pyramid1.tangents);
-    setupFixedVertexAttrib(
+    setupVertexAttribBuiltinArray(
       useNormalMapViewProgram.attrib_texcoord, pyramid1.texcoords);
 
     glGenTextures(1, &normalMap);
