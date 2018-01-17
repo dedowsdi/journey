@@ -161,6 +161,27 @@ void App::initWnd() {
 }
 
 //--------------------------------------------------------------------
+void App::updateFps()
+{
+  static GLfloat lastTime = 0;
+  static GLfloat time = 0;
+  static GLfloat count = 0;
+
+  GLuint curTime = glfwGetTime();
+
+  time += curTime - lastTime;
+  ++count;
+
+  if (time >= 1) {
+    mFps = count;
+    time -= 1;
+    count = 0;
+  }
+
+  lastTime = curTime;;
+}
+
+//--------------------------------------------------------------------
 void App::run() {
   srand(time(0));
   init();
@@ -182,8 +203,9 @@ void App::finisheReading() { mReading = GL_FALSE; }
 
 //--------------------------------------------------------------------
 void App::loop() {
-  glfwSwapInterval(1);
+  glfwSwapInterval(mSwapInterval);
   while (!glfwWindowShouldClose(mWnd)) {
+    updateFps();
     update();
     display();
     glfwSwapBuffers(mWnd);
@@ -237,6 +259,9 @@ void App::glfwKey(
         glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
         glPolygonMode(
           GL_FRONT_AND_BACK, GL_POINT + (polygonMode - GL_POINT + 1) % 3);
+      } break;
+      case GLFW_KEY_KP_2: {
+        glfwSwapInterval(mSwapInterval ^= 1);
       } break;
 
       case GLFW_KEY_KP_1: {

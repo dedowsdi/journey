@@ -13,10 +13,10 @@ namespace zxd {
 struct Pyramid0 {
   GLuint vao;
   vec3 vertices[12] = {
-    vec3(0, 0, 1) , vec3(-1, -1, 0) , vec3(1,  -1, 0) ,
-    vec3(0, 0, 1) , vec3(1,  -1, 0) , vec3(1,  1,  0) ,
-    vec3(0, 0, 1) , vec3(1,  1,  0) , vec3(-1, 1,  0) ,
-    vec3(0, 0, 1) , vec3(-1, 1,  0) , vec3(-1, -1, 0)
+    vec3(0, 0, 0.5) , vec3(-1, -1, 0) , vec3(1,  -1, 0) ,
+    vec3(0, 0, 0.5) , vec3(1,  -1, 0) , vec3(1,  1,  0) ,
+    vec3(0, 0, 0.5) , vec3(1,  1,  0) , vec3(-1, 1,  0) ,
+    vec3(0, 0, 0.5) , vec3(-1, 1,  0) , vec3(-1, -1, 0)
   };
   vec3 normals[12];
   vec2 texcoords[12] = {
@@ -244,7 +244,7 @@ public:
 
     // light
     zxd::LightSource dirLight;
-    dirLight.position = vec4(0, -1, 1, 0);
+    dirLight.position = vec4(1, -1, 1, 0);
     dirLight.diffuse = vec4(1, 1, 1, 1);
     dirLight.specular = vec4(1, 1, 1, 1);
     dirLight.linearAttenuation = 1.0f;
@@ -256,8 +256,8 @@ public:
     // material
     material.ambient = vec4(0.2);
     material.diffuse = vec4(0.8);
-    material.specular = vec4(0.8);
-    material.shininess = 30;
+    material.specular = vec4(1.0);
+    material.shininess = 50;
 
     bindUniformLocations(useNormalMapViewProgram);
 
@@ -329,6 +329,7 @@ public:
     std::stringstream ss;
     ss << "q : lighting space : " << (lightSpace == 0 ? "view" : "tangent")
        << std::endl;
+    ss << "fps : "<< mFps << std::endl;
     mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
     glDisable(GL_BLEND);
   }

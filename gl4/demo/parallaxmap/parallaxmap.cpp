@@ -213,6 +213,7 @@ public:
     ss << "q : parallax method : " << parallaxMethods[program.parallaxMethod]
        << std::endl;
     ss << "w : heightScale : " << heightScale << std::endl;
+    ss << "fps : " << mFps << std::endl;
     mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
     glDisable(GL_BLEND);
   }

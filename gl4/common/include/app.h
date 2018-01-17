@@ -32,6 +32,8 @@ public:
 
 protected:
   GLboolean mReading;
+  GLuint mSwapInterval{1};
+  GLfloat mFps;
   std::string mInput;
   CameraMode mCameraMode;
   AppInfo mInfo;
@@ -66,6 +68,7 @@ protected:
   virtual void createScene() {}
   virtual void update() {}
   virtual void display() {}
+  virtual void updateFps();
 
   virtual void loop();
   virtual void shutdown() {}
