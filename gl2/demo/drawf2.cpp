@@ -21,6 +21,9 @@
  *  If color_map is enabled with rgb color, let's assume red map is size of n,
  *  than after map, r = map[round(r*(n-1))].
  *
+ *  If you use pixel buffer, you will get GL_INVALID_OPERATION if you draw call
+ *  access exceed buffer size.
+ *
  */
 
 #include "glad/glad.h"
@@ -30,6 +33,7 @@
 #include <stdio.h>
 #include "common.h"
 
+GLuint pubo;
 GLubyte image[12 * 16 * 3];
 
 // subrect of image
@@ -93,9 +97,14 @@ void createImage() {
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
 
+  createImage();
+
+  glGenBuffers(1, &pubo);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pubo);
+  glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(image), image, GL_STATIC_DRAW);
+
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
-  createImage();
 }
 
 void display(void) {
@@ -103,12 +112,15 @@ void display(void) {
   glColor3f(1.0, 1.0, 1.0);
   glRasterPos2i(200, 200);
   glPixelZoom(10, 10);
-  glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, image);
+
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pubo);
+  glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, BUFFER_OFFSET(0));
 
   glColor3f(1.0f, 1.0f, 1.0f);
   glWindowPos2i(10, 480);
   char info[512];
 
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   sprintf(info,
     "qQ : _x0 : %u\n"
     "wW : _y0 : %u\n"
