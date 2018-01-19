@@ -1,0 +1,305 @@
+ vim: tw=80 sw=2 ts=2 et
+-----------
+2018.01.02:
+    
+bash:
+  indirect expansion ${!var}
+    var=foo ; foo=hoo; echo ${!var}
+
+  ${parameter#word}, remove matching prefix as less as possible
+  ${parameter##word}, remove matching prefix as much as possible
+
+  ${parameter%word}, remove matching tail as less as possible
+  ${parameter%%word}, remove matching tail as much as possible
+
+  here string 
+    <<<str
+
+-----------
+2018.01.03:
+
+bash:
+  IFS sequence of characters used to split fields. default to <space><tab><newline>
+
+  "$*" = "$1c$2c$3..."
+  "$@" = "$1"c"$2"c"$3"...
+
+  array:
+    indexed array works like vector
+    declare -a l ; l=(a b c d e) ; echo ${#l[@]} ;  unset l[0] ; echo ${l[@]}
+
+    associatived array works like map
+    declare -A m; m[a]=A ; m[b]=B ; m[c]=C ; unset m[b] ; echo ${#m[@]} ; echo ${!m[@]} ; echo ${m[@]}
+
+-----------
+2018.01.06:
+
+vim:
+  winnr('$') get number of windows
+  bufwinnr(winbufnr(winid)) conver winid to winnr
+  use getwinvar() to retrieve window variable and option
+  use getwininfo() to retreive window infor
+
+-----------
+2018.01.07:
+
+vim:
+  You can not set break point at anomymous function(numbered funcition). You should use normal
+  function with dict postfix.
+  use :function /pattern to search function
+
+-----------
+2018.01.08:
+
+wsl:
+  wsl doesn't support gui related stuff.
+
+bash:
+  grep -L ...  get files without match
+  you can nest "" if the inner "" is used to quote sub command result
+  !!:0  repeat last command, discard everything except 1st word
+
+ag:
+  ag use pcre(3) with multiline enabled search pattern.
+
+linebreak:
+  unix    LF   0A   \n
+  windows CRLF 0D0A \r\n
+  mac     CR   0D   \r
+  Make sure you don't mix fileformat, some search patterns rely on it.
+
+vim:
+  gp paste below cursor, place cursor at end of newly pasted context
+  in order to search literal string with line break, use
+     substitute(escape(string, '/\?'), "\n", '\\n', 'g')
+  replace string musbe be '\\n', '\n' won't work. It works like manually type /Ctrl-r=string
+  when searching, \n is newline, \r is CR (carriage return = Ctrl-M = ^M) 
+  when replacing, \r is newline, \n is a null byte (0x00).
+
+-----------
+2018.01.09:
+
+bash:
+  grep -F and ag -F are totally different,  grep -F interpret pattern as a list of new line
+  seperated strings, each string will be used as a search pattern, any of which is to be matched
+  seperately.  ag -F match pattern as whole string, including "newline".
+  You can not use \n as line break in literal search, you must use the real linebreak character(0X0A
+  for unix)
+
+-----------
+2018.01.09:
+
+vim:
+  shellescape(str) escape str to be used for shell command arg,
+  ' => '\''
+  \n and ! will be escaped once or twice
+  %#will be escaped zero or once
+
+  If you want to use str as literial match, leave \n and ! alone, but escape %#| if you will use it'll
+  be used in a ex command.
+
+-----------
+2018.01.10:
+
+sed:
+  by default, sed output all the processed text, use -n to suppress it
+  sed took script from --expression or --file or the first non option argument if there has no -e or
+  -f. 
+  you can specify multiple input to sed, they will be combined together as a single giant input, you
+  can also use -s to tell sed to treat them seperately.
+  Commands within a script or script-file can be separated by semicolons (;) or newlines (ASCII 10).
+  Multiple scripts can be specified with -e or -f options.
+
+  all sed command follow this syntax:
+    [addr]X[options]
+
+vim:
+  special range:
+    /{pattern}[/], [/] is needed to seperate pattern from anything that follows
+    ?{pattern}[?], 
+    \/           , use previous search pattern
+    \?
+    \&           , use previous substitute pattern
+    /pat1//pat2/ , find line contain "pat2" after line containing "pat1", without moving the cursor,
+                   pat2 search will start from current cursor position
+    5;/pat2/     , find line contain "pat2" after line 5, leaving the cursor in line 5
+                   pat2 search will start after line 5
+
+-----------
+2018.01.12:
+
+sed:
+  sed address is very much alike vim range, except:
+    blank range indicate whole file
+    post ! after range is used to negate the sense of match
+
+  sed use BRE by default, -e will switch to ERE
+
+regex:
+  backreference: \# reference previous # capturing group, \1 matches the exact same text that was
+  matched by the first capturing group. 
+
+gl:
+  always clear depth if you depth test is enabled.
+  
+-----------
+2018.01.13:
+
+gl:
+  lighting of normalmap is prefered to be calculated in tangent space, which means you have to
+  transform light, camera into tangent space in vertex shader. Local viewer of light model has no
+  meaning in tangent space lighting.
+
+  It's easier to calculate normalmap lighting in view space, you only need to transfrom normal from
+  tbn space to view space in fragment shader.
+
+-----------
+2018.01.14:
+
+gl:
+  for debug purpose, it'd better to get used to normal colors:
+
+  normal      | color         | basic color name 
+  ------------|-----------------------------------
+  1,  0,  0   | 1,   0.5, 0.5 | light brown?
+  0,  1,  0   | 0.5, 1,   0.5 | light lime?
+  0,  0,  1   | 0.5, 0.5, 1   | light blue ?
+  -1, 0,  0   | 0,   0.5, 0.5 | teal
+  0,  -1, 0   | 0.5, 0,   0.5 | purple
+  0,  0,  -1  | 0.5, 0.5, 0   | olive
+
+  basic rgb colors:
+    Black   #000000 (0,0,0)
+    White   #FFFFFF (255,255,255)
+    Red     #FF0000 (255,0,0)
+    Lime    #00FF00 (0,255,0)
+    Blue    #0000FF (0,0,255)
+    Yellow  #FFFF00 (255,255,0)
+    Cyan    #00FFFF (0,255,255)
+    Magenta #FF00FF (255,0,255)
+    Silver  #C0C0C0 (192,192,192)
+    Gray    #808080 (128,128,128)
+    Maroon  #800000 (128,0,0)
+    Olive   #808000 (128,128,0)
+    Green   #008000 (0,128,0)
+    Purple  #800080 (128,0,128)
+    Teal    #008080 (0,128,128)
+    Navy    #000080 (0,0,128)
+
+
+  yellow = red + green
+  cyan = green + blue
+  magenta = red + blue
+
+-----------
+2018.01.15:
+
+gl:
+  If your vertex attribute array looks weird, such as the w componnet is not 1 or the number of
+  components is not right, you might forgot to enable this attribute array.
+
+sed:
+  you can specify number flag to replace only nth match.
+
+vim:
+  bufexists works on full path name, tild path name, and relative path name
+  There is no number flag in substitute, you can only do it with following regex:
+  s/\v%((pattern).{-}){n-1th}\zspattern/replace pattern/
+
+-----------
+2018.01.16:
+
+freeimage:
+  FreeImage uses a BGR[A] pixel layout under a Little Endian processor (Windows, Linux) and uses a
+  RGB[A] pixel layout under a Big Endian  processor (Mac OS X or any Big Endian Linux / Unix). 
+
+-----------
+2018.01.17:
+
+lldb:
+  Lldb 3.8 only support watchpoint for built in type?
+  Faild to set watch point for glm::mat4[0][0], always complain failed to send
+  gdb stuff.
+
+vim:
+  undo branches:
+    normal undo(u) redo(ctrl-r) goes back and forward along current branch. When you undo something
+    and make a change, vim will create a new undo branch for you.
+    Every change you made is numbered, you can travel along it with g- and g+, or :earlier, :later,
+    g- is the same as earlier 1, g+ is the same as g+. You can also goto specific change directly
+    with :undo N (:undo N is totally different from :undo), if N is in current branch, current
+    branch didn't change, otherwise, current branch is changed to branch that contains N (If
+    multiple branches contain N, use the one with largest change number).
+    :earlier {N}{[s|m|h|d]} works with time
+    :earlier {N}f goto older text state {N} file writes before.
+    :undolist will list head chagne of every branch.
+
+  there is no way to paste literal linebreak directly, you must use = register
+  to do this
+
+-----------
+2018.01.18:
+
+vim:
+  if command has -bar option, you must escape | if you want to use it as
+  argument.
+  ex command will expand % to current file, # to alternate file
+  grep will use !shellcmd ? which means if you want to match literal linebrak,
+  you must escape it.
+
+  file search:
+    downward search:
+      ** matches only directory in file search, 
+      **5 means maximum number of levels matched is 5
+
+    upward search:
+      usually used to search for a file
+      /a/b/c/d;/a/b will search in:
+        /a/b/c/d
+        /a/b/c
+        /a/b
+      /a/b is called stop directory, it should be appended to previous path with
+      a ';'. if you omit it, vim will search until root.
+      e;/a/b  will search in (assume current dir is /a/b/c/d):
+        /a/b/c/d/e
+        /a/b/c/e
+        /a/b/e
+
+    combined search:
+      **;/a/b wil search in(assume crrent dir is /a/b/c/d):
+      /a/b/c/d/**
+      /a/b/c/**
+      /a/b/**
+
+  'tags' : by default &tags = ./tags;,tags
+    if cpoption doesn't include 'd' ./ will expand to path of current file.
+
+  gl:
+    it's totally legal to bind the same buffer to different target.
+
+-----------
+2018.01.18:
+
+linux:
+  check cpu :
+    lscpu
+    cat /proc/cpuinfo 
+  check disk and partition :
+    lsblk
+    fdisk -l
+  check slot on mother board:
+    lspci
+  check cpu bit :
+    getconf LONG_BIT 
+  check memory :
+    free
+    cat /proc/meminfo  
+  check memory hardware :
+    dmidecode -t memory
+  check bios :
+    dmidecode -t bios
+  check all DMI(desktop management interface) info
+    dmidecode -q
+  check system info :
+    uname -a
+
