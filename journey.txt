@@ -303,3 +303,51 @@ linux:
   check system info :
     uname -a
 
+  iconv can be used to change character encoding
+
+vim:
+  :set change both global and local option
+  :setglobal set global option
+  :setlocal set local option
+  setlocal option< set local value to it's global value
+  set option<  remove local value, so global value will be used
+
+  fileencodings : 
+    when you edit an existing file in vim, vim will try fileencoding in
+    'fileencodings' in sequence, utf-8 will be used if all failed, fileencoding
+    will be set to an empty string, so you should put special encoding (such as
+    ucs-bom)in the front part, and common encoding(such as latin1) in the back.
+    fileencodings is ignored if ++enc exists
+    if fileencodings is empty, vim will use global fileencoding
+
+  fileencoding :
+    when you edit a new file, global fileencoding will be used. If fileencoding
+    is empty, utf-8 will be used.  if fileencoding is not utf-8, conversion will
+    be done when writting the file(via internal iconv).
+  
+  encoding:
+    vim internal encoding, it's always utf-8
+
+  ga : print ascii value
+  g8 : print hex value
+  8g8 : find illegal utf-8 byte sequence
+
+-----------
+2018.01.20:
+
+vim:
+  ctrl-\_e replace whole cmdline with expressiion, you miight need getcmdtype(),
+  getcmdline(), getcmdpos(), setcmdpos() to help you with it.
+
+  help topic:
+    prefix   example    context
+    :        :h let     excmd
+    none     :h r       normal mode
+    v_       :h v_*     visualmode
+    i_       :h i_*     insert mode
+    c_       :h c_*     ex command line
+    /        :h /*      search patterno
+    '        :h '*'     option
+    -        :h -*      vim argument
+   you can use ctrl-v to insert the special key want to search help
+
