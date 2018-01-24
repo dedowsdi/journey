@@ -114,15 +114,16 @@ sed:
     [addr]X[options]
 
 vim:
-  special range:
-    /{pattern}[/], [/] is needed to seperate pattern from anything that follows
-    ?{pattern}[?], 
-    \/           , use previous search pattern
+  special line number in range:
+    /{pattern}[/]  [/] is needed to seperate pattern from anything that follows
+    ?{pattern}[?]  
+    \/             use previous search pattern
     \?
-    \&           , use previous substitute pattern
-    /pat1//pat2/ , find line contain "pat2" after line containing "pat1", without moving the cursor,
-                   pat2 search will start from current cursor position
-    5;/pat2/     , find line contain "pat2" after line 5, leaving the cursor in line 5
+    \&             use previous substitute pattern
+    /pat1//pat2/   find line contain "pat2" after line containing "pat1", without moving the cursor
+
+  range can be seperated with , or ;
+    5;/pat2/       find line contain "pat2" after line 5, leaving the cursor in line 5
                    pat2 search will start after line 5
 
 -----------
@@ -317,7 +318,7 @@ vim:
     'fileencodings' in sequence, utf-8 will be used if all failed, fileencoding
     will be set to an empty string, so you should put special encoding (such as
     ucs-bom)in the front part, and common encoding(such as latin1) in the back.
-    fileencodings is ignored if ++enc exists
+    fileencodings is ignored if ++enc option exists
     if fileencodings is empty, vim will use global fileencoding
 
   fileencoding :
@@ -351,3 +352,24 @@ vim:
     -        :h -*      vim argument
    you can use ctrl-v to insert the special key want to search help
 
+-----------
+2018.01.20:
+
+vim:
+  search-offset:
+    /pattern/[bse][num]   apply lines or characters offset
+    /pattern0/;/patten1/  use /patten1/ as offset, search start after match of pattern0
+
+bash:
+  nl   add line number to output
+
+-----------
+2018.01.23:
+
+vim:
+  You can get all special character code in :digraph, or search digraph-table
+
+c++:
+  when you insert something at iter to a vector, if the vector needs to be
+  reallocated, all iterators will be invalidated, otherwise only iteraters
+  starts from iter will be invalidated.

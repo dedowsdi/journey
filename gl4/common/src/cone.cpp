@@ -1,56 +1,51 @@
-#include "sphere.h"
+#include "cone.h"
 #include "common.h"
 
 namespace zxd {
 
 //--------------------------------------------------------------------
-void Sphere::buildVertex(GLuint location) {
-  GLfloat phiStep = glm::pi<GLfloat>() / mStack;
-  GLfloat thetaStep = 2 * glm::pi<GLfloat>() / mSlice;
+void Cone::buildVertex(GLuint location) {
+  GLfloat thetaStep = 2 * glm::pi<GLfloat>() / mSlice;  // azimuthal angle step
+  GLfloat heightStep = mHeight / mStack;
+  GLfloat radiusStep = mRadius / mStack;
 
   GLuint numVertPole = mSlice + 1;
   GLuint numVertCenter = (mSlice + 1) * 2;
 
-  mVertices.reserve(numVertPole * 2 + numVertCenter * (mStack - 2));
+  mVertices.reserve(numVertPole * 2 + numVertCenter * (mStack - 1));
 
-  // create sphere stack by stack along z
+  // add bottom fan
+  mVertices.push_back(vec3(0.0));
+  for (int i = 0; i <= mSlice; ++i) {
+    GLfloat theta = -thetaStep * i; // apply - for back face
+    mVertices.push_back(
+      vec3(mRadius * glm::cos(theta), mRadius * glm::sin(theta), 0));
+  }
+
+  // create stack from bottom to top
   // build triangle strip as
   //    0 2
   //    1 3
   for (int i = 0; i < mStack; ++i) {
-    GLfloat phi0 = i * phiStep;
-    GLfloat phi1 = phi0 + phiStep;
+    GLfloat h0 = heightStep * i;
+    GLfloat h1 = h0 + heightStep;
+    GLfloat r0 = radiusStep * (mStack - i);
+    GLfloat r1 = r0 - radiusStep;
 
-    GLfloat sinPhi0 = std::sin(phi0);
-    GLfloat sinPhi1 = std::sin(phi1);
-    GLfloat cosPhi0 = std::cos(phi0);
-    GLfloat cosPhi1 = std::cos(phi1);
-
-    GLfloat rTimesSinPhi0 = mRadius * sinPhi0;
-    GLfloat rTimesSinPhi1 = mRadius * sinPhi1;
-    GLfloat rTimesCosPhi0 = mRadius * cosPhi0;
-    GLfloat rTimesCosPhi1 = mRadius * cosPhi1;
-
-    // add pole
-    if (i == 0) mVertices.push_back(glm::vec3(0, 0, mRadius));
-    if (i == mStack - 1) mVertices.push_back(glm::vec3(0, 0, -mRadius));
+    // add hat
+    if (i == mStack - 1) mVertices.push_back(glm::vec3(0, 0, mHeight));
 
     for (int j = 0; j <= mSlice; j++) {
       // loop last stack in reverse order
-      GLfloat theta = thetaStep * (i == mStack - 1 ? -j : j);
+      GLfloat theta = thetaStep * j;
       GLfloat cosTheta = std::cos(theta);
       GLfloat sinTheta = std::sin(theta);
 
-      // x = rho * sin(phi) * cos(theta)
-      // x = rho * sin(phi) * sin(theta)
-      // z = rho * cos(phi)
-      if (i != 0)
-        mVertices.push_back(vec3(
-          rTimesSinPhi0 * cosTheta, rTimesSinPhi0 * sinTheta, rTimesCosPhi0));
+      if (i != mStack - 1) {
+        mVertices.push_back(vec3(r1 * cosTheta, r1 * sinTheta, h1));
+      }
 
-      if (i != mStack - 1)
-        mVertices.push_back(vec3(
-          rTimesSinPhi1 * cosTheta, rTimesSinPhi1 * sinTheta, rTimesCosPhi1));
+      mVertices.push_back(vec3(r0 * cosTheta, r0 * sinTheta, h0));
     }
   }
 
@@ -66,12 +61,41 @@ void Sphere::buildVertex(GLuint location) {
 }
 
 //--------------------------------------------------------------------
-void Sphere::buildNormal(GLuint location) {
+void Cone::buildNormal(GLuint location) {
   mNormals.clear();
   mNormals.reserve(mVertices.size());
-  for (int i = 0; i < mVertices.size(); ++i) {
-    mNormals.push_back(glm::normalize(mVertices[i]));
+
+  GLuint numVertBottom = mSlice + 2;
+
+  // normals for bottom
+  for (int i = 0; i < numVertBottom; ++i) {
+    mNormals.push_back(vec3(0, 0, -1));
   }
+
+  glm::vec3 apex(0, 0, mHeight);
+
+  // normals for 1st stack
+  for (int i = 0; i <= mSlice; ++i) {
+    const vec3& vertex = mVertices[numVertBottom + i * 2];
+    vec3 outer = glm::cross(vertex, apex);
+    vec3 normal = glm::cross(apex - vertex, outer);
+    mNormals.push_back(normal);
+    mNormals.push_back(normal);
+  }
+
+  // normals for 1 - last 2 stacks
+  for (int i = 1; i < mStack - 1; ++i) {
+    // no reallocate will happen here
+    mNormals.insert(mNormals.end(), mNormals.begin() + numVertBottom,
+      mNormals.begin() + numVertBottom + (mSlice + 1) * 2);
+  }
+
+  // normals for last stacks
+  mNormals.push_back(vec3(0, 0, 1));
+  for (int i = 0; i <= mSlice; ++i) {
+    mNormals.push_back(mNormals[numVertBottom + i * 2]);
+  }
+  assert(mNormals.size() == mVertices.size());
 
   bindVertexArrayObject();
 
@@ -85,27 +109,22 @@ void Sphere::buildNormal(GLuint location) {
 }
 
 //--------------------------------------------------------------------
-void Sphere::buildTexcoord(GLuint location) {
-  // t ranges from 0.0 at z = - radius to 1.0 at z = radius (t increases
-  // linearly along longitudinal lines), and s ranges from 0.0 at the +y axis,
-  // to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x axis,
-  // and back to 1.0 at the +y axis
+void Cone::buildTexcoord(GLuint location) {
+  // t ranges from 0.0 at 0 to 1.0 at z = height, and s ranges from 0.0 at the
+  // +y axis, to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x
+  // axis, and back to 1.0 at the +y axis
   
   mTexcoords.clear();
   mTexcoords.reserve(mVertices.size());
+
   float twoPi = 2 * glm::pi<GLfloat>();
   for (int i = 0; i < mVertices.size(); ++i) {
-    GLfloat cosPhi = mVertices[i].z / mRadius;
-    GLfloat phi = std::acos(cosPhi);
-    GLfloat sinPhi = std::sin(phi);
-    GLfloat cosTheta = mVertices[i].x / (mRadius * sinPhi);
-    GLfloat sinTheta = mVertices[i].y / (mRadius * sinPhi);
 
-    GLfloat gamma = std::atan2(-cosTheta, sinTheta);
+    GLfloat gamma = std::atan2(-mVertices[i].x, mVertices[i].y);
     if (gamma < 0) gamma += 2 * twoPi;
 
     float s = gamma / twoPi;
-    float t = phi / twoPi;
+    float t = mVertices[i].z / mHeight;
     mTexcoords.push_back(glm::vec2(s, t));
   }
 
@@ -121,7 +140,7 @@ void Sphere::buildTexcoord(GLuint location) {
 }
 
 //--------------------------------------------------------------------
-void Sphere::draw(GLuint primcount /* = 1*/) {
+void Cone::draw(GLuint primcount /* = 1*/) {
   GLuint numVertPole = mSlice + 2;  // pole + slice + 1
   GLuint numVertCenter = (mSlice + 1) * 2;
 
@@ -131,7 +150,7 @@ void Sphere::draw(GLuint primcount /* = 1*/) {
     glDrawArrays(GL_TRIANGLE_FAN, 0, numVertPole);
 
     GLuint next = numVertPole;
-    for (int i = 0; i < mStack - 2; ++i, next += numVertCenter) {
+    for (int i = 0; i < mStack - 1; ++i, next += numVertCenter) {
       glDrawArrays(GL_TRIANGLE_STRIP, next, numVertCenter);
     }
     glDrawArrays(GL_TRIANGLE_FAN, next, numVertPole);
@@ -145,5 +164,4 @@ void Sphere::draw(GLuint primcount /* = 1*/) {
     glDrawArraysInstanced(GL_TRIANGLE_FAN, next, numVertPole, primcount);
   }
 }
-
 }

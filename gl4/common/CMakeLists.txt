@@ -10,8 +10,11 @@ set(COMMON_SRCS
     src/geometry.cpp
     src/sphere.cpp
     src/cuboid.cpp
+    src/cone.cpp
     src/stringutil.cpp
     src/texutil.cpp
+    src/cylinder.cpp
+    src/torus.cpp
     )
 
 add_library(common 

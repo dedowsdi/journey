@@ -30,4 +30,7 @@ GLenum glDebugSeverityFromString(const char* s);
 const char* glPolygonModeToString(GLenum e);
 GLenum glPolygonModeFromString(const char* s);
 
+const char* glCullFaceModeToString(GLenum e);
+GLenum glCullFaceModeFromString(const char* s);
+
 #endif /* GLENUMSTRING_H */

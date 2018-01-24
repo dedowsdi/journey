@@ -32,7 +32,7 @@ void display(void) {
 
   glPushMatrix();
   glTranslatef(-4, 0, 0);
-  glutSolidTorus(0.5, 1, 7, 16);
+  glutSolidTorus(0.5, 1, 5, 16);
   glPopMatrix();
 
   glPushMatrix();
@@ -42,10 +42,24 @@ void display(void) {
   GLint polygonMode[2];
   glGetIntegerv(GL_POLYGON_MODE, polygonMode);
 
+  GLint cullFace;
+  glGetIntegerv(GL_CULL_FACE_MODE, &cullFace);
+
   glColor3f(1.0f, 1.0f, 1.0f);
   glWindowPos2i(10, 492);
   GLchar info[256];
-  sprintf(info, "q : polygonMode : %s \n", glPolygonModeToString(polygonMode[0]));
+  // clang-format off
+  sprintf(info,
+    "q : polygonMode : %s \n"
+    "w : cullface : %d \n"
+    "e : depth : %d \n"
+    "r : lighting : %d \n"
+    "u : cullface : %s \n"
+    ,
+    glPolygonModeToString(polygonMode[0]), glIsEnabled(GL_CULL_FACE),
+    glIsEnabled(GL_DEPTH_TEST), glIsEnabled(GL_LIGHTING), glCullFaceModeToString(cullFace)
+    );
+  // clang-format on
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
 
   glutSwapBuffers();
@@ -54,7 +68,8 @@ void display(void) {
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_SMOOTH);
-  glEnable(GL_LIGHTING);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
@@ -119,6 +134,43 @@ void keyboard(unsigned char key, int x, int y) {
       glPolygonMode(GL_FRONT_AND_BACK, polygonMode[0]);
       glutPostRedisplay();
     } break;
+    case 'w': {
+      if (glIsEnabled(GL_CULL_FACE)) {
+        glDisable(GL_CULL_FACE);
+      } else {
+        glEnable(GL_CULL_FACE);
+      }
+      glutPostRedisplay();
+    } break;
+    case 'e': {
+      if (glIsEnabled(GL_DEPTH_TEST)) {
+        glDisable(GL_DEPTH_TEST);
+      } else {
+        glEnable(GL_DEPTH_TEST);
+      }
+      glutPostRedisplay();
+    } break;
+    case 'r': {
+      if (glIsEnabled(GL_LIGHTING)) {
+        glDisable(GL_LIGHTING);
+      } else {
+        glEnable(GL_LIGHTING);
+      }
+      glutPostRedisplay();
+    } break;
+    case 'u': {
+      GLint cullFace;
+      glGetIntegerv(GL_CULL_FACE_MODE, &cullFace);
+      if (cullFace == GL_FRONT) {
+        glCullFace(GL_BACK);
+      } else if (cullFace == GL_BACK) {
+        glCullFace(GL_FRONT_AND_BACK);
+      } else {
+        glCullFace(GL_FRONT);
+      }
+      glutPostRedisplay();
+    } break;
+
     default:
       break;
   }

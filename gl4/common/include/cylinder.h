@@ -1,5 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef CYLINDER_H
+#define CYLINDER_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -7,11 +7,12 @@
 namespace zxd {
 
 /*
- * build sphere with two triangle fans and a bunch of triangle strips
+ * build cylinder with two triangle fans and a bunch of triangle strips
  */
-class Sphere : public Geometry {
+class Cylinder : public Geometry {
 protected:
   GLfloat mRadius;
+  GLfloat mHeight;
   GLuint mSlice;  // longitiude
   GLuint mStack;  // latitude
 
@@ -20,9 +21,9 @@ protected:
   Vec2Vector mTexcoords;
 
 public:
-  Sphere() : mRadius(1), mSlice(16), mStack(16) {}
-  Sphere(GLfloat radius, GLuint slice, GLuint stack)
-      : mRadius(radius), mSlice(slice), mStack(stack) {}
+  Cylinder() : mRadius(1), mHeight(1), mSlice(16), mStack(16) {}
+  Cylinder(GLfloat radius, GLfloat height, GLuint slice, GLuint stack)
+      : mRadius(radius), mHeight(height), mSlice(slice), mStack(stack) {}
 
   void buildVertex(GLuint location);
   // as i'm using strip and fan, normal should be vertex normal.
@@ -39,7 +40,10 @@ public:
 
   inline GLuint getStack() const { return mStack; }
   inline void setStack(GLuint v) { mStack = v; }
+
+  inline GLfloat getHeight() const { return mHeight; }
+  inline void setHeight(GLfloat v) { mHeight = v; }
 };
 }
 
-#endif /* SPHERE_H */
+#endif /* CYLINDER_H */

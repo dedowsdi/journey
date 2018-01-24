@@ -6,6 +6,10 @@
 #include <sstream>
 #include "glEnumString.h"
 #include "cuboid.h"
+#include "cone.h"
+#include "stateutil.h"
+#include "cylinder.h"
+#include "torus.h"
 
 namespace zxd {
 
@@ -61,10 +65,13 @@ protected:
   zxd::Material mMaterial;
   Sphere mSphere;
   Cuboid mCuboid;
+  Cone mCone;
+  Cylinder mCylinder;
+  Torus mTorus;
   BlinnProgram mProgram;
 
 public:
-  GeometryApp() : mSphere(1, 16, 16), mCameraPos(0, -6, 6) {}
+  GeometryApp() :  mCameraPos(0, -6, 6) {}
 
   virtual void initInfo() {
     App::initInfo();
@@ -114,12 +121,22 @@ public:
     mCuboid.buildVertex(mProgram.attrib_vertex);
     mCuboid.buildNormal(mProgram.attrib_normal);
 
+    mCone.buildVertex(mProgram.attrib_vertex);
+    mCone.buildNormal(mProgram.attrib_normal);
+
+    mCylinder.buildVertex(mProgram.attrib_vertex);
+    mCylinder.buildNormal(mProgram.attrib_normal);
+
+    mTorus.setRings(32);
+    mTorus.setSides(32);
+    mTorus.buildVertex(mProgram.attrib_vertex);
+    mTorus.buildNormal(mProgram.attrib_normal);
   }
 
   virtual void update() {}
 
   virtual void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(mProgram);
 
@@ -140,15 +157,36 @@ public:
     mProgram.updateModel(model);
     mCuboid.draw();
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    model = glm::translate(glm::vec3(-2, 0, 0));
+    mProgram.updateModel(model);
+    mCone.draw();
+
+    model = glm::translate(glm::vec3(0, 2, 0));
+    mProgram.updateModel(model);
+    mCylinder.draw();
+
+    model = glm::translate(glm::vec3(0, -3, 0));
+    mProgram.updateModel(model);
+    mTorus.draw();
+
+    GLint cullFace;
+    glGetIntegerv(GL_CULL_FACE_MODE, &cullFace);
 
     GLint polygonMode;
     glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
     std::stringstream ss;
-    ss << "q : polygon mode " << glPolygonModeToString(polygonMode);
-    mBitmapText.print(ss.str(), 10, 492);
-    glDisable(GL_BLEND);
+    ss << "q : polygon mode " << glPolygonModeToString(polygonMode)
+       << std::endl;
+    ss << "w : cullface " << GLint(glIsEnabled(GL_CULL_FACE)) << std::endl;
+    ss << "e : depth " << GLint(glIsEnabled(GL_DEPTH_TEST)) << std::endl;
+    ss << "r : cullface " << glCullFaceModeToString(cullFace) << std::endl;
+
+    {
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      CapabilityGuard<GL_BLEND> blend(GL_TRUE);
+      CapabilityGuard<GL_CULL_FACE> cullFace(GL_FALSE);
+      mBitmapText.print(ss.str(), 10, 492);
+    }
   }
 
   virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
@@ -169,6 +207,31 @@ public:
           glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
           glPolygonMode(
             GL_FRONT_AND_BACK, GL_POINT + (polygonMode - GL_POINT + 1) % 3);
+        } break;
+        case GLFW_KEY_W: {
+          if (glIsEnabled(GL_CULL_FACE)) {
+            glDisable(GL_CULL_FACE);
+          } else {
+            glEnable(GL_CULL_FACE);
+          }
+        } break;
+        case GLFW_KEY_E: {
+          if (glIsEnabled(GL_DEPTH_TEST)) {
+            glDisable(GL_DEPTH_TEST);
+          } else {
+            glEnable(GL_DEPTH_TEST);
+          }
+        } break;
+        case GLFW_KEY_R: {
+          GLint cullFace;
+          glGetIntegerv(GL_CULL_FACE_MODE, &cullFace);
+          if (cullFace == GL_FRONT) {
+            glCullFace(GL_BACK);
+          } else if (cullFace == GL_BACK) {
+            glCullFace(GL_FRONT_AND_BACK);
+          } else {
+            glCullFace(GL_FRONT);
+          }
         } break;
 
         default:

@@ -272,3 +272,25 @@ GLenum glPolygonModeFromString(const char* s) {
   if (strcmp(s, "GL_FILL") == 0) return GL_FILL;
   return 0;
 }
+
+//--------------------------------------------------------------------
+const char* glCullFaceModeToString(GLenum e) {
+  switch (e) {
+    case GL_FRONT:
+      return "GL_FRONT";
+    case GL_BACK:
+      return "GL_BACK";
+    case GL_FRONT_AND_BACK:
+      return "GL_FRONT_AND_BACK";
+    default:
+      return "";
+  }
+}
+
+//--------------------------------------------------------------------
+GLenum glCullFaceModeFromString(const char* s) {
+  if (strcmp(s, "GL_FRONT") == 0) return GL_FRONT;
+  if (strcmp(s, "GL_BACK") == 0) return GL_BACK;
+  if (strcmp(s, "GL_FRONT_AND_BACK") == 0) return GL_FRONT_AND_BACK;
+  return 0;
+}
