@@ -20,18 +20,14 @@ protected:
 
   glm::vec3 mHalfDiag;
 
-  Vec3Vector mVertices;
-  Vec3Vector mNormals;
-  Vec2Vector mTexcoords;
-
 public:
   Cuboid(const glm::vec3& halfDiag) : mHalfDiag(halfDiag) {}
   Cuboid(GLfloat size = 1) : mHalfDiag(0.5 * size, 0.5 * size, 0.5 * size) {}
 
-  void buildVertex(GLuint location);
+  void buildVertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void buildNormal(GLuint location);
-  void buildTexcoord(GLuint location);
+  void buildNormal();
+  void buildTexcoord();
 
   void draw(GLuint primcount = 1);
 };

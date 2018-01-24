@@ -4,13 +4,14 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void Sphere::buildVertex(GLuint location) {
+void Sphere::buildVertex() {
   GLfloat phiStep = glm::pi<GLfloat>() / mStack;
   GLfloat thetaStep = 2 * glm::pi<GLfloat>() / mSlice;
 
   GLuint numVertPole = mSlice + 1;
   GLuint numVertCenter = (mSlice + 1) * 2;
 
+  mVertices.clear();
   mVertices.reserve(numVertPole * 2 + numVertCenter * (mStack - 2));
 
   // create sphere stack by stack along z
@@ -53,71 +54,47 @@ void Sphere::buildVertex(GLuint location) {
           rTimesSinPhi1 * cosTheta, rTimesSinPhi1 * sinTheta, rTimesCosPhi1));
     }
   }
-
-  bindVertexArrayObject();
-
-  glGenBuffers(1, &mVertexBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(glm::vec3),
-    value_ptr(mVertices[0]), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(location, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(location);
 }
 
 //--------------------------------------------------------------------
-void Sphere::buildNormal(GLuint location) {
+void Sphere::buildNormal() {
   mNormals.clear();
   mNormals.reserve(mVertices.size());
   for (int i = 0; i < mVertices.size(); ++i) {
     mNormals.push_back(glm::normalize(mVertices[i]));
   }
-
-  bindVertexArrayObject();
-
-  glGenBuffers(1, &mNormalBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, mNormalBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mNormals.size() * sizeof(glm::vec3),
-    value_ptr(mNormals[0]), GL_STATIC_DRAW);
-
-  glEnableVertexAttribArray(location);
-  glVertexAttribPointer(location, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
 }
 
 //--------------------------------------------------------------------
-void Sphere::buildTexcoord(GLuint location) {
+void Sphere::buildTexcoord() {
   // t ranges from 0.0 at z = - radius to 1.0 at z = radius (t increases
   // linearly along longitudinal lines), and s ranges from 0.0 at the +y axis,
   // to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x axis,
   // and back to 1.0 at the +y axis
-  
+  //
   mTexcoords.clear();
   mTexcoords.reserve(mVertices.size());
-  float twoPi = 2 * glm::pi<GLfloat>();
-  for (int i = 0; i < mVertices.size(); ++i) {
-    GLfloat cosPhi = mVertices[i].z / mRadius;
-    GLfloat phi = std::acos(cosPhi);
-    GLfloat sinPhi = std::sin(phi);
-    GLfloat cosTheta = mVertices[i].x / (mRadius * sinPhi);
-    GLfloat sinTheta = mVertices[i].y / (mRadius * sinPhi);
 
-    GLfloat gamma = std::atan2(-cosTheta, sinTheta);
-    if (gamma < 0) gamma += 2 * twoPi;
+  for (int i = 0; i < mStack; ++i) {
+    GLfloat t0 = 1 - static_cast<GLfloat>(i) / mStack;
+    GLfloat t1 = 1 - static_cast<GLfloat>(i + 1) / mStack;
 
-    float s = gamma / twoPi;
-    float t = phi / twoPi;
-    mTexcoords.push_back(glm::vec2(s, t));
+    // add pole
+    if (i == 0) mTexcoords.push_back(glm::vec2(1, 0));
+    if (i == mStack - 1) mTexcoords.push_back(glm::vec2(0, 0));
+
+    for (int j = 0; j <= mSlice; j++) {
+      // loop last stack in reverse order
+      GLfloat s = static_cast<GLfloat>(j) / mSlice;
+      if (i == mStack - 1) s = 1 - s;
+
+      if (i != 0) mTexcoords.push_back(glm::vec2(s, t0));
+
+      if (i != mStack - 1) mTexcoords.push_back(glm::vec2(s, t1));
+    }
   }
 
-  bindVertexArrayObject();
-
-  glGenBuffers(1, &mTexcoordBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, mTexcoordBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mTexcoords.size() * sizeof(glm::vec2),
-    value_ptr(mTexcoords[0]), GL_STATIC_DRAW);
-
-  glEnableVertexAttribArray(location);
-  glVertexAttribPointer(location, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+  assert(mTexcoords.size() == mVertices.size());
 }
 
 //--------------------------------------------------------------------
@@ -145,5 +122,4 @@ void Sphere::draw(GLuint primcount /* = 1*/) {
     glDrawArraysInstanced(GL_TRIANGLE_FAN, next, numVertPole, primcount);
   }
 }
-
 }

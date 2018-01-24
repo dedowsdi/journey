@@ -13,8 +13,7 @@ define_gl_type_traits(GLdouble, GL_DOUBLE);
 define_gl_type_traits(GLboolean, GL_BOOL);
 
 //--------------------------------------------------------------------
-void setUniformLocation(GLint *loc, GLint program, const std::string &name)
-{
+void setUniformLocation(GLint *loc, GLint program, const std::string &name) {
   *loc = glGetUniformLocation(program, name.c_str());
   if (*loc == -1) {
     printf("failed to get uniform location : %s\n", name.c_str());
@@ -65,5 +64,31 @@ void matrixAttribPointer(
   glVertexAttribDivisor(index + 1, 1);
   glVertexAttribDivisor(index + 2, 1);
   glVertexAttribDivisor(index + 3, 1);
+}
+
+//--------------------------------------------------------------------
+std::vector<GLubyte> createChessImage(GLuint width, GLuint height, GLuint gridWidth,
+  GLuint gridHeight, const glm::vec4 &black /* = glm::vec4(0, 0, 0, 1)*/,
+  const glm::vec4 &white /* = glm::vec4(1)*/) {
+  std::vector<GLubyte> image;
+  image.reserve(width * height * 4);
+
+  for (int i = 0; i < height; ++i) {
+    for (int j = 0; j < width; ++j) {
+      if ((i & gridHeight) ^ (j & gridWidth)) {
+        image.push_back(black.r * 255);
+        image.push_back(black.g * 255);
+        image.push_back(black.b * 255);
+        image.push_back(black.a * 255);
+      } else {
+        image.push_back(white.r * 255);
+        image.push_back(white.g * 255);
+        image.push_back(white.b * 255);
+        image.push_back(white.a * 255);
+      }
+    }
+  }
+
+  return image;
 }
 }

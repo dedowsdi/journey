@@ -4,8 +4,8 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void Cone::buildVertex(GLuint location) {
-  GLfloat thetaStep = 2 * glm::pi<GLfloat>() / mSlice;  // azimuthal angle step
+void Cone::buildVertex() {
+  GLfloat thetaStep = f2pi / mSlice;  // azimuthal angle step
   GLfloat heightStep = mHeight / mStack;
   GLfloat radiusStep = mRadius / mStack;
 
@@ -17,12 +17,12 @@ void Cone::buildVertex(GLuint location) {
   // add bottom fan
   mVertices.push_back(vec3(0.0));
   for (int i = 0; i <= mSlice; ++i) {
-    GLfloat theta = -thetaStep * i; // apply - for back face
+    GLfloat theta = -thetaStep * i;  // apply - for back face
     mVertices.push_back(
       vec3(mRadius * glm::cos(theta), mRadius * glm::sin(theta), 0));
   }
 
-  // create stack from bottom to top
+  // create stack from bottom to top, different sphere.
   // build triangle strip as
   //    0 2
   //    1 3
@@ -48,20 +48,10 @@ void Cone::buildVertex(GLuint location) {
       mVertices.push_back(vec3(r0 * cosTheta, r0 * sinTheta, h0));
     }
   }
-
-  bindVertexArrayObject();
-
-  glGenBuffers(1, &mVertexBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(glm::vec3),
-    value_ptr(mVertices[0]), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(location, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(location);
 }
 
 //--------------------------------------------------------------------
-void Cone::buildNormal(GLuint location) {
+void Cone::buildNormal() {
   mNormals.clear();
   mNormals.reserve(mVertices.size());
 
@@ -96,47 +86,38 @@ void Cone::buildNormal(GLuint location) {
     mNormals.push_back(mNormals[numVertBottom + i * 2]);
   }
   assert(mNormals.size() == mVertices.size());
-
-  bindVertexArrayObject();
-
-  glGenBuffers(1, &mNormalBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, mNormalBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mNormals.size() * sizeof(glm::vec3),
-    value_ptr(mNormals[0]), GL_STATIC_DRAW);
-
-  glEnableVertexAttribArray(location);
-  glVertexAttribPointer(location, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
 }
 
 //--------------------------------------------------------------------
-void Cone::buildTexcoord(GLuint location) {
-  // t ranges from 0.0 at 0 to 1.0 at z = height, and s ranges from 0.0 at the
-  // +y axis, to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x
-  // axis, and back to 1.0 at the +y axis
-  
+void Cone::buildTexcoord() {
   mTexcoords.clear();
   mTexcoords.reserve(mVertices.size());
 
-  float twoPi = 2 * glm::pi<GLfloat>();
-  for (int i = 0; i < mVertices.size(); ++i) {
-
-    GLfloat gamma = std::atan2(-mVertices[i].x, mVertices[i].y);
-    if (gamma < 0) gamma += 2 * twoPi;
-
-    float s = gamma / twoPi;
-    float t = mVertices[i].z / mHeight;
-    mTexcoords.push_back(glm::vec2(s, t));
+  // bottom texcoords
+  mTexcoords.push_back(glm::vec2(0, 0));
+  for (int i = 0; i <= mSlice; ++i) {
+    GLfloat s = 1 - static_cast<GLfloat>(i) / mSlice;
+    mTexcoords.push_back(glm::vec2(s, 0));
   }
 
-  bindVertexArrayObject();
+  for (int i = 0; i < mStack; ++i) {
+    GLfloat t0 = static_cast<GLfloat>(i + 1) / mStack;
+    GLfloat t1 = static_cast<GLfloat>(i) / mStack;
 
-  glGenBuffers(1, &mTexcoordBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, mTexcoordBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mTexcoords.size() * sizeof(glm::vec2),
-    value_ptr(mTexcoords[0]), GL_STATIC_DRAW);
+    // add pole
+    if (i == mStack - 1) mTexcoords.push_back(glm::vec2(1, 0));
 
-  glEnableVertexAttribArray(location);
-  glVertexAttribPointer(location, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    for (int j = 0; j <= mSlice; j++) {
+      // loop last stack in reverse order
+      GLfloat s = static_cast<GLfloat>(j) / mSlice;
+
+      mTexcoords.push_back(glm::vec2(s, t0));
+
+      if (i != mStack - 1) mTexcoords.push_back(glm::vec2(s, t1));
+    }
+  }
+
+  assert(mTexcoords.size() == mVertices.size());
 }
 
 //--------------------------------------------------------------------

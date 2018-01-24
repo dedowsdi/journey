@@ -15,19 +15,15 @@ protected:
   GLuint mSlice;  // longitiude
   GLuint mStack;  // latitude
 
-  Vec3Vector mVertices;
-  Vec3Vector mNormals;
-  Vec2Vector mTexcoords;
-
 public:
   Sphere() : mRadius(1), mSlice(16), mStack(16) {}
   Sphere(GLfloat radius, GLuint slice, GLuint stack)
       : mRadius(radius), mSlice(slice), mStack(stack) {}
 
-  void buildVertex(GLuint location);
+  void buildVertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void buildNormal(GLuint location);
-  void buildTexcoord(GLuint location);
+  void buildNormal();
+  void buildTexcoord();
 
   void draw(GLuint primcount = 1);
 

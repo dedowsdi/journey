@@ -30,6 +30,15 @@
 namespace zxd {
 using namespace glm;
 
+static const GLfloat fpi = glm::pi<GLfloat>();
+static const GLfloat f2pi = fpi * 2;
+static const GLfloat fpi2 = fpi / 2;
+static const GLfloat fpi4 = fpi / 4;
+static const GLdouble dpi = glm::pi<GLdouble>();
+static const GLfloat d2pi = dpi * 2;
+static const GLfloat dpi2 = dpi / 2;
+static const GLfloat dpi4 = dpi / 4;
+
 typedef std::vector<mat2> Mat2Vector;
 typedef std::vector<mat3> Mat3Vector;
 typedef std::vector<mat4> Mat4Vector;

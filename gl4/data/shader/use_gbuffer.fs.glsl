@@ -11,7 +11,7 @@ uniform sampler2D gSpecular;
 uniform sampler2D gShininess;
 uniform sampler2D gDepth;
 
-out vec4 flagColor;
+out vec4 fragColor;
 
 void main(void) {
   vec3 vertex = texture(gVertex, fs_in.texcoord).xyz;
@@ -25,6 +25,6 @@ void main(void) {
   material.specular = texture(gSpecular, fs_in.texcoord);
   material.shininess = texture(gShininess, fs_in.texcoord).r * 255;
 
-  flagColor = blinn(vertex, normal, material);
+  fragColor = blinn(vertex, normal, material);
   gl_FragDepth = texture(gDepth, fs_in.texcoord).r;
 }

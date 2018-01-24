@@ -44,17 +44,18 @@ void setupVertexAttrib(GLint attrib, _It beg, _It end,
   glEnableVertexAttribArray(attrib);
 }
 
-
-template<typename T>
-void setupVertexAttrib(GLint attrib, const T& t){
+template <typename T>
+void setupVertexAttrib(GLint attrib, const T &t) {
   setupVertexAttrib(attrib, t.begin(), t.end());
 }
 
-
 #define setupVertexAttribBuiltinArray(attrib, array) \
-  setupVertexAttrib(                          \
+  setupVertexAttrib(                                 \
     attrib, array, array + sizeof(array) / sizeof(decltype(array[0])));
 
+std::vector<GLubyte> createChessImage(GLuint width, GLuint height, GLuint gridWidth,
+  GLuint gridHeight, const glm::vec4 &black = glm::vec4(0, 0, 0, 1),
+  const glm::vec4 &white = glm::vec4(1));
 }
 
 #endif /* COMMON_H */

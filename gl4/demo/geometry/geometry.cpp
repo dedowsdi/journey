@@ -14,11 +14,14 @@
 namespace zxd {
 
 GLfloat wndAspect;
+GLuint diffuseMap;
 
 struct BlinnProgram : public zxd::Program {
   // GLint loc_eye;
   GLint attrib_vertex;
   GLint attrib_normal;
+  GLint attrib_texcoord;
+  GLint loc_diffuseMap;
 
   virtual void updateModel(const mat4 &_modelMatrix) {
     modelMatrix = _modelMatrix;
@@ -35,9 +38,11 @@ struct BlinnProgram : public zxd::Program {
       loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
   }
   virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/blinn.vs.glsl");
     StringVector sv;
-    sv.push_back("#version 430 core\n #define LIGHT_COUNT 8\n");
+    sv.push_back("#version 430 core\n#define WITH_TEX\n");
+    attachShaderSourceAndFile(
+      GL_VERTEX_SHADER, sv, "data/shader/blinn.vs.glsl");
+    sv.push_back("#define LIGHT_COUNT 3\n");
     sv.push_back(readFile("data/shader/blinn.frag"));
     attachShaderSourceAndFile(
       GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
@@ -48,11 +53,13 @@ struct BlinnProgram : public zxd::Program {
     setUniformLocation(
       &loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
     setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
+    setUniformLocation(&loc_diffuseMap, "diffuseMap");
   }
 
   virtual void bindAttribLocations() {
     attrib_vertex = getAttribLocation("vertex");
     attrib_normal = getAttribLocation("normal");
+    attrib_texcoord = getAttribLocation("texcoord");
   };
 };
 
@@ -71,7 +78,7 @@ protected:
   BlinnProgram mProgram;
 
 public:
-  GeometryApp() :  mCameraPos(0, -6, 6) {}
+  GeometryApp() : mCameraPos(0, -6, 6) {}
 
   virtual void initInfo() {
     App::initInfo();
@@ -94,6 +101,7 @@ public:
     // material
     mMaterial.shininess = 50;
     mMaterial.specular = vec4(1.0, 1.0, 1.0, 1.0);
+    mMaterial.ambient = vec4(1.0);
 
     // text
     mBitmapText.init();
@@ -115,22 +123,37 @@ public:
     mMaterial.bindUniformLocations(mProgram.object, "material");
 
     // geometry
-    mSphere.buildVertex(mProgram.attrib_vertex);
-    mSphere.buildNormal(mProgram.attrib_normal);
+    mSphere.buildMesh();
+    mSphere.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
-    mCuboid.buildVertex(mProgram.attrib_vertex);
-    mCuboid.buildNormal(mProgram.attrib_normal);
+    mCuboid.buildMesh();
+    mCuboid.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
-    mCone.buildVertex(mProgram.attrib_vertex);
-    mCone.buildNormal(mProgram.attrib_normal);
+    mCone.buildMesh();
+    mCone.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
-    mCylinder.buildVertex(mProgram.attrib_vertex);
-    mCylinder.buildNormal(mProgram.attrib_normal);
+    mCylinder.buildMesh();
+    mCylinder.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
     mTorus.setRings(32);
     mTorus.setSides(32);
-    mTorus.buildVertex(mProgram.attrib_vertex);
-    mTorus.buildNormal(mProgram.attrib_normal);
+    mTorus.buildMesh();
+    mTorus.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
+
+    // texture
+    GLint imageWidth = 64;
+    GLint imageHeight = 64;
+    auto image = createChessImage(imageWidth, imageHeight, 8, 8);
+
+    glGenTextures(1, &diffuseMap);
+    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA,
+      GL_UNSIGNED_BYTE, &image.front());
   }
 
   virtual void update() {}
@@ -138,7 +161,11 @@ public:
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+
     glUseProgram(mProgram);
+
+    glUniform1i(mProgram.loc_diffuseMap, 0);
 
     mProgram.viewMatrixInverseTranspose =
       glm::inverse(glm::transpose(mProgram.viewMatrix));
