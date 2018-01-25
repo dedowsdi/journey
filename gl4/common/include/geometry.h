@@ -24,8 +24,7 @@ public:
   void bind(GLint vertex, GLint normal = -1, GLint texcoord = -1);
   virtual void draw(GLuint primcount = 1) = 0;
 
-  void buildMesh(
-    GLboolean vertex = 1, GLboolean normal = 1, GLboolean texcoord = 1);
+  void buildMesh(GLboolean normal = 1, GLboolean texcoord = 1);
   virtual void buildVertex(){};
   // as i'm using strip and fan, normal should be vertex normal.
   virtual void buildNormal(){};

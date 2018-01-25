@@ -5,6 +5,7 @@ set (PROJECTS
     lines
     normalmap
     parallaxmap
+    normalviewer
     )
 
 foreach(PROJECT ${PROJECTS})

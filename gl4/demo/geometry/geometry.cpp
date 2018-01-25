@@ -101,7 +101,7 @@ public:
     // material
     mMaterial.shininess = 50;
     mMaterial.specular = vec4(1.0, 1.0, 1.0, 1.0);
-    mMaterial.ambient = vec4(1.0);
+    mMaterial.ambient = vec4(0.8);
 
     // text
     mBitmapText.init();
