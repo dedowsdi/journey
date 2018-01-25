@@ -15,6 +15,7 @@ set(COMMON_SRCS
     src/texutil.cpp
     src/cylinder.cpp
     src/torus.cpp
+    src/xyplane.cpp
     )
 
 add_library(common 

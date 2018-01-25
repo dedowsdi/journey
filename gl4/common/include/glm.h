@@ -39,6 +39,13 @@ static const GLfloat d2pi = dpi * 2;
 static const GLfloat dpi2 = dpi / 2;
 static const GLfloat dpi4 = dpi / 4;
 
+static const glm::vec3 axis_px(1, 0, 0);
+static const glm::vec3 axis_nx(-1, 0, 0);
+static const glm::vec3 axis_py(0, 1, 0);
+static const glm::vec3 axis_ny(0, -1, 0);
+static const glm::vec3 axis_pz(0, 0, 1);
+static const glm::vec3 axis_nz(0, 0, -1);
+
 typedef std::vector<mat2> Mat2Vector;
 typedef std::vector<mat3> Mat3Vector;
 typedef std::vector<mat4> Mat4Vector;

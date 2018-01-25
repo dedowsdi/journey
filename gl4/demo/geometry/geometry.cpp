@@ -10,6 +10,7 @@
 #include "stateutil.h"
 #include "cylinder.h"
 #include "torus.h"
+#include "xyplane.h"
 
 namespace zxd {
 
@@ -75,6 +76,7 @@ protected:
   Cone mCone;
   Cylinder mCylinder;
   Torus mTorus;
+  Xyplane mXyplane;
   BlinnProgram mProgram;
 
 public:
@@ -124,21 +126,33 @@ public:
 
     // geometry
     mSphere.buildMesh();
-    mSphere.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
+    mSphere.bind(
+      mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
     mCuboid.buildMesh();
-    mCuboid.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
+    mCuboid.bind(
+      mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
     mCone.buildMesh();
-    mCone.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
+    mCone.bind(
+      mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
     mCylinder.buildMesh();
-    mCylinder.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
+    mCylinder.bind(
+      mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
     mTorus.setRings(32);
     mTorus.setSides(32);
     mTorus.buildMesh();
-    mTorus.bind(mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
+    mTorus.bind(
+      mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
+
+    mXyplane.setSlice(8);
+    mXyplane.setWidth(8);
+    mXyplane.setHeight(8);
+    mXyplane.buildMesh();
+    mXyplane.bind(
+      mProgram.attrib_vertex, mProgram.attrib_normal, mProgram.attrib_texcoord);
 
     // texture
     GLint imageWidth = 64;
@@ -176,7 +190,13 @@ public:
       mLights[i].updateUniforms(mProgram.viewMatrix);
     }
 
-    mat4 model(1.0f);
+    mat4 model;
+
+    model = glm::translate(glm::vec3(0, 0, -2));
+    mProgram.updateModel(model);
+    mXyplane.draw();
+
+    model = mat4(1.0f);
     mProgram.updateModel(model);
     mSphere.draw();
 
@@ -192,7 +212,7 @@ public:
     mProgram.updateModel(model);
     mCylinder.draw();
 
-    model = glm::translate(glm::vec3(0, -3, 0));
+    model = glm::translate(glm::vec3(0, -2.5, 0));
     mProgram.updateModel(model);
     mTorus.draw();
 
