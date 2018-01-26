@@ -28,7 +28,7 @@ protected:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "Hello World" << std::endl;
+    ss << "fps : " << mFps << std::endl;
     mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
     glDisable(GL_BLEND);
   }

@@ -49,28 +49,28 @@ public:
   GLint loc_viewMatrix;
   GLint loc_projMatrix;
   GLint loc_modelViewMatrix;
-  GLint loc_viwProjMatrix;
+  GLint loc_viewProjMatrix;
   GLint loc_modelViewProjMatrix;
 
   GLint loc_modelMatrixInverse;
   GLint loc_viewMatrixInverse;
   GLint loc_projMatrixInverse;
   GLint loc_modelViewMatrixInverse;
-  GLint loc_viwProjMatrixInverse;
+  GLint loc_viewProjMatrixInverse;
   GLint loc_modelViewProjMatrixInverse;
 
   GLint loc_modelMatrixTranspose;
   GLint loc_viewMatrixTranspose;
   GLint loc_projMatrixTranspose;
   GLint loc_modelViewMatrixTranspose;
-  GLint loc_viwProjMatrixTranspose;
+  GLint loc_viewProjMatrixTranspose;
   GLint loc_modelViewProjMatrixTranspose;
 
   GLint loc_modelMatrixInverseTranspose;
   GLint loc_viewMatrixInverseTranspose;
   GLint loc_projMatrixInverseTranspose;
   GLint loc_modelViewMatrixInverseTranspose;
-  GLint loc_viwProjMatrixInverseTranspose;
+  GLint loc_viewProjMatrixInverseTranspose;
   GLint loc_modelViewProjMatrixInverseTranspose;
 
 public:

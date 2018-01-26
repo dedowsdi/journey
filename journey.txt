@@ -373,3 +373,13 @@ c++:
   when you insert something at iter to a vector, if the vector needs to be
   reallocated, all iterators will be invalidated, otherwise only iteraters
   starts from iter will be invalidated.
+
+-----------
+2018.01.25:
+
+bash:
+  xargs took as much augument as possible per command line, unless you specify -n
+  if you want to use xargs will itmes contain space:   
+    print item lines | xargs -d "\n" -n1 cmd
+
+  \ in double quotes escapes only $, `, ", \, or newline, otherwise it's removed.
