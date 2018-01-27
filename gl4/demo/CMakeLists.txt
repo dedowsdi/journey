@@ -7,6 +7,7 @@ set (PROJECTS
     parallaxmap
     normalviewer
     billboard
+    particle
     )
 
 foreach(PROJECT ${PROJECTS})

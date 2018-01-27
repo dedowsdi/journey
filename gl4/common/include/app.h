@@ -33,6 +33,7 @@ public:
 protected:
   GLboolean mReading;
   GLuint mSwapInterval{1};
+  GLuint mFrameNumber;
   GLfloat mFps;
   std::string mInput;
   CameraMode mCameraMode;
@@ -43,7 +44,7 @@ protected:
   dvec2 mLastButtonPosition;  // used to rotate camera when right button pressed
 
 public:
-  App() : mCameraMode(CM_BLEND), mViewMatrix(0), mReading(GL_FALSE) {}
+  App() : mCameraMode(CM_BLEND), mViewMatrix(0), mReading(GL_FALSE), mFrameNumber(0) {}
 
   void init();
   virtual void run();

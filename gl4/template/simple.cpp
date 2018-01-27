@@ -3,6 +3,8 @@
 #include <sstream>
 #include "common.h"
 
+using namespace glm;
+
 namespace zxd {
 class HelloWorld : public App {
 protected:

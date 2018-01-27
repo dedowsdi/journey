@@ -328,8 +328,10 @@ public:
     setViewMatrix(&mRenderGbufferProgram.viewMatrix);
 
     // sphere and lights
-    mSphere.buildVertex(mRenderGbufferProgram.attrib_vertex);
-    mSphere.buildNormal(mRenderGbufferProgram.attrib_normal);
+    mSphere.buildVertex();
+    mSphere.buildNormal();
+    mSphere.bind(
+      mRenderGbufferProgram.attrib_vertex, mRenderGbufferProgram.attrib_normal);
 
     resetSphere();
 

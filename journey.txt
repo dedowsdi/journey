@@ -383,3 +383,24 @@ bash:
     print item lines | xargs -d "\n" -n1 cmd
 
   \ in double quotes escapes only $, `, ", \, or newline, otherwise it's removed.
+
+-----------
+2018.01.26:
+
+gl:
+  billboard: there are mainly 3 kinds of billboard
+    0 : align billboard rotatoin to camera rotation
+    2 : rotate z to center_to_camera, don't care about orientation.
+    3 : look at camera from billboard center, use camera up as up.
+
+  You can also create billboard just like you render 2d text.
+
+  You can also create billboard by transform billboard center to ndc (the depth
+  value is generated in the same ways as other renderable in the scene), and
+  then define your billboard directly in ndc(If you want to create billboard in
+  fixed size, this is an option).
+
+vim:
+  vim use b:current_syntax to guard syntax file loading.
+  If want to just add or change some syntax to current syntax file, place you
+  syntax file under runtimepath/after/syntax/, and don't set b:currentsyntax

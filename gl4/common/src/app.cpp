@@ -210,6 +210,7 @@ void App::loop() {
     display();
     glfwSwapBuffers(mWnd);
     glfwPollEvents();
+    ++mFrameNumber;
   }
   shutdown();
   glfwDestroyWindow(mWnd);
