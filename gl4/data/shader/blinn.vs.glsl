@@ -8,24 +8,24 @@ in vec3 normal;
 in vec2 texcoord;
 #endif
 
-uniform mat4 modelViewProjMatrix;
-uniform mat4 modelViewMatrix;
-uniform mat4 modelViewMatrixInverseTranspose;
+uniform mat4 mvp_mat;
+uniform mat4 mv_mat;
+uniform mat4 mv_mat_it;
 
-out VS_OUT{
-  vec3 viewVertex; // view space
-  vec3 viewNormal; // view space
+out vs_out{
+  vec3 view_vertex; // view space
+  vec3 view_normal; // view space
 #ifdef WITH_TEX
   vec2 texcoord;
 #endif
-} vs_out;
+} vo;
 
 void main(void)
 {
-  vs_out.viewNormal = mat3(modelViewMatrixInverseTranspose) * normal;
-  vs_out.viewVertex = (modelViewMatrix * vertex).xyz;
+  vo.view_normal = mat3(mv_mat_it) * normal;
+  vo.view_vertex = (mv_mat * vertex).xyz;
 #ifdef WITH_TEX
-  vs_out.texcoord = texcoord;
+  vo.texcoord = texcoord;
 #endif
-  gl_Position = modelViewProjMatrix * vertex;
+  gl_Position = mvp_mat * vertex;
 }

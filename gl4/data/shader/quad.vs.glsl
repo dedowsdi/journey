@@ -3,13 +3,13 @@
 in vec4 vertex;
 in vec2 texcoord;
 
-out VS_OUT
+out vs_out
 {
  vec2 texcoord;
-}vs_out;
+}vo;
 
 void main(void)
 {
   gl_Position = vertex;
-  vs_out.texcoord = texcoord;
+  vo.texcoord = texcoord;
 }

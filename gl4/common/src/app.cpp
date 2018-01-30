@@ -6,45 +6,45 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void glfwErrorCallback(int error, const char *description) {
+void glfw_error_callback(int error, const char *description) {
   std::cout << description << std::endl;
 }
 
 //--------------------------------------------------------------------
-void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
-  GLsizei length, const GLchar *message, const void *userParam) {
-  const char *debugSource = glDebugSourceToString(source);
-  const char *debugType = glDebugTypeToString(type);
-  const char *debugSeverity = glDebugSeverityToString(severity);
+void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
+  GLsizei length, const GLchar *message, const void *user_param) {
+  const char *debug_source = gl_debug_source_to_string(source);
+  const char *debug_type = gl_debug_type_to_string(type);
+  const char *debug_severity = gl_debug_severity_to_string(severity);
 
-  printf("%s : %s : %s : %d : %.*s\n", debugSeverity, debugSource, debugType,
+  printf("%s : %s : %s : %d : %.*s\n", debug_severity, debug_source, debug_type,
     id, length, message);
 }
 
 //--------------------------------------------------------------------
-void App::init() {
-  initInfo();
-  initWnd();
-  initGL();
+void app::init() {
+  init_info();
+  init_wnd();
+  init_g_l();
 }
 
 //--------------------------------------------------------------------
-void App::initInfo() {
-  mInfo.title = "app";
-  mInfo.wndWidth = 512;
-  mInfo.wndHeight = 512;
-  mInfo.majorVersion = 4;
-  mInfo.minorVersion = 3;
-  mInfo.samples = 1;
-  mInfo.fullscreen = GL_FALSE;
-  mInfo.vsync = GL_FALSE;
-  mInfo.cursor = GL_TRUE;
-  mInfo.stereo = GL_FALSE;
-  mInfo.debug = GL_TRUE;
+void app::init_info() {
+  m_info.title = "app";
+  m_info.wnd_width = 512;
+  m_info.wnd_height = 512;
+  m_info.major_version = 4;
+  m_info.minor_version = 3;
+  m_info.samples = 1;
+  m_info.fullscreen = GL_FALSE;
+  m_info.vsync = GL_FALSE;
+  m_info.cursor = GL_TRUE;
+  m_info.stereo = GL_FALSE;
+  m_info.debug = GL_TRUE;
 }
 
 //--------------------------------------------------------------------
-void App::initGL() {
+void app::init_g_l() {
   if (!gladLoadGL()) {
     std::cerr << "glad failed to load gl" << std::endl;
     return;
@@ -65,12 +65,12 @@ void App::initGL() {
   // init debugger
   glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-  glDebugMessageCallback(glDebugOutput, this);
-  debugMessageControl();
+  glDebugMessageCallback(gl_debug_output, this);
+  debug_message_control();
 }
 
 //--------------------------------------------------------------------
-void App::debugMessageControl() {
+void app::debug_message_control() {
   GLuint ids[] = {131185};
 
   glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
@@ -78,168 +78,168 @@ void App::debugMessageControl() {
 }
 
 //--------------------------------------------------------------------
-void App::initWnd() {
-  glfwSetErrorCallback(glfwErrorCallback);
+void app::init_wnd() {
+  glfwSetErrorCallback(glfw_error_callback);
   if (!glfwInit()) {
     std::cerr << "Failed to initialize GLFW" << std::endl;
     return;
   }
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, mInfo.majorVersion);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, mInfo.minorVersion);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, m_info.major_version);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, m_info.minor_version);
 
 #ifdef _DEBUG
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
 
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_SAMPLES, mInfo.samples);
-  glfwWindowHint(GLFW_STEREO, mInfo.stereo);
-  glfwWindowHint(GLFW_DEPTH_BITS, mInfo.stereo);
+  glfwWindowHint(GLFW_SAMPLES, m_info.samples);
+  glfwWindowHint(GLFW_STEREO, m_info.stereo);
+  glfwWindowHint(GLFW_DEPTH_BITS, m_info.stereo);
 
-  if (mInfo.fullscreen) {
-    if (mInfo.wndWidth == 0 || mInfo.wndHeight == 0) {
+  if (m_info.fullscreen) {
+    if (m_info.wnd_width == 0 || m_info.wnd_height == 0) {
       const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-      mInfo.wndWidth = mode->width;
-      mInfo.wndHeight = mode->height;
+      m_info.wnd_width = mode->width;
+      m_info.wnd_height = mode->height;
     }
-    mWnd = glfwCreateWindow(mInfo.wndWidth, mInfo.wndHeight,
-      mInfo.title.c_str(), glfwGetPrimaryMonitor(), NULL);
-    // glfwSwapInterval((int)mInfo.flags.vsync);
+    m_wnd = glfwCreateWindow(m_info.wnd_width, m_info.wnd_height,
+      m_info.title.c_str(), glfwGetPrimaryMonitor(), NULL);
+    // glfwSwapInterval((int)m_info.flags.vsync);
   } else {
-    mWnd = glfwCreateWindow(
-      mInfo.wndWidth, mInfo.wndHeight, mInfo.title.c_str(), NULL, NULL);
-    if (!mWnd) {
+    m_wnd = glfwCreateWindow(
+      m_info.wnd_width, m_info.wnd_height, m_info.title.c_str(), NULL, NULL);
+    if (!m_wnd) {
       std::cerr << "Failed to open window" << std::endl;
       return;
     }
   }
 
-  glfwMakeContextCurrent(mWnd);
+  glfwMakeContextCurrent(m_wnd);
 
   // set up call back
-  glfwSetWindowUserPointer(mWnd, this);
+  glfwSetWindowUserPointer(m_wnd, this);
 
   auto resizeCallback = [](GLFWwindow *wnd, int w, int h) {
-    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
-    pthis->glfwResize(wnd, w, h);
+    auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfw_resize(wnd, w, h);
   };
   auto keyCallback = [](
     GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
-    pthis->glfwKey(wnd, key, scancode, action, mods);
+    auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfw_key(wnd, key, scancode, action, mods);
   };
   auto mouseButtonCallback = [](
     GLFWwindow *wnd, int button, int action, int mods) {
-    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
-    pthis->glfwMouseButton(wnd, button, action, mods);
+    auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfw_mouse_button(wnd, button, action, mods);
   };
   auto cursorCallback = [](GLFWwindow *wnd, double x, double y) {
-    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
-    pthis->glfwMouseMove(wnd, x, y);
+    auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfw_mouse_move(wnd, x, y);
   };
   auto scrollCallback = [](GLFWwindow *wnd, double xoffset, double yoffset) {
-    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
-    pthis->glfwMouseWheel(wnd, xoffset, yoffset);
+    auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfw_mouse_wheel(wnd, xoffset, yoffset);
   };
   auto charCallback = [](GLFWwindow *wnd, unsigned int codepoint) {
-    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
-    pthis->glfwChar(wnd, codepoint);
+    auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfw_char(wnd, codepoint);
   };
   auto charmodeCallback = [](GLFWwindow *wnd, unsigned int codepoint, int mod) {
-    auto pthis = static_cast<App *>(glfwGetWindowUserPointer(wnd));
-    pthis->glfwCharmod(wnd, codepoint, mod);
+    auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
+    pthis->glfw_charmod(wnd, codepoint, mod);
   };
 
-  glfwSetWindowSizeCallback(mWnd, resizeCallback);
-  glfwSetKeyCallback(mWnd, keyCallback);
-  glfwSetMouseButtonCallback(mWnd, mouseButtonCallback);
-  glfwSetCursorPosCallback(mWnd, cursorCallback);
-  glfwSetScrollCallback(mWnd, scrollCallback);
-  glfwSetCharCallback(mWnd, charCallback);
-  glfwSetCharModsCallback(mWnd, charmodeCallback);
+  glfwSetWindowSizeCallback(m_wnd, resizeCallback);
+  glfwSetKeyCallback(m_wnd, keyCallback);
+  glfwSetMouseButtonCallback(m_wnd, mouseButtonCallback);
+  glfwSetCursorPosCallback(m_wnd, cursorCallback);
+  glfwSetScrollCallback(m_wnd, scrollCallback);
+  glfwSetCharCallback(m_wnd, charCallback);
+  glfwSetCharModsCallback(m_wnd, charmodeCallback);
 }
 
 //--------------------------------------------------------------------
-void App::updateFps()
-{
-  static GLfloat lastTime = 0;
+void app::update_fps() {
+  static GLfloat last_time = 0;
   static GLfloat time = 0;
   static GLfloat count = 0;
 
-  GLuint curTime = glfwGetTime();
+  GLuint cur_time = glfwGetTime();
 
-  time += curTime - lastTime;
+  time += cur_time - last_time;
   ++count;
 
   if (time >= 1) {
-    mFps = count;
+    m_fps = count;
     time -= 1;
     count = 0;
   }
 
-  lastTime = curTime;;
+  last_time = cur_time;
+  ;
 }
 
 //--------------------------------------------------------------------
-void App::run() {
+void app::run() {
   srand(time(0));
   init();
-  createScene();
+  create_scene();
   loop();
 }
 
 //--------------------------------------------------------------------
-void App::startReading() {
-  mReading = GL_TRUE;
-  mInput.clear();
+void app::start_reading() {
+  m_reading = GL_TRUE;
+  m_input.clear();
 }
 
 //--------------------------------------------------------------------
-void App::stopReading() { mReading = GL_FALSE; }
+void app::stop_reading() { m_reading = GL_FALSE; }
 
 //--------------------------------------------------------------------
-void App::finisheReading() { mReading = GL_FALSE; }
+void app::finishe_reading() { m_reading = GL_FALSE; }
 
 //--------------------------------------------------------------------
-void App::loop() {
-  glfwSwapInterval(mSwapInterval);
-  while (!glfwWindowShouldClose(mWnd)) {
-    updateFps();
+void app::loop() {
+  glfwSwapInterval(m_swap_interval);
+  while (!glfwWindowShouldClose(m_wnd)) {
+    update_fps();
     update();
     display();
-    glfwSwapBuffers(mWnd);
+    glfwSwapBuffers(m_wnd);
     glfwPollEvents();
-    ++mFrameNumber;
+    ++m_frame_number;
   }
   shutdown();
-  glfwDestroyWindow(mWnd);
+  glfwDestroyWindow(m_wnd);
   glfwTerminate();
 }
 
 //--------------------------------------------------------------------
-void App::glfwResize(GLFWwindow *wnd, int w, int h) {
+void app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   (void)wnd;
-  mInfo.wndWidth = w;
-  mInfo.wndWidth = h;
+  m_info.wnd_width = w;
+  m_info.wnd_width = h;
   glViewport(0, 0, w, h);
 }
 
 //--------------------------------------------------------------------
-void App::glfwKey(
+void app::glfw_key(
   GLFWwindow *wnd, int key, int scancode, int action, int mods) {
   (void)wnd;
   (void)scancode;
   (void)mods;
 
-  if (mReading) {
+  if (m_reading) {
     if (action == GLFW_PRESS) {
       switch (key) {
         case GLFW_KEY_BACKSPACE:
-          mInput.pop_back();
+          m_input.pop_back();
           break;
         case GLFW_KEY_ESCAPE:
-          stopReading();
+          stop_reading();
         default:
           break;
       }
@@ -250,43 +250,43 @@ void App::glfwKey(
   if (action == GLFW_PRESS) {
     switch (key) {
       case GLFW_KEY_ESCAPE:
-        glfwSetWindowShouldClose(mWnd, GL_TRUE);
+        glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
       case GLFW_KEY_KP_SUBTRACT:
-        mCameraMode = static_cast<CameraMode>((mCameraMode + 1) % 2);
+        m_camera_mode = static_cast<camera_mode>((m_camera_mode + 1) % 2);
         break;
       case GLFW_KEY_KP_0: {
-        GLint polygonMode;
-        glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
+        GLint polygon_mode;
+        glGetIntegerv(GL_POLYGON_MODE, &polygon_mode);
         glPolygonMode(
-          GL_FRONT_AND_BACK, GL_POINT + (polygonMode - GL_POINT + 1) % 3);
+          GL_FRONT_AND_BACK, GL_POINT + (polygon_mode - GL_POINT + 1) % 3);
       } break;
       case GLFW_KEY_KP_2: {
-        glfwSwapInterval(mSwapInterval ^= 1);
+        glfwSwapInterval(m_swap_interval ^= 1);
       } break;
 
       case GLFW_KEY_KP_1: {
-        if (mViewMatrix) {
-          GLfloat distance = glm::length((*mViewMatrix)[3].xyz());
+        if (m_v_mat) {
+          GLfloat distance = glm::length((*m_v_mat)[3].xyz());
           GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
-          *mViewMatrix = glm::lookAt(glm::vec3(0.0f, -distance * factor, 0.0f),
+          *m_v_mat = glm::lookAt(glm::vec3(0.0f, -distance * factor, 0.0f),
             glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         }
       } break;
       case GLFW_KEY_KP_3: {
-        if (mViewMatrix) {
-          GLfloat distance = glm::length((*mViewMatrix)[3].xyz());
+        if (m_v_mat) {
+          GLfloat distance = glm::length((*m_v_mat)[3].xyz());
           GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
-          *mViewMatrix = glm::lookAt(glm::vec3(-distance * factor, 0.0f, 0.0f),
+          *m_v_mat = glm::lookAt(glm::vec3(-distance * factor, 0.0f, 0.0f),
             glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         }
       } break;
 
       case GLFW_KEY_KP_7: {
-        if (mViewMatrix) {
-          GLfloat distance = glm::length((*mViewMatrix)[3].xyz());
+        if (m_v_mat) {
+          GLfloat distance = glm::length((*m_v_mat)[3].xyz());
           GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
-          *mViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, -distance * factor),
+          *m_v_mat = glm::lookAt(glm::vec3(0.0f, 0.0f, -distance * factor),
             glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         }
       } break;
@@ -298,83 +298,85 @@ void App::glfwKey(
 }
 
 //--------------------------------------------------------------------
-void App::glfwMouseButton(GLFWwindow *wnd, int button, int action, int mods) {
+void app::glfw_mouse_button(GLFWwindow *wnd, int button, int action, int mods) {
   if (action == GLFW_PRESS && GLFW_MOUSE_BUTTON_MIDDLE == button) {
-    glfwGetCursorPos(mWnd, &mLastButtonPosition[0], &mLastButtonPosition[1]);
+    glfwGetCursorPos(
+      m_wnd, &m_last_button_position[0], &m_last_button_position[1]);
   }
 }
 
 //--------------------------------------------------------------------
-void App::glfwMouseMove(GLFWwindow *wnd, double x, double y) {
-  if (mViewMatrix &&
-      glfwGetMouseButton(mWnd, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
-    GLdouble dtX = x - mLastButtonPosition[0];
-    GLdouble dtY = y - mLastButtonPosition[1];
+void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  if (m_v_mat &&
+      glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
+    GLdouble dtx = x - m_last_button_position[0];
+    GLdouble dty = y - m_last_button_position[1];
 
-    if (mCameraMode == CM_BLEND) {
+    if (m_camera_mode == CM_BLEND) {
       // yaw world, assume z up
-      if (dtX != 0) {
-        *mViewMatrix *=
-          glm::rotate(static_cast<GLfloat>(dtX * 0.02), vec3(0, 0, 1));
+      if (dtx != 0) {
+        *m_v_mat *=
+          glm::rotate(static_cast<GLfloat>(dtx * 0.02), vec3(0, 0, 1));
       }
 
       // pitch camera, but reserve center
-      if (dtY != 0) {
-        glm::vec3 translation = glm::column(*mViewMatrix, 3).xyz();
+      if (dty != 0) {
+        glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
 
         // translate world to camera
-        (*mViewMatrix)[3][0] = 0;
-        (*mViewMatrix)[3][1] = 0;
-        (*mViewMatrix)[3][2] = 0;
+        (*m_v_mat)[3][0] = 0;
+        (*m_v_mat)[3][1] = 0;
+        (*m_v_mat)[3][2] = 0;
 
         // rotate, translate world back
-        *mViewMatrix =
+        *m_v_mat =
           glm::translate(translation) *
-          glm::rotate(static_cast<GLfloat>(dtY * 0.02), vec3(1, 0, 0)) *
-          *mViewMatrix;
+          glm::rotate(static_cast<GLfloat>(dty * 0.02), vec3(1, 0, 0)) *
+          *m_v_mat;
       }
-    } else if (mCameraMode == CM_ARCBALL) {
-      if (dtX != 0 || dtY != 0) {
-        mat4 windowMatrixInverse = zxd::computeWindowMatrixInverse(
-          0, 0, mInfo.wndWidth, mInfo.wndHeight, 0, 1);
-        mat4 m = zxd::arcball(glm::vec2(mLastButtonPosition[0],
-                                mInfo.wndHeight - 1 - mLastButtonPosition[1]),
-          glm::vec2(x, mInfo.wndHeight - 1 - y), windowMatrixInverse);
+    } else if (m_camera_mode == CM_ARCBALL) {
+      if (dtx != 0 || dty != 0) {
+        mat4 w_mat_i = zxd::compute_window_matrix_inverse(
+          0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
+        mat4 m =
+          zxd::arcball(glm::vec2(m_last_button_position[0],
+                         m_info.wnd_height - 1 - m_last_button_position[1]),
+            glm::vec2(x, m_info.wnd_height - 1 - y), w_mat_i);
 
-        glm::vec3 translation = glm::column(*mViewMatrix, 3).xyz();
+        glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
         // translate world to camera
-        (*mViewMatrix)[3][0] = 0;
-        (*mViewMatrix)[3][1] = 0;
-        (*mViewMatrix)[3][2] = 0;
+        (*m_v_mat)[3][0] = 0;
+        (*m_v_mat)[3][1] = 0;
+        (*m_v_mat)[3][2] = 0;
 
         // rotate, translate world back
-        *mViewMatrix = glm::translate(translation) * m * *mViewMatrix;
+        *m_v_mat = glm::translate(translation) * m * *m_v_mat;
       }
     }
 
-    mLastButtonPosition[0] = x;
-    mLastButtonPosition[1] = y;
+    m_last_button_position[0] = x;
+    m_last_button_position[1] = y;
   }
 }
 
 //--------------------------------------------------------------------
-void App::glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
   // yoffset is negative if you scroll toward yourself
-  if (mViewMatrix) {
+  if (m_v_mat) {
     GLfloat scale = 1 - 0.1 * yoffset;
-    (*mViewMatrix)[3][0] *= scale;
-    (*mViewMatrix)[3][1] *= scale;
-    (*mViewMatrix)[3][2] *= scale;
+    (*m_v_mat)[3][0] *= scale;
+    (*m_v_mat)[3][1] *= scale;
+    (*m_v_mat)[3][2] *= scale;
   }
 }
 
 //--------------------------------------------------------------------
-void App::glfwChar(GLFWwindow *wnd, unsigned int codepoint) {
-  if (mReading) {
-    mInput.push_back(char(codepoint));
+void app::glfw_char(GLFWwindow *wnd, unsigned int codepoint) {
+  if (m_reading) {
+    m_input.push_back(char(codepoint));
   }
 }
 
 //--------------------------------------------------------------------
-void App::glfwCharmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {}
+void app::glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {}
 }

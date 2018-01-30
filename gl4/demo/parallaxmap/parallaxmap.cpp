@@ -21,106 +21,105 @@
 #include "light.h"
 #include "quad.h"
 #include "texutil.h"
+#include "program.h"
 
 namespace zxd {
 
-struct ParallaxProgram : public Program {
-  GLint attrib_vertex;
-  GLint attrib_normal;
-  GLint attrib_tangent;
-  GLint attrib_texcoord;
-  GLint loc_normalMap;
-  GLint loc_diffuseMap;
-  GLint loc_depthMap;
-  GLint loc_modelCamera;
-  GLint loc_heightScale;
+struct parallax_program : public program {
+  GLint al_vertex;
+  GLint al_normal;
+  GLint al_tangent;
+  GLint al_texcoord;
+  GLint ul_normal_map;
+  GLint ul_diffuse_map;
+  GLint ul_depth_map;
+  GLint ul_model_camera;
+  GLint ul_height_scale;
 
-  GLuint parallaxMethod{0};
+  GLuint parallax_method{0};
 
-  virtual void updateModel(const mat4 &_modelMatrix) {
-    modelMatrix = _modelMatrix;
-    modelViewMatrix = viewMatrix * modelMatrix;
-    modelViewMatrixInverse = glm::inverse(modelViewMatrix);
-    modelMatrixInverse = glm::inverse(modelMatrix);
-    modelViewProjMatrix = projMatrix * modelViewMatrix;
-    glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, glm::value_ptr(modelViewProjMatrix));
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mv_mat = v_mat * m_mat;
+    mv_mat_i = glm::inverse(mv_mat);
+    m_mat_i = glm::inverse(m_mat);
+    mvp_mat = p_mat * mv_mat;
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   };
-  virtual void attachShaders() {
-    StringVector sv;
+  virtual void attach_shaders() {
+    string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    attachShaderSourceAndFile(
+    attach_shader_source_and_file(
       GL_VERTEX_SHADER, sv, "data/shader/parallaxmap.vs.glsl");
     std::stringstream ss;
-    ss << "#define PARALLAX_METHOD " << parallaxMethod << std::endl;
+    ss << "#define PARALLAX_METHOD " << parallax_method << std::endl;
     sv.push_back(ss.str());
-    sv.push_back(readFile("data/shader/blinn.frag"));
-    attachShaderSourceAndFile(
+    sv.push_back(read_file("data/shader/blinn.frag"));
+    attach_shader_source_and_file(
       GL_FRAGMENT_SHADER, sv, "data/shader/parallaxmap.fs.glsl");
 
-    setName("parallaxmap");
+    set_name("parallaxmap");
   }
 
-  virtual void bindUniformLocations() {
-    // setUniformLocation(&loc_eye, "eye");
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_normalMap, "normalMap");
-    setUniformLocation(&loc_diffuseMap, "diffuseMap");
-    setUniformLocation(&loc_depthMap, "depthMap");
-    setUniformLocation(&loc_modelCamera, "modelCamera");
-    setUniformLocation(&loc_heightScale, "heightScale");
+  virtual void bind_uniform_locations() {
+    // uniform_location(&ul_eye, "eye");
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_normal_map, "normal_map");
+    uniform_location(&ul_diffuse_map, "diffuse_map");
+    uniform_location(&ul_depth_map, "depth_map");
+    uniform_location(&ul_model_camera, "model_camera");
+    uniform_location(&ul_height_scale, "height_scale");
   }
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
-    attrib_normal = getAttribLocation("normal");
-    attrib_tangent = getAttribLocation("tangent");
-    attrib_texcoord = getAttribLocation("texcoord");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_normal = attrib_location("normal");
+    al_tangent = attrib_location("tangent");
+    al_texcoord = attrib_location("texcoord");
   };
-} program;
+} prg;
 
-GLuint normalMap, diffuseMap, depthMap;
-std::vector<zxd::LightSource> lights;
-zxd::LightModel lightModel;
-zxd::Material material;
-Quad quad;
-GLfloat heightScale = 0.05f;
-std::string parallaxMethods[] = {"parallaxOcclusionMap", "parallaxSteepMap",
-  "parallaxMapWithOffset", "parallaxMapWithoutOffset"};
+GLuint normal_map, diffuse_map, depth_map;
+std::vector<zxd::light_source> lights;
+zxd::light_model light_model;
+zxd::material material;
+quad quad;
+GLfloat height_scale = 0.05f;
+std::string parallax_methods[] = {"parallax_occlusion_map", "parallaxSteepMap",
+  "parallax_map_with_offset", "parallaxMapWithoutOffset"};
 
-class NormalMapApp : public App {
+class normal_map_app : public app {
 protected:
-  BitmapText mBitmapText;
+  bitmap_text m_text;
 
 public:
-  NormalMapApp() {}
+  normal_map_app() {}
 
-  virtual void initInfo() {
-    App::initInfo();
-    mInfo.title = "hello world";
-    mInfo.wndWidth = 512;
-    mInfo.wndHeight = 512;
+  virtual void init_info() {
+    app::init_info();
+    m_info.title = "hello world";
+    m_info.wnd_width = 512;
+    m_info.wnd_height = 512;
   }
-  virtual void createScene() {
+  virtual void create_scene() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    program.parallaxMethod = 3;
-    program.init();
-    program.projMatrix =
-      glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
-    program.viewMatrix = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
+    prg.parallax_method = 3;
+    prg.init();
+    prg.p_mat = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
+    prg.v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
 
     // init quad
-    quad.setupVertexAttrib(program.attrib_vertex, program.attrib_texcoord,
-      program.attrib_normal, program.attrib_tangent);
+    quad.setup_vertex_attrib(
+      prg.al_vertex, prg.al_texcoord, prg.al_normal, prg.al_tangent);
 
     // load maps
     fipImage diffuseImage = zxd::fipLoadImage("data/texture/bricks2.jpg");
     fipImage normalImage = zxd::fipLoadImage("data/texture/bricks2_normal.jpg");
     fipImage depthImage = zxd::fipLoadImage("data/texture/bricks2_disp.jpg");
 
-    glGenTextures(1, &diffuseMap);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    glGenTextures(1, &diffuse_map);
+    glBindTexture(GL_TEXTURE_2D, diffuse_map);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -130,8 +129,8 @@ public:
       diffuseImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
       diffuseImage.accessPixels());
 
-    glGenTextures(1, &normalMap);
-    glBindTexture(GL_TEXTURE_2D, normalMap);
+    glGenTextures(1, &normal_map);
+    glBindTexture(GL_TEXTURE_2D, normal_map);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -141,8 +140,8 @@ public:
       normalImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
       normalImage.accessPixels());
 
-    glGenTextures(1, &depthMap);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glGenTextures(1, &depth_map);
+    glBindTexture(GL_TEXTURE_2D, depth_map);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -153,15 +152,15 @@ public:
       depthImage.accessPixels());
 
     // light
-    zxd::LightSource dirLight;
-    dirLight.position = vec4(0, -1, 1, 0);
-    dirLight.diffuse = vec4(1, 1, 1, 1);
-    dirLight.specular = vec4(1, 1, 1, 1);
-    dirLight.linearAttenuation = 1.0f;
+    zxd::light_source dir_light;
+    dir_light.position = vec4(0, -1, 1, 0);
+    dir_light.diffuse = vec4(1, 1, 1, 1);
+    dir_light.specular = vec4(1, 1, 1, 1);
+    dir_light.linear_attenuation = 1.0f;
 
-    lights.push_back(dirLight);
+    lights.push_back(dir_light);
 
-    lightModel.localViewer = 1;
+    light_model.local_viewer = 1;
 
     // material
     material.ambient = vec4(0.2);
@@ -169,40 +168,40 @@ public:
     material.specular = vec4(0.8);
     material.shininess = 50;
 
-    setViewMatrix(&program.viewMatrix);
-    bindUniformLocations(program);
+    set_v_mat(&prg.v_mat);
+    bind_uniform_locations(prg);
 
-    mBitmapText.init();
-    mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
+    m_text.init();
+    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   }
 
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw low quality mesh with normal map
-    glUseProgram(program);
-    program.updateModel(mat4(1.0));
-    glUniform1i(program.loc_diffuseMap, 0);
-    glUniform1i(program.loc_normalMap, 1);
-    glUniform1i(program.loc_depthMap, 2);
-    glUniform1f(program.loc_heightScale, heightScale);
+    glUseProgram(prg);
+    prg.update_model(mat4(1.0));
+    glUniform1i(prg.ul_diffuse_map, 0);
+    glUniform1i(prg.ul_normal_map, 1);
+    glUniform1i(prg.ul_depth_map, 2);
+    glUniform1f(prg.ul_height_scale, height_scale);
 
     // get camera model position
-    vec3 camera = glm::column(program.modelViewMatrixInverse, 3).xyz();
-    glUniform3fv(program.loc_modelCamera, 1, glm::value_ptr(camera));
+    vec3 camera = glm::column(prg.mv_mat_i, 3).xyz();
+    glUniform3fv(prg.ul_model_camera, 1, glm::value_ptr(camera));
 
     for (int i = 0; i < lights.size(); ++i) {
-      lights[i].updateUniforms(program.modelMatrixInverse);
+      lights[i].update_uniforms(prg.m_mat_i);
     }
-    lightModel.updateUniforms();
-    material.updateUniforms();
+    light_model.update_uniforms();
+    material.update_uniforms();
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    glBindTexture(GL_TEXTURE_2D, diffuse_map);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, normalMap);
+    glBindTexture(GL_TEXTURE_2D, normal_map);
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glBindTexture(GL_TEXTURE_2D, depth_map);
 
     quad.draw();
 
@@ -210,42 +209,42 @@ public:
     glDisable(GL_SCISSOR_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "q : parallax method : " << parallaxMethods[program.parallaxMethod]
+    ss << "q : parallax method : " << parallax_methods[prg.parallax_method]
        << std::endl;
-    ss << "w : heightScale : " << heightScale << std::endl;
-    ss << "fps : " << mFps << std::endl;
-    mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
+    ss << "w : height_scale : " << height_scale << std::endl;
+    ss << "fps : " << m_fps << std::endl;
+    m_text.print(ss.str(), 10, m_info.wnd_height - 25);
     glDisable(GL_BLEND);
   }
 
   virtual void update() {}
 
-  virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
-    App::glfwResize(wnd, w, h);
-    mBitmapText.reshape(w, h);
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+    app::glfw_resize(wnd, w, h);
+    m_text.reshape(w, h);
   }
 
-  virtual void bindUniformLocations(zxd::Program &program) {
-    lightModel.bindUniformLocations(program.object, "lightModel");
+  virtual void bind_uniform_locations(zxd::program &prg) {
+    light_model.bind_uniform_locations(prg.object, "lm");
     for (int i = 0; i < lights.size(); ++i) {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      lights[i].bindUniformLocations(program.object, ss.str());
+      lights[i].bind_uniform_locations(prg.object, ss.str());
     }
-    material.bindUniformLocations(program.object, "material");
+    material.bind_uniform_locations(prg.object, "mtl");
   }
 
-  virtual void glfwKey(
+  virtual void glfw_key(
     GLFWwindow *wnd, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
       switch (key) {
         case GLFW_KEY_ESCAPE:
-          glfwSetWindowShouldClose(mWnd, GL_TRUE);
+          glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
         case GLFW_KEY_Q: {
-          program.parallaxMethod = (program.parallaxMethod + 1) % 4;
-          program.clear();
-          program.init();
+          prg.parallax_method = (prg.parallax_method + 1) % 4;
+          prg.clear();
+          prg.init();
         } break;
 
           break;
@@ -258,10 +257,10 @@ public:
       switch (key) {
         case GLFW_KEY_W:
           if (mods & GLFW_MOD_SHIFT) {
-            heightScale -= 0.002;
-            heightScale = glm::max(heightScale, 0.0f);
+            height_scale -= 0.002;
+            height_scale = glm::max(height_scale, 0.0f);
           } else {
-            heightScale += 0.002;
+            height_scale += 0.002;
           }
 
           break;
@@ -269,25 +268,26 @@ public:
           break;
       }
     }
-    App::glfwKey(wnd, key, scancode, action, mods);
+    app::glfw_key(wnd, key, scancode, action, mods);
   }
 
-  virtual void glfwMouseButton(
+  virtual void glfw_mouse_button(
     GLFWwindow *wnd, int button, int action, int mods) {
-    App::glfwMouseButton(wnd, button, action, mods);
+    app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {
-    App::glfwMouseMove(wnd, x, y);
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+    app::glfw_mouse_move(wnd, x, y);
   }
 
-  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
-    App::glfwMouseWheel(wnd, xoffset, yoffset);
+  virtual void glfw_mouse_wheel(
+    GLFWwindow *wnd, double xoffset, double yoffset) {
+    app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 };
 }
 
 int main(int argc, char *argv[]) {
-  zxd::NormalMapApp app;
+  zxd::normal_map_app app;
   app.run();
 }

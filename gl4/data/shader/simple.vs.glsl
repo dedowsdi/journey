@@ -2,8 +2,8 @@
 
 in vec4 vertex;
 
-uniform mat4 modelViewProjMatrix;
+uniform mat4 mvp_mat;
 
 void main() {
-  gl_Position = modelViewProjMatrix * vertex;
+  gl_Position = mvp_mat * vertex;
 }

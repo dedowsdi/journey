@@ -9,39 +9,39 @@ namespace zxd {
 /*
  * build sphere with two triangle fans and a bunch of triangle strips
  */
-class Torus : public Geometry {
+class torus : public geometry {
 protected:
-  GLfloat mInnerRadius;
-  GLfloat mOuterRadius;
-  GLuint mSides;  // longitiude
-  GLuint mRings;  // latitude
+  GLfloat m_inner_radius;
+  GLfloat m_outer_radius;
+  GLuint m_sides;  // longitiude
+  GLuint m_rings;  // latitude
 
 public:
-  Torus() : mInnerRadius(0.25), mOuterRadius(1), mSides(16), mRings(16) {}
-  Torus(GLfloat innerRadius, GLfloat outerRadius, GLuint sides, GLuint rings)
-      : mInnerRadius(innerRadius),
-        mOuterRadius(outerRadius),
-        mSides(sides),
-        mRings(rings) {}
+  torus() : m_inner_radius(0.25), m_outer_radius(1), m_sides(16), m_rings(16) {}
+  torus(GLfloat inner_radius, GLfloat outer_radius, GLuint sides, GLuint rings)
+      : m_inner_radius(inner_radius),
+        m_outer_radius(outer_radius),
+        m_sides(sides),
+        m_rings(rings) {}
 
-  void buildVertex();
+  void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void buildNormal();
-  void buildTexcoord();
+  void build_normal();
+  void build_texcoord();
 
   void draw(GLuint primcount = 1);
 
-  GLfloat getInnerRadius() const { return mInnerRadius; }
-  void setInnerRadius(GLfloat v) { mInnerRadius = v; }
+  GLfloat inner_radius() const { return m_inner_radius; }
+  void inner_radius(GLfloat v) { m_inner_radius = v; }
 
-  GLfloat getOuterRadius() const { return mOuterRadius; }
-  void setOuterRadius(GLfloat v) { mOuterRadius = v; }
+  GLfloat outer_radius() const { return m_outer_radius; }
+  void outer_radius(GLfloat v) { m_outer_radius = v; }
 
-  GLuint getSides() const { return mSides; }
-  void setSides(GLuint v) { mSides = v; }
+  GLuint sides() const { return m_sides; }
+  void sides(GLuint v) { m_sides = v; }
 
-  GLuint getRings() const { return mRings; }
-  void setRings(GLuint v) { mRings = v; }
+  GLuint rings() const { return m_rings; }
+  void rings(GLuint v) { m_rings = v; }
 };
 }
 

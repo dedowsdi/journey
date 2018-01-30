@@ -6,16 +6,16 @@
 in vec4 vertex; // x y s t
 in vec3 translation; // instance translation
 
-out VS_OUT{
+out vs_out{
   vec2 texcoord;
-}vs_out;
+}vo;
 
-uniform mat4 viewProjMatrix;
-uniform vec3 cameraPos; // world position
+uniform mat4 vp_mat;
+uniform vec3 camera_pos; // world position
 
 void main() {
-  vs_out.texcoord = vertex.zw;
-  vec3 ev = cameraPos - translation;
+  vo.texcoord = vertex.zw;
+  vec3 ev = camera_pos - translation;
 
   // yaw, pitch in intrinsic
   
@@ -39,12 +39,12 @@ void main() {
     s1 /= l;
   }
 
-  mat4 modelMatrix = mat4(
+  mat4 m_mat = mat4(
       c0,            0,             -s0,           0,
       s0 * s1,       c1,            c0*s1,         0,
       s0*c1,         -s1,           c0*c1,         0,
       translation.x, translation.y, translation.z, 1
       );
 
-  gl_Position = viewProjMatrix * modelMatrix * vec4(vertex.xy, 0, 1);
+  gl_Position = vp_mat * m_mat * vec4(vertex.xy, 0, 1);
 }

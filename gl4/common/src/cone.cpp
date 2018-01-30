@@ -4,145 +4,146 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void Cone::buildVertex() {
-  GLfloat thetaStep = f2pi / mSlice;  // azimuthal angle step
-  GLfloat heightStep = mHeight / mStack;
-  GLfloat radiusStep = mRadius / mStack;
+void cone::build_vertex() {
+  GLfloat theta_step = f2pi / m_slice;  // azimuthal angle step
+  GLfloat height_step = m_height / m_stack;
+  GLfloat radius_step = m_radius / m_stack;
 
-  GLuint numVertPole = mSlice + 1;
-  GLuint numVertCenter = (mSlice + 1) * 2;
+  GLuint num_vert_pole = m_slice + 1;
+  GLuint num_vert_center = (m_slice + 1) * 2;
 
-  mVertices.reserve(numVertPole * 2 + numVertCenter * (mStack - 1));
+  m_vertices.reserve(num_vert_pole * 2 + num_vert_center * (m_stack - 1));
 
   // add bottom fan
-  mVertices.push_back(vec3(0.0));
-  for (int i = 0; i <= mSlice; ++i) {
-    GLfloat theta = -thetaStep * i;  // apply - for back face
-    mVertices.push_back(
-      vec3(mRadius * glm::cos(theta), mRadius * glm::sin(theta), 0));
+  m_vertices.push_back(vec3(0.0));
+  for (int i = 0; i <= m_slice; ++i) {
+    GLfloat theta = -theta_step * i;  // apply - for back face
+    m_vertices.push_back(
+      vec3(m_radius * glm::cos(theta), m_radius * glm::sin(theta), 0));
   }
 
   // create stack from bottom to top, different sphere.
   // build triangle strip as
   //    0 2
   //    1 3
-  for (int i = 0; i < mStack; ++i) {
-    GLfloat h0 = heightStep * i;
-    GLfloat h1 = h0 + heightStep;
-    GLfloat r0 = radiusStep * (mStack - i);
-    GLfloat r1 = r0 - radiusStep;
+  for (int i = 0; i < m_stack; ++i) {
+    GLfloat h0 = height_step * i;
+    GLfloat h1 = h0 + height_step;
+    GLfloat r0 = radius_step * (m_stack - i);
+    GLfloat r1 = r0 - radius_step;
 
     // add hat
-    if (i == mStack - 1) mVertices.push_back(glm::vec3(0, 0, mHeight));
+    if (i == m_stack - 1) m_vertices.push_back(glm::vec3(0, 0, m_height));
 
-    for (int j = 0; j <= mSlice; j++) {
+    for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
-      GLfloat theta = thetaStep * j;
-      GLfloat cosTheta = std::cos(theta);
-      GLfloat sinTheta = std::sin(theta);
+      GLfloat theta = theta_step * j;
+      GLfloat cos_theta = std::cos(theta);
+      GLfloat sin_theta = std::sin(theta);
 
-      if (i != mStack - 1) {
-        mVertices.push_back(vec3(r1 * cosTheta, r1 * sinTheta, h1));
+      if (i != m_stack - 1) {
+        m_vertices.push_back(vec3(r1 * cos_theta, r1 * sin_theta, h1));
       }
 
-      mVertices.push_back(vec3(r0 * cosTheta, r0 * sinTheta, h0));
+      m_vertices.push_back(vec3(r0 * cos_theta, r0 * sin_theta, h0));
     }
   }
 }
 
 //--------------------------------------------------------------------
-void Cone::buildNormal() {
-  mNormals.clear();
-  mNormals.reserve(mVertices.size());
+void cone::build_normal() {
+  m_normals.clear();
+  m_normals.reserve(m_vertices.size());
 
-  GLuint numVertBottom = mSlice + 2;
+  GLuint num_vert_bottom = m_slice + 2;
 
   // normals for bottom
-  for (int i = 0; i < numVertBottom; ++i) {
-    mNormals.push_back(vec3(0, 0, -1));
+  for (int i = 0; i < num_vert_bottom; ++i) {
+    m_normals.push_back(vec3(0, 0, -1));
   }
 
-  glm::vec3 apex(0, 0, mHeight);
+  glm::vec3 apex(0, 0, m_height);
 
   // normals for 1st stack
-  for (int i = 0; i <= mSlice; ++i) {
-    const vec3& vertex = mVertices[numVertBottom + i * 2];
+  for (int i = 0; i <= m_slice; ++i) {
+    const vec3& vertex = m_vertices[num_vert_bottom + i * 2];
     vec3 outer = glm::cross(vertex, apex);
     vec3 normal = glm::cross(apex - vertex, outer);
-    mNormals.push_back(normal);
-    mNormals.push_back(normal);
+    m_normals.push_back(normal);
+    m_normals.push_back(normal);
   }
 
   // normals for 1 - last 2 stacks
-  for (int i = 1; i < mStack - 1; ++i) {
+  for (int i = 1; i < m_stack - 1; ++i) {
     // no reallocate will happen here
-    mNormals.insert(mNormals.end(), mNormals.begin() + numVertBottom,
-      mNormals.begin() + numVertBottom + (mSlice + 1) * 2);
+    m_normals.insert(m_normals.end(), m_normals.begin() + num_vert_bottom,
+      m_normals.begin() + num_vert_bottom + (m_slice + 1) * 2);
   }
 
   // normals for last stacks
-  mNormals.push_back(vec3(0, 0, 1));
-  for (int i = 0; i <= mSlice; ++i) {
-    mNormals.push_back(mNormals[numVertBottom + i * 2]);
+  m_normals.push_back(vec3(0, 0, 1));
+  for (int i = 0; i <= m_slice; ++i) {
+    m_normals.push_back(m_normals[num_vert_bottom + i * 2]);
   }
-  assert(mNormals.size() == mVertices.size());
+  assert(m_normals.size() == m_vertices.size());
 }
 
 //--------------------------------------------------------------------
-void Cone::buildTexcoord() {
-  mTexcoords.clear();
-  mTexcoords.reserve(mVertices.size());
+void cone::build_texcoord() {
+  m_texcoords.clear();
+  m_texcoords.reserve(m_vertices.size());
 
   // bottom texcoords
-  mTexcoords.push_back(glm::vec2(0, 0));
-  for (int i = 0; i <= mSlice; ++i) {
-    GLfloat s = 1 - static_cast<GLfloat>(i) / mSlice;
-    mTexcoords.push_back(glm::vec2(s, 0));
+  m_texcoords.push_back(glm::vec2(0, 0));
+  for (int i = 0; i <= m_slice; ++i) {
+    GLfloat s = 1 - static_cast<GLfloat>(i) / m_slice;
+    m_texcoords.push_back(glm::vec2(s, 0));
   }
 
-  for (int i = 0; i < mStack; ++i) {
-    GLfloat t0 = static_cast<GLfloat>(i + 1) / mStack;
-    GLfloat t1 = static_cast<GLfloat>(i) / mStack;
+  for (int i = 0; i < m_stack; ++i) {
+    GLfloat t0 = static_cast<GLfloat>(i + 1) / m_stack;
+    GLfloat t1 = static_cast<GLfloat>(i) / m_stack;
 
     // add pole
-    if (i == mStack - 1) mTexcoords.push_back(glm::vec2(1, 0));
+    if (i == m_stack - 1) m_texcoords.push_back(glm::vec2(1, 0));
 
-    for (int j = 0; j <= mSlice; j++) {
+    for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
-      GLfloat s = static_cast<GLfloat>(j) / mSlice;
+      GLfloat s = static_cast<GLfloat>(j) / m_slice;
 
-      mTexcoords.push_back(glm::vec2(s, t0));
+      m_texcoords.push_back(glm::vec2(s, t0));
 
-      if (i != mStack - 1) mTexcoords.push_back(glm::vec2(s, t1));
+      if (i != m_stack - 1) m_texcoords.push_back(glm::vec2(s, t1));
     }
   }
 
-  assert(mTexcoords.size() == mVertices.size());
+  assert(m_texcoords.size() == m_vertices.size());
 }
 
 //--------------------------------------------------------------------
-void Cone::draw(GLuint primcount /* = 1*/) {
-  GLuint numVertPole = mSlice + 2;  // pole + slice + 1
-  GLuint numVertCenter = (mSlice + 1) * 2;
+void cone::draw(GLuint primcount /* = 1*/) {
+  GLuint num_vert_pole = m_slice + 2;  // pole + slice + 1
+  GLuint num_vert_center = (m_slice + 1) * 2;
 
-  bindVertexArrayObject();
+  bind_vertex_array_object();
 
   if (primcount == 1) {
-    glDrawArrays(GL_TRIANGLE_FAN, 0, numVertPole);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, num_vert_pole);
 
-    GLuint next = numVertPole;
-    for (int i = 0; i < mStack - 1; ++i, next += numVertCenter) {
-      glDrawArrays(GL_TRIANGLE_STRIP, next, numVertCenter);
+    GLuint next = num_vert_pole;
+    for (int i = 0; i < m_stack - 1; ++i, next += num_vert_center) {
+      glDrawArrays(GL_TRIANGLE_STRIP, next, num_vert_center);
     }
-    glDrawArrays(GL_TRIANGLE_FAN, next, numVertPole);
+    glDrawArrays(GL_TRIANGLE_FAN, next, num_vert_pole);
   } else {
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, numVertPole, primcount);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, num_vert_pole, primcount);
 
-    GLuint next = numVertPole;
-    for (int i = 0; i < mStack - 2; ++i, next += numVertCenter) {
-      glDrawArraysInstanced(GL_TRIANGLE_STRIP, next, numVertCenter, primcount);
+    GLuint next = num_vert_pole;
+    for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
+      glDrawArraysInstanced(
+        GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
     }
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, next, numVertPole, primcount);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, next, num_vert_pole, primcount);
   }
 }
 }

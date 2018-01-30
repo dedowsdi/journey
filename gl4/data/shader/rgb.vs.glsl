@@ -3,14 +3,14 @@
 in vec4 vertex;
 in vec4 color;
 
-uniform mat4 modelViewProjMatrix;
+uniform mat4 mvp_mat;
 
-out VS_OUT{
+out vs_out{
   flat vec4 color;
-}vs_out;
+}vo;
 
 void main(void)
 {
-  gl_Position = modelViewProjMatrix * vertex;
-  vs_out.color = color;
+  gl_Position = mvp_mat * vertex;
+  vo.color = color;
 }

@@ -4,10 +4,10 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void drawQuad(GLuint texture) {
+void draw_quad(GLuint texture) {
   static GLuint vao;
   static GLuint vbo;
-  static QuadProgram quadProgram;
+  static quad_program quad_program;
   // clang-format off
   // {vertex.x, vertex.y, texcoord.x, texcoord.y}
   static GLfloat vertices[6][4] = {
@@ -21,8 +21,8 @@ void drawQuad(GLuint texture) {
   };
   // clang-format on
 
-  if (quadProgram.object == -1) {
-    quadProgram.init();
+  if (quad_program.object == -1) {
+    quad_program.init();
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -32,24 +32,23 @@ void drawQuad(GLuint texture) {
     glBufferData(
       GL_ARRAY_BUFFER, sizeof(vertices), vertices[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(quadProgram.attrib_vertex, 2, GL_FLOAT, GL_FALSE,
+    glVertexAttribPointer(quad_program.al_vertex, 2, GL_FLOAT, GL_FALSE,
       4 * sizeof(GLfloat), BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(quadProgram.attrib_vertex);
+    glEnableVertexAttribArray(quad_program.al_vertex);
 
-    glVertexAttribPointer(quadProgram.attrib_texcoord, 2, GL_FLOAT, GL_FALSE,
+    glVertexAttribPointer(quad_program.al_texcoord, 2, GL_FLOAT, GL_FALSE,
       4 * sizeof(GLfloat), BUFFER_OFFSET(2 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(quadProgram.attrib_texcoord);
+    glEnableVertexAttribArray(quad_program.al_texcoord);
   }
 
   glBindVertexArray(vao);
-  glUseProgram(quadProgram);
+  glUseProgram(quad_program);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-  quadProgram.updateUniforms(0);
+  quad_program.update_uniforms(0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
-
 }
 }

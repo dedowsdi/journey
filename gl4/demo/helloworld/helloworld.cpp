@@ -2,19 +2,19 @@
 #include "bitmap_text.h"
 
 namespace zxd {
-class HelloWorld : public App {
+class hello_world : public app {
 protected:
-  BitmapText mBitmapText;
+  bitmap_text m_text;
 
 public:
-  virtual void initInfo() {
-    App::initInfo();
-    mInfo.title = "hello world";
+  virtual void init_info() {
+    app::init_info();
+    m_info.title = "hello world";
   }
-  virtual void createScene() {
+  virtual void create_scene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
-    mBitmapText.init();
-    mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
+    m_text.init();
+    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   }
 
   virtual void update() {}
@@ -23,20 +23,20 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    mBitmapText.print("Hello World", 10, 492);
+    m_text.print("hello world", 10, 492);
   }
 
-  virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
-    App::glfwResize(wnd, w, h);
-    mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+    app::glfw_resize(wnd, w, h);
+    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   }
 
-  virtual void glfwKey(
+  virtual void glfw_key(
     GLFWwindow *wnd, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
       switch (key) {
         case GLFW_KEY_ESCAPE:
-          glfwSetWindowShouldClose(mWnd, GL_TRUE);
+          glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
         default:
           break;
@@ -47,6 +47,6 @@ public:
 }
 
 int main(int argc, char *argv[]) {
-  zxd::HelloWorld app;
+  zxd::hello_world app;
   app.run();
 }

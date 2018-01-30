@@ -9,32 +9,32 @@ namespace zxd {
 /*
  * build sphere with two triangle fans and a bunch of triangle strips
  */
-class Sphere : public Geometry {
+class sphere : public geometry {
 protected:
-  GLfloat mRadius;
-  GLuint mSlice;  // longitiude
-  GLuint mStack;  // latitude
+  GLfloat m_radius;
+  GLuint m_slice;  // longitiude
+  GLuint m_stack;  // latitude
 
 public:
-  Sphere() : mRadius(1), mSlice(16), mStack(16) {}
-  Sphere(GLfloat radius, GLuint slice, GLuint stack)
-      : mRadius(radius), mSlice(slice), mStack(stack) {}
+  sphere() : m_radius(1), m_slice(16), m_stack(16) {}
+  sphere(GLfloat radius, GLuint slice, GLuint stack)
+      : m_radius(radius), m_slice(slice), m_stack(stack) {}
 
-  void buildVertex();
+  void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void buildNormal();
-  void buildTexcoord();
+  void build_normal();
+  void build_texcoord();
 
   void draw(GLuint primcount = 1);
 
-  inline GLfloat getRadius() const { return mRadius; }
-  inline void setRadius(GLfloat v) { mRadius = v; }
+  GLfloat radius() const { return m_radius; }
+  void radius(GLfloat v) { m_radius = v; }
 
-  inline GLuint getSlice() const { return mSlice; }
-  inline void setSlice(GLuint v) { mSlice = v; }
+  GLuint slice() const { return m_slice; }
+  void slice(GLuint v) { m_slice = v; }
 
-  inline GLuint getStack() const { return mStack; }
-  inline void setStack(GLuint v) { mStack = v; }
+  GLuint stack() const { return m_stack; }
+  void stack(GLuint v) { m_stack = v; }
 };
 }
 

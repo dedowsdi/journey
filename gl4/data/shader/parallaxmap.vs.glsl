@@ -7,31 +7,31 @@ in vec3 normal;
 in vec3 tangent;
 in vec2 texcoord;
 
-uniform mat4 modelViewProjMatrix;
+uniform mat4 mvp_mat;
 
-struct LightSource {
+struct light_source {
   vec4 ambient;
   vec4 diffuse;
   vec4 specular;
   vec4 position;  
-  vec3 spotDirection;
-  float spotExponent;
-  float spotCutoff;
-  float spotCosCutoff;
-  float constantAttenuation;
-  float linearAttenuation;
-  float quadraticAttenuation;
+  vec3 spot_direction;
+  float spot_exponent;
+  float spot_cutoff;
+  float spot_cos_cutoff;
+  float constant_attenuation;
+  float linear_attenuation;
+  float quadratic_attenuation;
 };
 
-out VS_OUT{
-  vec3 tangentVertex; 
-  vec3 tangentCamera;
+out vs_out{
+  vec3 tangent_vertex; 
+  vec3 tangent_camera;
   vec2 texcoord;
-  LightSource tangentLights[LIGHT_COUNT];
-} vs_out;
+  light_source tangent_lights[LIGHT_COUNT];
+} vo;
 
-uniform LightSource lights[LIGHT_COUNT]; //lights in model space
-uniform vec3 modelCamera;
+uniform light_source lights[LIGHT_COUNT]; //lights in model space
+uniform vec3 model_camera;
 
 void main(void)
 {
@@ -39,19 +39,19 @@ void main(void)
   vec3 N = normal;
   vec3 B = normalize(cross(N, T));
   mat3 tbn = mat3(T, B, N);
-  mat3 tbnInverse = transpose(tbn);
+  mat3 tbn_i = transpose(tbn);
 
-  vs_out.tangentVertex = (mat4(tbnInverse) * vertex).xyz;
-  vs_out.tangentCamera = tbnInverse * modelCamera;
-  vs_out.texcoord = texcoord;
+  vo.tangent_vertex = (mat4(tbn_i) * vertex).xyz;
+  vo.tangent_camera = tbn_i * model_camera;
+  vo.texcoord = texcoord;
 
-  vs_out.tangentLights = lights;
+  vo.tangent_lights = lights;
   for (int i = 0; i < LIGHT_COUNT; i++) {
-    vs_out.tangentLights[i].position = mat4(tbnInverse) *
-      vs_out.tangentLights[i].position;
-    vs_out.tangentLights[i].spotDirection = tbnInverse *
-      vs_out.tangentLights[i].spotDirection;
+    vo.tangent_lights[i].position = mat4(tbn_i) *
+      vo.tangent_lights[i].position;
+    vo.tangent_lights[i].spot_direction = tbn_i *
+      vo.tangent_lights[i].spot_direction;
   }
 
-  gl_Position = modelViewProjMatrix * vertex;
+  gl_Position = mvp_mat * vertex;
 }

@@ -6,110 +6,109 @@
 #include <string>
 #include <vector>
 
-typedef std::vector<std::string> StringVector;
-typedef std::vector<const char*> CStringVector;
+typedef std::vector<std::string> string_vector;
+typedef std::vector<const char*> cstring_vector;
 
 namespace zxd {
 
 // just a place hold, barely has any function.
-struct Program {
+struct program {
 public:
   GLuint object;
   // some popular matrix
-  glm::mat4 viewMatrix;
-  glm::mat4 projMatrix;
-  glm::mat4 modelMatrix;
-  glm::mat4 modelViewMatrix;
-  glm::mat4 viewProjMatrix;
-  glm::mat4 modelViewProjMatrix;
+  glm::mat4 v_mat;
+  glm::mat4 p_mat;
+  glm::mat4 m_mat;
+  glm::mat4 mv_mat;
+  glm::mat4 vp_mat;
+  glm::mat4 mvp_mat;
 
-  glm::mat4 viewMatrixInverse;
-  glm::mat4 projMatrixInverse;
-  glm::mat4 modelMatrixInverse;
-  glm::mat4 modelViewMatrixInverse;
-  glm::mat4 viewProjMatrixInverse;
-  glm::mat4 modelViewProjMatrixInverse;
+  glm::mat4 v_mat_i;
+  glm::mat4 p_mat_i;
+  glm::mat4 m_mat_i;
+  glm::mat4 mv_mat_i;
+  glm::mat4 vp_mat_i;
+  glm::mat4 mvp_mat_i;
 
-  glm::mat4 viewMatrixTranspose;
-  glm::mat4 projMatrixTranspose;
-  glm::mat4 modelMatrixTranspose;
-  glm::mat4 modelViewMatrixTranspose;
-  glm::mat4 viewProjMatrixTranspose;
-  glm::mat4 modelViewProjMatrixTranspose;
+  glm::mat4 v_mat_t;
+  glm::mat4 p_mat_t;
+  glm::mat4 m_mat_t;
+  glm::mat4 mv_mat_t;
+  glm::mat4 vp_mat_t;
+  glm::mat4 mvp_mat_t;
 
-  glm::mat4 viewMatrixInverseTranspose;
-  glm::mat4 projMatrixInverseTranspose;
-  glm::mat4 modelMatrixInverseTranspose;
-  glm::mat4 modelViewMatrixInverseTranspose;
-  glm::mat4 viewProjMatrixInverseTranspose;
-  glm::mat4 modelViewProjMatrixInverseTranspose;
+  glm::mat4 v_mat_it;
+  glm::mat4 p_mat_it;
+  glm::mat4 m_mat_it;
+  glm::mat4 mv_mat_it;
+  glm::mat4 vp_mat_it;
+  glm::mat4 mvp_mat_it;
 
   // some popular location
-  GLint loc_modelMatrix;
-  GLint loc_viewMatrix;
-  GLint loc_projMatrix;
-  GLint loc_modelViewMatrix;
-  GLint loc_viewProjMatrix;
-  GLint loc_modelViewProjMatrix;
+  GLint ul_m_mat;
+  GLint ul_v_mat;
+  GLint ul_p_mat;
+  GLint ul_mv_mat;
+  GLint ul_vp_mat;
+  GLint ul_mvp_mat;
 
-  GLint loc_modelMatrixInverse;
-  GLint loc_viewMatrixInverse;
-  GLint loc_projMatrixInverse;
-  GLint loc_modelViewMatrixInverse;
-  GLint loc_viewProjMatrixInverse;
-  GLint loc_modelViewProjMatrixInverse;
+  GLint ul_m_mat_i;
+  GLint ul_v_mat_i;
+  GLint ul_p_mat_i;
+  GLint ul_mv_mat_i;
+  GLint ul_vp_mat_i;
+  GLint ul_mvp_mat_i;
 
-  GLint loc_modelMatrixTranspose;
-  GLint loc_viewMatrixTranspose;
-  GLint loc_projMatrixTranspose;
-  GLint loc_modelViewMatrixTranspose;
-  GLint loc_viewProjMatrixTranspose;
-  GLint loc_modelViewProjMatrixTranspose;
+  GLint ul_m_mat_t;
+  GLint ul_v_mat_t;
+  GLint ul_p_mat_t;
+  GLint ul_mv_mat_t;
+  GLint ul_vp_mat_t;
+  GLint ul_mvp_mat_t;
 
-  GLint loc_modelMatrixInverseTranspose;
-  GLint loc_viewMatrixInverseTranspose;
-  GLint loc_projMatrixInverseTranspose;
-  GLint loc_modelViewMatrixInverseTranspose;
-  GLint loc_viewProjMatrixInverseTranspose;
-  GLint loc_modelViewProjMatrixInverseTranspose;
+  GLint ul_m_mat_it;
+  GLint ul_v_mat_it;
+  GLint ul_p_mat_it;
+  GLint ul_mv_mat_it;
+  GLint ul_vp_mat_it;
+  GLint ul_mvp_mat_it;
 
 protected:
-  std::string mName;
+  std::string m_name;
 
 public:
-  Program() : object(-1) {}
-  virtual ~Program() {}
+  program() : object(-1) {}
+  virtual ~program() {}
 
   operator GLuint() { return object; }
 
   virtual void init() {
     object = glCreateProgram();
-    attachShaders();
+    attach_shaders();
     link();
-    bindUniformLocations();
-    bindAttribLocations();
+    bind_uniform_locations();
+    bind_attrib_locations();
   }
 
   void link();
 
-  virtual void attachShaders(){};
-  virtual void bindUniformLocations(){};
-  virtual void bindAttribLocations(){};
+  virtual void attach_shaders(){};
+  virtual void bind_uniform_locations(){};
+  virtual void bind_attrib_locations(){};
 
-  GLint getAttribLocation(const std::string& name);
+  GLint attrib_location(const std::string& name);
 
   // some wrapper
-  void setUniformLocation(GLint* location, const std::string& name);
-  void attachShaderFile(GLenum type, const std::string& file);
-  bool attachShaderSource(GLenum type, const StringVector& source);
-  void attachShaderSourceAndFile(
-    GLenum type, const StringVector& source, const std::string& file);
+  void uniform_location(GLint* location, const std::string& name);
+  void attach_shader_file(GLenum type, const std::string& file);
+  bool attach_shader_source(GLenum type, const string_vector& source);
+  void attach_shader_source_and_file(
+    GLenum type, const string_vector& source, const std::string& file);
 
-  std::string getName() const { return mName; }
-  void setName( std::string v){mName = v;}
+  std::string name() const { return m_name; }
+  void set_name(std::string v) { m_name = v; }
 
   void clear();
-
 };
 }
 

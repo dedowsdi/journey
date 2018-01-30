@@ -10,74 +10,74 @@
 
 namespace zxd {
 
-struct BitmapTextProgram : public zxd::Program {
-  GLint attrib_vertex;
-  GLint loc_textColor;
-  GLint loc_fontMap;
-  BitmapTextProgram() {}
-  void reshape(GLuint wndWidth, GLuint wndHeight) {
-    modelViewProjMatrix = glm::ortho(
-      0.0f, (GLfloat)wndWidth, 0.0f, (GLfloat)wndHeight, -1.0f, 1.0f);
+struct bitmap_text_program : public zxd::program {
+  GLint al_vertex;
+  GLint ul_text_color;
+  GLint ul_font_map;
+  bitmap_text_program() {}
+  void reshape(GLuint wnd_width, GLuint wnd_height) {
+    mvp_mat = glm::ortho(
+      0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
   }
-  void updateUniforms(const glm::vec4& textColor) {
+  void update_uniforms(const glm::vec4& text_color) {
     glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
-    glUniform4fv(loc_textColor, 1, value_ptr(textColor));
-    glUniform1i(loc_fontMap, 0);
+      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+    glUniform4fv(ul_text_color, 1, value_ptr(text_color));
+    glUniform1i(ul_font_map, 0);
   }
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/bitmap_text.vs.glsl");
-    attachShaderFile(GL_FRAGMENT_SHADER, "data/shader/bitmap_text.fs.glsl");
+  virtual void attach_shaders() {
+    attach_shader_file(GL_VERTEX_SHADER, "data/shader/bitmap_text.vs.glsl");
+    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/bitmap_text.fs.glsl");
   }
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_textColor, "textColor");
-    setUniformLocation(&loc_fontMap, "fontMap");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_text_color, "text_color");
+    uniform_location(&ul_font_map, "font_map");
   }
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
   }
 };
 
 // only works with grayscale bitmap
-class BitmapText {
+class bitmap_text {
 public:
-  struct Glyph {
-    GLfloat xMin;  // the same as bearying X in freetype glyph
-    GLfloat yMin;  // bearyingY - height
-    GLfloat xMax;  // xMin + width
-    GLfloat yMax;  // the same as bearying Y
-    GLfloat sMin;  // texcoord
-    GLfloat tMin;  //
-    GLfloat sMax;  //
-    GLfloat tMax;  //
-    GLfloat xOrigin;
-    GLfloat yOrigin;
+  struct glyph {
+    GLfloat x_min;  // the same as bearying X in freetype glyph
+    GLfloat y_min;  // bearyingY - height
+    GLfloat x_max;  // x_min + width
+    GLfloat y_max;  // the same as bearying Y
+    GLfloat s_min;  // texcoord
+    GLfloat t_min;  //
+    GLfloat s_max;  //
+    GLfloat t_max;  //
+    GLfloat x_origin;
+    GLfloat y_origin;
     GLuint advance;  // in pixel
   };
 
 protected:
-  std::string mFace;
-  std::string mFmtFile;
-  std::shared_ptr<BitmapTextProgram> mProgram;
-  GLuint mVao;
-  GLuint mVbo;
-  GLuint mTextureSize;
-  GLuint mTexture;
-  GLuint mNumCharacters;
-  GLuint mHeight;
-  GLuint mLinespace;
-  GLuint mMaxAdvance;
+  std::string m_face;
+  std::string m_fmt_file;
+  std::shared_ptr<bitmap_text_program> m_program;
+  GLuint m_vao;
+  GLuint m_vbo;
+  GLuint m_texture_size;
+  GLuint m_texture;
+  GLuint m_num_characters;
+  GLuint m_height;
+  GLuint m_linespace;
+  GLuint m_max_advance;
 
-  std::map<GLchar, Glyph> mGlyphDict;
+  std::map<GLchar, glyph> m_glyph_dict;
 
 public:
-  BitmapText(const std::string& fmtfile = "data/font/DejaVuSansMono_15_9.fmt");
-  ~BitmapText();
+  bitmap_text(const std::string& fmtfile = "data/font/DejaVuSansMono_15_9.fmt");
+  ~bitmap_text();
   void init();
   // must be called at least once
-  void reshape(GLuint wndWidth, GLuint wndHeight) {
-    mProgram->reshape(wndWidth, wndHeight);
+  void reshape(GLuint wnd_width, GLuint wnd_height) {
+    m_program->reshape(wnd_width, wnd_height);
   }
 
   void print(const std::string& text, GLuint x, GLuint y,

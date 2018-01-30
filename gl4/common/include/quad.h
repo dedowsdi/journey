@@ -7,36 +7,36 @@
 
 namespace zxd {
 
-struct QuadProgram : public zxd::Program {
-  GLint loc_quadMap;
-  GLint attrib_vertex;
-  GLint attrib_texcoord;
+struct quad_program : public zxd::program {
+  GLint ul_quad_map;
+  GLint al_vertex;
+  GLint al_texcoord;
 
-  QuadProgram() {}
+  quad_program() {}
 
-  void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attachShaderFile(GL_FRAGMENT_SHADER, "data/shader/quad.fs.glsl");
+  void attach_shaders() {
+    attach_shader_file(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/quad.fs.glsl");
   }
 
-  void updateUniforms(GLuint texIndex = 0) {
-    glUniform1i(loc_quadMap, texIndex);
+  void update_uniforms(GLuint tex_index = 0) {
+    glUniform1i(ul_quad_map, tex_index);
   }
 
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_quadMap, "quadMap");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_quad_map, "quad_map");
   }
 
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
-    attrib_texcoord = getAttribLocation("texcoord");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_texcoord = attrib_location("texcoord");
   }
 };
 
-void drawQuad(GLuint texture);
+void draw_quad(GLuint texture);
 
 // triangle strip quad
-struct Quad {
+struct quad {
   GLuint vao;
   // clang-format off
   std::array<glm::vec2, 4> vertices{
@@ -70,16 +70,15 @@ struct Quad {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   }
 
-  void setupVertexAttrib(GLint attribVertex, GLint attribTexcoord = -1,
-    GLint attribNormal = -1, GLint attribTangent = -1) {
-    if (!glIsVertexArray(vao)) 
-      glGenVertexArrays(1, &vao);
+  void setup_vertex_attrib(GLint al_vertex, GLint al_texcoord = -1,
+    GLint al_normal = -1, GLint al_tangent = -1) {
+    if (!glIsVertexArray(vao)) glGenVertexArrays(1, &vao);
 
     glBindVertexArray(vao);
-    if (attribVertex != -1) zxd::setupVertexAttrib(attribVertex, vertices);
-    if (attribTexcoord != -1) zxd::setupVertexAttrib(attribTexcoord, texcoords);
-    if (attribNormal != -1) zxd::setupVertexAttrib(attribNormal, normals);
-    if (attribTangent != -1) zxd::setupVertexAttrib(attribTangent, tangents);
+    if (al_vertex != -1) zxd::setup_vertex_attrib(al_vertex, vertices);
+    if (al_texcoord != -1) zxd::setup_vertex_attrib(al_texcoord, texcoords);
+    if (al_normal != -1) zxd::setup_vertex_attrib(al_normal, normals);
+    if (al_tangent != -1) zxd::setup_vertex_attrib(al_tangent, tangents);
   }
 };
 }

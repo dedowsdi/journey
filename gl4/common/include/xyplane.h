@@ -6,32 +6,32 @@
 
 namespace zxd {
 
-class Xyplane : public Geometry {
+class xyplane : public geometry {
 protected:
-  GLuint mSlice;
-  GLfloat mWidth;
-  GLfloat mHeight;
+  GLuint m_slice;
+  GLfloat m_width;
+  GLfloat m_height;
 
 public:
-  Xyplane() : mSlice(1), mWidth(1), mHeight(1) {}
-  Xyplane(GLfloat width, GLfloat height, GLuint slice)
-      : mWidth(width), mHeight(height), mSlice(slice) {}
+  xyplane() : m_slice(1), m_width(1), m_height(1) {}
+  xyplane(GLfloat width, GLfloat height, GLuint slice)
+      : m_width(width), m_height(height), m_slice(slice) {}
 
-  void buildVertex();
+  void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void buildNormal();
-  void buildTexcoord();
+  void build_normal();
+  void build_texcoord();
 
   void draw(GLuint primcount = 1);
 
-  GLuint getSlice() const { return mSlice; }
-  void setSlice(GLuint v) { mSlice = v; }
+  GLuint slice() const { return m_slice; }
+  void slice(GLuint v) { m_slice = v; }
 
-  GLfloat getWidth() const { return mWidth; }
-  void setWidth(GLfloat v) { mWidth = v; }
+  GLfloat width() const { return m_width; }
+  void width(GLfloat v) { m_width = v; }
 
-  GLfloat getHeight() const { return mHeight; }
-  void setHeight(GLfloat v) { mHeight = v; }
+  GLfloat getHeight() const { return m_height; }
+  void set_height(GLfloat v) { m_height = v; }
 };
 }
 

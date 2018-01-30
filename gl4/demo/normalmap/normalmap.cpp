@@ -10,7 +10,7 @@
 namespace zxd {
 
 // clang-format off
-struct Pyramid0 {
+struct pyramid0 {
   GLuint vao;
   vec3 vertices[12] = {
     vec3(0, 0, 0.5) , vec3(-1, -1, 0) , vec3(1,  -1, 0) ,
@@ -28,7 +28,7 @@ struct Pyramid0 {
 
 } pyramid0;
 
-struct Pyramid1 {
+struct pyramid1 {
   GLuint vao;
 vec3 vertices[4] = {
   vec3(-1, 1,  0),
@@ -53,155 +53,151 @@ vec2 texcoords[4] = {
 }pyramid1;
 // clang-format on
 
-struct RenderNormalmapProgram : public zxd::Program {
-  GLint attrib_texcoord;
-  GLint attrib_normal;
+struct render_normalmap_program : public zxd::program {
+  GLint al_texcoord;
+  GLint al_normal;
 
-  virtual void updateModel(const mat4 &_modelMatrix) {}
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/render_normalmap.vs.glsl");
-    attachShaderFile(
+  virtual void update_model(const mat4 &_m_mat) {}
+  virtual void attach_shaders() {
+    attach_shader_file(
+      GL_VERTEX_SHADER, "data/shader/render_normalmap.vs.glsl");
+    attach_shader_file(
       GL_FRAGMENT_SHADER, "data/shader/render_normalmap.fs.glsl");
   }
-  virtual void bindUniformLocations() {}
+  virtual void bind_uniform_locations() {}
 
-  virtual void bindAttribLocations() {
-    attrib_texcoord = getAttribLocation("texcoord");
-    attrib_normal = getAttribLocation("normal");
+  virtual void bind_attrib_locations() {
+    al_texcoord = attrib_location("texcoord");
+    al_normal = attrib_location("normal");
   };
-} renderNormalmapProgram;
+} render_normalmap_program;
 
-struct UseNormalMapViewProgram : public zxd::Program {
-  GLint attrib_vertex;
-  GLint attrib_normal;
-  GLint attrib_tangent;
-  GLint attrib_texcoord;
-  GLint loc_normalMap;
+struct use_normal_map_view_program : public zxd::program {
+  GLint al_vertex;
+  GLint al_normal;
+  GLint al_tangent;
+  GLint al_texcoord;
+  GLint ul_normal_map;
 
-  virtual void updateModel(const mat4 &_modelMatrix) {
-    modelMatrix = _modelMatrix;
-    modelViewMatrix = viewMatrix * modelMatrix;
-    modelViewMatrixInverseTranspose =
-      glm::inverse(glm::transpose(modelViewMatrix));
-    modelViewProjMatrix = projMatrix * modelViewMatrix;
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mv_mat = v_mat * m_mat;
+    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mvp_mat = p_mat * mv_mat;
 
-    glUniformMatrix4fv(loc_modelViewMatrixInverseTranspose, 1, 0,
-      value_ptr(modelViewMatrixInverseTranspose));
-    glUniformMatrix4fv(loc_modelViewMatrix, 1, 0, value_ptr(modelViewMatrix));
-    glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
+    glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
+    glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
-  virtual void attachShaders() {
-    attachShaderFile(
+  virtual void attach_shaders() {
+    attach_shader_file(
       GL_VERTEX_SHADER, "data/shader/use_normalmap_view.vs.glsl");
-    StringVector sv;
+    string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    sv.push_back(readFile("data/shader/blinn.frag"));
-    attachShaderSourceAndFile(
+    sv.push_back(read_file("data/shader/blinn.frag"));
+    attach_shader_source_and_file(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
 
-    setName("use_normalmap_view");
+    set_name("use_normalmap_view");
   }
-  virtual void bindUniformLocations() {
-    // setUniformLocation(&loc_eye, "eye");
-    setUniformLocation(&loc_modelViewMatrix, "modelViewMatrix");
-    setUniformLocation(
-      &loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_normalMap, "normalMap");
+  virtual void bind_uniform_locations() {
+    // uniform_location(&ul_eye, "eye");
+    uniform_location(&ul_mv_mat, "mv_mat");
+    uniform_location(&ul_mv_mat_it, "mv_mat_it");
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_normal_map, "normal_map");
   }
 
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
-    attrib_normal = getAttribLocation("normal");
-    attrib_tangent = getAttribLocation("tangent");
-    attrib_texcoord = getAttribLocation("texcoord");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_normal = attrib_location("normal");
+    al_tangent = attrib_location("tangent");
+    al_texcoord = attrib_location("texcoord");
   };
-} useNormalMapViewProgram;
+} use_normal_map_view_program;
 
-struct UseNormalMapTangentProgram : public Program {
-  GLint attrib_vertex;
-  GLint attrib_normal;
-  GLint attrib_tangent;
-  GLint attrib_texcoord;
-  GLint loc_normalMap;
-  GLint loc_modelCamera;
+struct use_normal_map_tangent_program : public program {
+  GLint al_vertex;
+  GLint al_normal;
+  GLint al_tangent;
+  GLint al_texcoord;
+  GLint ul_normal_map;
+  GLint ul_model_camera;
 
-  virtual void updateModel(const mat4 &_modelMatrix) {
-    modelMatrix = _modelMatrix;
-    modelViewMatrix = viewMatrix * modelMatrix;
-    modelViewMatrixInverse = glm::inverse(modelViewMatrix);
-    modelMatrixInverse = glm::inverse(modelMatrix);
-    modelViewProjMatrix = projMatrix * modelViewMatrix;
-    glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, glm::value_ptr(modelViewProjMatrix));
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mv_mat = v_mat * m_mat;
+    mv_mat_i = glm::inverse(mv_mat);
+    m_mat_i = glm::inverse(m_mat);
+    mvp_mat = p_mat * mv_mat;
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   };
-  virtual void attachShaders() {
-    StringVector sv;
+  virtual void attach_shaders() {
+    string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    attachShaderSourceAndFile(
+    attach_shader_source_and_file(
       GL_VERTEX_SHADER, sv, "data/shader/use_normalmap_tangent.vs.glsl");
-    sv.push_back(readFile("data/shader/blinn.frag"));
-    attachShaderSourceAndFile(
+    sv.push_back(read_file("data/shader/blinn.frag"));
+    attach_shader_source_and_file(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
 
-    setName("use_normalmap_tangent");
+    set_name("use_normalmap_tangent");
   }
-  virtual void bindUniformLocations() {
-    // setUniformLocation(&loc_eye, "eye");
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_normalMap, "normalMap");
-    setUniformLocation(&loc_modelCamera, "modelCamera");
+  virtual void bind_uniform_locations() {
+    // uniform_location(&ul_eye, "eye");
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_normal_map, "normal_map");
+    uniform_location(&ul_model_camera, "model_camera");
   }
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
-    attrib_normal = getAttribLocation("normal");
-    attrib_tangent = getAttribLocation("tangent");
-    attrib_texcoord = getAttribLocation("texcoord");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_normal = attrib_location("normal");
+    al_tangent = attrib_location("tangent");
+    al_texcoord = attrib_location("texcoord");
   };
-} useNormalMapTangentProgram;
+} use_normal_map_tangent_program;
 
-GLuint normalMap;
-std::vector<zxd::LightSource> lights;
-zxd::LightModel lightModel;
-zxd::Material material;
-GLint lightSpace = 0;  // 0 : view, 1 : tangent
+GLuint normal_map;
+std::vector<zxd::light_source> lights;
+zxd::light_model light_model;
+zxd::material material;
+GLint light_space = 0;  // 0 : view, 1 : tangent
 
-class NormalMapApp : public App {
+class normal_map_app : public app {
 protected:
-  BitmapText mBitmapText;
+  bitmap_text m_text;
 
 public:
-  NormalMapApp() {}
+  normal_map_app() {}
 
-  virtual void initInfo() {
-    App::initInfo();
-    mInfo.title = "hello world";
-    mInfo.wndWidth = IMAGE_WIDTH * 2;
-    mInfo.wndHeight = IMAGE_HEIGHT;
+  virtual void init_info() {
+    app::init_info();
+    m_info.title = "hello world";
+    m_info.wnd_width = IMAGE_WIDTH * 2;
+    m_info.wnd_height = IMAGE_HEIGHT;
   }
-  virtual void createScene() {
+  virtual void create_scene() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    renderNormalmapProgram.init();
-    useNormalMapViewProgram.init();
-    useNormalMapViewProgram.projMatrix =
+    render_normalmap_program.init();
+    use_normal_map_view_program.init();
+    use_normal_map_view_program.p_mat =
       glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
-    useNormalMapViewProgram.viewMatrix =
+    use_normal_map_view_program.v_mat =
       glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
-    useNormalMapTangentProgram.init();
-    useNormalMapTangentProgram.projMatrix = useNormalMapViewProgram.projMatrix;
-    useNormalMapTangentProgram.viewMatrix = useNormalMapViewProgram.viewMatrix;
+    use_normal_map_tangent_program.init();
+    use_normal_map_tangent_program.p_mat = use_normal_map_view_program.p_mat;
+    use_normal_map_tangent_program.v_mat = use_normal_map_view_program.v_mat;
 
     // create mesh data
-    zxd::generateFaceNormals(
+    zxd::generate_face_normals(
       pyramid0.vertices, pyramid0.vertices + 12, pyramid0.normals);
 
-    mat4 tbn = zxd::getTangetnBasis(pyramid1.vertices[0], pyramid1.vertices[1],
-      pyramid1.vertices[2], pyramid1.texcoords[0], pyramid1.texcoords[1],
-      pyramid1.texcoords[2], &pyramid1.normals[0]);
-    mat4 invTbn = inverse(tbn);
+    mat4 tbn = zxd::get_tangetn_basis(pyramid1.vertices[0],
+      pyramid1.vertices[1], pyramid1.vertices[2], pyramid1.texcoords[0],
+      pyramid1.texcoords[1], pyramid1.texcoords[2], &pyramid1.normals[0]);
+    mat4 tbn_i = inverse(tbn);
     vec3 tangent = vec3(glm::column(tbn, 0));
     // vec3 tangent = glm::row(tbn, 0).xyz();
 
@@ -209,49 +205,49 @@ public:
 
     // transform modle normals to tbn space
     for (int i = 0; i < 12; ++i)
-      pyramid0.normals[i] = zxd::transformVector(invTbn, pyramid0.normals[i]);
+      pyramid0.normals[i] = zxd::transform_vector(tbn_i, pyramid0.normals[i]);
 
     // create vertex arries
     glGenVertexArrays(1, &pyramid0.vao);
     glBindVertexArray(pyramid0.vao);
 
-    setupVertexAttribBuiltinArray(
-      renderNormalmapProgram.attrib_normal, pyramid0.normals);
-    setupVertexAttribBuiltinArray(
-      renderNormalmapProgram.attrib_texcoord, pyramid0.texcoords);
+    setup_vertex_al_builtin_array(
+      render_normalmap_program.al_normal, pyramid0.normals);
+    setup_vertex_al_builtin_array(
+      render_normalmap_program.al_texcoord, pyramid0.texcoords);
 
     glGenVertexArrays(1, &pyramid1.vao);
     glBindVertexArray(pyramid1.vao);
 
-    setupVertexAttribBuiltinArray(
-      useNormalMapViewProgram.attrib_vertex, pyramid1.vertices);
-    setupVertexAttribBuiltinArray(
-      useNormalMapViewProgram.attrib_normal, pyramid1.normals);
-    setupVertexAttribBuiltinArray(
-      useNormalMapViewProgram.attrib_tangent, pyramid1.tangents);
-    setupVertexAttribBuiltinArray(
-      useNormalMapViewProgram.attrib_texcoord, pyramid1.texcoords);
+    setup_vertex_al_builtin_array(
+      use_normal_map_view_program.al_vertex, pyramid1.vertices);
+    setup_vertex_al_builtin_array(
+      use_normal_map_view_program.al_normal, pyramid1.normals);
+    setup_vertex_al_builtin_array(
+      use_normal_map_view_program.al_tangent, pyramid1.tangents);
+    setup_vertex_al_builtin_array(
+      use_normal_map_view_program.al_texcoord, pyramid1.texcoords);
 
-    glGenTextures(1, &normalMap);
-    glBindTexture(GL_TEXTURE_2D, normalMap);
+    glGenTextures(1, &normal_map);
+    glBindTexture(GL_TEXTURE_2D, normal_map);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, IMAGE_WIDTH, IMAGE_HEIGHT, 0, GL_RGB,
-      GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, IMAGE_WIDTH, IMAGE_HEIGHT, 0,
+      GL_RGB, GL_UNSIGNED_BYTE, 0);
 
     // light
-    zxd::LightSource dirLight;
-    dirLight.position = vec4(1, -1, 1, 0);
-    dirLight.diffuse = vec4(1, 1, 1, 1);
-    dirLight.specular = vec4(1, 1, 1, 1);
-    dirLight.linearAttenuation = 1.0f;
+    zxd::light_source dir_light;
+    dir_light.position = vec4(1, -1, 1, 0);
+    dir_light.diffuse = vec4(1, 1, 1, 1);
+    dir_light.specular = vec4(1, 1, 1, 1);
+    dir_light.linear_attenuation = 1.0f;
 
-    lights.push_back(dirLight);
+    lights.push_back(dir_light);
 
-    lightModel.localViewer = 1;
+    light_model.local_viewer = 1;
 
     // material
     material.ambient = vec4(0.2);
@@ -259,30 +255,30 @@ public:
     material.specular = vec4(1.0);
     material.shininess = 50;
 
-    bindUniformLocations(useNormalMapViewProgram);
+    bind_uniform_locations(use_normal_map_view_program);
 
-    setViewMatrix(&useNormalMapViewProgram.viewMatrix);
+    set_v_mat(&use_normal_map_view_program.v_mat);
 
-    mBitmapText.init();
-    mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
+    m_text.init();
+    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   }
 
-  void generateNormalMap() {
+  void generate_normal_map() {
     glViewport(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
     glScissor(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(pyramid0.vao);
-    glUseProgram(renderNormalmapProgram);
+    glUseProgram(render_normalmap_program);
 
     glDrawArrays(GL_TRIANGLES, 0, 12);
 
-    glBindTexture(GL_TEXTURE_2D, normalMap);
+    glBindTexture(GL_TEXTURE_2D, normal_map);
     glCopyTexImage2D(
       GL_TEXTURE_2D, 0, GL_RGB, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, 0);
   }
   virtual void display() {
-    generateNormalMap();
+    generate_normal_map();
 
     glViewport(IMAGE_WIDTH, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
     glEnable(GL_SCISSOR_TEST);
@@ -290,85 +286,85 @@ public:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw low quality mesh with normal map
-    if (lightSpace == 0) {
-      glUseProgram(useNormalMapViewProgram);
-      useNormalMapViewProgram.updateModel(mat4(1.0));
-      glUniform1i(useNormalMapViewProgram.loc_normalMap, 0);
+    if (light_space == 0) {
+      glUseProgram(use_normal_map_view_program);
+      use_normal_map_view_program.update_model(mat4(1.0));
+      glUniform1i(use_normal_map_view_program.ul_normal_map, 0);
 
       for (int i = 0; i < lights.size(); ++i) {
-        lights[i].updateUniforms(useNormalMapViewProgram.viewMatrix);
+        lights[i].update_uniforms(use_normal_map_view_program.v_mat);
       }
     } else {
-      glUseProgram(useNormalMapTangentProgram);
-      useNormalMapTangentProgram.updateModel(mat4(1.0));
-      glUniform1i(useNormalMapTangentProgram.loc_normalMap, 0);
+      glUseProgram(use_normal_map_tangent_program);
+      use_normal_map_tangent_program.update_model(mat4(1.0));
+      glUniform1i(use_normal_map_tangent_program.ul_normal_map, 0);
 
       // get camera model position
       vec3 camera =
-        glm::column(useNormalMapTangentProgram.modelViewMatrixInverse, 3).xyz();
-      glUniform3fv(
-        useNormalMapTangentProgram.loc_modelCamera, 1, glm::value_ptr(camera));
+        glm::column(use_normal_map_tangent_program.mv_mat_i, 3).xyz();
+      glUniform3fv(use_normal_map_tangent_program.ul_model_camera, 1,
+        glm::value_ptr(camera));
 
       for (int i = 0; i < lights.size(); ++i) {
-        lights[i].updateUniforms(useNormalMapTangentProgram.modelMatrixInverse);
+        lights[i].update_uniforms(use_normal_map_tangent_program.m_mat_i);
       }
     }
-    lightModel.updateUniforms();
-    material.updateUniforms();
+    light_model.update_uniforms();
+    material.update_uniforms();
 
     glBindVertexArray(pyramid1.vao);
 
     glDisable(GL_SCISSOR_TEST);
-    glBindTexture(GL_TEXTURE_2D, normalMap);
+    glBindTexture(GL_TEXTURE_2D, normal_map);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    glViewport(0, 0, mInfo.wndWidth, mInfo.wndHeight);
+    glViewport(0, 0, m_info.wnd_width, m_info.wnd_height);
     glEnable(GL_BLEND);
     glDisable(GL_SCISSOR_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "q : lighting space : " << (lightSpace == 0 ? "view" : "tangent")
+    ss << "q : lighting space : " << (light_space == 0 ? "view" : "tangent")
        << std::endl;
-    ss << "fps : "<< mFps << std::endl;
-    mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
+    ss << "fps : " << m_fps << std::endl;
+    m_text.print(ss.str(), 10, m_info.wnd_height - 25);
     glDisable(GL_BLEND);
   }
 
   virtual void update() {}
 
-  virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
-    App::glfwResize(wnd, w, h);
-    mBitmapText.reshape(w, h);
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+    app::glfw_resize(wnd, w, h);
+    m_text.reshape(w, h);
   }
 
-  virtual void bindUniformLocations(zxd::Program &program) {
-    lightModel.bindUniformLocations(program.object, "lightModel");
+  virtual void bind_uniform_locations(zxd::program &program) {
+    light_model.bind_uniform_locations(program.object, "lm");
     for (int i = 0; i < lights.size(); ++i) {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      lights[i].bindUniformLocations(program.object, ss.str());
+      lights[i].bind_uniform_locations(program.object, ss.str());
     }
-    material.bindUniformLocations(program.object, "material");
+    material.bind_uniform_locations(program.object, "mtl");
   }
 
-  virtual void glfwKey(
+  virtual void glfw_key(
     GLFWwindow *wnd, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
       switch (key) {
         case GLFW_KEY_ESCAPE:
-          glfwSetWindowShouldClose(mWnd, GL_TRUE);
+          glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
         case GLFW_KEY_Q:
-          lightSpace ^= 1;
-          if (lightSpace == 0) {
-            useNormalMapViewProgram.viewMatrix = *mViewMatrix;
-              
-            setViewMatrix(&useNormalMapViewProgram.viewMatrix);
-            bindUniformLocations(useNormalMapViewProgram);
+          light_space ^= 1;
+          if (light_space == 0) {
+            use_normal_map_view_program.v_mat = *m_v_mat;
+
+            set_v_mat(&use_normal_map_view_program.v_mat);
+            bind_uniform_locations(use_normal_map_view_program);
           } else {
-            useNormalMapTangentProgram.viewMatrix = *mViewMatrix;
-            setViewMatrix(&useNormalMapTangentProgram.viewMatrix);
-            bindUniformLocations(useNormalMapTangentProgram);
+            use_normal_map_tangent_program.v_mat = *m_v_mat;
+            set_v_mat(&use_normal_map_tangent_program.v_mat);
+            bind_uniform_locations(use_normal_map_tangent_program);
           }
 
           break;
@@ -376,25 +372,26 @@ public:
           break;
       }
     }
-    App::glfwKey(wnd, key, scancode, action, mods);
+    app::glfw_key(wnd, key, scancode, action, mods);
   }
 
-  virtual void glfwMouseButton(
+  virtual void glfw_mouse_button(
     GLFWwindow *wnd, int button, int action, int mods) {
-    App::glfwMouseButton(wnd, button, action, mods);
+    app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {
-    App::glfwMouseMove(wnd, x, y);
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+    app::glfw_mouse_move(wnd, x, y);
   }
 
-  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
-    App::glfwMouseWheel(wnd, xoffset, yoffset);
+  virtual void glfw_mouse_wheel(
+    GLFWwindow *wnd, double xoffset, double yoffset) {
+    app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 };
 }
 
 int main(int argc, char *argv[]) {
-  zxd::NormalMapApp app;
+  zxd::normal_map_app app;
   app.run();
 }

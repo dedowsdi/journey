@@ -1,21 +1,21 @@
-in VS_OUT{
-  vec3 viewVertex; // view space
-  vec3 viewNormal; // view space
+in vs_out{
+  vec3 view_vertex; // view space
+  vec3 view_normal; // view space
 #ifdef WITH_TEX
   vec2 texcoord;
 #endif
-} fs_in;
+} fi;
 
 #ifdef WITH_TEX
-uniform sampler2D diffuseMap;
+uniform sampler2D diffuse_map;
 #endif
 
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main(void) {
-  vec3 normal = normalize(fs_in.viewNormal);
-  fragColor = blinn(fs_in.viewVertex, normal);
+  vec3 normal = normalize(fi.view_normal);
+  frag_color = blinn(fi.view_vertex, normal);
 #ifdef WITH_TEX
-  fragColor.xyz *= texture(diffuseMap, fs_in.texcoord).xyz;
+  frag_color.xyz *= texture(diffuse_map, fi.texcoord).xyz;
 #endif
 }

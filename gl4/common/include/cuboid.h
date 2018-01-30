@@ -7,27 +7,27 @@
 
 namespace zxd {
 
-typedef std::vector<glm::vec3> Vec3Vector;
-typedef std::vector<glm::vec2> Vec2Vector;
+typedef std::vector<glm::vec3> vec3_vector;
+typedef std::vector<glm::vec2> vec2_vector;
 
-class Cuboid : public Geometry {
+class cuboid : public geometry {
 protected:
-  GLuint mVao;
+  GLuint m_vao;
 
-  GLuint mVertexBuffer;
-  GLuint mNormalBuffer;
-  GLuint mTexcoordBuffer;
+  GLuint m_vertex_buffer;
+  GLuint m_normal_buffer;
+  GLuint m_texcoord_buffer;
 
-  glm::vec3 mHalfDiag;
+  glm::vec3 m_half_diag;
 
 public:
-  Cuboid(const glm::vec3& halfDiag) : mHalfDiag(halfDiag) {}
-  Cuboid(GLfloat size = 1) : mHalfDiag(0.5 * size, 0.5 * size, 0.5 * size) {}
+  cuboid(const glm::vec3& half_diag) : m_half_diag(half_diag) {}
+  cuboid(GLfloat size = 1) : m_half_diag(0.5 * size, 0.5 * size, 0.5 * size) {}
 
-  void buildVertex();
+  void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void buildNormal();
-  void buildTexcoord();
+  void build_normal();
+  void build_texcoord();
 
   void draw(GLuint primcount = 1);
 };

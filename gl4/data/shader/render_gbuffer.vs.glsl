@@ -3,18 +3,18 @@
 in vec4 vertex;
 in vec3 normal;
 
-uniform mat4 modelViewProjMatrix;
-uniform mat4 modelViewMatrix;
-uniform mat4 modelViewMatrixInverseTranspose;
+uniform mat4 mvp_mat;
+uniform mat4 mv_mat;
+uniform mat4 mv_mat_it;
 
-out VS_OUT{
-  vec3 viewVertex;
-  vec3 viewNormal;
-} vs_out;
+out vs_out{
+  vec3 view_vertex;
+  vec3 view_normal;
+} vo;
 
 void main(void)
 {
-  vs_out.viewNormal = mat3(modelViewMatrixInverseTranspose) * normal;
-  vs_out.viewVertex = (modelViewMatrix * vertex).xyz;
-  gl_Position = modelViewProjMatrix * vertex;
+  vo.view_normal = mat3(mv_mat_it) * normal;
+  vo.view_vertex = (mv_mat * vertex).xyz;
+  gl_Position = mvp_mat * vertex;
 }

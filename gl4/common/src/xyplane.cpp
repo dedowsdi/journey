@@ -3,83 +3,83 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void Xyplane::buildVertex() {
-  mVertices.clear();
-  mVertices.reserve((mSlice + 1) * (mSlice + 1));
+void xyplane::build_vertex() {
+  m_vertices.clear();
+  m_vertices.reserve((m_slice + 1) * (m_slice + 1));
 
   // build plane as triangle strip
-  GLfloat xstep = mWidth / mSlice;
-  GLfloat ystep = mHeight / mSlice;
+  GLfloat xstep = m_width / m_slice;
+  GLfloat ystep = m_height / m_slice;
 
-  GLfloat left = -mWidth / 2;
-  GLfloat bottom = -mHeight / 2;
+  GLfloat left = -m_width / 2;
+  GLfloat bottom = -m_height / 2;
 
   // build triangle strip as:
   //  0 2
   //  1 3
-  for (int i = 0; i < mSlice; ++i) {  // row
+  for (int i = 0; i < m_slice; ++i) {  // row
 
     GLfloat y1 = bottom + ystep * i;
     GLfloat y0 = y1 + ystep;
 
-    for (int j = 0; j <= mSlice; ++j) {  // col
+    for (int j = 0; j <= m_slice; ++j) {  // col
       GLfloat x = left + xstep * j;
 
       vec3 v0(x, y0, 0);
       vec3 v1(x, y1, 0);
-      mVertices.push_back(v0);
-      mVertices.push_back(v1);
+      m_vertices.push_back(v0);
+      m_vertices.push_back(v1);
     }
   }
 }
 
 //--------------------------------------------------------------------
-void Xyplane::buildNormal() {
-  mNormals.clear();
-  mNormals.reserve(mVertices.size());
+void xyplane::build_normal() {
+  m_normals.clear();
+  m_normals.reserve(m_vertices.size());
 
-  for (int i = 0; i < mVertices.size(); ++i) {
-    mNormals.push_back(vec3(0, 0, 1));
+  for (int i = 0; i < m_vertices.size(); ++i) {
+    m_normals.push_back(vec3(0, 0, 1));
   }
 
-  assert(mNormals.size() == mVertices.size());
+  assert(m_normals.size() == m_vertices.size());
 }
 
 //--------------------------------------------------------------------
-void Xyplane::buildTexcoord() {
-  mTexcoords.clear();
-  mTexcoords.reserve(mVertices.size());
+void xyplane::build_texcoord() {
+  m_texcoords.clear();
+  m_texcoords.reserve(m_vertices.size());
 
-  for (int i = 0; i < mSlice; ++i) {  // row
+  for (int i = 0; i < m_slice; ++i) {  // row
 
-    GLfloat t0 = static_cast<GLfloat>(i) / mSlice;
-    GLfloat t1 = static_cast<GLfloat>(i + 1) / mSlice;
+    GLfloat t0 = static_cast<GLfloat>(i) / m_slice;
+    GLfloat t1 = static_cast<GLfloat>(i + 1) / m_slice;
 
-    for (int j = 0; j <= mSlice; ++j) {  // col
-      GLfloat s = static_cast<GLfloat>(j) / mSlice;
+    for (int j = 0; j <= m_slice; ++j) {  // col
+      GLfloat s = static_cast<GLfloat>(j) / m_slice;
 
       vec2 tex0(s, t0);
       vec2 tex1(s, t1);
-      mTexcoords.push_back(tex0);
-      mTexcoords.push_back(tex1);
+      m_texcoords.push_back(tex0);
+      m_texcoords.push_back(tex1);
     }
   }
-  assert(mTexcoords.size() == mVertices.size());
+  assert(m_texcoords.size() == m_vertices.size());
 }
 
 //--------------------------------------------------------------------
-void Xyplane::draw(GLuint primcount /* = 1*/) {
-  GLuint rowSize = (mSlice + 1) * 2;
+void xyplane::draw(GLuint primcount /* = 1*/) {
+  GLuint rowSize = (m_slice + 1) * 2;
   GLuint next = 0;
   
-  bindVertexArrayObject();
+  bind_vertex_array_object();
 
   if (primcount == 1) {
-    for (int i = 0; i < mSlice; ++i, next += rowSize) {
+    for (int i = 0; i < m_slice; ++i, next += rowSize) {
       glDrawArrays(GL_TRIANGLE_STRIP, next, rowSize);
     }
   } else {
-    for (int i = 0; i < mSlice; ++i, next += rowSize) {
+    for (int i = 0; i < m_slice; ++i, next += rowSize) {
       glDrawArraysInstanced(GL_TRIANGLE_STRIP, next, rowSize, primcount);
     }
   }

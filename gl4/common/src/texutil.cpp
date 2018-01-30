@@ -19,7 +19,7 @@ fipImage fipLoadImage(const std::string& file) {
 }
 
 //--------------------------------------------------------------------
-void saveTexture(const std::string& filename, GLenum target, GLuint level,
+void save_texture(const std::string& filename, GLenum target, GLuint level,
   GLenum format, GLenum type, GLuint size) {
   GLint width, height;
 

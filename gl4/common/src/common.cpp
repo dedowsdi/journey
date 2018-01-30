@@ -13,7 +13,7 @@ define_gl_type_traits(GLdouble, GL_DOUBLE);
 define_gl_type_traits(GLboolean, GL_BOOL);
 
 //--------------------------------------------------------------------
-void setUniformLocation(GLint *loc, GLint program, const std::string &name) {
+void uniform_location(GLint *loc, GLint program, const std::string &name) {
   *loc = glGetUniformLocation(program, name.c_str());
   if (*loc == -1) {
     printf("failed to get uniform location : %s\n", name.c_str());
@@ -21,7 +21,7 @@ void setUniformLocation(GLint *loc, GLint program, const std::string &name) {
 }
 
 //--------------------------------------------------------------------
-std::string readFile(const std::string &filepath) {
+std::string read_file(const std::string &filepath) {
   std::ifstream ifs(filepath);
   if (!ifs) {
     std::stringstream ss;
@@ -44,7 +44,7 @@ std::string readFile(const std::string &filepath) {
 }
 
 //--------------------------------------------------------------------
-void matrixAttribPointer(
+void matrix_al_pointer(
   GLint index, GLuint divisor /* = 1*/, GLboolean normalize /* = GL_FALSE*/) {
   glVertexAttribPointer(
     index + 0, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), BUFFER_OFFSET(0));
@@ -67,8 +67,9 @@ void matrixAttribPointer(
 }
 
 //--------------------------------------------------------------------
-std::vector<GLubyte> createChessImage(GLuint width, GLuint height, GLuint gridWidth,
-  GLuint gridHeight, const glm::vec4 &black /* = glm::vec4(0, 0, 0, 1)*/,
+std::vector<GLubyte> create_chess_image(GLuint width, GLuint height,
+  GLuint gridWidth, GLuint gridHeight,
+  const glm::vec4 &black /* = glm::vec4(0, 0, 0, 1)*/,
   const glm::vec4 &white /* = glm::vec4(1)*/) {
   std::vector<GLubyte> image;
   image.reserve(width * height * 4);

@@ -1,6 +1,6 @@
 #version 430 core
 
-in VS_OUT
+in vs_out
 {
  vec2 texcoord;
 }vs_in;

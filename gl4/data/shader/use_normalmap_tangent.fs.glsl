@@ -2,19 +2,19 @@
 #define LIGHT_COUNT 8
 #endif
 
-in VS_OUT{
-  vec3 tangentVertex;
-  vec3 tangentCamera;
+in vs_out{
+  vec3 tangent_vertex;
+  vec3 tangent_camera;
   vec2 texcoord;
-  LightSource tangentLights[LIGHT_COUNT];
-} fs_in;
+  light_source tangent_lights[LIGHT_COUNT];
+} fi;
 
-uniform sampler2D normalMap;
+uniform sampler2D normal_map;
 
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main(void)
 {
-  vec3 normal = texture(normalMap, fs_in.texcoord).xyz * 2 - 1; 
-  fragColor = blinn(fs_in.tangentVertex, normal, fs_in.tangentCamera, fs_in.tangentLights);
+  vec3 normal = texture(normal_map, fi.texcoord).xyz * 2 - 1; 
+  frag_color = blinn(fi.tangent_vertex, normal, fi.tangent_camera, fi.tangent_lights);
 }

@@ -3,7 +3,7 @@
 #include <cstring>
 
 //--------------------------------------------------------------------
-const char* glTexWrapToString(GLenum e) {
+const char* gl_tex_wrap_to_string(GLenum e) {
   switch (e) {
     case GL_CLAMP_TO_BORDER:
       return "GL_CLAMP_TO_BORDER";
@@ -19,7 +19,7 @@ const char* glTexWrapToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gTexWraplFromString(const char* s) {
+GLenum g_tex_wrapl_from_string(const char* s) {
   if (strcmp(s, "GL_CLAMP_TO_BORDER") == 0) return GL_CLAMP_TO_BORDER;
   if (strcmp(s, "GL_CLAMP_TO_EDGE") == 0) return GL_CLAMP_TO_EDGE;
   if (strcmp(s, "GL_MIRRORED_REPEAT") == 0) return GL_MIRRORED_REPEAT;
@@ -28,7 +28,7 @@ GLenum gTexWraplFromString(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* glTexFilterToString(GLenum e) {
+const char* gl_tex_filter_to_string(GLenum e) {
   switch (e) {
     case GL_NEAREST:
       return "GL_NEAREST";
@@ -48,7 +48,7 @@ const char* glTexFilterToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glTexFilterFromString(const char* s) {
+GLenum gl_tex_filter_from_string(const char* s) {
   if (strcmp(s, "GL_NEAREST") == 0) return GL_NEAREST;
   if (strcmp(s, "GL_LINEAR") == 0) return GL_LINEAR;
   if (strcmp(s, "GL_NEAREST_MIPMAP_NEAREST") == 0)
@@ -62,7 +62,7 @@ GLenum glTexFilterFromString(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* gluNurbSampleMethodToString(GLenum e) {
+const char* glu_nurb_sample_method_to_string(GLenum e) {
   switch (e) {
     case GLU_OBJECT_PARAMETRIC_ERROR:
       return "GLU_OBJECT_PARAMETRIC_ERROR";
@@ -80,7 +80,7 @@ const char* gluNurbSampleMethodToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gluNurbSampleMethodlFromString(const char* s) {
+GLenum glu_nurb_sample_methodl_from_string(const char* s) {
   if (strcmp(s, "GLU_OBJECT_PARAMETRIC_ERROR") == 0)
     return GLU_OBJECT_PARAMETRIC_ERROR;
   if (strcmp(s, "GLU_OBJECT_PATH_LENGTH") == 0) return GLU_OBJECT_PATH_LENGTH;
@@ -91,7 +91,7 @@ GLenum gluNurbSampleMethodlFromString(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* glShaderTypeToString(GLenum e) {
+const char* gl_shader_type_to_string(GLenum e) {
   switch (e) {
     case GL_FRAGMENT_SHADER:
       return "GL_FRAGMENT_SHADER";
@@ -103,14 +103,14 @@ const char* glShaderTypeToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glShaderTypeFromString(const char* s) {
+GLenum gl_shader_type_from_string(const char* s) {
   if (strcmp(s, "GL_FRAGMENT_SHADER") == 0) return GL_FRAGMENT_SHADER;
   if (strcmp(s, "GL_VERTEX_SHADER") == 0) return GL_VERTEX_SHADER;
   return 0;
 }
 
 //--------------------------------------------------------------------
-const char* glDebugSourceToString(GLenum e) {
+const char* gl_debug_source_to_string(GLenum e) {
   switch (e) {
     case GL_DEBUG_SOURCE_API:
       return "GL_DEBUG_SOURCE_API";
@@ -130,7 +130,7 @@ const char* glDebugSourceToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glDebugSourceFromString(const char* s) {
+GLenum gl_debug_source_from_string(const char* s) {
   if (strcmp(s, "GL_DEBUG_SOURCE_API") == 0) return GL_DEBUG_SOURCE_API;
   if (strcmp(s, "GL_DEBUG_SOURCE_WINDOW_SYSTEM") == 0)
     return GL_DEBUG_SOURCE_WINDOW_SYSTEM;
@@ -145,7 +145,7 @@ GLenum glDebugSourceFromString(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* glDebugTypeToString(GLenum e) {
+const char* gl_debug_type_to_string(GLenum e) {
   switch (e) {
     case GL_DEBUG_TYPE_ERROR:
       return "GL_DEBUG_TYPE_ERROR";
@@ -171,7 +171,7 @@ const char* glDebugTypeToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glDebugTypeFromString(const char* s) {
+GLenum gl_debug_type_from_string(const char* s) {
   if (strcmp(s, "GL_DEBUG_TYPE_ERROR") == 0) return GL_DEBUG_TYPE_ERROR;
   if (strcmp(s, "GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR") == 0)
     return GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR;
@@ -190,7 +190,7 @@ GLenum glDebugTypeFromString(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* glDebugSeverityToString(GLenum e) {
+const char* gl_debug_severity_to_string(GLenum e) {
   switch (e) {
     case GL_DEBUG_SEVERITY_HIGH:
       return "GL_DEBUG_SEVERITY_HIGH";
@@ -206,7 +206,7 @@ const char* glDebugSeverityToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glDebugSeverityFromString(const char* s) {
+GLenum gl_debug_severity_from_string(const char* s) {
   if (strcmp(s, "GL_DEBUG_SEVERITY_HIGH") == 0) return GL_DEBUG_SEVERITY_HIGH;
   if (strcmp(s, "GL_DEBUG_SEVERITY_MEDIUM") == 0)
     return GL_DEBUG_SEVERITY_MEDIUM;
@@ -217,7 +217,7 @@ GLenum glDebugSeverityFromString(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* glPolygonModeToString(GLenum e) {
+const char* gl_polygon_mode_to_string(GLenum e) {
   switch (e) {
     case GL_POINT:
       return "GL_POINT";
@@ -231,7 +231,7 @@ const char* glPolygonModeToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glPolygonModeFromString(const char* s) {
+GLenum gl_polygon_mode_from_string(const char* s) {
   if (strcmp(s, "GL_POINT") == 0) return GL_POINT;
   if (strcmp(s, "GL_LINE") == 0) return GL_LINE;
   if (strcmp(s, "GL_FILL") == 0) return GL_FILL;
@@ -239,7 +239,7 @@ GLenum glPolygonModeFromString(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* glCullFaceModeToString(GLenum e) {
+const char* gl_cull_face_mode_to_string(GLenum e) {
   switch (e) {
     case GL_FRONT:
       return "GL_FRONT";
@@ -253,7 +253,7 @@ const char* glCullFaceModeToString(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glCullFaceModeFromString(const char* s) {
+GLenum gl_cull_face_mode_from_string(const char* s) {
   if (strcmp(s, "GL_FRONT") == 0) return GL_FRONT;
   if (strcmp(s, "GL_BACK") == 0) return GL_BACK;
   if (strcmp(s, "GL_FRONT_AND_BACK") == 0) return GL_FRONT_AND_BACK;

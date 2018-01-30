@@ -7,13 +7,13 @@
 #endif
 
 #if PARALLAX_METHOD == 0
-#define parallaxMap parallaxOcclusionMap
+#define parallax_map parallax_occlusion_map
 #elif PARALLAX_METHOD == 1
-#define parallaxMap parallaxSteepMap
+#define parallax_map parallax_steep_map
 #elif PARALLAX_METHOD == 2
-#define parallaxMap parallaxMapWithOffset
+#define parallax_map parallax_map_with_offset
 #elif PARALLAX_METHOD == 3
-#define parallaxMap parallaxMapWithoutOffset
+#define parallax_map parallax_map_without_offset
 #endif
 
 #ifndef LIGHT_COUNT
@@ -28,118 +28,119 @@
 #define MAX_LAYERS 16.0
 #endif
 
-in VS_OUT{
-  vec3 tangentVertex;
-  vec3 tangentCamera;
+in vs_out{
+  vec3 tangent_vertex;
+  vec3 tangent_camera;
   vec2 texcoord;
-  LightSource tangentLights[LIGHT_COUNT];
-} fs_in;
+  light_source tangent_lights[LIGHT_COUNT];
+} fi;
 
-uniform sampler2D diffuseMap;
-uniform sampler2D normalMap;
-uniform sampler2D depthMap;
-uniform float heightScale = 1.0f;
+uniform sampler2D diffuse_map;
+uniform sampler2D normal_map;
+uniform sampler2D depth_map;
+uniform float height_scale = 1.0f;
 
-out vec4 fragColor;
+out vec4 frag_color;
 
 // without offset limiting
-vec2 parallaxMapWithoutOffset(vec2 texcoord, vec3 viewDir){
-  float height = texture(depthMap, texcoord).r;
-  return texcoord - viewDir.xy * height * heightScale;
+vec2 parallax_map_without_offset(vec2 texcoord, vec3 view_dir){
+  float height = texture(depth_map, texcoord).r;
+  return texcoord - view_dir.xy * height * height_scale;
 }
 
 // with offset limiting
-vec2 parallaxMapWithOffset(vec2 texcoord, vec3 viewDir){
-  float height = texture(depthMap, texcoord).r;
-  return texcoord - viewDir.xy/viewDir.z * height * heightScale;
+vec2 parallax_map_with_offset(vec2 texcoord, vec3 view_dir){
+  float height = texture(depth_map, texcoord).r;
+  return texcoord - view_dir.xy/view_dir.z * height * height_scale;
 }
 
 // the 1st depth layter after the intersection point of -viewdir and
 // geometry(from height map) has depth value greater than depth value in depth
 // map
-vec2 parallaxSteepMap(vec2 texcoord, vec3 viewDir){
+vec2 parallax_steep_map(vec2 texcoord, vec3 view_dir){
   // 0,0,1 is normal in tangent space, if you look right at this surface, this
-  // will be the viewDir, you won't need much layer in this case.
-  float numLayers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0.0,0.0,1.0), viewDir)));
+  // will be the view_dir, you won't need much layer in this case.
+  float num_layers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0.0,0.0,1.0), view_dir)));
 
-	float layerDepth = 1.0 / numLayers;
-	float currentLayerDepth = 0.0;
+	float layer_depth = 1.0 / num_layers;
+	float current_layer_depth = 0.0;
 
-	// the amount to shift the texture coordinates per layer (from vector P)
-	vec2 P = viewDir.xy * heightScale; 
-	vec2 deltaTexcoord = P / numLayers;
+	// the amount to shift the texture coordinates per layer (from vector p)
+	vec2 p = view_dir.xy * height_scale; 
+	vec2 delta_texcoord = p / num_layers;
 
-  vec2  currentTexcoord = texcoord;
-  float currentDepthMapValue = texture(depthMap, currentTexcoord).r;
+  vec2  current_texcoord = texcoord;
+  float current_depth_map_value = texture(depth_map, current_texcoord).r;
   
-  while(currentLayerDepth < currentDepthMapValue)
+  while(current_layer_depth < current_depth_map_value)
   {
-    // shift texture coordinates along direction of P
-    currentTexcoord -= deltaTexcoord;
+    // shift texture coordinates along direction of p
+    current_texcoord -= delta_texcoord;
     // get depthmap value at current texture coordinates
-    currentDepthMapValue = texture(depthMap, currentTexcoord).r;  
+    current_depth_map_value = texture(depth_map, current_texcoord).r;  
     // get depth of next layer
-    currentLayerDepth += layerDepth;  
+    current_layer_depth += layer_depth;  
   }
 
-  return currentTexcoord;
+  return current_texcoord;
 }
 
-vec2 parallaxOcclusionMap(vec2 texcoord, vec3 viewDir){
+vec2 parallax_occlusion_map(vec2 texcoord, vec3 view_dir){
   // 0,0,1 is normal in tangent space, if you look right at this surface, this
-  // will be the viewDir, you won't need much layer in this case.
-  float numLayers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0,0,1), viewDir)));
+  // will be the view_dir, you won't need much layer in this case.
+  float num_layers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0,0,1), view_dir)));
 
-	float layerDepth = 1.0 / numLayers;
-	float currentLayerDepth = 0.0;
+	float layer_depth = 1.0 / num_layers;
+	float current_layer_depth = 0.0;
 
-	// the amount to shift the texture coordinates per layer (from vector P)
-	vec2 P = viewDir.xy * heightScale; 
-	vec2 deltaTexcoord = P / numLayers;
+	// the amount to shift the texture coordinates per layer (from vector p)
+	vec2 p = view_dir.xy * height_scale; 
+	vec2 delta_texcoord = p / num_layers;
 
-  vec2  currentTexcoord = texcoord;
-  float currentDepthMapValue = texture(depthMap, currentTexcoord).r;
+  vec2  current_texcoord = texcoord;
+  float current_depth_map_value = texture(depth_map, current_texcoord).r;
   
-  while(currentLayerDepth < currentDepthMapValue)
+  while(current_layer_depth < current_depth_map_value)
   {
-    // shift texture coordinates along direction of P
-    currentTexcoord -= deltaTexcoord;
+    // shift texture coordinates along direction of p
+    current_texcoord -= delta_texcoord;
     // get depthmap value at current texture coordinates
-    currentDepthMapValue = texture(depthMap, currentTexcoord).r;  
+    current_depth_map_value = texture(depth_map, current_texcoord).r;  
     // get depth of next layer
-    currentLayerDepth += layerDepth;  
+    current_layer_depth += layer_depth;  
   }
 
-  vec2 previousTexcoord = currentTexcoord + deltaTexcoord;
-  float d0 = currentDepthMapValue - currentLayerDepth;
-  float d1 = (layerDepth - currentLayerDepth) - texture(depthMap,
-      previousTexcoord).r;
+  vec2 previous_texcoord = current_texcoord + delta_texcoord;
+  float d0 = current_depth_map_value - current_layer_depth;
+  float d1 = (layer_depth - current_layer_depth) - texture(depth_map,
+      previous_texcoord).r;
 
   float weight = d0 / (d0 + d1);
 
-  texcoord = currentTexcoord * (1-weight) + previousTexcoord * (weight);
+  texcoord = current_texcoord * (1-weight) + previous_texcoord * (weight);
   return texcoord;
 }
 
 void main(void)
 {
-  vec2 texcoord = parallaxMap(fs_in.texcoord, normalize(fs_in.tangentCamera -
-        fs_in.tangentVertex));
+  vec2 texcoord = parallax_map(fi.texcoord, normalize(fi.tangent_camera -
+        fi.tangent_vertex));
 
   if(texcoord.x > 1.0 ||texcoord.y > 1.0 ||texcoord.x < 0.0 ||texcoord.y < 0.0 )
     discard;
 
-  vec3 normal = texture(normalMap, texcoord).xyz * 2 - 1; 
+  vec3 normal = texture(normal_map, texcoord).xyz * 2 - 1; 
 
-  //LightProduct product = getLightProduct(fs_in.tangentVertex, normal,
-  //fs_in.tangentCamera, material, fs_in.tangentLights);
-  //vec4 diffuse = material.emission + lightModel.ambient * material.ambient +
+  //light_product product = get_light_product(fi.tangent_vertex, normal,
+  //fi.tangent_camera, material, fi.tangentLights);
+  //vec4 diffuse = material.emission + light_model.ambient * material.ambient +
   //product.ambient + product.diffuse;
 
-  //diffuse *= texture(diffuseMap, fs_in.texcoord);
-  //fragColor = diffuse + product.specular;
-  //fragColor.a = product.diffuse.a;
+  //diffuse *= texture(diffuse_map, fi.texcoord);
+  //frag_color = diffuse + product.specular;
+  //frag_color.a = product.diffuse.a;
 
-  fragColor = blinn(fs_in.tangentVertex, normal, fs_in.tangentCamera, fs_in.tangentLights);
-  fragColor *= texture(diffuseMap, fs_in.texcoord);
+  frag_color = blinn(fi.tangent_vertex, normal, fi.tangent_camera,
+      fi.tangent_lights);
+  frag_color *= texture(diffuse_map, fi.texcoord);
 }

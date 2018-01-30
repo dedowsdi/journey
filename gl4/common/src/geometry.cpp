@@ -4,35 +4,35 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void Geometry::bind(
+void geometry::bind(
   GLint vertex, GLint normal /* = -1*/, GLint texcoord /* = -1*/) {
-  bindVertexArrayObject();
+  bind_vertex_array_object();
 
   if (vertex != -1) {
-    glGenBuffers(1, &mVertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(glm::vec3),
-      value_ptr(mVertices[0]), GL_STATIC_DRAW);
+    glGenBuffers(1, &m_vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(glm::vec3),
+      value_ptr(m_vertices[0]), GL_STATIC_DRAW);
 
     glVertexAttribPointer(vertex, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(vertex);
   }
 
   if (normal != -1) {
-    glGenBuffers(1, &mNormalBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mNormalBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mNormals.size() * sizeof(glm::vec3),
-      value_ptr(mNormals[0]), GL_STATIC_DRAW);
+    glGenBuffers(1, &m_normal_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_normal_buffer);
+    glBufferData(GL_ARRAY_BUFFER, m_normals.size() * sizeof(glm::vec3),
+      value_ptr(m_normals[0]), GL_STATIC_DRAW);
 
     glVertexAttribPointer(normal, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(normal);
   }
 
   if (texcoord != -1) {
-    glGenBuffers(1, &mTexcoordBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mTexcoordBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mTexcoords.size() * sizeof(glm::vec2),
-      value_ptr(mTexcoords[0]), GL_STATIC_DRAW);
+    glGenBuffers(1, &m_texcoord_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_texcoord_buffer);
+    glBufferData(GL_ARRAY_BUFFER, m_texcoords.size() * sizeof(glm::vec2),
+      value_ptr(m_texcoords[0]), GL_STATIC_DRAW);
 
     glVertexAttribPointer(texcoord, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(texcoord);
@@ -40,22 +40,22 @@ void Geometry::bind(
 }
 
 //--------------------------------------------------------------------
-void Geometry::buildMesh(
+void geometry::build_mesh(
   GLboolean normal /* = 1*/, GLboolean texcoord /* = 1*/) {
-  buildVertex();
+  build_vertex();
   if (normal) {
-    buildNormal();
+    build_normal();
   }
   if (texcoord) {
-    buildTexcoord();
+    build_texcoord();
   }
 }
 
 //--------------------------------------------------------------------
-void Geometry::bindVertexArrayObject() {
-  if (mVao == -1) {
-    glGenVertexArrays(1, &mVao);
+void geometry::bind_vertex_array_object() {
+  if (m_vao == -1) {
+    glGenVertexArrays(1, &m_vao);
   }
-  glBindVertexArray(mVao);
+  glBindVertexArray(m_vao);
 }
 }

@@ -3,70 +3,68 @@
 
 namespace zxd {
 
-struct LightSource {
+struct light_source {
   glm::vec4 ambient;
   glm::vec4 diffuse;
   glm::vec4 specular;
   glm::vec4 position;  // local
-  glm::vec3 spotDirection;
-  float spotExponent;
-  float spotCutoff;
-  float spotCosCutoff;
-  float constantAttenuation;
-  float linearAttenuation;
-  float quadraticAttenuation;
+  glm::vec3 spot_direction;
+  float spot_exponent;
+  float spot_cutoff;
+  float spot_cos_cutoff;
+  float constant_attenuation;
+  float linear_attenuation;
+  float quadratic_attenuation;
 
-  GLint loc_ambient;
-  GLint loc_diffuse;
-  GLint loc_specular;
-  GLint loc_position;
-  GLint loc_spotDirection;
-  GLint loc_spotExponent;
-  GLint loc_spotCutoff;
-  GLint loc_spotCosCutoff;
-  GLint loc_constantAttenuation;
-  GLint loc_linearAttenuation;
-  GLint loc_quadraticAttenuation;
+  GLint ul_ambient;
+  GLint ul_diffuse;
+  GLint ul_specular;
+  GLint ul_position;
+  GLint ul_spot_direction;
+  GLint ul_spot_exponent;
+  GLint ul_spot_cutoff;
+  GLint ul_spot_cos_cutoff;
+  GLint ul_constant_attenuation;
+  GLint ul_linear_attenuation;
+  GLint ul_quadratic_attenuation;
 
-  LightSource();
+  light_source();
 
-  void bindUniformLocations(GLuint program, const std::string& name);
-
-  void updateUniforms(const glm::mat4& transform);
+  void bind_uniform_locations(GLuint program, const std::string& name);
+  void update_uniforms(const glm::mat4& transform);
 
   // get volume radius for point and spot, -1 for dir
-  GLfloat getRadius(GLfloat epsilon);
-
+  GLfloat radius(GLfloat epsilon);
 };
 
-struct LightModel {
+struct light_model {
   glm::vec4 ambient;
-  GLboolean localViewer;
+  GLboolean local_viewer;
 
-  GLint loc_ambient;
-  GLint loc_localViewer;
+  GLint ul_ambient;
+  GLint ul_local_viewer;
 
-  LightModel() : ambient(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f)), localViewer(0) {}
+  light_model() : ambient(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f)), local_viewer(0) {}
 
-  void bindUniformLocations(GLint program, const std::string& name);
-  void updateUniforms();
+  void bind_uniform_locations(GLint program, const std::string& name);
+  void update_uniforms();
 };
 
-struct Material {
+struct material {
   vec4 emission;
   vec4 ambient;
   vec4 diffuse;
   vec4 specular;
   float shininess;
 
-  GLint loc_emission;
-  GLint loc_ambient;
-  GLint loc_diffuse;
-  GLint loc_specular;
-  GLint loc_shininess;
+  GLint ul_emission;
+  GLint ul_ambient;
+  GLint ul_diffuse;
+  GLint ul_specular;
+  GLint ul_shininess;
 
-  Material();
-  void bindUniformLocations(GLuint program, const std::string& name);
-  void updateUniforms();
+  material();
+  void bind_uniform_locations(GLuint program, const std::string& name);
+  void update_uniforms();
 };
 }

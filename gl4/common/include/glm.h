@@ -39,61 +39,56 @@ static const GLfloat d2pi = dpi * 2;
 static const GLfloat dpi2 = dpi / 2;
 static const GLfloat dpi4 = dpi / 4;
 
-static const glm::vec3 axis_px(1, 0, 0);
-static const glm::vec3 axis_nx(-1, 0, 0);
-static const glm::vec3 axis_py(0, 1, 0);
-static const glm::vec3 axis_ny(0, -1, 0);
-static const glm::vec3 axis_pz(0, 0, 1);
-static const glm::vec3 axis_nz(0, 0, -1);
+static const glm::vec3 pxa(1, 0, 0);
+static const glm::vec3 nxa(-1, 0, 0);
+static const glm::vec3 pya(0, 1, 0);
+static const glm::vec3 nya(0, -1, 0);
+static const glm::vec3 pza(0, 0, 1);
+static const glm::vec3 nza(0, 0, -1);
 
-typedef std::vector<mat2> Mat2Vector;
-typedef std::vector<mat3> Mat3Vector;
-typedef std::vector<mat4> Mat4Vector;
-typedef std::vector<vec2> Vec2Vector;
-typedef std::vector<vec3> Vec3Vector;
-typedef std::vector<vec4> Vec4Vector;
+typedef std::vector<mat2> mat2_vector;
+typedef std::vector<mat3> mat3_vector;
+typedef std::vector<mat4> mat4_vector;
+typedef std::vector<vec2> vec2_vector;
+typedef std::vector<vec3> vec3_vector;
+typedef std::vector<vec4> vec4_vector;
 
 // follow convention of glm, always return
 
-inline vec3 makeFloor(const vec3& lhs, const vec3& rhs);
+vec3 make_floor(const vec3& lhs, const vec3& rhs);
 
-inline vec3 makeCeil(const vec3& lhs, const vec3& rhs);
+vec3 make_ceil(const vec3& lhs, const vec3& rhs);
 
-inline vec3 axis(const mat4& m, GLuint i) { return vec3(column(m, i)); }
+vec3 axis(const mat4& m, GLuint i);
 
-inline mat4 createMat4(const vec3& xAxis, const vec3& yAxis, const vec3& zAxis);
-
-// radian between any vector, no need to normalize first
-inline GLfloat angleAny(const vec3& lhs, const vec3& rhs);
+mat4 create_mat4(const vec3& xa, const vec3& ya, const vec3& za);
 
 // radian between any vector, no need to normalize first
-inline GLfloat orientedAngleAny(
-  const vec3& lhs, const vec3& rhs, const vec3& ref);
+GLfloat angle_any(const vec3& lhs, const vec3& rhs);
 
-inline vec3 getFaceNormal(const vec3& v0, const vec3& v1, const vec3& v2);
+// radian between any vector, no need to normalize first
+GLfloat oriented_angle_any(const vec3& lhs, const vec3& rhs, const vec3& ref);
 
-mat4 getTangetnBasis(const vec3& v0, const vec3& v1, const vec3& v2,
+vec3 face_normal(const vec3& v0, const vec3& v1, const vec3& v2);
+
+mat4 get_tangetn_basis(const vec3& v0, const vec3& v1, const vec3& v2,
   const vec2& texcoord0, const vec2& texcoord1, const vec2& texcoord2,
   const vec3* normal = 0);
 
 // generate normals for triangles
 template <typename _It, typename _OutIt>
-inline void generateFaceNormals(_It beg, _It end, _OutIt out);
+void generate_face_normals(_It beg, _It end, _OutIt out);
 
 // assume w is
-inline vec3 transformPosition(const mat4& m, const vec3& v);
+vec3 transform_position(const mat4& m, const vec3& v);
 
 // assume w is 0
-inline vec3 transformVector(const mat4& m, const vec3& v);
+vec3 transform_vector(const mat4& m, const vec3& v);
 
 // assume w is 1
-inline vec3 operator*(const mat4& m, const vec3& v) {
-  return transformPosition(m, v);
-}
-
 bool operator<(const vec3& lhs, const vec3& rhs);
 
-inline bool operator>(const vec3& lhs, const vec3& rhs);
+bool operator>(const vec3& lhs, const vec3& rhs);
 
 std::ostream& operator<<(std::ostream& os, const vec2& v);
 std::ostream& operator<<(std::ostream& os, const vec3& v);
@@ -101,50 +96,13 @@ std::ostream& operator<<(std::ostream& os, const vec4& v);
 std::ostream& operator<<(std::ostream& os, const mat2& m);
 std::ostream& operator<<(std::ostream& os, const mat3& m);
 std::ostream& operator<<(std::ostream& os, const mat4& m);
-std::ostream& operator<<(std::ostream& os, const Vec3Vector& v);
+std::ostream& operator<<(std::ostream& os, const vec3_vector& v);
 
-inline GLfloat maxAbsComponent(const vec3& v) {
-  GLfloat x = glm::abs(v[0]);
-  GLfloat y = glm::abs(v[1]);
-  GLfloat z = glm::abs(v[2]);
-  return glm::max(glm::max(x, y), z);
-}
-
-//--------------------------------------------------------------------
-inline vec3 makeFloor(const vec3& lhs, const vec3& rhs) {
-  return vec3(
-    std::min(lhs.x, rhs.x), std::min(lhs.y, rhs.y), std::min(lhs.z, rhs.z));
-}
-
-//--------------------------------------------------------------------
-inline vec3 makeCeil(const vec3& lhs, const vec3& rhs) {
-  return vec3(
-    std::max(lhs.x, rhs.x), std::max(lhs.y, rhs.y), std::max(lhs.z, rhs.z));
-}
-
-//--------------------------------------------------------------------
-inline mat4 createMat4(
-  const vec3& xAxis, const vec3& yAxis, const vec3& zAxis) {
-  return mat4(vec4(xAxis, 0), vec4(yAxis, 0), vec4(zAxis, 0),
-    vec4(0.0f, 0.0f, 0.0f, 1.0f));
-}
-
-//--------------------------------------------------------------------
-inline GLfloat angleAny(const vec3& lhs, const vec3& rhs) {
-  return angle(normalize(lhs), normalize(rhs));
-}
-
-//--------------------------------------------------------------------
-inline vec3 getFaceNormal(const vec3& v0, const vec3& v1, const vec3& v2) {
-  vec3 v01 = v1 - v0;
-  vec3 v02 = v2 - v0;
-  vec3 normal = cross(v01, v02);
-  return normalize(normal);
-}
+GLfloat max_abs_component(const vec3& v);
 
 //--------------------------------------------------------------------
 template <typename _It, typename _OutIt>
-inline void generateFaceNormals(_It beg, _It end, _OutIt out) {
+void generate_face_normals(_It beg, _It end, _OutIt out) {
   typedef decltype(*beg) value_type;
   unsigned size = end - beg;
   if (size % 3 != 0) {
@@ -154,51 +112,23 @@ inline void generateFaceNormals(_It beg, _It end, _OutIt out) {
     value_type& v0 = *iter++;
     value_type& v1 = *iter++;
     value_type& v2 = *iter++;
-    vec3 normal = getFaceNormal(v0, v1, v2);
+    vec3 normal = face_normal(v0, v1, v2);
     *out++ = normal;
     *out++ = normal;
     *out++ = normal;
   }
 }
-//--------------------------------------------------------------------
-inline vec3 transformPosition(const mat4& m, const vec3& v) {
-  vec3 r;
-
-  GLfloat fInvW =
-    1.0f / (m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z + m[3][3]);
-  r.x = (m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z + m[3][0]) * fInvW;
-  r.y = (m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z + m[3][1]) * fInvW;
-  r.z = (m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z + m[3][2]) * fInvW;
-
-  return r;
-}
-
-//--------------------------------------------------------------------
-inline vec3 transformVector(const mat4& m, const vec3& v) {
-  vec3 r;
-
-  r.x = (m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z);
-  r.y = (m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z);
-  r.z = (m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z);
-
-  return r;
-}
-
-//--------------------------------------------------------------------
-inline bool operator>(const vec3& lhs, const vec3& rhs) {
-  return lhs != rhs && !operator<(lhs, rhs);
-}
 
 // p0 and p1 is in window space
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
-  const glm::mat4& windowMatrixInverse, GLfloat radius = 0.8f);
+  const glm::mat4& w_mat_i, GLfloat radius = 0.8f);
 
-glm::vec3 ndcToSphere(const glm::vec2& p, GLfloat radius = 0.8f);
+glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius = 0.8f);
 
-glm::mat4 computeWindowMatrix(
+glm::mat4 compute_window_matrix(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
 
-glm::mat4 computeWindowMatrixInverse(
+glm::mat4 compute_window_matrix_inverse(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
 }
 

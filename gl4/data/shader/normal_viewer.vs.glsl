@@ -3,16 +3,16 @@
 in vec4 vertex;
 in vec3 normal;
 
-uniform mat4 modelViewMatrix;
-uniform mat4 modelViewMatrixInverseTranspose;
+uniform mat4 mv_mat;
+uniform mat4 mv_mat_it;
 
-out VS_OUT 
+out vs_out 
 { 
   vec3 normal; 
 }
-vs_out;
+vo;
 
 void main() {
-  gl_Position = modelViewMatrix * vertex;
-  vs_out.normal = mat3(modelViewMatrixInverseTranspose) * normal;
+  gl_Position = mv_mat * vertex;
+  vo.normal = mat3(mv_mat_it) * normal;
 }

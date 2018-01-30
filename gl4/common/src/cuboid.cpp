@@ -4,13 +4,13 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void Cuboid::buildVertex() {
-  mVertices.clear();
-  mVertices.reserve(24);
+void cuboid::build_vertex() {
+  m_vertices.clear();
+  m_vertices.reserve(24);
 
-  GLfloat x = mHalfDiag.x;
-  GLfloat y = mHalfDiag.y;
-  GLfloat z = mHalfDiag.z;
+  GLfloat x = m_half_diag.x;
+  GLfloat y = m_half_diag.y;
+  GLfloat z = m_half_diag.z;
   GLfloat x2 = x * 2;
   GLfloat y2 = y * 2;
   GLfloat z2 = z * 2;
@@ -26,13 +26,13 @@ void Cuboid::buildVertex() {
     vec3(-x, y, -z)    // bottom
   };
 
-  glm::vec3 stepXs[6] = {
+  glm::vec3 xsteps[6] = {
     vec3(x2, 0, 0), vec3(-x2, 0, 0),  // front, back
     vec3(0, y2, 0), vec3(0, -y2, 0),  // right, left
     vec3(x2, 0, 0), vec3(x2, 0, 0)    // top, bottom
   };
 
-  glm::vec3 stepYs[6] = {
+  glm::vec3 ysteps[6] = {
     vec3(0, 0, z2), vec3(0, 0, z2),  // front, back
     vec3(0, 0, z2), vec3(0, 0, z2),  // right, left
     vec3(0, y2, 0), vec3(0, -y2, 0)  // top, bottom
@@ -40,54 +40,54 @@ void Cuboid::buildVertex() {
 
   for (int i = 0; i < 6; ++i) {
     const vec3& origin = origins[i];
-    const vec3& stepX = stepXs[i];
-    const vec3& stepY = stepYs[i];
+    const vec3& xstep = xsteps[i];
+    const vec3& ystep = ysteps[i];
 
-    mVertices.push_back(origin);
-    mVertices.push_back(origin + stepX);
-    mVertices.push_back(origin + stepX + stepY);
+    m_vertices.push_back(origin);
+    m_vertices.push_back(origin + xstep);
+    m_vertices.push_back(origin + xstep + ystep);
 
-    mVertices.push_back(origin);
-    mVertices.push_back(origin + stepX + stepY);
-    mVertices.push_back(origin + stepY);
+    m_vertices.push_back(origin);
+    m_vertices.push_back(origin + xstep + ystep);
+    m_vertices.push_back(origin + ystep);
   }
 }
 
 //--------------------------------------------------------------------
-void Cuboid::buildNormal() {
-  mNormals.clear();
-  mNormals.reserve(mVertices.size());
-  for (int i = 0; i < 6; ++i) mNormals.push_back(glm::vec3(0, -1, 0));
-  for (int i = 0; i < 6; ++i) mNormals.push_back(glm::vec3(0, 1, 0));
-  for (int i = 0; i < 6; ++i) mNormals.push_back(glm::vec3(1, 0, 0));
-  for (int i = 0; i < 6; ++i) mNormals.push_back(glm::vec3(-1, 0, 0));
-  for (int i = 0; i < 6; ++i) mNormals.push_back(glm::vec3(0, 0, 1));
-  for (int i = 0; i < 6; ++i) mNormals.push_back(glm::vec3(0, 0, -1));
+void cuboid::build_normal() {
+  m_normals.clear();
+  m_normals.reserve(m_vertices.size());
+  for (int i = 0; i < 6; ++i) m_normals.push_back(glm::vec3(0, -1, 0));
+  for (int i = 0; i < 6; ++i) m_normals.push_back(glm::vec3(0, 1, 0));
+  for (int i = 0; i < 6; ++i) m_normals.push_back(glm::vec3(1, 0, 0));
+  for (int i = 0; i < 6; ++i) m_normals.push_back(glm::vec3(-1, 0, 0));
+  for (int i = 0; i < 6; ++i) m_normals.push_back(glm::vec3(0, 0, 1));
+  for (int i = 0; i < 6; ++i) m_normals.push_back(glm::vec3(0, 0, -1));
 }
 
 //--------------------------------------------------------------------
-void Cuboid::buildTexcoord() {
-  mTexcoords.clear();
-  mTexcoords.reserve(mVertices.size());
+void cuboid::build_texcoord() {
+  m_texcoords.clear();
+  m_texcoords.reserve(m_vertices.size());
 
   for (int i = 0; i < 6; ++i) {
-    mTexcoords.push_back(glm::vec2(0, 0));
-    mTexcoords.push_back(glm::vec2(1, 0));
-    mTexcoords.push_back(glm::vec2(1, 1));
-    mTexcoords.push_back(glm::vec2(0, 0));
-    mTexcoords.push_back(glm::vec2(1, 1));
-    mTexcoords.push_back(glm::vec2(0, 1));
+    m_texcoords.push_back(glm::vec2(0, 0));
+    m_texcoords.push_back(glm::vec2(1, 0));
+    m_texcoords.push_back(glm::vec2(1, 1));
+    m_texcoords.push_back(glm::vec2(0, 0));
+    m_texcoords.push_back(glm::vec2(1, 1));
+    m_texcoords.push_back(glm::vec2(0, 1));
   }
 }
 
 //--------------------------------------------------------------------
-void Cuboid::draw(GLuint primcount /* = 1*/) {
-  bindVertexArrayObject();
+void cuboid::draw(GLuint primcount /* = 1*/) {
+  bind_vertex_array_object();
   if (primcount == 1) {
-    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
     // glDrawArrays(GL_TRIANGLES, 0, 12);
   } else {
-    glDrawArraysInstanced(GL_TRIANGLES, 0, mVertices.size(), primcount);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, m_vertices.size(), primcount);
   }
 }
 }

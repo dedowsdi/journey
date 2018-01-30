@@ -1,0 +1,95 @@
+ vim: tw=80 sw=2 ts=2 et
+
+# changed from https://gcc.gnu.org/codingconventions.html#CandCxx
+Inlining Functions
+  Inlining functions only when you have reason to believe that the expansion of
+  the function is smaller than a call to the function or that inlining is
+  significant to the run-time of the compiler.
+
+	Constructors and destructors, even those with empty bodies, are often much
+	larger than programmers expect. Prefer non-inline versions unless you have
+	evidence that the inline version is smaller or has a significant performance
+	impact.
+
+Line Length
+  80
+
+Names
+  Macros names should be in ALL_CAPS unless it's used as a function.
+
+  Other names should be lower-case and separated by low_lines.
+
+	When classes have member functions, prefer to name data members with a
+	leading m_ and static data members with a leading s_.
+
+	Template parameter names should use CamelCase, following the C++ Standard.
+
+Variable Definitions
+  Variables should be defined at the point of first use, rather than at the top
+  of the function
+
+Struct Definitions
+  Use the struct keyword for plain old data (POD) types.
+
+Class Definitions
+  Use the class keyword for non-POD types.
+  prefer to make data members private.
+
+Constructors and Destructors
+  All constructors should initialize data members in the member initializer list
+  rather than in the body of the constructor.
+
+  A class with virtual functions or virtual bases should have a virtual
+  destructor.
+
+conversions
+  Single argument constructors should nearly always be declared explicit.
+  Conversion operators should be avoided.
+
+Overloading Functions
+  Overloading functions is permitted, but take care to ensure that overloads are
+  not surprising, i.e. semantically identical or at least very similar. Virtual
+  functions should not be overloaded.
+
+Overloading Operators
+  Overloading operators is permitted, but take care to ensure that overloads are
+  not surprising. Some unsurprising uses are in the implementation of numeric
+  types and in following the C++ Standard Library's conventions. In addition,
+  overloaded operators, excepting the call operator, should not be used for
+  expensive implementations.rguments
+
+Default arguments
+  Another type of function overloading, and the same rules apply. Default
+  arguments must always be POD values, i.e. may not run constructors. Virtual
+  functions should not have default arguments.
+
+Templates
+	To avoid excessive compiler size, consider implementing non-trivial templates
+	on a non-template base class with void* parameters.
+
+	Prefer typename over class in template parameter lists.
+
+Namespaces
+	Namespaces are encouraged. All separable libraries should have a unique
+	global namespace. All individual tools should have a unique global namespace.
+	Nested include directories names should map to nested namespaces when possible.
+
+	Header files should have neither using directives nor namespace-scope using declarations.
+
+Casts
+	C-style casts should not be used. Instead, use C++-style casts.
+
+Namespaces
+	Open a namespace with the namespace name followed by a left brace and a new line.
+		namespace gnutool {
+	Close a namespace with a right brace, optional closing comment, and a new line.
+		} // namespace gnutool
+	Definitions within the body of a namespace are not indented.
+
+Extern "C"
+	Prefer an extern "C" block to a declaration qualifier.
+	Open an extern "C" block with the left brace on the same line.
+		extern "C" {
+	Close an extern "C" block with a right brace, optional closing comment, and a new line.
+		} // extern "C"
+	Definitions within the body of an extern "C" block are not indented.

@@ -4,7 +4,7 @@
 #include "glm.h"
 
 namespace zxd {
-class StringUtil {
+class string_util {
 public:
   static std::string tail(const std::string& path);
   static std::string basename(const std::string& filename);

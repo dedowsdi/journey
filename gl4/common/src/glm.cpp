@@ -5,26 +5,89 @@ using namespace glm;
 namespace zxd {
 
 //--------------------------------------------------------------------
-mat4 getTangetnBasis(const vec3& v0, const vec3& v1, const vec3& v2,
+vec3 make_floor(const vec3& lhs, const vec3& rhs) {
+  return vec3(
+    std::min(lhs.x, rhs.x), std::min(lhs.y, rhs.y), std::min(lhs.z, rhs.z));
+}
+
+//--------------------------------------------------------------------
+vec3 make_ceil(const vec3& lhs, const vec3& rhs) {
+  return vec3(
+    std::max(lhs.x, rhs.x), std::max(lhs.y, rhs.y), std::max(lhs.z, rhs.z));
+}
+
+//--------------------------------------------------------------------
+vec3 axis(const mat4& m, GLuint i) { return vec3(column(m, i)); }
+
+//--------------------------------------------------------------------
+mat4 create_mat4(const vec3& xa, const vec3& ya, const vec3& za) {
+  return mat4(
+    vec4(xa, 0), vec4(ya, 0), vec4(za, 0), vec4(0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+//--------------------------------------------------------------------
+GLfloat angle_any(const vec3& lhs, const vec3& rhs) {
+  return angle(normalize(lhs), normalize(rhs));
+}
+
+//--------------------------------------------------------------------
+vec3 face_normal(const vec3& v0, const vec3& v1, const vec3& v2) {
+  vec3 v01 = v1 - v0;
+  vec3 v02 = v2 - v0;
+  vec3 normal = cross(v01, v02);
+  return normalize(normal);
+}
+
+//--------------------------------------------------------------------
+mat4 get_tangetn_basis(const vec3& v0, const vec3& v1, const vec3& v2,
   const vec2& texcoord0, const vec2& texcoord1, const vec2& texcoord2,
   const vec3* normal /* = 0*/) {
-  vec3 dtPos01 = v1 - v0;
-  vec3 dtPos02 = v2 - v0;
-  vec2 dtTex01 = texcoord1 - texcoord0;
-  vec2 dtTex02 = texcoord2 - texcoord0;
+  vec3 dt_pos01 = v1 - v0;
+  vec3 dt_pos02 = v2 - v0;
+  vec2 dt_tex01 = texcoord1 - texcoord0;
+  vec2 dt_tex02 = texcoord2 - texcoord0;
 
-  float r = 1.0 / (dtTex01.x * dtTex02.y - dtTex02.x * dtTex01.y);
-  vec3 tangent = (dtPos01 * dtTex02.y - dtPos02 * dtTex01.y) * r;
+  float r = 1.0 / (dt_tex01.x * dt_tex02.y - dt_tex02.x * dt_tex01.y);
+  vec3 tangent = (dt_pos01 * dt_tex02.y - dt_pos02 * dt_tex01.y) * r;
   tangent = glm::normalize(tangent);
-  vec3 bitangent = (dtPos02 * dtTex01.x - dtPos01 * dtTex02.x) * r;
+  vec3 bitangent = (dt_pos02 * dt_tex01.x - dt_pos01 * dt_tex02.x) * r;
   bitangent = glm::normalize(bitangent);
-  return createMat4(
-    tangent, bitangent, normal == 0 ? getFaceNormal(v0, v1, v2) : *normal);
+  return create_mat4(
+    tangent, bitangent, normal == 0 ? face_normal(v0, v1, v2) : *normal);
+}
+
+//--------------------------------------------------------------------
+vec3 transform_position(const mat4& m, const vec3& v) {
+  vec3 r;
+
+  GLfloat inv_w =
+    1.0f / (m[0][3] * v.x + m[1][3] * v.y + m[2][3] * v.z + m[3][3]);
+  r.x = (m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z + m[3][0]) * inv_w;
+  r.y = (m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z + m[3][1]) * inv_w;
+  r.z = (m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z + m[3][2]) * inv_w;
+
+  return r;
+}
+
+//--------------------------------------------------------------------
+vec3 transform_vector(const mat4& m, const vec3& v) {
+  vec3 r;
+
+  r.x = (m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z);
+  r.y = (m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z);
+  r.z = (m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z);
+
+  return r;
 }
 
 //------------------------------------------------------------------------------
 bool operator<(const vec3& lhs, const vec3& rhs) {
   return lhs.x < rhs.x && lhs.y < rhs.y && lhs.z < rhs.z;
+}
+
+//--------------------------------------------------------------------
+bool operator>(const vec3& lhs, const vec3& rhs) {
+  return lhs != rhs && !operator<(lhs, rhs);
 }
 
 //------------------------------------------------------------------------------
@@ -87,7 +150,7 @@ std::ostream& operator<<(std::ostream& os, const mat4& m) {
 }
 
 //------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const Vec3Vector& v) {
+std::ostream& operator<<(std::ostream& os, const vec3_vector& v) {
   auto size = v.size();
   for (size_t i = 0; i < size; ++i) {
     os << v[i] << std::endl;
@@ -96,25 +159,33 @@ std::ostream& operator<<(std::ostream& os, const Vec3Vector& v) {
 }
 
 //--------------------------------------------------------------------
-glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
-  const glm::mat4& windowMatrixInverse, GLfloat radius /* = 0.8*/) {
-  glm::vec4 n0 = windowMatrixInverse * glm::vec4(p0, 0, 1);
-  glm::vec4 n1 = windowMatrixInverse * glm::vec4(p1, 0, 1);
-  glm::vec3 sp0 = ndcToSphere(n0.xy(), radius);
-  glm::vec3 sp1 = ndcToSphere(n1.xy(), radius);
+GLfloat max_abs_component(const vec3& v) {
+  GLfloat x = glm::abs(v[0]);
+  GLfloat y = glm::abs(v[1]);
+  GLfloat z = glm::abs(v[2]);
+  return glm::max(glm::max(x, y), z);
+}
 
-  GLfloat rpRadius = 1 / radius;
+//--------------------------------------------------------------------
+glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
+  const glm::mat4& w_mat_i, GLfloat radius /* = 0.8*/) {
+  glm::vec4 n0 = w_mat_i * glm::vec4(p0, 0, 1);
+  glm::vec4 n1 = w_mat_i * glm::vec4(p1, 0, 1);
+  glm::vec3 sp0 = ndc_tosphere(n0.xy(), radius);
+  glm::vec3 sp1 = ndc_tosphere(n1.xy(), radius);
+
+  GLfloat rp_radius = 1 / radius;
 
   // get rotate axis in camera space
   glm::vec3 axis = cross(sp0, sp1);
 
-  GLfloat theta = glm::orientedAngle(sp0 * rpRadius, sp1 * rpRadius, axis);
+  GLfloat theta = glm::orientedAngle(sp0 * rp_radius, sp1 * rp_radius, axis);
 
   return glm::rotate(theta, axis);
 }
 
 //--------------------------------------------------------------------
-glm::vec3 ndcToSphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/) {
+glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/) {
   GLfloat l2 = glm::length2(p);
   if (l2 >= radius * radius) {
     return glm::vec3(p * radius / glm::sqrt(l2), 0);
@@ -124,7 +195,7 @@ glm::vec3 ndcToSphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/) {
 }
 
 //--------------------------------------------------------------------
-glm::mat4 computeWindowMatrix(
+glm::mat4 compute_window_matrix(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f) {
   glm::mat4 m;
 
@@ -142,7 +213,7 @@ glm::mat4 computeWindowMatrix(
 }
 
 //--------------------------------------------------------------------
-glm::mat4 computeWindowMatrixInverse(
+glm::mat4 compute_window_matrix_inverse(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f) {
   glm::mat4 m;
   m[0][0] = 2.0 / width;

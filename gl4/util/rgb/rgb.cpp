@@ -7,134 +7,134 @@ using namespace glm;
 
 namespace zxd {
 
-class ColorPane {
+class color_pane {
 public:
-  ColorPane() : mColor(1, 1, 1){};
-  ColorPane(GLfloat r, GLfloat g, GLfloat b) : mColor(r, g, b){};
-  ColorPane(vec3 v) : mColor(v){};
-  void addRed(GLfloat f) { mColor.r = glm::clamp(mColor.r + f, 0.0f, 1.0f); }
-  void addGreen(GLfloat f) { mColor.g = glm::clamp(mColor.g + f, 0.0f, 1.0f); }
-  void addBlue(GLfloat f) { mColor.b = glm::clamp(mColor.b + f, 0.0f, 1.0f); }
-  GLfloat getRed() { return mColor.r; }
-  GLfloat getGreen() { return mColor.g; };
-  GLfloat getBlue() { return mColor.b; };
+  color_pane() : m_color(1, 1, 1){};
+  color_pane(GLfloat r, GLfloat g, GLfloat b) : m_color(r, g, b){};
+  color_pane(vec3 v) : m_color(v){};
+  void add_red(GLfloat f) { m_color.r = glm::clamp(m_color.r + f, 0.0f, 1.0f); }
+  void add_green(GLfloat f) { m_color.g = glm::clamp(m_color.g + f, 0.0f, 1.0f); }
+  void add_blue(GLfloat f) { m_color.b = glm::clamp(m_color.b + f, 0.0f, 1.0f); }
+  GLfloat red() { return m_color.r; }
+  GLfloat green() { return m_color.g; };
+  GLfloat blue() { return m_color.b; };
 
-  GLfloat getX() const { return x; }
-  void setX(GLfloat v) { x = v; }
+  GLfloat x() const { return m_x; }
+  void x(GLfloat v) { m_x = v; }
 
-  GLfloat getY() const { return y; }
-  void setY(GLfloat v) { y = v; }
+  GLfloat y() const { return m_y; }
+  void y(GLfloat v) { m_y = v; }
 
-  const vec3 &getColor() const { return mColor; }
-  void setColor(const vec3 &v) { mColor = v; }
+  const vec3 &color() const { return m_color; }
+  void set_color(const vec3 &v) { m_color = v; }
 
 protected:
-  vec3 mColor;
-  GLfloat x;
-  GLfloat y;
+  vec3 m_color;
+  GLfloat m_x;
+  GLfloat m_y;
 };
 
-typedef std::vector<ColorPane> ColorPaneVector;
+typedef std::vector<color_pane> color_pane_vector;
 
-struct RgbProgram : public zxd::Program {
-  GLint attrib_vertex;
-  GLint attrib_color;
-  GLint loc_gamma;
+struct rgb_program : public zxd::program {
+  GLint al_vertex;
+  GLint al_color;
+  GLint ul_gamma;
 
-  void updateUniforms(GLboolean gamma = 0) {
+  void update_uniforms(GLboolean gamma = 0) {
     glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
-    glUniform1i(loc_gamma, gamma);
+      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+    glUniform1i(ul_gamma, gamma);
   }
 
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/rgb.vs.glsl");
-    attachShaderFile(GL_FRAGMENT_SHADER, "data/shader/rgb.fs.glsl");
+  virtual void attach_shaders() {
+    attach_shader_file(GL_VERTEX_SHADER, "data/shader/rgb.vs.glsl");
+    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/rgb.fs.glsl");
   }
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_gamma, "gamma");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_gamma, "gamma");
   }
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
-    attrib_color = getAttribLocation("color");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_color = attrib_location("color");
   };
-} rgbProgram;
+} rgb_program;
 
-std::string inputModes[] = {"float", "byte", "normal"};
+std::string input_modes[] = {"float", "byte", "normal"};
 
-class RgbApp : public App {
+class rgb_app : public app {
 protected:
-  BitmapText mBitmapText;
-  GLuint mMaxPanePerLine;
-  GLuint mCurrentPaneIndex;
-  GLfloat mPaneWidth;
-  GLfloat mPaneHeight;
+  bitmap_text m_text;
+  GLuint m_max_pane_per_line;
+  GLuint m_current_pane_index;
+  GLfloat m_pane_width;
+  GLfloat m_pane_height;
 
-  GLboolean mGamma;
-  GLboolean mHelp;
-  GLuint mPaneVao;
-  GLuint mBorderVao;
-  GLuint mPaneVertexBuffer;
-  GLuint mPaneColorBuffer;
-  GLuint mBorderVertexBuffer;
-  GLuint mBorderColorBuffer;
-  GLfloat mBorderWidth;
-  GLuint mInputMode;
+  GLboolean m_gamma;
+  GLboolean m_help;
+  GLuint m_pane_vao;
+  GLuint m_border_vao;
+  GLuint m_pane_vertex_buffer;
+  GLuint m_pane_color_buffer;
+  GLuint m_border_vertex_buffer;
+  GLuint m_border_color_buffer;
+  GLfloat m_border_width;
+  GLuint m_input_mode;
 
-  ColorPaneVector mPanes;
+  color_pane_vector m_panes;
 
-  Vec2Vector mPaneVertices;
-  Vec3Vector mPaneColors;
+  vec2_vector m_pane_vertices;
+  vec3_vector m_pane_colors;
 
-  Vec2Vector mBorderVertices;
-  Vec3Vector mBorderColors;
+  vec2_vector m_border_vertices;
+  vec3_vector m_border_colors;
 
 public:
-  RgbApp() {}
+  rgb_app() {}
 
 protected:
-  virtual void initInfo() {
-    App::initInfo();
-    mInfo.title = "hello world";
-    mInfo.wndWidth = 1024;
-    mInfo.wndHeight = 512;
-    mInfo.samples = 4;
+  virtual void init_info() {
+    app::init_info();
+    m_info.title = "hello world";
+    m_info.wnd_width = 1024;
+    m_info.wnd_height = 512;
+    m_info.samples = 4;
   }
 
-  GLuint getNumRows() {
-    return glm::ceil(mPanes.size() / static_cast<GLfloat>(mMaxPanePerLine));
+  GLuint num_rows() {
+    return glm::ceil(m_panes.size() / static_cast<GLfloat>(m_max_pane_per_line));
   }
-  GLuint getNumCols() {
-    return mPanes.size() >= mMaxPanePerLine ? mMaxPanePerLine : mPanes.size();
+  GLuint num_cols() {
+    return m_panes.size() >= m_max_pane_per_line ? m_max_pane_per_line : m_panes.size();
   }
-  GLuint getCurrentRow() { return mCurrentPaneIndex / mMaxPanePerLine; }
-  GLuint getCurrentCol() {
-    return mPanes.size() >= mMaxPanePerLine
-             ? mCurrentPaneIndex % mMaxPanePerLine
-             : mCurrentPaneIndex;
+  GLuint current_row() { return m_current_pane_index / m_max_pane_per_line; }
+  GLuint current_col() {
+    return m_panes.size() >= m_max_pane_per_line
+             ? m_current_pane_index % m_max_pane_per_line
+             : m_current_pane_index;
   }
 
-  virtual void createScene() {
-    mMaxPanePerLine = 8;
-    mBorderWidth = 20.0f;
-    mGamma = GL_FALSE;
-    mHelp = GL_TRUE;
-    mReading = GL_FALSE;
-    mInputMode = 0;
+  virtual void create_scene() {
+    m_max_pane_per_line = 8;
+    m_border_width = 20.0f;
+    m_gamma = GL_FALSE;
+    m_help = GL_TRUE;
+    m_reading = GL_FALSE;
+    m_input_mode = 0;
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_LINE_SMOOTH);
-    mBitmapText.init();
-    mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
+    m_text.init();
+    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 
-    rgbProgram.init();
-    rgbProgram.projMatrix = ortho(0.0f, 1.0f, 0.0f, 1.0f);
-    glEnableVertexAttribArray(rgbProgram.attrib_vertex);
-    glEnableVertexAttribArray(rgbProgram.attrib_color);
+    rgb_program.init();
+    rgb_program.p_mat = ortho(0.0f, 1.0f, 0.0f, 1.0f);
+    glEnableVertexAttribArray(rgb_program.al_vertex);
+    glEnableVertexAttribArray(rgb_program.al_color);
 
     // clang-format off
-    Vec3Vector colors = Vec3Vector( {
+    vec3_vector colors = vec3_vector( {
       {0.0, 0.0, 0.0},
       {1.0, 1.0, 1.0}, 
       {1.0, 0.0, 0.0}, 
@@ -155,90 +155,90 @@ protected:
     });
     // clang-format on
 
-    glGenVertexArrays(1, &mPaneVao);
-    glGenVertexArrays(1, &mBorderVao);
+    glGenVertexArrays(1, &m_pane_vao);
+    glGenVertexArrays(1, &m_border_vao);
 
     for (GLuint i = 0; i < colors.size(); ++i) {
-      ColorPane pane(colors[i]);
-      mPanes.push_back(pane);
+      color_pane pane(colors[i]);
+      m_panes.push_back(pane);
 
       for (int j = 0; j < 6; ++j) {
-        mPaneColors.push_back(colors[i]);
+        m_pane_colors.push_back(colors[i]);
       }
     }
 
-    mCurrentPaneIndex = mPanes.size() - 1;
-    for (int i = 0; i < 6; ++i) mBorderColors.push_back(vec3(0.0));
+    m_current_pane_index = m_panes.size() - 1;
+    for (int i = 0; i < 6; ++i) m_border_colors.push_back(vec3(0.0));
 
-    glBindVertexArray(mBorderVao);
+    glBindVertexArray(m_border_vao);
 
-    glGenBuffers(1, &mBorderVertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mBorderVertexBuffer);
+    glGenBuffers(1, &m_border_vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_border_vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(vec2), 0, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(
-      rgbProgram.attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(rgbProgram.attrib_vertex);
+      rgb_program.al_vertex, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(rgb_program.al_vertex);
 
-    glGenBuffers(1, &mBorderColorBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mBorderColorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mBorderColors.size() * sizeof(vec3),
-      value_ptr(mBorderColors.front()), GL_DYNAMIC_DRAW);  // will be updated
+    glGenBuffers(1, &m_border_color_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_border_color_buffer);
+    glBufferData(GL_ARRAY_BUFFER, m_border_colors.size() * sizeof(vec3),
+      value_ptr(m_border_colors.front()), GL_DYNAMIC_DRAW);  // will be updated
     glVertexAttribPointer(
-      rgbProgram.attrib_color, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(rgbProgram.attrib_color);
+      rgb_program.al_color, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(rgb_program.al_color);
 
-    resizePane();
-    resetPaneVertexBuffer();
-    resetPaneColorBuffer();
-    updateBorderVertexBuffer();
+    resize_pane();
+    reset_pane_vertex_buffer();
+    reset_pane_color_buffer();
+    update_border_vertex_buffer();
   }
 
-  ColorPane &getCurrentPane() { return mPanes[mCurrentPaneIndex]; }
+  color_pane &current_pane() { return m_panes[m_current_pane_index]; }
 
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(rgbProgram);
-    glViewport(0, mInfo.wndHeight * 0.1, mInfo.wndWidth, mInfo.wndHeight * 0.9);
+    glUseProgram(rgb_program);
+    glViewport(0, m_info.wnd_height * 0.1, m_info.wnd_width, m_info.wnd_height * 0.9);
 
     // render pane
-    glBindVertexArray(mPaneVao);
-    rgbProgram.modelViewProjMatrix = rgbProgram.projMatrix;
-    rgbProgram.updateUniforms(mGamma);
-    glDrawArrays(GL_TRIANGLES, 0, mPaneVertices.size());
+    glBindVertexArray(m_pane_vao);
+    rgb_program.mvp_mat = rgb_program.p_mat;
+    rgb_program.update_uniforms(m_gamma);
+    glDrawArrays(GL_TRIANGLES, 0, m_pane_vertices.size());
 
     // render border on current selected color pane
-    glLineWidth(mBorderWidth);
-    glBindVertexArray(mBorderVao);
-    const ColorPane &pane = getCurrentPane();
-    rgbProgram.modelViewProjMatrix =
-      rgbProgram.projMatrix * translate(vec3(pane.getX(), pane.getY(), 0));
-    rgbProgram.updateUniforms(mGamma);
+    glLineWidth(m_border_width);
+    glBindVertexArray(m_border_vao);
+    const color_pane &pane = current_pane();
+    rgb_program.mvp_mat =
+      rgb_program.p_mat * translate(vec3(pane.x(), pane.y(), 0));
+    rgb_program.update_uniforms(m_gamma);
     glDrawArrays(GL_LINE_LOOP, 0, 4);
     glLineWidth(1);
 
-    glViewport(0, 0, mInfo.wndWidth, mInfo.wndHeight);
+    glViewport(0, 0, m_info.wnd_width, m_info.wnd_height);
     // render text
-    // for (int i = 0; i < mPanes.size(); ++i) {
-    // ColorPane &pane = mPanes[i];
-    // const vec3 &color = pane.getColor();
+    // for (int i = 0; i < m_panes.size(); ++i) {
+    // color_pane &pane = m_panes[i];
+    // const vec3 &color = pane.color();
     // std::stringstream ss;
     // ss.precision(3);
     // ss << color.r << " " << color.g << " " << color.b;
     // glEnable(GL_BLEND);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // mBitmapText.print(ss.str(), pane.getX() * mInfo.wndWidth + 5,
-    // pane.getY() * mInfo.wndHeight + 8, vec4(0, 0, 0, 1));
+    // m_text.print(ss.str(), pane.x() * m_info.wnd_width + 5,
+    // pane.y() * m_info.wnd_height + 8, vec4(0, 0, 0, 1));
     // glDisable(GL_BLEND);
     //}
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     std::stringstream ss;
-    if (mReading) {
-      ss << "input " << inputModes[mInputMode] << " color : " << mInput;
+    if (m_reading) {
+      ss << "input " << input_modes[m_input_mode] << " color : " << m_input;
     } else {
-      const vec3 &color = pane.getColor();
+      const vec3 &color = pane.color();
       ss.precision(3);
       ss.setf(std::ios_base::fixed);
       ss << color.r << " " << color.g << " " << color.b;
@@ -249,35 +249,35 @@ protected:
       ss << "          ";
       ss << color.r * 2 - 1 << " " << color.g * 2 - 1 << " " << color.b * 2 - 1;
     }
-    mBitmapText.print(ss.str(), 5, 10, vec4(1));
+    m_text.print(ss.str(), 5, 10, vec4(1));
 
-    if (mHelp) {
+    if (m_help) {
       std::stringstream ss;
       ss << " h : toggle help" << std::endl;
       ss << " esc : exit" << std::endl;
       ss << " a : add new color pane" << std::endl;
       ss << " d : delete color pane" << std::endl;
       ss << " arrow : select color pane" << std::endl;
-      ss << " g : gamma correction : " << (mGamma == GL_FALSE ? 0 : 1)
+      ss << " g : gamma correction : " << (m_gamma == GL_FALSE ? 0 : 1)
          << std::endl;
-      ss << " i : input mode : " << inputModes[mInputMode] << std::endl;
+      ss << " i : input mode : " << input_modes[m_input_mode] << std::endl;
       ss << " enter : start or finish input color" << std::endl;
       ss << " [ctrl|alt]qQ : red" << std::endl;
       ss << " [ctrl|alt]wW : green" << std::endl;
       ss << " [ctrl|alt]eE : blue" << std::endl;
-      mBitmapText.print(ss.str(), 1, mInfo.wndHeight - 25, vec4(0, 0, 1, 1));
+      m_text.print(ss.str(), 1, m_info.wnd_height - 25, vec4(0, 0, 1, 1));
     }
     glDisable(GL_BLEND);
   }
 
   virtual void update() {}
 
-  virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
-    App::glfwResize(wnd, w, h);
-    mBitmapText.reshape(w, h);
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+    app::glfw_resize(wnd, w, h);
+    m_text.reshape(w, h);
   }
 
-  GLfloat getQuantity(int mods) {
+  GLfloat quantity(int mods) {
     GLfloat quantity = 0.01;
     if (mods & GLFW_MOD_CONTROL) quantity = 0.001;
     //if (mods & GLFW_MOD_ALT) quantity = 0.001;
@@ -285,35 +285,35 @@ protected:
     return quantity;
   }
 
-  void finisheReading() {
-    App::finisheReading();
-    std::stringstream ss(mInput);
+  void finishe_reading() {
+    app::finishe_reading();
+    std::stringstream ss(m_input);
     vec3 color;
     if (ss >> color[0] && ss >> color[1] && ss >> color[2]) {
-      ColorPane &pane = getCurrentPane();
-      if (mInputMode == 0) {
-      } else if (mInputMode == 1) {
+      color_pane &pane = current_pane();
+      if (m_input_mode == 0) {
+      } else if (m_input_mode == 1) {
         color /= 255.0f;
-      } else if (mInputMode == 2) {
+      } else if (m_input_mode == 2) {
         color = glm::normalize(color);
         color = color * 0.5f + 0.5f;
       }
-      pane.setColor(glm::clamp(color, vec3(0), vec3(1)));
+      pane.set_color(glm::clamp(color, vec3(0), vec3(1)));
 
-      updatePaneColorBuffer();
+      update_pane_color_buffer();
     }
   }
 
-  virtual void glfwKey(
+  virtual void glfw_key(
     GLFWwindow *wnd, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
       switch (key) {
         case GLFW_KEY_ENTER:
         case GLFW_KEY_KP_ENTER:
-          if (mReading) {
-            finisheReading();
+          if (m_reading) {
+            finishe_reading();
           } else {
-            startReading();
+            start_reading();
           }
           break;
         default:
@@ -321,7 +321,7 @@ protected:
       }
     }
 
-    if (!mReading) {
+    if (!m_reading) {
       if (action == GLFW_PRESS) {
         switch (key) {
           case GLFW_KEY_UP:
@@ -337,20 +337,20 @@ protected:
             right();
             break;
           case GLFW_KEY_A:
-            addPane();
+            add_pane();
             break;
           case GLFW_KEY_D:
-            deleteCurrentPane();
+            delete_current_pane();
             break;
           case GLFW_KEY_G:
-            mGamma = !mGamma;
+            m_gamma = !m_gamma;
             break;
           case GLFW_KEY_H:
-            mHelp = !mHelp;
+            m_help = !m_help;
             break;
           case GLFW_KEY_I:
-            mInputMode =
-              (mInputMode + 1) % (sizeof(inputModes) / sizeof(inputModes[0]));
+            m_input_mode =
+              (m_input_mode + 1) % (sizeof(input_modes) / sizeof(input_modes[0]));
             break;
 
           default:
@@ -361,207 +361,202 @@ protected:
       if (action == GLFW_PRESS || action == GLFW_REPEAT) {
         switch (key) {
           case GLFW_KEY_Q:
-            getCurrentPane().addRed(getQuantity(mods));
-            updatePaneColorBuffer();
+            current_pane().add_red(quantity(mods));
+            update_pane_color_buffer();
             break;
           case GLFW_KEY_W:
-            getCurrentPane().addGreen(getQuantity(mods));
-            updatePaneColorBuffer();
+            current_pane().add_green(quantity(mods));
+            update_pane_color_buffer();
             break;
           case GLFW_KEY_E:
-            getCurrentPane().addBlue(getQuantity(mods));
-            updatePaneColorBuffer();
+            current_pane().add_blue(quantity(mods));
+            update_pane_color_buffer();
             break;
           default:
             break;
         }
       }
     }
-    App::glfwKey(wnd, key, scancode, action, mods);
+    app::glfw_key(wnd, key, scancode, action, mods);
   }
 
-  virtual void glfwMouseButton(
+  virtual void glfw_mouse_button(
     GLFWwindow *wnd, int button, int action, int mods) {
-    App::glfwMouseButton(wnd, button, action, mods);
+    app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {
-    App::glfwMouseMove(wnd, x, y);
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+    app::glfw_mouse_move(wnd, x, y);
   }
 
-  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
-    App::glfwMouseWheel(wnd, xoffset, yoffset);
+  virtual void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+    app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 
   // select panes
   void left() {
-    if (mCurrentPaneIndex > 0) --mCurrentPaneIndex;
+    if (m_current_pane_index > 0) --m_current_pane_index;
   }
   void right() {
-    if (mCurrentPaneIndex + 1 < mPanes.size()) ++mCurrentPaneIndex;
+    if (m_current_pane_index + 1 < m_panes.size()) ++m_current_pane_index;
   }
   void down() {
-    if (mCurrentPaneIndex >= getNumCols()) mCurrentPaneIndex -= getNumCols();
+    if (m_current_pane_index >= num_cols()) m_current_pane_index -= num_cols();
   }
   void up() {
-    if (mCurrentPaneIndex + getNumCols() < mPanes.size())
-      mCurrentPaneIndex += getNumCols();
+    if (m_current_pane_index + num_cols() < m_panes.size())
+      m_current_pane_index += num_cols();
   }
-  // void selectPane(GLuint index);
-  void addPane() {
-    GLuint numRows = getNumRows();
-    GLuint numCols = getNumCols();
-    GLuint row = numRows - 1;
-    GLuint col = mPanes.size() % numCols;
-    GLboolean needResizePane = 0;
+  // void select_pane(GLuint index);
+  void add_pane() {
+    GLuint row = num_rows() - 1;
+    GLuint col = m_panes.size() % num_cols();
+    GLboolean need_resize_pane = 0;
 
-    if (mMaxPanePerLine > numCols) {
-      needResizePane = 1;
+    if (m_max_pane_per_line > num_cols()) {
+      need_resize_pane = 1;
     } else if (col == 0) {
       ++row;
-      needResizePane = 1;
+      need_resize_pane = 1;
     }
 
     vec3 color(glm::linearRand(vec3(0.0), vec3(1.0)));
-    for (int i = 0; i < 6; ++i) mPaneColors.push_back(color);
+    for (int i = 0; i < 6; ++i) m_pane_colors.push_back(color);
 
     // add new color pane
-    ColorPane pane;
-    GLfloat x = col * mPaneWidth;
-    GLfloat y = row * mPaneHeight;
-    pane.setColor(color);
-    pane.setX(x);
-    pane.setY(y);
-    mPanes.push_back(pane);
+    color_pane pane;
+    GLfloat x = col * m_pane_width;
+    GLfloat y = row * m_pane_height;
+    pane.set_color(color);
+    pane.x(x);
+    pane.y(y);
+    m_panes.push_back(pane);
 
-    if (needResizePane) {
-      resizePane();
-      updateBorderVertexBuffer();
+    if (need_resize_pane) {
+      resize_pane();
+      update_border_vertex_buffer();
     } else {
-      mPaneVertices.push_back(vec2(x, y));
-      mPaneVertices.push_back(vec2(x + mPaneWidth, y));
-      mPaneVertices.push_back(vec2(x + mPaneWidth, y + mPaneHeight));
-      mPaneVertices.push_back(vec2(x, y));
-      mPaneVertices.push_back(vec2(x + mPaneWidth, y + mPaneHeight));
-      mPaneVertices.push_back(vec2(x, y + mPaneHeight));
+      m_pane_vertices.push_back(vec2(x, y));
+      m_pane_vertices.push_back(vec2(x + m_pane_width, y));
+      m_pane_vertices.push_back(vec2(x + m_pane_width, y + m_pane_height));
+      m_pane_vertices.push_back(vec2(x, y));
+      m_pane_vertices.push_back(vec2(x + m_pane_width, y + m_pane_height));
+      m_pane_vertices.push_back(vec2(x, y + m_pane_height));
     }
-    resetPaneVertexBuffer();
-    resetPaneColorBuffer();
+    reset_pane_vertex_buffer();
+    reset_pane_color_buffer();
 
-    mCurrentPaneIndex = mPanes.size() - 1;
+    m_current_pane_index = m_panes.size() - 1;
   }
-  void deleteCurrentPane() {
-    if (mPanes.size() == 1) return;
+  void delete_current_pane() {
+    if (m_panes.size() == 1) return;
 
-    mPanes.erase(mPanes.begin() + mCurrentPaneIndex);
-    auto iter0 = mPaneVertices.begin() + mCurrentPaneIndex * 6;
-    mPaneVertices.erase(iter0, iter0 + 6);
+    m_panes.erase(m_panes.begin() + m_current_pane_index);
+    auto iter0 = m_pane_vertices.begin() + m_current_pane_index * 6;
+    m_pane_vertices.erase(iter0, iter0 + 6);
 
-    auto iter1 = mPaneColors.begin() + mCurrentPaneIndex * 6;
-    mPaneColors.erase(iter1, iter1 + 6);
+    auto iter1 = m_pane_colors.begin() + m_current_pane_index * 6;
+    m_pane_colors.erase(iter1, iter1 + 6);
 
-    resizePane();
-    updateBorderVertexBuffer();
-    resetPaneVertexBuffer();
-    resetPaneColorBuffer();
-    if (mCurrentPaneIndex == mPanes.size()) {
-      mCurrentPaneIndex = mPanes.size() - 1;
+    resize_pane();
+    update_border_vertex_buffer();
+    reset_pane_vertex_buffer();
+    reset_pane_color_buffer();
+    if (m_current_pane_index == m_panes.size()) {
+      m_current_pane_index = m_panes.size() - 1;
     }
   }
 
-  void resizePane() {
+  void resize_pane() {
     GLuint col = 0;
     GLuint row = 0;
 
-    GLuint numRows = getNumRows();
-    GLuint numCols = getNumCols();
+    m_pane_width = 1.0f / num_cols();
+    m_pane_height = 1.0f / num_rows();
 
-    mPaneWidth = 1.0f / numCols;
-    mPaneHeight = 1.0f / numRows;
-
-    for (GLuint i = 0; i < mPanes.size(); ++i) {
-      if (col == mMaxPanePerLine) {
+    for (GLuint i = 0; i < m_panes.size(); ++i) {
+      if (col == m_max_pane_per_line) {
         col = 0;
         ++row;
       }
 
-      ColorPane &pane = mPanes[i];
-      pane.setX(mPaneWidth * col);
-      pane.setY(mPaneHeight * row);
+      color_pane &pane = m_panes[i];
+      pane.x(m_pane_width * col);
+      pane.y(m_pane_height * row);
       ++col;
     }
 
-    mPaneVertices.clear();
+    m_pane_vertices.clear();
     // build pane mesh
-    for (int i = 0; i < mPanes.size(); ++i) {
-      ColorPane &pane = mPanes[i];
-      GLfloat x = pane.getX();
-      GLfloat y = pane.getY();
+    for (int i = 0; i < m_panes.size(); ++i) {
+      color_pane &pane = m_panes[i];
+      GLfloat x = pane.x();
+      GLfloat y = pane.y();
       // std::cout << x << " : " << y << std::endl;
-      mPaneVertices.push_back(vec2(x, y));
-      mPaneVertices.push_back(vec2(x + mPaneWidth, y));
-      mPaneVertices.push_back(vec2(x + mPaneWidth, y + mPaneHeight));
-      mPaneVertices.push_back(vec2(x, y));
-      mPaneVertices.push_back(vec2(x + mPaneWidth, y + mPaneHeight));
-      mPaneVertices.push_back(vec2(x, y + mPaneHeight));
+      m_pane_vertices.push_back(vec2(x, y));
+      m_pane_vertices.push_back(vec2(x + m_pane_width, y));
+      m_pane_vertices.push_back(vec2(x + m_pane_width, y + m_pane_height));
+      m_pane_vertices.push_back(vec2(x, y));
+      m_pane_vertices.push_back(vec2(x + m_pane_width, y + m_pane_height));
+      m_pane_vertices.push_back(vec2(x, y + m_pane_height));
     }
 
     // build border mesh
-    mBorderVertices.clear();
-    mBorderVertices.push_back(vec2(0, 0));
-    mBorderVertices.push_back(vec2(0 + mPaneWidth, 0));
-    mBorderVertices.push_back(vec2(0 + mPaneWidth, 0 + mPaneHeight));
-    mBorderVertices.push_back(vec2(0, 0 + mPaneHeight));
+    m_border_vertices.clear();
+    m_border_vertices.push_back(vec2(0, 0));
+    m_border_vertices.push_back(vec2(0 + m_pane_width, 0));
+    m_border_vertices.push_back(vec2(0 + m_pane_width, 0 + m_pane_height));
+    m_border_vertices.push_back(vec2(0, 0 + m_pane_height));
   }
 
-  void resetPaneVertexBuffer() {
-    glBindVertexArray(mPaneVao);
+  void reset_pane_vertex_buffer() {
+    glBindVertexArray(m_pane_vao);
 
-    if (glIsBuffer(mPaneVertexBuffer)) glDeleteBuffers(1, &mPaneVertexBuffer);
+    if (glIsBuffer(m_pane_vertex_buffer)) glDeleteBuffers(1, &m_pane_vertex_buffer);
 
-    glGenBuffers(1, &mPaneVertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mPaneVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mPaneVertices.size() * sizeof(vec2),
-      value_ptr(mPaneVertices.front()), GL_STATIC_DRAW);
+    glGenBuffers(1, &m_pane_vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_pane_vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, m_pane_vertices.size() * sizeof(vec2),
+      value_ptr(m_pane_vertices.front()), GL_STATIC_DRAW);
     glVertexAttribPointer(
-      rgbProgram.attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+      rgb_program.al_vertex, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
-    glEnableVertexAttribArray(rgbProgram.attrib_vertex);
+    glEnableVertexAttribArray(rgb_program.al_vertex);
   }
 
-  void resetPaneColorBuffer() {
-    glBindVertexArray(mPaneVao);
+  void reset_pane_color_buffer() {
+    glBindVertexArray(m_pane_vao);
 
-    if (glIsBuffer(mPaneColorBuffer)) glDeleteBuffers(1, &mPaneColorBuffer);
-    glGenBuffers(1, &mPaneColorBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mPaneColorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, mPaneColors.size() * sizeof(vec3),
-      value_ptr(mPaneColors.front()), GL_DYNAMIC_DRAW);  // will be updated
+    if (glIsBuffer(m_pane_color_buffer)) glDeleteBuffers(1, &m_pane_color_buffer);
+    glGenBuffers(1, &m_pane_color_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_pane_color_buffer);
+    glBufferData(GL_ARRAY_BUFFER, m_pane_colors.size() * sizeof(vec3),
+      value_ptr(m_pane_colors.front()), GL_DYNAMIC_DRAW);  // will be updated
     glVertexAttribPointer(
-      rgbProgram.attrib_color, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+      rgb_program.al_color, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
-    glEnableVertexAttribArray(rgbProgram.attrib_color);
+    glEnableVertexAttribArray(rgb_program.al_color);
   }
 
-  void updateBorderVertexBuffer() {
-    glBindBuffer(GL_ARRAY_BUFFER, mBorderVertexBuffer);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vec2) * mBorderVertices.size(),
-      value_ptr(mBorderVertices.front()));
+  void update_border_vertex_buffer() {
+    glBindBuffer(GL_ARRAY_BUFFER, m_border_vertex_buffer);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vec2) * m_border_vertices.size(),
+      value_ptr(m_border_vertices.front()));
   }
 
-  void updatePaneColorBuffer() {
-    ColorPane &pane = getCurrentPane();
+  void update_pane_color_buffer() {
+    color_pane &pane = current_pane();
     for (int i = 0; i < 6; ++i) {
-      mPaneColors[mCurrentPaneIndex * 6 + i] = pane.getColor();
+      m_pane_colors[m_current_pane_index * 6 + i] = pane.color();
     }
-    glBindBuffer(GL_ARRAY_BUFFER, mPaneColorBuffer);
-    glBufferSubData(GL_ARRAY_BUFFER, sizeof(vec3) * 6 * mCurrentPaneIndex,
-      sizeof(vec3) * 6, value_ptr(mPaneColors[mCurrentPaneIndex * 6]));
+    glBindBuffer(GL_ARRAY_BUFFER, m_pane_color_buffer);
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(vec3) * 6 * m_current_pane_index,
+      sizeof(vec3) * 6, value_ptr(m_pane_colors[m_current_pane_index * 6]));
   }
 };
 }
 
 int main(int argc, char *argv[]) {
-  zxd::RgbApp app;
+  zxd::rgb_app app;
   app.run();
 }

@@ -5,23 +5,23 @@ in vec3 normal;
 in vec3 tangent;
 in vec2 texcoord;
 
-uniform mat4 modelViewProjMatrix;
-uniform mat4 modelViewMatrix;
-uniform mat4 modelViewMatrixInverseTranspose;
+uniform mat4 mvp_mat;
+uniform mat4 mv_mat;
+uniform mat4 mv_mat_it;
 
-out VS_OUT{
-  vec3 viewVertex;
+out vs_out{
+  vec3 view_vertex;
   vec2 texcoord;
   mat3 tbn;
-} vs_out;
+} vo;
 
 void main(void)
 {
-  vs_out.viewVertex = (modelViewMatrix * vertex).xyz;
-  vs_out.texcoord = texcoord;
+  vo.view_vertex = (mv_mat * vertex).xyz;
+  vo.texcoord = texcoord;
 
   vec3 B = normalize(cross(normal, tangent));
-  vs_out.tbn = mat3(tangent, B, normal);
+  vo.tbn = mat3(tangent, B, normal);
 
-  gl_Position = modelViewProjMatrix * vertex;
+  gl_Position = mvp_mat * vertex;
 }

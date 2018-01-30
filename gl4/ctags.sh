@@ -11,6 +11,6 @@ ctags \
     --exclude=cmake \
     --exclude=CMake \
     --exclude=CMakeLists \
-    --language-force=c \
+    --language-force=c++ \
     /usr/local/source/glm/glm/ \
     ./gl43/

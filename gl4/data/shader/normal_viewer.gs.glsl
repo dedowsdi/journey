@@ -7,10 +7,10 @@
 layout(triangles) in;
 layout(line_strip, max_vertices = 6) out;
 
-uniform mat4 projMatrix;
-uniform float normalLength = 0.1;
+uniform mat4 p_mat;
+uniform float normal_length = 0.1;
 
-in VS_OUT 
+in vs_out 
 { 
   vec3 normal; 
 } gs_in[];
@@ -26,13 +26,13 @@ void main(void) {
 
   for (int i = 0; i < 3; ++i) {
 
-    gl_Position = projMatrix * gl_in[i].gl_Position;
+    gl_Position = p_mat * gl_in[i].gl_Position;
     EmitVertex();
 
     vec4 vertex = gl_in[i].gl_Position;
-    vertex.xyz += gs_in[i].normal * normalLength * vertex.w;
+    vertex.xyz += gs_in[i].normal * normal_length * vertex.w;
 
-    gl_Position = projMatrix * vertex;
+    gl_Position = p_mat * vertex;
     EmitVertex();
 
     EndPrimitive();

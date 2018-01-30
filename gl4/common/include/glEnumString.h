@@ -3,31 +3,31 @@
 
 #include "glad/glad.h"
 
-const char* glTexWrapToString(GLenum e);
-GLenum gTexWraplFromString(const char* s);
+const char* gl_tex_wrap_to_string(GLenum e);
+GLenum g_tex_wrapl_from_string(const char* s);
 
-const char* glTexFilterToString(GLenum e);
-GLenum glTexFilterFromString(const char* s);
+const char* gl_tex_filter_to_string(GLenum e);
+GLenum gl_tex_filter_from_string(const char* s);
 
-const char* gluNurbSampleMethodToString(GLenum e);
-GLenum gluNurbSampleMethodlFromString(const char* s);
+const char* glu_nurb_sample_method_to_string(GLenum e);
+GLenum glu_nurb_sample_methodl_from_string(const char* s);
 
-const char* glShaderTypeToString(GLenum e);
-GLenum glShaderTypeFromString(const char* s);
+const char* gl_shader_type_to_string(GLenum e);
+GLenum gl_shader_type_from_string(const char* s);
 
-const char* glDebugSourceToString(GLenum e);
-GLenum glDebugSourceFromString(const char* s);
+const char* gl_debug_source_to_string(GLenum e);
+GLenum gl_debug_source_from_string(const char* s);
 
-const char* glDebugTypeToString(GLenum e);
-GLenum glDebugTypeFromString(const char* s);
+const char* gl_debug_type_to_string(GLenum e);
+GLenum gl_debug_type_from_string(const char* s);
 
-const char* glDebugSeverityToString(GLenum e);
-GLenum glDebugSeverityFromString(const char* s);
+const char* gl_debug_severity_to_string(GLenum e);
+GLenum gl_debug_severity_from_string(const char* s);
 
-const char* glPolygonModeToString(GLenum e);
-GLenum glPolygonModeFromString(const char* s);
+const char* gl_polygon_mode_to_string(GLenum e);
+GLenum gl_polygon_mode_from_string(const char* s);
 
-const char* glCullFaceModeToString(GLenum e);
-GLenum glCullFaceModeFromString(const char* s);
+const char* gl_cull_face_mode_to_string(GLenum e);
+GLenum gl_cull_face_mode_from_string(const char* s);
 
 #endif /* GLENUMSTRING_H */

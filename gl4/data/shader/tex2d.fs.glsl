@@ -1,14 +1,14 @@
 #version 330 core
 
-in VS_OUT{
+in vs_out{
   vec2 texcoord;
-}fs_in;
+}fi;
 
-uniform sampler2D diffuseMap;
+uniform sampler2D diffuse_map;
 
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main(void)
 {
-  fragColor = texture(diffuseMap, fs_in.texcoord);
+  frag_color = texture(diffuse_map, fi.texcoord);
 }

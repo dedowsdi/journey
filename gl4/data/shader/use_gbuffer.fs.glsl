@@ -1,30 +1,30 @@
-in VS_OUT{
+in vs_out{
   vec2 texcoord;
-} fs_in;
+} fi;
 
-uniform sampler2D gVertex;
-uniform sampler2D gNormal;
-uniform sampler2D gEmission;
-uniform sampler2D gAmbient;
-uniform sampler2D gDiffuse;
-uniform sampler2D gSpecular;
-uniform sampler2D gShininess;
-uniform sampler2D gDepth;
+uniform sampler2D g_vertex;
+uniform sampler2D g_normal;
+uniform sampler2D g_emission;
+uniform sampler2D g_ambient;
+uniform sampler2D g_diffuse;
+uniform sampler2D g_specular;
+uniform sampler2D g_shininess;
+uniform sampler2D g_depth;
 
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main(void) {
-  vec3 vertex = texture(gVertex, fs_in.texcoord).xyz;
-  vec3 normal = normalize(texture(gNormal, fs_in.texcoord).xyz);
+  vec3 vertex = texture(g_vertex, fi.texcoord).xyz;
+  vec3 normal = normalize(texture(g_normal, fi.texcoord).xyz);
 
-  Material material;
+  material material;
 
-  material.emission = texture(gEmission, fs_in.texcoord);
-  material.ambient = texture(gAmbient, fs_in.texcoord);
-  material.diffuse = texture(gDiffuse, fs_in.texcoord);
-  material.specular = texture(gSpecular, fs_in.texcoord);
-  material.shininess = texture(gShininess, fs_in.texcoord).r * 255;
+  material.emission = texture(g_emission, fi.texcoord);
+  material.ambient = texture(g_ambient, fi.texcoord);
+  material.diffuse = texture(g_diffuse, fi.texcoord);
+  material.specular = texture(g_specular, fi.texcoord);
+  material.shininess = texture(g_shininess, fi.texcoord).r * 255;
 
-  fragColor = blinn(vertex, normal, material);
-  gl_FragDepth = texture(gDepth, fs_in.texcoord).r;
+  frag_color = blinn(vertex, normal, material);
+  gl_FragDepth = texture(g_depth, fi.texcoord).r;
 }

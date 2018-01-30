@@ -2,14 +2,14 @@
 
 in vec4 vertex;
 
-uniform mat4 modelViewProjMatrix;
+uniform mat4 mvp_mat;
 
-out VS_OUT{
+out vs_out{
   vec2 texcoord;
-} vs_out;
+} vo;
 
 void main(void)
 {
-  gl_Position = modelViewProjMatrix * vec4(vertex.xy, 0, 1);
-  vs_out.texcoord = vertex.zw;
+  gl_Position = mvp_mat * vec4(vertex.xy, 0, 1);
+  vo.texcoord = vertex.zw;
 }

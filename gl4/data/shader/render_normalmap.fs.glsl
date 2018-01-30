@@ -1,13 +1,13 @@
 #version 430 core
 
-in VS_OUT{
+in vs_out{
   vec3 normal;
-}fs_in;
+}fi;
 
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main(void)
 {
   //render normal as color
-  fragColor = vec4((normalize(fs_in.normal) + 1.0) * 0.5, 1.0);
+  frag_color = vec4((normalize(fi.normal) + 1.0) * 0.5, 1.0);
 }

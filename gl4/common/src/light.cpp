@@ -4,92 +4,93 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-LightSource::LightSource()
+light_source::light_source()
     : ambient(0, 0, 0, 1),
       diffuse(0, 0, 0, 1),
       specular(0, 0, 0, 1),
       position(0, 0, 0, 1),
-      spotDirection(0, 0, -1),
-      spotExponent(0),
-      spotCutoff(180),
-      spotCosCutoff(-1),
-      constantAttenuation(1),
-      linearAttenuation(0),
-      quadraticAttenuation(0) {}
+      spot_direction(0, 0, -1),
+      spot_exponent(0),
+      spot_cutoff(180),
+      spot_cos_cutoff(-1),
+      constant_attenuation(1),
+      linear_attenuation(0),
+      quadratic_attenuation(0) {}
 
 //--------------------------------------------------------------------
-void LightSource::bindUniformLocations(
+void light_source::bind_uniform_locations(
   GLuint program, const std::string& name) {
-  setUniformLocation(&loc_ambient, program, name + ".ambient");
-  setUniformLocation(&loc_diffuse, program, name + ".diffuse");
-  setUniformLocation(&loc_specular, program, name + ".specular");
-  setUniformLocation(&loc_position, program, name + ".position");
-  setUniformLocation(&loc_spotDirection, program, name + ".spotDirection");
-  setUniformLocation(&loc_spotExponent, program, name + ".spotExponent");
-  setUniformLocation(&loc_spotCutoff, program, name + ".spotCutoff");
-  setUniformLocation(&loc_spotCosCutoff, program, name + ".spotCosCutoff");
-  setUniformLocation(
-    &loc_constantAttenuation, program, name + ".constantAttenuation");
-  setUniformLocation(
-    &loc_linearAttenuation, program, name + ".linearAttenuation");
-  setUniformLocation(
-    &loc_quadraticAttenuation, program, name + ".quadraticAttenuation");
+  uniform_location(&ul_ambient, program, name + ".ambient");
+  uniform_location(&ul_diffuse, program, name + ".diffuse");
+  uniform_location(&ul_specular, program, name + ".specular");
+  uniform_location(&ul_position, program, name + ".position");
+  uniform_location(&ul_spot_direction, program, name + ".spot_direction");
+  uniform_location(&ul_spot_exponent, program, name + ".spot_exponent");
+  uniform_location(&ul_spot_cutoff, program, name + ".spot_cutoff");
+  uniform_location(&ul_spot_cos_cutoff, program, name + ".spot_cos_cutoff");
+  uniform_location(
+    &ul_constant_attenuation, program, name + ".constant_attenuation");
+  uniform_location(
+    &ul_linear_attenuation, program, name + ".linear_attenuation");
+  uniform_location(
+    &ul_quadratic_attenuation, program, name + ".quadratic_attenuation");
 }
 
 //--------------------------------------------------------------------
-void LightSource::updateUniforms(const glm::mat4& transform) {
+void light_source::update_uniforms(const glm::mat4& transform) {
   glm::vec4 position1 = transform * position;
-  glm::vec3 spotDirection1 = glm::mat3(transform) * spotDirection;
+  glm::vec3 spot_direction1 = glm::mat3(transform) * spot_direction;
 
-  if (loc_ambient != -1) glUniform4fv(loc_ambient, 1, value_ptr(ambient));
-  if (loc_diffuse != -1) glUniform4fv(loc_diffuse, 1, value_ptr(diffuse));
-  if (loc_specular != -1) glUniform4fv(loc_specular, 1, value_ptr(specular));
-  if (loc_position != -1) glUniform4fv(loc_position, 1, value_ptr(position1));
-  if (loc_spotDirection != -1)
-    glUniform3fv(loc_spotDirection, 1, value_ptr(spotDirection1));
-  if (loc_spotExponent != -1) glUniform1f(loc_spotExponent, spotExponent);
-  if (loc_spotCutoff != -1) glUniform1f(loc_spotCutoff, spotCutoff);
-  if (loc_spotCosCutoff != -1) glUniform1f(loc_spotCosCutoff, spotCosCutoff);
-  if (loc_constantAttenuation != -1)
-    glUniform1f(loc_constantAttenuation, constantAttenuation);
-  if (loc_linearAttenuation != -1)
-    glUniform1f(loc_linearAttenuation, linearAttenuation);
-  if (loc_quadraticAttenuation != -1)
-    glUniform1f(loc_quadraticAttenuation, quadraticAttenuation);
+  if (ul_ambient != -1) glUniform4fv(ul_ambient, 1, value_ptr(ambient));
+  if (ul_diffuse != -1) glUniform4fv(ul_diffuse, 1, value_ptr(diffuse));
+  if (ul_specular != -1) glUniform4fv(ul_specular, 1, value_ptr(specular));
+  if (ul_position != -1) glUniform4fv(ul_position, 1, value_ptr(position1));
+  if (ul_spot_direction != -1)
+    glUniform3fv(ul_spot_direction, 1, value_ptr(spot_direction1));
+  if (ul_spot_exponent != -1) glUniform1f(ul_spot_exponent, spot_exponent);
+  if (ul_spot_cutoff != -1) glUniform1f(ul_spot_cutoff, spot_cutoff);
+  if (ul_spot_cos_cutoff != -1) glUniform1f(ul_spot_cos_cutoff,
+  spot_cos_cutoff);
+  if (ul_constant_attenuation != -1)
+    glUniform1f(ul_constant_attenuation, constant_attenuation);
+  if (ul_linear_attenuation != -1)
+    glUniform1f(ul_linear_attenuation, linear_attenuation);
+  if (ul_quadratic_attenuation != -1)
+    glUniform1f(ul_quadratic_attenuation, quadratic_attenuation);
 }
 
 //--------------------------------------------------------------------
-GLfloat LightSource::getRadius(GLfloat epsilon) {
+GLfloat light_source::radius(GLfloat epsilon) {
   if (position[3] == 0) return -1;
 
-  if (constantAttenuation == 0 && linearAttenuation == 0 &&
-      quadraticAttenuation == 0) {
+  if (constant_attenuation == 0 && linear_attenuation == 0 &&
+      quadratic_attenuation == 0) {
     return 0;
   }
 
-  GLfloat mdc = maxAbsComponent(diffuse.xyz());
+  GLfloat mdc = max_abs_component(diffuse.xyz());
 
-  return -linearAttenuation +
+  return -linear_attenuation +
          std::sqrt(
-           linearAttenuation * linearAttenuation -
-           4 * quadraticAttenuation * (constantAttenuation - mdc * epsilon)) /
-           (2 * quadraticAttenuation);
+           linear_attenuation * linear_attenuation -
+           4 * quadratic_attenuation * (constant_attenuation - mdc * epsilon)) /
+           (2 * quadratic_attenuation);
 }
 
 //--------------------------------------------------------------------
-void LightModel::bindUniformLocations(GLint program, const std::string& name) {
-  setUniformLocation(&loc_ambient, program, name + ".ambient");
-  setUniformLocation(&loc_localViewer, program, name + ".localViewer");
+void light_model::bind_uniform_locations(GLint program, const std::string& name) {
+  uniform_location(&ul_ambient, program, name + ".ambient");
+  uniform_location(&ul_local_viewer, program, name + ".local_viewer");
 }
 
 //--------------------------------------------------------------------
-void LightModel::updateUniforms() {
-  if (loc_ambient != -1) glUniform4fv(loc_ambient, 1, value_ptr(ambient));
-  if (loc_localViewer != -1) glUniform1i(loc_localViewer, localViewer);
+void light_model::update_uniforms() {
+  if (ul_ambient != -1) glUniform4fv(ul_ambient, 1, value_ptr(ambient));
+  if (ul_local_viewer != -1) glUniform1i(ul_local_viewer, local_viewer);
 }
 
 //--------------------------------------------------------------------
-Material::Material()
+material::material()
     : emission(0.0, 0.0, 0.0, 1.0),
       ambient(0.2, 0.2, 0.2, 1.0),
       diffuse(0.8, 0.8, 0.8, 1.0),
@@ -97,20 +98,20 @@ Material::Material()
       shininess(0) {}
 
 //--------------------------------------------------------------------
-void Material::bindUniformLocations(GLuint program, const std::string& name) {
-  setUniformLocation(&loc_emission, program, name + ".emission");
-  setUniformLocation(&loc_ambient, program, name + ".ambient");
-  setUniformLocation(&loc_diffuse, program, name + ".diffuse");
-  setUniformLocation(&loc_specular, program, name + ".specular");
-  setUniformLocation(&loc_shininess, program, name + ".shininess");
+void material::bind_uniform_locations(GLuint program, const std::string& name) {
+  uniform_location(&ul_emission, program, name + ".emission");
+  uniform_location(&ul_ambient, program, name + ".ambient");
+  uniform_location(&ul_diffuse, program, name + ".diffuse");
+  uniform_location(&ul_specular, program, name + ".specular");
+  uniform_location(&ul_shininess, program, name + ".shininess");
 }
 
 //--------------------------------------------------------------------
-void Material::updateUniforms() {
-  if (loc_emission != -1) glUniform4fv(loc_emission, 1, value_ptr(emission));
-  if (loc_ambient != -1) glUniform4fv(loc_ambient, 1, value_ptr(ambient));
-  if (loc_diffuse != -1) glUniform4fv(loc_diffuse, 1, value_ptr(diffuse));
-  if (loc_specular != -1) glUniform4fv(loc_specular, 1, value_ptr(specular));
-  if (loc_shininess != -1) glUniform1f(loc_shininess, shininess);
+void material::update_uniforms() {
+  if (ul_emission != -1) glUniform4fv(ul_emission, 1, value_ptr(emission));
+  if (ul_ambient != -1) glUniform4fv(ul_ambient, 1, value_ptr(ambient));
+  if (ul_diffuse != -1) glUniform4fv(ul_diffuse, 1, value_ptr(diffuse));
+  if (ul_specular != -1) glUniform4fv(ul_specular, 1, value_ptr(specular));
+  if (ul_shininess != -1) glUniform1f(ul_shininess, shininess);
 }
 }

@@ -3,13 +3,13 @@
 #include "glad/glad.h"
 
 template <GLenum type>
-class CapabilityGuard {
+class capability_guard {
 protected:
-  GLboolean mOld;
+  GLboolean m_old;
 
 public:
-  CapabilityGuard(GLboolean b) {
-    mOld = glIsEnabled(type);
+  capability_guard(GLboolean b) {
+    m_old = glIsEnabled(type);
     if (b) {
       glEnable(type);
     } else {
@@ -17,8 +17,8 @@ public:
     }
   }
 
-  ~CapabilityGuard() {
-    if (mOld) {
+  ~capability_guard() {
+    if (m_old) {
       glEnable(type);
     } else {
       glDisable(type);

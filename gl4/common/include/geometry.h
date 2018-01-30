@@ -4,34 +4,34 @@
 #include "glm.h"
 
 namespace zxd {
-class Geometry {
+class geometry {
 protected:
-  GLuint mVao;
+  GLuint m_vao;
 
-  GLuint mVertexBuffer;
-  GLuint mNormalBuffer;
-  GLuint mTexcoordBuffer;
+  GLuint m_vertex_buffer;
+  GLuint m_normal_buffer;
+  GLuint m_texcoord_buffer;
 
-  Vec3Vector mVertices;
-  Vec3Vector mNormals;
-  Vec2Vector mTexcoords;
+  vec3_vector m_vertices;
+  vec3_vector m_normals;
+  vec2_vector m_texcoords;
 
 public:
-  Geometry() : mVao(-1) {}
+  geometry() : m_vao(-1) {}
 
-  GLuint getVao() const { return mVao; }
+  GLuint vao() const { return m_vao; }
 
   void bind(GLint vertex, GLint normal = -1, GLint texcoord = -1);
   virtual void draw(GLuint primcount = 1) = 0;
 
-  void buildMesh(GLboolean normal = 1, GLboolean texcoord = 1);
-  virtual void buildVertex(){};
+  void build_mesh(GLboolean normal = 1, GLboolean texcoord = 1);
+  virtual void build_vertex(){};
   // as i'm using strip and fan, normal should be vertex normal.
-  virtual void buildNormal(){};
-  virtual void buildTexcoord(){};
+  virtual void build_normal(){};
+  virtual void build_texcoord(){};
 
 protected:
-  void bindVertexArrayObject();
+  void bind_vertex_array_object();
 };
 }
 

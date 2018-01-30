@@ -8,7 +8,7 @@ using namespace glm;
 namespace zxd {
 class HelloWorld : public App {
 protected:
-  BitmapText mBitmapText;
+  BitmapText m_bitmapText;
 
 public:
   HelloWorld() {}
@@ -16,12 +16,12 @@ public:
 protected:
   virtual void initInfo() {
     App::initInfo();
-    mInfo.title = "hello world";
+    m_info.title = "hello world";
   }
   virtual void createScene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
-    mBitmapText.init();
-    mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
+    m_bitmapText.init();
+    m_bitmapText.reshape(m_info.wndWidth, m_info.wndHeight);
   }
 
   virtual void display() {
@@ -30,8 +30,8 @@ protected:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "fps : " << mFps << std::endl;
-    mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
+    ss << "fps : " << m_fps << std::endl;
+    m_bitmapText.print(ss.str(), 10, m_info.wndHeight - 25);
     glDisable(GL_BLEND);
   }
 
@@ -39,7 +39,7 @@ protected:
 
   virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
     App::glfwResize(wnd, w, h);
-    mBitmapText.reshape(w, h);
+    m_bitmapText.reshape(w, h);
   }
 
   virtual void glfwKey(
@@ -47,7 +47,7 @@ protected:
     if (action == GLFW_PRESS) {
       switch (key) {
         case GLFW_KEY_ESCAPE:
-          glfwSetWindowShouldClose(mWnd, GL_TRUE);
+          glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
         default:
           break;

@@ -36,7 +36,7 @@ bash:
 
 vim:
   winnr('$') get number of windows
-  bufwinnr(winbufnr(winid)) conver winid to winnr
+  bufwinnr(winbufnr(winid)) convert winid to winnr
   use getwinvar() to retrieve window variable and option
   use getwininfo() to retreive window infor
 
@@ -71,7 +71,7 @@ linebreak:
 vim:
   gp paste below cursor, place cursor at end of newly pasted context
   in order to search literal string with line break, use
-     substitute(escape(string, '/\?'), "\n", '\\n', 'g')
+     substitute(escape(string, '\/?'), "\n", '\\n', 'g')
   replace string musbe be '\\n', '\n' won't work. It works like manually type /Ctrl-r=string
   when searching, \n is newline, \r is CR (carriage return = Ctrl-M = ^M) 
   when replacing, \r is newline, \n is a null byte (0x00).
@@ -80,11 +80,12 @@ vim:
 2018.01.09:
 
 bash:
-  grep -F and ag -F are totally different,  grep -F interpret pattern as a list of new line
-  seperated strings, each string will be used as a search pattern, any of which is to be matched
-  seperately.  ag -F match pattern as whole string, including "newline".
-  You can not use \n as line break in literal search, you must use the real linebreak character(0X0A
-  for unix)
+  grep -F and ag -F are totally different,  grep -F interpret pattern as a list
+  of new line seperated strings, each string will be used as a search pattern,
+  any of which is to be matched seperately.  ag -F match pattern as whole
+  string, including "newline".
+  You can not use \n as line break in literal search, you must use the real
+  linebreak character(0X0A for unix)
 
 -----------
 2018.01.09:
@@ -95,16 +96,17 @@ vim:
   \n and ! will be escaped once or twice
   %#will be escaped zero or once
 
-  If you want to use str as literial match, leave \n and ! alone, but escape %#| if you will use it'll
-  be used in a ex command.
+  If you want to use str as literial match, leave \n and ! alone, but escape %#
+  and | (if your ex command has -bar option) if you will use it'll be used in a
+  ex command.
 
 -----------
 2018.01.10:
 
 sed:
   by default, sed output all the processed text, use -n to suppress it
-  sed took script from --expression or --file or the first non option argument if there has no -e or
-  -f. 
+  sed took script from --expression or --file or the first non option argument
+  if there has no -e or -f. 
   you can specify multiple input to sed, they will be combined together as a single giant input, you
   can also use -s to tell sed to treat them seperately.
   Commands within a script or script-file can be separated by semicolons (;) or newlines (ASCII 10).
@@ -123,8 +125,7 @@ vim:
     /pat1//pat2/   find line contain "pat2" after line containing "pat1", without moving the cursor
 
   range can be seperated with , or ;
-    5;/pat2/       find line contain "pat2" after line 5, leaving the cursor in line 5
-                   pat2 search will start after line 5
+    5;/pat2/       find line contain "pat2" after line 5, pat2 search will start after line 5
 
 -----------
 2018.01.12:
@@ -137,8 +138,8 @@ sed:
   sed use BRE by default, -e will switch to ERE
 
 regex:
-  backreference: \# reference previous # capturing group, \1 matches the exact same text that was
-  matched by the first capturing group. 
+  backreference: \# reference previous # capturing group, \1 matches the exact
+  same text that was matched by the first capturing group. 
 
 gl:
   always clear depth if you depth test is enabled.
@@ -147,12 +148,12 @@ gl:
 2018.01.13:
 
 gl:
-  lighting of normalmap is prefered to be calculated in tangent space, which means you have to
-  transform light, camera into tangent space in vertex shader. Local viewer of light model has no
-  meaning in tangent space lighting.
+  lighting of normalmap is prefered to be calculated in tangent space, which
+  means you have to transform light, camera into tangent space in vertex shader.
+  Local viewer of light model has no meaning in tangent space lighting.
 
-  It's easier to calculate normalmap lighting in view space, you only need to transfrom normal from
-  tbn space to view space in fragment shader.
+  Although it's easier to calculate normalmap lighting in view space, you only
+  need to transfrom normal from tbn space to view space in fragment shader.
 
 -----------
 2018.01.14:
@@ -303,6 +304,10 @@ linux:
     dmidecode -q
   check system info :
     uname -a
+  check usb:
+    lsusb
+  check hardware:
+    lshw
 
   iconv can be used to change character encoding
 
@@ -337,7 +342,7 @@ vim:
 2018.01.20:
 
 vim:
-  ctrl-\_e replace whole cmdline with expressiion, you miight need getcmdtype(),
+  ctrl-\_e replace whole cmdline with expressiion, you might need getcmdtype(),
   getcmdline(), getcmdpos(), setcmdpos() to help you with it.
 
   help topic:
@@ -350,7 +355,7 @@ vim:
     /        :h /*      search patterno
     '        :h '*'     option
     -        :h -*      vim argument
-   you can use ctrl-v to insert the special key want to search help
+   you can use ctrl-v to insert the special key want to search help for that key
 
 -----------
 2018.01.20:
@@ -379,7 +384,7 @@ c++:
 
 bash:
   xargs took as much augument as possible per command line, unless you specify -n
-  if you want to use xargs will itmes contain space:   
+  if you want to use xargs with itmes contain space:   
     print item lines | xargs -d "\n" -n1 cmd
 
   \ in double quotes escapes only $, `, ", \, or newline, otherwise it's removed.
@@ -404,3 +409,77 @@ vim:
   vim use b:current_syntax to guard syntax file loading.
   If want to just add or change some syntax to current syntax file, place you
   syntax file under runtimepath/after/syntax/, and don't set b:currentsyntax
+
+-----------
+2018.01.27:
+
+c++:
+  if you erase iter of list while you are looping, only the erased iter got
+  invalidated, which means ++iter will fail, you need to do it like this:
+    auto it = iter;
+    ++it;
+    l.erase(iter)
+
+-----------
+2018.01.28:
+
+ssh:
+  there are mainly two ways to use ssh:
+    1: username,password, commonly used on unix system.
+    2: public key authorization(commonly used in android system):
+      use ssh-genkey to generate private and public key
+      keep private key to your self, copy public key to server .ssh/authorized_keys
+
+android:
+  you can install termux in your android to use it like linux.
+  termux use 8022 as default port for ssh.
+
+linux:
+  check dir or file space usage : du -hs /etc
+  You can use deja-dup to bakup, restore.
+  You can restore a single file or directory : as deja-dup --restore
+
+  You can use grep -A to print more lines after match.
+
+-----------
+2018.01.29:
+
+linux:
+  daemon:
+    A daemon is a computer program that runs as a background process in
+    multitasking computer operating system. Traditionally the process names of a
+    daemon end with the letter d.
+    Deamon is not attached to a tty, which means you can list deamon process as:
+      ps -eo tty,pid,comm | grep ^?
+
+    You can use initctrl to control init deamon. 
+      initctrl list
+      initctrl status ssh-agent
+
+  orphan process: parent dead, but still executing, adopted by init(pid 1).
+
+  zombie(defunct) process : a process that has completed execution (via the exit
+    system call) but still has an entry in the process table: it is a process in
+    the "Terminated state". This occurs for child processes, where the entry is
+    still needed to allow the parent process to read its child's exit status:
+    once the exit status is read via the wait system call, the zombie's entry is
+    removed from the process table and it is said to be "reaped". A child
+    process always first becomes a zombie before being removed from the resource
+    table. In most cases, under normal system operation zombies are immediately
+    waited on by their parent and then reaped by the system – processes that
+    stay zombies for a long time are generally an error and cause a resource
+    leak. The kill command has no effect on zombie process.
+
+  An orphan zombie process will be reaped automatically.
+
+  terminal = tty = text input/output enviroment
+  console = pyshical terminal
+
+  shell is the outer most layer around the operating system kernel.
+  There are two kinds of shell:
+    command line interface(CLI).
+    graphical user interface(GUI).
+    
+  there are two kinds of tty:
+    hardware tty : one end connected to hardware, one end connected to software
+    pesudo tty : both ends connected to software.

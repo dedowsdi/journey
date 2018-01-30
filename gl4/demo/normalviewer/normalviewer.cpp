@@ -6,111 +6,112 @@
 
 namespace zxd {
 
-Torus torus;
-GLfloat normalLength = 0.1f;
-vec4 normalColor(1.0);
-vec4 wireColor(0.0, 0.0, 0.0, 1.0);
+torus torus;
+GLfloat normal_length = 0.1f;
+vec4 normal_color(1.0);
+vec4 wire_color(0.0, 0.0, 0.0, 1.0);
 
-struct NormalViewerProgram : public zxd::Program {
-  GLint attrib_vertex;
-  GLint attrib_normal;
+struct normal_viewer_program : public zxd::program {
+  GLint al_vertex;
+  GLint al_normal;
 
-  GLint loc_normalLength;
-  GLint loc_color;
+  GLint ul_normal_length;
+  GLint ul_color;
 
-  virtual void updateModel(const mat4 &_modelMatrix) {
-    modelMatrix = _modelMatrix;
-    modelViewMatrix = viewMatrix * modelMatrix;
-    modelViewMatrixInverseTranspose =
-      glm::inverse(glm::transpose(modelViewMatrix));
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mv_mat = v_mat * m_mat;
+    mv_mat_it =
+      glm::inverse(glm::transpose(mv_mat));
 
-    glUniformMatrix4fv(loc_modelViewMatrixInverseTranspose, 1, 0,
-      value_ptr(modelViewMatrixInverseTranspose));
-    glUniformMatrix4fv(loc_modelViewMatrix, 1, 0, value_ptr(modelViewMatrix));
+    glUniformMatrix4fv(ul_mv_mat_it, 1, 0,
+      value_ptr(mv_mat_it));
+    glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
   }
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/normal_viewer.vs.glsl");
-    attachShaderFile(GL_GEOMETRY_SHADER, "data/shader/normal_viewer.gs.glsl");
-    attachShaderFile(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
+  virtual void attach_shaders() {
+    attach_shader_file(GL_VERTEX_SHADER, "data/shader/normal_viewer.vs.glsl");
+    attach_shader_file(GL_GEOMETRY_SHADER, "data/shader/normal_viewer.gs.glsl");
+    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
   }
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_projMatrix, "projMatrix");
-    setUniformLocation(&loc_modelViewMatrix, "modelViewMatrix");
-    setUniformLocation(
-      &loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_p_mat, "p_mat");
+    uniform_location(&ul_mv_mat, "mv_mat");
+    uniform_location(
+      &ul_mv_mat_it,
+      "mv_mat_it");
 
-    setUniformLocation(&loc_normalLength, "normalLength");
-    setUniformLocation(&loc_color, "color");
+    uniform_location(&ul_normal_length, "normal_length");
+    uniform_location(&ul_color, "color");
   }
 
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
-    attrib_normal = getAttribLocation("normal");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_normal = attrib_location("normal");
   };
 };
 
-struct WireProgram : public zxd::Program {
-  GLint attrib_vertex;
-  GLint loc_color;
+struct wire_program : public zxd::program {
+  GLint al_vertex;
+  GLint ul_color;
 
-  virtual void updateModel(const mat4 &_modelMatrix) {
-    modelMatrix = _modelMatrix;
-    modelViewProjMatrix = projMatrix * viewMatrix * modelMatrix;
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mvp_mat = p_mat * v_mat * m_mat;
 
     glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
+      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/simple.vs.glsl");
-    attachShaderFile(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
+  virtual void attach_shaders() {
+    attach_shader_file(GL_VERTEX_SHADER, "data/shader/simple.vs.glsl");
+    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
   }
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_color, "color");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_color, "color");
   }
 
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
   };
 };
 
-NormalViewerProgram program;
+normal_viewer_program program;
 
-WireProgram wireProgram;
+wire_program wire_program;
 
-class NormalViewerApp : public App {
+class normal_viewer_app : public app {
 protected:
-  BitmapText mBitmapText;
+  bitmap_text m_text;
 
 public:
-  NormalViewerApp() {}
+  normal_viewer_app() {}
 
 protected:
-  virtual void initInfo() {
-    App::initInfo();
-    mInfo.title = "normal viewer";
+  virtual void init_info() {
+    app::init_info();
+    m_info.title = "normal viewer";
   }
-  virtual void createScene() {
+  virtual void create_scene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
     program.init();
-    program.projMatrix = glm::perspective(fpi4, getWndAspect(), 0.1f, 50.0f);
-    program.viewMatrix = glm::lookAt(vec3(0, 5, 5), vec3(0), vec3(0, 0, 1));
+    program.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 50.0f);
+    program.v_mat = glm::lookAt(vec3(0, 5, 5), vec3(0), vec3(0, 0, 1));
 
-    wireProgram.init();
-    wireProgram.projMatrix = program.projMatrix;
+    wire_program.init();
+    wire_program.p_mat = program.p_mat;
 
-    setViewMatrix(&program.viewMatrix);
+    set_v_mat(&program.v_mat);
 
-    torus.buildMesh();
-    torus.bind(program.attrib_vertex, program.attrib_normal);
+    torus.build_mesh();
+    torus.bind(program.al_vertex, program.al_normal);
 
-    torus.bind(wireProgram.attrib_vertex);
+    torus.bind(wire_program.al_vertex);
 
-    mBitmapText.init();
-    mBitmapText.reshape(mInfo.wndWidth, mInfo.wndHeight);
+    m_text.init();
+    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   }
 
   virtual void display() {
@@ -119,18 +120,18 @@ protected:
     glUseProgram(program);
 
     mat4 model(1.0);
-    program.updateModel(model);
+    program.update_model(model);
     glUniformMatrix4fv(
-      program.loc_projMatrix, 1, 0, value_ptr(program.projMatrix));
-    glUniform1f(program.loc_normalLength, normalLength);
-    glUniform4fv(program.loc_color, 1, value_ptr(normalColor));
+      program.ul_p_mat, 1, 0, value_ptr(program.p_mat));
+    glUniform1f(program.ul_normal_length, normal_length);
+    glUniform4fv(program.ul_color, 1, value_ptr(normal_color));
     torus.draw();
 
-    glUseProgram(wireProgram);
+    glUseProgram(wire_program);
 
-    wireProgram.viewMatrix = program.viewMatrix;
-    wireProgram.updateModel(model);
-    glUniform4fv(wireProgram.loc_color, 1, value_ptr(wireColor));
+    wire_program.v_mat = program.v_mat;
+    wire_program.update_model(model);
+    glUniform4fv(wire_program.ul_color, 1, value_ptr(wire_color));
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     torus.draw();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -138,62 +139,62 @@ protected:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "qQ : normal length : " << normalLength << std::endl;
-    mBitmapText.print(ss.str(), 10, mInfo.wndHeight - 25);
+    ss << "qQ : normal length : " << normal_length << std::endl;
+    m_text.print(ss.str(), 10, m_info.wnd_height - 25);
     glDisable(GL_BLEND);
   }
 
   virtual void update() {}
 
-  virtual void glfwResize(GLFWwindow *wnd, int w, int h) {
-    App::glfwResize(wnd, w, h);
-    mBitmapText.reshape(w, h);
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+    app::glfw_resize(wnd, w, h);
+    m_text.reshape(w, h);
   }
 
-  virtual void glfwKey(
+  virtual void glfw_key(
     GLFWwindow *wnd, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
       switch (key) {
         case GLFW_KEY_ESCAPE:
-          glfwSetWindowShouldClose(mWnd, GL_TRUE);
+          glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
 
         case GLFW_KEY_Q:
           if (mods & GLFW_MOD_SHIFT) {
-            normalLength -= 0.1f;
+            normal_length -= 0.1f;
           } else {
-            normalLength += 0.1f;
+            normal_length += 0.1f;
           }
           break;
         default:
           break;
       }
     }
-    App::glfwKey(wnd, key, scancode, action, mods);
+    app::glfw_key(wnd, key, scancode, action, mods);
   }
 
-  virtual void glfwMouseButton(
+  virtual void glfw_mouse_button(
     GLFWwindow *wnd, int button, int action, int mods) {
-    App::glfwMouseButton(wnd, button, action, mods);
+    app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfwMouseMove(GLFWwindow *wnd, double x, double y) {
-    App::glfwMouseMove(wnd, x, y);
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+    app::glfw_mouse_move(wnd, x, y);
   }
 
-  virtual void glfwMouseWheel(GLFWwindow *wnd, double xoffset, double yoffset) {
-    App::glfwMouseWheel(wnd, xoffset, yoffset);
+  virtual void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+    app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
-  virtual void glfwChar(GLFWwindow *wnd, unsigned int codepoint) {
-    App::glfwChar(wnd, codepoint);
+  virtual void glfw_char(GLFWwindow *wnd, unsigned int codepoint) {
+    app::glfw_char(wnd, codepoint);
   }
-  virtual void glfwCharmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {
-    App::glfwCharmod(wnd, codepoint, mods);
+  virtual void glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {
+    app::glfw_charmod(wnd, codepoint, mods);
   }
 };
 }
 
 int main(int argc, char *argv[]) {
-  zxd::NormalViewerApp app;
+  zxd::normal_viewer_app app;
   app.run();
 }
