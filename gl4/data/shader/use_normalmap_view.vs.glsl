@@ -10,14 +10,14 @@ uniform mat4 mv_mat;
 uniform mat4 mv_mat_it;
 
 out vs_out{
-  vec3 view_vertex;
+  vec3 v_vertex;
   vec2 texcoord;
   mat3 tbn;
 } vo;
 
 void main(void)
 {
-  vo.view_vertex = (mv_mat * vertex).xyz;
+  vo.v_vertex = (mv_mat * vertex).xyz;
   vo.texcoord = texcoord;
 
   vec3 B = normalize(cross(normal, tangent));

@@ -13,8 +13,8 @@ uniform mat4 mv_mat;
 uniform mat4 mv_mat_it;
 
 out vs_out{
-  vec3 view_vertex; // view space
-  vec3 view_normal; // view space
+  vec3 v_vertex; // view space
+  vec3 v_normal; // view space
 #ifdef WITH_TEX
   vec2 texcoord;
 #endif
@@ -22,8 +22,8 @@ out vs_out{
 
 void main(void)
 {
-  vo.view_normal = mat3(mv_mat_it) * normal;
-  vo.view_vertex = (mv_mat * vertex).xyz;
+  vo.v_normal = mat3(mv_mat_it) * normal;
+  vo.v_vertex = (mv_mat * vertex).xyz;
 #ifdef WITH_TEX
   vo.texcoord = texcoord;
 #endif

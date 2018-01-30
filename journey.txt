@@ -155,6 +155,8 @@ gl:
   Although it's easier to calculate normalmap lighting in view space, you only
   need to transfrom normal from tbn space to view space in fragment shader.
 
+  The view space lighting is brighter than tangent space lighting?
+
 -----------
 2018.01.14:
 
@@ -483,3 +485,19 @@ linux:
   there are two kinds of tty:
     hardware tty : one end connected to hardware, one end connected to software
     pesudo tty : both ends connected to software.
+
+-----------
+2018.01.30:
+
+vim:
+  If there exists multiple entries of the same line in quickfix list, and you
+  want to make change to every quickfix entry, you need to revert the quickfix
+  list first, otherwise only entry of the same line will will be changed
+  correctly.
+
+git:
+  If do something like :
+    git checkout sha1
+  You will be in 'detached head' state, git won't be able to handle you change
+  in this state. You should always use
+    git checkout -b newbranch sha1

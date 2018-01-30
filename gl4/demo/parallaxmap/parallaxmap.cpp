@@ -114,9 +114,9 @@ public:
       prg.al_vertex, prg.al_texcoord, prg.al_normal, prg.al_tangent);
 
     // load maps
-    fipImage diffuseImage = zxd::fipLoadImage("data/texture/bricks2.jpg");
-    fipImage normalImage = zxd::fipLoadImage("data/texture/bricks2_normal.jpg");
-    fipImage depthImage = zxd::fipLoadImage("data/texture/bricks2_disp.jpg");
+    fipImage diffuse_image = zxd::fipLoadImage("data/texture/bricks2.jpg");
+    fipImage normal_image = zxd::fipLoadImage("data/texture/bricks2_normal.jpg");
+    fipImage depth_image = zxd::fipLoadImage("data/texture/bricks2_disp.jpg");
 
     glGenTextures(1, &diffuse_map);
     glBindTexture(GL_TEXTURE_2D, diffuse_map);
@@ -125,9 +125,9 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, diffuseImage.getWidth(),
-      diffuseImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
-      diffuseImage.accessPixels());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, diffuse_image.getWidth(),
+      diffuse_image.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
+      diffuse_image.accessPixels());
 
     glGenTextures(1, &normal_map);
     glBindTexture(GL_TEXTURE_2D, normal_map);
@@ -136,9 +136,9 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normalImage.getWidth(),
-      normalImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
-      normalImage.accessPixels());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normal_image.getWidth(),
+      normal_image.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
+      normal_image.accessPixels());
 
     glGenTextures(1, &depth_map);
     glBindTexture(GL_TEXTURE_2D, depth_map);
@@ -147,9 +147,9 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, depthImage.getWidth(),
-      depthImage.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
-      depthImage.accessPixels());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, depth_image.getWidth(),
+      depth_image.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE,
+      depth_image.accessPixels());
 
     // light
     zxd::light_source dir_light;

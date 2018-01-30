@@ -29,10 +29,10 @@
 #endif
 
 in vs_out{
-  vec3 tangent_vertex;
-  vec3 tangent_camera;
+  vec3 t_vertex;
+  vec3 t_camera;
   vec2 texcoord;
-  light_source tangent_lights[LIGHT_COUNT];
+  light_source t_lights[LIGHT_COUNT];
 } fi;
 
 uniform sampler2D diffuse_map;
@@ -43,30 +43,30 @@ uniform float height_scale = 1.0f;
 out vec4 frag_color;
 
 // without offset limiting
-vec2 parallax_map_without_offset(vec2 texcoord, vec3 view_dir){
+vec2 parallax_map_without_offset(vec2 texcoord, vec3 v_dir){
   float height = texture(depth_map, texcoord).r;
-  return texcoord - view_dir.xy * height * height_scale;
+  return texcoord - v_dir.xy * height * height_scale;
 }
 
 // with offset limiting
-vec2 parallax_map_with_offset(vec2 texcoord, vec3 view_dir){
+vec2 parallax_map_with_offset(vec2 texcoord, vec3 v_dir){
   float height = texture(depth_map, texcoord).r;
-  return texcoord - view_dir.xy/view_dir.z * height * height_scale;
+  return texcoord - v_dir.xy/v_dir.z * height * height_scale;
 }
 
 // the 1st depth layter after the intersection point of -viewdir and
 // geometry(from height map) has depth value greater than depth value in depth
 // map
-vec2 parallax_steep_map(vec2 texcoord, vec3 view_dir){
+vec2 parallax_steep_map(vec2 texcoord, vec3 v_dir){
   // 0,0,1 is normal in tangent space, if you look right at this surface, this
-  // will be the view_dir, you won't need much layer in this case.
-  float num_layers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0.0,0.0,1.0), view_dir)));
+  // will be the v_dir, you won't need much layer in this case.
+  float num_layers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0.0,0.0,1.0), v_dir)));
 
 	float layer_depth = 1.0 / num_layers;
 	float current_layer_depth = 0.0;
 
 	// the amount to shift the texture coordinates per layer (from vector p)
-	vec2 p = view_dir.xy * height_scale; 
+	vec2 p = v_dir.xy * height_scale; 
 	vec2 delta_texcoord = p / num_layers;
 
   vec2  current_texcoord = texcoord;
@@ -85,16 +85,16 @@ vec2 parallax_steep_map(vec2 texcoord, vec3 view_dir){
   return current_texcoord;
 }
 
-vec2 parallax_occlusion_map(vec2 texcoord, vec3 view_dir){
+vec2 parallax_occlusion_map(vec2 texcoord, vec3 v_dir){
   // 0,0,1 is normal in tangent space, if you look right at this surface, this
-  // will be the view_dir, you won't need much layer in this case.
-  float num_layers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0,0,1), view_dir)));
+  // will be the v_dir, you won't need much layer in this case.
+  float num_layers = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(vec3(0,0,1), v_dir)));
 
 	float layer_depth = 1.0 / num_layers;
 	float current_layer_depth = 0.0;
 
 	// the amount to shift the texture coordinates per layer (from vector p)
-	vec2 p = view_dir.xy * height_scale; 
+	vec2 p = v_dir.xy * height_scale; 
 	vec2 delta_texcoord = p / num_layers;
 
   vec2  current_texcoord = texcoord;
@@ -123,16 +123,16 @@ vec2 parallax_occlusion_map(vec2 texcoord, vec3 view_dir){
 
 void main(void)
 {
-  vec2 texcoord = parallax_map(fi.texcoord, normalize(fi.tangent_camera -
-        fi.tangent_vertex));
+  vec2 texcoord = parallax_map(fi.texcoord, normalize(fi.t_camera -
+        fi.t_vertex));
 
   if(texcoord.x > 1.0 ||texcoord.y > 1.0 ||texcoord.x < 0.0 ||texcoord.y < 0.0 )
     discard;
 
   vec3 normal = texture(normal_map, texcoord).xyz * 2 - 1; 
 
-  //light_product product = get_light_product(fi.tangent_vertex, normal,
-  //fi.tangent_camera, material, fi.tangentLights);
+  //light_product product = get_light_product(fi.t_vertex, normal,
+  //fi.t_camera, material, fi.tangentLights);
   //vec4 diffuse = material.emission + light_model.ambient * material.ambient +
   //product.ambient + product.diffuse;
 
@@ -140,7 +140,7 @@ void main(void)
   //frag_color = diffuse + product.specular;
   //frag_color.a = product.diffuse.a;
 
-  frag_color = blinn(fi.tangent_vertex, normal, fi.tangent_camera,
-      fi.tangent_lights);
+  frag_color = blinn(fi.t_vertex, normal, fi.t_camera,
+      fi.t_lights);
   frag_color *= texture(diffuse_map, fi.texcoord);
 }

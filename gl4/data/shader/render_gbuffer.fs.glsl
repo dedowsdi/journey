@@ -9,8 +9,8 @@ layout(location = 5) out vec4 g_specular;
 layout(location = 6) out float g_shininess;
 
 in vs_out{
-  vec3 view_vertex; // view space
-  vec3 view_normal; // view space
+  vec3 v_vertex; // view space
+  vec3 v_normal; // view space
 } fi;
 
 struct material {
@@ -24,8 +24,8 @@ uniform material mtl;
 
 void main(void)
 {
-  g_vertex = fi.view_vertex;
-  g_normal = fi.view_normal;
+  g_vertex = fi.v_vertex;
+  g_normal = fi.v_normal;
   g_emission = mtl.emission;
   g_ambient = mtl.ambient;
   g_diffuse = mtl.diffuse;

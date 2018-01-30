@@ -24,10 +24,10 @@ struct light_source {
 };
 
 out vs_out{
-  vec3 tangent_vertex; 
-  vec3 tangent_camera;
+  vec3 t_vertex; 
+  vec3 t_camera;
   vec2 texcoord;
-  light_source tangent_lights[LIGHT_COUNT];
+  light_source t_lights[LIGHT_COUNT];
 } vo;
 
 uniform light_source lights[LIGHT_COUNT]; //lights in model space
@@ -41,14 +41,14 @@ void main(void)
   mat3 tbn = mat3(T, B, N);
   mat3 tbn_i = transpose(tbn);
 
-  vo.tangent_vertex = (mat4(tbn_i) * vertex).xyz;
-  vo.tangent_camera = tbn_i * model_camera;
+  vo.t_vertex = (mat4(tbn_i) * vertex).xyz;
+  vo.t_camera = tbn_i * model_camera;
   vo.texcoord = texcoord;
 
-  vo.tangent_lights = lights;
+  vo.t_lights = lights;
   for (int i = 0; i < LIGHT_COUNT; i++) {
-    vo.tangent_lights[i].position = mat4(tbn_i) * vo.tangent_lights[i].position;
-    vo.tangent_lights[i].spot_direction = tbn_i * vo.tangent_lights[i].spot_direction;
+    vo.t_lights[i].position = mat4(tbn_i) * vo.t_lights[i].position;
+    vo.t_lights[i].spot_direction = tbn_i * vo.t_lights[i].spot_direction;
   }
 
   gl_Position = mvp_mat * vertex;

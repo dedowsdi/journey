@@ -1,6 +1,6 @@
 //#version 430 core
 in vs_out{
-  vec3 view_vertex;
+  vec3 v_vertex;
   vec2 texcoord;
   mat3 tbn;
 } fi;
@@ -16,5 +16,5 @@ void main(void)
   // tbn is an orthogonal basis
   normal = normalize(mat3(mv_mat_it) * (fi.tbn * normal));
 
-  frag_color = blinn(fi.view_vertex, normal);
+  frag_color = blinn(fi.v_vertex, normal);
 }

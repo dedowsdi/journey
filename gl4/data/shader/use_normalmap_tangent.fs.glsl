@@ -3,10 +3,10 @@
 #endif
 
 in vs_out{
-  vec3 tangent_vertex;
-  vec3 tangent_camera;
+  vec3 t_vertex;
+  vec3 t_camera;
   vec2 texcoord;
-  light_source tangent_lights[LIGHT_COUNT];
+  light_source t_lights[LIGHT_COUNT];
 } fi;
 
 uniform sampler2D normal_map;
@@ -16,5 +16,5 @@ out vec4 frag_color;
 void main(void)
 {
   vec3 normal = texture(normal_map, fi.texcoord).xyz * 2 - 1; 
-  frag_color = blinn(fi.tangent_vertex, normal, fi.tangent_camera, fi.tangent_lights);
+  frag_color = blinn(fi.t_vertex, normal, fi.t_camera, fi.t_lights);
 }
