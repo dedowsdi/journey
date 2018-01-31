@@ -36,10 +36,6 @@ struct material {
   float shininess;
 };
 
-uniform light_model lm;
-uniform light_source lights[LIGHT_COUNT];
-uniform material mtl;
-
 void light(vec3 vertex, vec3 normal, vec3 v2e, light_source source,
   material mtl, out light_product product) {
   product = light_product(vec4(0), vec4(0), vec4(0));
@@ -89,8 +85,10 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, light_source source,
   product.specular = visibility * pow(ndoth, mtl.shininess) * source.specular * mtl.specular;
 }
 
-light_product get_light_product(vec3 vertex, vec3 normal, vec3 camera, material mtl,
-    light_source lights[LIGHT_COUNT]){
+// split diffuse and specular
+void blinn(vec3 vertex, vec3 normal, vec3 camera, material mtl, light_source
+    lights[LIGHT_COUNT], light_model lm, out vec4 diffuse, out vec4 specular){
+  // if you calculating lighting in non-view space, make sure lcoal_viewer is 1
   vec3 v2e = lm.local_viewer ? normalize(camera - vertex) : vec3(0,0,1);
   light_product product = light_product(vec4(0),vec4(0),vec4(0));
 
@@ -101,31 +99,18 @@ light_product get_light_product(vec3 vertex, vec3 normal, vec3 camera, material 
     product.specular += currentProduct.specular;
     product.ambient += currentProduct.ambient;
   }
-  return product;
+
+  diffuse = mtl.emission + lm.ambient * mtl.ambient +
+    product.ambient + product.diffuse;
+  specular = product.specular;
 }
 
-// the most simple case, in view space
-vec4 blinn(vec3 vertex, vec3 normal){
-  light_product product = get_light_product(vertex, normal, vec3(0.0), mtl, lights);
-  vec4 color = mtl.emission + lm.ambient * mtl.ambient +
-    product.ambient + product.diffuse + product.specular;
-  return color;
-}
-
-// some shader(such as gbuffer) get material from texture, in view space
-vec4 blinn(vec3 vertex, vec3 normal, material mtl){
-  light_product product = get_light_product(vertex, normal, vec3(0.0), mtl, lights);
-  vec4 color = mtl.emission + lm.ambient * mtl.ambient +
-    product.ambient + product.diffuse + product.specular;
-  return color;
-}
-
-// some shader(such as normal map) don't use view space light positions, in
-// whatever space excpet view
-vec4 blinn(vec3 vertex, vec3 normal, vec3 camera, light_source lights[LIGHT_COUNT]){
-  // will this code be optimized by opengl ? only light position is from uniform
-  light_product product = get_light_product(vertex, normal, camera, mtl, lights);
-  vec4 color = mtl.emission + lm.ambient * mtl.ambient +
-    product.ambient + product.diffuse + product.specular;
+vec4 blinn(vec3 vertex, vec3 normal, vec3 camera, material mtl, light_source
+    lights[LIGHT_COUNT], light_model lm){
+  vec4 diffuse;
+  vec4 specular;
+  blinn(vertex, normal, camera, mtl, lights, lm, diffuse, specular);
+  vec4 color = diffuse + specular;
+  color.a = mtl.diffuse.a;
   return color;
 }

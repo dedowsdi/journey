@@ -60,7 +60,7 @@ struct use_normal_map_tangent_progrm : public program {
   GLint al_tangent;
   GLint al_texcoord;
   GLint ul_normal_map;
-  GLint ul_model_camera;
+  GLint ul_m_camera;
 
   virtual void update_model(const mat4 &_m_mat) {
     m_mat = _m_mat;
@@ -85,7 +85,7 @@ struct use_normal_map_tangent_progrm : public program {
     // uniform_location(&ul_eye, "eye");
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_normal_map, "normal_map");
-    uniform_location(&ul_model_camera, "model_camera");
+    uniform_location(&ul_m_camera, "m_camera");
   }
   virtual void bind_attrib_locations() {
     al_vertex = attrib_location("vertex");
@@ -124,13 +124,11 @@ public:
     prg1.p_mat = prg0.p_mat;
     prg1.v_mat = prg0.v_mat;
 
-    q.setup_vertex_attrib(
-      prg0.al_vertex, prg0.al_texcoord, prg0.al_normal, prg0.al_tangent);
-    q.setup_vertex_attrib(
-      prg1.al_vertex, prg1.al_texcoord, prg1.al_normal, prg1.al_tangent);
+    q.build_mesh(1, 1, 1);
+    q.bind(prg0.al_vertex, prg0.al_normal, prg0.al_texcoord, prg0.al_tangent);
+    q.bind(prg1.al_vertex, prg1.al_normal, prg1.al_texcoord, prg1.al_tangent);
 
-    fipImage normal_image =
-      zxd::fipLoadImage("data/texture/bricks2_normal.jpg");
+    fipImage normal_image = zxd::fipLoadImage("data/texture/bricks.bmp");
 
     glGenTextures(1, &normal_map);
     glBindTexture(GL_TEXTURE_2D, normal_map);
@@ -187,7 +185,7 @@ public:
 
       // get camera model position
       vec3 camera = glm::column(prg1.mv_mat_i, 3).xyz();
-      glUniform3fv(prg1.ul_model_camera, 1, glm::value_ptr(camera));
+      glUniform3fv(prg1.ul_m_camera, 1, glm::value_ptr(camera));
 
       for (int i = 0; i < lights.size(); ++i) {
         lights[i].update_uniforms(prg1.m_mat_i);
@@ -207,6 +205,8 @@ public:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << "q : lighting space : " << (light_space == 0 ? "view" : "tangent")
+       << std::endl;
+    ss << "w : local viewer " << static_cast<GLint>(light_model.local_viewer)
        << std::endl;
     ss << "fps : " << m_fps << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 25);
@@ -251,6 +251,10 @@ public:
           }
 
           break;
+        case GLFW_KEY_W:
+          light_model.local_viewer ^= 1;
+          break;
+
         default:
           break;
       }

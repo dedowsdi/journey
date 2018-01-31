@@ -4,6 +4,7 @@
 #include "glm.h"
 #include <array>
 #include "common.h"
+#include "geometry.h"
 
 namespace zxd {
 
@@ -33,53 +34,20 @@ struct quad_program : public zxd::program {
   }
 };
 
-void draw_quad(GLuint texture);
+// draw single 2d quad
+void draw_quad(GLuint tex_index = 0);
 
-// triangle strip quad
-struct quad {
-  GLuint vao;
-  // clang-format off
-  std::array<glm::vec2, 4> vertices{
-    glm::vec2(-1.0f, 1.0f),
-    glm::vec2(-1.0f, -1.0f),
-    glm::vec2(1.0f, 1.0f),
-    glm::vec2(1.0f, -1.0f) 
-  };
-  std::array<glm::vec2, 4> texcoords{
-    glm::vec2{0.0f, 1.0f},
-    glm::vec2{0.0f, 0.0f}, 
-    glm::vec2{1.0f, 1.0f}, 
-    glm::vec2{1.0f, 0.0f}
-  };
-  std::array<glm::vec3, 4> normals{
-    glm::vec3{0.0f, 0.0f, 1.0f}, 
-    glm::vec3{0.0f, 0.0f, 1.0f}, 
-    glm::vec3{0.0f, 0.0f, 1.0f},
-    glm::vec3{0.0f, 0.0f, 1.0f}
-  };
-  std::array<glm::vec3, 4> tangents{
-    glm::vec3{1.0f, 0.0f, 0.0f }, 
-    glm::vec3{1.0f, 0.0f, 0.0f }, 
-    glm::vec3{1.0f, 0.0f, 0.0f },
-    glm::vec3{1.0f, 0.0f, 0.0f }
-  };
-  // clang-format on
+class quad : public geometry {
+public:
+  quad(const glm::vec3& half_diag) {}
+  quad(GLfloat size = 1) {}
 
-  void draw() {
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-  }
+  void build_vertex();
+  void build_normal();
+  void build_texcoord();
+  void build_tangent();
 
-  void setup_vertex_attrib(GLint al_vertex, GLint al_texcoord = -1,
-    GLint al_normal = -1, GLint al_tangent = -1) {
-    if (!glIsVertexArray(vao)) glGenVertexArrays(1, &vao);
-
-    glBindVertexArray(vao);
-    if (al_vertex != -1) zxd::setup_vertex_attrib(al_vertex, vertices);
-    if (al_texcoord != -1) zxd::setup_vertex_attrib(al_texcoord, texcoords);
-    if (al_normal != -1) zxd::setup_vertex_attrib(al_normal, normals);
-    if (al_tangent != -1) zxd::setup_vertex_attrib(al_tangent, tangents);
-  }
+  void draw(GLuint primcount = 1);
 };
 }
 

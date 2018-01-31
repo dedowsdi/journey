@@ -6,6 +6,9 @@ in vs_out{
 } fi;
 
 uniform mat4 mv_mat_it;
+uniform material mtl;
+uniform light_model lm;
+uniform light_source lights[LIGHT_COUNT];
 uniform sampler2D normal_map;
 
 out vec4 frag_color;
@@ -16,5 +19,5 @@ void main(void)
   // tbn is an orthogonal basis
   normal = normalize(mat3(mv_mat_it) * (fi.tbn * normal));
 
-  frag_color = blinn(fi.v_vertex, normal);
+  frag_color = blinn(fi.v_vertex, normal, vec3(0), mtl, lights, lm);
 }

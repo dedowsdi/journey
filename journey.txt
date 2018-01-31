@@ -156,6 +156,7 @@ gl:
   need to transfrom normal from tbn space to view space in fragment shader.
 
   The view space lighting is brighter than tangent space lighting?
+  Will view space lighing losing some of the detail?
 
 -----------
 2018.01.14:

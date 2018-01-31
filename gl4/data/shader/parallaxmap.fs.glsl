@@ -40,6 +40,10 @@ uniform sampler2D normal_map;
 uniform sampler2D depth_map;
 uniform float height_scale = 1.0f;
 
+uniform material mtl;
+uniform light_model lm;
+uniform light_source lights[LIGHT_COUNT];
+
 out vec4 frag_color;
 
 // without offset limiting
@@ -140,7 +144,6 @@ void main(void)
   //frag_color = diffuse + product.specular;
   //frag_color.a = product.diffuse.a;
 
-  frag_color = blinn(fi.t_vertex, normal, fi.t_camera,
-      fi.t_lights);
+  frag_color = blinn(fi.t_vertex, normal, fi.t_camera, mtl, fi.t_lights, lm);
   frag_color *= texture(diffuse_map, fi.texcoord);
 }

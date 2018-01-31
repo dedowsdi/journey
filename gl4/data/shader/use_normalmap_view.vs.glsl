@@ -7,7 +7,6 @@ in vec2 texcoord;
 
 uniform mat4 mvp_mat;
 uniform mat4 mv_mat;
-uniform mat4 mv_mat_it;
 
 out vs_out{
   vec3 v_vertex;

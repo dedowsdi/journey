@@ -1,0 +1,20 @@
+ vim: tw=80 sw=2 ts=2 et
+
+use cpp_code_convension as much as possible.
+
+Abbreviation:
+  m_mat    | model_matrix
+  v_mat    | view_matrix
+  p_mat    | proj_matrix
+  mv_mat   | model_view_matrix
+  mvp_mat  | model_view_proj_matrix
+  m_mat_i  | model_matrix_inverse
+  m_mat_it | model_matrix_inverse_transpose
+  t_camera | tbn_camera
+  m_camera | model_camera
+  w_camera | world_camera
+  v_vertex | view_vertex
+  s_vertex | wnd_vertex  // careful, not w
+
+shader option:
+  use macro to define shader option instead of uniform.

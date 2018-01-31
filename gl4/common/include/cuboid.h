@@ -7,17 +7,8 @@
 
 namespace zxd {
 
-typedef std::vector<glm::vec3> vec3_vector;
-typedef std::vector<glm::vec2> vec2_vector;
-
 class cuboid : public geometry {
 protected:
-  GLuint m_vao;
-
-  GLuint m_vertex_buffer;
-  GLuint m_normal_buffer;
-  GLuint m_texcoord_buffer;
-
   glm::vec3 m_half_diag;
 
 public:

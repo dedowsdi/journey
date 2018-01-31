@@ -3,13 +3,13 @@
 in vs_out
 {
  vec2 texcoord;
-}vs_in;
+}fi;
 
-uniform sampler2D quadMap;
+uniform sampler2D quad_map;
 
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main(void)
 {
-  fragColor = texture(quadMap, vs_in.texcoord);
+  frag_color = texture(quad_map, fi.texcoord);
 }

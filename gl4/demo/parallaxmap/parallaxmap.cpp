@@ -33,7 +33,7 @@ struct parallax_program : public program {
   GLint ul_normal_map;
   GLint ul_diffuse_map;
   GLint ul_depth_map;
-  GLint ul_model_camera;
+  GLint ul_m_camera;
   GLint ul_height_scale;
 
   GLuint parallax_method{0};
@@ -67,7 +67,7 @@ struct parallax_program : public program {
     uniform_location(&ul_normal_map, "normal_map");
     uniform_location(&ul_diffuse_map, "diffuse_map");
     uniform_location(&ul_depth_map, "depth_map");
-    uniform_location(&ul_model_camera, "model_camera");
+    uniform_location(&ul_m_camera, "m_camera");
     uniform_location(&ul_height_scale, "height_scale");
   }
   virtual void bind_attrib_locations() {
@@ -82,7 +82,7 @@ GLuint normal_map, diffuse_map, depth_map;
 std::vector<zxd::light_source> lights;
 zxd::light_model light_model;
 zxd::material material;
-quad quad;
+quad q;
 GLfloat height_scale = 0.05f;
 std::string parallax_methods[] = {"parallax_occlusion_map", "parallaxSteepMap",
   "parallax_map_with_offset", "parallaxMapWithoutOffset"};
@@ -110,12 +110,13 @@ public:
     prg.v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
 
     // init quad
-    quad.setup_vertex_attrib(
-      prg.al_vertex, prg.al_texcoord, prg.al_normal, prg.al_tangent);
+    q.build_mesh(1, 1, 1);
+    q.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord, prg.al_tangent);
 
     // load maps
     fipImage diffuse_image = zxd::fipLoadImage("data/texture/bricks2.jpg");
-    fipImage normal_image = zxd::fipLoadImage("data/texture/bricks2_normal.jpg");
+    fipImage normal_image =
+      zxd::fipLoadImage("data/texture/bricks2_normal.jpg");
     fipImage depth_image = zxd::fipLoadImage("data/texture/bricks2_disp.jpg");
 
     glGenTextures(1, &diffuse_map);
@@ -188,7 +189,7 @@ public:
 
     // get camera model position
     vec3 camera = glm::column(prg.mv_mat_i, 3).xyz();
-    glUniform3fv(prg.ul_model_camera, 1, glm::value_ptr(camera));
+    glUniform3fv(prg.ul_m_camera, 1, glm::value_ptr(camera));
 
     for (int i = 0; i < lights.size(); ++i) {
       lights[i].update_uniforms(prg.m_mat_i);
@@ -203,7 +204,7 @@ public:
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, depth_map);
 
-    quad.draw();
+    q.draw();
 
     glEnable(GL_BLEND);
     glDisable(GL_SCISSOR_TEST);

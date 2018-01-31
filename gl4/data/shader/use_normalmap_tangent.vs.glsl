@@ -31,7 +31,7 @@ out vs_out{
 } vo;
 
 uniform light_source lights[LIGHT_COUNT]; //lights in model space
-uniform vec3 model_camera;
+uniform vec3 m_camera;
 
 void main(void)
 {
@@ -41,8 +41,8 @@ void main(void)
   mat3 tbn = mat3(T, B, N);
   mat3 tbn_i = transpose(tbn);
 
-  vo.t_vertex = (mat4(tbn_i) * vertex).xyz;
-  vo.t_camera = tbn_i * model_camera;
+  vo.t_vertex = tbn_i * vertex.xyz;
+  vo.t_camera = tbn_i * m_camera;
   vo.texcoord = texcoord;
 
   vo.t_lights = lights;

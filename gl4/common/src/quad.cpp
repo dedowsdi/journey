@@ -4,51 +4,73 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void draw_quad(GLuint texture) {
-  static GLuint vao;
-  static GLuint vbo;
-  static quad_program quad_program;
-  // clang-format off
-  // {vertex.x, vertex.y, texcoord.x, texcoord.y}
-  static GLfloat vertices[6][4] = {
-    {-1, -1, 0, 0},
-    {1,  -1, 1, 0},
-    {1,  1, 1, 1},
+void draw_quad(GLuint tex_index /* = 0*/) {
+  static quad q;
+  static quad_program prg;
+  q.build_mesh(1, 1, 1);
 
-    {-1, -1, 0, 0},
-    {1,  1, 1, 1},
-    {-1, 1, 0, 1},
-  };
-  // clang-format on
-
-  if (quad_program.object == -1) {
-    quad_program.init();
-
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(
-      GL_ARRAY_BUFFER, sizeof(vertices), vertices[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(quad_program.al_vertex, 2, GL_FLOAT, GL_FALSE,
-      4 * sizeof(GLfloat), BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(quad_program.al_vertex);
-
-    glVertexAttribPointer(quad_program.al_texcoord, 2, GL_FLOAT, GL_FALSE,
-      4 * sizeof(GLfloat), BUFFER_OFFSET(2 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(quad_program.al_texcoord);
+  if (prg.object == -1) {
+    prg.init();
+    q.bind(prg.al_vertex, prg.al_texcoord);
   }
 
-  glBindVertexArray(vao);
-  glUseProgram(quad_program);
+  glUseProgram(prg.object);
+  prg.update_uniforms(tex_index);
+  q.draw();
+}
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, texture);
+//--------------------------------------------------------------------
+void quad::build_vertex() {
+  m_vertices.clear();
+  m_vertices.reserve(4);
 
-  quad_program.update_uniforms(0);
+  m_vertices.push_back(glm::vec3(-1.0f, 1.0f, 0));
+  m_vertices.push_back(glm::vec3(-1.0f, -1.0f, 0));
+  m_vertices.push_back(glm::vec3(1.0f, 1.0f, 0));
+  m_vertices.push_back(glm::vec3(1.0f, -1.0f, 0));
+}
 
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+//--------------------------------------------------------------------
+void quad::build_normal() {
+  m_normals.clear();
+  m_normals.reserve(4);
+
+  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
+  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
+  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
+  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
+}
+
+//--------------------------------------------------------------------
+void quad::build_texcoord() {
+  m_texcoords.clear();
+  m_texcoords.reserve(4);
+
+  m_texcoords.push_back(glm::vec2{0.0f, 1.0f});
+  m_texcoords.push_back(glm::vec2{0.0f, 0.0f});
+  m_texcoords.push_back(glm::vec2{1.0f, 1.0f});
+  m_texcoords.push_back(glm::vec2{1.0f, 0.0f});
+}
+
+//--------------------------------------------------------------------
+void quad::build_tangent() {
+  m_tangents.clear();
+  m_tangents.reserve(4);
+
+  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
+  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
+  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
+  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
+}
+
+//--------------------------------------------------------------------
+void quad::draw(GLuint primcount /* = 1*/) {
+  bind_vertex_array_object();
+
+  if (primcount == 1) {
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+  } else {
+    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, primcount);
+  }
 }
 }
