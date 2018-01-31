@@ -155,9 +155,6 @@ gl:
   Although it's easier to calculate normalmap lighting in view space, you only
   need to transfrom normal from tbn space to view space in fragment shader.
 
-  The view space lighting is brighter than tangent space lighting?
-  Will view space lighing losing some of the detail?
-
 -----------
 2018.01.14:
 
@@ -502,3 +499,18 @@ git:
   You will be in 'detached head' state, git won't be able to handle you change
   in this state. You should always use
     git checkout -b newbranch sha1
+
+gl:
+  normal achieved from normal still needs to be normalized:
+    // be very careful about this!!, not easay to debug, totally nightmare
+    vec3 t_normal = normalize(texture(normal_map, fi.texcoord).xyz * 2 - 1); 
+
+linux:
+  there are two kinds of clipboard:
+    CLIPBOARD SELECTION works as traditional clipboard.  according to + in vim
+    PRMARY SELECTION works on last heightlight, pasted with middle mouse.
+    according to * in vim.
+    SECONDARY SELECTION was never used by me.
+  You need some tool such xsel to connect tty and xwindow selection. :
+    echo balabala  | xsel -i   # set primary selection to balabala
+  If you are using neovim, you should install of of this kind of tool.

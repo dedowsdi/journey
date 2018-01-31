@@ -14,7 +14,7 @@ out vec4 frag_color;
 
 void main(void)
 {
-  vec3 t_normal = texture(normal_map, fi.texcoord).xyz * 2 - 1; 
+  vec3 t_normal = normalize(texture(normal_map, fi.texcoord).xyz * 2 - 1); 
   
   frag_color = blinn(fi.t_vertex, t_normal, fi.t_camera, mtl, fi.t_lights, lm);
 }
