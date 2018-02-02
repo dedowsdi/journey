@@ -25,7 +25,7 @@ void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
 void app::init() {
   init_info();
   init_wnd();
-  init_g_l();
+  init_gl();
 }
 
 //--------------------------------------------------------------------
@@ -44,7 +44,7 @@ void app::init_info() {
 }
 
 //--------------------------------------------------------------------
-void app::init_g_l() {
+void app::init_gl() {
   if (!gladLoadGL()) {
     std::cerr << "glad failed to load gl" << std::endl;
     return;
@@ -161,14 +161,18 @@ void app::init_wnd() {
 }
 
 //--------------------------------------------------------------------
+void app::update_time() {
+  m_last_time = m_current_time;
+  m_current_time = glfwGetTime();
+  m_delta_time = m_current_time - m_last_time;
+}
+
+//--------------------------------------------------------------------
 void app::update_fps() {
-  static GLfloat last_time = 0;
-  static GLfloat time = 0;
-  static GLfloat count = 0;
+  static GLdouble time = 0;
+  static GLdouble count;
 
-  GLuint cur_time = glfwGetTime();
-
-  time += cur_time - last_time;
+  time += m_delta_time;
   ++count;
 
   if (time >= 1) {
@@ -176,9 +180,23 @@ void app::update_fps() {
     time -= 1;
     count = 0;
   }
+}
 
-  last_time = cur_time;
-  ;
+//--------------------------------------------------------------------
+void app::update_camera() {
+  if (!m_v_mat) return;
+
+  if (m_camera_mode == CM_FREE && m_camera_moving == 1) {
+    vec3 dir(0);
+    if (m_move_dir & MD_LEFT) dir.x = 1;
+    if (m_move_dir & MD_RIGHT) dir.x = -1;
+    if (m_move_dir & MD_FOWARD) dir.z = 1;
+    if (m_move_dir & MD_BACK) dir.z = -1;
+
+    dir = glm::normalize(dir);
+    m_camera_translation += dir * static_cast<GLfloat>(m_delta_time);
+    (*m_v_mat)[3] = vec4(m_start_v_mat[3].xyz() + m_camera_translation, 1);
+  }
 }
 
 //--------------------------------------------------------------------
@@ -187,6 +205,29 @@ void app::run() {
   init();
   create_scene();
   loop();
+}
+
+//--------------------------------------------------------------------
+void app::set_camera_mode(camera_mode v) {
+  static std::string modes[] = {"CM_YAW_PITCH", "CM_ARCBALL", "CM_FREE"};
+  m_camera_mode = v;
+  std::cout << "current camera mode : " << modes[m_camera_mode] << std::endl;
+
+  if (m_camera_mode == CM_FREE) {
+    m_start_v_mat = *m_v_mat;
+    m_camera_translation = vec3(0);
+
+    // hide, fix cursor
+    glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
+    m_adtx = m_adty = 0;
+
+    glfwGetCursorPos(
+      m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
+    m_last_cursor_position[1] = glfw_to_gl(m_last_cursor_position[1]);
+  } else {
+    glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+  }
 }
 
 //--------------------------------------------------------------------
@@ -205,7 +246,9 @@ void app::finishe_reading() { m_reading = GL_FALSE; }
 void app::loop() {
   glfwSwapInterval(m_swap_interval);
   while (!glfwWindowShouldClose(m_wnd)) {
+    update_time();
     update_fps();
+    update_camera();
     update();
     display();
     glfwSwapBuffers(m_wnd);
@@ -253,7 +296,7 @@ void app::glfw_key(
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
       case GLFW_KEY_KP_SUBTRACT:
-        m_camera_mode = static_cast<camera_mode>((m_camera_mode + 1) % 2);
+        set_camera_mode(static_cast<camera_mode>((m_camera_mode + 1) % 3));
         break;
       case GLFW_KEY_KP_0: {
         GLint polygon_mode;
@@ -265,6 +308,15 @@ void app::glfw_key(
         glfwSwapInterval(m_swap_interval ^= 1);
       } break;
 
+      default:
+        break;
+    }
+  }
+
+  // camera
+  if (m_v_mat == 0) return;
+  if (action == GLFW_PRESS) {
+    switch (key) {
       case GLFW_KEY_KP_1: {
         if (m_v_mat) {
           GLfloat distance = glm::length((*m_v_mat)[3].xyz());
@@ -291,7 +343,43 @@ void app::glfw_key(
         }
       } break;
 
-      default:
+      case GLFW_KEY_LEFT:
+        m_move_dir |= MD_LEFT;
+        m_camera_moving = 1;
+        break;
+
+      case GLFW_KEY_RIGHT:
+        m_move_dir |= MD_RIGHT;
+        m_camera_moving = 1;
+        break;
+
+      case GLFW_KEY_UP:
+        m_move_dir |= MD_FOWARD;
+        m_camera_moving = 1;
+        break;
+
+      case GLFW_KEY_DOWN:
+        m_move_dir |= MD_BACK;
+        m_camera_moving = 1;
+        break;
+    }
+  } else if (action == GLFW_RELEASE) {
+    switch (key) {
+      case GLFW_KEY_LEFT:
+        m_move_dir &= ~MD_LEFT;
+        m_camera_moving = m_move_dir == 0 ? 0 : 1;
+        break;
+      case GLFW_KEY_RIGHT:
+        m_move_dir &= ~MD_RIGHT;
+        m_camera_moving = m_move_dir == 0 ? 0 : 1;
+        break;
+      case GLFW_KEY_UP:
+        m_move_dir &= ~MD_FOWARD;
+        m_camera_moving = m_move_dir == 0 ? 0 : 1;
+        break;
+      case GLFW_KEY_DOWN:
+        m_move_dir &= ~MD_BACK;
+        m_camera_moving = m_move_dir == 0 ? 0 : 1;
         break;
     }
   }
@@ -301,61 +389,73 @@ void app::glfw_key(
 void app::glfw_mouse_button(GLFWwindow *wnd, int button, int action, int mods) {
   if (action == GLFW_PRESS && GLFW_MOUSE_BUTTON_MIDDLE == button) {
     glfwGetCursorPos(
-      m_wnd, &m_last_button_position[0], &m_last_button_position[1]);
+      m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
+    m_last_cursor_position[1] = glfw_to_gl(m_last_cursor_position[1]);
   }
 }
 
 //--------------------------------------------------------------------
 void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
-  if (m_v_mat &&
-      glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
-    GLdouble dtx = x - m_last_button_position[0];
-    GLdouble dty = y - m_last_button_position[1];
+  if (!m_v_mat) return;
 
-    if (m_camera_mode == CM_BLEND) {
-      // yaw world, assume z up
-      if (dtx != 0) {
-        *m_v_mat *=
-          glm::rotate(static_cast<GLfloat>(dtx * 0.02), vec3(0, 0, 1));
-      }
-
-      // pitch camera, but reserve center
-      if (dty != 0) {
-        glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
-
-        // translate world to camera
-        (*m_v_mat)[3][0] = 0;
-        (*m_v_mat)[3][1] = 0;
-        (*m_v_mat)[3][2] = 0;
-
-        // rotate, translate world back
-        *m_v_mat =
-          glm::translate(translation) *
-          glm::rotate(static_cast<GLfloat>(dty * 0.02), vec3(1, 0, 0)) *
-          *m_v_mat;
-      }
-    } else if (m_camera_mode == CM_ARCBALL) {
-      if (dtx != 0 || dty != 0) {
-        mat4 w_mat_i = zxd::compute_window_matrix_inverse(
-          0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
-        mat4 m =
-          zxd::arcball(glm::vec2(m_last_button_position[0],
-                         m_info.wnd_height - 1 - m_last_button_position[1]),
-            glm::vec2(x, m_info.wnd_height - 1 - y), w_mat_i);
-
-        glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
-        // translate world to camera
-        (*m_v_mat)[3][0] = 0;
-        (*m_v_mat)[3][1] = 0;
-        (*m_v_mat)[3][2] = 0;
-
-        // rotate, translate world back
-        *m_v_mat = glm::translate(translation) * m * *m_v_mat;
-      }
+  y = glfw_to_gl(y);
+  GLdouble dtx = x - m_last_cursor_position[0];
+  GLdouble dty = y - m_last_cursor_position[1];
+  if (m_camera_mode == CM_YAW_PITCH) {
+    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
+      return;
+    // yaw world, assume z up
+    if (dtx != 0) {
+      *m_v_mat *= glm::rotate(static_cast<GLfloat>(dtx * 0.02), vec3(0, 0, 1));
     }
 
-    m_last_button_position[0] = x;
-    m_last_button_position[1] = y;
+    // pitch camera, but reserve center
+    if (dty != 0) {
+      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+
+      // translate world to camera
+      (*m_v_mat)[3][0] = 0;
+      (*m_v_mat)[3][1] = 0;
+      (*m_v_mat)[3][2] = 0;
+
+      // rotate, translate world back
+      *m_v_mat = glm::translate(translation) *
+                 glm::rotate(static_cast<GLfloat>(-dty * 0.02), vec3(1, 0, 0)) *
+                 *m_v_mat;
+    }
+    m_last_cursor_position[0] = x;
+    m_last_cursor_position[1] = y;
+  } else if (m_camera_mode == CM_ARCBALL) {
+    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
+      return;
+    if (dtx != 0 || dty != 0) {
+      mat4 w_mat_i = zxd::compute_window_matrix_inverse(
+        0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
+      mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
+
+      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+      // translate world to camera
+      (*m_v_mat)[3][0] = 0;
+      (*m_v_mat)[3][1] = 0;
+      (*m_v_mat)[3][2] = 0;
+
+      // rotate, translate world back
+      *m_v_mat = glm::translate(translation) * m * *m_v_mat;
+    }
+    m_last_cursor_position[0] = x;
+    m_last_cursor_position[1] = y;
+  } else if (m_camera_mode == CM_FREE) {
+    m_adtx += dtx;
+    m_adty += dty;
+    *m_v_mat =
+      glm::rotate(static_cast<GLfloat>(m_adtx) * 0.002f, vec3(0, 1, 0)) *
+      glm::rotate(static_cast<GLfloat>(-m_adty) * 0.002f, vec3(1, 0, 0)) *
+      m_start_v_mat;
+
+    (*m_v_mat)[3] = vec4(m_start_v_mat[3].xyz() + m_camera_translation, 1);
+
+    // fix cursor
+    glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
   }
 }
 
@@ -379,4 +479,7 @@ void app::glfw_char(GLFWwindow *wnd, unsigned int codepoint) {
 
 //--------------------------------------------------------------------
 void app::glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {}
+
+//--------------------------------------------------------------------
+GLdouble app::glfw_to_gl(GLdouble y) { return m_info.wnd_height - 1 - y; }
 }

@@ -289,6 +289,8 @@ linux:
   check disk and partition :
     lsblk
     fdisk -l
+  check disk filesystem:
+    df -T
   check slot on mother board:
     lspci
   check cpu bit :
@@ -493,6 +495,13 @@ vim:
   list first, otherwise only entry of the same line will will be changed
   correctly.
 
+  v:register  |  the register in effect.
+  v:char      |  character that was typed to trigger the abbreviation
+
+  <expr> can be used in map or abbreviation
+    :inoremap <expr> key expression  " evaluate expression as rhs
+    :ab[breviate] [<expr>] [<buffer>] {lhs} {rhs}
+
 git:
   If do something like :
     git checkout sha1
@@ -514,3 +523,80 @@ linux:
   You need some tool such xsel to connect tty and xwindow selection. :
     echo balabala  | xsel -i   # set primary selection to balabala
   If you are using neovim, you should install of of this kind of tool.
+
+-----------
+2018.02.01:
+
+linux:
+  swap works likes virtual memory on windows.
+
+  device:
+    a device file or special file is an interface for a device driver that
+    appears in a file system as if it were an ordinary file. They allow software
+    to interact with a device driver using standard input/output system calls,
+    which simplifies many tasks and unifies user-space I/O mechanisms.
+
+  There are two general kinds of device files in Unix-like operating systems:
+    character devices(not used in linux):
+      provide unbuffered, direct access to the hardware device.
+
+    block device:
+      provide buffered access to hardware devices, and provide some abstraction
+      from their specifics. Unlike character devices, block devices will always
+      allow the programmer to read or write a block of any size (including
+      single characters/bytes) and any alignment. 
+
+  Pseudo-devices: 
+    Device nodes on Unix-like systems do not necessarily have to correspond to
+    physical devices. Nodes that lack this correspondence form the group of
+    pseudo-devices.
+
+  Some of the most commonly used (character-based) pseudo-devices include:
+    /dev/null – accepts and discards all input; produces no output (always
+                returns an end-of-file indication on a read)
+    /dev/zero – accepts and discards all input; produces a continuous stream of
+                NUL (zero value) bytes
+    /dev/full – produces a continuous stream of NUL (zero value) bytes when
+                read, and returns a "disk full" message when written to
+    /dev/random and /dev/urandom – they produce a variable-length stream of
+                                   pseudo-random numbers.
+
+  In Unix-like operating systems, a loop device, vnd (vnode disk), or lofi (loop
+  file interface) is a pseudo-device that makes a file accessible as a block
+  device. such as:
+    mount -o loop /media/balabala /dsfsdf/sdf.iso
+
+  linux style file system:
+    inode:
+      inode is a data structure in a Unix-style file system that describes a
+      filesystem object such as a file or a directory. Each inode stores the
+      attributes and disk block location(s) of the object's data.Filesystem object
+      attributes may include metadata (times of last change, access,
+      modification), as well as owner and permission data.
+      Every file has one inode.
+
+    block:
+      real file content, a file may take multiple blocks.
+
+    directory:
+      directy block stores child inode and their name(just like hard link),
+      which means if you want to add/delete/rename a file in a directory, you
+      need w privilege.
+
+    link:
+      hard link:
+        simply add a new inode name pair in directory data block, no new inode
+        created. You can only create hard link in the same filesystem. You can
+        not create hard link for directory. 
+      symbolic link:
+        Add a new file, it's datablock is the target. It's a new file, it has
+        it's own inode an datablock.
+
+    number of hard links:
+      a file has 1 hard link when it's created, it's stored in it's parent
+      directory, it increases every time you create a hardlink for it. 
+
+      a directory has 2 had link when it's created, one in it's parent
+      directory, one in special entry '.', whose inode is the directory it self.
+      it also increases everytime you create a child directory in it, as special
+      entry '..' of child directory will point to it's parent, 
