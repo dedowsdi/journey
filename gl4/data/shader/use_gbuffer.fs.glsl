@@ -11,7 +11,6 @@ uniform sampler2D g_specular;
 uniform sampler2D g_shininess;
 uniform sampler2D g_depth;
 
-uniform material mtl;
 uniform light_model lm;
 uniform light_source lights[LIGHT_COUNT];
 

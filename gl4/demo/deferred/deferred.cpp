@@ -325,8 +325,7 @@ public:
     set_v_mat(&m_render_gbuffer_program.v_mat);
 
     // sphere and lights
-    m_sphere.build_vertex();
-    m_sphere.build_normal();
+    m_sphere.build_mesh();
     m_sphere.bind(
       m_render_gbuffer_program.al_vertex, m_render_gbuffer_program.al_normal);
 
@@ -376,6 +375,8 @@ public:
       light.bind_uniform_locations(m_glinn.object, ss.str());
       m_lights.push_back(light);
     }
+
+    m_light_model.bind_uniform_locations(m_glinn.object, "lm");
   }
 
   virtual void display() {
@@ -396,6 +397,7 @@ public:
     std::stringstream ss;
     ss << "qQ : sphere number " << m_numspheres << std::endl;
     ss << "wW : light number " << m_num_lights << std::endl;
+    ss << "fps : " << m_fps << std::endl;
     m_text.print(ss.str(), 10, 492);
     glDisable(GL_BLEND);
   }

@@ -451,10 +451,10 @@ linux:
     A daemon is a computer program that runs as a background process in
     multitasking computer operating system. Traditionally the process names of a
     daemon end with the letter d.
-    Deamon is not attached to a tty, which means you can list deamon process as:
+    Daemon is not attached to a tty, which means you can list deamon process as:?
       ps -eo tty,pid,comm | grep ^?
 
-    You can use initctrl to control init deamon. 
+    You can use initctrl to control init deamon?. 
       initctrl list
       initctrl status ssh-agent
 
@@ -600,3 +600,53 @@ linux:
       directory, one in special entry '.', whose inode is the directory it self.
       it also increases everytime you create a child directory in it, as special
       entry '..' of child directory will point to it's parent, 
+
+-----------
+2018.02.02:
+  linux:
+    top:
+      operation:
+        o COMMAND=lantern   # filter command
+        L                   # locate 
+        k                   # kill
+      top -n 1              # execute once and exit
+      top -o %MEM           # sort by %MEM
+    top detail is hard to remember, htop is much more user friendly.
+
+    bash arithmetic works on integer only. you need bc to work on float:
+      echo "scale=3; 1/100"|bc
+
+  schedule commands:
+    scheduled commands is done via cron deamon on linux.
+    you can use crontab -e to schedule your commands. Or you can add commands to
+    /etc/cron.daily/ to execute command in preset schedule.
+
+  find default port for service:
+    cat /etc/services
+
+Multiples of bytes:
+  Decimal    |           | Binary     |          |
+  Value      | Metric    | Value      | IEC      | JEDEC
+  1000^1	kB | kilobyte  | 1024^1	KiB | kibibyte | KB	kilobyte
+  1000^2	MB | megabyte  | 1024^2	MiB | mebibyte | MB	megabyte
+  1000^3	GB | gigabyte  | 1024^3	GiB | gibibyte | GB	gigabyte
+  1000^4	TB | terabyte  | 1024^4	TiB | tebibyte | –
+  1000^5	PB | petabyte  | 1024^5	PiB | pebibyte | –
+  1000^6	EB | exabyte   | 1024^6	EiB | exbibyte | –
+  1000^7	ZB | zettabyte | 1024^7	ZiB | zebibyte | –
+  1000^8	YB | yottabyte | 1024^8	YiB | yobibyte | –
+
+-----------
+2018.02.02:
+linux:
+  you can use xinput to control touchboard:
+    xinput list
+    xinput --disable touchboardid
+  
+c++:
+  always always initialize class member.
+
+gl:
+  if you change marcro that will change uniform size(such as light_count), you
+  need to rebind all uniform locations.
+

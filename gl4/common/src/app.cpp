@@ -170,7 +170,7 @@ void app::update_time() {
 //--------------------------------------------------------------------
 void app::update_fps() {
   static GLdouble time = 0;
-  static GLdouble count;
+  static GLdouble count = 0;
 
   time += m_delta_time;
   ++count;
@@ -244,6 +244,7 @@ void app::finishe_reading() { m_reading = GL_FALSE; }
 
 //--------------------------------------------------------------------
 void app::loop() {
+  // TODO swap interval not working on my laptop gt635m
   glfwSwapInterval(m_swap_interval);
   while (!glfwWindowShouldClose(m_wnd)) {
     update_time();
@@ -294,18 +295,22 @@ void app::glfw_key(
     switch (key) {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
+        std::cout << "closing window" << std::endl;
         break;
       case GLFW_KEY_KP_SUBTRACT:
         set_camera_mode(static_cast<camera_mode>((m_camera_mode + 1) % 3));
         break;
       case GLFW_KEY_KP_0: {
-        GLint polygon_mode;
-        glGetIntegerv(GL_POLYGON_MODE, &polygon_mode);
-        glPolygonMode(
-          GL_FRONT_AND_BACK, GL_POINT + (polygon_mode - GL_POINT + 1) % 3);
+        GLint polygon_mode[2];
+        glGetIntegerv(GL_POLYGON_MODE, polygon_mode);
+        polygon_mode[0] = GL_POINT + (polygon_mode[0] - GL_POINT + 1) % 3;
+        glPolygonMode(GL_FRONT_AND_BACK, polygon_mode[0]);
+        std::cout << "polygon mode : "
+                  << gl_polygon_mode_to_string(polygon_mode[0]) << std::endl;
       } break;
       case GLFW_KEY_KP_2: {
         glfwSwapInterval(m_swap_interval ^= 1);
+        std::cout << "swap interval : " << m_swap_interval << std::endl;
       } break;
 
       default:

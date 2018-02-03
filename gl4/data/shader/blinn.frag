@@ -2,7 +2,6 @@
 #define LIGHT_COUNT 8
 #endif
 
-// exactly the same as gl__light_source_parameters
 struct light_source {
   vec4 ambient;
   vec4 diffuse;

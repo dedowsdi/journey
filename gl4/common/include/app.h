@@ -62,7 +62,7 @@ protected:
   mat4 m_start_v_mat;  // used to record init rotation in CM_FREE.
 
   dvec2
-    m_last_cursor_position;  // used to rotate camera when mid button pressed
+    m_last_cursor_position;   // used to rotate camera when mid button pressed
   vec3 m_camera_translation;  // translation during CM_FREE mode
 
 public:
@@ -74,7 +74,11 @@ public:
         m_move_dir(0),
         m_frame_number(0),
         m_adtx(0),
-        m_adty(0) {}
+        m_adty(0),
+        m_fps(0),
+        m_last_time(0),
+        m_current_time(0),
+        m_delta_time(0) {}
 
   void init();
   virtual void run();
