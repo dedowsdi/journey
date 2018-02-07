@@ -128,36 +128,11 @@ void cylinder::draw(GLuint primcount /* = 1*/) {
 
   bind_vertex_array_object();
 
-  if (primcount == 1) {
-    glDrawArrays(GL_TRIANGLE_FAN, 0, num_vert_bottom);
-
-    GLuint next = num_vert_bottom;
-    for (int i = 0; i < m_stack; ++i, next += num_vert_center) {
-      glDrawArrays(GL_TRIANGLE_STRIP, next, num_vert_center);
-    }
-    glDrawArrays(GL_TRIANGLE_FAN, next, num_vert_bottom);
-  } else {
-#ifdef GL_VERSION_3_0
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, num_vert_bottom, primcount);
-#else
-    glDrawArraysInstancedARB(GL_TRIANGLE_FAN, 0, num_vert_bottom, primcount);
-#endif
-
-    GLuint next = num_vert_bottom;
-    for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
-#ifdef GL_VERSION_3_0
-      glDrawArraysInstanced(
-        GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
-#else
-      glDrawArraysInstancedARB(
-        GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
-#endif
-    }
-#ifdef GL_VERSION_3_0
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, next, num_vert_bottom, primcount);
-#else
-    glDrawArraysInstancedARB(GL_TRIANGLE_FAN, next, num_vert_bottom, primcount);
-#endif
+  draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_bottom, primcount);
+  GLuint next = num_vert_bottom;
+  for (int i = 0; i < m_stack; ++i, next += num_vert_center) {
+    draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
   }
+  draw_arrays(GL_TRIANGLE_FAN, next, num_vert_bottom, primcount);
 }
 }

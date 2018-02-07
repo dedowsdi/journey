@@ -71,18 +71,8 @@ void xyplane::draw(GLuint primcount /* = 1*/) {
 
   bind_vertex_array_object();
 
-  if (primcount == 1) {
-    for (int i = 0; i < m_slice; ++i, next += row_size) {
-      glDrawArrays(GL_TRIANGLE_STRIP, next, row_size);
-    }
-  } else {
-    for (int i = 0; i < m_slice; ++i, next += row_size) {
-#ifdef GL_VERSION_3_0
-      glDrawArraysInstanced(GL_TRIANGLE_STRIP, next, row_size, primcount);
-#else
-      glDrawArraysInstancedARB(GL_TRIANGLE_STRIP, next, row_size, primcount);
-#endif
-    }
+  for (int i = 0; i < m_slice; ++i, next += row_size) {
+    draw_arrays(GL_TRIANGLE_STRIP, next, row_size, primcount);
   }
 }
 }

@@ -104,36 +104,12 @@ void sphere::draw(GLuint primcount /* = 1*/) {
 
   bind_vertex_array_object();
 
-  if (primcount == 1) {
-    glDrawArrays(GL_TRIANGLE_FAN, 0, num_vert_pole);
+  draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_pole, primcount);
 
-    GLuint next = num_vert_pole;
-    for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
-      glDrawArrays(GL_TRIANGLE_STRIP, next, num_vert_center);
-    }
-    glDrawArrays(GL_TRIANGLE_FAN, next, num_vert_pole);
-  } else {
-#ifdef GL_VERSION_3_0
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, num_vert_pole, primcount);
-#else
-    glDrawArraysInstancedARB(GL_TRIANGLE_FAN, 0, num_vert_pole, primcount);
-#endif
-
-    GLuint next = num_vert_pole;
-    for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
-#ifdef GL_VERSION_3_0
-      glDrawArraysInstanced(
-        GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
-#else
-      glDrawArraysInstancedARB(
-        GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
-#endif
-    }
-#ifdef GL_VERSION_3_0
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, next, num_vert_pole, primcount);
-#else
-    glDrawArraysInstancedARB(GL_TRIANGLE_FAN, next, num_vert_pole, primcount);
-#endif
+  GLuint next = num_vert_pole;
+  for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
+    draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
   }
+  draw_arrays(GL_TRIANGLE_FAN, next, num_vert_pole, primcount);
 }
 }

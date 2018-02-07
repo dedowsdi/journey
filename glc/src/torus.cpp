@@ -114,20 +114,8 @@ void torus::draw(GLuint primcount /* = 1*/) {
 
   GLuint ring_size = (m_sides + 1) * 2;
 
-  if (primcount == 1) {
-    for (int i = 0; i < m_rings; ++i) {
-      glDrawArrays(GL_TRIANGLE_STRIP, ring_size * i, ring_size);
-    }
-  } else {
-    for (int i = 0; i < m_rings; ++i) {
-#ifdef GL_VERSION_3_0
-      glDrawArraysInstanced(
-        GL_TRIANGLE_STRIP, ring_size * i, ring_size, primcount);
-#else
-      glDrawArraysInstancedARB(
-        GL_TRIANGLE_STRIP, ring_size * i, ring_size, primcount);
-#endif
-    }
+  for (int i = 0; i < m_rings; ++i) {
+    draw_arrays(GL_TRIANGLE_STRIP, ring_size * i, ring_size, primcount);
   }
 }
 }

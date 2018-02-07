@@ -83,15 +83,6 @@ void cuboid::build_texcoord() {
 //--------------------------------------------------------------------
 void cuboid::draw(GLuint primcount /* = 1*/) {
   bind_vertex_array_object();
-  if (primcount == 1) {
-    glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
-    // glDrawArrays(GL_TRIANGLES, 0, 12);
-  } else {
-#ifdef GL_VERSION_3_0
-    glDrawArraysInstanced(GL_TRIANGLES, 0, m_vertices.size(), primcount);
-#else
-    glDrawArraysInstancedARB(GL_TRIANGLES, 0, m_vertices.size(), primcount);
-#endif
-  }
+  draw_arrays(GL_TRIANGLES, 0, m_vertices.size(), primcount);
 }
 }
