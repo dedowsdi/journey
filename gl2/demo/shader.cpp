@@ -48,11 +48,11 @@ struct program0 : public program {
 
     string_vector sv;
     sv.push_back(vs);
-    attach_shader_source(GL_VERTEX_SHADER, sv);
+    attach(GL_VERTEX_SHADER, sv);
 
     sv.clear();
     sv.push_back(fs);
-    attach_shader_source(GL_FRAGMENT_SHADER, sv);
+    attach(GL_FRAGMENT_SHADER, sv);
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_iamge, "image");

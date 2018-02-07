@@ -39,8 +39,8 @@ struct render_gbuffer_program : public zxd::program {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/render_gbuffer.vs.glsl");
-    attach_shader_file(
+    attach(GL_VERTEX_SHADER, "data/shader/render_gbuffer.vs.glsl");
+    attach(
       GL_FRAGMENT_SHADER, "data/shader/render_gbuffer.fs.glsl");
   }
   virtual void bind_uniform_locations() {
@@ -85,14 +85,14 @@ struct glinn_program : public zxd::program {
     }
 
     object = glCreateProgram();
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/use_gbuffer.vs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/use_gbuffer.vs.glsl");
     string_vector sv;
     std::stringstream ss;
     ss << "#version 430 core" << std::endl;
     ss << "#define LIGHT_COUNT " << light_count << std::endl;
     sv.push_back(ss.str());
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_gbuffer.fs.glsl");
 
     this->link();

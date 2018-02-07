@@ -27,8 +27,8 @@ struct freetype_text_program : public zxd::program {
     glUniform1i(ul_font_map, 0);
   }
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/freetype_text.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/freetype_text.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/freetype_text.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/freetype_text.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");

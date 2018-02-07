@@ -2,7 +2,7 @@ struct prg : public quad_base {
   GLint ul_name;
 
   virtual void do_attach_shaders() {
-    attach_shader_file(
+    attach(
       GL_FRAGMENT_SHADER, "");
   }
 

@@ -52,11 +52,11 @@ class app0 : public app {
       // everything is done on vertex attribute
     }
     virtual void attach_shaders() {
-      attach_shader_file(GL_VERTEX_SHADER, "data/shader/instance.vs.glsl");
+      attach(GL_VERTEX_SHADER, "data/shader/instance.vs.glsl");
       string_vector sv;
       sv.push_back("#define LIGHT_COUNT 8\n");
       sv.push_back(read_file("data/shader/blinn.frag"));
-      attach_shader_source_and_file(
+      attach(
         GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
     }
     virtual void bind_uniform_locations() {

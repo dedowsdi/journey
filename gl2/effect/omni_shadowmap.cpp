@@ -71,9 +71,9 @@ struct render_program : public zxd::program {
 
   void attach_shaders() {
     // render shadow program
-    attach_shader_file(
+    attach(
       GL_VERTEX_SHADER, "data/shader/render_omni_shadowmap.vs.glsl");
-    attach_shader_file(
+    attach(
       GL_FRAGMENT_SHADER, "data/shader/render_omni_shadowmap.fs.glsl");
 
     name("render_prg");
@@ -161,14 +161,14 @@ struct use_program : public zxd::program {
 
   virtual void attach_shaders() {
     // use_program
-    attach_shader_file(
+    attach(
       GL_VERTEX_SHADER, "data/shader/use_omni_shadowmap.vs.glsl");
 
     string_vector sv;
     sv.push_back("#version 120\n");
     sv.push_back("#define LIGHT_COUNT 9\n");
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_omni_shadowmap.fs.glsl");
 
     name("use_prg");

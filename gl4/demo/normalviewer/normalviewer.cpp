@@ -29,9 +29,9 @@ struct normal_viewer_program : public zxd::program {
     glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
   }
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/normal_viewer.vs.glsl");
-    attach_shader_file(GL_GEOMETRY_SHADER, "data/shader/normal_viewer.gs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/normal_viewer.vs.glsl");
+    attach(GL_GEOMETRY_SHADER, "data/shader/normal_viewer.gs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_p_mat, "p_mat");
@@ -62,8 +62,8 @@ struct wire_program : public zxd::program {
       ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/simple.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/simple.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");

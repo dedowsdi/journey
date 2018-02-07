@@ -22,7 +22,7 @@ GLboolean srgb_texture = 0;
 struct gamma_program : public program {
   GLint ul_iamge;
   virtual void attach_shaders() {
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/gamma.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/gamma.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_iamge, "image");

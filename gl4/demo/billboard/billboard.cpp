@@ -21,8 +21,8 @@ struct program0 : public zxd::program {
   GLint ul_diffuse_map;
 
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/billboard_align.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/tex2d.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/billboard_align.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/tex2d.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_v_mat, "v_mat");
@@ -43,8 +43,8 @@ struct program1 : public zxd::program {
   GLint ul_camera_pos;
 
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/billboard_z.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/tex2d.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/billboard_z.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/tex2d.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_vp_mat, "vp_mat");
@@ -66,8 +66,8 @@ struct program2 : public zxd::program {
   GLint ul_camera_up;
 
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/billboard_eye.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/tex2d.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/billboard_eye.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/tex2d.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_vp_mat, "vp_mat");

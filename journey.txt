@@ -663,3 +663,15 @@ vim:
 
 linux:
   use who to check logged users.
+  
+
+-----------
+2018.02.06:
+
+vim:
+  :25   goto line 25
+  :/pattern/ goto line match pattern, different from :normal! /pattern
+
+linux:
+  change tty font:
+    sudo dpkg-reconfigure console-setup

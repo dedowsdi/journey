@@ -80,9 +80,9 @@ struct render_normalmap_program : public zxd::program {
     m_mat = _m_mat;
   }
   virtual void attach_shaders() {
-    attach_shader_file(
+    attach(
       GL_VERTEX_SHADER, "data/shader/render_normalmap.vs.glsl");
-    attach_shader_file(
+    attach(
       GL_FRAGMENT_SHADER, "data/shader/render_normalmap.fs.glsl");
   }
   virtual void bind_uniform_locations() {}
@@ -111,12 +111,12 @@ struct use_normal_map_view_program : public zxd::program {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
-    attach_shader_file(
+    attach(
       GL_VERTEX_SHADER, "data/shader/use_normalmap_view.vs.glsl");
     string_vector sv;
     sv.push_back("#version 120\n #define LIGHT_COUNT 1\n");
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
 
     name("use_normalmap_view");
@@ -156,10 +156,10 @@ struct use_normal_map_tangent_program : public program {
   virtual void attach_shaders() {
     string_vector sv;
     sv.push_back("#version 120\n #define LIGHT_COUNT 1\n");
-    attach_shader_source_and_file(
+    attach(
       GL_VERTEX_SHADER, sv, "data/shader/use_normalmap_tangent.vs.glsl");
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
 
     name("use_normalmap_tangent");

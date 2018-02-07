@@ -48,8 +48,8 @@ struct rgb_program : public zxd::program {
   }
 
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/rgb.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/rgb.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/rgb.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/rgb.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");

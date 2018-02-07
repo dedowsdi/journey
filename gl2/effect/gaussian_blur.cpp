@@ -58,13 +58,13 @@ struct gaussian_blur_program : public program {
   }
 
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
 
     std::stringstream ss;
     ss << "#version 120\n#define radius " << radius << "\n";
     string_vector sv;
     sv.push_back(ss.str());
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/gaussian_blur.fs.glsl");
   }
 

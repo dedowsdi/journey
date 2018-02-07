@@ -50,11 +50,11 @@ class app0 : public app {
       glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     }
     virtual void attach_shaders() {
-      attach_shader_file(GL_VERTEX_SHADER, "data/shader/blinn.vs.glsl");
+      attach(GL_VERTEX_SHADER, "data/shader/blinn.vs.glsl");
       string_vector sv;
       sv.push_back("#define LIGHT_COUNT 8\n");
       sv.push_back(read_file("data/shader/blinn.frag"));
-      attach_shader_source_and_file(
+      attach(
         GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
     }
     virtual void bind_uniform_locations() {

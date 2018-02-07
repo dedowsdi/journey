@@ -59,8 +59,8 @@ class app0 : public app {
     }
     virtual void model(const glm::mat4& m_mat) {}
     virtual void attach_shaders() {
-      attach_shader_file(GL_VERTEX_SHADER, "data/shader/freetype_text.vs.glsl");
-      attach_shader_file(
+      attach(GL_VERTEX_SHADER, "data/shader/freetype_text.vs.glsl");
+      attach(
         GL_FRAGMENT_SHADER, "data/shader/freetype_text.fs.glsl");
     }
     virtual void bind_uniform_locations() {

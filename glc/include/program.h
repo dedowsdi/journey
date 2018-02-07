@@ -100,12 +100,11 @@ public:
   virtual void update_frame() {}
 
   GLint attrib_location(const std::string& name);
-
-  // some wrapper
   void uniform_location(GLint* location, const std::string& name);
-  void attach_shader_file(GLenum type, const std::string& file);
-  bool attach_shader_source(GLenum type, const string_vector& source);
-  void attach_shader_source_and_file(
+
+  void attach(GLenum type, const std::string& file);
+  bool attach(GLenum type, const string_vector& source);
+  void attach(
     GLenum type, const string_vector& source, const std::string& file);
 
   std::string name() const { return m_name; }

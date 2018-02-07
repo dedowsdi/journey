@@ -49,13 +49,13 @@ struct parallax_program : public program {
   virtual void attach_shaders() {
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    attach_shader_source_and_file(
+    attach(
       GL_VERTEX_SHADER, sv, "data/shader/parallaxmap.vs.glsl");
     std::stringstream ss;
     ss << "#define PARALLAX_METHOD " << parallax_method << std::endl;
     sv.push_back(ss.str());
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/parallaxmap.fs.glsl");
 
     name("parallaxmap");

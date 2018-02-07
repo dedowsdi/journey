@@ -43,14 +43,14 @@ struct blinn_program : public zxd::program {
   virtual void attach_shaders() {
     string_vector sv;
     if (with_texcoord) sv.push_back("#define WITH_TEX\n");
-    attach_shader_source_and_file(
+    attach(
       GL_VERTEX_SHADER, sv, "data/shader/blinn.vs.glsl");
 
     sv.clear();
     if (with_texcoord) sv.push_back("#define WITH_TEX\n");
     sv.push_back("#define LIGHT_COUNT 8\n");
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
   }
   virtual void bind_uniform_locations() {
@@ -101,8 +101,8 @@ struct quad_program : public zxd::program {
   quad_program() : quad_map_name("quad_map") {}
 
   void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/quad.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/quad.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0) {
@@ -128,7 +128,7 @@ struct quad_base : public zxd::program {
   quad_base() : quad_map_name("quad_map") {}
 
   void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
     do_attach_shaders();
   }
 

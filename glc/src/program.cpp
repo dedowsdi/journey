@@ -53,15 +53,15 @@ void program::uniform_location(GLint* location, const std::string& name) {
 }
 
 //--------------------------------------------------------------------
-void program::attach_shader_file(GLenum type, const std::string& file) {
+void program::attach(GLenum type, const std::string& file) {
   string_vector sv;
   sv.push_back(read_file(file));
-  if (!attach_shader_source(type, sv))
+  if (!attach(type, sv))
     std::cout << "faild to compile " << file << std::endl;
 }
 
 //--------------------------------------------------------------------
-bool program::attach_shader_source(GLenum type, const string_vector& source) {
+bool program::attach(GLenum type, const string_vector& source) {
   GLuint sh;
 
   sh = glCreateShader(type);
@@ -93,11 +93,11 @@ bool program::attach_shader_source(GLenum type, const string_vector& source) {
 }
 
 //--------------------------------------------------------------------
-void program::attach_shader_source_and_file(
+void program::attach(
   GLenum type, const string_vector& source, const std::string& file) {
   string_vector combined_source(source);
   combined_source.push_back(read_file(file));
-  if (!attach_shader_source(type, combined_source))
+  if (!attach(type, combined_source))
     std::cout << "failed to compile " << file << std::endl;
 }
 

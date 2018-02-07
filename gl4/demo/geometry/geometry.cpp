@@ -38,11 +38,11 @@ struct blinn_program : public zxd::program {
   virtual void attach_shaders() {
     string_vector sv;
     sv.push_back("#version 430 core\n#define WITH_TEX\n");
-    attach_shader_source_and_file(
+    attach(
       GL_VERTEX_SHADER, sv, "data/shader/blinn.vs.glsl");
     sv.push_back("#define LIGHT_COUNT 3\n");
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach_shader_source_and_file(
+    attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
   }
   virtual void bind_uniform_locations() {

@@ -24,8 +24,8 @@ struct circular_program : public program {
   GLint ul_use_origin;
 
   virtual void attach_shaders() {
-    attach_shader_file(GL_VERTEX_SHADER, "data/shader/circular.vs.glsl");
-    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/circular.fs.glsl");
+    attach(GL_VERTEX_SHADER, "data/shader/circular.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/circular.fs.glsl");
   };
   virtual void bind_uniform_locations() {
     uniform_location(&ul_time, "time");
