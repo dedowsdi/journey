@@ -10,7 +10,7 @@ void disk::build_vertex() {
     m_inner == 0 ? cv_ring * (m_loop - 1) + m_slice + 2 : cv_ring * m_loop;
   m_vertices.reserve(cv_disk);
 
-  GLfloat theta_step = f2pi / m_slice;
+  GLfloat theta_step = m_sweep / m_slice;
   GLfloat radius_step = (m_outer - m_inner) / m_loop;
   GLuint li = 0;
 
@@ -20,7 +20,7 @@ void disk::build_vertex() {
     GLfloat radius = radius_step;
 
     for (int i = 0; i <= m_slice; ++i) {
-      GLfloat theta = theta_step * i;
+      GLfloat theta = m_start + theta_step * i;
       GLfloat ct = std::cos(theta);
       GLfloat st = std::sin(theta);
 
@@ -36,7 +36,7 @@ void disk::build_vertex() {
     GLfloat radius1 = m_inner + radius_step * (li + 1);
 
     for (int i = 0; i <= m_slice; ++i) {
-      GLfloat theta = theta_step * i;
+      GLfloat theta = m_start + theta_step * i;
       GLfloat ct = std::cos(theta);
       GLfloat st = std::sin(theta);
 

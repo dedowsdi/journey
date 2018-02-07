@@ -13,13 +13,27 @@ class disk : public geometry {
 protected:
   GLfloat m_inner;
   GLfloat m_outer;
+  GLfloat m_start; // in radian
+  GLfloat m_sweep;
   GLuint m_slice;
   GLuint m_loop;
 
 public:
-  disk() : m_inner(0.5), m_outer(1), m_slice(16), m_loop(8) {}
+  disk()
+      : m_inner(0.5),
+        m_outer(1),
+        m_slice(16),
+        m_loop(8),
+        m_start(0),
+        m_sweep(f2pi) {}
+
   disk(GLfloat inner, GLfloat outer, GLuint slice, GLuint loop)
-      : m_inner(inner), m_outer(outer), m_slice(slice), m_loop(loop) {}
+      : m_inner(inner),
+        m_outer(outer),
+        m_slice(slice),
+        m_loop(loop),
+        m_start(0),
+        m_sweep(f2pi) {}
 
   void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
@@ -39,6 +53,12 @@ public:
 
   GLuint loop() const { return m_loop; }
   void loop(GLuint v) { m_loop = v; }
+
+  GLfloat start() const { return m_start; }
+  void start(GLfloat v) { m_start = v; }
+
+  GLfloat sweep() const { return m_sweep; }
+  void sweep(GLfloat v) { m_sweep = v; }
 };
 }
 

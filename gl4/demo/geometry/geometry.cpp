@@ -75,10 +75,11 @@ protected:
   cylinder m_cylinder;
   torus m_torus;
   xyplane m_xyplane;
-  disk m_disk;
+  disk m_disk0;
+  disk m_disk1;
 
 public:
-  geometry_app() : m_camera_pos(0, -6, 6) {}
+  geometry_app() : m_camera_pos(0, -8, 8) {}
 
   virtual void init_info() {
     app::init_info();
@@ -147,8 +148,13 @@ public:
     m_xyplane.build_mesh();
     m_xyplane.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
 
-    m_disk.build_mesh();
-    m_disk.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_disk0.build_mesh();
+    m_disk0.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+
+    m_disk1.start(fpi4);
+    m_disk1.sweep(fpi2);
+    m_disk1.build_mesh();
+    m_disk1.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
 
     // texture
     GLint image_width = 64;
@@ -193,7 +199,11 @@ public:
 
     model = glm::translate(glm::vec3(2, -2, -1));
     prg.update_model(model);
-    m_disk.draw();
+    m_disk0.draw();
+
+    model = glm::translate(glm::vec3(4, -2, -1));
+    prg.update_model(model);
+    m_disk1.draw();
 
     model = mat4(1.0f);
     prg.update_model(model);
