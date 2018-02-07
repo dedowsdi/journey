@@ -1,4 +1,4 @@
-set(SRCS 
+set(GLC_SRCS 
     src/bitmap_text.cpp
     src/common.cpp
     src/glEnumString.cpp
@@ -19,7 +19,7 @@ set(SRCS
     )
 
 add_library(glc 
-    ${SRCS}
+    ${GLC_SRCS}
     )
 
 target_link_libraries(glc

@@ -5,6 +5,8 @@ project (gl4)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 include(util)
 
+#set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
 
 if( CMAKE_BUILD_TYPE STREQUAL ""  )
@@ -26,7 +28,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #this variable will be used at findOSG
 set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it's cached")
-
 FIND_PACKAGE(PkgConfig REQUIRED)
 
 FIND_PACKAGE(OpenGL REQUIRED)
@@ -37,14 +38,14 @@ findLibraryRequird(FIP_LIBS freeimageplus)
 findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)
 
 include_directories(
+    gl43/include
     ${GLFW3_INCLUDE_DIRS}
     ${OPENGL_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIR_ft2build}
     ${FIP_INCLUDE_DIR}
+    glc/include
     common/include
-    ../glc/include
-    gl43/include
     )
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
