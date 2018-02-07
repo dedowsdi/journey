@@ -5,7 +5,8 @@
  */
 
 #include "app.h"
-#include "read_image.cpp"
+#include "readimage.cpp"
+
 extern GLubyte* read_image(const char*, GLsizei*, GLsizei*);
 
 namespace zxd {

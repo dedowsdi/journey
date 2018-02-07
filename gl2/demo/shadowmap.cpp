@@ -331,7 +331,7 @@ class app0 : public app {
 
     gluLookAt(light_pos[0], light_pos[1], light_pos[2], lookat[0], lookat[1],
       lookat[2], up[0], up[1], up[2]);
-    glGetDoublev(g_l__m_o_d_e_l_v_i_e_w__m_a_t_r_i_x, depthBSVP);
+    glGetDoublev(GL_MODELVIEW_MATRIX, depthBSVP);
 
     // render scene, generate depth buffer
     draw_objects(GL_TRUE);
@@ -341,7 +341,7 @@ class app0 : public app {
     glTranslated(0.5f, 0.5f, 0.5f);
     glScaled(0.5f, 0.5f, 0.5f);
     glMultMatrixd(depthBSVP);
-    glGetDoublev(g_l__m_o_d_e_l_v_i_e_w__m_a_t_r_i_x, depthBSVP);
+    glGetDoublev(GL_MODELVIEW_MATRIX, depthBSVP);
 
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);

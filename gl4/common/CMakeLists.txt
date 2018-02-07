@@ -1,22 +1,5 @@
 set(COMMON_SRCS 
     src/app.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/bitmap_text.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/common.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/glEnumString.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/glm.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/light.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/program.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/quad.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/geometry.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/sphere.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/cuboid.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/cone.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/stringutil.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/texutil.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/cylinder.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/torus.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/xyplane.cpp
-    ${CMAKE_SOURCE_DIR}/../glc/src/disk.cpp
     )
 
 add_library(common 
@@ -25,6 +8,7 @@ add_library(common
 
 target_link_libraries(common
     gl43
+    glc
     ${OPENGL_gl_LIBRARY}
     ${GLFW3_LIBRARIES}
     ${FREETYPE_LIBRARIES}

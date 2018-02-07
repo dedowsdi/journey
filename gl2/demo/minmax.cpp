@@ -4,7 +4,7 @@
  *  this demonstrates use of the glMinmax() call.
  */
 #include "app.h"
-#include "read_image.cpp"
+#include "readimage.cpp"
 extern GLubyte* read_image(const char*, GLsizei*, GLsizei*);
 
 namespace zxd {

@@ -58,7 +58,7 @@ struct parallax_program : public program {
     attach_shader_source_and_file(
       GL_FRAGMENT_SHADER, sv, "data/shader/parallaxmap.fs.glsl");
 
-    set_name("parallaxmap");
+    name("parallaxmap");
   }
 
   virtual void bind_uniform_locations() {

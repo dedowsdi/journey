@@ -177,7 +177,7 @@ class app0 : public app {
     glRotatef(yaw, 0, 1, 0);
 
     GLdouble model_view[16];
-    glGetDoublev(g_l__m_o_d_e_l_v_i_e_w__m_a_t_r_i_x, model_view);
+    glGetDoublev(GL_MODELVIEW_MATRIX, model_view);
 
     // draw skybox
     glColor3f(1.0f, 1.0f, 1.0f);

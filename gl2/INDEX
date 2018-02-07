@@ -16,6 +16,7 @@ Chapter 2: State Management and Drawing Geometric Objects
 	varray.c	(1.1)
 	mvarray.c	(1.4)
     vbo.c       (1.5)
+    sprite
 
 Chapter 3: Vieweing
 
@@ -72,6 +73,7 @@ Chapter 8: Drawing Pixels, Bitmaps, Fonts, and Images
 	colormatrix.c	(ARB_imaging_subset)
 	histogram.c	(ARB_imaging_subset)
 	minmax.c	(ARB_imaging_subset)
+    pbo.c
 
 Chapter 9: Texture Mapping
 
@@ -90,6 +92,7 @@ Chapter 9: Texture Mapping
 	shadowmap.c	(1.4)
 	wrap.c
 	texprox.c	(1.1)
+    texmat
 
 Chapter 10: The Framebuffer
 
@@ -101,6 +104,7 @@ Chapter 10: The Framebuffer
 	accpersp.c	(1.0)
 	accanti.c	(1.0)
 	dof.c		(1.0)
+    rtt.cpp
 
 Chapter 11: Tessellators and Quadrics
 

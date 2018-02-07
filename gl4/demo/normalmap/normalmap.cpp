@@ -36,7 +36,7 @@ struct use_normal_map_view_program : public zxd::program {
     attach_shader_source_and_file(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
 
-    set_name("use_normalmap_view");
+    name("use_normalmap_view");
   }
   virtual void bind_uniform_locations() {
     // uniform_location(&ul_eye, "eye");
@@ -79,7 +79,7 @@ struct use_normal_map_tangent_progrm : public program {
     attach_shader_source_and_file(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
 
-    set_name("use_normalmap_tangent");
+    name("use_normalmap_tangent");
   }
   virtual void bind_uniform_locations() {
     // uniform_location(&ul_eye, "eye");

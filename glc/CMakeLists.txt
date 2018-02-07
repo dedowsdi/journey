@@ -1,0 +1,27 @@
+set(SRCS 
+    src/bitmap_text.cpp
+    src/common.cpp
+    src/glEnumString.cpp
+    src/glm.cpp
+    src/light.cpp
+    src/program.cpp
+    src/quad.cpp
+    src/geometry.cpp
+    src/sphere.cpp
+    src/cuboid.cpp
+    src/cone.cpp
+    src/stringutil.cpp
+    src/texutil.cpp
+    src/cylinder.cpp
+    src/torus.cpp
+    src/xyplane.cpp
+    src/disk.cpp
+    )
+
+add_library(glc 
+    ${SRCS}
+    )
+
+target_link_libraries(glc
+    X11
+    )

@@ -3,7 +3,7 @@ set (DEMOES
     aargb
     accanti
     accpersp
-    alpha3D
+    alpha3d
     alpha
     bezcurve
     bezmesh
@@ -74,11 +74,11 @@ set (DEMOES
     unproject
     varray
     wrap
-    edgeFlag
+    edgeflag
     vbo
     icosahedron
     twosidedlighting
-    pboimage
+    pbo
     sprite
     texmat
     stencilcap

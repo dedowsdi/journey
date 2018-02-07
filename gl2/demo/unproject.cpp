@@ -44,8 +44,8 @@ class app0 : public app {
       case GLUT_LEFT_BUTTON:
         if (state == GLUT_DOWN) {
           glGetIntegerv(GL_VIEWPORT, viewport);
-          glGetDoublev(g_l__m_o_d_e_l_v_i_e_w__m_a_t_r_i_x, mvmatrix);
-          glGetDoublev(g_l__p_r_o_j_e_c_t_i_o_n__m_a_t_r_i_x, projmatrix);
+          glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
+          glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
           /*  note viewport[3] is height of window in pixels, that why -1 is
            *  needed, only works if viewport height is the same as window
            * height,

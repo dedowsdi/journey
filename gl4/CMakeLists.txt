@@ -56,6 +56,7 @@ file(COPY data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #generate cfg file
 
 add_subdirectory(gl43)
+add_subdirectory(glc)
 add_subdirectory(common)
 add_subdirectory(demo)
 add_subdirectory(util)
