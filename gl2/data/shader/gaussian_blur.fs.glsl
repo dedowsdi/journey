@@ -1,15 +1,17 @@
 /*
- * Just a demostration of two pass gaussian blur, you should precaculate weights
+ * just a demostration of two pass gaussian blur, you should precaculate weights
  * if you want to use it.
  */
 #extension GL_EXT_gpu_shader4 : require
 
+varying vec2 m_texcoord;
+
 uniform float mean;
 uniform float deviation;
 uniform bool horizontal = true;
-uniform float gaussianStep;
+uniform float gaussian_step;
 
-uniform sampler2D colorMap;
+uniform sampler2D quad_map;
 
 #ifndef radius
 #define radius 4
@@ -21,18 +23,18 @@ float weights[radius+1];
 
 void main(void) {
   float r = 1.0 / sqrt(2.0 * pi);
-  vec2 texelStep = 1.0 / textureSize2D(colorMap, 0);
+  vec2 texel_step = 1.0 / textureSize2D(quad_map, 0);
   if (horizontal) {
-    texelStep.y = 0.0;
+    texel_step.y = 0.0;
   } else {
-    texelStep.x = 0.0;
+    texel_step.x = 0.0;
   }
   float rd = 1.0 / deviation;
 
   // calculate weights
   for (int i = 0; i <= radius; i++) {
     weights[i] =
-      pow(e, -0.5 * pow((gaussianStep * i - mean) * rd, 2.0)) * rd * r;
+      pow(e, -0.5 * pow((gaussian_step * i - mean) * rd, 2.0)) * rd * r;
   }
   // normalize weights
   float rw = weights[0];
@@ -41,12 +43,12 @@ void main(void) {
   }
   rw = 1.0 / rw;
 
-  vec4 color = weights[0] * rw * texture2D(colorMap, gl_TexCoord[0].xy);
+  vec4 color = weights[0] * rw * texture2D(quad_map, m_texcoord.xy);
   for (int i = 1; i <= radius; i++) {
     color +=
-      weights[i] * rw * texture2D(colorMap, gl_TexCoord[0].xy + texelStep * i);
+      weights[i] * rw * texture2D(quad_map, m_texcoord.xy + texel_step * i);
     color +=
-      weights[i] * rw * texture2D(colorMap, gl_TexCoord[0].xy - texelStep * i);
+      weights[i] * rw * texture2D(quad_map, m_texcoord.xy - texel_step * i);
   }
   gl_FragColor = color;
 }

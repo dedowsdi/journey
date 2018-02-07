@@ -1,7 +1,7 @@
 /*
  * mean = 0
  * stand deviation = 1
- * gaussianStep = 0.5
+ * gaussian_step = 0.5
  * radius = 4
  */
 #version 120
@@ -9,24 +9,25 @@
 
 #define radius 4
 
-uniform bool horizontal = true;
+varying vec2 m_texcoord;
 
-uniform sampler2D colorMap;
+uniform bool horizontal = true;
+uniform sampler2D quad_map;
 
 const float weights[5] = float[5](0.204164, 0.180174, 0.123832, 0.0662822, 0.0276306);
 
 void main(void) {
-  vec2 texStep = 1.0 / textureSize2D(colorMap, 0);
+  vec2 tex_step = 1.0 / textureSize2D(quad_map, 0);
   if (horizontal) {
-    texStep.y = 0.0;
+    tex_step.y = 0.0;
   } else {
-    texStep.x = 0.0;
+    tex_step.x = 0.0;
   }
 
-  vec4 color = weights[0] * texture2D(colorMap, gl_TexCoord[0].xy);
+  vec4 color = weights[0] * texture2D(quad_map, m_texcoord.xy);
   for (int i = 1; i <= radius; i++) {
-    color += weights[i] * texture2D(colorMap, gl_TexCoord[0].xy + texStep * i);
-    color += weights[i] * texture2D(colorMap, gl_TexCoord[0].xy - texStep * i);
+    color += weights[i] * texture2D(quad_map, m_texcoord.xy + tex_step * i);
+    color += weights[i] * texture2D(quad_map, m_texcoord.xy - tex_step * i);
   }
   gl_FragColor = color;
 }

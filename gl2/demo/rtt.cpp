@@ -1,14 +1,14 @@
 /*
  * rtt
  *
- * Ned ARB_framebuffer_object.
+ * ned a_r_b_framebuffer_object.
  *
- * You can attact render buffer or 2d texture to framebuffer attachment.
+ * you can attact render buffer or 2d texture to framebuffer attachment.
  *
- * Don't ever use seperated stencil buffer, if you need stencil, always use
+ * don't ever use seperated stencil buffer, if you need stencil, always use
  * internal farmat GL_DEPTH24_STENCIL8.
  *
- * If you need to render both stencil and depth , attach a depth stencil
+ * if you need to render both stencil and depth , attach a depth stencil
  * renderbuffer, then read depth component and stencil index.
  */
 #include "glad/glad.h"
@@ -21,15 +21,15 @@
 #define IMAGE_HEIGHT 256
 
 GLUquadricObj* qobj;  // usded to create disk
-GLuint colorTex;
-GLuint depthTex;
-GLuint stencilTex;
+GLuint color_tex;
+GLuint depth_tex;
+GLuint stencil_tex;
 
 GLuint fbo;
 GLuint rbo;  // stencil depth render buffer
-GLfloat depthData[IMAGE_WIDTH * IMAGE_HEIGHT];
-GLubyte stencilData[IMAGE_WIDTH * IMAGE_HEIGHT];
-GLboolean useDepthStencilBuffer = GL_FALSE;
+GLfloat depth_data[IMAGE_WIDTH * IMAGE_HEIGHT];
+GLubyte stencil_data[IMAGE_WIDTH * IMAGE_HEIGHT];
+GLboolean use_depth_stencil_buffer = GL_FALSE;
 
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -43,8 +43,8 @@ void init(void) {
   glGenFramebuffers(1, &fbo);
 
   // color texture
-  glGenTextures(1, &colorTex);
-  glBindTexture(GL_TEXTURE_2D, colorTex);
+  glGenTextures(1, &color_tex);
+  glBindTexture(GL_TEXTURE_2D, color_tex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -53,8 +53,8 @@ void init(void) {
     GL_UNSIGNED_BYTE, 0);
 
   // depth texture
-  glGenTextures(1, &depthTex);
-  glBindTexture(GL_TEXTURE_2D, depthTex);
+  glGenTextures(1, &depth_tex);
+  glBindTexture(GL_TEXTURE_2D, depth_tex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -63,8 +63,8 @@ void init(void) {
     0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 0);
 
   // stencil texture
-  glGenTextures(1, &stencilTex);
-  glBindTexture(GL_TEXTURE_2D, stencilTex);
+  glGenTextures(1, &stencil_tex);
+  glBindTexture(GL_TEXTURE_2D, stencil_tex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -88,7 +88,7 @@ void init(void) {
   glEnable(GL_STENCIL_TEST);
 }
 
-void renderScene() {
+void render_scene() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
   glDisable(GL_LIGHTING);
@@ -96,7 +96,7 @@ void renderScene() {
   glPushMatrix();
   glLoadIdentity();
 
-  // build stencil. Ref and mask are set to 0xff for visualization.
+  // build stencil. ref and mask are set to 0xff for visualization.
   glEnable(GL_STENCIL_TEST);
   glStencilFunc(GL_ALWAYS, 0xff, 0xff);
   glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -116,20 +116,20 @@ void display(void) {
 
   glViewport(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
   // draw scene at low left
-  renderScene();
+  render_scene();
 
   // render to textures
-  if (useDepthStencilBuffer) {
+  if (use_depth_stencil_buffer) {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex, 0);
     glFramebufferRenderbuffer(
       GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-    renderScene();
+    render_scene();
     glReadPixels(
-      0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, GL_DEPTH_COMPONENT, GL_FLOAT, depthData);
+      0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, GL_DEPTH_COMPONENT, GL_FLOAT, depth_data);
     glReadPixels(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, GL_STENCIL_INDEX,
-      GL_UNSIGNED_BYTE, stencilData);
+      GL_UNSIGNED_BYTE, stencil_data);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glDisable(GL_LIGHTING);
@@ -144,18 +144,18 @@ void display(void) {
     // color
     glViewport(IMAGE_WIDTH, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-    drawTexRect(-1, -1, 1, 1);
+    glBindTexture(GL_TEXTURE_2D, color_tex);
+    draw_tex_rect(-1, -1, 1, 1);
     glDisable(GL_TEXTURE_2D);
 
     // depth
     glWindowPos2i(IMAGE_WIDTH, IMAGE_HEIGHT);
-    glDrawPixels(IMAGE_WIDTH, IMAGE_HEIGHT, GL_LUMINANCE, GL_FLOAT, depthData);
+    glDrawPixels(IMAGE_WIDTH, IMAGE_HEIGHT, GL_LUMINANCE, GL_FLOAT, depth_data);
 
     // stencil
     glWindowPos2i(0, IMAGE_HEIGHT);
     glDrawPixels(
-      IMAGE_WIDTH, IMAGE_HEIGHT, GL_LUMINANCE, GL_UNSIGNED_BYTE, stencilData);
+      IMAGE_WIDTH, IMAGE_HEIGHT, GL_LUMINANCE, GL_UNSIGNED_BYTE, stencil_data);
 
     glPopMatrix();
 
@@ -164,14 +164,14 @@ void display(void) {
   } else {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex, 0);
     //glFramebufferTexture2D(
-      //GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+      //GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_tex, 0);
     //glFramebufferTexture2D(
-      //GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencilTex, 0);
+      //GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencil_tex, 0);
     glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
-    renderScene();
+      GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth_tex, 0);
+    render_scene();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glDisable(GL_LIGHTING);
@@ -186,18 +186,18 @@ void display(void) {
     // color
     glEnable(GL_TEXTURE_2D);
     glViewport(IMAGE_WIDTH, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-    drawTexRect(-1, -1, 1, 1);
+    glBindTexture(GL_TEXTURE_2D, color_tex);
+    draw_tex_rect(-1, -1, 1, 1);
 
     // depth + stecil ?
     glViewport(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT);
-    glBindTexture(GL_TEXTURE_2D, depthTex);
-    drawTexRect(-1, -1, 1, 1);
+    glBindTexture(GL_TEXTURE_2D, depth_tex);
+    draw_tex_rect(-1, -1, 1, 1);
 
     // stencil
     // glViewport(0, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT);
-    // glBindTexture(GL_TEXTURE_2D, stencilTex);
-    // drawTexRect(-1, -1, 1, 1);
+    // glBindTexture(GL_TEXTURE_2D, stencil_tex);
+    // draw_tex_rect(-1, -1, 1, 1);
 
     glDisable(GL_TEXTURE_2D);
 
@@ -212,7 +212,7 @@ void display(void) {
   glDisable(GL_LIGHTING);
   glDisable(GL_STENCIL_TEST);
   char info[256];
-  sprintf(info, "q : use depth24stencil8 buffer : %d\n", useDepthStencilBuffer);
+  sprintf(info, "q : use depth24stencil8 buffer : %d\n", use_depth_stencil_buffer);
 
   glWindowPos2i(20, IMAGE_HEIGHT * 2 - 20);
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const unsigned char*)info);
@@ -236,7 +236,7 @@ void keyboard(unsigned char key, int x, int y) {
       exit(0);
       break;
     case 'q':
-      useDepthStencilBuffer = useDepthStencilBuffer ^ 1;
+      use_depth_stencil_buffer = use_depth_stencil_buffer ^ 1;
       glutPostRedisplay();
       break;
     case 'f':
@@ -253,7 +253,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(IMAGE_WIDTH * 2, IMAGE_HEIGHT * 2);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

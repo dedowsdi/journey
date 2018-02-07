@@ -1,6 +1,6 @@
 /*
  *  twosidedlighting.c
- *  This program demonstrates the use of tow-sided lighting
+ *  this program demonstrates the use of tow-sided lighting
  *  model.
  *
  *  TODO the graph is all white, really not so 3d, couldn't figure the geometry
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  zxd::loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

@@ -1,284 +1,384 @@
 /* normalmap.c
  *
- * Used to give high detail to low quality geomety.
+ * used to give high detail to low quality geomety.
  *
- * There are two types of normal map: model space , tangent space.
- * Benifit of tangent space:
- *   As z is always positive, you can only store xy components.
- *   Reuse the same normal map on different surfaces?
- *   The ability to modify the texture mapping?
+ * there are two types of normal map: model space , tangent space.
+ * benifit of tangent space:
+ *   as z is always positive, you can only store xy components.
+ *   reuse the same normal map on different surfaces?
+ *   the ability to modify the texture mapping?
  *
- * You need a fine grained mesh and a corse grained mesh.
- * The fine grained mesh will be used to create normal map, each triangle in
+ * you need a fine grained mesh and a corse grained mesh.
+ * the fine grained mesh will be used to create normal map, each triangle in
  * fine grained mesh needs to find it's "parent" triangle and it's tangent space
  * in corse grained mesh, the normal is then converted into this tangent space.
  *
- * In order to render normal map, i use tex*2 - 1 as ndc, so the corresponding
+ * in order to render normal map, i use tex*2 - 1 as ndc, so the corresponding
  * normal will be rendered at resolution * tex.
  */
-#include "glad/glad.h"
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <GL/freeglut_ext.h>
-#include <stdlib.h>
-#include <memory.h>
-#include "common.h"
-#include "glm.h"
+#include "app.h"
+#include "program.h"
+#include "light.h"
+#include <sstream>
+
+namespace zxd {
 
 using namespace glm;
 
-#define imageWidth 256
-#define imageHeight 256
-
-#define VAO_LOW 0
-#define VAO_HIGH 1
-
-static GLuint texName;
-GLint render_normalmap_program;
-GLint normalmap_program;
-GLint loc_normalMap;
-
-GLuint vaos[2];
+#define IMAGE_WIDTH 256
+#define IMAGE_HEIGHT 256
 
 // clang-format off
-vec3 vertices0[12] = {
-  vec3(0, 1, 0), vec3(-1, 0, 1), vec3(1 , 0, 1),
-  vec3(0, 1, 0), vec3(1 , 0, 1), vec3(1 , 0, -1 ),
-  vec3(0, 1, 0), vec3(1 , 0, -1 ), vec3(-1, 0, -1 ),
-  vec3(0, 1, 0), vec3(-1, 0, -1 ), vec3(-1, 0, 1)
-};
-vec3 normals0[12];
-vec2 texcoords0[12] = {
-  vec2(0.5,0.5), vec2(0,0), vec2(1,0),
-  vec2(0.5,0.5), vec2(1,0), vec2(1,1),
-  vec2(0.5,0.5), vec2(1,1), vec2(0,1),
-  vec2(0.5,0.5), vec2(0,1), vec2(0,0)
-};
+struct pyramid0 {
+  GLuint vao;
+  vec3 vertices[12] = {
+    vec3(0, 0, 0.5) , vec3(-1, -1, 0) , vec3(1,  -1, 0) ,
+    vec3(0, 0, 0.5) , vec3(1,  -1, 0) , vec3(1,  1,  0) ,
+    vec3(0, 0, 0.5) , vec3(1,  1,  0) , vec3(-1, 1,  0) ,
+    vec3(0, 0, 0.5) , vec3(-1, 1,  0) , vec3(-1, -1, 0)
+  };
+  vec3 normals[12];
+  vec2 texcoords[12] = {
+    vec2(0.5,0.5), vec2(0,0), vec2(1,0),
+    vec2(0.5,0.5), vec2(1,0), vec2(1,1),
+    vec2(0.5,0.5), vec2(1,1), vec2(0,1),
+    vec2(0.5,0.5), vec2(0,1), vec2(0,0)
+  };
 
-vec3 vertices1[4] = {
-  vec3(-1, 0, 1 ),
-  vec3(1 , 0, 1 ),
-  vec3(1 , 0, -1 ),
-  vec3(-1, 0, -1 )
+} pyramid0;
+
+struct pyramid1 {
+  GLuint vao;
+vec3 vertices[4] = {
+  vec3(-1, 1,  0),
+  vec3(-1, -1, 0),
+  vec3(1,  1,  0),
+  vec3(1,  -1, 0)
 };
-vec3 normals1[4] = {
-  vec3(0, 1, 0),
-  vec3(0, 1, 0),
-  vec3(0, 1, 0),
-  vec3(0, 1, 0)
+vec3 normals[4] = {
+  vec3(0, 0, 1),
+  vec3(0, 0, 1),
+  vec3(0, 0, 1),
+  vec3(0, 0, 1)
 };
-vec3 tangents1[4];
-vec2 texcoords1[4] = {
+vec3 tangents[4];
+vec2 texcoords[4] = {
+   vec2(0,1),
    vec2(0,0), 
-   vec2(1,0), 
-   vec2(1,1), 
-   vec2(0,1) 
+   vec2(1,1),
+   vec2(1,0) 
 };
 
+}pyramid1;
 // clang-format on
 
-void generateNormalMap() {
-  // render high detail geometry to generate normal map
-  glViewport(0, 0, imageWidth, imageHeight);
-  glBindVertexArray(vaos[VAO_HIGH]);
+struct render_normalmap_program : public zxd::program {
+  GLint al_texcoord;
+  GLint al_normal;
 
-  // glEnable(GL_TEXTURE_2D);
-  // render normal
-  glUseProgram(render_normalmap_program);
-  glDrawArrays(GL_TRIANGLES, 0, 12);
-  glFlush();
-
-  glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, imageWidth, imageHeight, 0);
-}
-
-void init(void) {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-
-  glShadeModel(GL_SMOOTH);
-  glEnable(GL_DEPTH_TEST);
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-  render_normalmap_program = glCreateProgram();
-  attachShaderFile(render_normalmap_program, GL_VERTEX_SHADER,
-    "data/shader/render_normalmap.vs.glsl");
-  attachShaderFile(render_normalmap_program, GL_FRAGMENT_SHADER,
-    "data/shader/render_normalmap.fs.glsl");
-  ZCGE(glLinkProgram(render_normalmap_program));
-
-  normalmap_program = glCreateProgram();
-  attachShaderFile(
-    normalmap_program, GL_VERTEX_SHADER, "data/shader/normalmap.vs.glsl");
-  attachShaderFile(
-    normalmap_program, GL_FRAGMENT_SHADER, "data/shader/normalmap.fs.glsl");
-  ZCGE(glLinkProgram(normalmap_program));
-  setUniformLocation(&loc_normalMap, normalmap_program, "normalMap");
-
-  // init mesh data
-  zxd::generateFaceNormals(vertices0, vertices0 + 12, normals0);
-
-  // there are only 1 quad in low quality mesh
-  mat4 tbn = zxd::getTangetnBasis(vertices1[0], vertices1[1], vertices1[2],
-    texcoords1[0], texcoords1[1], texcoords1[2], &normals1[0]);
-  mat4 invTbn = inverse(tbn);
-  vec3 tangent = vec3(glm::column(tbn, 0));
-
-  for (int i = 0; i < 4; ++i) tangents1[i] = tangent;
-
-  // transform modle normals to tbn space
-  for (int i = 0; i < 12; ++i)
-    normals0[i] = zxd::transformVector(invTbn, normals0[i]);
-
-  glGenVertexArrays(2, vaos);
-
-  glBindVertexArray(vaos[VAO_HIGH]);
-  {
-    GLuint buffers[3];
-    glGenBuffers(3, buffers);
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices0), vertices0, GL_STATIC_DRAW);
-    glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0));
-    glEnable(GL_VERTEX_ARRAY);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(normals0), normals0, GL_STATIC_DRAW);
-    glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(0));
-    glEnable(GL_NORMAL_ARRAY);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
-    glBufferData(
-      GL_ARRAY_BUFFER, sizeof(texcoords0), texcoords0, GL_STATIC_DRAW);
-    glTexCoordPointer(2, GL_FLOAT, 0, BUFFER_OFFSET(0));
-    glEnable(GL_TEXTURE_COORD_ARRAY);
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
   }
-  ZCGEA;
-
-  glBindVertexArray(vaos[VAO_LOW]);
-  {
-    GLuint buffers[4];
-    glGenBuffers(4, buffers);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
-    glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0));
-    glEnable(GL_VERTEX_ARRAY);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(normals1), normals1, GL_STATIC_DRAW);
-    glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(0));
-    glEnable(GL_NORMAL_ARRAY);
-
-    glClientActiveTexture(GL_TEXTURE0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
-    glBufferData(
-      GL_ARRAY_BUFFER, sizeof(texcoords1), texcoords1, GL_STATIC_DRAW);
-    glTexCoordPointer(2, GL_FLOAT, 0, BUFFER_OFFSET(0));
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    glClientActiveTexture(GL_TEXTURE1);
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[3]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(tangents1), tangents1, GL_STATIC_DRAW);
-    glTexCoordPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0));
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+  virtual void attach_shaders() {
+    attach_shader_file(
+      GL_VERTEX_SHADER, "data/shader/render_normalmap.vs.glsl");
+    attach_shader_file(
+      GL_FRAGMENT_SHADER, "data/shader/render_normalmap.fs.glsl");
   }
-  ZCGEA;
+  virtual void bind_uniform_locations() {}
 
-  // texture for normal map
-  glGenTextures(1, &texName);
-  glBindTexture(GL_TEXTURE_2D, texName);
+  virtual void bind_attrib_locations() {
+    al_texcoord = attrib_location("texcoord");
+    al_normal = attrib_location("normal");
+  };
+} render_prg;
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+struct use_normal_map_view_program : public zxd::program {
+  GLint al_vertex;
+  GLint al_normal;
+  GLint al_tangent;
+  GLint al_texcoord;
+  GLint ul_normal_map;
 
-  // light and material
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mv_mat = v_mat * m_mat;
+    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mvp_mat = p_mat * mv_mat;
 
-  GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};
-
-  GLfloat light_position0[] = {1.0, 1.0, 0.0, 0.0};  // 0 w means dir light
-  GLfloat light_diffuse0[] = {1.0, 1.0, 1.0, 1.0};
-
-  GLfloat lmodel_ambient[] = {0.1, 0.1, 0.1, 1.0};  // global ambient
-
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse0);
-
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-}
-
-void display(void) {
-  glViewport(imageWidth, 0, imageWidth, imageHeight);
-  glEnable(GL_SCISSOR_TEST);
-  glScissor(imageWidth, 0, imageWidth, imageHeight * 2);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // draw low quality mesh with normal map
-  glUseProgram(normalmap_program);
-
-  glEnable(GL_TEXTURE_2D);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-  glBindTexture(GL_TEXTURE_2D, texName);
-  glUniform1i(loc_normalMap, 0);
-
-  glBindVertexArray(vaos[VAO_LOW]);
-  glDrawArrays(GL_QUADS, 0, 4);
-
-  glUseProgram(0);
-  glDisable(GL_TEXTURE_2D);
-
-  glColor3f(1.0f, 1.0f, 1.0f);
-  glWindowPos2i(10, 492);
-  GLchar info[256];
-
-  sprintf(info, " \n");
-  glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
-  glEnable(GL_TEXTURE_2D);
-
-  glFlush();
-  ZCGEA
-}
-
-void reshape(int w, int h) {
-  // create normal map
-  generateNormalMap();
-
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(45, 1, 1, 100);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(0, 3, 3, 0, 0, 0, 0, 1, 0);
-}
-
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 27:
-      exit(0);
-      break;
-
-    default:
-      break;
+    glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
+    glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
-}
+  virtual void attach_shaders() {
+    attach_shader_file(
+      GL_VERTEX_SHADER, "data/shader/use_normalmap_view.vs.glsl");
+    string_vector sv;
+    sv.push_back("#version 120\n #define LIGHT_COUNT 1\n");
+    sv.push_back(read_file("data/shader/blinn.frag"));
+    attach_shader_source_and_file(
+      GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
 
-int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(512, 256);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyboard);
-  glutMainLoop();
+    set_name("use_normalmap_view");
+  }
+  virtual void bind_uniform_locations() {
+    // uniform_location(&ul_eye, "eye");
+    uniform_location(&ul_mv_mat, "mv_mat");
+    uniform_location(&ul_mv_mat_it, "mv_mat_it");
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_normal_map, "normal_map");
+  }
+
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_normal = attrib_location("normal");
+    al_tangent = attrib_location("tangent");
+    al_texcoord = attrib_location("texcoord");
+  };
+} prg0;
+
+struct use_normal_map_tangent_program : public program {
+  GLint al_vertex;
+  GLint al_normal;
+  GLint al_tangent;
+  GLint al_texcoord;
+  GLint ul_normal_map;
+  GLint ul_m_camera;
+
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mv_mat = v_mat * m_mat;
+    mv_mat_i = glm::inverse(mv_mat);
+    m_mat_i = glm::inverse(m_mat);
+    mvp_mat = p_mat * mv_mat;
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
+  };
+  virtual void attach_shaders() {
+    string_vector sv;
+    sv.push_back("#version 120\n #define LIGHT_COUNT 1\n");
+    attach_shader_source_and_file(
+      GL_VERTEX_SHADER, sv, "data/shader/use_normalmap_tangent.vs.glsl");
+    sv.push_back(read_file("data/shader/blinn.frag"));
+    attach_shader_source_and_file(
+      GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
+
+    set_name("use_normalmap_tangent");
+  }
+  virtual void bind_uniform_locations() {
+    // uniform_location(&ul_eye, "eye");
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_normal_map, "normal_map");
+    uniform_location(&ul_m_camera, "m_camera");
+  }
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_normal = attrib_location("normal");
+    al_tangent = attrib_location("tangent");
+    al_texcoord = attrib_location("texcoord");
+  };
+} prg1;
+
+GLuint normal_map;
+std::vector<zxd::light_source> lights;
+zxd::light_model lm;
+zxd::material mtl;
+GLint light_space = 0;  // 0 : view, 1 : tangent
+
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "normalmap";
+    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.wnd_width = IMAGE_WIDTH * 2;
+    m_info.wnd_height = IMAGE_HEIGHT;
+  }
+
+  void generate_normal_map() {
+    glViewport(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+    glScissor(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glBindVertexArray(pyramid0.vao);
+    glUseProgram(render_prg);
+
+    glDrawArrays(GL_TRIANGLES, 0, 12);
+
+    glBindTexture(GL_TEXTURE_2D, normal_map);
+    glCopyTexImage2D(
+      GL_TEXTURE_2D, 0, GL_RGB, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, 0);
+  }
+
+  void bind_uniform_locations(zxd::program &prg) {
+    lm.bind_uniform_locations(prg.object, "lm");
+    for (int i = 0; i < lights.size(); ++i) {
+      std::stringstream ss;
+      ss << "lights[" << i << "]";
+      lights[i].bind_uniform_locations(prg.object, ss.str());
+    }
+    mtl.bind_uniform_locations(prg.object, "mtl");
+  }
+
+  void create_scene(void) {
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    render_prg.init();
+    prg0.init();
+    prg0.p_mat = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
+    prg0.v_mat = glm::lookAt(vec3(5, -5, 5), vec3(0.0f), vec3(0, 1, 0));
+    prg1.init();
+    prg1.p_mat = prg0.p_mat;
+    prg1.v_mat = prg0.v_mat;
+
+    set_v_mat(&prg0.v_mat);
+    // create mesh data
+    zxd::generate_face_normals(
+      pyramid0.vertices, pyramid0.vertices + 12, pyramid0.normals);
+
+    mat4 tbn = zxd::get_tangetn_basis(pyramid1.vertices[0],
+      pyramid1.vertices[1], pyramid1.vertices[2], pyramid1.texcoords[0],
+      pyramid1.texcoords[1], pyramid1.texcoords[2], &pyramid1.normals[0]);
+    mat4 tbn_i = inverse(tbn);
+    vec3 tangent = vec3(glm::column(tbn, 0));
+    // vec3 tangent = glm::row(tbn, 0).xyz();
+
+    for (int i = 0; i < 4; ++i) pyramid1.tangents[i] = tangent;
+
+    // transform modle normals to tbn space
+    for (int i = 0; i < 12; ++i)
+      pyramid0.normals[i] = zxd::transform_vector(tbn_i, pyramid0.normals[i]);
+
+    // create vertex arries
+    glGenVertexArrays(1, &pyramid0.vao);
+    glBindVertexArray(pyramid0.vao);
+
+    setup_vertex_al_builtin_array(render_prg.al_normal, pyramid0.normals);
+    setup_vertex_al_builtin_array(render_prg.al_texcoord, pyramid0.texcoords);
+
+    glGenVertexArrays(1, &pyramid1.vao);
+    glBindVertexArray(pyramid1.vao);
+
+    setup_vertex_al_builtin_array(prg0.al_vertex, pyramid1.vertices);
+    setup_vertex_al_builtin_array(prg0.al_normal, pyramid1.normals);
+    setup_vertex_al_builtin_array(prg0.al_tangent, pyramid1.tangents);
+    setup_vertex_al_builtin_array(prg0.al_texcoord, pyramid1.texcoords);
+
+    glGenTextures(1, &normal_map);
+    glBindTexture(GL_TEXTURE_2D, normal_map);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_WIDTH, IMAGE_HEIGHT, 0, GL_RGB,
+      GL_UNSIGNED_BYTE, 0);
+
+    // light
+    zxd::light_source dir_light;
+    dir_light.position = vec4(1, -1, 1, 0);
+    dir_light.diffuse = vec4(1, 1, 1, 1);
+    dir_light.specular = vec4(1, 1, 1, 1);
+    dir_light.linear_attenuation = 1.0f;
+
+    lights.push_back(dir_light);
+
+    lm.local_viewer = 1;
+
+    // mtl
+    mtl.ambient = vec4(0.2);
+    mtl.diffuse = vec4(0.8);
+    mtl.specular = vec4(1.0);
+    mtl.shininess = 50;
+
+    bind_uniform_locations(prg0);
+  }
+
+  void display(void) {
+    generate_normal_map();
+
+    glViewport(IMAGE_WIDTH, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(IMAGE_WIDTH, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // draw low quality mesh with normal map
+    if (light_space == 0) {
+      glUseProgram(prg0);
+      prg0.update_model(mat4(1.0));
+      glUniform1i(prg0.ul_normal_map, 0);
+
+      for (int i = 0; i < lights.size(); ++i) {
+        lights[i].update_uniforms(prg0.v_mat);
+      }
+    } else {
+      glUseProgram(prg1);
+      prg1.update_model(mat4(1.0));
+      glUniform1i(prg1.ul_normal_map, 0);
+
+      // get camera model position
+      vec3 camera = glm::column(prg1.mv_mat_i, 3).xyz();
+      glUniform3fv(prg1.ul_m_camera, 1, glm::value_ptr(camera));
+
+      for (int i = 0; i < lights.size(); ++i) {
+        lights[i].update_uniforms(prg1.m_mat_i);
+      }
+    }
+    lm.update_uniforms();
+    mtl.update_uniforms();
+
+    glBindVertexArray(pyramid1.vao);
+
+    glDisable(GL_SCISSOR_TEST);
+    glBindTexture(GL_TEXTURE_2D, normal_map);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glUseProgram(0);
+    glDisable(GL_TEXTURE_2D);
+
+    glViewport(0, 0, IMAGE_WIDTH * 2, IMAGE_HEIGHT);
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glWindowPos2i(10, m_info.wnd_height - 20);
+    GLchar info[256];
+
+    sprintf(
+      info, "q : lighting space : %s \n", light_space == 0 ? "view" : "tbn");
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte *)info);
+    glEnable(GL_TEXTURE_2D);
+
+    glFlush();
+    ZCGEA
+  }
+
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    // create normal map
+    generate_normal_map();
+  }
+
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
+    switch (key) {
+      case 'q':
+        light_space ^= 1;
+        if (light_space == 0) {
+          bind_uniform_locations(prg0);
+        } else {
+          bind_uniform_locations(prg1);
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+};
+}
+int main(int argc, char **argv) {
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }

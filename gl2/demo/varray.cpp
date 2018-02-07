@@ -1,19 +1,14 @@
 /*
  *  varray.c
- *  This program demonstrates vertex arrays.
+ *  this program demonstrates vertex arrays.
  *
- *  Dont change vertices data between glBegin and glEnd if you use
+ *  dont change vertices data between glBegin and glEnd if you use
  *  glArrayElement to render vertex, it takes effect in nonsequential ways.
  *
- *  If you enable some array, but don't use it, you will be screwed!
+ *  if you enable some array, but don't use it, you will be screwed!
  */
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "common.h"
+#include "app.h"
 
-#ifdef GL_VERSION_1_1
 #define POINTER 1
 #define INTERLEAVED 2
 
@@ -21,10 +16,12 @@
 #define ARRAYELEMENT 2
 #define DRAWELEMENTS 3
 
-int setupMethod = POINTER;
-int derefMethod = DRAWARRAY;
+namespace zxd {
 
-//vertex, color.....array is client state
+int setup_method = POINTER;
+int deref_method = DRAWARRAY;
+
+// vertex, color.....array is client state
 
 // clang-format off
  GLint vertices[] = {
@@ -43,16 +40,25 @@ int derefMethod = DRAWARRAY;
                      0.5, 0.5, 0.5};
 // clang-format on
 
-void setupPointers(void) {
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glEnableClientState(GL_COLOR_ARRAY);
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "varray";
+    m_info.display_mode = GLUT_SINGLE | GLUT_RGB;
+    m_info.wnd_width = 350;
+    m_info.wnd_height = 350;
+  }
 
-  glVertexPointer(2, GL_INT, 0, vertices);
-  glColorPointer(3, GL_FLOAT, 0, colors);
-}
+  void setup_pointers(void) {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
 
-void setupInterleave(void) {
-  // clang-format off
+    glVertexPointer(2, GL_INT, 0, vertices);
+    glColorPointer(3, GL_FLOAT, 0, colors);
+  }
+
+  void setup_interleave(void) {
+    // clang-format off
   // both colors and vertices in this array
    static GLfloat intertwined[] =
       {1.0, 0.2, 1.0, 100.0, 100.0, 0.0,
@@ -61,112 +67,90 @@ void setupInterleave(void) {
        0.2, 1.0, 0.2, 200.0, 300.0, 0.0,
        0.2, 1.0, 1.0, 300.0, 200.0, 0.0,
        0.2, 0.2, 1.0, 200.0, 100.0, 0.0};
-  // clang-format on
+    // clang-format on
 
-  // glInterleavedArrays enable related client states automatically.
-  glInterleavedArrays(GL_C3F_V3F, 0, intertwined);
-}
-
-void init(void) {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glShadeModel(GL_SMOOTH);
-  setupPointers();
-}
-
-void display(void) {
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  if (derefMethod == DRAWARRAY) {
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    // glInterleavedArrays enable related client states automatically.
+    glInterleavedArrays(GL_C3F_V3F, 0, intertwined);
   }
 
-  else if (derefMethod == ARRAYELEMENT) {
-    glBegin(GL_TRIANGLES);
-
-    // vertices[5] = 175; //this has no effect
-    glArrayElement(2);
-    // vertices[5] = 25; //this will take effect on previous glArrayElement call
-    glArrayElement(3);
-    glArrayElement(5);
-    glEnd();
-  } else if (derefMethod == DRAWELEMENTS) {
-    GLuint indices[4] = {0, 1, 3, 4};
-
-    glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, indices);
+  void create_scene(void) {
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_SMOOTH);
+    setup_pointers();
   }
-  glFlush();
-}
 
-void reshape(int w, int h) {
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
-}
+  void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
 
-void mouse(int button, int state, int x, int y) {
-  switch (button) {
-    case GLUT_LEFT_BUTTON:
-      if (state == GLUT_DOWN) {
-        if (setupMethod == POINTER) {
-          setupMethod = INTERLEAVED;
-          setupInterleave();
-        } else if (setupMethod == INTERLEAVED) {
-          setupMethod = POINTER;
-          setupPointers();
+    if (deref_method == DRAWARRAY) {
+      glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    else if (deref_method == ARRAYELEMENT) {
+      glBegin(GL_TRIANGLES);
+
+      // vertices[5] = 175; //this has no effect
+      glArrayElement(2);
+      // vertices[5] = 25; //this will take effect on previous glArrayElement
+      // call
+      glArrayElement(3);
+      glArrayElement(5);
+      glEnd();
+    } else if (deref_method == DRAWELEMENTS) {
+      GLuint indices[4] = {0, 1, 3, 4};
+
+      glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, indices);
+    }
+    glFlush();
+  }
+
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
+  }
+
+  void mouse(int button, int state, int x, int y) {
+    switch (button) {
+      case GLUT_LEFT_BUTTON:
+        if (state == GLUT_DOWN) {
+          if (setup_method == POINTER) {
+            setup_method = INTERLEAVED;
+            setup_interleave();
+          } else if (setup_method == INTERLEAVED) {
+            setup_method = POINTER;
+            setup_pointers();
+          }
+          glutPostRedisplay();
         }
-        glutPostRedisplay();
-      }
-      break;
-    case GLUT_MIDDLE_BUTTON:
-    case GLUT_RIGHT_BUTTON:
-      if (state == GLUT_DOWN) {
-        if (derefMethod == DRAWARRAY)
-          derefMethod = ARRAYELEMENT;
-        else if (derefMethod == ARRAYELEMENT)
-          derefMethod = DRAWELEMENTS;
-        else if (derefMethod == DRAWELEMENTS)
-          derefMethod = DRAWARRAY;
-        glutPostRedisplay();
-      }
-      break;
-    default:
-      break;
+        break;
+      case GLUT_MIDDLE_BUTTON:
+      case GLUT_RIGHT_BUTTON:
+        if (state == GLUT_DOWN) {
+          if (deref_method == DRAWARRAY)
+            deref_method = ARRAYELEMENT;
+          else if (deref_method == ARRAYELEMENT)
+            deref_method = DRAWELEMENTS;
+          else if (deref_method == DRAWELEMENTS)
+            deref_method = DRAWARRAY;
+          glutPostRedisplay();
+        }
+        break;
+      default:
+        break;
+    }
   }
-}
 
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 27:
-      exit(0);
-      break;
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
   }
+};
 }
 
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowSize(350, 350);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutMouseFunc(mouse);
-  glutKeyboardFunc(keyboard);
-  glutMainLoop();
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }
-#else
-int main(int argc, char** argv) {
-  fprintf(stderr,
-    "This program demonstrates a feature which is not in OpenGL Version "
-    "1.0.\n");
-  fprintf(stderr,
-    "If your implementation of OpenGL Version 1.0 has the right extensions,\n");
-
-  fprintf(stderr, "you may be able to modify this program to make it run.\n");
-  return 0;
-}
-#endif

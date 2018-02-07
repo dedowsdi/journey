@@ -1,5 +1,5 @@
 /*  accanti.c
- *  Use the accumulation buffer to do full-scene antialiasing
+ *  use the accumulation buffer to do full-scene antialiasing
  *  on a scene with orthographic parallel projection.
  */
 #include "glad/glad.h"
@@ -8,7 +8,7 @@
 #include "jitter.h"
 #include "common.h"
 
-/*  Initialize lighting and other values.
+/*  initialize lighting and other values.
  */
 void init(void)
 {
@@ -32,7 +32,7 @@ void init(void)
    glClearAccum(0.0, 0.0, 0.0, 0.0);
 }
 
-void displayObjects(void) 
+void display_objects(void) 
 {
    GLfloat torus_diffuse[] = { 0.7, 0.7, 0.0, 1.0 };
    GLfloat cube_diffuse[] = { 0.0, 0.7, 0.7, 1.0 };
@@ -86,14 +86,14 @@ void display(void)
    for (jitter = 0; jitter < ACSIZE; jitter++) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glPushMatrix ();
-/*	Note that 4.5 is the distance in world space between
+/*	note that 4.5 is the distance in world space between
  *	left and right and bottom and top.
- *	This formula converts fractional pixel movement to 
+ *	this formula converts fractional pixel movement to 
  *	world coordinates.
  */
       glTranslatef (j8[jitter].x*4.5/viewport[2],
                     j8[jitter].y*4.5/viewport[3], 0.0);
-      displayObjects ();
+      display_objects ();
       glPopMatrix ();
       glAccum(GL_ACCUM, 1.0/ACSIZE);
    }
@@ -123,8 +123,8 @@ void keyboard(unsigned char key, int x, int y)
    }
 }
 
-/*  Main Loop
- *  Be certain to request an accumulation buffer.
+/*  main loop
+ *  be certain to request an accumulation buffer.
  */
 int main(int argc, char** argv)
 {
@@ -134,7 +134,7 @@ int main(int argc, char** argv)
    glutInitWindowSize (250, 250);
    glutInitWindowPosition (100, 100);
    glutCreateWindow (argv[0]);
-  loadGL();
+  loadgl();
    init();
    glutReshapeFunc(reshape);
    glutDisplayFunc(display);

@@ -1,5 +1,5 @@
 /*  texturesurf.c
- *  This program uses evaluators to generate a curved
+ *  this program uses evaluators to generate a curved
  *  surface and automatically generated texture coordinates.
  */
 
@@ -31,22 +31,22 @@ void display(void) {
   glFlush();
 }
 
-#define imageWidth 64
-#define imageHeight 64
-GLubyte image[3 * imageWidth * imageHeight];
+#define image_width 64
+#define image_height 64
+GLubyte image[3 * image_width * image_height];
 
-void makeImage(void) {
+void make_image(void) {
   int i, j;
   float ti, tj;
 
-  for (i = 0; i < imageWidth; i++) {
-    ti = 2.0 * 3.14159265 * i / imageWidth;
-    for (j = 0; j < imageHeight; j++) {
-      tj = 2.0 * 3.14159265 * j / imageHeight;
+  for (i = 0; i < image_width; i++) {
+    ti = 2.0 * 3.14159265 * i / image_width;
+    for (j = 0; j < image_height; j++) {
+      tj = 2.0 * 3.14159265 * j / image_height;
 
-      image[3 * (imageHeight * i + j)] = (GLubyte)127 * (1.0 + sin(ti));
-      image[3 * (imageHeight * i + j) + 1] = (GLubyte)127 * (1.0 + cos(2 * tj));
-      image[3 * (imageHeight * i + j) + 2] =
+      image[3 * (image_height * i + j)] = (GLubyte)127 * (1.0 + sin(ti));
+      image[3 * (image_height * i + j) + 1] = (GLubyte)127 * (1.0 + cos(2 * tj));
+      image[3 * (image_height * i + j) + 2] =
         (GLubyte)127 * (1.0 + cos(ti + tj));
     }
   }
@@ -61,13 +61,13 @@ void init(void) {
   glEnable(GL_MAP2_VERTEX_3);
   glMapGrid2f(20, 0.0, 1.0, 20, 0.0, 1.0);
 
-  makeImage();
+  make_image();
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth, imageHeight, 0, GL_RGB,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image_width, image_height, 0, GL_RGB,
     GL_UNSIGNED_BYTE, image);
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

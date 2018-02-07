@@ -1,7 +1,9 @@
 // only works for directional light
 
-uniform mat4 modelViewProjMatrix;
+attribute vec4 vertex;
+
+uniform mat4 mvp_mat;
 
 void main(void) {
-  gl_Position = modelViewProjMatrix * gl_Vertex;
+  gl_Position = mvp_mat * vertex;
 }

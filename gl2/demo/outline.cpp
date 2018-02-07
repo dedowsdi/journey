@@ -19,11 +19,11 @@
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
 
-GLenum outlinePolygonMode = GL_FILL;
-glm::vec4 outlineColor(0.0f, 0.0f, 1.0f, 1.0f);
-GLfloat outlineScale = 1.01f;
-GLfloat outlineLineWidth = 1.0;
-GLfloat outlinePointSize = 1.0;
+GLenum outline_polygon_mode = GL_FILL;
+glm::vec4 outline_color(0.0f, 0.0f, 1.0f, 1.0f);
+GLfloat outline_scale = 1.01f;
+GLfloat outline_line_width = 1.0;
+GLfloat outline_point_size = 1.0;
 
 void render() { glutSolidSphere(5, 32, 32); }
 
@@ -43,13 +43,13 @@ void display(void) {
   glDepthMask(GL_FALSE);
   glStencilFunc(GL_NOTEQUAL, 1, 1);
   glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-  glColor4fv(glm::value_ptr(outlineColor));
-  glPolygonMode(GL_FRONT_AND_BACK, outlinePolygonMode);
-  glPointSize(outlinePointSize);
-  glLineWidth(outlineLineWidth);
+  glColor4fv(glm::value_ptr(outline_color));
+  glPolygonMode(GL_FRONT_AND_BACK, outline_polygon_mode);
+  glPointSize(outline_point_size);
+  glLineWidth(outline_line_width);
 
   glPushMatrix();
-  glScalef(outlineScale, outlineScale, outlineScale);
+  glScalef(outline_scale, outline_scale, outline_scale);
   render();
   glPopMatrix();
 
@@ -66,12 +66,12 @@ void display(void) {
       "iI : outline scale : %.2f \n" 
       "oO : outline point size : %.2f \n"
       "pP : outline line width : %.2f \n" ,
-      glPolygonModeToString(outlinePolygonMode),
+      gl_polygon_mode_to_string(outline_polygon_mode),
       glIsEnabled(GL_MULTISAMPLE),
-      outlineColor[0], outlineColor[1], outlineColor[2], outlineColor[3], 
-      outlineScale,
-      outlinePointSize,
-      outlineLineWidth
+      outline_color[0], outline_color[1], outline_color[2], outline_color[3], 
+      outline_scale,
+      outline_point_size,
+      outline_line_width
       );
   // clang-format on
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
@@ -143,7 +143,7 @@ void keyboard(unsigned char key, int x, int y) {
   switch (key) {
     case 'q':
     case 'Q':
-      outlinePolygonMode = GL_POINT + (outlinePolygonMode - GL_POINT + 1) % 3;
+      outline_polygon_mode = GL_POINT + (outline_polygon_mode - GL_POINT + 1) % 3;
       glutPostRedisplay();
       break;
 
@@ -159,45 +159,45 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'u':
     case 'U':
-      outlineColor = glm::linearRand(glm::vec4(0), glm::vec4(1));
+      outline_color = glm::linearRand(glm::vec4(0), glm::vec4(1));
       glutPostRedisplay();
       break;
 
     case 'i':
-      outlineScale += 0.01;
+      outline_scale += 0.01;
       glutPostRedisplay();
       break;
 
     case 'I':
-      outlineScale -= 0.01;
-      if (outlineScale < 1) {
-        outlineScale = 1;
+      outline_scale -= 0.01;
+      if (outline_scale < 1) {
+        outline_scale = 1;
       }
       glutPostRedisplay();
       break;
 
     case 'o':
-      outlinePointSize += 0.1;
+      outline_point_size += 0.1;
       glutPostRedisplay();
       break;
 
     case 'O':
-      outlinePointSize -= 0.1;
-      if (outlinePointSize < 1) {
-        outlinePointSize = 1;
+      outline_point_size -= 0.1;
+      if (outline_point_size < 1) {
+        outline_point_size = 1;
       }
       glutPostRedisplay();
       break;
 
     case 'p':
-      outlineLineWidth += 0.1;
+      outline_line_width += 0.1;
       glutPostRedisplay();
       break;
 
     case 'P':
-      outlineLineWidth -= 0.1;
-      if (outlinePointSize < 1) {
-        outlinePointSize = 1;
+      outline_line_width -= 0.1;
+      if (outline_point_size < 1) {
+        outline_point_size = 1;
       }
       glutPostRedisplay();
       break;
@@ -209,7 +209,7 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 void idle() {}
-void passiveMotion(int x, int y) {}
+void passive_motion(int x, int y) {}
 
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -217,12 +217,12 @@ int main(int argc, char** argv) {
   glutInitWindowSize(WINDOWS_WIDTH, WINDOWS_HEIGHT);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  zxd::loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);
-  glutPassiveMotionFunc(passiveMotion);
+  glutPassiveMotionFunc(passive_motion);
   glutKeyboardFunc(keyboard);
   glutIdleFunc(idle);
   glutMainLoop();

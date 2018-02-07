@@ -1,41 +1,41 @@
-#version 120
 #extension GL_EXT_gpu_shader4 : require
 
-varying vec3 normal;  // view space
-varying vec3 vertex;  // view space
+varying vec3 v_normal;
+varying vec3 v_vertex;
+varying vec4 l_vertex;  // bias, scaled wnd v_vertex of light view
 
-uniform vec3 lightDir;  // to light, normalized
-uniform sampler2D depthMap;
+uniform sampler2D depth_map;
 // sample the shadowmap once, the hardware will in fact also sample the
 // neighboring
 // texels, do the comparison for all of them, and return a float in [0,1] with a
 // bilinear filtering of the comparison results.
-uniform sampler2DShadow shadowMap;
+uniform sampler2DShadow shadow_map;
 uniform float bias = 0.005;
-uniform bool useSampler2DShadow = true;
+uniform bool use_sampler2_d_shadow = true;
+
+uniform material mtl;
+uniform light_model lm;
+uniform light_source lights[LIGHT_COUNT];
 
 /*
- * As depth map is discrete, different fragments with different depth might
+ * as depth map is discrete, different fragments with different depth might
  * sample the same texel, this could cause shadow acne, bias is used to
  * eliminite shaodw acne.
  */
 float shadow(float bias) {
   float visibility = 1.0;
 
-  if (useSampler2DShadow) {
-    visibility *=
-      shadow2DProj(shadowMap,
-        vec4(gl_TexCoord[1].xy, gl_TexCoord[1].z - bias, gl_TexCoord[1].w))
-        .z;
+  if (use_sampler2_d_shadow) {
+    visibility *= shadow2DProj(shadow_map,
+                    vec4(l_vertex.xy, l_vertex.z - bias, l_vertex.w)).z;
   } else {
     visibility = 0.0;
-    vec2 texelSize = 1.0 / textureSize2D(depthMap, 0);
+    vec2 texel_size = 1.0 / textureSize2D(depth_map, 0);
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; ++j) {
-        float pcfDepth =
-          texture2D(depthMap, vec4(gl_TexCoord[1]).xy + texelSize * vec2(i, j))
-            .z;
-        visibility += (gl_TexCoord[1].z - bias > pcfDepth) ? 0 : 1;
+        float pcf_depth =
+          texture2D(depth_map, l_vertex.xy + texel_size * vec2(i, j)).z;
+        visibility += (l_vertex.z - bias > pcf_depth) ? 0 : 1;
       }
     }
     visibility /= 9.0;
@@ -45,23 +45,13 @@ float shadow(float bias) {
 }
 
 void main(void) {
-  // simple blinn-phone for dir light
-  vec3 l = lightDir;
-  vec3 n = normalize(normal);
-  vec3 v = normalize(-vertex);
-  vec3 h = normalize(l + v);
+  vec3 l = normalize(lights[0].position.xyz - v_vertex);
+  vec3 n = normalize(v_normal);
   float ndotl = clamp(dot(n, l), 0.0, 1.0);
 
-  float shadowBias = clamp(bias * tan(acos(ndotl)), 0, 0.1);
-  float visibility = shadow(shadowBias);
+  float shadow_bias = clamp(bias * tan(acos(ndotl)), 0, 0.1);
+  float visibility = shadow(shadow_bias);
 
-  vec4 diffuse = ndotl * gl_LightSource[0].diffuse;
-  vec4 specular = vec4(0.0);
-  if (ndotl > 0.0) {
-    float ndoth = clamp(dot(n, h), 0.0, 1.0);
-    specular =
-      pow(ndoth, gl_BackMaterial.shininess) * gl_LightSource[0].specular;
-  }
-
-  gl_FragColor = visibility * (diffuse + specular);
+  gl_FragColor = blinn(v_vertex, v_normal, vec3(0), mtl, lights, lm);
+  gl_FragColor *= visibility;
 }

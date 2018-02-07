@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 1993-2003, Silicon Graphics, Inc.
- * All Rights Reserved
+ * copyright (c) 1993-2003, silicon graphics, inc.
+ * all rights reserved
  *
- * Permission to use, copy, modify, and distribute this software for any
+ * permission to use, copy, modify, and distribute this software for any
  * purpose and without fee is hereby granted, provided that the above
  * copyright notice appear in all copies and that both the copyright
  * notice and this permission notice appear in supporting documentation,
- * and that the name of Silicon Graphics, Inc. not be used in
+ * and that the name of silicon graphics, inc. not be used in
  * advertising or publicity pertaining to distribution of the software
  * without specific, written prior permission.
  *
@@ -23,30 +23,30 @@
  * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE POSSESSION, USE
  * OR PERFORMANCE OF THIS SOFTWARE.
  *
- * US Government Users Restricted Rights
- * Use, duplication, or disclosure by the Government is subject to
+ * US government users restricted rights
+ * use, duplication, or disclosure by the government is subject to
  * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
- * (c)(1)(ii) of the Rights in Technical Data and Computer Software
+ * (c)(1)(ii) of the rights in technical data and computer software
  * clause at DFARS 252.227-7013 and/or in similar or successor clauses
- * in the FAR or the DOD or NASA FAR Supplement.  Unpublished - rights
- * reserved under the copyright laws of the United States.
+ * in the FAR or the DOD or NASA FAR supplement.  unpublished - rights
+ * reserved under the copyright laws of the united states.
  *
- * Contractor/manufacturer is:
- *	Silicon Graphics, Inc.
- *	1500 Crittenden Lane
- *	Mountain View, CA  94043
- *	United State of America
+ * contractor/manufacturer is:
+ *	silicon graphics, inc.
+ *	1500 crittenden lane
+ *	mountain view, CA  94043
+ *	united state of america
  *
- * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
+ * open_g_l(R) is a registered trademark of silicon graphics, inc.
  */
 
 /*
  *  dof.c
- *  This program demonstrates use of the accumulation buffer to
- *  create an out-of-focus depth-of-field effect.  The teapots
- *  are drawn several times into the accumulation buffer.  The
+ *  this program demonstrates use of the accumulation buffer to
+ *  create an out-of-focus depth-of-field effect.  the teapots
+ *  are drawn several times into the accumulation buffer.  the
  *  viewing volume is jittered, except at the focal point, where
- *  the viewing volume is at the same position, each time.  In
+ *  the viewing volume is at the same position, each time.  in
  *  this case, the gold teapot remains in focus.
  */
 #include "glad/glad.h"
@@ -58,25 +58,25 @@
 
 #define PI_ 3.14159265358979323846
 
-GLuint teapotList;
+GLuint teapot_list;
 
-/* accFrustum()
- * The first 6 arguments are identical to the glFrustum() call.
+/* acc_frustum()
+ * the first 6 arguments are identical to the glFrustum() call.
  *
  * pixdx and pixdy are anti-alias jitter in pixels.
- * Set both equal to 0.0 for no anti-alias jitter.
+ * set both equal to 0.0 for no anti-alias jitter.
  * eyedx and eyedy are depth-of field jitter in pixels.
- * Set both equal to 0.0 for no depth of field effects.
+ * set both equal to 0.0 for no depth of field effects.
  *
  * focus is distance from eye to plane in focus.
  * focus must be greater than, but not equal to 0.0.
  *
- * Note that accFrustum() calls glTranslatef().  You will
- * probably want to insure that your ModelView matrix has been
- * initialized to identity before calling accFrustum().
+ * note that acc_frustum() calls glTranslatef().  you will
+ * probably want to insure that your model_view matrix has been
+ * initialized to identity before calling acc_frustum().
  */
-void accFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
-  GLdouble zNear, GLdouble zFar, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx,
+void acc_frustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
+  GLdouble z_near, GLdouble z_far, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx,
   GLdouble eyedy, GLdouble focus) {
   GLdouble xwsize, ywsize;
   GLdouble dx, dy;
@@ -87,45 +87,45 @@ void accFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
   xwsize = right - left;
   ywsize = top - bottom;
 
-  dx = -(pixdx * xwsize / (GLdouble)viewport[2] + eyedx * zNear / focus);
-  dy = -(pixdy * ywsize / (GLdouble)viewport[3] + eyedy * zNear / focus);
+  dx = -(pixdx * xwsize / (GLdouble)viewport[2] + eyedx * z_near / focus);
+  dy = -(pixdy * ywsize / (GLdouble)viewport[3] + eyedy * z_near / focus);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glFrustum(left + dx, right + dx, bottom + dy, top + dy, zNear, zFar);
+  glFrustum(left + dx, right + dx, bottom + dy, top + dy, z_near, z_far);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glTranslatef(-eyedx, -eyedy, 0.0);
 }
 
-/*  accPerspective()
+/*  acc_perspective()
  *
- *  The first 4 arguments are identical to the gluPerspective() call.
+ *  the first 4 arguments are identical to the gluPerspective() call.
  *  pixdx and pixdy are anti-alias jitter in pixels.
- *  Set both equal to 0.0 for no anti-alias jitter.
+ *  set both equal to 0.0 for no anti-alias jitter.
  *  eyedx and eyedy are depth-of field jitter in pixels.
- *  Set both equal to 0.0 for no depth of field effects.
+ *  set both equal to 0.0 for no depth of field effects.
  *
  *  focus is distance from eye to plane in focus.
  *  focus must be greater than, but not equal to 0.0.
  *
- *  Note that accPerspective() calls accFrustum().
+ *  note that acc_perspective() calls acc_frustum().
  */
-void accPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear,
-  GLdouble zFar, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx, GLdouble eyedy,
+void acc_perspective(GLdouble fovy, GLdouble aspect, GLdouble z_near,
+  GLdouble z_far, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx, GLdouble eyedy,
   GLdouble focus) {
   GLdouble fov2, left, right, bottom, top;
 
   fov2 = ((fovy * PI_) / 180.0) / 2.0;
 
-  top = zNear / (cos(fov2) / sin(fov2));
+  top = z_near / (cos(fov2) / sin(fov2));
   bottom = -top;
 
   right = top * aspect;
   left = -right;
 
-  accFrustum(
-    left, right, bottom, top, zNear, zFar, pixdx, pixdy, eyedx, eyedy, focus);
+  acc_frustum(
+    left, right, bottom, top, z_near, z_far, pixdx, pixdy, eyedx, eyedy, focus);
 }
 
 void init(void) {
@@ -153,13 +153,13 @@ void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClearAccum(0.0, 0.0, 0.0, 0.0);
   /*  make teapot display list */
-  teapotList = glGenLists(1);
-  glNewList(teapotList, GL_COMPILE);
+  teapot_list = glGenLists(1);
+  glNewList(teapot_list, GL_COMPILE);
   glutSolidTeapot(0.5);
   glEndList();
 }
 
-void renderTeapot(GLfloat x, GLfloat y, GLfloat z, GLfloat ambr, GLfloat ambg,
+void render_teapot(GLfloat x, GLfloat y, GLfloat z, GLfloat ambr, GLfloat ambg,
   GLfloat ambb, GLfloat difr, GLfloat difg, GLfloat difb, GLfloat specr,
   GLfloat specg, GLfloat specb, GLfloat shine) {
   GLfloat mat[4];
@@ -180,16 +180,16 @@ void renderTeapot(GLfloat x, GLfloat y, GLfloat z, GLfloat ambr, GLfloat ambg,
   mat[2] = specb;
   glMaterialfv(GL_FRONT, GL_SPECULAR, mat);
   glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
-  glCallList(teapotList);
+  glCallList(teapot_list);
   glPopMatrix();
 }
 
 /*  display() draws 5 teapots into the accumulation buffer
  *  several times; each time with a jittered perspective.
- *  The focal point is at z = 5.0, so the gold teapot will
- *  stay in focus.  The amount of jitter is adjusted by the
- *  magnitude of the accPerspective() jitter; in this example, 0.33.
- *  In this example, the teapots are drawn 8 times.  See jitter.h
+ *  the focal point is at z = 5.0, so the gold teapot will
+ *  stay in focus.  the amount of jitter is adjusted by the
+ *  magnitude of the acc_perspective() jitter; in this example, 0.33.
+ *  in this example, the teapots are drawn 8 times.  see jitter.h
  */
 void display(void) {
   int jitter;
@@ -200,19 +200,19 @@ void display(void) {
 
   for (jitter = 0; jitter < 8; jitter++) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    accPerspective(45.0, (GLdouble)viewport[2] / (GLdouble)viewport[3], 1.0,
+    acc_perspective(45.0, (GLdouble)viewport[2] / (GLdouble)viewport[3], 1.0,
       15.0, 0.0, 0.0, 0.33 * j8[jitter].x, 0.33 * j8[jitter].y, 5.0);
 
     /*	ruby, gold, silver, emerald, and cyan teapots	*/
-    renderTeapot(-1.1, -0.5, -4.5, 0.1745, 0.01175, 0.01175, 0.61424, 0.04136,
+    render_teapot(-1.1, -0.5, -4.5, 0.1745, 0.01175, 0.01175, 0.61424, 0.04136,
       0.04136, 0.727811, 0.626959, 0.626959, 0.6);
-    renderTeapot(-0.5, -0.5, -5.0, 0.24725, 0.1995, 0.0745, 0.75164, 0.60648,
+    render_teapot(-0.5, -0.5, -5.0, 0.24725, 0.1995, 0.0745, 0.75164, 0.60648,
       0.22648, 0.628281, 0.555802, 0.366065, 0.4);
-    renderTeapot(0.2, -0.5, -5.5, 0.19225, 0.19225, 0.19225, 0.50754, 0.50754,
+    render_teapot(0.2, -0.5, -5.5, 0.19225, 0.19225, 0.19225, 0.50754, 0.50754,
       0.50754, 0.508273, 0.508273, 0.508273, 0.4);
-    renderTeapot(1.0, -0.5, -6.0, 0.0215, 0.1745, 0.0215, 0.07568, 0.61424,
+    render_teapot(1.0, -0.5, -6.0, 0.0215, 0.1745, 0.0215, 0.07568, 0.61424,
       0.07568, 0.633, 0.727811, 0.633, 0.6);
-    renderTeapot(1.8, -0.5, -6.5, 0.0, 0.1, 0.06, 0.0, 0.50980392, 0.50980392,
+    render_teapot(1.8, -0.5, -6.5, 0.0, 0.1, 0.06, 0.0, 0.50980392, 0.50980392,
       0.50196078, 0.50196078, 0.50196078, .25);
     glAccum(GL_ACCUM, 0.125);
   }
@@ -230,8 +230,8 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-/*  Main Loop
- *  Be certain you request an accumulation buffer.
+/*  main loop
+ *  be certain you request an accumulation buffer.
  */
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -239,7 +239,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(400, 400);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

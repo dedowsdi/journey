@@ -1,18 +1,21 @@
 /*
- *  polys.c
- *  This program demonstrates polygon stippling.
- */
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <stdlib.h>
-#include "common.h"
-
-/*
  * glPolygonStipple is window aligned, not polygon aligned, be very careful!!!
  */
+#include "app.h"
 
-void display(void) {
-  // clang-format off
+namespace zxd {
+
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "polys";
+    m_info.display_mode = GLUT_SINGLE | GLUT_RGB;
+    m_info.wnd_width = 350;
+    m_info.wnd_height = 150;
+  }
+
+  void display(void) {
+    // clang-format off
   // 32x32 window aligned stipple patten
   // each line contains 2 rows
    GLubyte fly[] = {
@@ -50,54 +53,49 @@ void display(void) {
       0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55, 
       0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
       0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55};
-  // clang-format on
+    // clang-format on
 
-  glClear(GL_COLOR_BUFFER_BIT);
-  glColor3f(1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0, 1.0, 1.0);
 
-  /*  draw one solid, unstippled rectangle,	*/
-  /*  then two stippled rectangles		*/
-  glRectf(32.0, 32.0, 96.0, 96.0);
-  glEnable(GL_POLYGON_STIPPLE);
-  glPolygonStipple(fly);
-  glRectf(96.0, 32.0, 160, 96.0);
-  glPolygonStipple(halftone);
-  glRectf(160, 32.0, 224, 96.0);
-  glDisable(GL_POLYGON_STIPPLE);
+    /*  draw one solid, unstippled rectangle,	*/
+    /*  then two stippled rectangles		*/
+    glRectf(32.0, 32.0, 96.0, 96.0);
+    glEnable(GL_POLYGON_STIPPLE);
+    glPolygonStipple(fly);
+    glRectf(96.0, 32.0, 160, 96.0);
+    glPolygonStipple(halftone);
+    glRectf(160, 32.0, 224, 96.0);
+    glDisable(GL_POLYGON_STIPPLE);
 
-  glFlush();
-}
-
-void init(void) {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glShadeModel(GL_FLAT);
-}
-
-void reshape(int w, int h) {
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
-}
-
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 27:
-      exit(0);
-      break;
+    glFlush();
   }
-}
 
+  void create_scene(void) {
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_FLAT);
+  }
+
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
+  }
+
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
+    switch (key) {
+      case 27:
+        exit(0);
+        break;
+    }
+  }
+};
+}
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowSize(350, 150);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyboard);
-  glutMainLoop();
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }

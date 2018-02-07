@@ -1,255 +1,254 @@
 /*
  *  hdr.c
- *  Need Arb_framebuffer_object Arb_texture_float
+ *  need arb_framebuffer_object arb_texture_float
  *
  *  HDR(high dynamic range) is used to break the limit of [0,1] in framebuffer.
- *  You should use GL_RGBAF* family internal format for framebuffer color
+ *  you should use GL_RGBAF* family internal format for framebuffer color
  *  attachment, it's also called floating point framebuffer.
  *
- *  The procedure of transform color back to [0,1] is called tone map.
- *  Reinhard toon map:
+ *  the procedure of transform color back to [0,1] is called tone map.
+ *  reinhard toon map:
  *    x/(1+x)
  *  simple exposre toon map:
  *    1 - e^(-x * exposure)
  *
- *  Any function that result in [0,1] should work.
+ *  any function that result in [0,1] should work.
  */
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <stdlib.h>
-#include "common.h"
-#include <GL/freeglut_ext.h>
-GLUquadricObj* qobj;
+#include "app.h"
+#include "program.h"
+#include "light.h"
+#include "disk.h"
+#include <sstream>
+#include "quad.h"
+#include "common_program.h"
+
+namespace zxd {
 
 GLuint fbo;
-GLuint colorTex;
+GLuint color_tex;
 GLuint program;
-GLboolean useHdr = 0;
+GLboolean use_hdr = 0;
 
 GLint method = 0;
 GLfloat exposure = 1.0;
 
-GLint loc_method;
-GLint loc_exposure;
+disk disk0(0, 1, 16, 8);
+quad quad0;
 
-const char* methods[] = {"Reinhard", "exposure"};
+const char* methods[] = {"reinhard", "exposure"};
 
-#define checkImageWidth 256
-#define checkImageHeight 256
-static GLubyte checkImage[checkImageHeight][checkImageWidth][4];
+std::vector<zxd::light_source> lights;
+zxd::light_model lm;
+zxd::material mtl;
 
-static GLuint checkerTex;
+#define IMAGE_WIDTH 256
+#define IMAGE_HEIGHT 256
+GLubyte check_image[IMAGE_HEIGHT][IMAGE_WIDTH][4];
 
-void makeCheckImage(void) {
-  int i, j, c;
+static GLuint checker_tex;
 
-  for (i = 0; i < checkImageHeight; i++) {
-    for (j = 0; j < checkImageWidth; j++) {
-      c = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;
-      checkImage[i][j][0] = (GLubyte)c;
-      checkImage[i][j][1] = (GLubyte)c;
-      checkImage[i][j][2] = (GLubyte)c;
-      checkImage[i][j][3] = (GLubyte)255;
+blinn_program blinn_prg;
+
+struct hdr_program : public zxd::program {
+  GLint ul_method;
+  GLint ul_exposure;
+  GLint ul_diffuse_map;
+
+  GLint al_vertex;
+  GLint al_texcoord;
+
+  virtual void attach_shaders() {
+    attach_shader_file(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/hdr.fs.glsl");
+  }
+  virtual void bind_uniform_locations() {
+    // uniform_location(&ul_eye, "eye");
+    uniform_location(&ul_method, "method");
+    uniform_location(&ul_exposure, "exposure");
+    uniform_location(&ul_diffuse_map, "diffuse_map");
+  }
+
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_texcoord = attrib_location("texcoord");
+  }
+} hdr_prg;
+
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "hdr";
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB;
+    m_info.wnd_width = 512;
+    m_info.wnd_height = 512;
+  }
+
+  void make_check_image(void) {
+    int i, j, c;
+
+    for (i = 0; i < IMAGE_HEIGHT; i++) {
+      for (j = 0; j < IMAGE_WIDTH; j++) {
+        c = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;
+        check_image[i][j][0] = (GLubyte)c;
+        check_image[i][j][1] = (GLubyte)c;
+        check_image[i][j][2] = (GLubyte)c;
+        check_image[i][j][3] = (GLubyte)255;
+      }
     }
   }
-}
 
-void init(void) {
-  qobj = gluNewQuadric();
-  gluQuadricTexture(qobj, true);
+  void create_scene(void) {
+    // spot 0
+    light_source spot_light;
+    spot_light.position = vec4(0.0, 0.0, 0.05, 1.0);
+    spot_light.diffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    spot_light.specular = vec4(1.0, 1.0, 1.0, 1.0);
+    spot_light.ambient = vec4(0.0, 0.0, 0.0, 1.0);
+    spot_light.constant_attenuation = 1;
+    spot_light.linear_attenuation = 0;
+    spot_light.quadratic_attenuation = 0;
+    spot_light.spot_direction = vec3(0, 0, -1);
+    spot_light.spot_cutoff = 90;
+    spot_light.spot_exponent = 1;
 
-  // spot 0
-  GLfloat light_position0[] = {0.0, 0.0, 0.05, 1.0};
-  GLfloat light_diffuse0[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_specular0[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_ambient0[] = {0.0, 0.0, 0.0, 1.0};
-  GLfloat light_attenuation0[] = {1, 0, 0};
-  GLfloat spot_dir0[] = {0, 0, -1};
-  GLfloat spot_cutoff0 = 90;
-  GLfloat spot_exponent0 = 1;
+    // point 1
+    light_source point_light;
+    point_light.position = vec4(0.0, 0.0, 0.01, 1.0);
+    point_light.diffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    point_light.specular = vec4(1.0, 1.0, 1.0, 1.0);
+    point_light.ambient = vec4(0.0, 0.0, 0.0, 1.0);
+    point_light.constant_attenuation = 0.0001;
+    point_light.linear_attenuation = 1;
+    point_light.quadratic_attenuation = 10;
 
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse0);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular0);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient0);
-  glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, light_attenuation0[0]);
-  glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, light_attenuation0[1]);
-  glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, light_attenuation0[2]);
-  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spot_dir0);
-  glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, spot_cutoff0);
-  glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, spot_exponent0);
+    lights.push_back(spot_light);
+    lights.push_back(point_light);
 
-  // point 1
-  GLfloat light_position1[] = {0.0, 0.0, 0.01, 1.0};
-  GLfloat light_diffuse1[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_specular1[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_ambient1[] = {0.0, 0.0, 0.0, 1.0};
-  GLfloat light_attenuation1[] = {0, 1, 10};
+    lm.ambient = vec4(0, 0, 0, 1.0);  // global ambient
 
-  glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
-  glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse1);
-  glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular1);
-  glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient1);
-  glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, light_attenuation1[0]);
-  glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, light_attenuation1[1]);
-  glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, light_attenuation1[2]);
+    mtl.ambient = vec4(0.2, 0.2, 0.2, 1.0);
+    mtl.diffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    mtl.specular = vec4(1.0, 1.0, 1.0, 1.0);
+    mtl.emission = vec4(0.0, 0.0, 0.0, 1.0);
+    mtl.shininess = 2.0;
 
-  GLfloat lmodel_ambient[] = {0, 0, 0, 1.0};  // global ambient
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-  glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+    // texture
+    make_check_image();
+    glGenTextures(1, &checker_tex);
+    glBindTexture(GL_TEXTURE_2D, checker_tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_WIDTH, IMAGE_WIDTH, 0, GL_RGBA,
+      GL_UNSIGNED_BYTE, check_image);
 
-  GLfloat mat_ambient[] = {0.2, 0.2, 0.2, 1.0};
-  GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat mat_emission[] = {0.0, 0.0, 0.0, 1.0};
-  GLfloat mat_shininess = 2.0;
+    // fbo
+    glGenTextures(1, &color_tex);
+    glBindTexture(GL_TEXTURE_2D, color_tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F_ARB, m_info.wnd_width,
+      m_info.wnd_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-  // material
-  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat_emission);
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
+    glGenFramebuffers(1, &fbo);
 
-  // texture
-  makeCheckImage();
-  glGenTextures(1, &checkerTex);
-  glBindTexture(GL_TEXTURE_2D, checkerTex);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, checkImageWidth, checkImageWidth, 0,
-    GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+    blinn_prg.with_texcoord = GL_TRUE;
+    blinn_prg.init();
+    blinn_prg.bind_lighting_uniform_locations(lights, lm, mtl);
+    blinn_prg.v_mat = mat4(1.0);
+    blinn_prg.p_mat = mat4(1.0);
 
-  // fbo
-  glGenTextures(1, &colorTex);
-  glBindTexture(GL_TEXTURE_2D, colorTex);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexImage2D(
-    GL_TEXTURE_2D, 0, GL_RGBA16F_ARB, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    disk0.build_mesh();
+    disk0.bind(blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
-  glGenFramebuffers(1, &fbo);
+    hdr_prg.init();
+    quad0.build_mesh();
+    quad0.bind(hdr_prg.al_vertex, -1, hdr_prg.al_texcoord);
 
-  // hdr program
-  program = glCreateProgram();
-  attachShaderFile(program, GL_FRAGMENT_SHADER, "data/shader/hdr.fs.glsl");
-  ZCGE(glLinkProgram(program));
-  setUniformLocation(&loc_method, program, "method");
-  setUniformLocation(&loc_exposure, program, "exposure");
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_SMOOTH);
+  }
 
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glShadeModel(GL_SMOOTH);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_LIGHT1);
-}
+  void render() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(blinn_prg.object);
+    glBindTexture(GL_TEXTURE_2D, checker_tex);
 
-void render() {
-  glClear(GL_COLOR_BUFFER_BIT);
-  glUseProgram(0);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, checkerTex);
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  gluDisk(qobj, 0, 1, 32, 4);
-}
+    blinn_prg.tex_unit = 0;
+    blinn_prg.update_lighting_uniforms(lights, lm, mtl);
+    blinn_prg.update_model(glm::translate(vec3(0)));
 
-void display(void) {
-  glClear(GL_COLOR_BUFFER_BIT);
-  if (useHdr) {
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    disk0.draw();
+  }
 
-    render();
+  void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (use_hdr) {
+      glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+      glFramebufferTexture2D(
+        GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex, 0);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    // tone map
-    glUseProgram(program);
-    ZCGE(glUniform1i(loc_method, method));
-    ZCGE(glUniform1f(loc_exposure, exposure));
+      render();
 
-    glDisable(GL_LIGHTING);
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-    drawTexRect(-1, -1, 1, 1);
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      // tone map
+      glUseProgram(hdr_prg);
+      glBindTexture(GL_TEXTURE_2D, color_tex);
+
+      glUniform1i(hdr_prg.ul_method, method);
+      glUniform1f(hdr_prg.ul_exposure, exposure);
+      glUniform1i(hdr_prg.ul_diffuse_map, 0);
+
+      quad0.draw();
+    } else {
+      render();
+    }
+
     glUseProgram(0);
-  } else {
-    render();
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glWindowPos2i(10, 492);
+    GLchar info[256];
+
+    sprintf(info,
+      "q : toggle hdr : %d\n"
+      "w : toon map : %s\n"
+      "eE : exposure : %.2f",
+      use_hdr, methods[method], exposure);
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
+
+    glFlush();
+    glutSwapBuffers();
   }
 
-  glDisable(GL_TEXTURE_2D);
+  void reshape(int w, int h) { app::reshape(w, h); }
 
-  glColor3f(1.0f, 1.0f, 1.0f);
-  glWindowPos2i(10, 492);
-  GLchar info[256];
-
-  sprintf(info,
-    "q : toggle hdr : %d\n"
-    "w : toon map : %s\n"
-    "eE : exposure : %.2f",
-    useHdr, methods[method], exposure);
-  glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
-  glEnable(GL_TEXTURE_2D);
-
-  glFlush();
-  ZCGEA;
-}
-
-void reshape(int w, int h) {
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  if (w <= h)
-    glOrtho(-1, 1, -1 * (GLfloat)h / (GLfloat)w, 1 * (GLfloat)h / (GLfloat)w,
-      -10.0, 10.0);
-  else
-    glOrtho(-1 * (GLfloat)w / (GLfloat)h, 1 * (GLfloat)w / (GLfloat)h, -1, 1,
-      -10.0, 10.0);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-}
-
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 27:
-      exit(0);
-      break;
-    case 'q':
-      useHdr ^= 1;
-      glutPostRedisplay();
-      break;
-    case 'w':
-      method = (method + 1) % 2;
-      glutPostRedisplay();
-      break;
-    case 'e':
-      exposure += 0.1;
-      glutPostRedisplay();
-      break;
-    case 'E':
-      exposure -= 0.1;
-      glutPostRedisplay();
-      break;
-    default:
-      break;
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
+    switch (key) {
+      case 'q':
+        use_hdr ^= 1;
+        break;
+      case 'w':
+        method = (method + 1) % 2;
+        break;
+      case 'e':
+        exposure += 0.1;
+        break;
+      case 'E':
+        exposure -= 0.1;
+        break;
+      default:
+        break;
+    }
   }
+};
 }
-
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowSize(512, 512);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyboard);
-  glutMainLoop();
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }

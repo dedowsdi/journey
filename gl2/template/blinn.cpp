@@ -1,188 +1,175 @@
 #include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <GL/freeglut_ext.h>
-#include <stdlib.h>
-#include "common.h"
+#include "app.h"
 #include "program.h"
-#include "glm.h"
-#include <sstream>
 #include "light.h"
+
+namespace zxd {
 
 using namespace glm;
 
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
-GLfloat wndAspect = 1;
+GLfloat wnd_aspect = 1;
 
-vec3 cameraPos = vec3(0, -3, 3);
+vec3 camera_pos = vec3(0, -3, 3);
 
-std::vector<zxd::LightSource> lights;
-zxd::LightModel lightModel;
-zxd::Material material;
+std::vector<zxd::light_source> lights;
+zxd::light_model light_model;
+zxd::material material;
 
-struct MyProgram : public zxd::Program {
-  // GLint loc_eye;
-  MyProgram(){
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "blinn";
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.wnd_width = WINDOWS_WIDTH;
+    m_info.wnd_height = WINDOWS_HEIGHT;
   }
-  virtual void doUpdateFrame() {
-    projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
-    viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
-    viewMatrixInverseTranspose = glm::inverse(glm::transpose(viewMatrix));
 
-    material.updateUniforms();
-    lightModel.updateUniforms();
-    for (int i = 0; i < lights.size(); ++i) {
-      lights[i].updateUniforms(viewMatrix, viewMatrixInverseTranspose);
+  struct my_program : public zxd::program {
+    // GLint ul_eye;
+    my_program() {}
+    virtual void do_update_frame() {
+      v_mat_it = glm::inverse(glm::transpose(v_mat));
+
+      material.update_uniforms();
+      light_model.update_uniforms();
+      for (int i = 0; i < lights.size(); ++i) {
+        lights[i].update_uniforms(v_mat);
+      }
     }
-  }
-  virtual void doUpdateModel() {
-    // modelMatrixInverse = glm::inverse(modelMatrix);
-    modelViewMatrix = viewMatrix * modelMatrix;
-    modelViewMatrixInverseTranspose =
-      glm::inverse(glm::transpose(modelViewMatrix));
-    modelViewProjMatrix = projMatrix * modelViewMatrix;
+    virtual void update_model(const glm::mat4& _m_mat) {
+      // m_mat_i = glm::inverse(m_mat);
+      m_mat = _m_mat;
+      mv_mat = v_mat * m_mat;
+      mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+      mvp_mat = p_mat * mv_mat;
 
-    glUniformMatrix4fv(loc_modelViewMatrixInverseTranspose, 1, 0,
-      value_ptr(modelViewMatrixInverseTranspose));
-    glUniformMatrix4fv(loc_modelViewMatrix, 1, 0, value_ptr(modelViewMatrix));
-    glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
-  }
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/blinn.vs.glsl");
-    StringVector sv;
-    sv.push_back("#define LIGHT_COUNT 8\n");
-    sv.push_back(readFile("data/shader/blinn.frag"));
-    attachShaderSourceAndFile(
-      GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
-  }
-  virtual void bindUniformLocations() {
-    lightModel.bindUniformLocations(object, "lightModel");
-    for (int i = 0; i < lights.size(); ++i) {
-      std::stringstream ss;
-      ss << "lights[" << i << "]";
-      lights[i].bindUniformLocations(object, ss.str());
+      glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
+      glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
+      glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     }
-    material.bindUniformLocations(object, "material");
+    virtual void attach_shaders() {
+      attach_shader_file(GL_VERTEX_SHADER, "data/shader/blinn.vs.glsl");
+      string_vector sv;
+      sv.push_back("#define LIGHT_COUNT 8\n");
+      sv.push_back(read_file("data/shader/blinn.frag"));
+      attach_shader_source_and_file(
+        GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
+    }
+    virtual void bind_uniform_locations() {
+      light_model.bind_uniform_locations(object, "light_model");
+      for (int i = 0; i < lights.size(); ++i) {
+        std::stringstream ss;
+        ss << "lights[" << i << "]";
+        lights[i].bind_uniform_locations(object, ss.str());
+      }
+      material.bind_uniform_locations(object, "material");
 
-    // setUniformLocation(&loc_eye, "eye");
-    setUniformLocation(&loc_modelViewMatrix, "modelViewMatrix");
-    setUniformLocation(
-      &loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
+      // set_uniform_location(&ul_eye, "eye");
+      set_uniform_location(&ul_mv_mat, "mv_mat");
+      set_uniform_location(&ul_mv_mat_it, "mv_mat_it");
+      set_uniform_location(&ul_mvp_mat, "mvp_mat");
+    }
+    virtual void bind_attrib_locations() {}
+  } my_program;
+
+  void render(zxd::program& program) {
+    mat4 model = mat4(1.0f);
+    my_program.update_frame();
+    my_program.update_model(model);
+    glutSolidSphere(1, 64, 64);
   }
-  virtual void bindAttribLocations(){
 
-  }
-} myProgram;
+  void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-void render(zxd::Program& program) {
-  mat4 model = mat4(1.0f);
-  myProgram.updateFrame();
-  myProgram.updateModel(model);
-  glutSolidSphere(1, 64, 64);
-}
+    render(my_program);
 
-void display(void) {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_TEXTURE_2D);
 
-  render(myProgram);
+    GLint program;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &program);
 
-  glDisable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glWindowPos2i(10, 492);
+    GLchar info[512];
 
-  GLint program;
-  glGetIntegerv(GL_CURRENT_PROGRAM, &program);
-
-  glColor3f(1.0f, 1.0f, 1.0f);
-  glWindowPos2i(10, 492);
-  GLchar info[512];
-
-  // clang-format off
+    // clang-format off
   sprintf(info, "");
-  // clang-format on
+    // clang-format on
 
-  glUseProgram(0);
+    glUseProgram(0);
 
-  glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
 
-  glutSwapBuffers();
-}
-
-void init(void) {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glShadeModel(GL_SMOOTH);
-  glEnable(GL_CULL_FACE);
-  glEnable(GL_DEPTH_TEST);
-
-  zxd::LightSource dirLight;
-  dirLight.position = vec4(1, 0, 0, 0);
-  dirLight.diffuse = vec4(1, 1, 1, 1);
-  dirLight.specular = vec4(1, 1, 1, 1);
-
-  zxd::LightSource pointLight;
-  pointLight.position = vec4(0, 0, 5, 0);
-  pointLight.diffuse = vec4(0, 1, 0, 1);
-  pointLight.specular = vec4(1, 1, 1, 1);
-
-  zxd::LightSource spotLight;
-  spotLight.position = vec4(-5, 0, 0, 1);
-  spotLight.diffuse = vec4(0, 0, 1, 1);
-  spotLight.specular = vec4(0, 0, 1, 1);
-  spotLight.spotDirection = vec3(vec3(0) - spotLight.position.xyz());
-  spotLight.spotCutoff = 30;
-  spotLight.spotCosCutoff = std::cos(spotLight.spotCutoff);
-  spotLight.spotExponent = 3;
-
-  lights.push_back(dirLight);
-  lights.push_back(pointLight);
-  lights.push_back(spotLight);
-
-  material.shininess = 80;
-  material.specular = vec4(1.0, 1.0, 1.0, 1.0);
-
-  myProgram.init();
-}
-
-void reshape(int w, int h) {
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  wndAspect = static_cast<GLfloat>(w) / h;
-  glLoadIdentity();
-}
-
-void mouse(int button, int state, int x, int y) {
-  switch (button) {
-    default:
-      break;
+    glutSwapBuffers();
   }
-}
 
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 27:
-      exit(0);
-      break;
-    default:
-      break;
+  void create_scene(void) {
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+
+    zxd::light_source dir_light;
+    dir_light.position = vec4(1, 0, 0, 0);
+    dir_light.diffuse = vec4(1, 1, 1, 1);
+    dir_light.specular = vec4(1, 1, 1, 1);
+
+    zxd::light_source point_light;
+    point_light.position = vec4(0, 0, 5, 0);
+    point_light.diffuse = vec4(0, 1, 0, 1);
+    point_light.specular = vec4(1, 1, 1, 1);
+
+    zxd::light_source spot_light;
+    spot_light.position = vec4(-5, 0, 0, 1);
+    spot_light.diffuse = vec4(0, 0, 1, 1);
+    spot_light.specular = vec4(0, 0, 1, 1);
+    spot_light.spot_direction = vec3(vec3(0) - spot_light.position.xyz());
+    spot_light.spot_cutoff = 30;
+    spot_light.spot_cos_cutoff = std::cos(spot_light.spot_cutoff);
+    spot_light.spot_exponent = 3;
+
+    lights.push_back(dir_light);
+    lights.push_back(point_light);
+    lights.push_back(spot_light);
+
+    material.shininess = 80;
+    material.specular = vec4(1.0, 1.0, 1.0, 1.0);
+
+    my_program.init();
+    p_mat = glm::perspective(glm::radians(45.0f), wnd_aspect, 0.1f, 30.0f);
+    v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
   }
-}
-void idle() {}
-void passiveMotion(int x, int y) {}
 
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    wnd_aspect = static_cast<GLfloat>(w) / h;
+    glLoadIdentity();
+  }
+
+  void mouse(int button, int state, int x, int y) {
+    switch (button) {
+      default:
+        break;
+    }
+  }
+
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
+    switch (key) {
+      default:
+        break;
+    }
+  }
+  void idle() {}
+  void passive_motion(int x, int y) {}
+};
+}
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(WINDOWS_WIDTH, WINDOWS_HEIGHT);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutMouseFunc(mouse);
-  glutPassiveMotionFunc(passiveMotion);
-  glutKeyboardFunc(keyboard);
-  glutIdleFunc(idle);
-  glutMainLoop();
-
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }

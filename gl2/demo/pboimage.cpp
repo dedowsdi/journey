@@ -9,22 +9,22 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + (bytes))
 
-/*	Create checkerboard image	*/
-#define checkImageWidth 64
-#define checkImageHeight 64
-GLubyte checkImage[checkImageHeight][checkImageWidth][3];
+/*	create checkerboard image	*/
+#define check_image_width 64
+#define check_image_height 64
+GLubyte check_image[check_image_height][check_image_width][3];
 
-GLuint pixelBuffer;
+GLuint pixel_buffer;
 
-void makeCheckImage(void) {
+void make_check_image(void) {
   int i, j, c;
 
-  for (i = 0; i < checkImageHeight; i++) {
-    for (j = 0; j < checkImageWidth; j++) {
+  for (i = 0; i < check_image_height; i++) {
+    for (j = 0; j < check_image_width; j++) {
       c = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;
-      checkImage[i][j][0] = (GLubyte)c;
-      checkImage[i][j][1] = (GLubyte)c;
-      checkImage[i][j][2] = (GLubyte)c;
+      check_image[i][j][0] = (GLubyte)c;
+      check_image[i][j][1] = (GLubyte)c;
+      check_image[i][j][2] = (GLubyte)c;
     }
   }
 }
@@ -32,21 +32,21 @@ void makeCheckImage(void) {
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_FLAT);
-  makeCheckImage();
+  make_check_image();
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  glGenBuffers(1, &pixelBuffer);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixelBuffer);
-  glBufferData(GL_PIXEL_UNPACK_BUFFER, 3 * checkImageWidth * checkImageHeight,
-    checkImage, GL_STATIC_DRAW);
+  glGenBuffers(1, &pixel_buffer);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixel_buffer);
+  glBufferData(GL_PIXEL_UNPACK_BUFFER, 3 * check_image_width * check_image_height,
+    check_image, GL_STATIC_DRAW);
 }
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
   glRasterPos2i(0, 0);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixelBuffer);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixel_buffer);
   //draw pixels from current pixel unpack buffer
-  glDrawPixels(checkImageWidth, checkImageHeight, GL_RGB, GL_UNSIGNED_BYTE,
+  glDrawPixels(check_image_width, check_image_height, GL_RGB, GL_UNSIGNED_BYTE,
     BUFFER_OFFSET(0));
 
   glFlush();
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(300, 300);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  zxd::loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

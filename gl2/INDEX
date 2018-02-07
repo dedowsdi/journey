@@ -41,7 +41,7 @@ Chapter 5: Lighting
     gamma.c
     normalmap.c
 
-qChapter 6: Blending, Antialiasing, Fog, and Polygon Offset
+Chapter 6: Blending, Antialiasing, Fog, and Polygon Offset
 
 	blendeqn.c	(1.3 or ARB_imaging_subset)
 	alpha.c		(1.0)

@@ -434,7 +434,7 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
     if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
       return;
     if (dtx != 0 || dty != 0) {
-      mat4 w_mat_i = zxd::compute_window_matrix_inverse(
+      mat4 w_mat_i = zxd::compute_window_mat_i(
         0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
       mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
 

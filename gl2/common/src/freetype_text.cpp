@@ -7,34 +7,34 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-FreetypeText::FreetypeText(const std::string& font)
-    : mFace(font),
-      mProgram(new FreetypeTextProgram()),
-      mNumCharacters(256),
-      mHeight(15) {}
+freetype_text::freetype_text(const std::string& font)
+    : m_face(font),
+      m_program(new freetype_text_program()),
+      m_num_characters(256),
+      m_height(15) {}
 
 //--------------------------------------------------------------------
-FreetypeText::~FreetypeText() {}
+freetype_text::~freetype_text() {}
 
 //--------------------------------------------------------------------
-void FreetypeText::init() {
-  mProgram->init();
+void freetype_text::init() {
+  m_program->init();
 
-  glGenVertexArrays(1, &mVao);
-  glGenBuffers(1, &mVbo);
-  glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+  glGenVertexArrays(1, &m_vao);
+  glGenBuffers(1, &m_vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
   // sub data will be changed for every character
   glBufferData(GL_ARRAY_BUFFER, 64, 0, GL_DYNAMIC_DRAW);
 
-  updateGlyphDict();
+  update_glyph_dict();
 }
 
 //--------------------------------------------------------------------
-void FreetypeText::updateGlyphDict() {
-  mGlyphDict.clear();
+void freetype_text::update_glyph_dict() {
+  m_glyph_dict.clear();
 
-  glBindVertexArray(mVao);
-  glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+  glBindVertexArray(m_vao);
+  glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
   // build free type glyph dict
   FT_Library ft;
@@ -42,35 +42,35 @@ void FreetypeText::updateGlyphDict() {
 
   error = FT_Init_FreeType(&ft);
   if (error)
-    std::cout << "ERROR::FREETYPE: Could not init FreeType Library"
+    std::cout << "ERROR::FREETYPE: could not init FreeType library"
               << std::endl;
 
   FT_Face face;
-  std::string font(mFace);
+  std::string font(m_face);
   error = FT_New_Face(ft, font.c_str(), 0, &face);
   if (error == FT_Err_Unknown_File_Format)
     std::cout << "ERROR:FREETYEP: unsupported face";
   else if (error == FT_Err_Cannot_Open_Resource)
     std::cout << "can not open resource " << font << std::endl;
   else if (error)
-    std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+    std::cout << "ERROR::FREETYPE: failed to load font" << std::endl;
 
   error = FT_Set_Pixel_Sizes(face, /* handle to face object */
     0,                             /* pixel_width           */
-    mHeight);                      /* pixel_height          */
+    m_height);                      /* pixel_height          */
   if (error) std::cout << "faield to set pixel size" << std::endl;
 
-  mLinespace = face->size->metrics.height;
-  mLinespace = mLinespace >> 6;
-  mMaxAdvance = face->size->metrics.max_advance;
-  mMaxAdvance = mMaxAdvance >> 6;
+  m_linespace = face->size->metrics.height;
+  m_linespace = m_linespace >> 6;
+  m_max_advance = face->size->metrics.max_advance;
+  m_max_advance = m_max_advance >> 6;
 
   // create 8 bit gray scale bitmap image
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   // load 128 ascii characters
-  for (GLuint c = 0; c < mNumCharacters; c++) {
+  for (GLuint c = 0; c < m_num_characters; c++) {
     // load glyph
     if (FT_Load_Char(face, c, FT_LOAD_RENDER))
       std::cout << "faield to load char " << c << std::endl;
@@ -82,10 +82,10 @@ void FreetypeText::updateGlyphDict() {
     glyph.bearingY = face->glyph->bitmap_top;
     glyph.width = bitmap.width;
     glyph.height = bitmap.rows;  // bitmap.rows
-    glyph.xMin = glyph.bearingX;
-    glyph.yMin = glyph.bearingY - glyph.height;
-    glyph.xMax = glyph.xMin + glyph.width;
-    glyph.yMax = glyph.bearingY;
+    glyph.x_min = glyph.bearingX;
+    glyph.y_min = glyph.bearingY - glyph.height;
+    glyph.x_max = glyph.x_min + glyph.width;
+    glyph.y_max = glyph.bearingY;
     // glyph.origin = face->glyph->origin;
     glyph.advance = face->glyph->advance.x;
     glyph.advance >>= 6;
@@ -102,7 +102,7 @@ void FreetypeText::updateGlyphDict() {
       GL_UNSIGNED_BYTE, bitmap.buffer);
 
     glyph.texture = tex;
-    mGlyphDict.insert(std::make_pair(c, glyph));
+    m_glyph_dict.insert(std::make_pair(c, glyph));
   }
 
   // clear up
@@ -111,18 +111,18 @@ void FreetypeText::updateGlyphDict() {
 }
 
 //--------------------------------------------------------------------
-void FreetypeText::print(const std::string& text, GLuint x, GLuint y,
+void freetype_text::print(const std::string& text, GLuint x, GLuint y,
   const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /*= 1.0*/) {
   GLuint nextY = y;
   GLuint nextX = x;
 
   for (int i = 0; i < text.size(); ++i) {
     char character = text[i];
-    Glyph& glyph = mGlyphDict[character];
+    Glyph& glyph = m_glyph_dict[character];
 
     if (character == '\n') {
       nextX = x;
-      nextY -= mLinespace;
+      nextY -= m_linespace;
       continue;
     } else if (character == ' ') {
       nextX += glyph.advance * scale;
@@ -135,36 +135,36 @@ void FreetypeText::print(const std::string& text, GLuint x, GLuint y,
 }
 
 //--------------------------------------------------------------------
-void FreetypeText::print(char c, GLuint x, GLuint y,
+void freetype_text::print(char c, GLuint x, GLuint y,
   const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /* = 1.0*/) {
-  Glyph& glyph = mGlyphDict[c];
+  Glyph& glyph = m_glyph_dict[c];
   print(glyph, x, y, color, scale);
 }
 
 //--------------------------------------------------------------------
-void FreetypeText::print(const Glyph& glyph, GLuint x, GLuint y,
+void freetype_text::print(const Glyph& glyph, GLuint x, GLuint y,
   const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /* = 1.0*/) {
-  glUseProgram(*mProgram);
-  mProgram->updateUniforms(color);
+  glUseProgram(*m_program);
+  m_program->update_uniforms(color);
 
   // clang-format off
     // freetype generate texture from left to right, top to bottom, which means
     // we must flip y
     GLfloat vertices[4][4] = {
-      {x + glyph.xMin * scale, y + glyph.yMin * scale, 0, 1},
-      {x + glyph.xMax * scale, y + glyph.yMin * scale, 1, 1},
-      {x + glyph.xMax * scale, y + glyph.yMax * scale, 1, 0},
-      {x + glyph.xMin * scale, y + glyph.yMax * scale, 0, 0}
+      {x + glyph.x_min * scale, y + glyph.y_min * scale, 0, 1},
+      {x + glyph.x_max * scale, y + glyph.y_min * scale, 1, 1},
+      {x + glyph.x_max * scale, y + glyph.y_max * scale, 1, 0},
+      {x + glyph.x_min * scale, y + glyph.y_max * scale, 0, 0}
     };
   // clang-format on
 
-  glBindVertexArray(mVao);
-  glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+  glBindVertexArray(m_vao);
+  glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
   glVertexAttribPointer(
-    mProgram->attrib_vertex, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(mProgram->attrib_vertex);
+    m_program->al_vertex, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  glEnableVertexAttribArray(m_program->al_vertex);
 
   glBindTexture(GL_TEXTURE_2D, glyph.texture);
 

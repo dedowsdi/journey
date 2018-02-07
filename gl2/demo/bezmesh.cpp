@@ -1,5 +1,5 @@
 /*  bezmesh.c
- *  This program renders a lighted, filled Bezier surface,
+ *  this program renders a lighted, filled bezier surface,
  *  using two-dimensional evaluators.
  */
 #include "glad/glad.h"
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

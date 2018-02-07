@@ -1,11 +1,11 @@
 /*
  *  stencil.c
- *  This program demonstrates use of the stencil buffer for
+ *  this program demonstrates use of the stencil buffer for
  *  masking nonrectangular regions.
- *  Whenever the window is redrawn, a value of 1 is drawn
+ *  whenever the window is redrawn, a value of 1 is drawn
  *  into a diamond-shaped region in the stencil buffer.
- *  Elsewhere in the stencil buffer, the value is 0.
- *  Then a blue sphere is drawn where the stencil value is 1,
+ *  elsewhere in the stencil buffer, the value is 0.
+ *  then a blue sphere is drawn where the stencil value is 1,
  *  and yellow torii are drawn where the stencil value is not 1.
  *
  *  glStencilFunc setup func, ref and mask
@@ -56,7 +56,7 @@ void init(void) {
   glEnable(GL_STENCIL_TEST);
 }
 
-/* Draw a sphere in a diamond-shaped section in the
+/* draw a sphere in a diamond-shaped section in the
  * middle of a window with 2 torii.
  */
 void display(void) {
@@ -85,7 +85,7 @@ void display(void) {
   glFlush();
 }
 
-/*  Whenever the window is reshaped, redefine the
+/*  whenever the window is reshaped, redefine the
  *  coordinate system and redraw the stencil area.
  */
 void reshape(int w, int h) {
@@ -129,8 +129,8 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-/* Main Loop
- * Be certain to request stencil bits.
+/* main loop
+ * be certain to request stencil bits.
  */
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(400, 400);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

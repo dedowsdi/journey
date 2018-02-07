@@ -1,22 +1,28 @@
 /*
  *  convolution.c
- *  Use various 2D convolutions filters to find edges in an image.
+ *  use various 2D convolutions filters to find edges in an image.
  *
  */
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "readImage.cpp"
-#include <GL/freeglut_ext.h>
-#include "common.h"
+#include "app.h"
+#include "read_image.cpp"
 
-extern GLubyte* readImage(const char*, GLsizei*, GLsizei*);
+extern GLubyte* read_image(const char*, GLsizei*, GLsizei*);
+
+namespace zxd {
 
 GLubyte* pixels;
 GLsizei width, height;
 
-// clang-format off
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "convolution";
+    m_info.display_mode = GLUT_SINGLE | GLUT_RGBA;
+    m_info.wnd_width = width;
+    m_info.wnd_height = height;
+  }
+
+  // clang-format off
 
 GLfloat horizontal[3][3] = {
   {0, -1, 0}, 
@@ -36,84 +42,75 @@ GLfloat laplacian[3][3] = {
   {-0.125, -0.125, -0.125},
 };
 
-// clang-format on
+  // clang-format on
 
-void init(void) {
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+  void create_scene(void) {
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  printf("Using the horizontal filter\n");
-  glConvolutionFilter2D(
-    GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3, GL_LUMINANCE, GL_FLOAT, horizontal);
-  glEnable(GL_CONVOLUTION_2D);
-}
+    glClearColor(0.0, 0.0, 0.0, 0.0);
 
-void display(void) {
-  glClear(GL_COLOR_BUFFER_BIT);
-  glRasterPos2i(1, 1);
-  glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-
-  const unsigned char info[] = 
-    "q : horizontal filter\n"
-    "w : vertical filter\n"
-    "e : laplacian filter";
-  glWindowPos2i(10, height -20);
-  glutBitmapString(GLUT_BITMAP_9_BY_15, info);
-
-  glFlush();
-}
-
-void reshape(int w, int h) {
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0, w, 0, h, -1.0, 1.0);
-  glMatrixMode(GL_MODELVIEW);
-}
-
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 'q':
-      printf("Using a horizontal filter\n");
-      glConvolutionFilter2D(GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3, GL_LUMINANCE,
-        GL_FLOAT, horizontal);
-      break;
-
-    case 'w':
-      printf("Using the vertical filter\n");
-      glConvolutionFilter2D(GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3, GL_LUMINANCE,
-        GL_FLOAT, vertical);
-      break;
-
-    case 'e':
-      printf("Using the laplacian filter\n");
-      glConvolutionFilter2D(GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3, GL_LUMINANCE,
-        GL_FLOAT, laplacian);
-      break;
-
-    case 27:
-      exit(0);
+    printf("using the horizontal filter\n");
+    glConvolutionFilter2D(GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3, GL_LUMINANCE,
+      GL_FLOAT, horizontal);
+    glEnable(GL_CONVOLUTION_2D);
   }
-  glutPostRedisplay();
+
+  void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glRasterPos2i(1, 1);
+    glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+    const unsigned char info[] =
+      "q : horizontal filter\n"
+      "w : vertical filter\n"
+      "e : laplacian filter";
+    glWindowPos2i(10, height - 20);
+    glutBitmapString(GLUT_BITMAP_9_BY_15, info);
+
+    glFlush();
+  }
+
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, w, 0, h, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+  }
+
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
+    switch (key) {
+      case 'q':
+        printf("using a horizontal filter\n");
+        glConvolutionFilter2D(GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3,
+          GL_LUMINANCE, GL_FLOAT, horizontal);
+        break;
+
+      case 'w':
+        printf("using the vertical filter\n");
+        glConvolutionFilter2D(GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3,
+          GL_LUMINANCE, GL_FLOAT, vertical);
+        break;
+
+      case 'e':
+        printf("using the laplacian filter\n");
+        glConvolutionFilter2D(GL_CONVOLUTION_2D, GL_LUMINANCE, 3, 3,
+          GL_LUMINANCE, GL_FLOAT, laplacian);
+        break;
+    }
+  }
+
+  /*  main loop
+   *  open window with initial window size, title bar,
+   *  RGBA display mode, and handle input events.
+   */
+};
 }
-
-/*  Main Loop
- *  Open window with initial window size, title bar,
- *  RGBA display mode, and handle input events.
- */
 int main(int argc, char** argv) {
-  pixels = readImage("Data/leeds.bin", &width, &height);
-
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-  glutInitWindowSize(width, height);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyboard);
-  glutDisplayFunc(display);
-  glutMainLoop();
+  zxd::pixels = read_image("data/leeds.bin", &zxd::width, &zxd::height);
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }

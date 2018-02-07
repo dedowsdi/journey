@@ -1,293 +1,226 @@
 #include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <GL/freeglut_ext.h>
-#include <stdlib.h>
-#include "common.h"
+#include "app.h"
 #include "program.h"
-#include "glm.h"
-#include <sstream>
 #include "light.h"
+#include <sstream>
+#include "sphere.h"
+#include "common_program.h"
+
+namespace zxd {
 
 using namespace glm;
 
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
-GLfloat wndAspect = 1;
+GLfloat wnd_aspect = 1;
 
-GLboolean useProgram = GL_TRUE;
-vec3 cameraPos = vec3(0, -3, 3);
+GLboolean use_program = GL_TRUE;
+vec3 camera_pos = vec3(0, -3, 3);
 
-std::vector<zxd::LightSource> lights;
-zxd::LightModel lightModel;
-zxd::Material material;
+std::vector<zxd::light_source> lights;
+light_model lm;
+material mtl;
+sphere sphere0(1, 64, 64);
 
-struct MyProgram : public zxd::Program {
-  // GLint loc_eye;
+blinn_program prg0;
 
-  virtual void doUpdateFrame() {
-    projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
-    viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
-    viewMatrixInverseTranspose = glm::inverse(glm::transpose(viewMatrix));
-
-    material.updateUniforms();
-    lightModel.updateUniforms();
-    for (int i = 0; i < lights.size(); ++i) {
-      lights[i].updateUniforms(viewMatrix, viewMatrixInverseTranspose);
-    }
-  }
-  virtual void doUpdateModel() {
-    // modelMatrixInverse = glm::inverse(modelMatrix);
-    modelViewMatrix = viewMatrix * modelMatrix;
-    modelViewMatrixInverseTranspose =
-      glm::inverse(glm::transpose(modelViewMatrix));
-    modelViewProjMatrix = projMatrix * modelViewMatrix;
-
-    glUniformMatrix4fv(loc_modelViewMatrixInverseTranspose, 1, 0,
-      value_ptr(modelViewMatrixInverseTranspose));
-    glUniformMatrix4fv(loc_modelViewMatrix, 1, 0, value_ptr(modelViewMatrix));
-    glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
-  }
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/blinn.vs.glsl");
-    StringVector sv;
-    sv.push_back("#define LIGHT_COUNT 8\n");
-    sv.push_back(readFile("data/shader/blinn.frag"));
-    attachShaderSourceAndFile(
-      GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
-  }
-  virtual void bindUniformLocations() {
-    lightModel.bindUniformLocations(object, "lightModel");
-    for (int i = 0; i < lights.size(); ++i) {
-      std::stringstream ss;
-      ss << "lights[" << i << "]";
-      lights[i].bindUniformLocations(object, ss.str());
-    }
-    material.bindUniformLocations(object, "material");
-
-    // setUniformLocation(&loc_eye, "eye");
-    setUniformLocation(&loc_modelViewMatrix, "modelViewMatrix");
-    setUniformLocation(
-      &loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-  }
-} myProgram;
-
-void render(zxd::Program& program) {
+void render() {
   mat4 model = mat4(1.0f);
-  if (useProgram) {
-    myProgram.updateFrame();
-    myProgram.updateModel(model);
+  if (use_program) {
+    glUseProgram(prg0.object);
+    prg0.update_model(model);
+    prg0.update_lighting_uniforms(lights, lm, mtl);
+    sphere0.draw();
   } else {
     // setup matrix
     glUseProgram(0);
     glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(value_ptr(myProgram.projMatrix));
+    glLoadMatrixf(value_ptr(prg0.p_mat));
 
-    mat4 modelViewMatrix = model * myProgram.viewMatrix;
+    mat4 mv_mat = model * prg0.v_mat;
     glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(value_ptr(modelViewMatrix));
+    glLoadMatrixf(value_ptr(mv_mat));
 
-    // set up light and material
-    lightModel.pipeline();
+    // set up light and mtl
+    lm.pipeline();
     for (int i = 0; i < lights.size(); ++i) {
-      lights[i].pipeline(i, myProgram.viewMatrix);
+      lights[i].pipeline(i, prg0.v_mat);
     }
-    material.pipeline();
+    mtl.pipeline();
+    glutSolidSphere(1, 64, 64);
   }
-  glutSolidSphere(1, 64, 64);
 }
 
-void display(void) {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "blinnphong";
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.wnd_width = WINDOWS_WIDTH;
+    m_info.wnd_height = WINDOWS_HEIGHT;
+  }
 
-  render(myProgram);
+  void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glDisable(GL_TEXTURE_2D);
+    render();
 
-  GLint program;
-  glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+    glDisable(GL_TEXTURE_2D);
 
-  glColor3f(1.0f, 1.0f, 1.0f);
-  glWindowPos2i(10, 492);
-  GLchar info[512];
+    GLint program;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &program);
 
-  // clang-format off
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glWindowPos2i(10, 492);
+    GLchar info[512];
+
+    // clang-format off
   sprintf(info, 
       " q  : use program : %d \n"
       " w  : local viewer : %d \n"
-      " eE : light model ambient viewer : %.2f %.2f %.2f %.2f \n"
-      " jJ : material emission : %.2f %.2f %.2f %.2f \n"
-      " kK : material diffuse : %.2f %.2f %.2f %.2f \n" 
-      " lL : material specular : %.2f %.2f %.2f %.2f \n" 
-      " ;: : material ambient : %.2f %.2f %.2f %.2f \n" 
-      " mM : material shininess : %.2f \n" ,
-      useProgram, lightModel.localViewer, 
-      lightModel.ambient[0], lightModel.ambient[1], lightModel.ambient[2], lightModel.ambient[3], 
-      material.emission[0], material.emission[1], material.emission[2], material.emission[3], 
-      material.diffuse[0], material.diffuse[1], material.diffuse[2], material.diffuse[3], 
-      material.specular[0], material.specular[1], material.specular[2], material.specular[3], 
-      material.ambient[0], material.ambient[1], material.ambient[2], material.ambient[3], 
-      material.shininess
+      " eE : light model ambient : %.2f %.2f %.2f %.2f \n"
+      " jJ : mtl emission : %.2f %.2f %.2f %.2f \n"
+      " kK : mtl diffuse : %.2f %.2f %.2f %.2f \n" 
+      " lL : mtl specular : %.2f %.2f %.2f %.2f \n" 
+      " ;: : mtl ambient : %.2f %.2f %.2f %.2f \n" 
+      " mM : mtl shininess : %.2f \n" ,
+      use_program, lm.local_viewer, 
+      lm.ambient[0], lm.ambient[1], lm.ambient[2], lm.ambient[3], 
+      mtl.emission[0], mtl.emission[1], mtl.emission[2], mtl.emission[3], 
+      mtl.diffuse[0], mtl.diffuse[1], mtl.diffuse[2], mtl.diffuse[3], 
+      mtl.specular[0], mtl.specular[1], mtl.specular[2], mtl.specular[3], 
+      mtl.ambient[0], mtl.ambient[1], mtl.ambient[2], mtl.ambient[3], 
+      mtl.shininess
       );
-  // clang-format on
+    // clang-format on
 
-  glUseProgram(0);
+    glUseProgram(0);
 
-  glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
 
-  glutSwapBuffers();
-}
-
-void init(void) {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glShadeModel(GL_SMOOTH);
-  glEnable(GL_CULL_FACE);
-  glEnable(GL_DEPTH_TEST);
-
-  zxd::LightSource dirLight;
-  dirLight.position = vec4(1, 0, 0, 0);
-  dirLight.diffuse = vec4(1, 1, 1, 1);
-  dirLight.specular = vec4(1, 1, 1, 1);
-
-  zxd::LightSource pointLight;
-  pointLight.position = vec4(0, 0, 5, 1);
-  pointLight.diffuse = vec4(0, 1, 0, 1);
-  pointLight.specular = vec4(1, 1, 1, 1);
-
-  zxd::LightSource spotLight;
-  spotLight.position = vec4(-5, 0, 0, 1);
-  spotLight.diffuse = vec4(0, 0, 1, 1);
-  spotLight.specular = vec4(0, 0, 1, 1);
-  spotLight.spotDirection = vec3(vec3(0) - spotLight.position.xyz());
-  spotLight.spotCutoff = 30;
-  spotLight.spotCosCutoff = std::cos(spotLight.spotCutoff);
-  spotLight.spotExponent = 3;
-
-  lights.push_back(dirLight);
-  lights.push_back(pointLight);
-  lights.push_back(spotLight);
-
-  material.shininess = 80;
-  material.specular = vec4(1.0, 1.0, 1.0, 1.0);
-
-  myProgram.init();
-}
-
-void reshape(int w, int h) {
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  wndAspect = static_cast<GLfloat>(w) / h;
-  glLoadIdentity();
-}
-
-void mouse(int button, int state, int x, int y) {
-  switch (button) {
-    default:
-      break;
+    glutSwapBuffers();
   }
-}
 
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 'q': {
-      useProgram = !useProgram;
-      glutPostRedisplay();
-    } break;
+  void create_scene(void) {
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
-    case 'w':
-      lightModel.localViewer ^= 1;
-      glutPostRedisplay();
-      break;
+    zxd::light_source dir_light;
+    dir_light.position = vec4(1, 0, 0, 0);
+    dir_light.diffuse = vec4(1, 1, 1, 1);
+    dir_light.specular = vec4(1, 1, 1, 1);
 
-    case 'e':
-      lightModel.ambient += 0.05;
-      lightModel.ambient = glm::clamp(lightModel.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'E':
-      lightModel.ambient -= 0.05;
-      lightModel.ambient = glm::clamp(lightModel.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
+    zxd::light_source point_light;
+    point_light.position = vec4(0, 0, 5, 1);
+    point_light.diffuse = vec4(0, 1, 0, 1);
+    point_light.specular = vec4(1, 1, 1, 1);
 
-    case 'j':
-      material.emission += 0.05;
-      material.emission = glm::clamp(material.emission, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'J':
-      material.emission -= 0.05;
-      material.emission = glm::clamp(material.emission, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
+    zxd::light_source spot_light;
+    spot_light.position = vec4(-5, 0, 0, 1);
+    spot_light.diffuse = vec4(0, 0, 1, 1);
+    spot_light.specular = vec4(0, 0, 1, 1);
+    spot_light.spot_direction = vec3(vec3(0) - spot_light.position.xyz());
+    spot_light.spot_cutoff = 30;
+    spot_light.spot_cos_cutoff = std::cos(spot_light.spot_cutoff);
+    spot_light.spot_exponent = 3;
 
-    case 'k':
-      material.diffuse += 0.05;
-      material.diffuse = glm::clamp(material.diffuse, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'K':
-      material.diffuse -= 0.05;
-      material.diffuse = glm::clamp(material.diffuse, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
+    lights.push_back(dir_light);
+    lights.push_back(point_light);
+    lights.push_back(spot_light);
 
-    case 'l':
-      material.specular += 0.05;
-      material.specular = glm::clamp(material.specular, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-    case 'L':
-      material.specular -= 0.05;
-      material.specular = glm::clamp(material.specular, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
+    mtl.shininess = 80;
+    mtl.specular = vec4(1.0, 1.0, 1.0, 1.0);
 
-    case ';':
-      material.ambient += 0.05;
-      material.ambient = glm::clamp(material.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
+    prg0.init();
+    prg0.bind_lighting_uniform_locations(lights, lm, mtl);
+    prg0.p_mat =
+      glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 30.0f);
+    prg0.v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
+    this->set_v_mat(&prg0.v_mat);
 
-    case ':':
-      material.ambient -= 0.05;
-      material.ambient = glm::clamp(material.ambient, 0.0f, 1.0f);
-      glutPostRedisplay();
-      break;
-
-    case 'm':
-      material.shininess += 5;
-      material.shininess = glm::clamp(material.shininess, 0.0f, 1000.0f);
-      glutPostRedisplay();
-      break;
-    case 'M':
-      material.shininess -= 5;
-      material.shininess = glm::clamp(material.shininess, 0.0f, 1000.0f);
-      glutPostRedisplay();
-      break;
-    case 27:
-      exit(0);
-      break;
+    sphere0.build_mesh();
+    sphere0.bind(prg0.al_vertex, prg0.al_normal);
   }
-}
-void idle() {}
-void passiveMotion(int x, int y) {}
 
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    glLoadIdentity();
+  }
+
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
+    switch (key) {
+      case 'q': {
+        use_program = !use_program;
+      } break;
+
+      case 'w':
+        lm.local_viewer ^= 1;
+        break;
+
+      case 'e':
+        lm.ambient += 0.05;
+        lm.ambient = glm::clamp(lm.ambient, 0.0f, 1.0f);
+        break;
+      case 'E':
+        lm.ambient -= 0.05;
+        lm.ambient = glm::clamp(lm.ambient, 0.0f, 1.0f);
+        break;
+
+      case 'j':
+        mtl.emission += 0.05;
+        mtl.emission = glm::clamp(mtl.emission, 0.0f, 1.0f);
+        break;
+      case 'J':
+        mtl.emission -= 0.05;
+        mtl.emission = glm::clamp(mtl.emission, 0.0f, 1.0f);
+        break;
+
+      case 'k':
+        mtl.diffuse += 0.05;
+        mtl.diffuse = glm::clamp(mtl.diffuse, 0.0f, 1.0f);
+        break;
+      case 'K':
+        mtl.diffuse -= 0.05;
+        mtl.diffuse = glm::clamp(mtl.diffuse, 0.0f, 1.0f);
+        break;
+
+      case 'l':
+        mtl.specular += 0.05;
+        mtl.specular = glm::clamp(mtl.specular, 0.0f, 1.0f);
+        break;
+      case 'L':
+        mtl.specular -= 0.05;
+        mtl.specular = glm::clamp(mtl.specular, 0.0f, 1.0f);
+        break;
+
+      case ';':
+        mtl.ambient += 0.05;
+        mtl.ambient = glm::clamp(mtl.ambient, 0.0f, 1.0f);
+        break;
+
+      case ':':
+        mtl.ambient -= 0.05;
+        mtl.ambient = glm::clamp(mtl.ambient, 0.0f, 1.0f);
+        break;
+
+      case 'm':
+        mtl.shininess += 5;
+        mtl.shininess = glm::clamp(mtl.shininess, 0.0f, 1000.0f);
+        break;
+      case 'M':
+        mtl.shininess -= 5;
+        mtl.shininess = glm::clamp(mtl.shininess, 0.0f, 1000.0f);
+        break;
+    }
+  }
+};
+}
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(WINDOWS_WIDTH, WINDOWS_HEIGHT);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutMouseFunc(mouse);
-  glutPassiveMotionFunc(passiveMotion);
-  glutKeyboardFunc(keyboard);
-  glutIdleFunc(idle);
-  glutMainLoop();
-
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }

@@ -13,8 +13,8 @@
 #define Z .850650808352039932
 #define random() (double)rand() / INT_MAX
 long depth = 1;  // subdivide depth
-double aspectRatio = 1.0f;
-double vpWidth, vpHeight;
+double aspect_ratio = 1.0f;
+double vp_width, vp_height;
 
 // clang-format off
 static GLfloat vdata[12][3] = {
@@ -115,9 +115,9 @@ void display(void) {
 
 void reshape(int w, int h) {
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  aspectRatio = (double)w / h;
-  vpWidth = w;
-  vpHeight = h;
+  aspect_ratio = (double)w / h;
+  vp_width = w;
+  vp_height = h;
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -135,7 +135,7 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-void specialKeyPress(int key, int x, int y) {
+void special_key_press(int key, int x, int y) {
   switch (key) {
     case GLUT_KEY_UP:
       ++depth;
@@ -154,12 +154,12 @@ int main(int argc, char **argv) {
   glutInitWindowSize(800, 800);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);
-  glutSpecialFunc(specialKeyPress);
+  glutSpecialFunc(special_key_press);
   glutMainLoop();
   return 0;
 }

@@ -1,28 +1,28 @@
 /*
  * directional_shadowmap.c
  *
- * Need ARB_framebuffer_object
+ * need arb_framebuffer_object
  *
- * Shadow acne:
- *  As depth map is discrete, different fragments with different depth might
+ * shadow acne:
+ *  as depth map is discrete, different fragments with different depth might
  *  sample the same texel, the depth discrepancy could cause shadow acne, bias
  *  is used to eliminite shaodw acne. it's calculated as :
- *    float shadowBias = clamp(bias * tan(acos(ndotl)), 0, 0.01);
+ *    float shadow_bias = clamp(bias * tan(acos(ndotl)), 0, 0.01);
  *
- * Peter pan:
- *  Caused by shadow bias, can be fiexed via replacing thin geometry with
+ * peter pan:
+ *  caused by shadow bias, can be fiexed via replacing thin geometry with
  *  thicker geometry.
  *
- * Over sampling:
- *    This only happens when the light proj doesn't include the entire visibile
+ * over sampling:
+ *    this only happens when the light proj doesn't include the entire visibile
  *    area of the camea.
  *
- *    If it's beyound one of left, right, bottom, top plane, the generated
+ *    if it's beyound one of left, right, bottom, top plane, the generated
  *    texcoord doesn't belong to [0,1], you can control the visibility by
  *    setting wrap mode to clamp_to_border, and set border_color to the depth
  *    you thought fitful.
  *
- *    If it's beyound one of near and far plane, the generated light space depth
+ *    if it's beyound one of near and far plane, the generated light space depth
  *    doesn't belong to [0,1], you have to manually handle them in the shader.
  *
  * PCF(percentage-closer filter):
@@ -30,490 +30,500 @@
  *    different texture coordinates. example:
  *
  *    float visibility = 1.0;
- *    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+ *    vec2 texel_size = 1.0 / texture_size(shadow_map, 0);
  *    for(int x = -1; x <= 1; ++x)
  *    {
  *        for(int y = -1; y <= 1; ++y)
  *        {
- *            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) *
- * texelSize).r;
- *            visibility += currentDepth - bias > pcfDepth ? 0.0 : 1.0;
+ *            float pcf_depth = texture(shadow_map, proj_coords.xy + vec2(x, y)
+ * *
+ * texel_size).r;
+ *            visibility += current_depth - bias > pcf_depth ? 0.0 : 1.0;
  *        }
  *    }
  *    visibility /= 9.0;
  *
- *    If you use sample2DShadow, use shadow2D or shadow2DProj, pcf will be done
+ *    if you use sample2_d_shadow, use shadow2D or shadow2_d_proj, pcf will be
+ * done
  *    on hardware.
  *
- *
- *
- * You can use the same depth texture for both sample2D and sample2DShadow,
+ * you can use the same depth texture for both sample2D and sample2_d_shadow,
  * although opengl will complain sampler type and depth compare discrapancy.
- * It's properbally safer to make a copy for shadow map.
+ * it's properbally safer to make a copy for shadow map.
  *
  */
 
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <GL/freeglut_ext.h>
-#include <stdlib.h>
-#include "common.h"
-#include "glm.h"
+#include "app.h"
 #include "program.h"
+#include "light.h"
+#include "sphere.h"
+#include "xyplane.h"
+#include <sstream>
 
+namespace zxd {
 using namespace glm;
 
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
-GLuint shadowWidth = WINDOWS_WIDTH;
-GLuint shadowHeight = WINDOWS_HEIGHT;
+GLuint shadow_width = WINDOWS_WIDTH;
+GLuint shadow_height = WINDOWS_HEIGHT;
 
-GLdouble wndAspect = WINDOWS_WIDTH / WINDOWS_HEIGHT;
-GLdouble lightTop = 15;
-GLdouble lightNear = 0.1, lightFar = 30;
+sphere sphere0(1, 16, 16);
+xyplane plane0(-10, -10, 10, 10);
+xyplane plane1(-6, -10, 0, 10);
+
+GLdouble light_top = 15;
+GLdouble light_near = 0.1, light_far = 30;
 GLfloat bias = 0.005;
-GLboolean useSampler2DShadow = GL_FALSE;
+GLboolean use_sampler2_d_shadow = GL_FALSE;
 
-mat4 lightBSVP;  // bias * scale * lightProj * lightView
+mat4 light_bsvp_mat;  // bias * scale * light_proj * light_view
 
 GLuint fbo;
-GLuint depthMap, shadowMap;
+GLuint depth_map, shadow_map;
+GLdouble wnd_aspect;
 
-const char* filterStrings[] = {"NEAREST", "LINEAR"};
+const char* filter_strings[] = {"NEAREST", "LINEAR"};
 GLenum filters[] = {GL_NEAREST, GL_LINEAR};
 GLint filter = 0;
 
-vec4 light_position0(-8, 8, 8, 0);
-vec3 cameraPos = vec3(5, -20, 20);
+vec3 camera_pos = vec3(5, -20, 20);
 
-GLboolean cameraAtLight = GL_FALSE;
+std::vector<zxd::light_source> lights;
+light_model lm;
+material mtl;
 
-struct RenderProgram : public zxd::Program {
-  virtual void doUpdateModel() {
-    modelViewProjMatrix = projMatrix * viewMatrix * modelMatrix;
-    glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
+GLboolean camera_at_light = GL_FALSE;
+
+struct render_program : public zxd::program {
+  GLint al_vertex;
+  virtual void update_model(const glm::mat4& _m_mat) {
+    m_mat = _m_mat;
+    mvp_mat = p_mat * v_mat * m_mat;
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, &mvp_mat[0][0]);
   }
-  virtual void doUpdateFrame() {
+  virtual void update_frame() {
     glActiveTexture(GL_TEXTURE0);
     glDisable(GL_TEXTURE_2D);
     glActiveTexture(GL_TEXTURE1);
     glDisable(GL_TEXTURE_2D);
 
-    GLdouble right = lightTop * wndAspect;
+    GLdouble right = light_top * wnd_aspect;
     GLdouble left = -right;
 
-    projMatrix =
-      glm::ortho(left, right, -lightTop, lightTop, lightNear, lightFar);
-    viewMatrix =
-      glm::lookAt(light_position0.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+    p_mat =
+      glm::ortho(left, right, -light_top, light_top, light_near, light_far);
+    v_mat = glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
 
-    lightBSVP = glm::translate(vec3(0.5, 0.5, 0.5)) *
-                glm::scale(vec3(0.5, 0.5, 0.5)) * projMatrix * viewMatrix;
+    light_bsvp_mat = glm::translate(vec3(0.5, 0.5, 0.5)) *
+                     glm::scale(vec3(0.5, 0.5, 0.5)) * p_mat * v_mat;
   }
-  virtual void attachShaders() {
+  virtual void attach_shaders() {
     // render shadow program
-    attachShaderFile(
+    attach_shader_file(
       GL_VERTEX_SHADER, "data/shader/render_directional_shadowmap.vs.glsl");
-    attachShaderFile(
+    attach_shader_file(
       GL_FRAGMENT_SHADER, "data/shader/render_directional_shadowmap.fs.glsl");
   }
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_mvp_mat, "mvp_mat");
   }
 
-} renderProgram;
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+  }
 
-struct UseProgram : public zxd::Program {
-  GLint loc_lightDir;  // to light
-  GLint loc_lightMatrix;
-  GLint loc_bias;
-  GLint loc_useSampler2DShadow;
-  GLint loc_depthMap;
-  GLint loc_shadowMap;
+} render_prg;
 
-  virtual void doUpdateFrame() {
+struct use_program : public zxd::program {
+  GLint ul_light_mat;
+  GLint ul_bias;
+  GLint ul_use_sampler2_d_shadow;
+  GLint ul_depth_map;
+  GLint ul_shadow_map;
+
+  GLint al_vertex;
+  GLint al_normal;
+
+  virtual void update_frame() {
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glBindTexture(GL_TEXTURE_2D, depth_map);
 
     glActiveTexture(GL_TEXTURE1);
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
+    glBindTexture(GL_TEXTURE_2D, shadow_map);
 
-    if (cameraAtLight)
-      viewMatrix =
-        glm::lookAt(light_position0.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+    if (camera_at_light)
+      v_mat =
+        glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
     else
-      viewMatrix = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 0, 1));
+      v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
 
-    projMatrix = glm::perspective<GLfloat>(45.0, wndAspect, 0.1, 100);
+    mtl.update_uniforms();
+    lm.update_uniforms();
+    for (int i = 0; i < lights.size(); ++i) {
+      lights[i].update_uniforms(v_mat);
+    }
 
-    glUniform1f(loc_bias, bias);
-    glUniform1i(loc_useSampler2DShadow, useSampler2DShadow);
-    glUniform1i(loc_depthMap, 0);
-    glUniform1i(loc_shadowMap, 1);
+    p_mat = glm::perspective<GLfloat>(45.0f, wnd_aspect, 0.1, 100);
+
+    glUniform1f(ul_bias, bias);
+    glUniform1i(ul_use_sampler2_d_shadow, use_sampler2_d_shadow);
+    glUniform1i(ul_depth_map, 0);
+    glUniform1i(ul_shadow_map, 1);
   }
 
-  void doUpdateModel() {
-    modelViewMatrix = viewMatrix * modelMatrix;
-    modelViewMatrixInverseTranspose = glm::inverse(glm::transpose(modelViewMatrix));
-    modelViewProjMatrix = projMatrix * modelViewMatrix;
-    //mat4 modelMatrixInverse = glm::inverse(modelMatrix);
-    mat4 lightMatrix = lightBSVP * modelMatrix;
+  void update_model(const glm::mat4& _m_mat) {
+    m_mat = _m_mat;
+    mv_mat = v_mat * m_mat;
+    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mvp_mat = p_mat * mv_mat;
+    // mat4 m_mat_i = glm::inverse(m_mat);
+    mat4 light_mat = light_bsvp_mat * m_mat;
 
-    vec3 viewLightDir = (viewMatrix * light_position0).xyz();
-    viewLightDir = glm::normalize(viewLightDir);
-
-    glUniform3fv(loc_lightDir, 1, &viewLightDir[0]);
-    glUniformMatrix4fv(loc_lightMatrix, 1, 0, &lightMatrix[0][0]);
-    glUniformMatrix4fv(
-      loc_modelViewMatrix, 1, 0, &modelViewMatrix[0][0]);
-    glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, &modelViewProjMatrix[0][0]);
-    glUniformMatrix4fv(
-      loc_modelViewMatrixInverseTranspose, 1, 0, &modelViewMatrixInverseTranspose[0][0]);
+    glUniformMatrix4fv(ul_light_mat, 1, 0, &light_mat[0][0]);
+    glUniformMatrix4fv(ul_mv_mat, 1, 0, &mv_mat[0][0]);
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, &mvp_mat[0][0]);
+    glUniformMatrix4fv(ul_mv_mat_it, 1, 0, &mv_mat_it[0][0]);
   }
-  virtual void attachShaders() {
-    // useProgram
-    attachShaderFile(
+  virtual void attach_shaders() {
+    // use_program
+    attach_shader_file(
       GL_VERTEX_SHADER, "data/shader/use_directional_shadowmap.vs.glsl");
-    attachShaderFile(
-      GL_FRAGMENT_SHADER, "data/shader/use_directional_shadowmap.fs.glsl");
+
+    string_vector sv;
+    sv.push_back("#version 120\n");
+    sv.push_back("#define LIGHT_COUNT 8\n");
+    sv.push_back(read_file("data/shader/blinn.frag"));
+    attach_shader_source_and_file(
+      GL_FRAGMENT_SHADER, sv, "data/shader/use_directional_shadowmap.fs.glsl");
   }
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_lightDir, "lightDir");
-    setUniformLocation(&loc_lightMatrix, "lightMatrix");
-    setUniformLocation(&loc_modelViewMatrixInverseTranspose, "modelViewMatrixInverseTranspose");
-    setUniformLocation(&loc_modelViewMatrix, "modelViewMatrix");
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_bias, "bias");
-    setUniformLocation(&loc_depthMap, "depthMap");
-    setUniformLocation(&loc_shadowMap, "shadowMap");
-    setUniformLocation(&loc_useSampler2DShadow, "useSampler2DShadow");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_light_mat, "light_mat");
+    uniform_location(&ul_mv_mat_it, "mv_mat_it");
+    uniform_location(&ul_mv_mat, "mv_mat");
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_bias, "bias");
+    uniform_location(&ul_depth_map, "depth_map");
+    uniform_location(&ul_shadow_map, "shadow_map");
+    uniform_location(&ul_use_sampler2_d_shadow, "use_sampler2_d_shadow");
+
+    lm.bind_uniform_locations(object, "lm");
+    for (int i = 0; i < lights.size(); ++i) {
+      std::stringstream ss;
+      ss << "lights[" << i << "]";
+      lights[i].bind_uniform_locations(object, ss.str());
+    }
+    mtl.bind_uniform_locations(object, "mtl");
   }
 
-} useProgram;
-
-void render(zxd::Program& program) {
-
-  mat4 modelMatrix(1);
-
-  modelMatrix = glm::translate(vec3(0, 0, 3));
-  program.updateModel(modelMatrix);
-  glutSolidSphere(2, 16, 16);
-
-  modelMatrix = mat4(1);
-  program.updateModel(modelMatrix);
-  glNormal3f(0, 0, 1);
-  glRecti(-10, -10, 10, 10);
-
-  // create a wall
-  modelMatrix =
-    glm::translate(vec3(-10, 0, 0)) * glm::rotate(90.f, vec3(0, 1, 0));
-  program.updateModel(modelMatrix);
-  glNormal3f(0, 0, 1);
-  glRecti(-6, -10, 0, 10);
-
-  glFlush();
-}
-void renderShadowmap() {
-  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-  glViewport(0, 0, shadowWidth, shadowHeight);
-  glClear(GL_DEPTH_BUFFER_BIT);
-
-  glCullFace(GL_FRONT);
-
-  renderProgram.updateFrame();
-  // copy texture
-  render(renderProgram);
-
-  // You can use the same depth texture for both sample2D and sample2DShadow,
-  // although opengl will complain sampler type and depth compare discrapancy.
-  // It's properbally safer to make a copy for shadow map.
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, shadowMap);
-  glCopyTexImage2D(
-    GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 0, 0, shadowWidth, shadowHeight, 0);
-}
-
-void setupCamera() {}
-
-void display(void) {
-  renderShadowmap();
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-  glViewport(0, 0, WINDOWS_WIDTH, WINDOWS_HEIGHT);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, depthMap);
-
-  glCullFace(GL_BACK);
-  useProgram.updateFrame();
-  render(useProgram);
-
-  glUseProgram(0);
-  glColor3f(1.0f, 0.0f, 0.0f);
-  glWindowPos2i(10, 492);
-
-  GLchar info[512];
-  sprintf(info,
-    "q  : place camera at light \n"
-    "wW : camera position : %.2f %.2f %.2f\n"
-    "e  : use useSampler2DShadow : %d\n"
-    "r  : filter : %s\n"
-    "fF : shadow resolution : %d\n"
-    "iI : lightTop : %.2f\n"
-    "jJ : lightNear : %.2f\n"
-    "KK : lightFar : %.2f\n"
-    "lL : lightPosition : %.2f %.2f %.2f\n"
-    ";: : bias : %.3f\n"
-    "m: GL_CULL_FACE : %d",
-    cameraPos[0], cameraPos[1], cameraPos[2], useSampler2DShadow,
-    filterStrings[filter], shadowWidth, lightTop, lightNear, lightFar,
-    light_position0[0], light_position0[1], light_position0[2], bias,
-    glIsEnabled(GL_CULL_FACE));
-  glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
-
-  glFlush();
-}
-
-void init(void) {
-  glClearColor(0.0, 0.5, 1.0, 0.0);
-  glShadeModel(GL_SMOOTH);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_DEPTH_TEST);
-  // glEnable(GL_CULL_FACE);
-
-  // depth map
-  glGenTextures(1, &depthMap);
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, depthMap);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filters[filter]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filters[filter]);
-  GLfloat borderColor[] = {1.0, 1.0, 1.0, 1.0};
-  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadowWidth,
-    shadowHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
-
-  // shadow map
-  glGenTextures(1, &shadowMap);
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, shadowMap);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-
-  // setup texture compare, this will be used by shadow2D
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
-  glTexParameteri(
-    GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-  glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
-  // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, shadowWidth, shadowHeight, 0,
-  // GL_RGBA,
-  // GL_UNSIGNED_BYTE, 0);
-
-  glGenFramebuffers(1, &fbo);
-  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-  glFramebufferTexture2D(
-    GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-  glDrawBuffer(GL_NONE);
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    printf("incomplete frame buffer\n");
-
-  // dir light
-  GLfloat light_diffuse0[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_specular0[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_ambient0[] = {0.0, 0.0, 0.0, 1.0};
-
-  glLightfv(GL_LIGHT0, GL_POSITION, &light_position0[0]);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse0);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular0);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient0);
-
-  GLfloat mat_ambient[] = {0.2, 0.2, 0.2, 1.0};
-  GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat mat_specular[] = {0.0, 0.0, 0.0, 1.0};
-  GLfloat mat_emission[] = {0.0, 0.0, 0.0, 1.0};
-  GLfloat mat_shininess = 50.0;
-
-  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat_emission);
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
-
-  renderProgram.init();
-  useProgram.init();
-}
-
-void reshape(int w, int h) {
-  wndAspect = static_cast<double>(w) / h;
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-}
-
-void mouse(int button, int state, int x, int y) {
-  switch (button) {
-    default:
-      break;
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_normal = attrib_location("normal");
   }
-}
 
-void keyboard(unsigned char key, int x, int y) {
-  switch (key) {
-    case 27:
-      exit(0);
-      break;
-    case 'q':
-      cameraAtLight = !cameraAtLight;
-      glutPostRedisplay();
-      break;
+} use_prg;
 
-    case 'w': {
-      float d = glm::length(cameraPos);
-      vec3 n = glm::normalize(cameraPos);
-      cameraPos = n * (d - 0.5f);
-      glutPostRedisplay();
-    } break;
-
-    case 'W': {
-      float d = glm::length(cameraPos);
-      vec3 n = glm::normalize(cameraPos);
-      cameraPos = n * (d + 0.5f);
-      glutPostRedisplay();
-    } break;
-
-    case 'e': {
-      useSampler2DShadow = !useSampler2DShadow;
-      // toggle compare mode,  you can't use regular sample2D but tunn on
-      // texture compare
-      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
-      // useSampler2DShadow ? GL_COMPARE_R_TO_TEXTURE : GL_NONE);
-      glutPostRedisplay();
-    } break;
-
-    case 'r': {
-      filter ^= 1;
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filters[filter]);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filters[filter]);
-      glutPostRedisplay();
-    } break;
-
-    case 'f':
-      shadowWidth *= 2;
-      shadowHeight *= 2;
-      // reset texture size
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, depthMap);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadowWidth,
-        shadowHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
-      glutPostRedisplay();
-      break;
-
-    case 'F':
-      shadowWidth /= 2;
-      shadowHeight /= 2;
-      // reset texture size
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, depthMap);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadowWidth,
-        shadowHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
-      glutPostRedisplay();
-      break;
-
-    case 'i':
-      lightTop += 0.5;
-      glutPostRedisplay();
-      break;
-
-    case 'I':
-      lightTop -= 0.5;
-      glutPostRedisplay();
-      break;
-    case 'j':
-      lightNear += 0.5;
-      glutPostRedisplay();
-      break;
-
-    case 'J':
-      lightNear -= 0.5;
-      glutPostRedisplay();
-      break;
-
-    case 'k':
-      lightFar += 0.5;
-      glutPostRedisplay();
-      break;
-
-    case 'K':
-      lightFar -= 0.5;
-      glutPostRedisplay();
-      break;
-
-    case 'l':
-      light_position0[0] += 0.5;
-      light_position0[1] -= 0.5;
-      light_position0[2] -= 0.5;
-      glutPostRedisplay();
-      break;
-
-    case 'L':
-      light_position0[0] -= 0.5;
-      light_position0[1] += 0.5;
-      light_position0[2] += 0.5;
-      glutPostRedisplay();
-      break;
-
-    case ';':
-      bias += 0.001f;
-      glutPostRedisplay();
-      break;
-
-    case ':':
-      bias -= 0.001f;
-      bias = std::max(0.0f, bias);
-      glutPostRedisplay();
-      break;
-
-    case 'm': {
-      GLboolean e = glIsEnabled(GL_CULL_FACE);
-      if (e)
-        glDisable(GL_CULL_FACE);
-      else
-        glEnable(GL_CULL_FACE);
-      glutPostRedisplay();
-    } break;
-
-    default:
-      break;
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "directional_shadowmap";
+    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.wnd_width = WINDOWS_WIDTH;
+    m_info.wnd_height = WINDOWS_HEIGHT;
   }
-}
-void idle() {}
-void passiveMotion(int x, int y) {}
 
+  void render(zxd::program& prg) {
+    glUseProgram(prg.object);
+    prg.update_frame();
+    mat4 m_mat(1);
+
+    m_mat = glm::translate(vec3(0, 0, 3));
+    prg.update_model(m_mat);
+    sphere0.draw();
+
+    m_mat = mat4(1);
+    prg.update_model(m_mat);
+    glNormal3f(0, 0, 1);
+    plane0.draw();
+
+    // create a wall
+    m_mat = glm::translate(vec3(-10, 0, 0)) * glm::rotate(90.f, vec3(0, 1, 0));
+    prg.update_model(m_mat);
+    glNormal3f(0, 0, 1);
+    plane1.draw();
+
+    glFlush();
+  }
+  void render_shadowmap() {
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glViewport(0, 0, shadow_width, shadow_height);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    glCullFace(GL_FRONT);
+
+    // copy texture
+    render(render_prg);
+
+    // you can use the same depth texture for both sample2D and
+    // sample2_d_shadow,
+    // although opengl will complain sampler type and depth compare discrapancy.
+    // it's properbally safer to make a copy for shadow map.
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, shadow_map);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 0, 0, shadow_width,
+      shadow_height, 0);
+  }
+
+  void setup_camera() {}
+
+  void display(void) {
+    render_shadowmap();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glViewport(0, 0, WINDOWS_WIDTH, WINDOWS_HEIGHT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, depth_map);
+
+    glCullFace(GL_BACK);
+    render(use_prg);
+
+    glUseProgram(0);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glWindowPos2i(10, 492);
+
+    GLchar info[512];
+    sprintf(info,
+      "q  : place camera at light \n"
+      "wW : camera position : %.2f %.2f %.2f\n"
+      "e  : use use_sampler2_d_shadow : %d\n"
+      "r  : filter : %s\n"
+      "fF : shadow resolution : %d\n"
+      "iI : light_top : %.2f\n"
+      "jJ : light_near : %.2f\n"
+      "KK : light_far : %.2f\n"
+      "lL : light_position : %.2f %.2f %.2f\n"
+      ";: : bias : %.3f\n"
+      "m: GL_CULL_FACE : %d\n"
+      "fps : %f",
+      camera_pos[0], camera_pos[1], camera_pos[2], use_sampler2_d_shadow,
+      filter_strings[filter], shadow_width, light_top, light_near, light_far,
+      lights[0].position[0], lights[0].position[1], lights[0].position[2], bias,
+      glIsEnabled(GL_CULL_FACE), m_fps);
+    glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)info);
+
+    glutSwapBuffers();
+  }
+
+  void create_scene(void) {
+    glClearColor(0.0, 0.5, 1.0, 0.0);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_CULL_FACE);
+
+    // depth map
+    glGenTextures(1, &depth_map);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, depth_map);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filters[filter]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filters[filter]);
+    GLfloat border_color[] = {1.0, 1.0, 1.0, 1.0};
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadow_width,
+      shadow_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+
+    // shadow map
+    glGenTextures(1, &shadow_map);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, shadow_map);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+
+    // setup texture compare, this will be used by shadow2D
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
+    glTexParameteri(
+      GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+    glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, shadow_width, shadow_height, 0,
+    // GL_RGBA,
+    // GL_UNSIGNED_BYTE, 0);
+
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(
+      GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
+    glDrawBuffer(GL_NONE);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      printf("incomplete frame buffer\n");
+
+    // dir light
+    light_source dir_light;
+    dir_light.position = vec4(-8, 8, 8, 0);
+    dir_light.diffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    dir_light.specular = vec4(1.0, 1.0, 1.0, 1.0);
+    dir_light.ambient = vec4(0.0, 0.0, 0.0, 1.0);
+    lights.push_back(dir_light);
+
+    mtl.ambient = vec4(0.2, 0.2, 0.2, 1.0);
+    mtl.diffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    mtl.specular = vec4(0.0, 0.0, 0.0, 1.0);
+    mtl.emission = vec4(0.0, 0.0, 0.0, 1.0);
+    mtl.shininess = 50.0;
+
+    lm.local_viewer = 1;
+
+    render_prg.init();
+    use_prg.init();
+
+    sphere0.build_mesh();
+    plane0.build_mesh();
+    plane1.build_mesh();
+
+    sphere0.bind(render_prg.al_vertex);
+    plane0.bind(render_prg.al_vertex);
+    plane1.bind(render_prg.al_vertex);
+
+    sphere0.bind(use_prg.al_vertex, use_prg.al_normal);
+    plane0.bind(use_prg.al_vertex, use_prg.al_normal);
+    plane1.bind(use_prg.al_vertex, use_prg.al_normal);
+  }
+
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    zxd::wnd_aspect = wnd_aspect();
+  }
+
+  void mouse(int button, int state, int x, int y) {
+    switch (button) {
+      default:
+        break;
+    }
+  }
+
+  void keyboard(unsigned char key, int x, int y) {
+    app::keyboard(key, x, y);
+    switch (key) {
+      case 'q':
+        camera_at_light = !camera_at_light;
+        break;
+
+      case 'w': {
+        float d = glm::length(camera_pos);
+        vec3 n = glm::normalize(camera_pos);
+        camera_pos = n * (d - 0.5f);
+      } break;
+
+      case 'W': {
+        float d = glm::length(camera_pos);
+        vec3 n = glm::normalize(camera_pos);
+        camera_pos = n * (d + 0.5f);
+      } break;
+
+      case 'e': {
+        use_sampler2_d_shadow = !use_sampler2_d_shadow;
+        // toggle compare mode,  you can't use regular sample2D but tunn on
+        // texture compare
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
+        // use_sampler2_d_shadow ? GL_COMPARE_R_TO_TEXTURE : GL_NONE);
+      } break;
+
+      case 'r': {
+        filter ^= 1;
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filters[filter]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filters[filter]);
+      } break;
+
+      case 'f':
+        shadow_width *= 2;
+        shadow_height *= 2;
+        // reset texture size
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, depth_map);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadow_width,
+          shadow_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+        break;
+
+      case 'F':
+        shadow_width /= 2;
+        shadow_height /= 2;
+        // reset texture size
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, depth_map);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, shadow_width,
+          shadow_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+        break;
+
+      case 'i':
+        light_top += 0.5;
+        break;
+
+      case 'I':
+        light_top -= 0.5;
+        break;
+      case 'j':
+        light_near += 0.5;
+        break;
+
+      case 'J':
+        light_near -= 0.5;
+        break;
+
+      case 'k':
+        light_far += 0.5;
+        break;
+
+      case 'K':
+        light_far -= 0.5;
+        break;
+
+      case 'l':
+        lights[0].position[0] += 0.5;
+        lights[0].position[1] -= 0.5;
+        lights[0].position[2] -= 0.5;
+        break;
+
+      case 'L':
+        lights[0].position[0] -= 0.5;
+        lights[0].position[1] += 0.5;
+        lights[0].position[2] += 0.5;
+        break;
+
+      case ';':
+        bias += 0.001f;
+        break;
+
+      case ':':
+        bias -= 0.001f;
+        bias = std::max(0.0f, bias);
+        break;
+
+      case 'm': {
+        GLboolean e = glIsEnabled(GL_CULL_FACE);
+        if (e)
+          glDisable(GL_CULL_FACE);
+        else
+          glEnable(GL_CULL_FACE);
+      } break;
+
+      default:
+        break;
+    }
+  }
+};
+}
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH );
-  glutInitWindowSize(WINDOWS_WIDTH, WINDOWS_HEIGHT);
-  glutInitWindowPosition(100, 100);
-  glutInitContextFlags(GLUT_DEBUG);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutMouseFunc(mouse);
-  glutPassiveMotionFunc(passiveMotion);
-  glutKeyboardFunc(keyboard);
-  glutIdleFunc(idle);
-  glutMainLoop();
-
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }

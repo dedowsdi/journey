@@ -1,5 +1,6 @@
 set(SRCS 
     src/glad.c
+    src/glad_glx.c
     )
 
 add_library(gl21 

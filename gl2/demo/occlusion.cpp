@@ -1,9 +1,9 @@
 /*
  * occlusion.c
- * This program demonstrates occlusion query
+ * this program demonstrates occlusion query
  *
  * occlusion test works like bounding box test,
- * First you draw your "bounding box", check if any fragment can be drawn, if
+ * first you draw your "bounding box", check if any fragment can be drawn, if
  * nothing drawn, you can throw away your renderable.
  *
  */
@@ -24,12 +24,12 @@ void init(void) {
   glEnable(GL_DEPTH_TEST);
 }
 
-void printQuery(GLuint id) {}
+void print_query(GLuint id) {}
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  GLint numSamples, available;
+  GLint num_samples, available;
 
   // disable depth and color write when query
   glDepthMask(GL_FALSE);
@@ -42,9 +42,9 @@ void display(void) {
   glDepthMask(GL_TRUE);
   glColorMask(1, 1, 1, 1);
 
-  glGetQueryObjectiv(queries[0], GL_QUERY_RESULT, &numSamples);
+  glGetQueryObjectiv(queries[0], GL_QUERY_RESULT, &num_samples);
   glGetQueryObjectiv(queries[0], GL_QUERY_RESULT_AVAILABLE, &available);
-  printf("numSamples : %d, available : %s \n", numSamples,
+  printf("num_samples : %d, available : %s \n", num_samples,
     available ? "true" : "false");
 
   // if querry successed draw our renderable
@@ -64,9 +64,9 @@ void display(void) {
   glDepthMask(GL_TRUE);
   glColorMask(1, 1, 1, 1);
 
-  glGetQueryObjectiv(queries[1], GL_QUERY_RESULT, &numSamples);
+  glGetQueryObjectiv(queries[1], GL_QUERY_RESULT, &num_samples);
   glGetQueryObjectiv(queries[1], GL_QUERY_RESULT_AVAILABLE, &available);
-  printf("numSamples : %d, available : %s \n", numSamples,
+  printf("num_samples : %d, available : %s \n", num_samples,
     available ? "true" : "false");
 
   // if querry successed draw our renderable
@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

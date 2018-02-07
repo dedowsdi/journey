@@ -1,21 +1,22 @@
 set(COMMON_SRCS 
     src/app.cpp
-    src/bitmap_text.cpp
-    src/common.cpp
-    src/glEnumString.cpp
-    src/glm.cpp
-    src/light.cpp
-    src/program.cpp
-    src/quad.cpp
-    src/geometry.cpp
-    src/sphere.cpp
-    src/cuboid.cpp
-    src/cone.cpp
-    src/stringutil.cpp
-    src/texutil.cpp
-    src/cylinder.cpp
-    src/torus.cpp
-    src/xyplane.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/bitmap_text.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/common.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/glEnumString.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/glm.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/light.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/program.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/quad.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/geometry.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/sphere.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/cuboid.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/cone.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/stringutil.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/texutil.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/cylinder.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/torus.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/xyplane.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/disk.cpp
     )
 
 add_library(common 

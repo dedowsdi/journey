@@ -9,7 +9,7 @@
 
 using namespace glm;
 
-vec4 readVec4(std::istream& is) {
+vec4 read_vec4(std::istream& is) {
   glm::vec4 v;
   GLfloat* p = &v[0];
 
@@ -21,7 +21,7 @@ vec4 readVec4(std::istream& is) {
   return v;
 }
 
-mat4 readMatrix(std::istream& is) {
+mat4 read_mat(std::istream& is) {
   glm::mat4 m;
   GLfloat* p = &m[0][0];
 
@@ -57,8 +57,8 @@ int main(int argc, char* argv[]) {
 
   std::stringstream ss(s);
 
-  mat4 m = readMatrix(ss);
-  vec4 v = readVec4(ss);
+  mat4 m = read_mat(ss);
+  vec4 v = read_vec4(ss);
 
   using namespace zxd;
   std::cout << m * v << std::endl;

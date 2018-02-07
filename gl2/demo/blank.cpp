@@ -1,13 +1,13 @@
 /*
  *  blank.c
- *  Tmp program, always wipe clean after you experiment
+ *  tmp program, always wipe clean after you experiment
  */
 #include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include "common.h"
 
-#define drawOneLine(x1, y1, x2, y2) \
+#define draw_one_line(x1, y1, x2, y2) \
   glBegin(GL_LINES);                \
   glVertex2f((x1), (y1));           \
   glVertex2f((x2), (y2));           \
@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

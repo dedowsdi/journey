@@ -57,7 +57,7 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 void idle() {}
-void passiveMotion(int x, int y) {}
+void passive_motion(int x, int y) {}
 
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);
-  glutPassiveMotionFunc(passiveMotion);
+  glutPassiveMotionFunc(passive_motion);
   glutKeyboardFunc(keyboard);
   glutIdleFunc(idle);
   glutMainLoop();

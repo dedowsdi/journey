@@ -2,34 +2,32 @@
 #define LIGHT_COUNT 8
 #endif
 
-// cauculated in view space
-// exactly the same as gl_LightSourceParameters
-struct LightSource {
+struct light_source {
   vec4 ambient;
   vec4 diffuse;
   vec4 specular;
   vec4 position;  
-  vec3 spotDirection;
-  float spotExponent;
-  float spotCutoff;
-  float spotCosCutoff;
-  float constantAttenuation;
-  float linearAttenuation;
-  float quadraticAttenuation;
+  vec3 spot_direction;
+  float spot_exponent;
+  float spot_cutoff;
+  float spot_cos_cutoff;
+  float constant_attenuation;
+  float linear_attenuation;
+  float quadratic_attenuation;
 };
 
-struct LightModel{
+struct light_model{
   vec4 ambient;
-  bool localViewer;
+  bool local_viewer; // only has meaning if lighting is in view space
 };
 
-struct LightProduct {
+struct light_product {
   vec4 ambient;
   vec4 diffuse;
   vec4 specular;
 };
 
-struct Material {
+struct material {
   vec4 emission;
   vec4 ambient;
   vec4 diffuse;
@@ -37,15 +35,11 @@ struct Material {
   float shininess;
 };
 
-uniform LightModel lightModel;
-uniform LightSource lights[LIGHT_COUNT];
-uniform Material material;
-
-void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
-  Material material, out LightProduct product) {
-  product = LightProduct(vec4(0), vec4(0), vec4(0));
+void light(vec3 vertex, vec3 normal, vec3 v2e, light_source source,
+  material mtl, out light_product product) {
+  product = light_product(vec4(0), vec4(0), vec4(0));
   // skip blank light
-  if (source.constantAttenuation == 0.0) return;
+  if (source.constant_attenuation == 0.0) return;
 
   vec3 v2l = source.position.w == 0.0 ? source.position.xyz : source.position.xyz - vertex;
   vec3 l = normalize(v2l);
@@ -53,11 +47,12 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
   vec3 v = v2e;
 
   // spot light effect
-  float spotEffect = 1.0;
-  if (source.position.w == 1.0 && source.spotCutoff >= 0.0 && source.spotCutoff <= 90.0) {
-    float nldotd = dot(-l, source.spotDirection);
-    if (nldotd < source.spotCosCutoff) return;
-    spotEffect = pow(clamp(nldotd, 0.0, 1.0), source.spotExponent);
+  float spot_effect = 1.0;
+  if (source.position.w == 1.0 && source.spot_cutoff >= 0.0 &&
+      source.spot_cutoff <= 90.0) {
+    float nldotd = dot(-l, source.spot_direction);
+    if (nldotd < source.spot_cos_cutoff) return;
+    spot_effect = pow(clamp(nldotd, 0.0, 1.0), source.spot_exponent);
   }
 
   // attenuation
@@ -65,53 +60,56 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, LightSource source,
   if(source.position.w == 1.0)
   {
     float dist = length(v2l);
-    atten = 1.0 / (source.constantAttenuation + source.linearAttenuation *
-        dist + source.quadraticAttenuation * dist * dist);
+    atten = 1.0 / (source.constant_attenuation + source.linear_attenuation *
+        dist + source.quadratic_attenuation * dist * dist);
   }
 
-  float visibility = atten * spotEffect;
+  float visibility = atten * spot_effect;
 
   // ambient
-  product.ambient = visibility * source.ambient * material.ambient;
+  product.ambient = visibility * source.ambient * mtl.ambient;
 
   // diffuse
   float ndotl = dot(n, l);
   if (ndotl <= 0.0) return;
   ndotl = clamp(ndotl, 0.0, 1.0);
-  product.diffuse = visibility * ndotl * source.diffuse * material.diffuse;
+  product.diffuse = visibility * ndotl * source.diffuse * mtl.diffuse; 
 
   // specular
   vec3 h = normalize(l + v);
   float ndoth = dot(h, n);
   if(ndoth <= 0.0) return;
   ndoth = clamp(ndoth, 0.0, 1.0);
-  product.specular = visibility * pow(ndoth, material.shininess) * source.specular * material.specular;
+
+  product.specular = visibility * pow(ndoth, mtl.shininess) * source.specular * mtl.specular;
 }
 
-LightProduct getLightProduct(vec3 vertex, vec3 normal, Material material){
-  vec3 v2e = lightModel.localViewer ? normalize(-vertex) : vec3(0,0,1);
-  LightProduct product = LightProduct(vec4(0),vec4(0),vec4(0));
+// split diffuse and specular
+void blinn(vec3 vertex, vec3 normal, vec3 camera, material mtl, light_source
+    lights[LIGHT_COUNT], light_model lm, out vec4 diffuse, out vec4 specular){
+  // if you calculating lighting in non-view space, make sure lcoal_viewer is 1
+  vec3 v2e = lm.local_viewer ? normalize(camera - vertex) : vec3(0,0,1);
+  light_product product = light_product(vec4(0),vec4(0),vec4(0));
 
   for (int i = 0; i < LIGHT_COUNT; i++) {
-    LightProduct currentProduct = LightProduct(vec4(0),vec4(0),vec4(0));
-    light(vertex, normal, v2e, lights[i], material, currentProduct);
-    product.diffuse += currentProduct.diffuse;
-    product.specular += currentProduct.specular;
-    product.ambient += currentProduct.ambient;
+    light_product current_product = light_product(vec4(0),vec4(0),vec4(0));
+    light(vertex, normal, v2e, lights[i], mtl, current_product);
+    product.diffuse += current_product.diffuse;
+    product.specular += current_product.specular;
+    product.ambient += current_product.ambient;
   }
-  return product;
+
+  diffuse = mtl.emission + lm.ambient * mtl.ambient +
+    product.ambient + product.diffuse;
+  specular = product.specular;
 }
 
-vec4 blinn(vec3 vertex, vec3 normal){
-  LightProduct product = getLightProduct(vertex, normal, material);
-  vec4 color = material.emission + lightModel.ambient * material.ambient +
-    product.ambient + product.diffuse + product.specular;
-  return color;
-}
-
-vec4 blinn(vec3 vertex, vec3 normal, Material material){
-  LightProduct product = getLightProduct(vertex, normal, material);
-  vec4 color = material.emission + lightModel.ambient * material.ambient +
-    product.ambient + product.diffuse + product.specular;
+vec4 blinn(vec3 vertex, vec3 normal, vec3 camera, material mtl, light_source
+    lights[LIGHT_COUNT], light_model lm){
+  vec4 diffuse;
+  vec4 specular;
+  blinn(vertex, normal, camera, mtl, lights, lm, diffuse, specular);
+  vec4 color = diffuse + specular;
+  color.a = mtl.diffuse.a;
   return color;
 }

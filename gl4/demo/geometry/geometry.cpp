@@ -11,6 +11,7 @@
 #include "cylinder.h"
 #include "torus.h"
 #include "xyplane.h"
+#include "disk.h"
 
 namespace zxd {
 
@@ -74,6 +75,7 @@ protected:
   cylinder m_cylinder;
   torus m_torus;
   xyplane m_xyplane;
+  disk m_disk;
 
 public:
   geometry_app() : m_camera_pos(0, -6, 6) {}
@@ -139,9 +141,14 @@ public:
 
     m_xyplane.slice(8);
     m_xyplane.width(8);
-    m_xyplane.set_height(8);
+    m_xyplane.height(8);
+    m_xyplane.left(-4);
+    m_xyplane.bottom(-4);
     m_xyplane.build_mesh();
     m_xyplane.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+
+    m_disk.build_mesh();
+    m_disk.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
 
     // texture
     GLint image_width = 64;
@@ -183,6 +190,10 @@ public:
     model = glm::translate(glm::vec3(0, 0, -2));
     prg.update_model(model);
     m_xyplane.draw();
+
+    model = glm::translate(glm::vec3(2, -2, -1));
+    prg.update_model(model);
+    m_disk.draw();
 
     model = mat4(1.0f);
     prg.update_model(model);

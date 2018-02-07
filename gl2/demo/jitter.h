@@ -1,16 +1,16 @@
 /*
 jitter.h
 
-This file contains jitter point arrays for 2,3,4,8,15,24 and 66 jitters.
+this file contains jitter point arrays for 2,3,4,8,15,24 and 66 jitters.
 
-The arrays are named j2, j3, etc. Each element in the array has the form,
+the arrays are named j2, j3, etc. each element in the array has the form,
 for example, j8[0].x and j8[0].y
 
-Values are floating point in the range -.5 < x < .5, -.5 < y < .5, and
+values are floating point in the range -.5 < x < .5, -.5 < y < .5, and
 have a gaussian distribution around the origin.
 
-Use these to do model jittering for scene anti-aliasing and view volume
-jittering for depth of field effects. Use in conjunction with the 
+use these to do model jittering for scene anti-aliasing and view volume
+jittering for depth of field effects. use in conjunction with the 
 accwindow() routine.
 */
 

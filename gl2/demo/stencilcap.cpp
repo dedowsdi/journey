@@ -1,8 +1,8 @@
 /*
- *  stencilcap.c This program demonstrates use of the stencil cap for solid
+ *  stencilcap.c this program demonstrates use of the stencil cap for solid
  *  convex object
  *
- *  If you slice a convex object by a plane, you will see through the cut, we
+ *  if you slice a convex object by a plane, you will see through the cut, we
  *  need stencil buffer to cover the cut.
  *
  *    create stencil :
@@ -14,7 +14,7 @@
  *      call glStencilOp(GL_KEEP, GL_REVERT, GL_REVERT)
  *      draw convex object.
  *
- *      Any fragments that pass stencil test will get it's stencil reverted, the
+ *      any fragments that pass stencil test will get it's stencil reverted, the
  *      fragments that can be seen through the cut will be reverted once(0x1),
  * others
  *      will be reverted twice(0x0).
@@ -37,7 +37,7 @@
 #define BLUEMAT 1
 #define CAP 2
 
-GLfloat matClip[16];
+GLfloat mat_clip[16];
 GLint yaw = 0;  // yaw clip plane
 
 void init(void) {
@@ -76,7 +76,7 @@ void init(void) {
   glEnable(GL_STENCIL_TEST);
 }
 
-void drawObject() {
+void draw_object() {
   glCallList(BLUEMAT);
   glPushMatrix();
   glRotatef(45, 0, 1, 0);
@@ -89,13 +89,13 @@ void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // draw objects, which is cliped by the clip plane
-  drawObject();
+  draw_object();
 
   // draw clap aligned to clip plane
   glEnable(GL_STENCIL_TEST);
   glDisable(GL_CLIP_PLANE0);
   glPushMatrix();
-  glLoadMatrixf(matClip);
+  glLoadMatrixf(mat_clip);
   glStencilFunc(GL_EQUAL, 0x01, 0x01);
   glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
   glCallList(CAP);
@@ -113,10 +113,10 @@ void display(void) {
   ZCGEA
 }
 
-void resetStencil() {
+void reset_stencil() {
   glPushMatrix();
   glRotatef(yaw, 0, 1, 0);
-  glGetFloatv(GL_MODELVIEW_MATRIX, matClip);
+  glGetFloatv(g_l__m_o_d_e_l_v_i_e_w__m_a_t_r_i_x, mat_clip);
   GLdouble eqn[4] = {0, 0, -1, 0};
   glClipPlane(GL_CLIP_PLANE0, eqn);
   glEnable(GL_CLIP_PLANE0);
@@ -130,13 +130,13 @@ void resetStencil() {
   glStencilOp(GL_KEEP, GL_INVERT, GL_INVERT);
   glColorMask(0, 0, 0, 0);
   glDisable(GL_DEPTH_TEST);
-  drawObject();
+  draw_object();
   glEnable(GL_DEPTH_TEST);
   glColorMask(1, 1, 1, 1);
   glDisable(GL_STENCIL_TEST);
 }
 
-/*  Whenever the window is reshaped, redefine the
+/*  whenever the window is reshaped, redefine the
  *  coordinate system and redraw the stencil area.
  */
 void reshape(int w, int h) {
@@ -149,7 +149,7 @@ void reshape(int w, int h) {
   glLoadIdentity();
   glTranslatef(0.0, 0.0, -5.0);
 
-  resetStencil();
+  reset_stencil();
 }
 
 void keyboard(unsigned char key, int x, int y) {
@@ -159,12 +159,12 @@ void keyboard(unsigned char key, int x, int y) {
       break;
     case 'q':
       yaw += 5;
-      resetStencil();
+      reset_stencil();
       glutPostRedisplay();
       break;
     case 'Q':
       yaw -= 5;
-      resetStencil();
+      reset_stencil();
       glutPostRedisplay();
       break;
     default:
@@ -172,8 +172,8 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-/* Main Loop
- * Be certain to request stencil bits.
+/* main loop
+ * be certain to request stencil bits.
  */
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -181,7 +181,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(400, 400);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

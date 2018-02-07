@@ -1,15 +1,17 @@
 #version 120
 
+varying vec2 m_texcoord;
+
 uniform int method = 0;
 uniform float exposure = 1;
 
-uniform sampler2D colorMap;
+uniform sampler2D diffuse_map;
 
 void main(void) {
-  vec4 color = texture2D(colorMap, gl_TexCoord[0].xy);
+  vec4 color = texture2D(diffuse_map, m_texcoord.xy);
 
   if (method == 0) {
-    // Reinhard toon map
+    // reinhard toon map
     gl_FragColor = color / (1 + color);
   } else {
     // exposure tone map

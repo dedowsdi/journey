@@ -1,72 +1,61 @@
 /*
  *  texprox.c
- *  The brief program illustrates use of texture proxies.
- *  This program only prints out some messages about whether
+ *  the brief program illustrates use of texture proxies.
+ *  this program only prints out some messages about whether
  *  certain size textures are supported and then exits.
  *
- *  Note that texture proxies dont't care if there are still enough texture
+ *  note that texture proxies dont't care if there are still enough texture
  *  resources to be used.
  */
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "common.h"
+#include "app.h"
 
-#ifdef GL_VERSION_1_1
-void init(void) {
-  GLint proxyComponents;
+namespace zxd {
 
-  glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA,
-    GL_UNSIGNED_BYTE, NULL);
-  glGetTexLevelParameteriv(
-    GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &proxyComponents);
-  printf("proxyComponents are %d\n", proxyComponents);
-  if (proxyComponents == GL_RGBA8)
-    printf("proxy allocation succeeded\n");
-  else
-    printf("proxy allocation failed\n");
+class app0 : public app {
+  void init_info() {
+    app::init_info();
+    m_info.title = "texprox";
+    m_info.display_mode = GLUT_SINGLE | GLUT_RGB;
+    m_info.wnd_width = 500;
+    m_info.wnd_height = 500;
+  }
 
-  glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA16, 2048 * 256, 2048 * 256, 0,
-    GL_RGBA, GL_UNSIGNED_SHORT, NULL);
-  glGetTexLevelParameteriv(
-    GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &proxyComponents);
-  printf("proxyComponents are %d\n", proxyComponents);
-  if (proxyComponents == GL_RGBA16)
-    printf("proxy allocation succeeded\n");
-  else
-    printf("proxy allocation failed\n");
+  void create_scene(void) {
+    GLint proxy_components;
+
+    glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA,
+      GL_UNSIGNED_BYTE, NULL);
+    glGetTexLevelParameteriv(
+      GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &proxy_components);
+    printf("proxy_components are %d\n", proxy_components);
+    if (proxy_components == GL_RGBA8)
+      printf("proxy allocation succeeded\n");
+    else
+      printf("proxy allocation failed\n");
+
+    glTexImage2D(GL_PROXY_TEXTURE_2D, 0, GL_RGBA16, 2048 * 256, 2048 * 256, 0,
+      GL_RGBA, GL_UNSIGNED_SHORT, NULL);
+    glGetTexLevelParameteriv(
+      GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &proxy_components);
+    printf("proxy_components are %d\n", proxy_components);
+    if (proxy_components == GL_RGBA16)
+      printf("proxy allocation succeeded\n");
+    else
+      printf("proxy allocation failed\n");
+  }
+
+  void display(void) { exit(0); }
+
+  void reshape(int w, int h) {
+    app::reshape(w, h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+  }
+};
 }
-
-void display(void) { exit(0); }
-
-void reshape(int w, int h) {
-  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-}
-
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowSize(500, 500);
-  glutInitWindowPosition(100, 100);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutMainLoop();
+  zxd::app0 _app0;
+  _app0.run(argc, argv);
   return 0;
 }
-#else
-int main(int argc, char** argv) {
-  fprintf(stderr,
-    "This program demonstrates a feature which is not in OpenGL Version "
-    "1.0.\n");
-  fprintf(stderr,
-    "If your implementation of OpenGL Version 1.0 has the right extensions,\n");
-  fprintf(stderr, "you may be able to modify this program to make it run.\n");
-  return 0;
-}
-#endif

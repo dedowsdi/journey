@@ -1,7 +1,7 @@
 /*  accpersp.c
- *  Use the accumulation buffer to do full-scene antialiasing
+ *  use the accumulation buffer to do full-scene antialiasing
  *  on a scene with perspective projection, using the special
- *  routines accFrustum() and accPerspective().
+ *  routines acc_frustum() and acc_perspective().
  */
 #include "glad/glad.h"
 #include <GL/freeglut.h>
@@ -16,23 +16,23 @@
 
 GLuint acsize = 16;
 
-/* accFrustum()
- * The first 6 arguments are identical to the glFrustum() call.
+/* acc_frustum()
+ * the first 6 arguments are identical to the glFrustum() call.
  *
  * pixdx and pixdy are anti-alias jitter in pixels.
- * Set both equal to 0.0 for no anti-alias jitter.
+ * set both equal to 0.0 for no anti-alias jitter.
  * eyedx and eyedy are depth-of field jitter in pixels.
- * Set both equal to 0.0 for no depth of field effects.
+ * set both equal to 0.0 for no depth of field effects.
  *
  * focus is distance from eye to plane in focus.
  * focus must be greater than, but not equal to 0.0.
  *
- * Note that accFrustum() calls glTranslatef().  You will
- * probably want to insure that your ModelView matrix has been
- * initialized to identity before calling accFrustum().
+ * note that acc_frustum() calls glTranslatef().  you will
+ * probably want to insure that your model_view matrix has been
+ * initialized to identity before calling acc_frustum().
  */
-void accFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
-  GLdouble zNear, GLdouble zFar, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx,
+void acc_frustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
+  GLdouble z_near, GLdouble z_far, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx,
   GLdouble eyedy, GLdouble focus) {
   GLdouble xwsize, ywsize;
   GLdouble dx, dy;
@@ -43,48 +43,48 @@ void accFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
   xwsize = right - left;
   ywsize = top - bottom;
 
-  dx = -(pixdx * xwsize / (GLdouble)viewport[2] + eyedx * zNear / focus);
-  dy = -(pixdy * ywsize / (GLdouble)viewport[3] + eyedy * zNear / focus);
+  dx = -(pixdx * xwsize / (GLdouble)viewport[2] + eyedx * z_near / focus);
+  dy = -(pixdy * ywsize / (GLdouble)viewport[3] + eyedy * z_near / focus);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glFrustum(left + dx, right + dx, bottom + dy, top + dy, zNear, zFar);
+  glFrustum(left + dx, right + dx, bottom + dy, top + dy, z_near, z_far);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glTranslatef(-eyedx, -eyedy, 0.0);
 }
 
-/* accPerspective()
+/* acc_perspective()
  *
- * The first 4 arguments are identical to the gluPerspective() call.
+ * the first 4 arguments are identical to the gluPerspective() call.
  * pixdx and pixdy are anti-alias jitter in pixels.
- * Set both equal to 0.0 for no anti-alias jitter.
+ * set both equal to 0.0 for no anti-alias jitter.
  * eyedx and eyedy are depth-of field jitter in pixels.
- * Set both equal to 0.0 for no depth of field effects.
+ * set both equal to 0.0 for no depth of field effects.
  *
  * focus is distance from eye to plane in focus.
  * focus must be greater than, but not equal to 0.0.
  *
- * Note that accPerspective() calls accFrustum().
+ * note that acc_perspective() calls acc_frustum().
  */
-void accPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear,
-  GLdouble zFar, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx, GLdouble eyedy,
+void acc_perspective(GLdouble fovy, GLdouble aspect, GLdouble z_near,
+  GLdouble z_far, GLdouble pixdx, GLdouble pixdy, GLdouble eyedx, GLdouble eyedy,
   GLdouble focus) {
   GLdouble fov2, left, right, bottom, top;
 
   fov2 = ((fovy * PI_) / 180.0) / 2.0;
 
-  top = zNear / (cos(fov2) / sin(fov2));
+  top = z_near / (cos(fov2) / sin(fov2));
   bottom = -top;
 
   right = top * aspect;
   left = -right;
 
-  accFrustum(
-    left, right, bottom, top, zNear, zFar, pixdx, pixdy, eyedx, eyedy, focus);
+  acc_frustum(
+    left, right, bottom, top, z_near, z_far, pixdx, pixdy, eyedx, eyedy, focus);
 }
 
-/*  Initialize lighting and other values.
+/*  initialize lighting and other values.
  */
 void init(void) {
   GLfloat mat_ambient[] = {1.0, 1.0, 1.0, 1.0};
@@ -107,7 +107,7 @@ void init(void) {
   glClearAccum(0.0, 0.0, 0.0, 0.0);
 }
 
-void displayObjects(void) {
+void display_objects(void) {
   GLfloat torus_diffuse[] = {0.7, 0.7, 0.0, 1.0};
   GLfloat cube_diffuse[] = {0.0, 0.7, 0.7, 1.0};
   GLfloat sphere_diffuse[] = {0.7, 0.0, 0.7, 1.0};
@@ -157,9 +157,9 @@ void display(void) {
   glClear(GL_ACCUM_BUFFER_BIT);
   for (jitter = 0; jitter < acsize; jitter++) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    accPerspective(50.0, (GLdouble)viewport[2] / (GLdouble)viewport[3], 1.0,
+    acc_perspective(50.0, (GLdouble)viewport[2] / (GLdouble)viewport[3], 1.0,
       15.0, j8[jitter].x, j8[jitter].y, 0.0, 0.0, 1.0);
-    displayObjects();
+    display_objects();
     glAccum(GL_ACCUM, 1.0 / acsize);
   }
   glAccum(GL_RETURN, 1.0);
@@ -194,8 +194,8 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-/*  Main Loop
- *  Be certain you request an accumulation buffer.
+/*  main loop
+ *  be certain you request an accumulation buffer.
  */
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -203,7 +203,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(250, 250);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

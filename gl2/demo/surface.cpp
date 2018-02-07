@@ -1,9 +1,9 @@
 /*
  *  surface.c
- *  This program draws a NURBS surface in the shape of a
- *  symmetrical hill.  The 'c' keyboard key allows you to
+ *  this program draws a NURBS surface in the shape of a
+ *  symmetrical hill.  the 'c' keyboard key allows you to
  *  toggle the visibility of the control points themselves.
- *  Note that some of the control points are hidden by the
+ *  note that some of the control points are hidden by the
  *  surface itself.
  *
  *  change u step will change the surface slightly even the sample mothed is not
@@ -23,16 +23,16 @@
 #endif
 
 GLfloat ctlpoints[4][4][3];
-int showPoints = 0;
+int show_points = 0;
 
-GLUnurbsObj *theNurb;
+GLUnurbsObj *the_nurb;
 
-GLenum sampleMethods[] = {GLU_OBJECT_PARAMETRIC_ERROR, GLU_OBJECT_PATH_LENGTH,
+GLenum sample_methods[] = {GLU_OBJECT_PARAMETRIC_ERROR, GLU_OBJECT_PATH_LENGTH,
   GLU_PATH_LENGTH, GLU_PARAMETRIC_ERROR, GLU_DOMAIN_DISTANCE};
 
 /*
- *  Initializes the control points of the surface to a small hill.
- *  The control points range from -3 to +3 in x, y, and z
+ *  initializes the control points of the surface to a small hill.
+ *  the control points range from -3 to +3 in x, y, and z
  */
 void init_surface(void) {
   int u, v;
@@ -49,15 +49,15 @@ void init_surface(void) {
   }
 }
 
-void CALLBACK nurbsError(GLenum errorCode) {
+void CALLBACK nurbs_error(GLenum error_code) {
   const GLubyte *estring;
 
-  estring = gluErrorString(errorCode);
-  fprintf(stderr, "Nurbs Error: %s\n", estring);
+  estring = gluErrorString(error_code);
+  fprintf(stderr, "nurbs error: %s\n", estring);
   exit(0);
 }
 
-/*  Initialize material property and depth buffer.
+/*  initialize material property and depth buffer.
  */
 void init(void) {
   GLfloat mat_diffuse[] = {0.7, 0.7, 0.7, 1.0};
@@ -77,14 +77,14 @@ void init(void) {
 
   init_surface();
 
-  theNurb = gluNewNurbsRenderer();
+  the_nurb = gluNewNurbsRenderer();
 
   // control tessellate granularity
-  gluNurbsProperty(theNurb, GLU_SAMPLING_METHOD, GLU_PATH_LENGTH);  // default
-  gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 25.0);
+  gluNurbsProperty(the_nurb, GLU_SAMPLING_METHOD, GLU_PATH_LENGTH);  // default
+  gluNurbsProperty(the_nurb, GLU_SAMPLING_TOLERANCE, 25.0);
 
-  gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
-  gluNurbsCallback(theNurb, GLU_ERROR, reinterpret_cast<_GLUfuncptr>(nurbsError));
+  gluNurbsProperty(the_nurb, GLU_DISPLAY_MODE, GLU_FILL);
+  gluNurbsCallback(the_nurb, GLU_ERROR, reinterpret_cast<_GLUfuncptr>(nurbs_error));
 }
 
 void display(void) {
@@ -98,12 +98,12 @@ void display(void) {
   glRotatef(330.0, 1., 0., 0.);
   glScalef(0.5, 0.5, 0.5);
 
-  gluBeginSurface(theNurb);
-  gluNurbsSurface(theNurb, 8, knots, 8, knots, 4 * 3, 3, &ctlpoints[0][0][0], 4,
+  gluBeginSurface(the_nurb);
+  gluNurbsSurface(the_nurb, 8, knots, 8, knots, 4 * 3, 3, &ctlpoints[0][0][0], 4,
     4, GL_MAP2_VERTEX_3); //non rational
-  gluEndSurface(theNurb);
+  gluEndSurface(the_nurb);
 
-  if (showPoints) {
+  if (show_points) {
     glPointSize(5.0);
     glDisable(GL_LIGHTING);
     glColor3f(1.0, 1.0, 0.0);
@@ -121,23 +121,23 @@ void display(void) {
   glColor3f(1.0f,1.0f,1.0f);
   glWindowPos2i(10, 480);
   char info[512];
-  GLfloat sampleMethod, sampleTolerance, parametricTolerance, ustep, vstep;
+  GLfloat sample_method, sample_tolerance, parametric_tolerance, ustep, vstep;
 
-  gluGetNurbsProperty(theNurb, GLU_SAMPLING_METHOD, &sampleMethod);
-  gluGetNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, &sampleTolerance);
-  gluGetNurbsProperty(theNurb, GLU_PARAMETRIC_TOLERANCE, &parametricTolerance);
-  gluGetNurbsProperty(theNurb, GLU_U_STEP, &ustep);
-  gluGetNurbsProperty(theNurb, GLU_V_STEP, &vstep);
+  gluGetNurbsProperty(the_nurb, GLU_SAMPLING_METHOD, &sample_method);
+  gluGetNurbsProperty(the_nurb, GLU_SAMPLING_TOLERANCE, &sample_tolerance);
+  gluGetNurbsProperty(the_nurb, GLU_PARAMETRIC_TOLERANCE, &parametric_tolerance);
+  gluGetNurbsProperty(the_nurb, GLU_U_STEP, &ustep);
+  gluGetNurbsProperty(the_nurb, GLU_V_STEP, &vstep);
 
   sprintf(info,
-    "q : sampleMethod : %s \n"
-    "wW : sampleTolerance : %.2f \n"
-    "eE : parametricTolerance : %.2f \n"
+    "q : sample_method : %s \n"
+    "wW : sample_tolerance : %.2f \n"
+    "eE : parametric_tolerance : %.2f \n"
     "uU : u step : %.0f \n"
     "iI : v step : %.0f \n"
     "o : show points \n",
-    gluNurbSampleMethodToString(sampleMethod), (GLdouble)sampleTolerance,
-    (GLdouble)parametricTolerance, ustep, vstep);
+    glu_nurb_sample_method_to_string(sample_method), (GLdouble)sample_tolerance,
+    (GLdouble)parametric_tolerance, ustep, vstep);
 
   glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte *)info);
   glEnable(GL_TEXTURE_2D);
@@ -156,13 +156,13 @@ void reshape(int w, int h) {
 
 void keyboard(unsigned char key, int x, int y) {
   // just for convinence, get all of the properties here.
-  GLfloat sampleMethod, sampleTolerance, parametricTolerance, ustep, vstep;
+  GLfloat sample_method, sample_tolerance, parametric_tolerance, ustep, vstep;
 
-  gluGetNurbsProperty(theNurb, GLU_SAMPLING_METHOD, &sampleMethod);
-  gluGetNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, &sampleTolerance);
-  gluGetNurbsProperty(theNurb, GLU_PARAMETRIC_TOLERANCE, &parametricTolerance);
-  gluGetNurbsProperty(theNurb, GLU_U_STEP, &ustep);
-  gluGetNurbsProperty(theNurb, GLU_V_STEP, &vstep);
+  gluGetNurbsProperty(the_nurb, GLU_SAMPLING_METHOD, &sample_method);
+  gluGetNurbsProperty(the_nurb, GLU_SAMPLING_TOLERANCE, &sample_tolerance);
+  gluGetNurbsProperty(the_nurb, GLU_PARAMETRIC_TOLERANCE, &parametric_tolerance);
+  gluGetNurbsProperty(the_nurb, GLU_U_STEP, &ustep);
+  gluGetNurbsProperty(the_nurb, GLU_V_STEP, &vstep);
 
   switch (key) {
     case 27:
@@ -171,61 +171,61 @@ void keyboard(unsigned char key, int x, int y) {
     case 'q':
     case 'Q': {
       GLint i = 0;
-      while (sampleMethods[i] != (GLenum)sampleMethod) ++i;
-      gluNurbsProperty(theNurb, GLU_SAMPLING_METHOD, sampleMethods[++i % 5]);
+      while (sample_methods[i] != (GLenum)sample_method) ++i;
+      gluNurbsProperty(the_nurb, GLU_SAMPLING_METHOD, sample_methods[++i % 5]);
       glutPostRedisplay();
     } break;
     case 'w':
-      sampleTolerance += 5;
-      gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, sampleTolerance);
+      sample_tolerance += 5;
+      gluNurbsProperty(the_nurb, GLU_SAMPLING_TOLERANCE, sample_tolerance);
       glutPostRedisplay();
       break;
     case 'W':
-      if (sampleTolerance > 10) {
-        sampleTolerance -= 5;
-        gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, sampleTolerance);
+      if (sample_tolerance > 10) {
+        sample_tolerance -= 5;
+        gluNurbsProperty(the_nurb, GLU_SAMPLING_TOLERANCE, sample_tolerance);
         glutPostRedisplay();
       }
       break;
     case 'e':
-      parametricTolerance += 0.05;
-      gluNurbsProperty(theNurb, GLU_PARAMETRIC_TOLERANCE, parametricTolerance);
+      parametric_tolerance += 0.05;
+      gluNurbsProperty(the_nurb, GLU_PARAMETRIC_TOLERANCE, parametric_tolerance);
       glutPostRedisplay();
       break;
     case 'E':
-      if (parametricTolerance > 0.1) {
-        parametricTolerance -= 0.05;
+      if (parametric_tolerance > 0.1) {
+        parametric_tolerance -= 0.05;
         gluNurbsProperty(
-          theNurb, GLU_PARAMETRIC_TOLERANCE, parametricTolerance);
+          the_nurb, GLU_PARAMETRIC_TOLERANCE, parametric_tolerance);
         glutPostRedisplay();
       }
       break;
     case 'u':
       ustep += 1;
-      gluNurbsProperty(theNurb, GLU_U_STEP, ustep);
+      gluNurbsProperty(the_nurb, GLU_U_STEP, ustep);
       glutPostRedisplay();
       break;
     case 'U':
       if (ustep > 1) {
         ustep -= 1;
-        gluNurbsProperty(theNurb, GLU_U_STEP, ustep);
+        gluNurbsProperty(the_nurb, GLU_U_STEP, ustep);
         glutPostRedisplay();
       }
       break;
     case 'i':
       vstep += 1;
-      gluNurbsProperty(theNurb, GLU_V_STEP, vstep);
+      gluNurbsProperty(the_nurb, GLU_V_STEP, vstep);
       glutPostRedisplay();
       break;
     case 'I':
       if (vstep > 1) {
         vstep -= 1;
-        gluNurbsProperty(theNurb, GLU_V_STEP, vstep);
+        gluNurbsProperty(the_nurb, GLU_V_STEP, vstep);
         glutPostRedisplay();
       }
       break;
     case 'o':
-      showPoints = !showPoints;
+      show_points = !show_points;
       glutPostRedisplay();
       break;
     default:
@@ -239,7 +239,7 @@ int main(int argc, char **argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);

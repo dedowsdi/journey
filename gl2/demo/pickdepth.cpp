@@ -1,11 +1,11 @@
 /*
  * pickdepth.c
- * Picking is demonstrated in this program.  In
+ * picking is demonstrated in this program.  in
  * rendering mode, three overlapping rectangles are
- * drawn.  When the left mouse button is pressed,
+ * drawn.  when the left mouse button is pressed,
  * selection mode is entered with the picking matrix.
- * Rectangles which are drawn under the cursor position
- * are "picked."  Pay special attention to the depth
+ * rectangles which are drawn under the cursor position
+ * are "picked."  pay special attention to the depth
  * value range, which is returned.
  */
 #include "glad/glad.h"
@@ -20,15 +20,15 @@ void init(void) {
   glShadeModel(GL_FLAT);
   //change this won't affect zmin and zmax in hits, select mode always use
   //depth range 0,1 
-  /*glDepthRange(0.0, 1.0); [> The default z mapping <]*/
+  /*glDepthRange(0.0, 1.0); [> the default z mapping <]*/
 
 }
 
-/* The three rectangles are drawn.  In selection mode,
- * each rectangle is given the same name.  Note that
+/* the three rectangles are drawn.  in selection mode,
+ * each rectangle is given the same name.  note that
  * each rectangle is drawn with a different z value.
  */
-void drawRects(GLenum mode) {
+void draw_rects(GLenum mode) {
   if (mode == GL_SELECT) glLoadName(1);
   glBegin(GL_QUADS);
   glColor3f(1.0, 1.0, 0.0);
@@ -56,10 +56,10 @@ void drawRects(GLenum mode) {
   ZCGEA
 }
 
-/*  processHits() prints out the contents of the
+/*  process_hits() prints out the contents of the
  *  selection array.
  */
-void processHits(GLint hits, GLuint buffer[]) {
+void process_hits(GLint hits, GLuint buffer[]) {
   unsigned int i, j;
   GLuint names, *ptr;
 
@@ -82,14 +82,14 @@ void processHits(GLint hits, GLuint buffer[]) {
   }
 }
 
-/*  pickRects() sets up selection mode, name stack,
- *  and projection matrix for picking.  Then the objects
+/*  pick_rects() sets up selection mode, name stack,
+ *  and projection matrix for picking.  then the objects
  *  are drawn.
  */
 #define BUFSIZE 512
 
-void pickRects(int button, int state, int x, int y) {
-  GLuint selectBuf[BUFSIZE];
+void pick_rects(int button, int state, int x, int y) {
+  GLuint select_buf[BUFSIZE];
   GLint hits;
   GLint viewport[4];
 
@@ -97,7 +97,7 @@ void pickRects(int button, int state, int x, int y) {
 
   glGetIntegerv(GL_VIEWPORT, viewport);
 
-  glSelectBuffer(BUFSIZE, selectBuf);
+  glSelectBuffer(BUFSIZE, select_buf);
   (void)glRenderMode(GL_SELECT);
 
   glInitNames();
@@ -110,17 +110,17 @@ void pickRects(int button, int state, int x, int y) {
   gluPickMatrix(
     (GLdouble)x, (GLdouble)(viewport[3] - y - 1), 5.0, 5.0, viewport);
   glOrtho(0.0, 8.0, 0.0, 8.0, -0.5, 2.5);
-  drawRects(GL_SELECT);
+  draw_rects(GL_SELECT);
   glPopMatrix();
   glFlush();
 
   hits = glRenderMode(GL_RENDER);
-  processHits(hits, selectBuf);
+  process_hits(hits, select_buf);
 }
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  drawRects(GL_RENDER);
+  draw_rects(GL_RENDER);
   glFlush();
 }
 
@@ -141,7 +141,7 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-/*  Main Loop
+/*   loop
  */
 int main(int argc, char **argv) {
   glutInit(&argc, argv);
@@ -149,11 +149,11 @@ int main(int argc, char **argv) {
   glutInitWindowSize(200, 200);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);
-  glutMouseFunc(pickRects);
+  glutMouseFunc(pick_rects);
   glutKeyboardFunc(keyboard);
   glutMainLoop();
   return 0;

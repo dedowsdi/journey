@@ -1,19 +1,22 @@
 #version 120
 
-uniform mat4 modelViewMatrix;
-uniform mat4 modelViewProjMatrix;
-uniform mat4 modelViewMatrixInverseTranspose;
-uniform mat4 modelMatrix;
+attribute vec4 vertex;
+attribute vec3 normal;
 
-varying vec3 viewVertex;  
-varying vec3 worldVertex; 
-varying vec3 normal;  // local
+uniform mat4 mv_mat;
+uniform mat4 mvp_mat;
+uniform mat4 mv_mat_it;
+uniform mat4 m_mat;
+
+varying vec3 v_vertex;  
+varying vec3 w_vertex; 
+varying vec3 v_normal; 
 
 void main(void) {
-  gl_Position = modelViewProjMatrix * gl_Vertex;
+  gl_Position = mvp_mat * vertex;
 
-  worldVertex = (modelMatrix * gl_Vertex).xyz;
+  w_vertex = (m_mat * vertex).xyz;
   
-  normal = mat3(modelViewMatrixInverseTranspose) * gl_Normal;
-  viewVertex = (modelViewMatrix * gl_Vertex).xyz;
+  v_normal = mat3(mv_mat_it) * normal;
+  v_vertex = (mv_mat * vertex).xyz;
 }

@@ -10,44 +10,44 @@
 
 namespace zxd {
 
-struct FreetypeTextProgram : public zxd::Program {
-  GLint attrib_vertex;
-  GLint loc_textColor;
-  GLint loc_fontMap;
-  FreetypeTextProgram() {
+struct freetype_text_program : public zxd::program {
+  GLint al_vertex;
+  GLint ul_text_color;
+  GLint ul_font_map;
+  freetype_text_program() {
   }
-  void reshape(GLuint wndWidth, GLuint wndHeight) {
-    modelViewProjMatrix = glm::ortho(
-      0.0f, (GLfloat)wndWidth, 0.0f, (GLfloat)wndHeight, -1.0f, 1.0f);
+  void reshape(GLuint wnd_width, GLuint wnd_height) {
+    mvp_mat = glm::ortho(
+      0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
   }
-  void updateUniforms(const glm::vec4& textColor) {
+  void update_uniforms(const glm::vec4& text_color) {
     glUniformMatrix4fv(
-      loc_modelViewProjMatrix, 1, 0, value_ptr(modelViewProjMatrix));
-    glUniform4fv(loc_textColor, 1, value_ptr(textColor));
-    glUniform1i(loc_fontMap, 0);
+      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+    glUniform4fv(ul_text_color, 1, value_ptr(text_color));
+    glUniform1i(ul_font_map, 0);
   }
-  virtual void attachShaders() {
-    attachShaderFile(GL_VERTEX_SHADER, "data/shader/freetype_text.vs.glsl");
-    attachShaderFile(GL_FRAGMENT_SHADER, "data/shader/freetype_text.fs.glsl");
+  virtual void attach_shaders() {
+    attach_shader_file(GL_VERTEX_SHADER, "data/shader/freetype_text.vs.glsl");
+    attach_shader_file(GL_FRAGMENT_SHADER, "data/shader/freetype_text.fs.glsl");
   }
-  virtual void bindUniformLocations() {
-    setUniformLocation(&loc_modelViewProjMatrix, "modelViewProjMatrix");
-    setUniformLocation(&loc_textColor, "textColor");
-    setUniformLocation(&loc_fontMap, "fontMap");
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_text_color, "text_color");
+    uniform_location(&ul_font_map, "font_map");
   }
-  virtual void bindAttribLocations() {
-    attrib_vertex = getAttribLocation("vertex");
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
   }
 };
 
 // only works with grayscale bitmap
-class FreetypeText {
+class freetype_text {
 public:
   struct Glyph {
-    GLfloat xMin;  // the same as bearying X
-    GLfloat yMin;  // bearyingY - height
-    GLfloat xMax;  // xMin + width
-    GLfloat yMax;  // the same as bearying Y
+    GLfloat x_min;  // the same as bearying X
+    GLfloat y_min;  // bearyingY - height
+    GLfloat x_max;  // x_min + width
+    GLfloat y_max;  // the same as bearying Y
     GLfloat bearingX;
     GLfloat bearingY;
     GLfloat width;   // width of bounding box
@@ -58,28 +58,28 @@ public:
   };
 
 protected:
-  GLuint mNumCharacters;
-  GLuint mVao;
-  GLuint mVbo;
-  GLuint mTexture;
-  GLuint mHeight;     // width will be deduced from height by freetype
-  GLuint mLinespace;  // max height, in pixel
-  GLuint mMaxAdvance; // in pixel
+  GLuint m_num_characters;
+  GLuint m_vao;
+  GLuint m_vbo;
+  GLuint m_texture;
+  GLuint m_height;     // width will be deduced from height by freetype
+  GLuint m_linespace;  // max height, in pixel
+  GLuint m_max_advance; // in pixel
 
-  std::string mFace;
-  std::shared_ptr<FreetypeTextProgram> mProgram;
-  std::map<GLchar, Glyph> mGlyphDict;
+  std::string m_face;
+  std::shared_ptr<freetype_text_program> m_program;
+  std::map<GLchar, Glyph> m_glyph_dict;
 
 public:
-  FreetypeText(const std::string& font);
-  ~FreetypeText();
+  freetype_text(const std::string& font);
+  ~freetype_text();
   void init();
 
-  void updateGlyphDict();
+  void update_glyph_dict();
 
   // must be called at least once
-  void reshape(GLuint wndWidth, GLuint wndHeight) {
-    mProgram->reshape(wndWidth, wndHeight);
+  void reshape(GLuint wnd_width, GLuint wnd_height) {
+    m_program->reshape(wnd_width, wnd_height);
   }
 
   // linespace = height of 'I' + 2 if it's 0
@@ -92,23 +92,23 @@ public:
   void print(const Glyph& glyph, GLuint x, GLuint y,
     const glm::vec4& color = vec4(1.0f), GLfloat scale = 1.0);
 
-  GLuint getNumCharacters() const { return mNumCharacters; }
-  void setNumCharacters(GLuint v) { mNumCharacters = v; }
+  GLuint get_num_characters() const { return m_num_characters; }
+  void set_num_characters(GLuint v) { m_num_characters = v; }
 
-  GLuint getHeight() const { return mHeight; }
-  void setHeight(GLuint v) { mHeight = v; }
+  GLuint get_height() const { return m_height; }
+  void set_height(GLuint v) { m_height = v; }
 
-  const std::string& getFace() const { return mFace; }
-  void setFace( const std::string& v){mFace = v;}
+  const std::string& get_face() const { return m_face; }
+  void set_face( const std::string& v){m_face = v;}
 
-  GLuint getLinespace() const { return mLinespace; }
-  void setLinespace(GLuint v) { mLinespace = v; }
+  GLuint get_linespace() const { return m_linespace; }
+  void set_linespace(GLuint v) { m_linespace = v; }
 
-  GLuint getMaxAdvance() const { return mMaxAdvance; }
-  void setMaxAdvance(GLuint v) { mMaxAdvance = v; }
+  GLuint get_max_advance() const { return m_max_advance; }
+  void set_max_advance(GLuint v) { m_max_advance = v; }
 
-  const std::map<GLchar, Glyph>& getGlyphDict() { return mGlyphDict; }
-  const Glyph& getGlyph(char c) { return mGlyphDict[c]; }
+  const std::map<GLchar, Glyph>& get_glyph_dict() { return m_glyph_dict; }
+  const Glyph& getGlyph(char c) { return m_glyph_dict[c]; }
 };
 }
 

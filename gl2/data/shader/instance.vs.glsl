@@ -2,18 +2,18 @@
 
 attribute vec4 vertex;
 attribute vec3 normal;
-// If you have too many instances, you will run out of uniform, it'd better to
+// if you have too many instances, you will run out of uniform, it'd better to
 // use attribute to pass instance data such as transform
-attribute mat4 modelViewProjMatrix;
-attribute mat4 modelViewMatrix;
-attribute mat4 modelViewMatrixInverseTranspose;
+attribute mat4 mvp_mat;
+attribute mat4 mv_mat;
+attribute mat4 mv_mat_it;
 
-varying vec3 viewNormal; // view space
-varying vec3 viewVertex; // view space
+varying vec3 v_normal; // view space
+varying vec3 v_vertex; // view space
 
 void main(void)
 {
-  viewNormal = mat3(modelViewMatrixInverseTranspose) * normal;
-  viewVertex = (modelViewMatrix * vertex).xyz;
-  gl_Position = modelViewProjMatrix * vertex;
+  v_normal = mat3(mv_mat_it) * normal;
+  v_vertex = (mv_mat * vertex).xyz;
+  gl_Position = mvp_mat * vertex;
 }

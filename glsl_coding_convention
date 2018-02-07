@@ -18,3 +18,24 @@ Abbreviation:
 
 shader option:
   use macro to define shader option instead of uniform.
+
+name of glsl 1.3+:
+
+  vertex shader:
+    vs_out{
+    ...
+    } vo;
+
+  fragment shader:
+    vs_out{
+    ...
+    } fi;
+
+name of glsl 1.2:
+
+add space prefix to varying:
+  varying vec3 v_vertex;
+  varying vec2 m_texcoord   // m as model, or dummy
+
+about glsl 1.2 built in uniforms and attribute:
+  don't use them.

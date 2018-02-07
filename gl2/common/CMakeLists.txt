@@ -1,15 +1,23 @@
 set(COMMON_SRCS 
-    src/common.cpp
-    src/program.cpp
-    src/glm.cpp
-    src/glEnumString.cpp
-    src/light.cpp
-    src/sphere.cpp
-    src/texutil.cpp
-    src/bitmap_text.cpp
     src/freetype_text.cpp
-    src/quad.cpp
-    src/stringutil.cpp
+    src/app.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/bitmap_text.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/common.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/glEnumString.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/glm.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/light.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/program.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/quad.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/geometry.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/sphere.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/cuboid.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/cone.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/stringutil.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/texutil.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/cylinder.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/torus.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/xyplane.cpp
+    ${CMAKE_SOURCE_DIR}/../glc/src/disk.cpp
     )
 
 add_library(common 
@@ -23,4 +31,5 @@ target_link_libraries(common
     ${GLUT_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     ${FIP_LIBS}
+    X11
     )

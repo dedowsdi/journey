@@ -1,8 +1,8 @@
 /*
  * fragtest.c
- * This program demonstrates scissor and alpha test
+ * this program demonstrates scissor and alpha test
  *
- * Don't change alpha or scissor statie directly in keyboard function, it won't
+ * don't change alpha or scissor statie directly in keyboard function, it won't
  * work.
  *
  */
@@ -13,7 +13,7 @@
 #include <GL/freeglut_ext.h>
 #include "common.h"
 
-GLboolean enableScissor = GL_FALSE, enableAlpha = GL_FALSE;
+GLboolean enable_scissor = GL_FALSE, enable_alpha = GL_FALSE;
 
 void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -34,14 +34,14 @@ void triangle(void) {
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
 
-  if (enableScissor) {
+  if (enable_scissor) {
     glEnable(GL_SCISSOR_TEST);
     glScissor(200, 200, 100, 100);
   } else {
     glDisable(GL_SCISSOR_TEST);
   }
 
-  if (enableAlpha) {
+  if (enable_alpha) {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.5);
   } else {
@@ -85,14 +85,14 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'q':
     case 'Q': {
-      enableScissor = !enableScissor;
+      enable_scissor = !enable_scissor;
 
       glutPostRedisplay();
     } break;
 
     case 'w':
     case 'W':
-      enableAlpha = !enableAlpha;
+      enable_alpha = !enable_alpha;
       glutPostRedisplay();
       break;
 
@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  zxd::loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

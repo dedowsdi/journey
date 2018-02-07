@@ -637,7 +637,7 @@ Multiples of bytes:
   1000^8	YB | yottabyte | 1024^8	YiB | yobibyte | –
 
 -----------
-2018.02.02:
+2018.02.03:
 linux:
   you can use xinput to control touchboard:
     xinput list
@@ -650,3 +650,16 @@ gl:
   if you change marcro that will change uniform size(such as light_count), you
   need to rebind all uniform locations.
 
+-----------
+2018.02.04:
+
+vim:
+  aw includes trailing  or leading(if it has not trailing ) white space. Be
+  careful with this, it might cause problem.
+  c-w_c-o close all windows except current one. just like :only
+
+-----------
+2018.02.06:
+
+linux:
+  use who to check logged users.

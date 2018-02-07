@@ -1,5 +1,5 @@
 #ifndef WITH_TEX
-#version 430
+#version 430 core
 #endif
 
 in vec4 vertex;

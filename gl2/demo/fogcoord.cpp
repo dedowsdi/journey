@@ -1,41 +1,47 @@
 /*
  *  fogcoord.c
  *
- *  This program demonstrates the use of explicit fog
- *  coordinates.  You can press the keyboard and change
- *  the fog coordinate value at any vertex.  You can
+ *  this program demonstrates the use of explicit fog
+ *  coordinates.  you can press the keyboard and change
+ *  the fog coordinate value at any vertex.  you can
  *  also switch between using explicit fog coordinates
  *  and the default fog generation mode.
  *
- *  Pressing the 'f' and 'b' keys move the viewer forward
+ *  pressing the 'f' and 'b' keys move the viewer forward
  *  and backwards.
- *  Pressing 'c' initiates the default fog generation.
- *  Pressing capital 'C' restores explicit fog coordinates.
- *  Pressing '1', '2', '3', '8', '9', and '0' add or
+ *  pressing 'c' initiates the default fog generation.
+ *  pressing capital 'C' restores explicit fog coordinates.
+ *  pressing '1', '2', '3', '8', '9', and '0' add or
  *  subtract from the fog coordinate values at one of the
  *  three vertices of the triangle.
  */
-#include "glad/glad.h"
-#include <GL/freeglut.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <GL/freeglut_ext.h>
-#include "common.h"
+#include "app.h"
 
-static GLfloat f1, f2, f3;
+namespace zxd{
 
-/*  Initialize fog
+GLfloat f1, f2, f3;
+
+class app0 : public app{
+void init_info(){
+  app::init_info();
+  m_info.title = "fogcoord";
+  m_info.display_mode = GLUT_DOUBLE | GLUT_RGB;
+  m_info.wnd_width = 500;
+  m_info.wnd_height =  500;
+}
+
+
+/*  initialize fog
  */
-static void init(void) {
-  GLfloat fogColor[4] = {0.0, 0.25, 0.25, 1.0};
+void create_scene(void) {
+  GLfloat fog_color[4] = {0.0, 0.25, 0.25, 1.0};
   f1 = 1.0f;
   f2 = 5.0f;
   f3 = 10.0f;
 
   glEnable(GL_FOG);
   glFogi(GL_FOG_MODE, GL_EXP);
-  glFogfv(GL_FOG_COLOR, fogColor);
+  glFogfv(GL_FOG_COLOR, fog_color);
   glFogf(GL_FOG_DENSITY, 0.25);
   glHint(GL_FOG_HINT, GL_DONT_CARE);
   glFogi(GL_FOG_COORDINATE_SOURCE, GL_FOG_COORDINATE);
@@ -74,6 +80,7 @@ void display(void) {
 }
 
 void reshape(int w, int h) {
+  app::reshape(w, h);
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -84,6 +91,7 @@ void reshape(int w, int h) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
+  app::keyboard(key, x, y);
   switch (key) {
     case 'q': {
       int i;
@@ -93,70 +101,52 @@ void keyboard(unsigned char key, int x, int y) {
       else
         glFogi(GL_FOG_COORDINATE_SOURCE, GL_FRAGMENT_DEPTH);
     }
-      glutPostRedisplay();
       break;
     case 'w':
       f1 = f1 + 0.25;
-      glutPostRedisplay();
       break;
     case 'e':
       f2 = f2 + 0.25;
-      glutPostRedisplay();
       break;
     case 'r':
       f3 = f3 + 0.25;
-      glutPostRedisplay();
       break;
     case 'W':
       if (f1 > 0.25) {
         f1 = f1 - 0.25;
-        glutPostRedisplay();
       }
       break;
     case 'E':
       if (f2 > 0.25) {
         f2 = f2 - 0.25;
-        glutPostRedisplay();
       }
       break;
     case 'R':
       if (f3 > 0.25) {
         f3 = f3 - 0.25;
-        glutPostRedisplay();
       }
       break;
     case 'j':
       glMatrixMode(GL_MODELVIEW);
       glTranslatef(0.0, 0.0, -0.25);
-      glutPostRedisplay();
       break;
     case 'J':
       glMatrixMode(GL_MODELVIEW);
       glTranslatef(0.0, 0.0, 0.25);
-      glutPostRedisplay();
-      break;
-    case 27:
-      exit(0);
       break;
     default:
       break;
   }
 }
 
-/*  Main Loop
- *  Open window with initial window size, title bar,
+/*  main loop
+ *  open window with initial window size, title bar,
  *  RGBA display mode, depth buffer, and handle input events.
  */
+};
+}
 int main(int argc, char** argv) {
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-  glutInitWindowSize(500, 500);
-  glutCreateWindow(argv[0]);
-  loadGL();
-  init();
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyboard);
-  glutDisplayFunc(display);
-  glutMainLoop();
-  return 0;
+zxd::app0 _app0;
+_app0.run(argc, argv);
+return 0;
 }

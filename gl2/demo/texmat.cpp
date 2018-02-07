@@ -1,6 +1,6 @@
 /*
  *  sprite.c
- *  This program demonstrates tex matrix
+ *  this program demonstrates tex matrix
  */
 #include "glad/glad.h"
 #include <GL/freeglut.h>
@@ -8,17 +8,17 @@
 #include <GL/freeglut_ext.h>
 #include "common.h"
 
-#define imgWidth 32
-#define imgHeight 32
+#define img_width 32
+#define img_height 32
 
-GLubyte image[imgWidth][imgHeight][4];
+GLubyte image[img_width][img_height][4];
 GLuint tex;
 GLdouble roll = 0;
 
-void makeCheckImage() {
+void make_check_image() {
   GLubyte c;
-  for (int i = 0; i < imgHeight; ++i) {
-    for (int j = 0; j < imgWidth; ++j) {
+  for (int i = 0; i < img_height; ++i) {
+    for (int j = 0; j < img_width; ++j) {
       c = (((i & 8) == 0) ^ ((j & 8) == 0)) * 255;
       image[i][j][0] = c;
       image[i][j][1] = c;
@@ -32,7 +32,7 @@ void init(void) {
   glClearColor(0.0, 0.5, 1.0, 0.0);
   glShadeModel(GL_FLAT);
 
-  makeCheckImage();
+  make_check_image();
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   // create texture
@@ -43,7 +43,7 @@ void init(void) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img_width, img_height, 0, GL_RGBA,
     GL_UNSIGNED_BYTE, image);
 
   /*glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);*/
@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

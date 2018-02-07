@@ -1,20 +1,20 @@
 /*
  *  colormatix.c
- *  This program uses the color matrix to exchange the color channels of
+ *  this program uses the color matrix to exchange the color channels of
  *  an image.
  *
- *    Red   -> Green
- *    Green -> Blue
- *    Blue  -> Red
+ *    red   -> green
+ *    green -> blue
+ *    blue  -> red
  *
  */
 #include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
-#include "readImage.cpp"
+#include "read_image.cpp"
 #include "common.h"
 
-extern GLubyte* readImage(const char*, GLsizei*, GLsizei*);
+extern GLubyte* read_image(const char*, GLsizei*, GLsizei*);
 
 GLubyte* pixels;
 GLsizei width, height;
@@ -59,19 +59,19 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 
-/*  Main Loop
- *  Open window with initial window size, title bar,
+/*  main loop
+ *  open window with initial window size, title bar,
  *  RGBA display mode, and handle input events.
  */
 int main(int argc, char** argv) {
-  pixels = readImage("Data/leeds.bin", &width, &height);
+  pixels = read_image("data/leeds.bin", &width, &height);
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(width, height);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
-  loadGL();
+  loadgl();
   init();
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);

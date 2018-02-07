@@ -10,46 +10,47 @@ using namespace glm;
 
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
-GLfloat wndAspect = 1;
+GLfloat wnd_aspect = 1;
 
-struct MyProgram : public zxd::Program {
-  MyProgram() {
-    projMatrix = glm::perspective(glm::radians(45.0f), wndAspect, 0.1f, 30.0f);
-    viewMatrix = glm::lookAt(vec3(0, -5, 0), vec3(0, 0, 0), vec3(0, 0, 1));
+struct my_program : public zxd::program {
+  my_program() {
+    p_mat = glm::perspective(glm::radians(45.0f), wnd_aspect, 0.1f, 30.0f);
+    v_mat = glm::lookAt(vec3(0, -5, 0), vec3(0, 0, 0), vec3(0, 0, 1));
   }
 
-  virtual void doUpdateFrame() {
-
-  }
-
-  virtual void doUpdateModel() {
+  virtual void update_frame() {
 
   }
 
-  virtual void attachShaders() {
+  virtual void update_model(const glm::mat4& _m_mat) {
+    m_mat = _m_mat;
 
   }
 
-  virtual void bindUniformLocations() {
+  virtual void attach_shaders() {
 
   }
 
-  virtual void bindAttribLocations() {
+  virtual void bind_uniform_locations() {
 
   }
-} myProgram;
 
-void render(zxd::Program& program) {
-  myProgram.updateFrame();
+  virtual void bind_attrib_locations() {
+
+  }
+} my_program;
+
+void render(zxd::program& program) {
+  my_program.update_frame();
 
   mat4 model;
-  myProgram.updateModel(model);
+  my_program.update_model(model);
 }
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
 
-  render(myProgram);
+  render(my_program);
 
   glDisable(GL_TEXTURE_2D);
 
@@ -67,12 +68,12 @@ void init(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_FLAT);
 
-  myProgram.init();
+  my_program.init();
 }
 
 void reshape(int w, int h) {
   glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-  wndAspect = GLfloat(w) / h;
+  wnd_aspect = GLfloat(w) / h;
 }
 
 void mouse(int button, int state, int x, int y) {
@@ -90,7 +91,7 @@ void keyboard(unsigned char key, int x, int y) {
   }
 }
 void idle() {}
-void passiveMotion(int x, int y) {}
+void passive_motion(int x, int y) {}
 
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -103,7 +104,7 @@ int main(int argc, char** argv) {
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);
   glutMouseFunc(mouse);
-  glutPassiveMotionFunc(passiveMotion);
+  glutPassiveMotionFunc(passive_motion);
   glutKeyboardFunc(keyboard);
   glutIdleFunc(idle);
   glutMainLoop();
