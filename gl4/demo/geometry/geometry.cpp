@@ -132,6 +132,8 @@ public:
     m_cone.build_mesh();
     m_cone.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
 
+    m_cylinder.base(1);
+    m_cylinder.top(0.5);
     m_cylinder.build_mesh();
     m_cylinder.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
 

@@ -11,15 +11,21 @@ namespace zxd {
  */
 class cylinder : public geometry {
 protected:
-  GLfloat m_radius;
+  GLfloat m_base;
+  GLfloat m_top;
   GLfloat m_height;
   GLuint m_slice;  // longitiude
   GLuint m_stack;  // latitude
 
 public:
-  cylinder() : m_radius(1), m_height(1), m_slice(16), m_stack(16) {}
-  cylinder(GLfloat radius, GLfloat height, GLuint slice, GLuint stack)
-      : m_radius(radius), m_height(height), m_slice(slice), m_stack(stack) {}
+  cylinder() : m_base(1), m_top(1), m_height(1), m_slice(16), m_stack(16) {}
+  cylinder(
+    GLfloat base, GLfloat top, GLfloat height, GLuint slice, GLuint stack)
+      : m_base(base),
+        m_top(top),
+        m_height(height),
+        m_slice(slice),
+        m_stack(stack) {}
 
   void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
@@ -27,9 +33,6 @@ public:
   void build_texcoord();
 
   void draw(GLuint primcount = 1);
-
-  GLfloat radius() const { return m_radius; }
-  void radius(GLfloat v) { m_radius = v; }
 
   GLuint slice() const { return m_slice; }
   void slice(GLuint v) { m_slice = v; }
@@ -39,6 +42,12 @@ public:
 
   GLfloat height() const { return m_height; }
   void height(GLfloat v) { m_height = v; }
+
+  GLfloat base() const { return m_base; }
+  void base(GLfloat v) { m_base = v; }
+
+  GLfloat top() const { return m_top; }
+  void top(GLfloat v) { m_top = v; }
 };
 }
 
