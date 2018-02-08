@@ -666,12 +666,44 @@ linux:
   
 
 -----------
-2018.02.06:
+2018.02.07:
 
 vim:
   :25   goto line 25
   :/pattern/ goto line match pattern, different from :normal! /pattern
+  ycm search .ycm_extra_conf vim dir of current file untile root, be careful
+  about this.
 
 linux:
   change tty font:
     sudo dpkg-reconfigure console-setup
+
+-----------
+2018.02.10:
+
+linux:
+  The splash screen is the picture that you can see while Linux is booting.
+
+  The framebuffer (fbdev) is a character device providing access to graphics
+  hardware. 
+
+  Although the Linux frame-buffer supports 256 (or more) colors, the Linux console
+  driver does not; therefore, console applications are still limited to 16 colors
+  on the Linux console, frame-buffer or not.
+
+  change tty resolution:
+    type vbeinfo or videoinfo in grub prompt to get supported resolution.(or use
+    hwinfo --framebuffer)
+    add following lines to /etc/default/grub
+      GRUB_GFXMODE=1920x1080x32
+      GRUB_GFXPAYLOAD_LINUX=keep
+
+  always use max tty resolution:
+      GRUB_GFXMODE=auto
+
+  change tty text color:
+    echo -en "\e]P0222222"
+    # e]p is the "set color escape", color format is XRRGGBB
+
+  get max color in current terminal:
+    tput colors   # only 8 for tty, 256 for gnome terminal

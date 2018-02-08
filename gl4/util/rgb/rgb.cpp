@@ -3,9 +3,117 @@
 #include <sstream>
 #include "common.h"
 #include <iomanip>
+#include <fstream>
+#include <algorithm>
+#include <stdexcept>
 using namespace glm;
 
 namespace zxd {
+
+// clang-format off
+// predefined color
+vec3_vector start_colors = vec3_vector( {
+  {0.0, 0.0, 0.0},
+  {1.0, 1.0, 1.0}, 
+  {1.0, 0.0, 0.0}, 
+  {0.0, 1.0, 0.0},
+  {0.0, 0.0, 1.0},
+  {1.0, 1.0, 0.0}, 
+  {0.0, 1.0, 1.0}, 
+  {1.0, 0.0, 1.0},
+  {0.753, 0.753, 0.753},
+  {0.502, 0.502, 0.502}, 
+  {0.502, 0.0, 0.0},
+  {0.502, 0.502, 0.0},
+  {0.0, 0.502, 0.0}, 
+  {0.502, 0.0, 0.502},
+  {0.0, 0.502, 0.502},
+  {0.0, 0.0, 0.502},
+  {1.0, 1.0, 1.0}
+});
+// clang-format on
+
+std::string input_modes[] = {"float", "byte", "hex", "normal"};
+
+vec3 str_to_color(const std::string &s, GLint mode) {
+  vec3 color(1);
+
+  if (mode == 2) {  // read hex color
+    std::string str(s);
+    str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
+    std::stringstream ss(str);
+
+    GLint value;
+    if (ss >> std::hex >> value) {
+      // get the least significant 3 bytes as b g r
+      GLint i = 2;
+      do {
+        color[i--] = (value & 0xff) / 255.0f;
+        value >>= 8;
+      } while (i >= 0);
+    } else {
+      std::cerr << "failed to read " << input_modes[mode] << ss.str()
+                << std::endl;
+    }
+  } else {  // others
+    std::stringstream ss(s);
+    if (ss >> color[0] && ss >> color[1] && ss >> color[2]) {
+      if (mode == 0) {
+      } else if (mode == 1) {
+        color /= 255.0f;
+      } else if (mode == 2) {
+        color /= 255.0f;
+      } else if (mode == 3) {
+        color = glm::normalize(color);
+        color = color * 0.5f + 0.5f;
+      }
+    } else {
+      std::cerr << "failed to read " << ss.str() << std::endl;
+    }
+  }
+
+  return color;
+};
+
+void read_start_colors(const std::string &filename) {
+  // read data from file
+  start_colors.clear();
+
+  std::ifstream ifs(filename);
+  if (!ifs) {
+    std::stringstream ss;
+    ss << "failed to open file " << filename << std::endl;
+    throw std::runtime_error(ss.str());
+  }
+
+  GLint stage = 0;
+  std::string line;
+  GLint input_mode = 0;
+  while (std::getline(ifs, line)) {
+    if (line.empty() || line[0] == '#') {
+      continue;
+    }
+
+    if (stage == 0) {
+      // read data mode
+      try {
+        input_mode = std::stoi(line);
+      } catch (const std::invalid_argument &e) {
+        std::cout << e.what() << std::endl;
+        std::cout << "failed to get input mode(0 or 1 or 2 or 3)" << std::endl;
+        break;
+      }
+      ++stage;
+      continue;
+    }
+
+    // read data line by line
+    start_colors.push_back(str_to_color(line, input_mode));
+  }
+
+  std::cout << "read " << start_colors.size() << " " << input_modes[input_mode]
+            << " colors from " << filename << std::endl;
+}
 
 class color_pane {
 public:
@@ -13,8 +121,12 @@ public:
   color_pane(GLfloat r, GLfloat g, GLfloat b) : m_color(r, g, b){};
   color_pane(vec3 v) : m_color(v){};
   void add_red(GLfloat f) { m_color.r = glm::clamp(m_color.r + f, 0.0f, 1.0f); }
-  void add_green(GLfloat f) { m_color.g = glm::clamp(m_color.g + f, 0.0f, 1.0f); }
-  void add_blue(GLfloat f) { m_color.b = glm::clamp(m_color.b + f, 0.0f, 1.0f); }
+  void add_green(GLfloat f) {
+    m_color.g = glm::clamp(m_color.g + f, 0.0f, 1.0f);
+  }
+  void add_blue(GLfloat f) {
+    m_color.b = glm::clamp(m_color.b + f, 0.0f, 1.0f);
+  }
   GLfloat red() { return m_color.r; }
   GLfloat green() { return m_color.g; };
   GLfloat blue() { return m_color.b; };
@@ -42,8 +154,7 @@ struct rgb_program : public zxd::program {
   GLint ul_gamma;
 
   void update_uniforms(GLboolean gamma = 0) {
-    glUniformMatrix4fv(
-      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform1i(ul_gamma, gamma);
   }
 
@@ -60,8 +171,6 @@ struct rgb_program : public zxd::program {
     al_color = attrib_location("color");
   };
 } rgb_program;
-
-std::string input_modes[] = {"float", "byte", "normal"};
 
 class rgb_app : public app {
 protected:
@@ -103,10 +212,12 @@ protected:
   }
 
   GLuint num_rows() {
-    return glm::ceil(m_panes.size() / static_cast<GLfloat>(m_max_pane_per_line));
+    return glm::ceil(
+      m_panes.size() / static_cast<GLfloat>(m_max_pane_per_line));
   }
   GLuint num_cols() {
-    return m_panes.size() >= m_max_pane_per_line ? m_max_pane_per_line : m_panes.size();
+    return m_panes.size() >= m_max_pane_per_line ? m_max_pane_per_line
+                                                 : m_panes.size();
   }
   GLuint current_row() { return m_current_pane_index / m_max_pane_per_line; }
   GLuint current_col() {
@@ -133,37 +244,15 @@ protected:
     glEnableVertexAttribArray(rgb_program.al_vertex);
     glEnableVertexAttribArray(rgb_program.al_color);
 
-    // clang-format off
-    vec3_vector colors = vec3_vector( {
-      {0.0, 0.0, 0.0},
-      {1.0, 1.0, 1.0}, 
-      {1.0, 0.0, 0.0}, 
-      {0.0, 1.0, 0.0},
-      {0.0, 0.0, 1.0},
-      {1.0, 1.0, 0.0}, 
-      {0.0, 1.0, 1.0}, 
-      {1.0, 0.0, 1.0},
-      {0.753, 0.753, 0.753},
-      {0.502, 0.502, 0.502}, 
-      {0.502, 0.0, 0.0},
-      {0.502, 0.502, 0.0},
-      {0.0, 0.502, 0.0}, 
-      {0.502, 0.0, 0.502},
-      {0.0, 0.502, 0.502},
-      {0.0, 0.0, 0.502},
-      {1.0, 1.0, 1.0}
-    });
-    // clang-format on
-
     glGenVertexArrays(1, &m_pane_vao);
     glGenVertexArrays(1, &m_border_vao);
 
-    for (GLuint i = 0; i < colors.size(); ++i) {
-      color_pane pane(colors[i]);
+    for (GLuint i = 0; i < start_colors.size(); ++i) {
+      color_pane pane(start_colors[i]);
       m_panes.push_back(pane);
 
       for (int j = 0; j < 6; ++j) {
-        m_pane_colors.push_back(colors[i]);
+        m_pane_colors.push_back(start_colors[i]);
       }
     }
 
@@ -199,7 +288,8 @@ protected:
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(rgb_program);
-    glViewport(0, m_info.wnd_height * 0.1, m_info.wnd_width, m_info.wnd_height * 0.9);
+    glViewport(
+      0, m_info.wnd_height * 0.1, m_info.wnd_width, m_info.wnd_height * 0.9);
 
     // render pane
     glBindVertexArray(m_pane_vao);
@@ -238,6 +328,7 @@ protected:
     if (m_reading) {
       ss << "input " << input_modes[m_input_mode] << " color : " << m_input;
     } else {
+      // clang-format off
       const vec3 &color = pane.color();
       ss.precision(3);
       ss.setf(std::ios_base::fixed);
@@ -247,7 +338,13 @@ protected:
          << std::setw(3) << static_cast<GLint>(color.g * 255) << " "
          << std::setw(3) << static_cast<GLint>(color.b * 255) << " ";
       ss << "          ";
+      ss << std::setw(2) << std::setfill('0') << std::hex << static_cast<GLint>(color.r * 255) << " "
+         << std::setw(2) << std::setfill('0') << std::hex << static_cast<GLint>(color.g * 255) << " "
+         << std::setw(2) << std::setfill('0') << std::hex << static_cast<GLint>(color.b * 255)
+         << " ";
+      ss << "          ";
       ss << color.r * 2 - 1 << " " << color.g * 2 - 1 << " " << color.b * 2 - 1;
+      // clang-format on
     }
     m_text.print(ss.str(), 5, 10, vec4(1));
 
@@ -280,7 +377,7 @@ protected:
   GLfloat quantity(int mods) {
     GLfloat quantity = 0.01;
     if (mods & GLFW_MOD_CONTROL) quantity = 0.001;
-    //if (mods & GLFW_MOD_ALT) quantity = 0.001;
+    // if (mods & GLFW_MOD_ALT) quantity = 0.001;
     if (mods & GLFW_MOD_SHIFT) quantity *= -1;
     return quantity;
   }
@@ -288,20 +385,12 @@ protected:
   void finishe_reading() {
     app::finishe_reading();
     std::stringstream ss(m_input);
-    vec3 color;
-    if (ss >> color[0] && ss >> color[1] && ss >> color[2]) {
-      color_pane &pane = current_pane();
-      if (m_input_mode == 0) {
-      } else if (m_input_mode == 1) {
-        color /= 255.0f;
-      } else if (m_input_mode == 2) {
-        color = glm::normalize(color);
-        color = color * 0.5f + 0.5f;
-      }
-      pane.set_color(glm::clamp(color, vec3(0), vec3(1)));
 
-      update_pane_color_buffer();
-    }
+    color_pane &pane = current_pane();
+    vec3 color = str_to_color(m_input, m_input_mode);
+
+    pane.set_color(glm::clamp(color, vec3(0), vec3(1)));
+    update_pane_color_buffer();
   }
 
   virtual void glfw_key(
@@ -349,8 +438,8 @@ protected:
             m_help = !m_help;
             break;
           case GLFW_KEY_I:
-            m_input_mode =
-              (m_input_mode + 1) % (sizeof(input_modes) / sizeof(input_modes[0]));
+            m_input_mode = (m_input_mode + 1) %
+                           (sizeof(input_modes) / sizeof(input_modes[0]));
             break;
 
           default:
@@ -389,7 +478,8 @@ protected:
     app::glfw_mouse_move(wnd, x, y);
   }
 
-  virtual void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+  virtual void glfw_mouse_wheel(
+    GLFWwindow *wnd, double xoffset, double yoffset) {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 
@@ -512,7 +602,8 @@ protected:
   void reset_pane_vertex_buffer() {
     glBindVertexArray(m_pane_vao);
 
-    if (glIsBuffer(m_pane_vertex_buffer)) glDeleteBuffers(1, &m_pane_vertex_buffer);
+    if (glIsBuffer(m_pane_vertex_buffer))
+      glDeleteBuffers(1, &m_pane_vertex_buffer);
 
     glGenBuffers(1, &m_pane_vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_pane_vertex_buffer);
@@ -527,7 +618,8 @@ protected:
   void reset_pane_color_buffer() {
     glBindVertexArray(m_pane_vao);
 
-    if (glIsBuffer(m_pane_color_buffer)) glDeleteBuffers(1, &m_pane_color_buffer);
+    if (glIsBuffer(m_pane_color_buffer))
+      glDeleteBuffers(1, &m_pane_color_buffer);
     glGenBuffers(1, &m_pane_color_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_pane_color_buffer);
     glBufferData(GL_ARRAY_BUFFER, m_pane_colors.size() * sizeof(vec3),
@@ -557,6 +649,10 @@ protected:
 }
 
 int main(int argc, char *argv[]) {
+  if (argc >= 2) {
+    zxd::read_start_colors(argv[1]);
+  }
+
   zxd::rgb_app app;
   app.run();
 }
