@@ -121,7 +121,7 @@ void geometry<s0, s1, s2, s3>::buffer_texcoord() {
   glBindBuffer(GL_ARRAY_BUFFER, m_texcoord_buffer);
   glBufferData(GL_ARRAY_BUFFER,
     m_texcoords.size() * sizeof(decltype(m_texcoords[0])),
-    value_ptr(m_texcoords[0]), GL_STATIC_DRAW);
+    &m_texcoords.front(), GL_STATIC_DRAW);
 }
 
 //--------------------------------------------------------------------

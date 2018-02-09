@@ -131,6 +131,12 @@ glm::mat4 compute_window_mat(
 
 glm::mat4 compute_window_mat_i(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
+
+inline GLfloat pi(GLfloat a0, GLfloat d, uint n) {
+  GLfloat m = 1;
+  while (n--) m *= a0 + n * d;  // reverse order of pi
+  return m;
+}
 }
 
 #endif /* GLM_H */

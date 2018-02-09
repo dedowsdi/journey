@@ -16,6 +16,7 @@ set(GLC_SRCS
     src/torus.cpp
     src/xyplane.cpp
     src/disk.cpp
+    src/bezier.cpp
     )
 
 add_library(glc 

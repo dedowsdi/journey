@@ -24,11 +24,11 @@ class app0 : public app {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_FLAT);
 
-    glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 4, &ctrlpoints[0][0]);
+    glMap1f(GL_MAP1_VERTEX_3, 0.0, 2.0, 3, 4, &ctrlpoints[0][0]);
     glEnable(GL_MAP1_VERTEX_3);
 
     // 30 even steps from 0 to 1
-    glMapGrid1f(30, 0, 1);
+    glMapGrid1f(30, 0, 2);
   }
 
   void display(void) {

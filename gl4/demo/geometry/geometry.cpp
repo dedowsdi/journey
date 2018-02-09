@@ -12,10 +12,12 @@
 #include "torus.h"
 #include "xyplane.h"
 #include "disk.h"
+#include "bezier.h"
 
 namespace zxd {
 
 GLuint diffuse_map;
+GLuint diffuse_map1d;
 
 struct blinn_program : public zxd::program {
   // GLint ul_eye;
@@ -38,12 +40,10 @@ struct blinn_program : public zxd::program {
   virtual void attach_shaders() {
     string_vector sv;
     sv.push_back("#version 430 core\n#define WITH_TEX\n");
-    attach(
-      GL_VERTEX_SHADER, sv, "data/shader/blinn.vs.glsl");
+    attach(GL_VERTEX_SHADER, sv, "data/shader/blinn.vs.glsl");
     sv.push_back("#define LIGHT_COUNT 3\n");
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     // uniform_location(&ul_eye, "eye");
@@ -58,9 +58,35 @@ struct blinn_program : public zxd::program {
     al_normal = attrib_location("normal");
     al_texcoord = attrib_location("texcoord");
   };
-};
+} blinn_prg;
 
-blinn_program prg;
+struct texline_program : public zxd::program {
+  // GLint ul_eye;
+  GLint al_vertex;
+  GLint al_texcoord;
+
+  GLint ul_diffuse_map;
+
+  virtual void update_model(const mat4 &_m_mat) {
+    m_mat = _m_mat;
+    mvp_mat = p_mat * v_mat * m_mat;
+
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+  }
+  virtual void attach_shaders() {
+    attach(GL_VERTEX_SHADER, "data/shader/texline.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "data/shader/texline.fs.glsl");
+  }
+  virtual void bind_uniform_locations() {
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+    uniform_location(&ul_diffuse_map, "diffuse_map");
+  }
+
+  virtual void bind_attrib_locations() {
+    al_vertex = attrib_location("vertex");
+    al_texcoord = attrib_location("texcoord");
+  };
+} texline_prg;
 
 class geometry_app : public app {
 protected:
@@ -77,6 +103,7 @@ protected:
   xyplane m_xyplane;
   disk m_disk0;
   disk m_disk1;
+  bezier m_bezier;
 
 public:
   geometry_app() : m_camera_pos(0, -8, 8) {}
@@ -108,39 +135,44 @@ public:
     m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 
     // program
-    prg.init();
-    prg.p_mat =
+    blinn_prg.init();
+    blinn_prg.p_mat =
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 30.0f);
-    prg.v_mat = glm::lookAt(m_camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
-    set_v_mat(&prg.v_mat);
+    blinn_prg.v_mat = glm::lookAt(m_camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
+    set_v_mat(&blinn_prg.v_mat);
 
-    m_light_model.bind_uniform_locations(prg.object, "lm");
+    m_light_model.bind_uniform_locations(blinn_prg.object, "lm");
     for (int i = 0; i < m_lights.size(); ++i) {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      m_lights[i].bind_uniform_locations(prg.object, ss.str());
+      m_lights[i].bind_uniform_locations(blinn_prg.object, ss.str());
     }
-    m_material.bind_uniform_locations(prg.object, "mtl");
+    m_material.bind_uniform_locations(blinn_prg.object, "mtl");
 
     // geometry
     m_sphere.build_mesh();
-    m_sphere.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_sphere.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     m_cuboid.build_mesh();
-    m_cuboid.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_cuboid.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     m_cone.build_mesh();
-    m_cone.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_cone.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     m_cylinder.base(1);
     m_cylinder.top(0.5);
     m_cylinder.build_mesh();
-    m_cylinder.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_cylinder.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     m_torus.rings(32);
     m_torus.sides(32);
     m_torus.build_mesh();
-    m_torus.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_torus.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     m_xyplane.slice(8);
     m_xyplane.width(8);
@@ -148,15 +180,31 @@ public:
     m_xyplane.left(-4);
     m_xyplane.bottom(-4);
     m_xyplane.build_mesh();
-    m_xyplane.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_xyplane.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     m_disk0.build_mesh();
-    m_disk0.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_disk0.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     m_disk1.start(fpi4);
     m_disk1.sweep(fpi2);
     m_disk1.build_mesh();
-    m_disk1.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord);
+    m_disk1.bind(
+      blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
+
+    texline_prg.init();
+    texline_prg.p_mat = blinn_prg.p_mat;
+    texline_prg.v_mat = blinn_prg.v_mat;
+
+    vec3_vector ctrl_points;
+    ctrl_points.push_back(vec3(0));
+    ctrl_points.push_back(vec3(1, 0, 1));
+    ctrl_points.push_back(vec3(-1, 0, 2));
+    ctrl_points.push_back(vec3(0, 0, 3));
+    m_bezier.ctrl_points(ctrl_points);
+    m_bezier.build_mesh(-1, 1);
+    m_bezier.bind(texline_prg.al_vertex, -1, texline_prg.al_texcoord);
 
     // texture
     GLint image_width = 64;
@@ -172,6 +220,16 @@ public:
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0,
       GL_RGBA, GL_UNSIGNED_BYTE, &image.front());
+
+    glGenTextures(1, &diffuse_map1d);
+    glBindTexture(GL_TEXTURE_1D, diffuse_map1d);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, image_width,  0,
+      GL_RGBA, GL_UNSIGNED_BYTE, &image.front());
   }
 
   virtual void update() {}
@@ -181,51 +239,60 @@ public:
 
     glBindTexture(GL_TEXTURE_2D, diffuse_map);
 
-    glUseProgram(prg);
+    glUseProgram(blinn_prg);
 
-    glUniform1i(prg.ul_diffuse_map, 0);
+    glUniform1i(blinn_prg.ul_diffuse_map, 0);
 
-    prg.v_mat_it = glm::inverse(glm::transpose(prg.v_mat));
+    blinn_prg.v_mat_it = glm::inverse(glm::transpose(blinn_prg.v_mat));
 
     m_material.update_uniforms();
     m_light_model.update_uniforms();
     for (int i = 0; i < m_lights.size(); ++i) {
-      m_lights[i].update_uniforms(prg.v_mat);
+      m_lights[i].update_uniforms(blinn_prg.v_mat);
     }
 
     mat4 model;
 
     model = glm::translate(glm::vec3(0, 0, -2));
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_xyplane.draw();
 
     model = glm::translate(glm::vec3(2, -2, -1));
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_disk0.draw();
 
     model = glm::translate(glm::vec3(4, -2, -1));
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_disk1.draw();
 
     model = mat4(1.0f);
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_sphere.draw();
 
     model = glm::translate(glm::vec3(2, 0, 0));
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_cuboid.draw();
 
     model = glm::translate(glm::vec3(-2, 0, 0));
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_cone.draw();
 
     model = glm::translate(glm::vec3(0, 2, 0));
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_cylinder.draw();
 
     model = glm::translate(glm::vec3(0, -2.5, 0));
-    prg.update_model(model);
+    blinn_prg.update_model(model);
     m_torus.draw();
+
+    glBindTexture(GL_TEXTURE_1D, diffuse_map1d);
+    texline_prg.v_mat = blinn_prg.v_mat;
+    texline_prg.use();
+    glUniform1i(texline_prg.ul_diffuse_map, 0);
+
+    model = glm::translate(glm::vec3(0, -2.5, 0));
+    texline_prg.update_model(model);
+    m_bezier.draw();
 
     GLint cull_face;
     glGetIntegerv(GL_CULL_FACE_MODE, &cull_face);
