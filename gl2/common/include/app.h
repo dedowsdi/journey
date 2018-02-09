@@ -3,6 +3,9 @@
  */
 #include "glad/glad.h"
 #include "glad/glad_glx.h"
+#ifndef GL_VERSION_3_0
+#include <GL/glu.h>
+#endif
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <string>

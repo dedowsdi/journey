@@ -1,6 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 #include "glad/glad.h"
+#ifndef GL_VERSION_3_0
+#include <GL/glu.h>
+#endif
 #include <string>
 #include <iterator>
 #include "glm.h"

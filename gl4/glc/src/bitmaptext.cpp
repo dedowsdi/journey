@@ -1,4 +1,4 @@
-#include "bitmap_text.h"
+#include "bitmaptext.h"
 #include "texutil.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H

@@ -1,4 +1,4 @@
-#include "glEnumString.h"
+#include "glenumstring.h"
 #include <GL/glu.h>
 #include <cstring>
 

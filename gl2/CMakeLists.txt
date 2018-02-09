@@ -42,7 +42,7 @@ include_directories(
     ${FREETYPE_INCLUDE_DIR_ft2build}
     ${FIP_INCLUDE_DIR}
     common/include
-    glc/include
+    ../gl4/glc/include
     gl21/include
     )
 
