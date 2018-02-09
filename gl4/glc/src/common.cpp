@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "glm.h"
-#include "glEnumString.cpp"
+#include "glenumstring.h"
 
 using namespace glm;
 

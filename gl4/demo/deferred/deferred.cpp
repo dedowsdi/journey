@@ -16,7 +16,7 @@
  */
 
 #include "app.h"
-#include "bitmap_text.h"
+#include "bitmaptext.h"
 #include <sstream>
 #include "common.h"
 #include "sphere.h"

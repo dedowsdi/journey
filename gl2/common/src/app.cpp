@@ -1,7 +1,7 @@
 #include "app.h"
 #include <stdexcept>
 #include <iostream>
-#include "glEnumString.h"
+#include "glenumstring.h"
 
 namespace zxd {
 

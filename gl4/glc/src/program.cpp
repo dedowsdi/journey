@@ -1,7 +1,7 @@
 #include "program.h"
 #include <algorithm>
 #include <functional>
-#include "glEnumString.h"
+#include "glenumstring.h"
 #include "common.h"
 #include <sstream>
 

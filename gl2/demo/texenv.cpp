@@ -4,7 +4,7 @@
  *
  */
 #include "app.h"
-#include "glEnumString.h"
+#include "glenumstring.h"
 
 namespace zxd {
 

@@ -1,10 +1,10 @@
 #include "app.h"
-#include "bitmap_text.h"
+#include "bitmaptext.h"
 #include "sphere.h"
 #include "common.h"
 #include "light.h"
 #include <sstream>
-#include "glEnumString.h"
+#include "glenumstring.h"
 #include "cuboid.h"
 #include "cone.h"
 #include "stateutil.h"

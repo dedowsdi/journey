@@ -4,7 +4,7 @@
 #include <sstream>
 #include "quad.h"
 #include "texutil.h"
-#include "bitmap_text.h"
+#include "bitmaptext.h"
 #include <fstream>
 #include <iomanip>
 #include "stringutil.h"

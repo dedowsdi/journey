@@ -1,7 +1,7 @@
 set(GLC_SRCS 
-    src/bitmap_text.cpp
+    src/bitmaptext.cpp
     src/common.cpp
-    src/glEnumString.cpp
+    src/glenumstring.cpp
     src/glm.cpp
     src/light.cpp
     src/program.cpp

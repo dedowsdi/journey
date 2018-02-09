@@ -13,7 +13,7 @@
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
 #include "common.h"
-#include "glEnumString.h"
+#include "glenumstring.h"
 #include "glm.h"
 
 #define WINDOWS_WIDTH 512
