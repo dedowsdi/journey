@@ -11,7 +11,7 @@ namespace zxd {
 // draw single 2d quad
 void draw_quad(GLuint tex_index = 0);
 
-class quad : public geometry {
+class quad : public geometry2323 {
 public:
   quad(const glm::vec3& half_diag) {}
   quad(GLfloat size = 1) {}

@@ -25,10 +25,10 @@ void quad::build_vertex() {
   m_vertices.clear();
   m_vertices.reserve(4);
 
-  m_vertices.push_back(glm::vec3(-1.0f, 1.0f, 0));
-  m_vertices.push_back(glm::vec3(-1.0f, -1.0f, 0));
-  m_vertices.push_back(glm::vec3(1.0f, 1.0f, 0));
-  m_vertices.push_back(glm::vec3(1.0f, -1.0f, 0));
+  m_vertices.push_back(glm::vec2(-1.0f, 1.0f));
+  m_vertices.push_back(glm::vec2(-1.0f, -1.0f));
+  m_vertices.push_back(glm::vec2(1.0f, 1.0f));
+  m_vertices.push_back(glm::vec2(1.0f, -1.0f));
 }
 
 //--------------------------------------------------------------------

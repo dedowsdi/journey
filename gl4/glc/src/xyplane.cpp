@@ -22,8 +22,8 @@ void xyplane::build_vertex() {
     for (int j = 0; j <= m_slice; ++j) {  // col
       GLfloat x = m_left + xstep * j;
 
-      vec3 v0(x, y0, 0);
-      vec3 v1(x, y1, 0);
+      vec2 v0(x, y0);
+      vec2 v1(x, y1);
       m_vertices.push_back(v0);
       m_vertices.push_back(v1);
     }

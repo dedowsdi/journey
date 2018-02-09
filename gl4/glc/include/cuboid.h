@@ -7,7 +7,7 @@
 
 namespace zxd {
 
-class cuboid : public geometry {
+class cuboid : public geometry3323 {
 protected:
   glm::vec3 m_half_diag;
 

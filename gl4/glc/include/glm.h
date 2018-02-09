@@ -49,6 +49,7 @@ static const glm::vec3 nza(0, 0, -1);
 typedef std::vector<mat2> mat2_vector;
 typedef std::vector<mat3> mat3_vector;
 typedef std::vector<mat4> mat4_vector;
+typedef std::vector<GLfloat> float_vector;
 typedef std::vector<vec2> vec2_vector;
 typedef std::vector<vec3> vec3_vector;
 typedef std::vector<vec4> vec4_vector;

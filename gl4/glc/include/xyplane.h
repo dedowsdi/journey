@@ -6,7 +6,7 @@
 
 namespace zxd {
 
-class xyplane : public geometry {
+class xyplane : public geometry2323 {
 protected:
   GLuint m_slice;
   GLfloat m_width;

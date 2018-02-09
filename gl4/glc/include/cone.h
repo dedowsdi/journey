@@ -9,7 +9,7 @@ namespace zxd {
 /*
  * build sphere with two triangle fans and a bunch of triangle strips
  */
-class cone : public geometry {
+class cone : public geometry3323 {
 protected:
   GLfloat m_radius;
   GLfloat m_height;

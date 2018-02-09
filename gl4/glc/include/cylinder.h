@@ -9,7 +9,7 @@ namespace zxd {
 /*
  * build cylinder with two triangle fans and a bunch of triangle strips
  */
-class cylinder : public geometry {
+class cylinder : public geometry3323 {
 protected:
   GLfloat m_base;
   GLfloat m_top;

@@ -9,7 +9,7 @@ namespace zxd {
 /*
  * just like glu disk
  */
-class disk : public geometry {
+class disk : public geometry3323 {
 protected:
   GLfloat m_inner;
   GLfloat m_outer;
