@@ -485,10 +485,12 @@ protected:
 
   // select panes
   void left() {
-    if (m_current_pane_index > 0) --m_current_pane_index;
+    if (m_current_pane_index % num_cols() != 0) --m_current_pane_index;
   }
   void right() {
-    if (m_current_pane_index + 1 < m_panes.size()) ++m_current_pane_index;
+    if (m_current_pane_index % num_cols() != num_cols() - 1 &&
+        m_current_pane_index < m_panes.size() - 1)
+      ++m_current_pane_index;
   }
   void down() {
     if (m_current_pane_index >= num_cols()) m_current_pane_index -= num_cols();
