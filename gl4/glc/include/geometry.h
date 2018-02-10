@@ -170,6 +170,7 @@ void geometry<s0, s1, s2, s3>::bind_tangent(GLuint index) {
 typedef geometry<3, 3, 2, 3> geometry3323;
 typedef geometry<2, 3, 2, 3> geometry2323;
 typedef geometry<3, 3, 1, 3> geometry3313;
+typedef geometry<4, 3, 1, 3> geometry4313;
 
 }
 

@@ -13,6 +13,7 @@
 #include "xyplane.h"
 #include "disk.h"
 #include "bezier.h"
+#include "nurb.h"
 
 namespace zxd {
 
@@ -104,6 +105,7 @@ protected:
   disk m_disk0;
   disk m_disk1;
   bezier m_bezier;
+  nurb m_nurb;
 
 public:
   geometry_app() : m_camera_pos(0, -8, 8) {}
@@ -197,14 +199,30 @@ public:
     texline_prg.p_mat = blinn_prg.p_mat;
     texline_prg.v_mat = blinn_prg.v_mat;
 
-    vec3_vector ctrl_points;
-    ctrl_points.push_back(vec3(0));
-    ctrl_points.push_back(vec3(1, 0, 1));
-    ctrl_points.push_back(vec3(-1, 0, 2));
-    ctrl_points.push_back(vec3(0, 0, 3));
-    m_bezier.ctrl_points(ctrl_points);
-    m_bezier.build_mesh(-1, 1);
-    m_bezier.bind(texline_prg.al_vertex, -1, texline_prg.al_texcoord);
+    {
+      vec3_vector ctrl_points;
+      ctrl_points.push_back(vec3(0));
+      ctrl_points.push_back(vec3(1, 0, 1));
+      ctrl_points.push_back(vec3(-1, 0, 2));
+      ctrl_points.push_back(vec3(0, 0, 3));
+      m_bezier.ctrl_points(ctrl_points);
+      m_bezier.build_mesh(-1, 1);
+      m_bezier.bind(texline_prg.al_vertex, -1, texline_prg.al_texcoord);
+    }
+
+    {
+      vec4_vector ctrl_points;
+      ctrl_points.push_back(vec4(0, 0, 0, 1));
+      ctrl_points.push_back(vec4(1, 0, 1, 1));
+      ctrl_points.push_back(vec4(-1, 0, 2, 1));
+      ctrl_points.push_back(vec4(0, 0, 3, 1));
+      m_nurb.degree(3);
+      m_nurb.ctrl_points(ctrl_points);
+      m_nurb.uniform_knots();
+
+      m_nurb.build_mesh(-1, 1);
+      m_nurb.bind(texline_prg.al_vertex, -1, texline_prg.al_texcoord);
+    }
 
     // texture
     GLint image_width = 64;
@@ -228,8 +246,8 @@ public:
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, image_width,  0,
-      GL_RGBA, GL_UNSIGNED_BYTE, &image.front());
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, image_width, 0, GL_RGBA,
+      GL_UNSIGNED_BYTE, &image.front());
   }
 
   virtual void update() {}
@@ -293,6 +311,10 @@ public:
     model = glm::translate(glm::vec3(0, -2.5, 0));
     texline_prg.update_model(model);
     m_bezier.draw();
+
+    model = glm::translate(glm::vec3(2, -2, -1));
+    texline_prg.update_model(model);
+    m_nurb.draw();
 
     GLint cull_face;
     glGetIntegerv(GL_CULL_FACE_MODE, &cull_face);
