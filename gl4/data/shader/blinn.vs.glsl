@@ -19,7 +19,7 @@ out vs_out{
 void main(void)
 {
   vo.v_normal = mat3(mv_mat_it) * normal;
-  vo.v_vertex = (mv_mat * vertex).xyz;
+  vo.v_vertex = (mv_mat * (vertex / vertex.w)).xyz;
 #ifdef WITH_TEX
   vo.texcoord = texcoord;
 #endif

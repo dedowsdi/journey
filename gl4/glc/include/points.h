@@ -34,12 +34,20 @@ void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat) {
   glVertexAttribPointer(
     prg.al_vertex, tvec::components, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
   glEnableVertexAttribArray(prg.al_vertex);
-  
+
   prg.use();
   prg.udpate_uniforms(mvp_mat);
   glDrawArrays(GL_POINTS, 0, points.size());
 
-  //QUES : should i release vao and vbo?
+  // QUES : should i release vao and vbo?
+}
+
+template <typename tvec>
+void draw_points(
+  const std::vector<std::vector<tvec>>& points, const mat4& mvp_mat) {
+  for (auto iter = points.begin(); iter != points.end(); ++iter) {
+    draw_points(*iter, mvp_mat);
+  }
 }
 }
 

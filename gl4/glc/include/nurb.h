@@ -17,6 +17,8 @@ protected:
   GLfloat m_end;
 
 public:
+  nurb(v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree)
+      : m_ctrl_points(cbeg, cend), m_knots(kbeg, kend), m_degree(degree) {}
   nurb() : m_partitions(20), m_begin(0.0f), m_end(1.0f) {}
   ~nurb() {}
 
@@ -31,6 +33,8 @@ public:
 
   // get point by De Boor's algorithm
   vec4 get(GLfloat u);
+  vec3 tangent(GLfloat u);
+  nurb derivative();
 
   // compute pointer directly by b-spline formula
   vec4 get_by_coefs(GLfloat u);
@@ -62,16 +66,25 @@ public:
   void ctrl_points(const vec4_vector& v) { m_ctrl_points = v; }
 
   GLfloat begin() const { return m_begin; }
-  void begin(GLfloat v){ m_begin = v; }
+  void begin(GLfloat v) { m_begin = v; }
 
   GLfloat end() const { return m_end; }
-  void end(GLfloat v){ m_end = v; }
+  void end(GLfloat v) { m_end = v; }
 
   const float_vector& knots() const { return m_knots; }
   void knots(const float_vector& v) { m_knots = v; }
-  GLfloat knog(GLuint index) const { return m_knots.at(index); }
+  void knots(fv_ci kbeg, fv_ci kend) { m_knots.assign(kbeg, kend); }
+  GLfloat knot(GLuint index) const { return m_knots.at(index); }
   // created clamped uniform knots
   void uniform_knots();
+
+  static vec4 get(
+    v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u);
+  static vec3 tangent(
+    v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u);
+
+  static float_vector coeffients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u);
+  static GLuint knot_span(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u);
 
 protected:
   float_vector coefficents(GLfloat u);

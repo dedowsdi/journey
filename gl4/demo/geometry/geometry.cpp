@@ -16,6 +16,7 @@
 #include "nurb.h"
 #include "beziersurface.h"
 #include "points.h"
+#include "nurbsurface.h"
 
 namespace zxd {
 
@@ -72,6 +73,7 @@ protected:
   bezier m_bezier;
   nurb m_nurb;
   bezier_surface m_bezier_surface;
+  nurb_surface m_nurb_surface;
 
 public:
   geometry_app() : m_camera_pos(0, -8, 8), m_render_normal(GL_FALSE) {}
@@ -159,8 +161,25 @@ public:
       }
 
       m_bezier_surface.ctrl_points(vv);
-
       m_bezier_surface.build_mesh();
+    }
+
+    {
+      vec4_vector2 vv;
+      for (int i = 0; i < 5; ++i) {
+        vec4_vector v;
+        for (int j = 0; j < 5; ++j) {
+          v.push_back(
+            vec4(-1 + i * 0.5f, -1 + j * 0.5f, glm::linearRand(0.0f, 1.0f), 1));
+        }
+        vv.push_back(v);
+      }
+
+      m_nurb_surface.ctrl_points(vv);
+      m_nurb_surface.uniform_knots();
+      m_nurb_surface.udegree(3);
+      m_nurb_surface.vdegree(3);
+      m_nurb_surface.build_mesh();
     }
 
     {
@@ -176,8 +195,8 @@ public:
     {
       vec4_vector ctrl_points;
       ctrl_points.push_back(vec4(0, 0, 0, 1));
-      ctrl_points.push_back(vec4(1, 0, 1, 1));
-      ctrl_points.push_back(vec4(-1, 0, 2, 1));
+      ctrl_points.push_back(vec4(5, 0, 5, 5));
+      ctrl_points.push_back(vec4(-5, 0, 10, 5));
       ctrl_points.push_back(vec4(0, 0, 3, 1));
 
       m_nurb.degree(3);
@@ -261,11 +280,13 @@ public:
     render_blinn(m_bezier_surface, vec3(-3, -3, 0));
     {
       glPointSize(3);
-      const vec3_vector2 &ctrl_points = m_bezier_surface.ctrl_points();
-      for (int i = 0; i < ctrl_points.size(); ++i) {
-        draw_points(ctrl_points[i], blinn_prg.mvp_mat);
-      }
-      // draw_points(m_bezier_surface.u_ctrl_points(0), blinn_prg.mvp_mat);
+      draw_points(m_bezier_surface.ctrl_points(), blinn_prg.mvp_mat);
+      glPointSize(1);
+    }
+    render_blinn(m_nurb_surface, vec3(3, -3, 0));
+    {
+      glPointSize(3);
+      draw_points(m_nurb_surface.ctrl_points(), blinn_prg.mvp_mat);
       glPointSize(1);
     }
 

@@ -54,9 +54,19 @@ typedef std::vector<vec2> vec2_vector;
 typedef std::vector<vec3> vec3_vector;
 typedef std::vector<vec4> vec4_vector;
 
+typedef std::vector<std::vector<GLfloat>> float_vector2;
 typedef std::vector<std::vector<vec2>> vec2_vector2;
 typedef std::vector<std::vector<vec3>> vec3_vector2;
 typedef std::vector<std::vector<vec4>> vec4_vector2;
+
+typedef float_vector::iterator fv_i;
+typedef vec2_vector::iterator v2v_i;
+typedef vec3_vector::iterator v3v_i;
+typedef vec4_vector::iterator v4v_i;
+typedef float_vector::const_iterator fv_ci;
+typedef vec2_vector::const_iterator v2v_ci;
+typedef vec3_vector::const_iterator v3v_ci;
+typedef vec4_vector::const_iterator v4v_ci;
 
 // follow convention of glm, always return
 

@@ -21,6 +21,7 @@ set(GLC_SRCS
     src/bezier.cpp
     src/nurb.cpp
     src/beziersurface.cpp
+    src/nurbsurface.cpp
     )
 
 add_library(glc 

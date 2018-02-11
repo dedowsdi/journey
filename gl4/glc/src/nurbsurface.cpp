@@ -1,27 +1,29 @@
-#include "beziersurface.h"
-#include "bezier.h"
+#include "nurbsurface.h"
+#include "nurb.h"
 
 namespace zxd {
 
 //--------------------------------------------------------------------
-void bezier_surface::build_vertex() {
+void nurb_surface::build_vertex() {
   m_vertices.clear();
   m_vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
 
-  vec3_vector2 q2 = u_interim2();
+  vec4_vector2 q2 = u_interim2();
 
   // create triangle strip row by row
   // GLfloat ustep = (m_uend - m_ubegin) / m_upartition;
   GLfloat vstep = (m_vend - m_vbegin) / m_vpartition;
 
   for (GLuint i = 0; i < m_upartition; ++i) {
-    const vec3_vector& q0 = q2[i];
-    const vec3_vector& q1 = q2[i + 1];
+    const vec4_vector& q0 = q2[i];
+    const vec4_vector& q1 = q2[i + 1];
 
     for (int j = 0; j <= m_vpartition; ++j) {
       GLfloat v = m_vbegin + vstep * j;
-      vec3 v0 = bezier::get(q0.begin(), q0.end(), v);
-      vec3 v1 = bezier::get(q1.begin(), q1.end(), v);
+      vec4 v0 = nurb::get(
+        q0.begin(), q0.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
+      vec4 v1 = nurb::get(
+        q1.begin(), q1.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
       m_vertices.push_back(v1);
       m_vertices.push_back(v0);
     }
@@ -29,7 +31,7 @@ void bezier_surface::build_vertex() {
 }
 
 //--------------------------------------------------------------------
-void bezier_surface::build_normal() {
+void nurb_surface::build_normal() {
   m_normals.clear();
   m_normals.reserve(m_vertices.size());
 
@@ -37,23 +39,27 @@ void bezier_surface::build_normal() {
   GLfloat ustep = (m_uend - m_ubegin) / m_upartition;
   GLfloat vstep = (m_vend - m_vbegin) / m_vpartition;
 
-  vec3_vector2 uq2 = u_interim2();
-  vec3_vector2 vq2 = v_interim2();
+  vec4_vector2 uq2 = u_interim2();
+  vec4_vector2 vq2 = v_interim2();
 
   for (GLuint i = 0; i < m_upartition; ++i) {
     GLfloat u0 = m_ubegin + ustep * i;
     GLfloat u1 = u0 + ustep;
-    const vec3_vector& uq0 = uq2[i];
-    const vec3_vector& uq1 = uq2[i + 1];
+    const vec4_vector& uq0 = uq2[i];
+    const vec4_vector& uq1 = uq2[i + 1];
 
     for (int j = 0; j <= m_vpartition; ++j) {
       GLfloat v = m_vbegin + vstep * j;
-      const vec3_vector& vq = vq2[j];
+      const vec4_vector& vq = vq2[j];
 
-      vec3 right0 = bezier::tangent(uq0.begin(), uq0.end(), v);
-      vec3 right1 = bezier::tangent(uq1.begin(), uq1.end(), v);
-      vec3 front0 = bezier::tangent(vq.begin(), vq.end(), u0);
-      vec3 front1 = bezier::tangent(vq.begin(), vq.end(), u1);
+      vec3 right0 = nurb::tangent(
+        uq0.begin(), uq0.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
+      vec3 right1 = nurb::tangent(
+        uq1.begin(), uq1.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
+      vec3 front0 = nurb::tangent(
+        vq.begin(), vq.end(), m_uknots.begin(), m_uknots.end(), m_udegree, u0);
+      vec3 front1 = nurb::tangent(
+        vq.begin(), vq.end(), m_uknots.begin(), m_uknots.end(), m_udegree, u1);
 
       m_normals.push_back(normalize(cross(right1, front1)));
       m_normals.push_back(normalize(cross(right0, front0)));
@@ -62,7 +68,8 @@ void bezier_surface::build_normal() {
 }
 
 //--------------------------------------------------------------------
-void bezier_surface::build_texcoord() {
+void nurb_surface::build_texcoord() {
+  // QUES : even distribute ?.
   m_texcoords.clear();
   m_texcoords.reserve(m_vertices.size());
 
@@ -78,7 +85,7 @@ void bezier_surface::build_texcoord() {
 }
 
 //--------------------------------------------------------------------
-void bezier_surface::draw(GLuint primcount /* = 1*/) {
+void nurb_surface::draw(GLuint primcount /* = 1*/) {
   bind_vertex_array_object();
   GLuint strip_size = (m_vpartition + 1) * 2;
   for (GLuint i = 0; i < m_upartition; ++i) {
@@ -87,40 +94,43 @@ void bezier_surface::draw(GLuint primcount /* = 1*/) {
 }
 
 //--------------------------------------------------------------------
-vec3 bezier_surface::get(GLfloat u, GLfloat v) {
-  vec3_vector q = u_interim(u);
-  return bezier::get(q.begin(), q.end(), v);
+vec4 nurb_surface::get(GLfloat u, GLfloat v) {
+  vec4_vector q = u_interim(u);
+  return nurb::get(
+    q.begin(), q.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
 }
 
 //--------------------------------------------------------------------
-vec3_vector bezier_surface::u_interim(GLfloat u) {
-  vec3_vector q;
+vec4_vector nurb_surface::u_interim(GLfloat u) {
+  vec4_vector q;
   q.reserve(uorder());
 
   for (int i = 0; i < vorder(); ++i) {
-    const vec3_vector& ctrl_points = col(i);
-    q.push_back(bezier::get(ctrl_points.begin(), ctrl_points.end(), u));
+    const vec4_vector& ctrl_points = col(i);
+    q.push_back(nurb::get(ctrl_points.begin(), ctrl_points.end(),
+      m_uknots.begin(), m_uknots.end(), m_udegree, u));
   }
 
   return q;
 }
 
 //--------------------------------------------------------------------
-vec3_vector bezier_surface::v_interim(GLfloat v) {
-  vec3_vector q;
+vec4_vector nurb_surface::v_interim(GLfloat v) {
+  vec4_vector q;
   q.reserve(vorder());
 
   for (int i = 0; i < uorder(); ++i) {
-    vec3_vector ctrl_points = row(i);
-    q.push_back(bezier::get(ctrl_points.begin(), ctrl_points.end(), v));
+    vec4_vector ctrl_points = row(i);
+    q.push_back(nurb::get(ctrl_points.begin(), ctrl_points.end(),
+      m_vknots.begin(), m_vknots.end(), m_vdegree, v));
   }
 
   return q;
 }
 
 //--------------------------------------------------------------------
-vec3_vector2 bezier_surface::u_interim2() {
-  vec3_vector2 vv;
+vec4_vector2 nurb_surface::u_interim2() {
+  vec4_vector2 vv;
   GLfloat ustep = (m_uend - m_ubegin) / m_upartition;
   for (int i = 0; i <= m_upartition; ++i) {
     GLfloat u = m_ubegin + ustep * i;
@@ -130,8 +140,8 @@ vec3_vector2 bezier_surface::u_interim2() {
 }
 
 //--------------------------------------------------------------------
-vec3_vector2 bezier_surface::v_interim2() {
-  vec3_vector2 vv;
+vec4_vector2 nurb_surface::v_interim2() {
+  vec4_vector2 vv;
   GLfloat vstep = (m_vend - m_vbegin) / m_vpartition;
   for (int i = 0; i <= m_vpartition; ++i) {
     GLfloat v = m_vbegin + vstep * i;
@@ -141,11 +151,11 @@ vec3_vector2 bezier_surface::v_interim2() {
 }
 
 //--------------------------------------------------------------------
-const vec3_vector& bezier_surface::col(GLuint i) { return m_ctrl_points[i]; }
+const vec4_vector& nurb_surface::col(GLuint i) { return m_ctrl_points[i]; }
 
 //--------------------------------------------------------------------
-vec3_vector bezier_surface::row(GLuint i) {
-  vec3_vector v;
+vec4_vector nurb_surface::row(GLuint i) {
+  vec4_vector v;
   for (int j = 0; j < m_ctrl_points.size(); ++j) {
     v.push_back(m_ctrl_points[j][i]);
   }
@@ -153,10 +163,38 @@ vec3_vector bezier_surface::row(GLuint i) {
 }
 
 //--------------------------------------------------------------------
-GLuint bezier_surface::uorder() { return m_ctrl_points.size(); }
+void nurb_surface::uniform_knots() {
+  uniform_uknots();
+  uniform_vknots();
+}
 
 //--------------------------------------------------------------------
-GLuint bezier_surface::vorder() {
-  return m_ctrl_points.empty() ?: m_ctrl_points.front().size();
+void nurb_surface::uniform_uknots() {
+  GLuint m = un() + up() + 1;
+
+  m_uknots.clear();
+  m_uknots.reserve(m + 1);
+  GLuint s = up() + 1;
+  GLint c = m + 1 - 2 * s;
+
+  for (GLuint i = 0; i < s; ++i) m_uknots.push_back(0);
+  for (GLuint i = 0; i < c; ++i)
+    m_uknots.push_back(static_cast<GLfloat>((i + 1)) / (c + 1));
+  for (GLuint i = 0; i < s; ++i) m_uknots.push_back(1);
+}
+
+//--------------------------------------------------------------------
+void nurb_surface::uniform_vknots() {
+  GLuint m = vn() + vp() + 1;
+
+  m_vknots.clear();
+  m_vknots.reserve(m + 1);
+  GLuint s = vp() + 1;
+  GLint c = m + 1 - 2 * s;
+
+  for (GLuint i = 0; i < s; ++i) m_vknots.push_back(0);
+  for (GLuint i = 0; i < c; ++i)
+    m_vknots.push_back(static_cast<GLfloat>((i + 1)) / (c + 1));
+  for (GLuint i = 0; i < s; ++i) m_vknots.push_back(1);
 }
 }
