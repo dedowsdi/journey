@@ -24,7 +24,7 @@ public:
   virtual void build_texcoord();
   virtual void draw(GLuint primcount = 1);
 
-  unsigned int getDegree() { return n(); }
+  unsigned int degree() { return n(); }
   inline unsigned int n() { return m_ctrl_points.size() - 1; }
 
   // get point at t
@@ -45,15 +45,6 @@ public:
   // subdivide according to current point
   void subdivide(GLfloat t, bezier& lc, bezier& rc);
 
-  static std::vector<vec3_vector> iterate_all(
-    vec3_vector& ctrl_points, float t);
-
-  // De Casteljau's algorithm
-  static vec3_vector iterate(vec3_vector& ctrl_points, float t);
-
-  static vec3 get(
-    vec3_vector::iterator beg, vec3_vector::iterator end, GLfloat t);
-
   unsigned int partitions() const { return m_partitions; }
   void partitions(unsigned int v) { m_partitions = v; }
 
@@ -65,6 +56,21 @@ public:
 
   const vec3_vector& ctrl_points() { return m_ctrl_points; }
   void ctrl_points(const vec3_vector& v) { m_ctrl_points = v; }
+
+  static vec3_vector2 iterate_all(vec3_vector& ctrl_points, float t);
+  static vec3_vector2 iterate_all(
+    vec3_vector::const_iterator beg, vec3_vector::const_iterator end, float t);
+
+  // De Casteljau's algorithm
+  static vec3_vector iterate(vec3_vector& ctrl_points, float t);
+  static vec3_vector iterate(
+    vec3_vector::const_iterator beg, vec3_vector::const_iterator end, float t);
+
+  static vec3 get(vec3_vector::const_iterator beg,
+    vec3_vector::const_iterator end, GLfloat t);
+
+  static vec3 tangent(vec3_vector::const_iterator beg,
+    vec3_vector::const_iterator end, GLfloat t);
 
 private:
   // special function used to derivative

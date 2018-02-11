@@ -112,6 +112,11 @@ bezier bezier::derivative(GLuint level /* = 1*/) {
 }
 
 //--------------------------------------------------------------------
+vec3 bezier::tangent(GLfloat t) {
+  return tangent(m_ctrl_points.begin(), m_ctrl_points.end(), t);
+}
+
+//--------------------------------------------------------------------
 void bezier::subdivide(GLfloat t, bezier& lc, bezier& rc) {
   vec3_vector lp = lc.ctrl_points();
   vec3_vector rp = rc.ctrl_points();
@@ -127,7 +132,7 @@ void bezier::subdivide(GLfloat t, bezier& lc, bezier& rc) {
   //}
 
   // get all iterations is faster than use get one by one
-  std::vector<vec3_vector> vv = iterate_all(m_ctrl_points, t);
+  vec3_vector2 vv = iterate_all(m_ctrl_points, t);
   for (uint i = 0; i < lp.capacity(); ++i) {
     lp.push_back(vv[i].at(0));
     rp.push_back(vv[i].at(n - i));
@@ -135,11 +140,16 @@ void bezier::subdivide(GLfloat t, bezier& lc, bezier& rc) {
 }
 
 //--------------------------------------------------------------------
-std::vector<vec3_vector> bezier::iterate_all(
-  vec3_vector& ctrl_points, float t) {
-  std::vector<vec3_vector> vv;
+vec3_vector2 bezier::iterate_all(vec3_vector& ctrl_points, float t) {
+  return iterate_all(ctrl_points.begin(), ctrl_points.end(), t);
+}
 
-  vec3_vector va = ctrl_points;
+//--------------------------------------------------------------------
+vec3_vector2 bezier::iterate_all(
+  vec3_vector::const_iterator beg, vec3_vector::const_iterator end, float t) {
+  vec3_vector2 vv;
+
+  vec3_vector va(beg, end);
   vv.push_back(va);
   while (va.size() > 1) {
     va = iterate(va, t);
@@ -150,30 +160,40 @@ std::vector<vec3_vector> bezier::iterate_all(
 
 //--------------------------------------------------------------------
 vec3_vector bezier::iterate(vec3_vector& ctrl_points, float t) {
+  return iterate(ctrl_points.begin(), ctrl_points.end(), t);
+}
+
+//--------------------------------------------------------------------
+vec3_vector bezier::iterate(
+  vec3_vector::const_iterator beg, vec3_vector::const_iterator end, float t) {
   vec3_vector vertices;
 
-  if (ctrl_points.empty()) {
-    std::cerr << "not enough control points : " << ctrl_points.size()
-              << std::endl;
+  if (beg == end) {
+    std::cerr << "not enough control points : " << std::endl;
     return vertices;
   }
 
-  if (ctrl_points.size() == 1) {
-    vertices.push_back(*ctrl_points.begin());
+  if (std::distance(beg, end) == 1) {
+    vertices.push_back(*beg);
     return vertices;
   }
+
+  GLuint order = std::distance(beg, end);
 
   t = glm::clamp(t, 0.0f, 1.0f);
-  vertices.reserve(ctrl_points.size() - 1);
-  for (unsigned int i = 0; i < vertices.capacity(); ++i) {
-    vertices.push_back(ctrl_points.at(i) * (1 - t) + ctrl_points.at(i + 1) * t);
+  vertices.reserve(order - 1);
+  vec3_vector::const_iterator end_minus1 = end - 1;
+
+  for (vec3_vector::const_iterator iter = beg; iter != end_minus1; ++iter) {
+    vertices.push_back(*iter * (1 - t) + *(iter + 1) * t);
   }
+
   return vertices;
 }
 
 //--------------------------------------------------------------------
 vec3 bezier::get(
-  vec3_vector::iterator beg, vec3_vector::iterator end, GLfloat t) {
+  vec3_vector::const_iterator beg, vec3_vector::const_iterator end, GLfloat t) {
   if (beg == end) return vec3(0);
 
   t = std::max(std::min(t, 1.0f), 0.0f);
@@ -197,6 +217,16 @@ vec3 bezier::get(
   }
 
   return points.front();
+}
+
+//--------------------------------------------------------------------
+vec3 bezier::tangent(
+  vec3_vector::const_iterator beg, vec3_vector::const_iterator end, GLfloat t) {
+  vec3_vector2 vv = iterate_all(beg, end, t);
+  GLuint s = vv.size();
+
+  vec3 v = vv[s - 2][1] - vv[s - 2][0];
+  return glm::normalize(v);
 }
 
 //--------------------------------------------------------------------

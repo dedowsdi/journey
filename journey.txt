@@ -679,7 +679,7 @@ linux:
     sudo dpkg-reconfigure console-setup
 
 -----------
-2018.02.10:
+2018.02.09:
 
 linux:
   The splash screen is the picture that you can see while Linux is booting.
@@ -707,3 +707,14 @@ linux:
 
   get max color in current terminal:
     tput colors   # only 8 for tty, 256 for gnome terminal
+
+
+-----------
+2018.02.10:
+
+c++:
+  Internal linkage refers to everything only in scope of a translation unit.
+
+  External linkage refers to things that exist beyond a particular translation
+  unit. In other words, accessible through the whole program, which is the
+  combination of all translation units.

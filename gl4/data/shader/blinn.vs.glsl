@@ -1,7 +1,3 @@
-#ifndef WITH_TEX
-#version 430 core
-#endif
-
 in vec4 vertex;
 in vec3 normal;
 #ifdef WITH_TEX

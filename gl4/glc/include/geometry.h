@@ -16,7 +16,7 @@ protected:
 
 public:
   geometry_base() : m_vao(-1) {}
-  virtual ~geometry_base(){}
+  virtual ~geometry_base() {}
 
   GLuint vao() const { return m_vao; }
 
@@ -33,17 +33,17 @@ public:
   virtual void build_tangent(){};
 
   // a wrapper of glDrawArrays and glDrawArraysInstanced[ARB]
-  void draw_arrays(GLenum mode, GLint first, GLsizei count, GLsizei primcount);
+  void draw_arrays(GLenum mode, GLint first, GLsizei count, GLsizei primcount) const;
 
   virtual void buffer_vertex() {}
   virtual void buffer_normal() {}
   virtual void buffer_texcoord() {}
   virtual void buffer_tangent() {}
 
-  virtual void bind_vertex(GLuint index){}
-  virtual void bind_normal(GLuint index){}
-  virtual void bind_tangent(GLuint index){}
-  virtual void bind_texcoord(GLuint index){}
+  virtual void bind_vertex(GLuint index) {}
+  virtual void bind_normal(GLuint index) {}
+  virtual void bind_tangent(GLuint index) {}
+  virtual void bind_texcoord(GLuint index) {}
 
 protected:
   void bind_vertex_array_object();
@@ -76,7 +76,6 @@ struct glm_vec_traits<4> {
 template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
 class geometry : public geometry_base {
 protected:
-
   typename glm_vec_traits<s0>::vec_vector m_vertices;
   typename glm_vec_traits<s1>::vec_vector m_normals;
   typename glm_vec_traits<s2>::vec_vector m_texcoords;
@@ -92,6 +91,34 @@ protected:
   virtual void bind_normal(GLuint index);
   virtual void bind_texcoord(GLuint index);
   virtual void bind_tangent(GLuint index);
+
+  const typename glm_vec_traits<s0>::vec_vector& vertices() const {
+    return m_vertices;
+  }
+  void vertices(const typename glm_vec_traits<s0>::vec_vector& v) {
+    m_vertices = v;
+  }
+
+  const typename glm_vec_traits<s1>::vec_vector& normals() const {
+    return m_normals;
+  }
+  void normals(const typename glm_vec_traits<s1>::vec_vector& v) {
+    m_normals = v;
+  }
+
+  const typename glm_vec_traits<s2>::vec_vector& texcoords() const {
+    return m_texcoords;
+  }
+  void texcoords(const typename glm_vec_traits<s2>::vec_vector& v) {
+    m_texcoords = v;
+  }
+
+  const typename glm_vec_traits<s3>::vec_vector& tangents() const {
+    return m_tangents;
+  }
+  void tangents(const typename glm_vec_traits<s3>::vec_vector& v) {
+    m_tangents = v;
+  }
 };
 
 //--------------------------------------------------------------------
@@ -100,8 +127,8 @@ void geometry<s0, s1, s2, s3>::buffer_vertex() {
   glGenBuffers(1, &m_vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
   glBufferData(GL_ARRAY_BUFFER,
-    m_vertices.size() * sizeof(decltype(m_vertices[0])),
-    value_ptr(m_vertices[0]), GL_STATIC_DRAW);
+    m_vertices.size() * sizeof(decltype(m_vertices[0])), &m_vertices.front(),
+    GL_STATIC_DRAW);
 }
 
 //--------------------------------------------------------------------
@@ -110,7 +137,7 @@ void geometry<s0, s1, s2, s3>::buffer_normal() {
   glGenBuffers(1, &m_normal_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, m_normal_buffer);
   glBufferData(GL_ARRAY_BUFFER,
-    m_normals.size() * sizeof(decltype(m_normals[0])), value_ptr(m_normals[0]),
+    m_normals.size() * sizeof(decltype(m_normals[0])), &m_normals.front(),
     GL_STATIC_DRAW);
 }
 
@@ -120,8 +147,8 @@ void geometry<s0, s1, s2, s3>::buffer_texcoord() {
   glGenBuffers(1, &m_texcoord_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, m_texcoord_buffer);
   glBufferData(GL_ARRAY_BUFFER,
-    m_texcoords.size() * sizeof(decltype(m_texcoords[0])),
-    &m_texcoords.front(), GL_STATIC_DRAW);
+    m_texcoords.size() * sizeof(decltype(m_texcoords[0])), &m_texcoords.front(),
+    GL_STATIC_DRAW);
 }
 
 //--------------------------------------------------------------------
@@ -130,8 +157,8 @@ void geometry<s0, s1, s2, s3>::buffer_tangent() {
   glGenBuffers(1, &m_tangent_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, m_tangent_buffer);
   glBufferData(GL_ARRAY_BUFFER,
-    m_tangents.size() * sizeof(decltype(m_tangents[0])),
-    value_ptr(m_tangents[0]), GL_STATIC_DRAW);
+    m_tangents.size() * sizeof(decltype(m_tangents[0])), &m_tangents.front(),
+    GL_STATIC_DRAW);
 }
 
 //--------------------------------------------------------------------
@@ -166,12 +193,12 @@ void geometry<s0, s1, s2, s3>::bind_tangent(GLuint index) {
   glEnableVertexAttribArray(index);
 }
 
-
 typedef geometry<3, 3, 2, 3> geometry3323;
 typedef geometry<2, 3, 2, 3> geometry2323;
 typedef geometry<3, 3, 1, 3> geometry3313;
 typedef geometry<4, 3, 1, 3> geometry4313;
-
+typedef geometry<4, 3, 2, 3> geometry4323;
+typedef geometry<3, 1, 1, 1> geometry3111;
 }
 
 #endif /* GEOMETRY_H */

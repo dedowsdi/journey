@@ -69,14 +69,14 @@ public:
 
   const float_vector& knots() const { return m_knots; }
   void knots(const float_vector& v) { m_knots = v; }
-  GLfloat getKnot(GLuint index) const { return m_knots.at(index); }
+  GLfloat knog(GLuint index) const { return m_knots.at(index); }
   // created clamped uniform knots
   void uniform_knots();
 
 protected:
   float_vector coefficents(GLfloat u);
 
-  GLfloat getKnotRatio(GLfloat t, GLuint i, GLuint r = 1);
+  GLfloat knot_ratio(GLfloat t, GLuint i, GLuint r = 1);
 };
 }
 

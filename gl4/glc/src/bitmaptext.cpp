@@ -149,7 +149,7 @@ void bitmap_text::print(const std::string& text, GLuint x, GLuint y,
 
   glBindVertexArray(m_vao);
   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices),
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec4),
     value_ptr(vertices[0]), GL_STREAM_DRAW);
 
   glVertexAttribPointer(m_program->al_vertex, 4, GL_FLOAT, GL_FALSE,

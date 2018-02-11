@@ -47,7 +47,7 @@ void geometry_base::build_mesh(GLboolean normal /* = 1*/,
 
 //--------------------------------------------------------------------
 void geometry_base::draw_arrays(
-  GLenum mode, GLint first, GLsizei count, GLsizei primcount) {
+  GLenum mode, GLint first, GLsizei count, GLsizei primcount) const {
   if (primcount == 1) {
     glDrawArrays(mode, first, count);
   } else {

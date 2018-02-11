@@ -5,6 +5,7 @@ set(GLC_SRCS
     src/glm.cpp
     src/light.cpp
     src/program.cpp
+    src/common_program.cpp
     src/quad.cpp
     src/geometry.cpp
     src/sphere.cpp
@@ -16,8 +17,10 @@ set(GLC_SRCS
     src/torus.cpp
     src/xyplane.cpp
     src/disk.cpp
+    src/points.cpp
     src/bezier.cpp
     src/nurb.cpp
+    src/beziersurface.cpp
     )
 
 add_library(glc 

@@ -90,6 +90,8 @@ public:
     bind_attrib_locations();
   }
 
+  bool is_inited() { return object != -1; }
+
   void link();
   void use();
 

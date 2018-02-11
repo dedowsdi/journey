@@ -63,7 +63,7 @@ vec4 nurb::get(GLfloat u) {
     // iterate p-s times. leave only 1 element at last column
     for (unsigned int r = 1; r < h; ++r) {
       for (unsigned int i = 0; i < h - r; ++i) {
-        GLfloat a = getKnotRatio(u, kMinusP + i + r, r);
+        GLfloat a = knot_ratio(u, kMinusP + i + r, r);
         points.at(i) = points.at(i) * (1 - a) + points.at(i + 1) * a;
       }
     }
@@ -228,7 +228,7 @@ std::vector<vec4_vector> nurb::iterate(
     vv.push_back(vec4_vector());
 
     for (unsigned int i = 0; i < size - r; ++i) {
-      GLfloat a = getKnotRatio(u, beg + i + r, r);
+      GLfloat a = knot_ratio(u, beg + i + r, r);
       vec4 p = vv[r - 1].at(i) * (1 - a) + vv[r - 1].at(i + 1) * a;
       vv[r].push_back(p);
     }
@@ -310,7 +310,7 @@ float_vector nurb::coefficents(GLfloat u) {
 }
 
 //--------------------------------------------------------------------
-GLfloat nurb::getKnotRatio(GLfloat t, GLuint i, GLuint r /* = 1*/) {
+GLfloat nurb::knot_ratio(GLfloat t, GLuint i, GLuint r /* = 1*/) {
   return (t - m_knots.at(i)) /
          (m_knots.at(i + m_degree - r + 1) - m_knots.at(i));
 }

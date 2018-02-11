@@ -54,6 +54,10 @@ typedef std::vector<vec2> vec2_vector;
 typedef std::vector<vec3> vec3_vector;
 typedef std::vector<vec4> vec4_vector;
 
+typedef std::vector<std::vector<vec2>> vec2_vector2;
+typedef std::vector<std::vector<vec3>> vec3_vector2;
+typedef std::vector<std::vector<vec4>> vec4_vector2;
+
 // follow convention of glm, always return
 
 vec3 make_floor(const vec3& lhs, const vec3& rhs);
