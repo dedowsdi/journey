@@ -50,16 +50,13 @@ protected:
   GLdouble m_last_time;
   GLdouble m_current_time;
   GLdouble m_delta_time;
-
-  GLdouble m_adtx;
-  GLdouble m_adty;
+  GLdouble m_camera_move_speed;
 
   std::string m_input;
   camera_mode m_camera_mode;
   app_info m_info;
   GLFWwindow *m_wnd;
   mat4 *m_v_mat;
-  mat4 m_start_v_mat;  // used to record init rotation in CM_FREE.
 
   dvec2
     m_last_cursor_position;   // used to rotate camera when mid button pressed
@@ -73,12 +70,11 @@ public:
         m_camera_moving(GL_FALSE),
         m_move_dir(0),
         m_frame_number(0),
-        m_adtx(0),
-        m_adty(0),
         m_fps(0),
         m_last_time(0),
         m_current_time(0),
-        m_delta_time(0) {}
+        m_delta_time(0),
+        m_camera_move_speed(1.5) {}
 
   void init();
   virtual void run();

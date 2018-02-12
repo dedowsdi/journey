@@ -151,6 +151,9 @@ inline GLfloat pi(GLfloat a0, GLfloat d, uint n) {
   while (n--) m *= a0 + n * d;  // reverse order of pi
   return m;
 }
+
+// get camera position in world space, no need to invert view matrix.
+vec3 eye_pos(const mat4& v_mat);
 }
 
 #endif /* GLM_H */

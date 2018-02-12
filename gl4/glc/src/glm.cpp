@@ -225,4 +225,17 @@ glm::mat4 compute_window_mat_i(
 
   return m;
 }
+
+//--------------------------------------------------------------------
+vec3 eye_pos(const mat4& v_mat) {
+  const vec4& w2c = -v_mat[3];
+  // clang-format off
+	// project world to camera onto world x, y, z axis
+  return vec3(
+      w2c[0] * v_mat[0][0] + w2c[1] * v_mat[0][1] + w2c[2] * v_mat[0][2],
+      w2c[0] * v_mat[1][0] + w2c[1] * v_mat[1][1] + w2c[2] * v_mat[1][2],
+      w2c[0] * v_mat[2][0] + w2c[1] * v_mat[2][1] + w2c[2] * v_mat[2][2]
+      );
+  // clang-format on
+}
 }

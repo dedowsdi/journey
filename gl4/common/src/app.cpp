@@ -194,8 +194,8 @@ void app::update_camera() {
     if (m_move_dir & MD_BACK) dir.z = -1;
 
     dir = glm::normalize(dir);
-    m_camera_translation += dir * static_cast<GLfloat>(m_delta_time);
-    (*m_v_mat)[3] = vec4(m_start_v_mat[3].xyz() + m_camera_translation, 1);
+    (*m_v_mat)[3] +=
+      vec4(dir * static_cast<GLfloat>(m_delta_time * m_camera_move_speed), 0);
   }
 }
 
@@ -214,13 +214,11 @@ void app::set_camera_mode(camera_mode v) {
   std::cout << "current camera mode : " << modes[m_camera_mode] << std::endl;
 
   if (m_camera_mode == CM_FREE) {
-    m_start_v_mat = *m_v_mat;
     m_camera_translation = vec3(0);
 
     // hide, fix cursor
     glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
-    m_adtx = m_adty = 0;
 
     glfwGetCursorPos(
       m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
@@ -347,7 +345,14 @@ void app::glfw_key(
             glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         }
       } break;
-
+      case GLFW_KEY_C:
+        if (m_v_mat) {
+          mat4 v_mat_i = glm::inverse(*m_v_mat);
+          vec3 eye = v_mat_i[3].xyz();
+          vec3 center = eye + 10.0f * -glm::row(*m_v_mat, 2).xyz();
+          *m_v_mat = glm::lookAt(eye, center, pza);
+        }
+        break;
       case GLFW_KEY_LEFT:
         m_move_dir |= MD_LEFT;
         m_camera_moving = 1;
@@ -450,14 +455,14 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
     m_last_cursor_position[0] = x;
     m_last_cursor_position[1] = y;
   } else if (m_camera_mode == CM_FREE) {
-    m_adtx += dtx;
-    m_adty += dty;
-    *m_v_mat =
-      glm::rotate(static_cast<GLfloat>(m_adtx) * 0.002f, vec3(0, 1, 0)) *
-      glm::rotate(static_cast<GLfloat>(-m_adty) * 0.002f, vec3(1, 0, 0)) *
-      m_start_v_mat;
+    *m_v_mat = glm::rotate(static_cast<GLfloat>(-dty) * 0.002f, vec3(1, 0, 0)) *
+               glm::rotate(static_cast<GLfloat>(dtx) * 0.002f, vec3(0, 1, 0)) *
+               *m_v_mat;
 
-    (*m_v_mat)[3] = vec4(m_start_v_mat[3].xyz() + m_camera_translation, 1);
+    // use lookat to fix camera up, reserve camera position.
+    vec3 eye = eye_pos(*m_v_mat);
+    vec3 center = eye + 10.0f * -glm::row(*m_v_mat, 2).xyz();
+    *m_v_mat = glm::lookAt(eye, center, pza);
 
     // fix cursor
     glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
