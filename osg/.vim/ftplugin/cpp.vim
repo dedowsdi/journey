@@ -1,1 +1,1 @@
-call misc#loadAbbreviation('osg', 'opengl')
+call myvim#loadAbbreviation('osg', 'opengl', 'cpp')

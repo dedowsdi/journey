@@ -424,9 +424,7 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
       glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
 
       // translate world to camera
-      (*m_v_mat)[3][0] = 0;
-      (*m_v_mat)[3][1] = 0;
-      (*m_v_mat)[3][2] = 0;
+      set_col(*m_v_mat, 3, zp);
 
       // rotate, translate world back
       *m_v_mat = glm::translate(translation) *
@@ -445,9 +443,7 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
 
       glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
       // translate world to camera
-      (*m_v_mat)[3][0] = 0;
-      (*m_v_mat)[3][1] = 0;
-      (*m_v_mat)[3][2] = 0;
+      set_col(*m_v_mat, 3, zp);
 
       // rotate, translate world back
       *m_v_mat = glm::translate(translation) * m * *m_v_mat;
@@ -455,17 +451,31 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
     m_last_cursor_position[0] = x;
     m_last_cursor_position[1] = y;
   } else if (m_camera_mode == CM_FREE) {
+    // fix cursor
+    glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
+
     *m_v_mat = glm::rotate(static_cast<GLfloat>(-dty) * 0.002f, vec3(1, 0, 0)) *
                glm::rotate(static_cast<GLfloat>(dtx) * 0.002f, vec3(0, 1, 0)) *
                *m_v_mat;
 
     // use lookat to fix camera up, reserve camera position.
-    vec3 eye = eye_pos(*m_v_mat);
-    vec3 center = eye + 10.0f * -glm::row(*m_v_mat, 2).xyz();
-    *m_v_mat = glm::lookAt(eye, center, pza);
+    // vec3 eye = eye_pos(*m_v_mat);
+    // vec3 center = eye + 10.0f * -glm::row(*m_v_mat, 2).xyz();
+    //*m_v_mat = glm::lookAt(eye, center, pza);
 
-    // fix cursor
-    glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
+    vec3 forward = -glm::row(*m_v_mat, 2).xyz();
+    vec3 right = cross(forward, pza);
+    if (glm::length(right) < 0.0001f) {
+      return;
+    }
+    right = glm::normalize(right);
+
+    vec3 fixed_up = normalize(cross(right, forward));
+
+    // reserve eye position, use old eye position to deduce new world
+    // translation
+    *m_v_mat = glm::translate(
+      make_mat4_row(right, fixed_up, -forward), -eye_pos(*m_v_mat));
   }
 }
 

@@ -1,5 +1,5 @@
 "debugger, lldb or gdb
-let g:mycppDebugger = "gdb"
+set rtp +=./.vim
 "build dir, such as ./build/Debug, ./build/RelWithDebInfo
 let g:mycppBuildDir = "./build/Debug/"
 let g:mycppNamespaces = [

@@ -102,7 +102,7 @@ public:
 
   // compute pointer directly by b-spline formula
   osg::Vec4 getByCoefs(GLdouble u) {
-    osg::ref_ptr<osg::DoubleArray> coefs = computeCoefficients(u);
+    osg::ref_ptr<osg::DoubleArray> coefs = coefficients(u);
     osg::Vec4 p;
     for (unsigned int i = 0; i < mControlPoints->size(); ++i) {
       p += mControlPoints->at(i) * coefs->at(i);
@@ -277,10 +277,12 @@ public:
     return bb;
   }
 
+  GLdouble coefficient(GLushort i, GLdouble u);
+
 protected:
   ~Nurb() {}
 
-  osg::ref_ptr<osg::DoubleArray> computeCoefficients(GLdouble u) {
+  osg::ref_ptr<osg::DoubleArray> coefficients(GLdouble u) {
     osg::ref_ptr<osg::DoubleArray> result = new osg::DoubleArray;
     osg::DoubleArray& coefs = *result;
 

@@ -87,6 +87,7 @@ set (DEMOES
     cursor
     cameraManipulator2D
     fixVerticalUp
+    test
     )
 
 foreach(DEMO ${DEMOES})

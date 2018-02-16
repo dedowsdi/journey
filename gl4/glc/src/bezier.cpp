@@ -60,8 +60,8 @@ void bezier::elevate(bool positive /* = true*/) {
     GLfloat rcp_nplus1 = 1.0 / r;
 
     for (unsigned int i = 1; i < r; ++i) {
-      points.push_back(m_ctrl_points.at(i - 1) * (i * rcp_nplus1) +
-                       (m_ctrl_points.at(i) * (1 - i * rcp_nplus1)));
+      points.push_back(m_ctrl_points[i - 1] * (i * rcp_nplus1) +
+                       (m_ctrl_points[i] * (1 - i * rcp_nplus1)));
     }
   } else {
     // degree drop, unstable. Graph might be changed as lower degree can't
@@ -71,14 +71,13 @@ void bezier::elevate(bool positive /* = true*/) {
     GLfloat rcpN = 1.0 / n;
 
     if (r >= 2) {
-      points.push_back(
-        (m_ctrl_points.at(1) - points.front() * rcpN) / (1 - rcpN));
+      points.push_back((m_ctrl_points[1] - points.front() * rcpN) / (1 - rcpN));
 
       for (unsigned int i = 2; i < r; ++i) {
-        points.push_back((m_ctrl_points.at(i) + m_ctrl_points.at(i - 1) -
-                           points.at(i - 2) * ((i - 1) * rcpN) -
-                           points.at(i - 1) * (1 + rcpN)) /
-                         (1 - i * rcpN));
+        points.push_back(
+          (m_ctrl_points[i] + m_ctrl_points[i - 1] -
+            points[i - 2] * ((i - 1) * rcpN) - points[i - 1] * (1 + rcpN)) /
+          (1 - i * rcpN));
       }
     }
   }
@@ -134,8 +133,8 @@ void bezier::subdivide(GLfloat t, bezier& lc, bezier& rc) {
   // get all iterations is faster than use get one by one
   vec3_vector2 vv = iterate_all(m_ctrl_points, t);
   for (uint i = 0; i < lp.capacity(); ++i) {
-    lp.push_back(vv[i].at(0));
-    rp.push_back(vv[i].at(n - i));
+    lp.push_back(vv[i][0]);
+    rp.push_back(vv[i][n - i]);
   }
 }
 
@@ -238,7 +237,7 @@ void bezier::draw(GLuint primcount /* = 1*/) {
 //--------------------------------------------------------------------
 vec3 bezier::d(GLuint i, GLuint k) {
   if (k == 0)
-    return m_ctrl_points.at(i + 1) - m_ctrl_points.at(i);
+    return m_ctrl_points[i + 1] - m_ctrl_points[i];
   else
     return d(i + 1, k - 1) - d(i, k - 1);
 }

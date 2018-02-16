@@ -718,3 +718,104 @@ c++:
   External linkage refers to things that exist beyond a particular translation
   unit. In other words, accessible through the whole program, which is the
   combination of all translation units.
+
+-----------
+2018.02.12:
+
+c++:
+  After a serious of yaw and pitch, your camera will be tilted.  You need to get
+  current eye position and use look at to fix up. or.
+
+math:
+  inertial space:
+    rotation only coordinate transform. 
+    a_p1 = R * a;
+    a_p2 = T * a_p1;
+
+  sometimes it's necessary to do translate before rotation:
+    a_p1 = T * a;   // can i call p1 space initrial_t space ?
+    a_p2 = T * a_p1;
+
+  create model view matrix with negative eye translation in world space:
+    it's trivial to create model view by translation * rotation:
+      mv_mat = translate(world_pos) * rotate(world rotation)
+    if your world rotation changed, but you want to reserve your eye position:
+      // it should be understood as intrinsic transform.
+      mv_mat = rotate(new world rotation) * translate(-eye)
+
+  rotate around y+:
+    | c  0 s |
+    | 0  1 0 |
+    | -s 0 c |
+
+  post translate:
+    | A00   a01 | * | I t01 | = | .. A00*t01+a01    | =  A +   | 0 A00*t01   |
+    | a10_t α11 |   | 0 1   |   | .. a10_t*t01+α11  |          | 0 a10_t*t01 |
+
+    |  A00  | * t01 =  a0 * τ0 + a1 * τ1 + a2 * τ2
+    | a10_t |
+    
+    ∴  A * T  =  | a0 a1 a2 a3+a0*τ0+a1*τ1+a2*τ2 |
+
+  pre translate
+    | I t01 | * | A00   a01 | = | A00+t01*a10_t a01+t01*α11 | 
+    | 0 1   | * | a10_t α11 |   | ..                        | 
+                              = A + | t01*a10_t t01*α11 | = A + | τ0*α30 τ0*α31 τ0*α32 τ0*α11|
+                                    | 0         0       |       | τ1*α30 τ1*α31 τ1*α32 τ1*α11|
+                                                                | τ2*α30 τ2*α31 τ2*α32 τ2*α11|
+                                                                | 0      0      0      0     |
+
+-----------
+2018.02.16:
+
+math:
+  dot distribution:
+    x_t·(y+z) = x_t·y + x_t·z
+    (y+z)_t·x = y_t·x + z_t·x
+    (x+y)_t·(x+y) = x_t·x + 2x_t·y + y_t·y
+
+  laff matrix vector scalar greek alphabet:
+    Matrix | vector | scalor | code    | note
+    A      | a      | α      | code    | note
+    B      | b      | β      | alpha   |
+    C      | c      | γ      | beta    |
+    D      | d      | δ      | gamma   |
+    E      | e      | ε      | epsilon | ei is the ith unit basis vector
+    F      | f      | φ      | phi     |
+    G      | g      | ξ      | xi      |
+    H      | h      | ν      | eta     |
+    I      |        |        |         | identity matrix
+    K      | k      | κ      | kappa   |
+    L      | l      | λ      | lambda  |
+    M      | m      | μ      | mu      | m(·) = row dimension
+    N      | n      | ν      | nu      | ν is shared with V. n(·) = column dimension
+    O      |        |        |         | not used
+    P      | p      | π      | pi      |
+    Q      | q      | θ      | theta   |
+    R      | r      | ρ      | rho     |
+    S      | s      | σ      | sigma   |
+    T      | t      | τ      | tao     |
+    U      | u      | υ      | upsilon |
+    V      | v      | ν      | nu      | ν is shared with N
+    W      | w      | ω      | omega   |
+    X      | x      | χ      | chi     |
+    Y      | y      | ψ      | psi     |
+    Z      | z      | ζ      | zeta    |
+
+  given x∈ R_n, 
+    x = Σ(i, 0, n-1, xi*ei)
+
+  let L:R_n --> R_m be a linear transformation, given x∈ R_n, the result of y =
+  L(x) is a vector in R_m, but then:
+    y = L(x) = L(Σ(i, 0, n-1, χi*ei)) 
+             = Σ(i, 0, n-1, L(χi*ei)) 
+             = Σ(i, 0, n-1, χi*L(ei))
+             = Σ(i, 0, n-1, χi*ai)  // let L(ei) = ai
+             = Ax   // let A = | a0 a1 a2 .. am_1 |  //m_1 is m-1
+    ∴ so any L(x) can be represented as A(x), ai = L(ei)
+  
+  ∵ A(αx) = αAx, A(x+y) = Ax+Ay
+  ∴ A is linear
+
+  ∴ A function f : R_n → R_m is a linear transformation iff it can be written as
+    a matrix-vector multiplication.

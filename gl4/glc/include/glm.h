@@ -45,6 +45,14 @@ static const glm::vec3 pya(0, 1, 0);
 static const glm::vec3 nya(0, -1, 0);
 static const glm::vec3 pza(0, 0, 1);
 static const glm::vec3 nza(0, 0, -1);
+static const glm::vec4 hpxa(1, 0, 0, 1);
+static const glm::vec4 hnxa(-1, 0, 0, 1);
+static const glm::vec4 hpya(0, 1, 0, 1);
+static const glm::vec4 hnya(0, -1, 0, 1);
+static const glm::vec4 hpza(0, 0, 1, 1);
+static const glm::vec4 hnza(0, 0, -1, 1);
+static const glm::vec3 zp(0, 0, 0);
+static const glm::vec4 hzp(0, 0, 0, 1);
 
 typedef std::vector<mat2> mat2_vector;
 typedef std::vector<mat3> mat3_vector;
@@ -145,6 +153,18 @@ glm::mat4 compute_window_mat(
 
 glm::mat4 compute_window_mat_i(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
+
+void set_row(mat4& m, GLushort index, const vec4& v);
+void set_row(mat4& m, GLushort index, const vec3& v);
+void set_col(mat4& m, GLushort index, const vec3& v);
+mat4 erase_translation(const glm::mat4& m);
+
+mat4 make_mat4_row(
+  const vec4& r0, const vec4& r1, const vec4& r2, const vec4& r3);
+mat4 make_mat4_row(
+  const vec3& r0, const vec3& r1, const vec3& r2);
+mat3 make_mat3_row(
+  const vec3& r0, const vec3& r1, const vec3& r2);
 
 inline GLfloat pi(GLfloat a0, GLfloat d, uint n) {
   GLfloat m = 1;

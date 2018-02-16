@@ -227,15 +227,72 @@ glm::mat4 compute_window_mat_i(
 }
 
 //--------------------------------------------------------------------
-vec3 eye_pos(const mat4& v_mat) {
-  const vec4& w2c = -v_mat[3];
+void set_row(mat4& m, GLushort index, const vec4& v) {
+  m[0][index] = v[0];
+  m[1][index] = v[1];
+  m[2][index] = v[2];
+  m[3][index] = v[3];
+}
+
+//--------------------------------------------------------------------
+void set_row(mat4& m, GLushort index, const vec3& v) {
+  m[0][index] = v[0];
+  m[1][index] = v[1];
+  m[2][index] = v[2];
+}
+
+//--------------------------------------------------------------------
+void set_col(mat4& m, GLushort index, const vec3& v) {
+  m[index][0] = v[0];
+  m[index][1] = v[1];
+  m[index][2] = v[2];
+}
+
+//--------------------------------------------------------------------
+mat4 erase_translation(const glm::mat4& m) {
+  return mat4(m[0], m[1], m[2], hzp);
+}
+
+//--------------------------------------------------------------------
+mat4 make_mat4_row(
+  const vec4& r0, const vec4& r1, const vec4& r2, const vec4& r3) {
   // clang-format off
-	// project world to camera onto world x, y, z axis
-  return vec3(
-      w2c[0] * v_mat[0][0] + w2c[1] * v_mat[0][1] + w2c[2] * v_mat[0][2],
-      w2c[0] * v_mat[1][0] + w2c[1] * v_mat[1][1] + w2c[2] * v_mat[1][2],
-      w2c[0] * v_mat[2][0] + w2c[1] * v_mat[2][1] + w2c[2] * v_mat[2][2]
+  return mat4(
+      r0[0], r1[0], r2[0], r3[0], 
+      r0[1], r1[1], r2[1], r3[1], 
+      r0[2], r1[2], r2[2], r3[2], 
+      r0[3], r1[3], r2[3], r3[3]
       );
   // clang-format on
+}
+
+//--------------------------------------------------------------------
+mat4 make_mat4_row(
+const vec3& r0, const vec3& r1, const vec3& r2)
+{
+  // clang-format off
+  return mat4(
+      r0[0], r1[0], r2[0], 0,
+      r0[1], r1[1], r2[1], 0,
+      r0[2], r1[2], r2[2], 0,
+      0,     0,     0,     1
+      );
+  // clang-format on
+}
+
+//--------------------------------------------------------------------
+mat3 make_mat3_row(const vec3& r0, const vec3& r1, const vec3& r2) {
+  // clang-format off
+  return mat3(
+      r0[0], r1[0], r2[0],
+      r0[1], r1[1], r2[1],
+      r0[2], r1[2], r2[2]
+      );
+  // clang-format on
+}
+
+//--------------------------------------------------------------------
+vec3 eye_pos(const mat4& v_mat) {
+  return (-v_mat[3] * erase_translation(v_mat)).xyz();
 }
 }

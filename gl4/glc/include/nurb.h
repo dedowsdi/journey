@@ -48,6 +48,12 @@ public:
   GLfloat min_knot() { return m_knots.front(); }
   GLfloat max_knot() { return m_knots.back(); }
 
+  GLfloat weight(GLint i) { return m_ctrl_points[i].w; }
+  void weight(GLint i, GLfloat w) {
+    // what if current w is 0?
+    m_ctrl_points[i] *= w / m_ctrl_points[i].w;
+  }
+
   GLuint knot_multiplicity(GLuint i);
 
   void subdivide(GLfloat u, nurb& lc, nurb& rc);
@@ -77,17 +83,20 @@ public:
   GLfloat knot(GLuint index) const { return m_knots.at(index); }
   // created clamped uniform knots
   void uniform_knots();
+  GLfloat coefficient(GLint i, GLint p, GLfloat u);
 
   static vec4 get(
     v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u);
   static vec3 tangent(
     v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u);
 
-  static float_vector coeffients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u);
+  static float coefficient(
+    fv_ci kbeg, fv_ci kend, GLuint i, GLuint p, GLfloat u);
+  static float_vector coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u);
   static GLuint knot_span(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u);
 
 protected:
-  float_vector coefficents(GLfloat u);
+  float_vector coefficients(GLfloat u);
 
   GLfloat knot_ratio(GLfloat t, GLuint i, GLuint r = 1);
 };
