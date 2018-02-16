@@ -1,7 +1,7 @@
 "debugger, lldb or gdb
 "build dir, such as ./build/Debug, ./build/RelWithDebInfo
 let g:mycppBuildDir = './build/Debug'
-set rtp +=./.vim
+set rtp +=./.vim,./.vim/after
 "executable make target and path
 "let g:mycppMakes = {}
 "class name prefix
