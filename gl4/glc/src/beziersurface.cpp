@@ -4,9 +4,10 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void bezier_surface::build_vertex() {
-  m_vertices.clear();
-  m_vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
+GLint bezier_surface::build_vertex() {
+  vec3_array& vertices = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
 
   vec3_vector2 q2 = u_interim2();
 
@@ -22,16 +23,18 @@ void bezier_surface::build_vertex() {
       GLfloat v = m_vbegin + vstep * j;
       vec3 v0 = bezier::get(q0.begin(), q0.end(), v);
       vec3 v1 = bezier::get(q1.begin(), q1.end(), v);
-      m_vertices.push_back(v1);
-      m_vertices.push_back(v0);
+      vertices.push_back(v1);
+      vertices.push_back(v0);
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void bezier_surface::build_normal() {
-  m_normals.clear();
-  m_normals.reserve(m_vertices.size());
+GLint bezier_surface::build_normal() {
+  vec3_array& normals = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&normals));
+  normals.reserve(num_vertices());
 
   // create triangle strip row by row
   GLfloat ustep = (m_uend - m_ubegin) / m_upartition;
@@ -55,31 +58,34 @@ void bezier_surface::build_normal() {
       vec3 front0 = bezier::tangent(vq.begin(), vq.end(), u0);
       vec3 front1 = bezier::tangent(vq.begin(), vq.end(), u1);
 
-      m_normals.push_back(normalize(cross(right1, front1)));
-      m_normals.push_back(normalize(cross(right0, front0)));
+      normals.push_back(normalize(cross(right1, front1)));
+      normals.push_back(normalize(cross(right0, front0)));
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void bezier_surface::build_texcoord() {
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.size());
+GLint bezier_surface::build_texcoord() {
+  vec2_array& texcoords = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
 
   for (GLuint i = 0; i < m_upartition; ++i) {
     GLfloat y0 = static_cast<GLfloat>(i) / m_upartition;
     GLfloat y1 = static_cast<GLfloat>(i + 1) / m_upartition;
     for (int j = 0; j <= m_vpartition; ++j) {
       GLfloat x = static_cast<GLfloat>(j) / m_vpartition;
-      m_texcoords.push_back(vec2(x, y1));
-      m_texcoords.push_back(vec2(x, y0));
+      texcoords.push_back(vec2(x, y1));
+      texcoords.push_back(vec2(x, y0));
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
 void bezier_surface::draw(GLuint primcount /* = 1*/) {
-  bind_vertex_array_object();
+  bind_vao();
   GLuint strip_size = (m_vpartition + 1) * 2;
   for (GLuint i = 0; i < m_upartition; ++i) {
     draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size, primcount);
@@ -95,7 +101,6 @@ vec3 bezier_surface::get(GLfloat u, GLfloat v) {
 //--------------------------------------------------------------------
 vec3_vector bezier_surface::u_interim(GLfloat u) {
   vec3_vector q;
-  q.reserve(uorder());
 
   for (int i = 0; i < vorder(); ++i) {
     const vec3_vector& ctrl_points = col(i);
@@ -108,7 +113,6 @@ vec3_vector bezier_surface::u_interim(GLfloat u) {
 //--------------------------------------------------------------------
 vec3_vector bezier_surface::v_interim(GLfloat v) {
   vec3_vector q;
-  q.reserve(vorder());
 
   for (int i = 0; i < uorder(); ++i) {
     vec3_vector ctrl_points = row(i);

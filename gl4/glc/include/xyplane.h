@@ -6,7 +6,7 @@
 
 namespace zxd {
 
-class xyplane : public geometry2323 {
+class xyplane : public geometry_base {
 protected:
   GLuint m_slice;
   GLfloat m_width;
@@ -31,10 +31,10 @@ public:
         m_left(x0),
         m_bottom(y0) {}
 
-  void build_vertex();
+  GLint build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void build_normal();
-  void build_texcoord();
+  GLint build_normal();
+  GLint build_texcoord();
 
   void draw(GLuint primcount = 1);
 

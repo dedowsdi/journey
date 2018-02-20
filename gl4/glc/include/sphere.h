@@ -9,7 +9,7 @@ namespace zxd {
 /*
  * build sphere with two triangle fans and a bunch of triangle strips
  */
-class sphere : public geometry3323{
+class sphere : public geometry_base {
 protected:
   GLfloat m_radius;
   GLuint m_slice;  // longitiude
@@ -20,10 +20,10 @@ public:
   sphere(GLfloat radius, GLuint slice, GLuint stack)
       : m_radius(radius), m_slice(slice), m_stack(stack) {}
 
-  void build_vertex();
+  GLint build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void build_normal();
-  void build_texcoord();
+  GLint build_normal();
+  GLint build_texcoord();
 
   void draw(GLuint primcount = 1);
 

@@ -108,7 +108,7 @@ protected:
     torus.build_mesh();
     torus.bind(program.al_vertex, program.al_normal);
 
-    torus.bind(wire_program.al_vertex);
+    torus.bind(wire_program.al_vertex, -1, -1);
 
     m_text.init();
     m_text.reshape(m_info.wnd_width, m_info.wnd_height);

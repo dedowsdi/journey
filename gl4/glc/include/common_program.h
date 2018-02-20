@@ -104,6 +104,16 @@ struct normal_viewer_program : public zxd::program {
 
   virtual void bind_attrib_locations();
 };
+
+struct vertex_color_program : public zxd::program {
+  GLint al_vertex;
+  GLint al_color;
+
+  void attach_shaders();
+  virtual void bind_uniform_locations();
+  virtual void bind_attrib_locations();
+  void update_uniforms(const mat4& _mvp_mat);
+};
 }
 
 #endif /* COMMON_PROGRAM_H */

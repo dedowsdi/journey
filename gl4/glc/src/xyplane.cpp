@@ -3,9 +3,10 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void xyplane::build_vertex() {
-  m_vertices.clear();
-  m_vertices.reserve((m_slice + 1) * (m_slice + 1));
+GLint xyplane::build_vertex() {
+  vec2_array& vertices = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve((m_slice + 1) * (m_slice + 1));
 
   // build plane as triangle strip
   GLfloat xstep = m_width / m_slice;
@@ -24,28 +25,32 @@ void xyplane::build_vertex() {
 
       vec2 v0(x, y0);
       vec2 v1(x, y1);
-      m_vertices.push_back(v0);
-      m_vertices.push_back(v1);
+      vertices.push_back(v0);
+      vertices.push_back(v1);
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void xyplane::build_normal() {
-  m_normals.clear();
-  m_normals.reserve(m_vertices.size());
+GLint xyplane::build_normal() {
+  vec3_array& normals = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&normals));
+  normals.reserve(num_vertices());
 
-  for (int i = 0; i < m_vertices.size(); ++i) {
-    m_normals.push_back(vec3(0, 0, 1));
+  for (int i = 0; i < num_vertices(); ++i) {
+    normals.push_back(vec3(0, 0, 1));
   }
 
-  assert(m_normals.size() == m_vertices.size());
+  assert(normals.size() == num_vertices());
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void xyplane::build_texcoord() {
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.size());
+GLint xyplane::build_texcoord() {
+  vec2_array& texcoords = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
 
   for (int i = 0; i < m_slice; ++i) {  // row
 
@@ -57,11 +62,12 @@ void xyplane::build_texcoord() {
 
       vec2 tex0(s, t0);
       vec2 tex1(s, t1);
-      m_texcoords.push_back(tex0);
-      m_texcoords.push_back(tex1);
+      texcoords.push_back(tex0);
+      texcoords.push_back(tex1);
     }
   }
-  assert(m_texcoords.size() == m_vertices.size());
+  assert(texcoords.size() == num_vertices());
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
@@ -69,7 +75,7 @@ void xyplane::draw(GLuint primcount /* = 1*/) {
   GLuint row_size = (m_slice + 1) * 2;
   GLuint next = 0;
 
-  bind_vertex_array_object();
+  bind_vao();
 
   for (int i = 0; i < m_slice; ++i, next += row_size) {
     draw_arrays(GL_TRIANGLE_STRIP, next, row_size, primcount);

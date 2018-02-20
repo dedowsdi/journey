@@ -802,6 +802,8 @@ math:
     Y      | y      | ψ      | psi     |
     Z      | z      | ζ      | zeta    |
 
+  if you partition matrix by rows, use a_h_t(transpose a with hat) to represent it.
+
   given x∈ R_n, 
     x = Σ(i, 0, n-1, xi*ei)
 
@@ -819,3 +821,94 @@ math:
 
   ∴ A function f : R_n → R_m is a linear transformation iff it can be written as
     a matrix-vector multiplication.
+
+-----------
+2018.02.18:
+
+linux:
+  install dict:
+    sudo add-apt-repository universe
+    sudo apt install dict     # cli client to dictd server
+    sudo apt install dictd    # server
+    sudo apt install dict-gcide dict-wn dict-devil dict-moby-thesaurus  # database
+    
+-----------
+2018.02.19:
+
+issue:
+  cdef:
+    template definition generate extra typename in
+    gl4:template_array:update_array_buffer
+  
+c++:
+  if your class is derived from template class, such as A<int>, and there is a
+  method called foo() in A<int>, you can not access foo directly in your derived
+  class, "foo" in derived class is a nondependent name, which mean compiler
+  won't search it in A<int>, there are 3 ways to access foo:
+    1. this->foo(). Since this is always implicitly dependent in a template,
+       this->foo is dependent and the lookup is therefore deferred until the
+       template is actually instantiated, at which point all base classes are
+       considered
+    2. A<int>::foo to access.
+    3. call using A<int>::foo prior to foo();
+
+-----------
+2018.02.19:
+
+vim:
+  you can not execute ex command in normal!:
+    :normal! vi}:d     " won't work
+  
+  you can do it like this:
+    :normal! vi}
+    :'<,'>d
+
+-----------
+2018.02.19:
+
+math:
+  matrix-matrix multiplication distributive:
+    A(B+C) = AB + AC
+    (B+C)A = BA + CA
+
+  let A∈ R_mxn, let D denote a diagonal matrix:
+    AD = |a0 a1 a2 ... an_1| D
+       = |δ0*a0 δ1*a1 δ2*a2 ... δn_1*an_1|
+
+    (DA) = | δ0*a0_h_t     |
+           | δ1*a1_h_t     |
+           |  ...          |
+           | δn_1*an_1_h_t |
+
+  if A, B ∈ R_n_n, and are both upper triangular matrix, then AB is also upper
+  triangular matrix:
+    C=AB
+    assume i > j
+      γij = a_h_i_t·bj
+          = Σ(k, 0, n-1, αik*βkn_1 )
+        ∵ A is upper triangular, 
+        ∴ αik = 0 if k < i
+    ∴ γij = Σ(k, i, n-1, αik*βkn_1 )
+        ∵ B is upper triangular, 
+        ∵ k >= i > j
+        ∴ βkj = 0
+    ∴ γij = 0
+
+  if A, B ∈ R_n_n, and are both lower triangular matrix, then AB is also lower
+  triangular matrix:
+
+  if B = AA_t B is symmetric
+    βij = a_h_i_t·a_h_j = a_h_j_t·a_h_i = βji
+  if B = A_tA B is symmetric
+    βij = ai_t·aj = aj_t·ai = βji
+
+  rank1 update:
+    A = A + αxx_t
+
+
+    
+      
+      
+
+
+

@@ -4,45 +4,109 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void geometry_base::bind(GLint vertex, GLint normal /* = -1*/,
-  GLint texcoord /* = -1*/, GLint tangent /* = -1*/) {
-  bind_vertex_array_object();
-
-  if (vertex != -1) {
-    bind_vertex(vertex);
+void geometry_base::attrib_array(GLuint index, array_ptr _array) {
+  if (index >= m_attributes.size()) {
+    m_attributes.resize(index + 1);
   }
-
-  if (normal != -1) {
-    bind_normal(normal);
-  }
-
-  if (texcoord != -1) {
-    bind_texcoord(texcoord);
-  }
-
-  if (tangent != -1) {
-    bind_tangent(tangent);
-  }
+  m_attributes[index] = _array;
 }
 
 //--------------------------------------------------------------------
-void geometry_base::build_mesh(GLboolean normal /* = 1*/,
-  GLboolean texcoord /* = 1*/, GLboolean tangent /* = -1*/) {
-  build_vertex();
-  buffer_vertex();
+array_ptr geometry_base::attrib_array(GLuint index) {
+  if (index >= m_attributes.size()) {
+    std::cerr << " attribute index overflow : " << index << std::endl;
+  }
+  return m_attributes[index];
+}
 
-  if (normal) {
-    build_normal();
-    buffer_normal();
+//--------------------------------------------------------------------
+float_array_ptr geometry_base::attrib_float_array(GLuint index) {
+  return std::static_pointer_cast<float_array>(attrib_array(index));
+}
+
+//--------------------------------------------------------------------
+vec2_array_ptr geometry_base::attrib_vec2_array(GLuint index) {
+  return std::static_pointer_cast<vec2_array>(attrib_array(index));
+}
+
+//--------------------------------------------------------------------
+vec3_array_ptr geometry_base::attrib_vec3_array(GLuint index) {
+  return std::static_pointer_cast<vec3_array>(attrib_array(index));
+}
+
+//--------------------------------------------------------------------
+vec4_array_ptr geometry_base::attrib_vec4_array(GLuint index) {
+  return std::static_pointer_cast<vec4_array>(attrib_array(index));
+}
+
+//--------------------------------------------------------------------
+GLuint geometry_base::num_vertices() { return attrib_array(0)->num_elements(); }
+
+//--------------------------------------------------------------------
+geometry_base& geometry_base::bind(GLint attrib_index, GLint attrib_location) {
+  array_ptr _array = attrib_array(attrib_index);
+  if (!_array) {
+    std::cerr << attrib_index << " is not a valid vertex attrib array index"
+              << std::endl;
   }
-  if (texcoord) {
-    build_texcoord();
-    buffer_texcoord();
-  }
-  if (tangent) {
-    build_tangent();
-    buffer_tangent();
-  }
+  _array->bind(attrib_location);
+  return *this;
+}
+
+//--------------------------------------------------------------------
+geometry_base& geometry_base::bind(GLint vertex, GLint normal, GLint texcoord) {
+  bind_vao();
+  GLint idx = 0;
+
+  if (vertex != -1) bind(idx++, vertex);
+  if (normal != -1) bind(idx++, normal);
+  if (texcoord != -1) bind(idx++, texcoord);
+
+  return *this;
+}
+
+//--------------------------------------------------------------------
+geometry_base& geometry_base::bind_vntt(
+  GLint vertex, GLint normal, GLint texcoord, GLint tangent) {
+  bind_vao();
+  GLint idx = 0;
+
+  if (vertex != -1) bind(idx++, vertex);
+  if (normal != -1) bind(idx++, normal);
+  if (texcoord != -1) bind(idx++, texcoord);
+  if (tangent != -1) bind(idx++, tangent);
+
+  return *this;
+}
+
+//--------------------------------------------------------------------
+geometry_base& geometry_base::bind_vc(GLint vertex, GLint color) {
+  bind_vao();
+  GLint idx = 0;
+
+  if (vertex != -1) bind(idx++, vertex);
+  if (color != -1) bind(idx++, color);
+
+  return *this;
+}
+
+//--------------------------------------------------------------------
+void geometry_base::build_mesh() {
+  GLint idx;
+  idx = build_vertex();
+  if (idx != -1) attrib_array(idx)->update_array_buffer();
+
+  idx = build_color();
+  if (idx != -1) attrib_array(idx)->update_array_buffer();
+
+  idx = build_normal();
+  if (idx != -1) attrib_array(idx)->update_array_buffer();
+
+  idx = build_texcoord();
+  if (idx != -1) attrib_array(idx)->update_array_buffer();
+
+  idx = build_tangent();
+  if (idx != -1) attrib_array(idx)->update_array_buffer();
 }
 
 //--------------------------------------------------------------------
@@ -60,7 +124,7 @@ void geometry_base::draw_arrays(
 }
 
 //--------------------------------------------------------------------
-void geometry_base::bind_vertex_array_object() {
+void geometry_base::bind_vao() {
   if (m_vao == -1) {
     glGenVertexArrays(1, &m_vao);
   }

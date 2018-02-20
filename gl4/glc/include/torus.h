@@ -9,7 +9,7 @@ namespace zxd {
 /*
  * build sphere with two triangle fans and a bunch of triangle strips
  */
-class torus : public geometry3323 {
+class torus : public geometry_base {
 protected:
   GLfloat m_inner_radius;
   GLfloat m_outer_radius;
@@ -24,10 +24,10 @@ public:
         m_sides(sides),
         m_rings(rings) {}
 
-  void build_vertex();
+  GLint build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void build_normal();
-  void build_texcoord();
+  GLint build_normal();
+  GLint build_texcoord();
 
   void draw(GLuint primcount = 1);
 

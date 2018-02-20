@@ -3,7 +3,7 @@
 #include "geometry.h"
 
 namespace zxd {
-class nurb_surface : public geometry4323 {
+class nurb_surface : public geometry_base {
 protected:
   GLfloat m_ubegin;
   GLfloat m_uend;
@@ -29,11 +29,11 @@ public:
         m_udegree(3),
         m_vdegree(3){};
 
-  virtual void build_vertex();
+  virtual GLint build_vertex();
 
-  virtual void build_normal();
+  virtual GLint build_normal();
 
-  virtual void build_texcoord();
+  virtual GLint build_texcoord();
 
   virtual void draw(GLuint primcount = 1);
 

@@ -3,12 +3,13 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void disk::build_vertex() {
-  m_vertices.clear();
+GLint disk::build_vertex() {
   GLuint cv_ring = (m_slice + 1) * 2;
   GLuint cv_disk =
     m_inner == 0 ? cv_ring * (m_loop - 1) + m_slice + 2 : cv_ring * m_loop;
-  m_vertices.reserve(cv_disk);
+  vec3_array& vertices = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve(cv_disk);
 
   GLfloat theta_step = m_sweep / m_slice;
   GLfloat radius_step = (m_outer - m_inner) / m_loop;
@@ -16,7 +17,7 @@ void disk::build_vertex() {
 
   // if inner is 0, build innder circle with tirangle fan
   if (m_inner == 0) {
-    m_vertices.push_back(vec3(0));
+    vertices.push_back(vec3(0));
     GLfloat radius = radius_step;
 
     for (int i = 0; i <= m_slice; ++i) {
@@ -24,7 +25,7 @@ void disk::build_vertex() {
       GLfloat ct = std::cos(theta);
       GLfloat st = std::sin(theta);
 
-      m_vertices.push_back(vec3(radius * ct, radius * st, 0));
+      vertices.push_back(vec3(radius * ct, radius * st, 0));
     }
 
     ++li;
@@ -40,30 +41,36 @@ void disk::build_vertex() {
       GLfloat ct = std::cos(theta);
       GLfloat st = std::sin(theta);
 
-      m_vertices.push_back(vec3(radius0 * ct, radius0 * st, 0));
-      m_vertices.push_back(vec3(radius1 * ct, radius1 * st, 0));
+      vertices.push_back(vec3(radius0 * ct, radius0 * st, 0));
+      vertices.push_back(vec3(radius1 * ct, radius1 * st, 0));
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void disk::build_normal() {
-  m_normals.clear();
-  m_normals.reserve(m_vertices.size());
-  for (int i = 0; i < m_vertices.size(); ++i) {
-    m_normals.push_back(vec3(0, 0, 1));
+GLint disk::build_normal() {
+  vec3_array& normals = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&normals));
+  normals.reserve(num_vertices());
+  for (int i = 0; i < num_vertices(); ++i) {
+    normals.push_back(vec3(0, 0, 1));
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void disk::build_texcoord() {
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.size());
+GLint disk::build_texcoord() {
+  vec2_array& texcoords = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
+  const vec3_array& vertices = *attrib_vec3_array(0);
 
-  for (int i = 0; i < m_vertices.size(); ++i) {
-    const vec3& vertex = m_vertices[i];
-    m_texcoords.push_back(vertex.xy() * 0.5f / m_outer + 0.5f);
+  for (int i = 0; i < num_vertices(); ++i) {
+    const vec3& vertex = vertices[i];
+    texcoords.push_back(vertex.xy() * 0.5f / m_outer + 0.5f);
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
@@ -73,7 +80,7 @@ void disk::draw(GLuint primcount /* = 1*/) {
   GLuint li = 0;
   GLuint next = 0;
 
-  bind_vertex_array_object();
+  bind_vao();
 
   if (m_inner == 0) {
     draw_arrays(GL_TRIANGLE_FAN, 0, cv_fan, primcount);

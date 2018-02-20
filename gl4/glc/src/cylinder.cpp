@@ -4,19 +4,21 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void cylinder::build_vertex() {
+GLint cylinder::build_vertex() {
   GLuint num_vert_pole = m_slice + 1;
   GLuint num_vert_center = (m_slice + 1) * 2;
 
-  m_vertices.reserve(num_vert_pole * 2 + num_vert_center * (m_stack - 1));
+  vec3_array& vertices = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve(num_vert_pole * 2 + num_vert_center * (m_stack - 1));
 
   GLfloat theta_step =
     2 * glm::pi<GLfloat>() / m_slice;  // azimuthal angle step
   // add bottom fan
-  m_vertices.push_back(vec3(0.0));
+  vertices.push_back(vec3(0.0));
   for (int i = 0; i <= m_slice; ++i) {
     GLfloat theta = -theta_step * i;  // apply - for back face
-    m_vertices.push_back(
+    vertices.push_back(
       vec3(m_base * glm::cos(theta), m_base * glm::sin(theta), 0));
   }
 
@@ -39,67 +41,73 @@ void cylinder::build_vertex() {
       vec3 v1(radius1 * cos_theta, radius1 * sin_theta, height_step * i);
       vec3 v0(radius0 * cos_theta, radius0 * sin_theta, height_step * (i + 1));
 
-      m_vertices.push_back(v0);
-      m_vertices.push_back(v1);
+      vertices.push_back(v0);
+      vertices.push_back(v1);
     }
   }
 
   // add top fan
-  m_vertices.push_back(vec3(0, 0, m_height));
+  vertices.push_back(vec3(0, 0, m_height));
   for (int i = 0; i <= m_slice; ++i) {
     GLfloat theta = theta_step * i;  // apply - for back face
-    m_vertices.push_back(
+    vertices.push_back(
       vec3(m_top * glm::cos(theta), m_top * glm::sin(theta), m_height));
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void cylinder::build_normal() {
-  m_normals.clear();
-  m_normals.reserve(m_vertices.size());
+GLint cylinder::build_normal() {
+  vec3_array& normals = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&normals));
+  normals.reserve(num_vertices());
+
+  const vec3_array& vertices = *attrib_vec3_array(0);
 
   GLuint num_vert_bottom = m_slice + 2;
 
   // normals for bottom
   for (int i = 0; i < num_vert_bottom; ++i) {
-    m_normals.push_back(vec3(0, 0, -1));
+    normals.push_back(vec3(0, 0, -1));
   }
 
   glm::vec3 apex(0, 0, m_height);
 
   // normals for 1st stack
   for (int i = 0; i <= m_slice; ++i) {
-    const vec3& vertex = m_vertices[num_vert_bottom + i * 2];
+    const vec3& vertex = vertices[num_vert_bottom + i * 2];
     vec3 outer = glm::cross(vertex, apex);
     vec3 normal = glm::cross(apex - vertex, outer);
-    m_normals.push_back(normal);
-    m_normals.push_back(normal);
+    normals.push_back(normal);
+    normals.push_back(normal);
   }
 
   // normals for other stacks
   for (int i = 1; i < m_stack; ++i) {
     // no reallocate will happen here
-    m_normals.insert(m_normals.end(), m_normals.begin() + num_vert_bottom,
-      m_normals.begin() + num_vert_bottom + (m_slice + 1) * 2);
+    normals.insert(normals.end(), normals.begin() + num_vert_bottom,
+      normals.begin() + num_vert_bottom + (m_slice + 1) * 2);
   }
 
   // normals for bottom
   for (int i = 0; i < num_vert_bottom; ++i) {
-    m_normals.push_back(vec3(0, 0, 1));
+    normals.push_back(vec3(0, 0, 1));
   }
-  assert(m_normals.size() == m_vertices.size());
+  assert(normals.size() == num_vertices());
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void cylinder::build_texcoord() {
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.size());
+GLint cylinder::build_texcoord() {
+  vec2_array& texcoords = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
 
   // bottom texcoords
-  m_texcoords.push_back(glm::vec2(0, 0));
+  texcoords.push_back(glm::vec2(0, 0));
   for (int i = 0; i <= m_slice; ++i) {
     GLfloat s = 1 - static_cast<GLfloat>(i) / m_slice;
-    m_texcoords.push_back(glm::vec2(s, 0));
+    texcoords.push_back(glm::vec2(s, 0));
   }
 
   for (int i = 0; i < m_stack; ++i) {
@@ -110,19 +118,20 @@ void cylinder::build_texcoord() {
       // loop last stack in reverse order
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
 
-      m_texcoords.push_back(glm::vec2(s, t0));
-      m_texcoords.push_back(glm::vec2(s, t1));
+      texcoords.push_back(glm::vec2(s, t0));
+      texcoords.push_back(glm::vec2(s, t1));
     }
   }
 
   // top tex coords
-  m_texcoords.push_back(glm::vec2(0, 1));
+  texcoords.push_back(glm::vec2(0, 1));
   for (int i = 0; i <= m_slice; ++i) {
     GLfloat s = static_cast<GLfloat>(i) / m_slice;
-    m_texcoords.push_back(glm::vec2(s, 1));
+    texcoords.push_back(glm::vec2(s, 1));
   }
 
-  assert(m_texcoords.size() == m_vertices.size());
+  assert(texcoords.size() == num_vertices());
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
@@ -130,7 +139,7 @@ void cylinder::draw(GLuint primcount /* = 1*/) {
   GLuint num_vert_bottom = m_slice + 2;  // pole + slice + 1
   GLuint num_vert_center = (m_slice + 1) * 2;
 
-  bind_vertex_array_object();
+  bind_vao();
 
   draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_bottom, primcount);
   GLuint next = num_vert_bottom;

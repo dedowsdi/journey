@@ -3,202 +3,55 @@
 #include "glad/glad.h"
 #include "glm.h"
 #include "common.h"
+#include "array.h"
+#include <memory>
 
 namespace zxd {
+
+typedef std::vector<array_ptr> array_vector;
+
 class geometry_base {
 protected:
   GLuint m_vao;
-
-  GLuint m_vertex_buffer;
-  GLuint m_normal_buffer;
-  GLuint m_texcoord_buffer;
-  GLuint m_tangent_buffer;
+  array_vector m_attributes;
 
 public:
   geometry_base() : m_vao(-1) {}
   virtual ~geometry_base() {}
 
-  GLuint vao() const { return m_vao; }
+  void attrib_array(GLuint index, array_ptr _array);
+  array_ptr attrib_array(GLuint index);
+  float_array_ptr attrib_float_array(GLuint index);
+  vec2_array_ptr attrib_vec2_array(GLuint index);
+  vec3_array_ptr attrib_vec3_array(GLuint index);
+  vec4_array_ptr attrib_vec4_array(GLuint index);
 
-  void bind(
-    GLint vertex, GLint normal = -1, GLint texcoord = -1, GLint tangent = -1);
+  virtual GLuint num_vertices();
+  geometry_base& bind(GLint attrib_index, GLint attrib_location);
+  // the most common case, assume vertex 0, normal 1, texcoord 2
+  geometry_base& bind(GLint vertex, GLint normal, GLint texcoord);
+  geometry_base& bind_vntt(GLint vertex, GLint normal, GLint texcoord, GLint tangent);
+  geometry_base& bind_vc(GLint vertex, GLint color);
+
+  GLuint num_arrays() { return m_attributes.size(); }
+
   virtual void draw(GLuint primcount = 1) = 0;
 
-  void build_mesh(
-    GLboolean normal = 1, GLboolean texcoord = 1, GLboolean tangent = -1);
-  virtual void build_vertex(){};
-  // as i'm using strip and fan, normal should be vertex normal.
-  virtual void build_normal(){};
-  virtual void build_texcoord(){};
-  virtual void build_tangent(){};
-
   // a wrapper of glDrawArrays and glDrawArraysInstanced[ARB]
-  void draw_arrays(GLenum mode, GLint first, GLsizei count, GLsizei primcount) const;
+  void draw_arrays(
+    GLenum mode, GLint first, GLsizei count, GLsizei primcount) const;
 
-  virtual void buffer_vertex() {}
-  virtual void buffer_normal() {}
-  virtual void buffer_texcoord() {}
-  virtual void buffer_tangent() {}
+  void bind_vao();
 
-  virtual void bind_vertex(GLuint index) {}
-  virtual void bind_normal(GLuint index) {}
-  virtual void bind_tangent(GLuint index) {}
-  virtual void bind_texcoord(GLuint index) {}
+  virtual void build_mesh();
+  virtual GLint build_vertex() { return -1; }
+  virtual GLint build_color() { return -1; }
+  virtual GLint build_normal() { return -1; }
+  virtual GLint build_texcoord() { return -1; }
+  virtual GLint build_tangent() { return -1; }
 
-protected:
-  void bind_vertex_array_object();
+  GLuint vao() const { return m_vao; }
 };
-
-template <GLuint s>
-struct glm_vec_traits {
-  typedef GLfloat vec;
-  typedef float_vector vec_vector;
-};
-
-template <>
-struct glm_vec_traits<2> {
-  typedef vec2 vec;
-  typedef vec2_vector vec_vector;
-};
-
-template <>
-struct glm_vec_traits<3> {
-  typedef vec3 vec;
-  typedef vec3_vector vec_vector;
-};
-
-template <>
-struct glm_vec_traits<4> {
-  typedef vec4 vec;
-  typedef vec4_vector vec_vector;
-};
-
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-class geometry : public geometry_base {
-protected:
-  typename glm_vec_traits<s0>::vec_vector m_vertices;
-  typename glm_vec_traits<s1>::vec_vector m_normals;
-  typename glm_vec_traits<s2>::vec_vector m_texcoords;
-  typename glm_vec_traits<s3>::vec_vector m_tangents;
-
-protected:
-  virtual void buffer_vertex();
-  virtual void buffer_normal();
-  virtual void buffer_texcoord();
-  virtual void buffer_tangent();
-
-  virtual void bind_vertex(GLuint index);
-  virtual void bind_normal(GLuint index);
-  virtual void bind_texcoord(GLuint index);
-  virtual void bind_tangent(GLuint index);
-
-  const typename glm_vec_traits<s0>::vec_vector& vertices() const {
-    return m_vertices;
-  }
-  void vertices(const typename glm_vec_traits<s0>::vec_vector& v) {
-    m_vertices = v;
-  }
-
-  const typename glm_vec_traits<s1>::vec_vector& normals() const {
-    return m_normals;
-  }
-  void normals(const typename glm_vec_traits<s1>::vec_vector& v) {
-    m_normals = v;
-  }
-
-  const typename glm_vec_traits<s2>::vec_vector& texcoords() const {
-    return m_texcoords;
-  }
-  void texcoords(const typename glm_vec_traits<s2>::vec_vector& v) {
-    m_texcoords = v;
-  }
-
-  const typename glm_vec_traits<s3>::vec_vector& tangents() const {
-    return m_tangents;
-  }
-  void tangents(const typename glm_vec_traits<s3>::vec_vector& v) {
-    m_tangents = v;
-  }
-};
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::buffer_vertex() {
-  glGenBuffers(1, &m_vertex_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
-  glBufferData(GL_ARRAY_BUFFER,
-    m_vertices.size() * sizeof(decltype(m_vertices[0])), &m_vertices.front(),
-    GL_STATIC_DRAW);
-}
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::buffer_normal() {
-  glGenBuffers(1, &m_normal_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, m_normal_buffer);
-  glBufferData(GL_ARRAY_BUFFER,
-    m_normals.size() * sizeof(decltype(m_normals[0])), &m_normals.front(),
-    GL_STATIC_DRAW);
-}
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::buffer_texcoord() {
-  glGenBuffers(1, &m_texcoord_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, m_texcoord_buffer);
-  glBufferData(GL_ARRAY_BUFFER,
-    m_texcoords.size() * sizeof(decltype(m_texcoords[0])), &m_texcoords.front(),
-    GL_STATIC_DRAW);
-}
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::buffer_tangent() {
-  glGenBuffers(1, &m_tangent_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, m_tangent_buffer);
-  glBufferData(GL_ARRAY_BUFFER,
-    m_tangents.size() * sizeof(decltype(m_tangents[0])), &m_tangents.front(),
-    GL_STATIC_DRAW);
-}
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::bind_vertex(GLuint index) {
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
-  glVertexAttribPointer(index, s0, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(index);
-}
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::bind_normal(GLuint index) {
-  glBindBuffer(GL_ARRAY_BUFFER, m_normal_buffer);
-  glVertexAttribPointer(index, s1, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(index);
-}
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::bind_texcoord(GLuint index) {
-  glBindBuffer(GL_ARRAY_BUFFER, m_texcoord_buffer);
-  glVertexAttribPointer(index, s2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(index);
-}
-
-//--------------------------------------------------------------------
-template <GLuint s0, GLuint s1, GLuint s2, GLuint s3>
-void geometry<s0, s1, s2, s3>::bind_tangent(GLuint index) {
-  glBindBuffer(GL_ARRAY_BUFFER, m_tangent_buffer);
-  glVertexAttribPointer(index, s3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(index);
-}
-
-typedef geometry<3, 3, 2, 3> geometry3323;
-typedef geometry<2, 3, 2, 3> geometry2323;
-typedef geometry<3, 3, 1, 3> geometry3313;
-typedef geometry<4, 3, 1, 3> geometry4313;
-typedef geometry<4, 3, 2, 3> geometry4323;
-typedef geometry<3, 1, 1, 1> geometry3111;
 }
 
 #endif /* GEOMETRY_H */

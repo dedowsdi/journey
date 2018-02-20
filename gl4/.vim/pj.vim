@@ -37,3 +37,15 @@ function! ShrinkShaderMatrixName(name)
   let s = ShrinkMatrixName(s)
   return s
 endfunction
+
+function! RefactGeometry()
+  %s/\vm_(vertices|normals|texcoords|tangents)/\1/g
+  global /\v\.reserve/ normal! ^yiwOvec3_array& " = *(new vec3_array());attrib_array(num_arrays(), std::make_shared<array>(&"));
+  global /\v\.<clear>/ d
+  normal! gg
+  if search('\vbuild_texcoord')
+    normal! jvi}
+    '<,'>:s/vec3_array/vec2_array/g
+  endif
+  :%s/\Vvertices.size()/num_vertices()/g
+endfunction

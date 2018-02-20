@@ -49,14 +49,12 @@ struct parallax_program : public program {
   virtual void attach_shaders() {
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    attach(
-      GL_VERTEX_SHADER, sv, "data/shader/parallaxmap.vs.glsl");
+    attach(GL_VERTEX_SHADER, sv, "data/shader/parallaxmap.vs.glsl");
     std::stringstream ss;
     ss << "#define PARALLAX_METHOD " << parallax_method << std::endl;
     sv.push_back(ss.str());
     sv.push_back(read_file("data/shader/blinn.frag"));
-    attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/parallaxmap.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, sv, "data/shader/parallaxmap.fs.glsl");
 
     name("parallaxmap");
   }
@@ -110,8 +108,11 @@ public:
     prg.v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
 
     // init quad
-    q.build_mesh(1, 1, 1);
-    q.bind(prg.al_vertex, prg.al_normal, prg.al_texcoord, prg.al_tangent);
+    q.build_mesh();
+    q.bind(0, prg.al_vertex);
+    q.bind(1, prg.al_normal);
+    q.bind(2, prg.al_texcoord);
+    q.bind(3, prg.al_tangent);
 
     // load maps
     fipImage diffuse_image = zxd::fipLoadImage("data/texture/bricks2.jpg");

@@ -8,7 +8,7 @@ namespace zxd {
 void draw_quad(GLuint tex_index /* = 0*/) {
   static quad q;
   static quad_program prg;
-  q.build_mesh(1, 1, 1);
+  q.build_mesh();
 
   if (prg.object == -1) {
     prg.init();
@@ -21,52 +21,60 @@ void draw_quad(GLuint tex_index /* = 0*/) {
 }
 
 //--------------------------------------------------------------------
-void quad::build_vertex() {
-  m_vertices.clear();
-  m_vertices.reserve(4);
+GLint quad::build_vertex() {
+  vec2_array& vertices = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve(4);
 
-  m_vertices.push_back(glm::vec2(-1.0f, 1.0f));
-  m_vertices.push_back(glm::vec2(-1.0f, -1.0f));
-  m_vertices.push_back(glm::vec2(1.0f, 1.0f));
-  m_vertices.push_back(glm::vec2(1.0f, -1.0f));
+  vertices.push_back(vec2(-1.0f, 1.0f));
+  vertices.push_back(vec2(-1.0f, -1.0f));
+  vertices.push_back(vec2(1.0f, 1.0f));
+  vertices.push_back(vec2(1.0f, -1.0f));
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void quad::build_normal() {
-  m_normals.clear();
-  m_normals.reserve(4);
+GLint quad::build_normal() {
+  vec3_array& normals = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&normals));
+  normals.reserve(4);
 
-  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
-  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
-  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
-  m_normals.push_back(glm::vec3{0.0f, 0.0f, 1.0f});
+  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
+  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
+  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
+  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void quad::build_texcoord() {
-  m_texcoords.clear();
-  m_texcoords.reserve(4);
+GLint quad::build_texcoord() {
+  vec2_array& texcoords = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(4);
 
-  m_texcoords.push_back(glm::vec2{0.0f, 1.0f});
-  m_texcoords.push_back(glm::vec2{0.0f, 0.0f});
-  m_texcoords.push_back(glm::vec2{1.0f, 1.0f});
-  m_texcoords.push_back(glm::vec2{1.0f, 0.0f});
+  texcoords.push_back(vec2{0.0f, 1.0f});
+  texcoords.push_back(vec2{0.0f, 0.0f});
+  texcoords.push_back(vec2{1.0f, 1.0f});
+  texcoords.push_back(vec2{1.0f, 0.0f});
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void quad::build_tangent() {
-  m_tangents.clear();
-  m_tangents.reserve(4);
+GLint quad::build_tangent() {
+  vec3_array& tangents = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&tangents));
+  tangents.reserve(4);
 
-  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
-  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
-  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
-  m_tangents.push_back(glm::vec3{1.0f, 0.0f, 0.0f});
+  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
+  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
+  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
+  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
 void quad::draw(GLuint primcount /* = 1*/) {
-  bind_vertex_array_object();
+  bind_vao();
 
   if (primcount == 1) {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -78,4 +86,5 @@ void quad::draw(GLuint primcount /* = 1*/) {
 #endif
   }
 }
+
 }

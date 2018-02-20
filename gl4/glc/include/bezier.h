@@ -9,7 +9,7 @@ namespace zxd {
 /*
  * generally bezier class, degree >=1
  */
-class bezier : public geometry3313 {
+class bezier : public geometry_base {
 protected:
   GLuint m_partitions;  // number of partitions
   GLfloat m_begin;
@@ -20,8 +20,8 @@ protected:
 public:
   bezier() : m_partitions(20), m_begin(0), m_end(1) {}
 
-  virtual void build_vertex();
-  virtual void build_texcoord();
+  virtual GLint build_vertex();
+  virtual GLint build_texcoord();
   virtual void draw(GLuint primcount = 1);
 
   unsigned int degree() { return n(); }

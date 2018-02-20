@@ -4,9 +4,10 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void nurb_surface::build_vertex() {
-  m_vertices.clear();
-  m_vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
+GLint nurb_surface::build_vertex() {
+  vec4_array& vertices = *(new vec4_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
 
   vec4_vector2 q2 = u_interim2();
 
@@ -24,16 +25,18 @@ void nurb_surface::build_vertex() {
         q0.begin(), q0.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
       vec4 v1 = nurb::get(
         q1.begin(), q1.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
-      m_vertices.push_back(v1);
-      m_vertices.push_back(v0);
+      vertices.push_back(v1);
+      vertices.push_back(v0);
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void nurb_surface::build_normal() {
-  m_normals.clear();
-  m_normals.reserve(m_vertices.size());
+GLint nurb_surface::build_normal() {
+  vec3_array& normals = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&normals));
+  normals.reserve(num_vertices());
 
   // create triangle strip row by row
   GLfloat ustep = (m_uend - m_ubegin) / m_upartition;
@@ -61,32 +64,35 @@ void nurb_surface::build_normal() {
       vec3 front1 = nurb::tangent(
         vq.begin(), vq.end(), m_uknots.begin(), m_uknots.end(), m_udegree, u1);
 
-      m_normals.push_back(normalize(cross(right1, front1)));
-      m_normals.push_back(normalize(cross(right0, front0)));
+      normals.push_back(normalize(cross(right1, front1)));
+      normals.push_back(normalize(cross(right0, front0)));
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void nurb_surface::build_texcoord() {
+GLint nurb_surface::build_texcoord() {
   // QUES : even distribute ?.
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.size());
+  vec2_array& texcoords = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
 
   for (GLuint i = 0; i < m_upartition; ++i) {
     GLfloat y0 = static_cast<GLfloat>(i) / m_upartition;
     GLfloat y1 = static_cast<GLfloat>(i + 1) / m_upartition;
     for (int j = 0; j <= m_vpartition; ++j) {
       GLfloat x = static_cast<GLfloat>(j) / m_vpartition;
-      m_texcoords.push_back(vec2(x, y1));
-      m_texcoords.push_back(vec2(x, y0));
+      texcoords.push_back(vec2(x, y1));
+      texcoords.push_back(vec2(x, y0));
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
 void nurb_surface::draw(GLuint primcount /* = 1*/) {
-  bind_vertex_array_object();
+  bind_vao();
   GLuint strip_size = (m_vpartition + 1) * 2;
   for (GLuint i = 0; i < m_upartition; ++i) {
     draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size, primcount);
@@ -103,7 +109,6 @@ vec4 nurb_surface::get(GLfloat u, GLfloat v) {
 //--------------------------------------------------------------------
 vec4_vector nurb_surface::u_interim(GLfloat u) {
   vec4_vector q;
-  q.reserve(uorder());
 
   for (int i = 0; i < vorder(); ++i) {
     const vec4_vector& ctrl_points = col(i);
@@ -117,7 +122,6 @@ vec4_vector nurb_surface::u_interim(GLfloat u) {
 //--------------------------------------------------------------------
 vec4_vector nurb_surface::v_interim(GLfloat v) {
   vec4_vector q;
-  q.reserve(vorder());
 
   for (int i = 0; i < uorder(); ++i) {
     vec4_vector ctrl_points = row(i);
@@ -172,7 +176,6 @@ void nurb_surface::uniform_knots() {
 void nurb_surface::uniform_uknots() {
   GLuint m = un() + up() + 1;
 
-  m_uknots.clear();
   m_uknots.reserve(m + 1);
   GLuint s = up() + 1;
   GLint c = m + 1 - 2 * s;
@@ -187,7 +190,6 @@ void nurb_surface::uniform_uknots() {
 void nurb_surface::uniform_vknots() {
   GLuint m = vn() + vp() + 1;
 
-  m_vknots.clear();
   m_vknots.reserve(m + 1);
   GLuint s = vp() + 1;
   GLint c = m + 1 - 2 * s;

@@ -4,14 +4,15 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void torus::build_vertex() {
+GLint torus::build_vertex() {
   GLuint ring_size = (m_sides + 1) * 2;
   GLfloat pi2 = glm::pi<GLfloat>() * 2;
   GLfloat theta_step = pi2 / m_rings;
   GLfloat phi_step = pi2 / m_sides;
 
-  m_vertices.clear();
-  m_vertices.reserve(ring_size * m_rings);
+  vec3_array& vertices = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve(ring_size * m_rings);
 
   // build torus ring by ring(triangle strip), use theta along +z to rotate
   // ring, use phi along -y to rotate vertex in ring.
@@ -34,16 +35,18 @@ void torus::build_vertex() {
       vec3 v0(cos_theta0 * r, sin_theta0 * r, m_inner_radius * glm::sin(phi));
       vec3 v1(cos_theta1 * r, sin_theta1 * r, m_inner_radius * glm::sin(phi));
 
-      m_vertices.push_back(v0);
-      m_vertices.push_back(v1);
+      vertices.push_back(v0);
+      vertices.push_back(v1);
     }
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void torus::build_normal() {
-  m_normals.clear();
-  m_normals.reserve(m_vertices.capacity());
+GLint torus::build_normal() {
+  vec3_array& normals = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&normals));
+  normals.reserve(num_vertices());
 
   GLfloat pi2 = glm::pi<GLfloat>() * 2;
   GLfloat theta_step = pi2 / m_rings;
@@ -70,22 +73,24 @@ void torus::build_normal() {
       vec3 n1 =
         v1 - vec3(cos_theta1 * m_outer_radius, sin_theta1 * m_outer_radius, 0);
 
-      m_normals.push_back(glm::normalize(n0));
-      m_normals.push_back(glm::normalize(n1));
+      normals.push_back(glm::normalize(n0));
+      normals.push_back(glm::normalize(n1));
     }
   }
 
-  assert(m_normals.size() == m_vertices.size());
+  assert(normals.size() == num_vertices());
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void torus::build_texcoord() {
+GLint torus::build_texcoord() {
   GLfloat pi2 = glm::pi<GLfloat>() * 2;
   GLfloat theta_step = pi2 / m_rings;
   GLfloat phi_step = pi2 / m_sides;
 
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.capacity());
+  vec2_array& texcoords = *(new vec2_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
 
   // build torus ring by ring(triangle strip), use theta along +z to rotate
   // ring, use phi along -y to rotate vertex in ring.
@@ -100,17 +105,18 @@ void torus::build_texcoord() {
       vec2 t0(theta0 / pi2, phi / pi2);
       vec2 t1(theta1 / pi2, phi / pi2);
 
-      m_texcoords.push_back(t0);
-      m_texcoords.push_back(t1);
+      texcoords.push_back(t0);
+      texcoords.push_back(t1);
     }
   }
 
-  assert(m_texcoords.size() == m_vertices.size());
+  assert(texcoords.size() == num_vertices());
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
 void torus::draw(GLuint primcount /* = 1*/) {
-  bind_vertex_array_object();
+  bind_vao();
 
   GLuint ring_size = (m_sides + 1) * 2;
 

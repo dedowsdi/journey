@@ -17,6 +17,7 @@
 #include "beziersurface.h"
 #include "points.h"
 #include "nurbsurface.h"
+#include "axes.h"
 
 namespace zxd {
 
@@ -25,6 +26,7 @@ GLuint diffuse_map1d;
 
 blinn_program blinn_prg;
 normal_viewer_program nv_prg;
+vertex_color_program vc_prg;
 
 struct texline_program : public zxd::program {
   // GLint ul_eye;
@@ -74,6 +76,7 @@ protected:
   nurb m_nurb;
   bezier_surface m_bezier_surface;
   nurb_surface m_nurb_surface;
+  axes m_axes;
 
 public:
   geometry_app() : m_camera_pos(0, -8, 8), m_render_normal(GL_FALSE) {}
@@ -121,6 +124,8 @@ public:
     texline_prg.init();
     texline_prg.p_mat = blinn_prg.p_mat;
 
+    vc_prg.init();
+
     // geometry
     m_sphere.build_mesh();
 
@@ -148,6 +153,8 @@ public:
     m_disk1.start(fpi4);
     m_disk1.sweep(fpi2);
     m_disk1.build_mesh();
+
+    m_axes.build_mesh();
 
     {
       vec3_vector2 vv;
@@ -189,7 +196,7 @@ public:
       ctrl_points.push_back(vec3(-1, 0, 2));
       ctrl_points.push_back(vec3(0, 0, 3));
       m_bezier.ctrl_points(ctrl_points);
-      m_bezier.build_mesh(-1, 1);
+      m_bezier.build_mesh();
     }
 
     {
@@ -202,7 +209,7 @@ public:
       m_nurb.degree(3);
       m_nurb.ctrl_points(ctrl_points);
       m_nurb.uniform_knots();
-      m_nurb.build_mesh(-1, 1);
+      m_nurb.build_mesh();
     }
 
     // texture
@@ -260,6 +267,13 @@ public:
     gm.draw();
   }
 
+  void render_vertex_color(geometry_base &gm, const mat4 &mvp_mat) {
+    vc_prg.use();
+    vc_prg.update_uniforms(mvp_mat);
+    gm.bind_vc(vc_prg.al_vertex, vc_prg.al_color);
+    gm.draw();
+  }
+
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -289,6 +303,8 @@ public:
       draw_points(m_nurb_surface.ctrl_points(), blinn_prg.mvp_mat);
       glPointSize(1);
     }
+
+    render_vertex_color(m_axes, blinn_prg.p_mat * blinn_prg.v_mat);
 
     glBindTexture(GL_TEXTURE_1D, diffuse_map1d);
 

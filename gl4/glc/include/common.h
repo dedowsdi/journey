@@ -63,6 +63,19 @@ struct gl_type_traits {
   template <>                              \
   GLenum gl_type_traits<type>::gltype = value;
 
+// handle difference between float and vec
+template <typename T>
+struct glm_vecn {
+  static const GLuint components = T::components;
+  typedef typename T::value_type value_type;
+};
+
+template <>
+struct glm_vecn<GLfloat> {
+  static const GLuint components = 1;
+  typedef GLfloat value_type;
+};
+
 // only works with seperated vertex data
 //_It::valuetype has to be glm::vec*
 template <typename _It>

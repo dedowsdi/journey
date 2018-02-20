@@ -3,23 +3,27 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void bezier::build_vertex() {
-  m_vertices.clear();
-  m_vertices.reserve(m_partitions + 1);
+GLint bezier::build_vertex() {
+  vec3_array& vertices = *(new vec3_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve(m_partitions + 1);
 
   float dt = (m_end - m_begin) / m_partitions;
   for (uint i = 0; i <= m_partitions; ++i) {
-    m_vertices.push_back(get(m_begin + dt * i));
+    vertices.push_back(get(m_begin + dt * i));
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void bezier::build_texcoord() {
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.size());
-  for (int i = 0; i < m_vertices.size(); ++i) {
-    m_texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
+GLint bezier::build_texcoord() {
+  float_array& texcoords = *(new float_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
+  for (int i = 0; i < num_vertices(); ++i) {
+    texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
@@ -56,6 +60,8 @@ void bezier::elevate(bool positive /* = true*/) {
 
   if (positive) {
     GLuint r = n + 1;
+    vec3_array& points = *(new vec3_array());
+    attrib_array(num_arrays(), array_ptr(&points));
     points.reserve(r + 1);
     GLfloat rcp_nplus1 = 1.0 / r;
 
@@ -67,6 +73,8 @@ void bezier::elevate(bool positive /* = true*/) {
     // degree drop, unstable. Graph might be changed as lower degree can't
     // entirely represent higher degree bezier
     GLuint r = n - 1;
+    vec3_array& points = *(new vec3_array());
+    attrib_array(num_arrays(), array_ptr(&points));
     points.reserve(r + 1);
     GLfloat rcpN = 1.0 / n;
 
@@ -119,8 +127,6 @@ vec3 bezier::tangent(GLfloat t) {
 void bezier::subdivide(GLfloat t, bezier& lc, bezier& rc) {
   vec3_vector lp = lc.ctrl_points();
   vec3_vector rp = rc.ctrl_points();
-  lp.clear();
-  rp.clear();
   GLuint n = this->n();
   lp.reserve(n + 1);
   rp.reserve(n + 1);
@@ -230,8 +236,8 @@ vec3 bezier::tangent(
 
 //--------------------------------------------------------------------
 void bezier::draw(GLuint primcount /* = 1*/) {
-  bind_vertex_array_object();
-  draw_arrays(GL_LINE_STRIP, 0, m_vertices.size(), primcount);
+  bind_vao();
+  draw_arrays(GL_LINE_STRIP, 0, num_vertices(), primcount);
 }
 
 //--------------------------------------------------------------------

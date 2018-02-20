@@ -182,4 +182,26 @@ void normal_viewer_program::bind_attrib_locations() {
   al_vertex = attrib_location("vertex");
   al_normal = attrib_location("normal");
 }
+
+//--------------------------------------------------------------------
+void vertex_color_program::attach_shaders() {
+  attach(GL_VERTEX_SHADER, "data/shader/vertex_color.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, "data/shader/vertex_color.fs.glsl");
+}
+
+//--------------------------------------------------------------------
+void vertex_color_program::bind_uniform_locations() {
+  uniform_location(&ul_mvp_mat, "mvp_mat");
+}
+
+//--------------------------------------------------------------------
+void vertex_color_program::bind_attrib_locations() {
+  al_vertex = attrib_location("vertex");
+  al_color = attrib_location("color");
+}
+
+//--------------------------------------------------------------------
+void vertex_color_program::update_uniforms(const mat4& _mvp_mat) {
+  glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(_mvp_mat));
+}
 }

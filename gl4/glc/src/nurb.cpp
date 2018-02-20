@@ -3,35 +3,39 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void nurb::build_vertex() {
+GLint nurb::build_vertex() {
   if (!valid()) {
     std::cout << "invalid b spline. n : " << n() << ", p : " << m_degree
               << ", m : " << m() << std::endl;
-    return;
+    return 0;
   }
 
-  m_vertices.clear();
-  m_vertices.reserve(m_partitions + 1);
+  vec4_array& vertices = *(new vec4_array());
+  attrib_array(num_arrays(), array_ptr(&vertices));
+  vertices.reserve(m_partitions + 1);
 
   float dt = (m_end - m_begin) / m_partitions;
   for (uint i = 0; i <= m_partitions; ++i) {
-    m_vertices.push_back(get(m_begin + dt * i));
+    vertices.push_back(get(m_begin + dt * i));
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-void nurb::build_texcoord() {
-  m_texcoords.clear();
-  m_texcoords.reserve(m_vertices.size());
-  for (int i = 0; i < m_vertices.size(); ++i) {
-    m_texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
+GLint nurb::build_texcoord() {
+  float_array& texcoords = *(new float_array());
+  attrib_array(num_arrays(), array_ptr(&texcoords));
+  texcoords.reserve(num_vertices());
+  for (int i = 0; i < num_vertices(); ++i) {
+    texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
   }
+  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
 void nurb::draw(GLuint primcount) {
-  bind_vertex_array_object();
-  draw_arrays(GL_LINE_STRIP, 0, m_vertices.size(), primcount);
+  bind_vao();
+  draw_arrays(GL_LINE_STRIP, 0, num_vertices(), primcount);
 }
 
 //--------------------------------------------------------------------
@@ -256,8 +260,6 @@ void nurb::subdivide(GLfloat u, nurb& lc, nurb& rc) {
   lc.ctrl_points(points);
   lc.knots(knots);
 
-  points.clear();
-  knots.clear();
 
   // part 1, down edge of point iterations
   for (int i = vec.size() - 1; i > 0; --i) points.push_back(vec[i].back());
@@ -300,7 +302,6 @@ std::vector<vec4_vector> nurb::iterate(
 void nurb::uniform_knots() {
   GLuint m = n() + p() + 1;
 
-  m_knots.clear();
   m_knots.reserve(m + 1);
   GLuint s = p() + 1;
   GLint c = m + 1 - 2 * s;

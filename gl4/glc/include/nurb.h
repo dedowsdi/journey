@@ -7,7 +7,7 @@
 namespace zxd {
 using namespace glm;
 // clamped b-spline
-class nurb : public geometry4313 {
+class nurb : public geometry_base {
 protected:
   vec4_vector m_ctrl_points;
   float_vector m_knots;
@@ -27,8 +27,8 @@ public:
   GLuint p() { return m_degree; }
   bool valid() { return m() == n() + p() + 1; }
 
-  virtual void build_vertex();
-  virtual void build_texcoord();
+  virtual GLint build_vertex();
+  virtual GLint build_texcoord();
   virtual void draw(GLuint primcount = 1);
 
   // get point by De Boor's algorithm

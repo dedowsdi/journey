@@ -6,7 +6,7 @@
 
 namespace zxd {
 
-class Points3 : public geometry3111 {
+class Points3 : public geometry_base {
 protected:
   vec3_vector m_points;
 

@@ -9,7 +9,7 @@ namespace zxd {
 /*
  * build cylinder with two triangle fans and a bunch of triangle strips
  */
-class cylinder : public geometry3323 {
+class cylinder : public geometry_base {
 protected:
   GLfloat m_base;
   GLfloat m_top;
@@ -27,10 +27,10 @@ public:
         m_slice(slice),
         m_stack(stack) {}
 
-  void build_vertex();
+  GLint build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  void build_normal();
-  void build_texcoord();
+  GLint build_normal();
+  GLint build_texcoord();
 
   void draw(GLuint primcount = 1);
 

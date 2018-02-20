@@ -3,7 +3,7 @@
 #include "geometry.h"
 
 namespace zxd {
-class bezier_surface : public geometry3323 {
+class bezier_surface : public geometry_base {
 protected:
   GLfloat m_ubegin;
   GLfloat m_uend;
@@ -23,11 +23,11 @@ public:
         m_upartition(20),
         m_vpartition(20){};
 
-  virtual void build_vertex();
+  virtual GLint build_vertex();
 
-  virtual void build_normal();
+  virtual GLint build_normal();
 
-  virtual void build_texcoord();
+  virtual GLint build_texcoord();
 
   virtual void draw(GLuint primcount = 1);
 
