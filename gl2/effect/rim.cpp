@@ -153,7 +153,7 @@ class app0 : public app {
     prg0.v_mat = glm::lookAt(vec3(0, 0, 3), vec3(0, 0, 0), vec3(0, 1, 0));
 
     sphere0.build_mesh();
-    sphere0.bind(prg0.al_vertex, prg0.al_normal);
+    sphere0.bind(prg0.al_vertex, prg0.al_normal, -1);
   }
 
   void reshape(int w, int h) {

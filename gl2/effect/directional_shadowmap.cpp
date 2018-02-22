@@ -390,13 +390,13 @@ class app0 : public app {
     plane0.build_mesh();
     plane1.build_mesh();
 
-    sphere0.bind(render_prg.al_vertex);
-    plane0.bind(render_prg.al_vertex);
-    plane1.bind(render_prg.al_vertex);
+    sphere0.bind(render_prg.al_vertex, -1, -1);
+    plane0.bind(render_prg.al_vertex, -1, -1);
+    plane1.bind(render_prg.al_vertex, -1, -1);
 
-    sphere0.bind(use_prg.al_vertex, use_prg.al_normal);
-    plane0.bind(use_prg.al_vertex, use_prg.al_normal);
-    plane1.bind(use_prg.al_vertex, use_prg.al_normal);
+    sphere0.bind(use_prg.al_vertex, use_prg.al_normal, -1);
+    plane0.bind(use_prg.al_vertex, use_prg.al_normal, -1);
+    plane1.bind(use_prg.al_vertex, use_prg.al_normal, -1);
   }
 
   void reshape(int w, int h) {

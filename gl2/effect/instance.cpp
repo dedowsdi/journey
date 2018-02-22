@@ -210,7 +210,7 @@ class app0 : public app {
     prg.v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
 
     sphere0.build_mesh();
-    sphere0.bind(prg.al_vertex, prg.al_normal);
+    sphere0.bind(prg.al_vertex, prg.al_normal, -1);
 
     reset_mat_attribute();
   }

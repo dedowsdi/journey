@@ -853,7 +853,7 @@ c++:
     3. call using A<int>::foo prior to foo();
 
 -----------
-2018.02.19:
+2018.02.20:
 
 vim:
   you can not execute ex command in normal!:
@@ -862,9 +862,6 @@ vim:
   you can do it like this:
     :normal! vi}
     :'<,'>d
-
------------
-2018.02.19:
 
 math:
   matrix-matrix multiplication distributive:
@@ -905,10 +902,111 @@ math:
   rank1 update:
     A = A + αxx_t
 
+-----------
+2018.02.21:
 
-    
-      
-      
+math:
+  gaussian transform. L_j
+    I 0        0 0 ... 0
+    0 1        0 0 ... 0   // the jth row
+    0 -λ_j+1,j 1 0 ... 0
+    0 -λ_j+2,j 0 1 ... 0
+    0 .        . . .   0
+    0 .        . .  .  0
+    0 .        . .   . 0
+    0 -λ_m-1,j 0 0 ... 1
 
+  L_j*A equals A except for i > j, (L_j*A)_h_i_t = a_h_i_t - a_h_j_t * λ_i,j
 
+  use LU factorization to solve Ax = b :
+    L is unit lower trianglular matrix, U is upper trianglular matrix.
+    A = LU, U = L_inv*A, L_inv will the the final gaussian transform matrix
+    use gaussian transform to generate L and U col by col(current L col is the same as
+    negative col in gaussian transform). so 
+      L = L_n-1···L_2*L_1*L_0
+
+    forward substitution:
+      solve Lz = b.  (z = apply gaussian transform to the right hand side)
+      z = L_inv * b (the algorithm is nearly the same as LU factoriazation,
+                    except b is an vector)
+
+    backward substitution:
+      solve Ux = z
+
+windows:
+  powershell:
+     create a new “Current user, Windows PowerShell ISE” profile:
+       if (!(Test-Path -Path $PROFILE ))
+       { New-Item -Type File -Path $PROFILE -Force }
+
+-----------
+2018.02.22:
+
+math:
+  If Gaussian elimination with row exchanges (LU factorization with pivoting)
+  completes with an upper triangular system that has no zero diagonal
+  coefficients, then for all right-hand side vectors, b, the linear system Ax =
+  b has a unique solution, x.
+
+  permutation vector:
+    k_j ∈ {0,1..,n-1}, for 0<=j<=n-1.   k_i=k_j ==> i = j
+    p = (k_0, k_1, ...k_n-1)_t 
+
+  permutation matrix:
+    P = P(p) = | e_k_0_t   |
+               | e_k_1_t   |
+                    .
+                    .
+                    .
+               | e_k_n-1_t |
+
+    P is the identity matrix with its rows(or cols) rearranged as indicated by
+    the permutation vector (k 0 , k 1 , . . . , k n−1 ).
+
+  pivot matrix:
+    P(j) is a pivot matrix, it's result of swap 0 and jth row of I.
+
+  if in ith step of gaussian elimination, the ith item of current row is 0, you
+  can not do gaussian elimination, you must swap row, that's what pivot matrix
+  used for:
+    PA = LU
+    PAx = Pb
+    LUx = Pb
+    Lz = Pb
+    Ux = z
+
+  gaussian elimation will fail if no row can be found that puts a nonzero on the
+  diagonal(except the last one).
+
+  if A is invertible:
+    A is nonsingular.
+    A_inv exists.
+    AA_inv = A_inv*A = I.
+    A represents a linear transformation that is a bijection.
+    Ax = b has a unique solution for all b ∈ R_n .
+    Ax = 0 implies that x = 0.
+    Ax = ej has a solution for all j ∈ {0, . . . , n − 1}.
+    The determinant of A is nonzero: det(A) != 0.
+
+  special matrix:
+    A = | 0 1 | A_inv = | 0 1 |
+        | 1 0 |         | 1 0 |
+
+    | α_0,0 α_0,1 |      | α_1,1 -α_0,1 |   
+    | α_1,0 α_1,1 |_inv =| -α_1,0 α_0,0 |* (α_0,0*α_1,1 − α_1,0*α_0,1)
+
+    | L_00   0    |        | L_00_inv               0      |
+    | l_10_t λ_11 |_inv =  | -l_10_t*L_oo_inv/λ_11  1/λ_11 |
+
+    | U_00   u_01 |        | U_00_inv  -U_00_inv*u_01/υ_11 |
+    | 0      υ11  |_inv =  | 0         1/υ_11              |
+
+    | I 0    0 |        | I  0    0 |
+    | 0 1    0 |        | 0  1    0 |
+    | 0 l_21 0 |_inv =  | 0 -l_21 0 |
+
+  A_t_i = A_i_t
+    AA_i = I
+    A_i_t * A_t = I
+    A_t_i = A_i_t
 

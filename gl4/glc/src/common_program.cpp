@@ -163,7 +163,11 @@ void normal_viewer_program::update_model(const mat4& _m_mat) {
 //--------------------------------------------------------------------
 void normal_viewer_program::attach_shaders() {
   attach(GL_VERTEX_SHADER, "data/shader/normal_viewer.vs.glsl");
+#ifdef GL_VERSION_3_3
   attach(GL_GEOMETRY_SHADER, "data/shader/normal_viewer.gs.glsl");
+#else
+  attach(GL_GEOMETRY_SHADER_ARB, "data/shader/normal_viewer.gs.glsl");
+#endif
   attach(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
 }
 

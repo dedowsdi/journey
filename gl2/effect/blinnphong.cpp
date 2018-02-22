@@ -141,7 +141,7 @@ class app0 : public app {
     this->set_v_mat(&prg0.v_mat);
 
     sphere0.build_mesh();
-    sphere0.bind(prg0.al_vertex, prg0.al_normal);
+    sphere0.bind(prg0.al_vertex, prg0.al_normal, -1);
   }
 
   void reshape(int w, int h) {
