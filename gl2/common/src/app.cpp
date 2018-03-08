@@ -227,6 +227,9 @@ void app::loop() {
   if (drawable) {
     glXSwapIntervalEXT(dpy, drawable, m_swap_interval);
   }
+  // while(true){
+  // glutMainLoopEvent();
+  //}
   glutMainLoop();
 }
 
@@ -272,6 +275,18 @@ void app::keyboard(unsigned char key, int x, int y) {
     case '2': {
       m_swap_interval ^= 1;
       std::cout << "swap interval in glut? : " << m_swap_interval << std::endl;
+
+      Display *dpy = glXGetCurrentDisplay();
+      GLXDrawable drawable = glXGetCurrentDrawable();
+      unsigned int swap, maxSwap;
+      if (drawable) {
+        glXQueryDrawable(dpy, drawable, GLX_SWAP_INTERVAL_EXT, &swap);
+        glXQueryDrawable(dpy, drawable, GLX_MAX_SWAP_INTERVAL_EXT, &maxSwap);
+        printf(
+          "The swap interval is %u and the max swap interval is "
+          "%u\n",
+          swap, maxSwap);
+      }
     } break;
 
     default:
@@ -460,7 +475,7 @@ void app::idle(void) {
   update();
   glutPostRedisplay();
   ++m_frame_number;
-  //std::cout << m_frame_number<< std::endl;
+  // std::cout << m_frame_number<< std::endl;
 }
 
 //--------------------------------------------------------------------

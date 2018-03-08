@@ -1,0 +1,734 @@
+ vim: tw=80 sw=2 ts=2 et
+
+----------------
+Branching Policy
+  The main line of development is the master branch in the primary repository.
+  The master branch always contains the latest, potentially unstable work.
+
+  When a version release is impending, a feature freeze happens, and a separate
+  openmw-x (where x is the version number) branch is created. Only bugfixes and
+  well-tested or non-disruptive changes are accepted into that branch.
+
+  Developers who want to work on a new feature or a bug-fix are requested to
+  created a new topic branch based either on the master or the openmw-x branch.
+  Usually the master branch should be chosen over the openmw-x branch. But when
+  in doubt, please ask on the development forum.
+
+  The topic branch shall be given a short, descriptive, all-lowercase name.
+
+  Additional topic branches should branch off from the master / openmw-x branch,
+  unless they depend on another topic branch.
+
+  Once a topic branch is ready, the developer should issue a pull request on
+  github into the target branch of the primary repository. If you are unsure if
+  the branch is ready, ask on the forum first.
+
+------------------
+Naming Conventions
+  Files
+    header files: somefile.hpp
+    source files: somefile.cpp
+    No CamelCase and no underscores, please.
+
+  Names
+    Namespaces
+      Example: ThisIsANamespace
+
+    Namespaces in apps/openmw will have a MW-prefix (MWThisIsANamespace).
+    Obviously you should try to keep these names short, but don't use hard to
+    read abbreviations.
+
+    Classes
+      Example: ThisIsAClass
+
+    Functions
+      Example: thisIsAFunction
+
+    Local Variables & Parameters
+      Example: thisIsAVariable
+
+    Member Variables
+      Non-static: mThisIsAVariable
+
+    Static: sThisIsAVariable
+
+    Note that formally the name of the variable would still be thisIsAVariable.
+    The m and the s are scope sigils. Some other languages (e.g. Ruby) provide
+    these as part of the syntax. C doesn't, so we have to encode them in the
+    name. And no, this is not Hungarian notation.
+
+  Global Variables
+    Shame on you!
+
+  Enums
+    Example:
+
+    TypePrefix_SomeName
+    TypePrefix_SomeOtherName
+    TypePrefix_AndSomeMore
+    The TypePrefix should be chosen appropriately for the purpose of the enum.
+    Don't use all uppercase names. These would make the enums look like
+    preprocessor constants.
+
+  Preprocessor constants
+  Example: THISISACONSTANT
+
+  Since preprocessor constants are the only part of the language that does not
+  respect namespaces, these must be clearly distinguished from everything else.
+
+  Don't use these for anything but include guards and conditional compiling.
+
+  Acronyms
+    Acronyms in names should follow the guidelines on this page too, even if
+    that is not how you would normally write them, e.g.: a class representing a
+    NPC would be called Npc. Otherwise it would look like a preprocessor macro.
+
+  Abbreviations
+    Please avoid cryptic abbreviations. iter and i are okay. Well known acronyms
+    from the RPG terminology are okay too (but see above for advice on
+    capitalisation). Other abbreviations should be avoided. Don't be afraid of
+    long names!
+
+---------------------------
+Code Formatting Conventions
+  Layout & Indention
+  This is an example of the layout & indention style we encourage.
+
+   namespace SomeSpace
+   {
+       class SomeClass
+       {
+           private:
+              int mSomeVar;
+    
+           public:
+              float someFunction(float p1, float p2) const;
+       };
+   }
+
+   namespace SomeSpace
+   {
+       float SomeClass::someFunction(float p1, float p2) const
+       {
+           return p1 + p2;
+       }
+   }
+  Note that the indention width is 4 spaces. If you use tabs instead of
+  spaces, our build server will reject your code. Mixing spaces and tabs is
+  not good.
+
+  Includes
+    An implementation file (cpp) should always start by including its own
+    header.
+
+    Further includes should be grouped. Groups must be separated by an empty
+    line.
+
+    C headers (if any) should be listed before the C++ headers.
+    If more than one external library is used, each library's headers should
+    be put into a separate group.
+
+    use following sequence to include heades
+      Standard C and C++ headers
+      External libraries headers
+      Components headers
+      Apps headers
+      Local headers
+
+  ----------------
+  Doxygen Comments
+    Class definitions and function declarations should have doxygen comments. We
+    aren't very strict about this though (especially for trivial functions).
+
+    A class should be documented like this:
+
+      /// \brief short description
+      ///
+      /// Longer description.
+      class SomeClass
+
+    The longer description can be skipped, if there is nothing more to say.
+
+    A function should be documented like this:
+      /// Description.
+      void someFunction();
+
+    Here is a link to the Doxygen Documentation.
+      http://www.stack.nl/~dimitri/doxygen/commands.html
+    Please make plenty of use of the listed commands, especially the following:
+      \a
+      \attention
+      \brief
+      \note
+      \p
+      \param
+      \return
+      \todo
+
+------------------
+Other Coding Rules
+  Namespaces
+    We prefer fully qualified names (e.g. std::cout).
+
+    Using directives (e.g. "using namespace std") are not welcome. Using
+    directives in headers will result in the code being rejected.
+
+    Using declarations (e.g. "using std::cout") are tolerated, but should be
+    used only in the innermost possible scope (i.e. usually function scope).
+    Fully qualified names are still preferred.
+
+    Do not declare any names in the global namespace (the only exception to this
+    rule is the file which contains the main() function of an executable).
+
+  Other Pieces of Advice
+    Prefer C++ means over C means. In particular:
+      Do not use the preprocessor for purposes other than conditional compiling (this
+      includes include guards)
+      Use C++ streams instead of C I/O
+      Use new/delete instead of malloc/free (but usage of new/delete should also be
+      limited, see below)
+    Prefer STL-container over raw arrays and new[]/delete[].
+    Use new/delete only when necessary. Prefer automatic storage duration.
+    Throw exceptions instead of retuning error codes.
+    When returning a pointer, don't return a 0-pointer in case of an error
+    (returning a 0-pointer is still valid, if it does not represent an error
+    situation).
+    Remember the Rule of Three.
+
+
+.esm : elder scroll master file.
+.esp : elder scroll plugin.
+.bsa : Bethesda Softworks Archive.
+
+
+Apps: The OpenMW project consists of multiple applications/tools:
+  1 openmw : the actual game
+  2 openmw-launcher : a launcher for openmw
+  3 esmtool : a esm/esp file analysis tool (command line only).
+  4 bsatool : A bsa file analysis tool (command line only).
+  5 openmw-cs :  A replacement for the Morrowind Construction Set.
+  6 openmw-iniimporter : An importer for Morrowind.ini files.
+  7 openmw-essimporter : An importer for vanilla Morrowind save files. Currently
+                         in early stages - imported saves will be missing functionality,
+  8 openmw-wizard : An installation wizard for the game files that are required
+                    to run OpenMW.
+
+Components
+  A collection of reusable components. Most of these components are used by more
+  than one application within the OpenMW project.
+
+  An ideal component is self-contained with no additional dependencies on the
+  OpenMW codebase. In some cases depending on another component is OK.
+
+Extern
+  The Extern subsystem consists of libraries that are not part of the OpenMW
+  project, but of which a copy is kept in the repository anyway:
+
+  oics
+    Fork of the OIS Input Control System project, a library that makes it easy
+    to handle input configurations for mouse, keyboard and joysticks by routing
+    bindings through abstract channels. We use it for OpenMW's in-game key
+    binding menu. When OpenMW switched to SDL2 input, modifications to oics were
+    made to use SDL2 for input in place of OIS.
+
+  osg-ffmpeg-videoplayer
+    A port of the ogre-ffmpeg-videoplayer project, which is now in extern/ for
+    historical reasons. We might move it to components/ at some point.
+    
+-----------
+world model
+
+  ---------------------------------------------
+  there are two kinds of terminology in openmw:
+
+  --
+  MW:
+    id
+      A certain type of item, which is internally represented as a record.  Each
+      ID is identified by a unique string. IDs are immutable. Example:
+      katana_goldbrand_unique
+
+    reference
+      An instance of an ID, that exists either somewhere in the world or in a
+      container/inventory. A reference consists of the name of its ID and some
+      additional data. References are mutable. Not to be confused with C++
+      references.  Example: The sword Goldbrand that you have in your inventory
+      after finishing the Boethiah quest in Morrowind.
+
+  ---
+  NEW:
+    class
+      the same as id in MW. there is a c++ class per type of class.
+
+    object
+      the same as reference in MW.
+
+    instance
+      the same as object.
+
+  -------------
+  Record store:
+    The world model is split in two parts: An immutable part and a mutable part.
+    The record store represents the immutable part.
+
+    The esm/esp file format contains a list of records, where each record is
+    composed of a type ID and additional data. Our world model does mirror this
+    structure.
+
+    Individual records can by identified by a string ID, a numeric ID, a
+    coordinate-pair or not at all (depending on the type).
+
+    For each type of record we have a struct in the ESM namespace:
+    http://zinnschlag.github.com/openmw/namespaceESM.html
+
+    For each type of record we also have a list of these records, instantiating
+    the MWWorld::Store template. There are some variations depending on the
+    record type.
+
+    The class implementing the record store is named ESMStore (in the MWWorld
+    namespace). The ESMStore merges records from multiple ESM/ESP files into a
+    single store. The merging implementation can vary depending on the record
+    type.
+
+    A const reference to the current ESMStore can be obtained from the
+    MWBase::World class instance.
+
+  ----------------
+  Dynamic Records:
+    Some types of records can be generated dynamically during gameplay and then
+    accessed via the record store like any other record.
+    Examples:
+      custom classes
+      custom enchantments
+      potions created by alchemy
+      modifications to levelled lists via the console
+
+  ----
+  Cell
+    A cell record consists of some header-type data fields and a collection of
+    references. Of these only the header data is stored in the record store. The
+    collection of references is mutable and as such needs to be treated
+    separately.
+
+  ----
+  Info
+    For every practical purpose each info record is a sub-records of a dialogue
+    record. The OpenMW info storage implementation reflects this structure. The
+    esm/esp format does not.
+
+  -----
+  Cells
+
+  The World of an OpenMW game is composed of cells. Each cell consists of an
+  immutable part (stored in the record store) and a list of objects, which make
+  up the mutable part of the world model.
+
+    -----------
+    Terminology
+
+    An active cell refers to a cell that is in the currently rendered scene.  A
+    cell being loaded refers to the objects in the cell having been loaded from
+    the game files, ready to be used by scripts or other means. Once loaded, a
+    cell is never unloaded, unless you start a new game or load another saved
+    game. Note: some code/other documentation that may not be particularly
+    concerned with the world model will incorrectly use the term 'loaded' as
+    meaning 'active', do not confuse the two!
+
+    ---------------------
+    Interiors & Exteriors
+    These are the differences between interior and exterior cells:
+
+    Interior cells are accessed by an ID, which is identical to the user-visible
+    cell name. (except for the Russian version of Morrowind, which uses a
+    separate translation mechanism)
+    Exterior cells are accessed by a coordinate pair and can have an optional
+    name. Exterior cells are arranged in the regular grid which can have holes
+    and an irregular outline.
+    Only exterior cells have terrain
+    The sky is optional in interior cells
+    Only one interior cell can be active at any time. In this case no exterior
+    cells can be active
+    Multiple exterior calls can be active at the same time (in the default
+    configuration the cell the player is in and the eight neighbouring cells).
+    In this case no interior cell can be active.
+
+  -------
+  Objects
+
+  The mutable part of the world model is made up from objects (called references
+  in the original MW terminology). An object can either be located in a cell or
+  in a container (which is also located in a cell).
+
+  Each cell and each container keeps a separate list for each record type that
+  can be referenced. Each list is made up from a sequence of ESMS::LiveCellRef
+  objects (specialized for the respective record type). Please note that the
+  LiveCellRef only contains the persistent state. State only valid while the
+  object is in an active cell is stored elsewhere.
+
+  There is no polymorphism used here, which is a design flaw that originated at
+  a very early development stage and could not be fixed anymore without a total
+  rewrite, once everyone agreed that it was a flaw. Various workarounds are in
+  place now.
+
+  ---------------------
+  Unified Object Access
+
+  Unified access to objects is possible through the MWWorld::Ptr class. There
+  are several ways to obtain a Ptr:
+    directly from an object in a cell or a container
+    via the record ID (all referencable records have string IDs), if there is only
+    one object of this record
+    for NPCs and Creatures, via a CreatureStats::ActorId
+
+  --------------
+  MWWorld::Class
+
+  Another workaround is the MWWorld::Class hierarchy. Through the static
+  function MWWorld::Class::get from a Ptr a suitable instance of a derived
+  Class-class can be obtained that polymorphically implements record type
+  specific behaviour.
+
+  ------
+  Player
+
+  The player is a special object that references a record of the type NPC. The
+  player is by definition always in an active cell.
+
+  The player object is not stored within the list of objects of that cell.
+  Instead it is handled separately by the World class. This can be ignored most
+  of the time though. The player can be access like any other object via its ID
+  "player". The world class also provides a function that returns the player's
+  MWWorld::Ptr.
+
+  Please note that the esm/esp files don't contain a player object. Instead this
+  object is inserted when the player begins a new game.
+
+  ---------------------
+  Rendering Archiecture
+
+    ------------------------
+    Threading considerations
+      The default threading model in OpenSceneGraph, DrawThreadPerContext,
+      requires some care when dealing with modifications to rendering data
+      (Drawables and StateSets). Any such data that is currently in (or has been
+      in) the scene graph (referred to as 'live' data) must be assumed as unsafe
+      to modify because it could be in use by the drawing thread.
+
+      What is not allowed:
+        Modify a live StateSet (e.g. by adding/removing StateAttributes or
+        modifying a contained StateAttribute) 
+        Modify a live Drawable in a way that affects its drawing implementation
+
+      What is allowed:
+        Remove a Drawable from, or add it to the scene graph (the scene graph
+        itself is not part of rendering data) (un)assign a StateSet from a node
+        - the StateSets used for a rendering traversal are stored separately, so
+        this is fine.  Make harmless modifications that don't affect the
+        renderer, like adding callbacks, changing names, etc. Still be very
+        careful, though.
+
+      Whenever you are dealing with a bug that you think may be
+      threading-related, you can use the OSG_THREADING=SingleThreaded
+      environment variable to test your theory. As long as you stick to the
+      above rules, though, you shouldn't run into any issues.
+
+      To make actual modifications, one of the following techniques may be used:
+
+        Clone the original object and modify that copy. This is perfect for
+        infrequent modifications when we don't care about the performance
+        overhead of object cloning/deletion.
+
+           osg::ref_ptr<osg::StateSet> newStateSet = new osg::StateSet(*stateset, osg::CopyOp::SHALLOW_COPY); osg::BlendFunc*
+           blendFunc = static_cast<osg::BlendFunc*>(stateset->getAttribute(osg::StateAttribute::BLENDFUNC));
+           osg::ref_ptr<osg::BlendFunc> newBlendFunc = blendFunc ?  new osg::BlendFunc(*blendFunc) : new osg::BlendFunc;
+           newBlendFunc->setDestinationAlpha(osg::BlendFunc::ONE);
+           newStateSet->setAttribute(newBlendFunc, osg::StateAttribute::ON);
+           node.setStateSet(newStateSet);
+
+        Use a double buffering technique to manage access. We have a
+        StateSetUpdater class that implements this technique for StateSets.
+
+            class AtmosphereUpdater : public SceneUtil::StateSetUpdater
+            {
+            public:
+                void setEmissionColor(const osg::Vec4f& emissionColor)
+                {
+                    mEmissionColor = emissionColor;
+                }
+
+            protected:
+                virtual void setDefaults(osg::StateSet* stateset)
+                {
+                    stateset->setAttributeAndModes(createAlphaTrackingUnlitMaterial(), osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+                }
+
+                virtual void apply(osg::StateSet* stateset, osg::NodeVisitor* /*nv*/)
+                {
+                    osg::Material* mat = static_cast<osg::Material*>(stateset->getAttribute(osg::StateAttribute::MATERIAL));
+                    mat->setEmission(osg::Material::FRONT_AND_BACK, mEmissionColor);
+                }
+
+            private:
+                osg::Vec4f mEmissionColor;
+            };
+
+      Rather than changing the object itself, inject the change on the fly where
+      it's needed, e.g. into the CullVisitor by using a CullCallback.
+        https://github.com/OpenMW/openmw/blob/ada85aa1ee24e32435083cf644faece988ba9a27/apps/openmw/mwrender/sky.cpp#L742
+
+      Set the object's dataVariance to DYNAMIC, so that the draw traversal knows
+      that it has to synchronize that object. Never do this in performance
+      critical areas, or at all, really. Just one DYNAMIC object will make the
+      threading useless and probably halve your frame rate.
+
+  --------------------
+  Important components
+    
+    ------------
+    SceneManager
+      The SceneManager is where game object's rendering nodes (.nif or .osg) are
+      loaded, prepared, optimized and instanced, then stored in cache for future
+      use. Instancing refers to making a copy of the object that is safe to use
+      and modify, while the original 'template' object remains read-only.
+
+      A state sharing mechanism is employed that will share StateSets across
+      different objects in order to improve rendering efficiency. This means
+      that for any object loaded through the SceneManager it is not safe to
+      modify its StateSets because they could also be in use by another object.
+      It is advised to create a copy of the StateSet before making a
+      modification (just as discussed in Threading considerations). The
+      StateSetUpdater already does this for you by creating a copy of the
+      StateSet on the first frame its used.
+
+    ---------
+    Optimizer
+      The optimizer's job is to restructure a scenegraph in a way that is
+      functionally equivalent yet increases the rendering speed. It does this
+      for example by merging Geometries with the same StateSet into one
+      Geometry, removing redundant nodes, and so on. The Optimizer is run
+      automatically on any object loaded through the SceneManager.
+
+      It has been known to happen that the optimizer contained bugs, which are
+      then (usually) promptly fixed. These bugs could cause objects to render
+      incorrectly, cause incorrect collisions or spam warnings on the console.
+      In order to check if a bug is related to the Optimizer, we can run OpenMW
+      with the OPENMW_OPTIMIZE=OFF environment variable. If the bug disappears
+      with that flag, we can further narrow down which specific optimization may
+      be causing it, by disabling them in order:
+
+      OPENMW_OPTIMIZE="~MERGE_GEOMETRY"
+      OPENMW_OPTIMIZE="~MERGE_GEOMETRY|~REMOVE_REDUNDANT_NODES" # If the bug
+      does not appear now, the first optimization (FLATTEN_STATIC_TRANSFORMS)
+      has to be the culprit.
+
+    ---------
+    Utilities
+      Aside from the optimizer, the sceneutil/ directory contains many more
+      OpenSceneGraph "extensions" made for OpenMW purposes, for example our
+      lighting system. It is a good idea to be familiar with these.
+
+      There is also a scene graph debugger (invoked in-game with the "showSceneGraph"
+      (ssg) console command), this will print out the scene graph representation of
+      any given object, or even the whole scene (if no object is given). The results
+      are printed to a text file.
+
+  ----------------
+  GUI Architecture
+
+    -------------
+    Layout system
+      MyGUI's XML format for layouts/skins has been used for the majority of the
+      OpenMW GUI. The resulting files can be found at openmw/files/mygui.
+      Currently the formats are lacking a complete documentation, but the amount
+      of examples that are available should more or less make up for this.
+
+      MyGUI includes a Layout Editor and Skin Editor application, but
+      unfortunately these tools are difficult to use for us due to specifics of
+      the Morrowind GUI resources, e.g. BSA archives and case insensitivity. In
+      the past we made a MyGUI plugin to work around this, which can still be
+      found in the 'plugins' directory of the OpenMW code. However, this plugin
+      is currently not working as it has not been updated after OpenMW switched
+      to OpenSceneGraph rendering. So for the time being, XML files have to be
+      edited by hand (which, admittedly, is more convenient in many cases
+      anyway).
+
+      The coordinates in MyGUI layouts (left, top, width, height - always in
+      that order) are given in pixels and relative to the parent widget. The GUI
+      system internally works in pixels, even if GUI Scaling is enabled. The GUI
+      scaling option works by pretending to the GUI that the screen is smaller
+      than it really is, and then using the graphics card to do the scaling.
+
+      Widgets also have an Align property. The Align does not have any effect on
+      the initial placement of the widget, rather, it controls what will happen
+      when the parent widget changes size. For example, if the parent widget's
+      width increases by 1 pixel, and our widget is set to 'HStretch', its width
+      will also increase by 1 pixel. If in that same example our widget instead
+      uses 'Right' then the widget will move to the right by 1 pixel. Here is
+      the list of possible alignments
+        http://mygui.info/docs/struct_my_g_u_i_1_1_align.html#a31d25cd20fcd3d2782d864dd63b3be0a
+      , which can sometimes be combined for example 'Left Bottom'.
+
+      Please note that most of OpenMW's skin files were written using a
+      deprecated syntax. The now preferred and more powerful syntax is the
+      ResourceLayout, for which an example can be found at openmw_resources.xml.
+      This syntax more closely resembles the one used for layout files.
+
+      Apart from using skin/layout files it is still required to use C++ code in
+      order to connect widget events to certain actions. The code for this can
+      be found in the openmw/apps/openmw/mwgui/
+          
+  -------------
+  Box layouting
+    Because the above mentioned pixel-based layouting system can be a bit too
+    limited and cumbersome for some cases, we have created a new box-layout
+    system for OpenMW's purposes that functions similar to the way traditional
+    GUI toolkits like Qt or GTK work. It is usually preferred to use this system
+    for new layouts instead of positioning widgets by hand. The new system
+    introduces the following widgets:
+
+  ----------
+  HBox, VBox
+    Automatically positions and resizes their child widgets, horizontally or
+    vertically. Available user strings are 'Spacing' (empty space between each
+    widget), 'Padding' (outer padding), and 'AutoResize'. If 'AutoResize' is
+    true, the box resizes itself to the requested size of the child widgets.
+    Otherwise, the box will stay at its given size.
+
+    Child widgets can set the user string 'HStretch' (for HBox) or 'VStretch'
+    (for VBox). If stretching is enabled, the widget will fill up all the space
+    available to it. Otherwise, the widget will remain in its original size i.e.
+    the box will only control that widget's position.
+
+    Boxes can be nested within each other e.g. to produce a table layout.
+
+  ---------------
+  AutoSizedButton
+    This widget will resize itself to fit its label.
+
+    Text padding defaults to (24, 8) but can be overriden by the 'TextPadding'
+    user string.
+
+    If the 'ExpandDirection' user string is set to 'Left' then the button will
+    accordingly move to the left upon expanding its size (or to the right on
+    contracting). This is only relevant if the button is not part of a Box.
+
+  ----------------
+  AutoSizedEditBox
+    Like AutoSizedButton, but for multi-line text. The widget's width is static,
+    but the height will be adjusted based on the number of lines required.
+
+  ------
+  Spacer
+    An empty widget for use with HBox/VBox that fills all available space.
+    Spacers can be used to set the alignment of sibling widgets. For example, a
+    box containing a spacer, a button and another spacer (in that order) results
+    in a centered button.
+
+  ----------------
+  Escape sequences
+    As the MyGUI
+    wiki(http://wiki.ogre3d.org/tiki-index.php?page=MyGUI+text+formatting)
+    explains, text widgets support escape sequences starting with '#', for
+    example:
+
+    #ff0000text results in a red 'text'.
+    #{foobar} will be replaced with the value for 'foobar' in the
+    MyGUI::LanguageManager.
+    For OpenMW in particular, we have used a callback into the
+    MyGUI::LanguageManager to implement the following meanings:
+
+    #{setting=<section,setting>} will be replaced with the relevant setting
+    value in the user's OpenMW settings.cfg.
+
+    #{sCell=<cell id>} will be replaced with the translated name for a Morrowind
+    cell (this is usually the same as the Cell ID, but the Russian edition of
+    Morrowind uses a separate translation table)
+
+    #{fontcolour=<name>} will be replaced with the color of
+    FontColor_color_<name> in openmw.cfg (imported from Morrowind.ini). The
+    output format is R,G,B with RGB ranging from 0 to 1.
+
+    #{fontcolourhtml=<name>} is the same as above, except that the output format
+    is a '#' followed by an HTML color code.
+
+    #{<gamesetting>} will be replaced with the value of the Game Setting
+    <gamesetting> in the Morrowind Data Files.
+    Leveraging this replacement mechanism at runtime requires one to use the
+    'setCaptionWithReplacing' method rather than 'setCaption'. Colour-codes
+    (like #ff0000) are always used regardless of whether 'setCaption' or
+    'setCaptionWithReplacing' is used. To use escape sequences in a layout one
+    must use the 'Caption' property.
+
+    To avoid '#' characters in a caption being treated as an escape sequence,
+    this character needs to be escaped by adding another '#' character: '##'
+    produces '#'. MyGUI provides the function MyGUI::TextIterator::toTagsString
+    to do this. When retrieving text from a user-filled text box, you may want
+    to do the opposite by calling getOnlyText().
+
+    Escape sequences are also supported in skins. In order for this to work in
+    legacy skins, the version must be set to '1.1'.
+
+--------
+Research
+
+  -----------
+  Conventions
+    Variables
+      All attribute accesses are the modified (fortified/drained) value by
+      default. Base attribute access is indicated by attributes starting with
+      base.
+      Attributes may be prefixed with pc or npc to indicate the owner of the
+      attribute when opposing actors are involved.
+
+    Calculation
+      All numeric operations occur in floating point unless indicated.
+      int(x) truncates.
+      round(x) uses the default FPU rounding mode. [IEEE 754
+      round-half-towards-even]
+      roll(n) returns an integer from 0 up to but not including n.
+
+  ----------
+  Categories
+
+    Common Terms
+
+    Movement
+
+    Combat
+
+    Magic
+
+    NPC AI Behaviour
+
+    Trading and Services
+
+    Disposition and Persuasion
+
+    Player Craft Skills
+
+    Security and Crime
+
+    Stats and Levelling
+
+    Dialogue and Messages
+
+    Scripting
+
+    Weather
+
+    World
+
+    Game Settings
+
+----
+code
+  Enviroment allows each mw-subsystem to access any others subsystem's top-level manager class.
+  namespace MWBase: base interface for all kinds of stuff?
+
+  what's the different between world position and ESM::CellId ?
+    float x, y; // world position
+    typedef std::pair<int, int> CellId;
+
+  when you search something, use lower case id.
+  
+

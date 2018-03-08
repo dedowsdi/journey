@@ -53,7 +53,7 @@ protected:
   GLboolean m_rmb_down;
   GLboolean m_mmb_down;
   GLuint m_move_dir;
-  GLuint m_swap_interval{1};
+  GLuint m_swap_interval{4};
   GLuint m_frame_number;
   GLdouble m_fps;
   GLdouble m_last_time;

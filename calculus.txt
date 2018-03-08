@@ -1,0 +1,385 @@
+ vim: tw=120 sw=2 ts=2 et
+
+9.8.1-18
+  find the terms throught x^5 in the Maclarin series for f(x).
+  9.8.1. f(x) = tan(x) :
+
+     sin(x) = x - x^3/3! + x^5/5! - x^7/7! ···
+     cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! ···
+     tan(x) = sin(x) / cos(x) = x + 2x^3/3! + 16x^5/5! + ··· // long division
+
+  9.8.7. f(x) = e^x + x + sin(x)
+    
+     e^x = 1 + x + x^2/2! + x^3/3! + ···
+     x = x
+     sin(x) = x - x^3/3! + x^5/5! - x^7/7! ···
+
+9.8.24 method of equating coefficients:
+  tanx = sinx/cosx = a0 + a1x + a2x + ···
+  x - x^3/3! + x^5/5! - x^7/7! ··· = (a0 + a1x + a2x^2 + ···)*(1 - x^2/2! + x^4/4! - x^6/6! ···)
+                                   = a0 + a1x + (a2 - a0/2!)x^2 + (a3 -a1/2!)x^3 + (a4 - a2/2! + a0/4! )x^4 + ···
+  ∴ a0 = 0
+    a1 = 0
+    a2 - a0/2 =0  ==> a2 = 0
+    a3 - a1/2! = -1/3! ==> a3 = 1/3!
+    a4 -a2/2! + a0/4!  = 0 ==> a4 = 0
+
+  use this method get get maclaurin series of f(x) = sec(x) throuth x^4:
+  secx = 1/cosx = a0 + a1x + a2x + ··· 
+  1/(1 - x^2/2! + x^4/4! - x^6/6! ···) = a0 + a1x + a2x + ··· 
+  1 = (a0 + a1x + a2x^2 + ···) * (1 - x^2/2! + x^4/4! - x^6/6! ···) 
+    = a0 + a1x + (a2 - a0/2!)x^2 + (a3 - a1/2!)x^3 + (a4 - a2/2! + a0/4!)x^4
+
+  ∴ a0 = 1
+    a1 = 0
+    a2 - a0/2! = 0 ==> a2 = 1/2
+    a3 - a1/2! = 0 ==> a3 = 0
+    a4 - a2/2! + a0/4! = a4 ==> 1/12
+  secx = 1 + x^2/2 + 5x^4/24 + ···
+
+9.9.1-8 
+  find the maclaurin polynomial of order 4 for f(x) and use it to approximate f(0.12)
+  9.9.1. f(x) = e^2x
+
+    f(x) = 1 + 2x/1 + 2^2*x^2/2!+ 2^3*x^3/3!+ 2^4*x^4/4! ···
+    f(0.12) = 1.27124
+
+  9.9.7. f(x) = atan(x)
+    Dx_0_f = atan(x)                                           | f(0) = 0
+    Dx_1_f = 1*(1+x^2)^-1                                      | Dx_1_f(0) =  1
+    Dx_2_f = -2x*(1+x^2)^-2                                    | Dx_2_f(0) = 0
+    Dx_3_f = 8x^2*(1+x^2)^-3 - 2*(1+x^2)^-2                    | Dx_3_f(0) = -2
+    Dx_4_f = -48x^3/(1+x^2)^4 + 16x*(1+x^2)^-3 + 8x*(1+x^2)^-3 | Dx_4_f(0) = 0
+
+    f(x) = 0 + x + 0  - 2*x^3/3! +0
+    f(0.12) ≈ 0.119424,  f(0.12) = atan(0.12) = 0.119429
+
+9.9.17-24 sketch the graphs of the given equations.
+
+  9.9.17
+    2x+6y+3z=12 
+
+    [x, y] = meshgrid(0:0.1:1);
+    z = (12-2*x-6*y)/3;
+    surf(x, y, z);
+    xlabel('x');
+    ylabel('z');
+    zlabel('z');
+
+9.9.25-32
+  find a formula for R6(x) at a, then obtain a good bound for |R6(0.5)|
+
+  9.9.39 
+    sinx; a=π/4
+
+    Dx_0_f = sinx  | Dx_0_fx(a) = sqrt(2)/2
+    Dx_1_f = cosx  | Dx_1_fx(a) = sqrt(2)/2
+    Dx_2_f = -sinx | Dx_2_fx(a) = -sqrt(2)/2
+    Dx_3_f = -cosx | Dx_3_fx(a) = -sqrt(2)/2
+    Dx_4_f = sinx  | Dx_4_fx(a) = sqrt(2)/2
+    Dx_5_f = cosx  | Dx_5_fx(a) = sqrt(2)/2
+    Dx_6_f = -sinx | Dx_6_fx(a) = sqrt(2)/2
+    Dx_7_f = -cosx |
+
+    R6(x) = Dx_7_f(c) * (x-π/4)^7/7! = -cos(c) * (x-π/4)^7/5040
+    R6(0.5) = -cos(c) * (x-π/4)^7/5040 <= (π/4-x)^7/5040 ≈ 3.060043e-8
+
+11.1.25-32. find the arc length of the given curve.
+  11.1.25 x=t, y=t, z=2t; 0<=t<=2π
+  Dt(x) = 1
+  Dt(y) = 1
+  Dt(z) = 2
+  ∫_0_2π(sqrt(1 + 1 + 4))dt = 2π * sqrt(6)
+
+
+11.5.1-8 find the required limit or indicate that it does not exist.
+
+  11.5.1. L_t_1(2ti - t^2j) = 2i - 2j
+  11.5.5. L_t_0(sint*cost/t i  - 7t^3/e^t j + t/(t+1) k) = i
+
+11.5.33-38 find the length of the curve with the given vector equation
+
+  11.5.3 r(t) = t i + sint j + cost k ; 0 <= t <= 2
+  length = ∫_0_2(sqrt(1 + (cost)^2 + (-sint)^2))dt = 2*sqrt(2)
+
+11.5.44 consider the motion of a particle along a helix given by 
+  r(t) = sint i + cost j + (t^2-3t+2)k
+  where the k component measures the height in meters above the ground and t >= 0.
+
+  (a) Does the particle ever move downward ?
+    t^2 -3t + 2 < 0 ==>  when 1<t<2, particle move download
+  (b) Does the particle ever stop moving ?
+    v(t) = D_t_r(t) = cost i  - sint j + (2t - 3)k
+    v(t) will never be 0, so the particle never stop movint
+  (c) At what time does it reach a position 12meters above the groudn?
+    t^2 - 3t + 2 = 12 ==>  t = 5
+  (d) What is the velocity of the particle when it is 12 meters above the ground?
+    v(t) = cos5 i - sin5j + 7k
+
+11.6.1-4. find the parametric equations of the line through the given pair of points.
+  11.6.1. (1, -2, 3), (4, 5, 6)
+     r(t) = (1, -2, 3) + (3, 7, 3)t
+
+11.6.5-8. write both the parametric equations and the symetric equations for the line through the given point parallel
+          to the given vector.
+  11.5.5 (4, 5, 6), (3, 2, 1)
+    r(t) = (4, 5, 6) + (1, 3, 5) t, (x-4) / 1 = (y-5) /3 = (z-6) / 5
+
+11.6.15. find the parametric equations of the line through (5, -3, 4) that intersects the z-axis at a right angle
+  r(t) = (5, -3, 4) + (5, -3, 0)t
+
+11.6.26. find the euqation of the plane perpendicular to the curve r(t) = tsint i + 3t j + 2t cost k at t = π/2
+  r(π/2) = (π/2, 3π/2, 0)
+  D_t_(r(t)) = (sint + tcost) i + 3 j + (2cost - 2tsint) k
+  D_t_(r(π/2)) = i + 3 j - π k
+  ∴ the plane is x + 3y -π z = D,  substitute x, y, z to π/2, 3π/2, π/2 + 9π/2 = D
+  ∴ the plane is x + 3y - πz = π/2 + 9π/2
+  
+
+11.7.1-6 sketch the curve over the indicated domain for t. Find v, a, T and κ at the point where t = t1
+
+  11.7.1 r(t) = t i + t^2 j ; 0 <= t <= 2; t1 = 1
+    t=linspace(0,2);
+    x=t;
+    y=t.^2;
+    plot(x, y);
+
+    v(t) = i + 2t j
+    ds/dt = ‖v(t)‖ = sqrt(1 + 4t^2)
+    a(t) = 2 j
+    T(t) = v(t)/‖v(t)‖ = (i  + 2t j ) / sqrt(1 + 4t^2)
+    T'(t) = ( 2t i  + 12t^2 j ) / (1 + 4t^2)^(3/2)
+    ‖T'(t)‖ = sqrt(4t^3 + 144t^4) / (1 + 4t^2)^(3/2) 
+    κ(t) = ‖T'(t)‖ / (ds/dt)
+    κ(1) = 0.48662
+
+11.7.7-14 find the unit tangent vector T(t) and curvature κ(t) at the point where t = t1. 
+  11.7.7 u(t) 4t^2 i + 4t j ; t1 = 1/2
+    v(t) = 8t i + 4 j
+    T(t) = (8t i + 4j ) / sqrt(64t^2 + 16)
+    x' = 8t  x" = 8
+    y' = 4   y"" = 0
+    κ(t) = |x'y" - x"y'| / (x'^2 + y'^2)^1.5 = |32t|/(64t^2 + 16)^1.5 = |t|/2sqrt(4t^2 + 1)
+    κ(1/2) = sqrt(2)/8
+
+11.7.15-25 sketch the curve in the xy-plane. then, for the given point, find the curvature and radius of curvature.
+  11.7.15 y=2x^2, (1,2)
+
+    x=linspace(0,2);
+    y=2*x.^2;
+    plot(x,y)
+
+    y' = 4x y" = 4
+    κ(x) = |y"|/(1+y'^2)^1.5 = 4/(1+16x^2)^1.5
+    κ(1) = 4/17^1.5
+    r = 17^1.5/4
+
+11.7.27-34 find the curvature κ, the unit tangent vector T, the unit normalvector N, and the binormal vector B at t = t1
+  11.7.27 r(t) = 0.5t^2 i + t j + t^3/3 k; t1  = 2
+    r'(t) = t i + j + t^2 k, r'(2) = 2i + j + 4k
+    r"(t) = i + 0 j + 2t k, r"(2) = i + 0j + 4k
+    T(t) = r'(t) / ‖r'(t)‖ = (t i + j + t^2 k) / (sqrt(t^2 + 1 + t^4)) T(2) = (2i + j + 4k) / sqrt(21)
+    a_t = r'·r" / ‖r'‖ = 18 / sqrt(21)
+    a_n = ‖r'xr"‖ / ‖r'‖ = ‖4i -4j -k‖ / sqrt(21) = sqrt(33)/sqrt(21)
+    N = (a - a_tT)/a_n
+    B=TxN
+    κ = a_n/(ds/dt)^2 = sqrt(33) / 21^1.5
+
+11.8.1-20 name and sketch the graph of each of the following equatinos in three-space.
+  11.8.1. 4x^2 + 36y^2 = 144
+    [x,z]=meshgrid(0:0.1:1);
+    y= sqrt((144- 4*x.*x)/36);
+    surf(x,y,z)
+
+11.8.30 find the equation of the surface that results when the curve 4x^2-3y^2=12 in the xy-plane is revolved about the
+        x axis.
+
+        the generated curve is hyperboloid of two sheets, so it should be 4x^2 - 3y^2 + kz^2 = 12
+        when y=0, 4x^2 + kz^2 = 12 should form the same curve in xz plane as original curve in xy plane, so k=-3
+        so it's 4x^2 -3y^2 -3z^2 = 12
+
+11.9.1 make a table about the relationships between cylindrical and spherical coordinates.
+  cylinder to sphere  | sphere to cylinder
+  ρ = sqrt(r^2 + z^2) | r = ρsinΦ
+  θ = θ               | θ = θ
+  tan(Φ) = r/z        | z = ρcosΦ
+
+11.9.17-30, make the required change in the given equation.
+  11.9.17. x^2 + y^2 = 9 to cylinderical coordinates
+    r^2 = 9
+
+  11.9.23 r^2 + 2z^2 = 4 to spherical coordinates
+    ρ^2*(sinΦ)^2+2ρ^2*(cosΦ)^2 = 4
+    ρ^2*(1+(cosΦ)^2) = 4
+
+11.9.32. The hyperbola 2x^2-z^2=2 in the xz plane is revolved abount the z-axis. write the equation of the resulting
+         surface in cylindrical coordinates.
+
+         the hyperboloid in cartesian coordinates is 2x^2 + 2y^2 -z^2 = 2
+         2r^2 - z^2 = 2 
+
+11.9.38. let (ρ1, θ1, Φ1) and (ρ2, θ2, Φ2) be the spherical coordinates of two points, and d be the straight-line
+         distance between, show that:
+            d^2 = (ρ1 - ρ2)^2 + 2ρ1ρ2[1 - cos(θ1-θ2)sinΦ1sinΦ2 - cosΦ1cosΦ2]
+         
+         cartesian coodinates of the points is :
+          (ρ1sinΦ1cosθ1, ρ1sinΦ1sinθ1, ρ1cosΦ1)
+          (ρ2sinΦ2cosθ2, ρ2sinΦ2sinθ2, ρ2cosΦ2)
+
+        d^2 = (ρ1sinΦ1cosθ1 - ρ2sinΦ2cosθ2)^2 + (ρ1sinΦ1sinθ1 - ρ2sinΦ2sinθ2)^2 + (ρ1cosΦ1 - ρ2cosΦ2)^2
+            = (ρ1sinΦ1cosθ1)^2 + (ρ1sinΦ1sinθ1)^2 + (ρ1cosΦ1)^2 + (ρ2sinΦ2cosθ2)^2 + (ρ2sinΦ2sinθ2)^2 + (ρ2cosΦ2)^2 + ...
+            = (ρ1sinΦ1)^2 + (ρ1cosΦ1)^2 + (ρ2sinΦ2)^2 + (ρ2cosΦ2)^2 + ...
+            = (ρ1)^2 + (ρ2)^2 + ...
+            = ... +2ρ1ρ2(-sinΦ1cosθ1sinΦ2cosθ2 - sinΦ1sinθ1sinΦ2sinθ2 - cosΦ1cosΦ2)
+            = ... +2ρ1ρ2(-sinΦ1sinΦ2(cosθ1cosθ2 - sinθ1sinθ2) - cosΦ1cosΦ2)
+            = ... +2ρ1ρ2(-sinΦ1sinΦ2(cos(θ1-θ2) - cosΦ1cosΦ2)
+            = (ρ1 - ρ2)^2 + 2ρ1ρ2(1 - sinΦ1sinΦ2(cos(θ1-θ2) - cosΦ1cosΦ2)
+
+12.1.7-16. sketch the graph of f.
+  12.1.7. f(x,y) = 6
+    [x,y]=meshgrid(-1:0.1:1);
+    z=6*ones(21);
+    surf(x,y,z);
+
+  12.1.12 f(x,y) = sqrt(16-4x^2-y^2)
+    [x,y,z]=ellipsoid(0,0,0,2,4,4,20);
+    x=x(11:end,:)
+    y=y(11:end,:)
+    z=z(11:end,:)
+    surf(x,y,z)
+
+12.1.17-22. sketch the level curve z=k for the indicated values of k
+  12.1.17. z=0.5(x^2+y^2),k=0,2,4,5,8
+    [x,y]=meshgrid(-4:0.4:4);
+    z=0.5*(x.*x + y.*y);
+    contour(x,y,z,[0,2,4,6,8],'ShowText','on')
+
+12.1.27-32. describe geometrically the domain of each of the indicated functions of three variable.
+  12.1.27 f(x,y,z) = sqrt(x^2+y^2+z^2-16)
+    { x,y,z∈ R | x^2 + y^2 + z^2 >= 16 }
+
+12.1.33-38. describe geometrically the level surface for the funcitons defined in Problems 33-38
+  12.1.33. f(x,y,z) = x^2+y^2+z^2; k>0
+    sphere surface with center at(0,0,0), radius as sqrt(k)
+
+12.2.1-16. find all first partial derivatives of each function.
+  12.2.1. f(x,y) = (2x-y)^4
+    ∂f/∂x = 8(2x-y)^3
+    ∂f/∂y = -4(2x-y)^3
+
+  12.2.12. F(w,z) = wsin_i(w/z)
+    ∂F/∂w = sin_i(w/z) + w/sqrt(z^2-w^2)
+    ∂F/∂z = -w^2/sqrt(z^4-w^2*z^2)
+
+12.2.17-20 verify that ∂_ff/(∂y∂x) = ∂_ff/(∂x∂y)
+  12.2.20 f(x,y) = tan_i(xy)
+    f_x = y/(1+x^2*y^2) f_xy = (1+(xy)^2)^-1 + 2x^2y^2(1+x^2y^2)
+    f_y = x/(1+x^2*y^2) f_yx = (1+(xy)^2)^-1 + 2x^2y^2(1+x^2y^2) = f_xy
+
+25. Find the slope of the tangent to the curve of intersection of the surface 36z=4x^2+9y^2 and the plane x=3 at(3,2,2)
+  ∂z/∂y = y/2
+  ∂z/∂y(3,2,2) = 1
+
+12.3.1-16. find the indicated limit or state that it does not exist
+  12.3.1. lim_x,y_1,3(3x^2*y - xy^3) = 3*3*1 - 3*1 = 6
+  12.3.9. lim_x,y_0,0((x^2+y^2)/(x^4-y^4)) = lim_x,y_0,0(1/(x^2-y^2)) = doesn't exist
+  12.3.15. lim_x,y_0,0(x*x*y*y/(x^2+y^4)) 
+           = lim_r_0(r*r*(cosθsinθ)^2/(r*r*(cosθ)^2 + r^4*(sinθ)^4))
+           = lim_r_0((cosθsinθ)^2/((cosθ)^2 + r^2*(sinθ)^4))
+           = 0.5, if θ = π/4
+           = 0, if θ = 0
+           ∴ it doesn't exists
+
+12.3.17-26, describe the largest set S on which it is correct to say that f is continuous
+  12.3.21. f(x,y) = (x^2 + 3*x*y + y^2)/(y-x^2)
+    {(x,y)|y!=x^2}
+
+12.3.27-32. sketch the indicated set. Describe the boundary of the set, state whether the set is open, closed or
+            neigher.
+  13.3.30 {(x,y): 1<x<=4}.  
+    points on x=4 are boundary points, so it's not open.
+    points on x=1 are also boundary points, but it's not included in the set, so it's not closed.
+    so it's neither open nor closed.
+
+12.4.1-10. find the gradient ∇ f
+  12.4.1. f(x,y) = x^2*y + 3xy
+    ∇ f(x,y) = (2xy+3y, x^2+3x)
+
+  12.4.8. f(x,y,z) = x^2*y + y^2*z + z^2*x
+    ∇ f(x,y,z) = (z^2 + 2xy, x^2+2yz, y^2+2xz)
+
+12.4.11-14, find the gradient vector of the given function at the given point p. Then find the equation of the tangent
+plane at p.
+  12.4.11. f(x,y) = x^2*y - xy^2, p = (-2,3)
+    ∇ f(x,y) = (2xy-y^2, x^2-2xy)
+    ∇ f(-2,3) = (-21, 16)
+
+12.4.15-16,. find the equation w=T(x,y,z) of the tangent hyperplane at p
+  12.4.15. f(x,y,z) = 3x^2 - 2y^2 + xz^2, p=(1,2,-1)
+    ∇ f(x,y,z) = (6x+z^2, -4y, 2xz)
+    ∇ f(p) = (7, -8, -2)
+    w = f(p) + ∇ f(p)·((x,y,z) - p)
+      = 3 - 12 + 1 + (7, -8, -2) · (x-1, y-2, z+1)
+      = 7x - 8y - 2z - 3
+
+12.4.17 show that ∇ (f/g) = (g∇ f - f∇ g) / g^2
+  ∇ (f/g) = ∇ (f*g^-1) = g^-1∇ f  + f∇ g^-1
+          = g^-1∇ f  - f∇ g / g^2
+          = (g∇ f  - f∇ g) / g^2
+
+12.5.1-8. find the directional derivative of f at the point p in the direction of a
+  1. f(x,y) = x^2*y; p = (1,2) ; a = 3i - 4j
+    ∇ f(x,y) = (2xy, x^2)
+    ∇ f(1,2) = (4, 1)
+    D_a_f(x,y) = ∇ f(1,2)·a = (4,1)·(3,-4) = 8
+
+12.5.9-12. find a unit vector in the direction in which f increases most rapidly at p. What is the rate of change in
+           this direction.
+  12.5.9. f(x,y) = x^3 - y^5; p=(2,-1)
+    ∇ f(x,y) = (3x^2, -5y^4)
+    ∇ f(2,-1) = (12, -5)
+    ‖∇ f(2,-1)‖ = 13
+    u = (12/13, -5/13)
+
+12.5.15. sketch the level curve of f(x,y) = y/x^2 that goes through p=(1,2). calculate the gradient vector ∇ f(p) and
+         draw the vector, placing it's initial point at p. what should be true about ∇ f(p)?
+    f(1,2) = 1/4
+    level curve is y = x^2/4
+    ∇ f(x,y) = (-2y/x^3, 1/x^2)
+    ∇ f(1,2) = (-1/4, 1/4)
+    f(x,y) increase most rapidly along ∇ f(p)
+
+12.5.20. The temperature at (x,y,z) of a solid sphere centered at the origin is T(x,y,z) = 100e^-(x^2+y^2+z^2). Note
+         that it is hottest at the origin. Show that the direction of greatest decrease in temperature is always a
+         vector pointing away form the origin
+    -∇ f(x,y,z) = -(-200xe^(-x^2+y^2+z^2), -200ye^(-x^2+y^2+z^2),-200ze^(-x^2+y^2+z^2))
+                = 200xe^(-x^2+y^2+z^2)(x,y,z), it's in the same dir as (x,y,z)
+
+12.6.1-6 find dw/dt by using the chain rule. express your final answer in terms of t.
+  12.6.1. w=x^2y^3, x=t^3, y=t^2 
+    dw/dt = ∇ w(x,y) · (dx/dt, dy/dt)
+          = (2xy^3, 3x^2y^2) · (3t^2, 2t)
+          = 12t^11
+
+12.6.7-12. find ∂w/∂t by using the Chain Rule. Express your final answer in terms of s and t
+  12.6.7. w=x^2y; x=st; y=s-5
+    ∂w/∂t = ∇ w(x,y) · (∂x/∂t, ∂y/∂t)
+          = (2xy, x^2) · (s, -1)
+          = 2s^3t - 3s^2t^2
+
+12.6.15 if w=u^2 -utanv, u=x, and v = πx, find dw/dx at x = 1/4
+    dw/dx = ∇ w(u,v) · (du/dx, dv/dx)
+          = (2u - tanv, -u(secv)^2)·(1, π)
+          = -0.75 + π/8
+
+12.6.20. Sand is pouring onto a conical pile in sucha a way that at a certain instant thte height is 100 inches and
+increasing at 3 inches per minute and the base radius is 40 inches and increasing at 2 inches per minute. How fast is
+the volume increasing at that instant ?
+  V = πr^2h/3
+  dv/dt = ∇ V(r,h) · (dr/dt, dh/dt)
+        = (2πrh/3, πr^2/3) · (2, 3)
+        = 20800π/3
+
+12.6.21-24. find dy/dx
+  12.6.23. xsiny + ycosx = 0
+    dy/dx = -(∂F/∂x) / (∂F/∂y) =  (ysinx - siny) / (xcosy - cosx)
