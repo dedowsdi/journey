@@ -196,9 +196,6 @@ Other Coding Rules
     Remember the Rule of Three.
 
 
-.esm : elder scroll master file.
-.esp : elder scroll plugin.
-.bsa : Bethesda Softworks Archive.
 
 
 Apps: The OpenMW project consists of multiple applications/tools:
@@ -730,5 +727,11 @@ code
     typedef std::pair<int, int> CellId;
 
   when you search something, use lower case id.
-  
 
+
+.esm : elder scroll master file.
+.esp : elder scroll plugin.
+.bsa : Bethesda Softworks Archive.
+
+.esm :
+  all infos of a dialog follows it immediately

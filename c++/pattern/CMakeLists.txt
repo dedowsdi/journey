@@ -22,6 +22,7 @@ set (PROJECTS
     observer
     state
     strategy
+    crtp
     )
 
 foreach(PROJECT ${PROJECTS})

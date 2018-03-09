@@ -994,7 +994,7 @@ math:
    • N(A) = {0}.
    • rank(A) = n.
 
-  special matrix:
+  inverse of special matrix:
     A = | 0 1 | A_inv = | 0 1 |
         | 1 0 |         | 1 0 |
 
@@ -1529,4 +1529,44 @@ c++:
   it will cause compiler to compile these particular types, so the associated
   class member functions will be available at link time.
 
+----------
+2018.03.09
+
+math:
+  let A be nxn matrix, if X_iAX = Λ, the matrix X is said to diagnalize matrix
+  A. rank(X) = n.
+
+  Matrices for which such a matrix X does not exists are called defective
+  matrix.
+
+  jordan block : | λ 1 |
+                 | 0 λ |
+
+  Given A ∈ R_n×n ,
+  p_n (λ) = det(A − λI) = λ^n + γ_n−1*λ^n−1 + · · · + γ_1*λ + γ_0 
+  for some coefficients γ_0, γ_1 , . . . , γ_n−1 ∈ R.
+
+  The set of all roots of p_n(λ), which is the set of all eigenvalues of A, is
+  denoted by Λ(A) and is called the spectrum of matrix A.
+
+  Given A ∈ R_n×n , p_n(λ) = det(A − λI) is called the characteristic
+  polynomial.
+
+  The characteristic polynomial can be factored as 
+  p_n(λ) = det(A − λI) = (λ − λ 0 )^n_0*(λ − λ_1)^n_1 · · · (λ − λ_k−1 )^n_k−1 ,
+  where n0 + n1 + · · · + nk−1 = n and nj is the root λ j , which is known
+  as the (algebraic) multiplicity of eigenvalue λ_j .
+
+c++:
+  you don't need virtual destructor unless you will destroy derived class with
+  base class pointer.
+
+linux:
+  xargs -I conflicits with -n ?
+    types='BOOK BODY'
+    # following command will not print BOOK BODY on seperate lines
+    echo $types | xargs -I {} -n 1 bash -cx 'echo {}' 
+
+  redirect each execution of xargs:
+    ... | xargs -I {} bash -c ' ... > ..'
 
