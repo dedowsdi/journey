@@ -67,6 +67,9 @@ linebreak:
   windows CRLF 0D0A \r\n
   mac     CR   0D   \r
   Make sure you don't mix fileformat, some search patterns rely on it.
+  you can use &filemormat option in vim to check fileformat.
+  sometimes if your echo behaved weird, it might because your are handling a dos
+  file and the "\r" cause echo to do weird stuff.
 
 vim:
   gp paste below cursor, place cursor at end of newly pasted context
@@ -202,6 +205,7 @@ gl:
 
 sed:
   you can specify number flag to replace only nth match.
+  s/.../.../number
 
 vim:
   bufexists works on full path name, tild path name, and relative path name
@@ -1539,9 +1543,6 @@ math:
   Matrices for which such a matrix X does not exists are called defective
   matrix.
 
-  jordan block : | λ 1 |
-                 | 0 λ |
-
   Given A ∈ R_n×n ,
   p_n (λ) = det(A − λI) = λ^n + γ_n−1*λ^n−1 + · · · + γ_1*λ + γ_0 
   for some coefficients γ_0, γ_1 , . . . , γ_n−1 ∈ R.
@@ -1570,3 +1571,144 @@ linux:
   redirect each execution of xargs:
     ... | xargs -I {} bash -c ' ... > ..'
 
+
+----------
+2018.03.10
+
+math:
+  jordan block has eigenvalue λ of algebraic multiplicity k, but geometric
+  multiplicity one (it has only one linearly independent eigenvector).
+
+    J_k(λ) =  | λ 1 0 ... 0 0 |
+              | 0 λ 1 ... 0 0 |
+              | 0 0 λ ... 0 0 |
+              | ...       0 0 |
+              | 0 0 0 ... λ 1 |
+              | 0 0 0 ... 0 λ |
+    Λ(J) = {λ}
+
+  The geometric multiplicity of an eigenvalue λ equals the number of linearly
+  independent eigenvectors that are associated with λ.
+
+  Let A ∈ R_n×n and A_i,i are a square matrices. Then Λ(A) = Λ(A_0,0 ) ∪ Λ(A_1,1
+  ) ∪ · · · ∪ Λ(A_N−1,N−1 ).
+
+  Let A ∈ R_n×n be symmetric, λ_i != λ_j , Ax_i = λ_i*x_i and Ax_j = λ_j*x_j
+  then xi_t*x_j = 0
+
+  Let A ∈ R n×n be symmetric. Then its eigenvalues are real valued.
+
+  Let Ax = λx and k ≥ 1. A^k*x = λ^k*x
+
+  A ∈ R_n×n is nonsingular if and only if 0 !∈  Λ(A).
+
+linux:
+  use wc to count lines words or bytes
+
+  use cmp compare files byte by byte
+
+  use comm to cmpare files line by line (must be sorted)
+    comm -23 file1 file2  # print uniq item in file1
+    comm -13 file1 file2  # print uniq item in file2
+    comm -12 file1 file2  # print common item in file1 and file2
+
+  uniq -cd sorted  # find duplicated lines in a file
+
+  read from file line by line:
+    while IFS= read -r variable ; do
+      ...
+    done;<file
+  
+  proces substitution:
+    comm -23 <(sort file0|uniq) <(sort file1|uniq)
+
+----------
+2018.03.11
+
+c++:
+  change data alignment:
+    #pragma pack(push)
+    #pragma pack(1)
+
+    struct Data{
+      ...
+    }
+
+    #pragma pack(pop)
+
+linux:
+  use xxd to dump hex or revert
+
+----------
+2018.03.12
+
+linux:
+  print hex
+    echo $((16#ff))
+    echo $((0xff))
+  print oct
+    echo $((8#77))
+    echo $((077))
+
+vim:
+  count item:
+    :%s/item//gn
+
+----------
+2018.03.14
+
+vim:
+  shift m lines 5 times
+  :>>>>>m
+
+qt:
+  you can connect signal to another signal
+
+  qt automatically removes all connections involving an object when the object
+  is deleted. although you can manually do it with disconnect
+
+  if a signal has more parameters than the slot it is connected to, the
+  additional parameters are simply ignored.
+
+  One of Qt's major achievements has been the extension of C++ with a mechanism
+  for creating independent software components that can be bound together
+  without any component knowing anything about the other components it is
+  connected to.  The mechanism is called the meta-object system, and it provides
+  two key services: signalsŔslots and introspection.
+
+  meta-object system:
+    The Q_OBJECT macro declares some introspection functions that must be
+    implemented in every QObject subclass: metaObject(), tr(), qt_metacall(),
+    and a few more.
+
+    Qt's moc tool generates implementations for the functions declared by
+    Q_OBJECT and for all the signals.
+
+    QObject member functions such as connect() and disconnect() use the
+    introspection functions to do their work.
+  
+----------
+2018.03.15
+
+vim:
+  a and i is the same on blank line.
+
+qt:
+  After creating the user interface, setupUi() will automatically connect any
+  slots that follow the naming convention on_objectName_signalName() to the
+  corresponding objectName's signalName() signal
+
+  Qt's parentŔchild mechanism is implemented in QObject. When we create an
+  object (a widget, validator, or any other kind) with a parent, the parent adds
+  the object to the list of its children.  When the parent is deleted, it walks
+  through its list of children and deletes each child. The children themselves
+  then delete all of their children, and so on recursively until none remain.
+  The parent-child mechanism greatly simplifies memory management, reducing the
+  risk of memory leaks. The only objects we must call delete on are the objects
+  we create with new and that have no parent.  And if we delete a child object
+  before its parent, Qt will automatically remove that object from the parent's
+  list of children.  
+  
+  For widgets, the parent has an additional meaning: Child widgets are shown
+  within the parent's area. When we delete the parent widget, not only does the
+  child vanish from memory, it also vanishes from the screen.

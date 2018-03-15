@@ -1,0 +1,5 @@
+add_subdirectory(helloworld)
+add_subdirectory(quit_button)
+add_subdirectory(age_widget)
+add_subdirectory(find_dialog)
+add_subdirectory(gotocell_dialog)

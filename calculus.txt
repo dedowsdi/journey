@@ -1,5 +1,153 @@
  vim: tw=120 sw=2 ts=2 et
 
+1.6.1-15. state whether the indicated functoin is continuous at 3. if not, why.
+  1.6.1. f(x) = (x-3)(x-4)
+    f is polynomial, it's continuous on R, so it's continusous on 3.
+
+  1.6.10 f(x) = (21-7x)/(x-3)
+    f is rational, it's continuous on R except x=3, so it's not continuous on 3.
+
+1.6.18-23. the given function is not defined at a certain point. How should it be defined in order to make it continuous
+at that point?
+  1.6.20 g(x) = sinx/x
+    sinx is C on R, x is C on R, so g(x) is C on R except 0
+    so define g(0) = lim_x_0(g(x)) = 1 will make it continuous at 0.
+
+1.6.24-34. at what points, if any, are the functions discontinuous?
+  1.6.30 f(x) = 1/sqrt(4+x^2)
+    norminator and denominator are both continuous on R, denominator always >0, so f is continuous on R.
+
+1.6.41-48. determine whether the function is continuous at the given point c. ifnot, determine whether the
+discontinunity is removable or nonremovable.
+  1.6.45. g(x) = sinx/x,  x != 0
+               = 0,       x = 0
+          c = 0
+    sinx and x is both C on R, so g is C if x != 0
+    if x = 0, lim_x_0(g(x)) = 1 != g(0)
+    redefine g(0) = 1 wile make it continuous on R, so 0 is removable on g.
+
+1.6.62. let f(x) = 1/(x-1), then f(-2) = 1/3, f(2) = 1. Does the Intermediate Value Theorem imply the existence of a
+number c between -2 and 2 such taht f(c) = 0 ? Explain.
+  1 and x-1 is C on R, f is C on R except on 1, 1 ∈ [-2,1], so f is not C on [-2,1], so you can not apply Intermediate
+  Value Theorem to i in this interval.
+
+2.7.1-12. Assume that each equation in Problems 1-12 dfines a differentiable function of x, find Dx_y by implicit
+differentiation.
+  2.7.1.y^2-x^2 = 1
+    2yy' -2x = 0
+    y' = x/y
+
+2.7.13-18. find the equation of the tangent line at the indicated point.
+  2.7.13. x^3y + y^3x = 30; (1,3)
+  3x^2*y + x^3*y + 3y^2*y'x + y^3 = 0
+  y' = -(y^3+3x^2*y)/(x^3+3y^2*x)
+  y'(1,3) = -37/28
+  f(x) = -37/28 * (x -1) + 3
+
+2.7.19-32. find dy/dx
+  2.7.19. y = 3x^(5/3) + sqrt(x)
+    y' = 5x^(2/3) + 0.5x^(-0.5)
+  2.7.27. y = sqrt(x^2 + sinx)
+    y' = 0.5(x^2 + sinx)^(-0.5) * (2x + cosx)
+
+2.7.36. Find the equation of the normal line  to the curve 8(x^2 + y^2) = 100(x^2-y^2) at (3,1)
+  F(x) = 8(x^2 + y^2) - 100(x^2-y^2) = 0
+  dy/dx = -(∂F/∂x)/(∂F/∂y) = -(16(x^2+y^2)2x - 200x)/(16(x^2+y^2)2y + 200y) = (25x-4x(x^2+y^2))/(25y+4y(x^2+y^2))
+  dy/dx_(3,1) = -9/13
+  k of normal line = 13/9
+  f(x) = 13/9 * (x-3) + 1
+
+  you can also solve this problem by ∇, as ∇ is normal line of level curve
+  ∇f = (∂F/∂x,∂F/∂y)) ==> k = (∂F/∂y)/(∂F/∂x)
+
+2.8.1. Each edge ofa variable cube is increasing at a rate of 3 inches per second. How fast is the volume of the cube
+increasing when an edge is 2 inches long.
+  V = x^3
+  V' = 3x^2x'
+  V'(12) = 3 * 144 * 3 = 1296
+
+2.8.10. A child is flying a kite. If the kite is 90 ffet above the child's hand level and the wind is blowing it on a
+horizontal courses at 5 feep per second. how fast is the child paying out cord when 150 feet of cord is out?
+  assume horizontal distance between kite and the child is x
+  s^2 = 90^2 + x^2
+  2ss' = 2xx'
+  s' = xx'/s'
+  when s = 150, x = sqrt(s^2 - h^2) = sqrt(150^2 - 90^2) = 120
+    s' = 120 * 5 / 150 = 4
+
+ 2.8.20. Water is pumped at a uniform rate of 2 liters per minute into a tank shaped like a frustum of a right circular
+ cone. The tank has altitude 80cm and lowers and upper radii of 20 and 40cm respectively. How fast is water level rising
+ when the depth of water is 30cm?
+  V = π/3 * h * (a^2 + ab + b^2)
+  b = 20 + h * 20/80 = 0.25h + 20
+  V = π/3 * h * (400 + 5h + 400 + 400 + 10h + h^2/16)
+    = 400πh + 5πh^2 + πh^3/48
+  v' = 400πh' + 10πhh' + πh^2/16
+  v'(h=30) = 0.841811
+
+2.9.1-8 find dy.
+  2.9.1. y= x^2 + x - 3
+    dy = f'(x) dx 
+       = (2x + 1)dx
+
+2.9.10 let y = f(x) = x^3. Find the value of dy in each ease.
+  dy = 3x^2dx
+  (a) x= 0.5, dx = 1
+    dy = 3x^2dx = (3*0.25) * 1 = 0.75
+  (b) x=-1, dx = 0.75
+    dy = 3x^2dx = (3*1) * 0.75 = 2.25
+
+2.9.18-20. use diffentials to approximate the given number. Compare with calculater values.
+  2.9.20 26.91^(1/3)
+    y = f(x) = x^(1/3)
+    dy = f'(x) = dx/(3 * x^(2/3))
+    f'(27) = dx/(3 * 27^(2/3)) = 1/9
+    f(26.91) = f(27 - 0.09) = f(27) - 0.09 * f'(27) = 3 - 0.01 = 2.99, real value is  2.996663
+
+2.9.29. The angle θ between two equal sides of an isosceles triangle measures 0.53 += 0.005 radian. The two equal sides
+are exactly 151 centimeters long. Calculate the length of the third side with an estimate for the absolute error and the
+relative error.
+  c = sqrt(a^2 + b^2 - 2abcosθ)
+    = sqrt(2a^2 - 2a^2cosθ)
+    = a sqrt(2- 2cosθ)
+    = a sqrt(2 - 2(1 - 2sin(θ/2)^2))
+    = 2a*sin(θ/2)
+  c(0.53) = 79.096599 
+  f'(θ) = acos(θ/2) = 151*cos(θ/2)
+  f'(0.53) = 145.728968
+  dc = f'(0.53) * 0.005 = 0.728645
+  absolute error is 0.728645
+  relative error is dc/f(0.53) = 0.728645/79.096599 = 0.009212
+
+3.6.1-21. A function is defined and a closed interval is given. Decide whether the Mean Value Theroem applies to the given
+function on the given interval. If it does, find all possible values of c; if not, state the reason. In Each problem,
+sketch the graph of the given function on the given interval.
+  3.6.1. f(x) = |x|; [1,2]
+    f(x) is C on [1,2] and D on (1,2) so mean value theroem applies.
+
+  3.6.10 f(x) = (x-4)/(x-3); [0,4]
+    f(3) doesn't exist, so f(x) is not C on [0,4], so mean value theroem doesn't apply.
+
+3.6.22 (Rolle's Theorem)If f is C on[a,b] and D on (a,b) and if f(a) = f(b) , then there is at least one number c in
+(a,b) such that f'(c) = 0. 
+  ∵ f is C on[a,b] and D on (a,b)
+  ∴ exist c f(c) = (f(b) - f(a))/(b-a) = 0
+
+3.6.29 Prove that if F'(x) = 0 for all x in (a,b) then there is a constant C such that F(x) = C for all x in (a,b).
+  assume G(x) = 0
+  ∵ F'(x) = G'(x) = 0 for all x in (a,b)
+  ∴ F(x) = G(x) + C = C for some constant C
+
+3.6.35. Let f have a derivative on an interval I. Prove that between successive distinct zeros of f' there can be at
+most one zero of f.
+  assume a, b is successive distinct zeros of f', f'(a) = f'(b) = 0
+  assume a <= c0 < c1 <= b, f(c0) = f(c1) = 0,
+  ∵ f is C on [c0, c1], D on (c0, c1)
+  ∴ exist point d ∈ (c0, c1) that f'(d) = (f(c1) - f(c0)) / (c1 - c0) = 0
+  ∵ a<= c0 < d < c1 <= b, f'(d) = 0
+  ∵ a and b no longer succive distinct zeros of f'
+  ∴ there can be at most one zero of f between a and b
+
 9.8.1-18
   find the terms throught x^5 in the Maclarin series for f(x).
   9.8.1. f(x) = tan(x) :
@@ -440,3 +588,4 @@ whether it is a saddle point.
     -4<=f(0,y)<=4,   -1<=f(1,y)<=7
     -4<=f(x,-1)<=-1, 4<=f(x,1)<=7
     f has local maximum at (1,1) = 7, local minimum at (0, -1) = -4
+

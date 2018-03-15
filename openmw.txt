@@ -733,5 +733,17 @@ code
 .esp : elder scroll plugin.
 .bsa : Bethesda Softworks Archive.
 
-.esm :
-  all infos of a dialog follows it immediately
+openmw-cs:
+
+Morrowind uses something called a relational database for game data, it means
+that every type of thing can be expressed as a table: there is a table for
+objects, a table for enchantments, a table for icons, one for meshes and so on.
+Properties of an entry must be simple values, like numbers or text strings. If
+we want a more complicated property we need to reference an entry from another
+table. There are a few exceptions to this though, some tables do have subtables.
+The effects of enchantments are one of those exceptions
+
+code:
+  Color 
+    typedef uint32_t Color; // rr gg bb aa, starts from least significant bits
+                            // the same as 0xaabbggrr
