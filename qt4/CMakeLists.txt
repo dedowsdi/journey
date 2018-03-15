@@ -36,7 +36,7 @@ set(QUI ${CMAKE_SOURCE_DIR}/ui)
 #set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
-find_package(Qt4  REQUIRED QtGui QtXml)
+find_package(Qt4  REQUIRED QtGui QtXml QtUiTools)
 
 include_directories(${CMAKE_SOURCE_DIR}/ui/uis)
 
