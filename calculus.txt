@@ -148,6 +148,29 @@ most one zero of f.
   ∵ a and b no longer succive distinct zeros of f'
   ∴ there can be at most one zero of f between a and b
 
+4.3.9-16. suppose ∫_0_1_f(x)dx = 1, ∫_1_2_f(x)dx = 3, ∫_0_1_g(x)dx = -1, and ∫_0_2_g(x)dx = 4. Use properties of
+definite intergals to calculate each of the integrals.
+  ∫_1_2_g(x)dx = ∫_0_2_g(x)dx + ∫_1_0_g(x)dx = ∫_0_2_g(x)dx - ∫_0_1_g(x)dx = 4 + 1 = 5
+
+  4.3.9. ∫_1_2_2f(x)dx = 2∫_1_2_f(x)dx = 6
+  4.3.13. ∫_2_1_[2f(s) + 5g(s)]ds = -2∫_1_2_f(s)ds -5∫_1_2_f(s)ds = -2 * 3 - 5 * -1 = -1
+
+4.3.17-26. find G'(x).
+  4.3.22. G(x) = ∫_1_x_(xt)dt
+    G(x)= x∫_1_x_(t)dt
+    G'(x) = ∫_1_x_(t)dt + x * x
+          = 3x^2/2 - 1/2
+
+4.3.27-32, find the integrals on which the graph of y = f(x), x>=0, is (a) increasing and (b) concave up.
+  4.3.30. f(x) = ∫_0_x_(t+sint)dt
+    a:
+      f'(x) = x+sinx > 0
+      ∵ x > sinx if x > 0
+      ∴ on interval (0, +∞) f(x) is increasing
+    b:
+      f"(x) = 1 + cosx > 0
+      ∴ on interval (2kπ+π, 2kπ+3π), k∈ N, f(x) is concave up
+
 9.8.1-18
   find the terms throught x^5 in the Maclarin series for f(x).
   9.8.1. f(x) = tan(x) :
