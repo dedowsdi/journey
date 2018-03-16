@@ -23,18 +23,3 @@ void GoToCellDialog::on_lineEdit_textChanged()
 {
   buttonBox->button(QDialogButtonBox::Ok)->setEnabled(lineEdit->hasAcceptableInput());
 }
-
-int main(int argc, char *argv[])
-{
-  QApplication app(argc, argv);
-
-  //Ui::GoToCellDialog ui;
-  //QDialog *dialog = new QDialog;
-  //ui.setupUi(dialog);
-  //dialog->show();
-  
-  GoToCellDialog  dialog;
-  dialog.show();
-
-  return app.exec();
-}

@@ -1712,3 +1712,22 @@ qt:
   For widgets, the parent has an additional meaning: Child widgets are shown
   within the parent's area. When we delete the parent widget, not only does the
   child vanish from memory, it also vanishes from the screen.
+
+----------
+2018.03.16
+
+qt4:
+  The parent-child relationship doesn't mean the same thing for dialogs as for
+  other widgets. A dialog is always a window in its own right, but if it has a
+  parent, it is centered on top of the parent by default. A child dialog also
+  shares its parent's taskbar entry.
+
+  A modeless window is one that runs independently of any other windows in the
+  application.
+
+  A modal window is a window that pops up when invoked and blocks the
+  application, preventing any other processing or interactions from taking place
+  until the window is closed.
+
+  A dialog is modeless if it's invoked using show() (unless we call setModal()
+  beforehand to make it modal); it is modal if it's invoked using exec().
