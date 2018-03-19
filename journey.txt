@@ -1731,3 +1731,14 @@ qt4:
 
   A dialog is modeless if it's invoked using show() (unless we call setModal()
   beforehand to make it modal); it is modal if it's invoked using exec().
+
+----------
+2018.03.17
+
+qt4:
+  The top-left pixel of a Qt widget is located at position (0, 0), and the
+  bottom-right pixel is located at (width() - 1, height() - 1).
+
+linux:
+  print available locales:
+    locale -a

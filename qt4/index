@@ -1,0 +1,42 @@
+ vim: tw=80 sw=2 ts=2 et
+
+basic
+    helloworld
+    age_widget
+    quit_button
+
+dialog
+    find_dialog
+    gotocell_dialog
+    dynamic_dialog
+    sort_dialog
+
+custom widget
+    hex_spinbox 
+    icon_editor  
+
+ui
+    openmw_startup
+
+main window
+    main_window
+
+item based widget
+    flowchart_symbol_picker | list widget
+    coordinate_setter       | table widget
+    settings_viewer         | tree widget
+
+view with default model
+    teamleaders      | list view with string list model
+    color_names      | list view with proxy model
+    directory_viewer | tree view with dir model
+
+view with custom model
+    cities         | table view with custom table model with writable flag
+    currencies     | table view with custom table model
+    boolean_parser | tree view with custom abstract item model
+
+custom delegate
+    track_editor
+    
+

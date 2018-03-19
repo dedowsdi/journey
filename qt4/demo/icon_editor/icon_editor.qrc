@@ -1,0 +1,5 @@
+<RCC>
+<qresource>
+    <file alias="mouse.png">../../data/images/mouse.png</file>
+</qresource>
+</RCC>

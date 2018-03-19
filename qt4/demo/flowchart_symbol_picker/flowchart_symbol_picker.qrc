@@ -1,0 +1,14 @@
+<RCC>
+<qresource>
+    <file alias = "data">../../data/images/data.png</file>
+    <file alias = "decision">../../data/images/decision.png</file>
+    <file alias = "document">../../data/images/document.png</file>
+    <file alias = "manual-input">../../data/images/manual-input.png</file>
+    <file alias = "manual-operation">../../data/images/manual-operation.png</file>
+    <file alias = "on-page-reference">../../data/images/on-page-reference.png</file>
+    <file alias = "predefined-process">../../data/images/predefined-process.png</file>
+    <file alias = "preparation">../../data/images/preparation.png</file>
+    <file alias = "printer">../../data/images/printer.png</file>
+    <file alias = "process">../../data/images/process.png</file>
+</qresource>
+</RCC>

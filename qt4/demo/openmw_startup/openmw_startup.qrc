@@ -1,0 +1,8 @@
+<RCC>
+  <qresource>
+    <file alias="configues">../../data/images/configure.png</file>
+    <file alias="createAddon">../../data/images/create-addon.png</file>
+    <file alias="editContent">../../data/images/edit-content.png</file>
+    <file alias="newGame">../../data/images/new-game.png</file>
+  </qresource>
+</RCC>

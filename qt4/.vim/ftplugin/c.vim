@@ -1,1 +1,1 @@
-call myvim#loadAbbreviation('opengl', 'cpp')
+call abbre#cpp()
