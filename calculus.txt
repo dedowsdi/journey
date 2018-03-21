@@ -279,6 +279,74 @@ hours and V in gallons.
   0 = [20t-0.5t^2]_0_x
     x = 20
 
+4.5.1-14. fidn the averate value of the function on the given intervale.
+  4.5.1. f(x) = 4x^3; [1,3]
+    f(c) = 1/(3-1) * ∫_1_3_4x^3dx = 40
+
+  4.5.11. F(y) = y(1+y^2)^3; [1,2]
+    f(c) = 1/(2-1) * ∫_1_2_(y(1+y^2)^3)dy
+    let u = 1+y^2, du = 2ydy
+    f(c) = 0.5*∫_u(1)_u(2)_u^3du
+         = = 625/128
+
+4.5.15-28. find all values of c that satisfy the Mean Value Theorem for Integrals on the given interval.
+  4.5.21. H(z) = sinz; [-π, π]
+    H(c) = 1/(2π)* ∫_-π_π_sinzdz = 0
+    c = 0, -π, π
+
+4.5.35-44, use symmetry to help you evaluate the given integral.
+  4.3.35. ∫_-π_π_(sinx+cosx)dx
+    lhs = ∫_-π_π_(sinx)dx + ∫_-π_π_(cosx)dx
+        = 0 + 2∫_0_π_(cosx)dx
+        = 0 + 2 [-sinx]_0_π
+        = 0
+
+4.5.45. Prove that ∫_a_b_f(-x)dx = ∫_-b_-a_f(x)dx. (theroem)
+  let u=-x, du = -dx
+  lhs = ∫_-a_-b_f(u)-du = ∫_-b_-a_f(u)du = ∫_-b_-a_f(x)dx = rhs
+
+4.5.60. Prove the symmetry Theorem for the case of odd functions.
+  eg. prove ∫_-a_a_f(x)dx = 0 if f(-x) = -f(x)
+  ∫_-a_a_f(x)dx =∫_-a_0_f(x)dx + ∫_0_a_f(x)dx
+                =∫_0_a_f(-x)dx + ∫_0_a_f(x)dx  // according to 4.5.45
+                =-∫_0_a_f(x)dx + ∫_0_a_f(x)dx
+                =0
+
+6.1.1 Use the approximation ln2 ≈ 0.693 and ln3 ≈ 1.009 together to calculate approximations to each of the followings:
+  (b) ln1.5 = ln3/2 = ln3 - ln2 = 0.316
+
+6.1.3-14, find the indicated derivative. assume in each case that x is restricted so that ln is defined
+  6.1.10. dr/dx if r = lnx/(x^2*lnx^2) + (ln1/x)^3
+    lhs = 1/(2x^2) + (ln1/x)^3
+    dr/dx = -x^-3 + 3(ln1/x)^2 * x * -x^(-2)
+          = -x^-3 - 3(ln1/x)^2/x
+
+6.1.15-26. find the integrals.
+  6.3.20. ∫-1/(x(lnx)^2)dx
+    u = lnx, du = (1/x)dx
+    lhs = -1∫1/(lnx)^2) * 1/x dx
+        = - ∫1/(u^2) du
+        = u^-1
+        = 1/lnx
+
+6.1.27-30. write the expressions as the logarithm of a single quantity.
+  6.1.30. ln(x^2-9) - 2ln(x-3) - ln(x+3)
+    lhs = ln (x^2-9) / ( (x-3)^2 * (x+3) ) = ln(1/(x-3))
+
+6.1.40. Explain why lim_x_0_ln(sinx/x) = 0
+  lhs = ln(lim_x_0_(sinx/x))
+      = ln 1  
+      = 0
+
+6.1.50 Evaluate ∫_0_π/3_tanxdx
+  ∫tanxdx = ∫sinx/cosx dx 
+          = -∫1/cosx * - sinx dx
+          = -ln|cosx|
+
+  ∫_0_π/3_tanxdx = [-ln|cosx|]_0_π/3
+                 = -ln0.5 + ln1
+                 = ln2
+
 9.8.1-18
   find the terms throught x^5 in the Maclarin series for f(x).
   9.8.1. f(x) = tan(x) :

@@ -1742,3 +1742,27 @@ qt4:
 linux:
   print available locales:
     locale -a
+
+----------
+2018.03.20
+
+qt4:
+  draw a pixel at x,y with antialiasing, the pixel center is at x+0.5, y+0.5
+  draw a pixel at x,y with antialiasing, following pixels will be colored grey:
+    (x-1, y-1)
+    (x-1, y)
+    (x, y-1)
+    (x, y)
+    this is 4 pixels surrounding x,y
+
+  there are two sets of coordinates in qt:
+    logical coordinate:
+      you specify your geometry in this coordinate
+    physical coordinate:
+      the real window coordinates
+
+  boundary of logical coordinates, works similar like ortho projection in opengl:
+    paint->window(x,y,width,height)
+  
+  viewport in qt works similar as viewport like opengl:
+    paint->setViewport(x,y,with,height)

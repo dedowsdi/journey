@@ -36,9 +36,13 @@ set(QUI ${CMAKE_SOURCE_DIR}/ui)
 #set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
-find_package(Qt4  REQUIRED QtGui QtXml QtUiTools)
+find_package(Qt4  REQUIRED QtGui QtXml QtUiTools QtOpenGL)
+find_package(OpenGL  REQUIRED)
 
-include_directories(${CMAKE_SOURCE_DIR}/ui/uis)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/ui/uis
+    ${OPENGL_INCLUDE_DIR}
+    )
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")

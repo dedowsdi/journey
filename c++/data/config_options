@@ -1,0 +1,10 @@
+# this is comment
+# boost config file supports only fullname=value style
+float=10.0
+
+# int_vec=6 7 8 9 10 won't work, you can only specify one option value per line?
+int_vec=6
+int_vec=7
+int_vec=8
+int_vec=9
+int_vec=10

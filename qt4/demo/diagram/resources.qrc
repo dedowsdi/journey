@@ -1,0 +1,13 @@
+<RCC>
+<qresource prefix = "images">
+    <file alias="bringtofront.png">../../data/images/diagram/bringtofront.png</file>
+    <file alias="colors.png">../../data/images/diagram/colors.png</file>
+    <file alias="copy.png">../../data/images/diagram/copy.png</file>
+    <file alias="cut.png">../../data/images/diagram/cut.png</file>
+    <file alias="delete.png">../../data/images/diagram/delete.png</file>
+    <file alias="link.png">../../data/images/diagram/link.png</file>
+    <file alias="node.png">../../data/images/diagram/node.png</file>
+    <file alias="paste.png">../../data/images/diagram/paste.png</file>
+    <file alias="sendtoback.png">../../data/images/diagram/sendtoback.png</file>
+</qresource>
+</RCC>
