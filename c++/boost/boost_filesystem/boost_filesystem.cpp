@@ -1,5 +1,11 @@
 /*
- * boost filesystem path support both posix(unix variants, linux, Max OS X) generic and native format.
+ * boost filesystem path support both posix(unix variants, linux, Max OS X)
+ * generic and native format.
+ *
+ * path objects always hold pathnames in the native format, but otherwise leave
+ * them unchanged from their source. The preferred() function will convert to
+ * the preferred form, if the native format has several forms. Thus on Windows,
+ * it will convert slashes to backslashes.
  */
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -67,7 +73,7 @@ void query_path(const fs::path& p){
 }
 
 void observer_path(const fs::path& p){
- cout  <<  "\nobservers, native format:" << endl;
+  cout  <<  "\nobservers, native format:" << endl;
 # ifdef BOOST_POSIX_API
   cout  <<  "  native()-------------: " << p.native() << endl;
   cout  <<  "  c_str()--------------: " << p.c_str() << endl;
@@ -77,6 +83,10 @@ void observer_path(const fs::path& p){
 # endif
   cout  <<  "  string()-------------: " << p.string() << endl;
   wcout << L"  wstring()------------: " << p.wstring() << endl;
+
+  cout  <<  "\nobservers, generic format:\n";
+  cout  <<  "  generic_string()-----: " << p.generic_string() << endl;
+  wcout << L"  generic_wstring()----: " << p.generic_wstring() << endl;
 }
 
 void print_path_type(const fs::path& path0){

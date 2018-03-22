@@ -24,6 +24,7 @@
 #include <vector>
 #include <ostream>
 #include <fstream>
+#include <istream>
 
 using namespace std;
 namespace po = boost::program_options;
@@ -34,6 +35,17 @@ std::ostream& operator<<(std::ostream& os , const std::vector<T> values){
         std::cout << v << " ";
     });
   return os;
+}
+
+class A{
+public:
+  std::string s;
+};
+
+// you must at least provide >> operator for custom type
+istream& operator>>(std::istream& is, A& a){
+  is >> a.s;
+  return is;
 }
 
 struct options{
@@ -74,10 +86,15 @@ int main(int argc, char *argv[])
   po::options_description config("config options");
   config.add_options()
     ("int,i", po::value<int>(&_options.int_option)->default_value(5), "int option")
-    ("string,s", po::value<string>(&_options.string_option), "string option")
+    ("string,s", po::value<string>(&_options.string_option)->default_value("lalala"), "string option")
     // multitoken : -v 1 2 3 4 5
     ("int_vec,v", po::value<vector<int>>(&_options.int_vec_option)->multitoken()->composing(), "int vec option, support multitoken")
     ("string_vec,b", po::value<vector<string>>(&_options.string_vec_option), "string vec option")
+    // you don't have to store option to local variable, although you wont's see
+    // them in help if you don't specify one.
+    ("data", po::value<string>()->default_value("data"), "data")
+    // texual value of default_value is only used to display help info ?
+    ("A", po::value<A>()->default_value(A(), "default_A"), "A")
     ;
 
   // hidden
@@ -107,7 +124,6 @@ int main(int argc, char *argv[])
   notify(vm);
 
   _options.print();
-  std::cout << std::endl << std::endl;
 
   if (vm.count("help")) {
     std::cout << visible_options << std::endl;
@@ -117,6 +133,14 @@ int main(int argc, char *argv[])
   if (vm.count("version")) {
     std::cout << "v1.0.0" << std::endl;
     return 0;
+  }
+
+  if (vm.count("data")) {
+    std::cout << "data : " << vm["data"].as<string>() << std::endl;
+  }
+
+  if (vm.count("A")) {
+    std::cout << "A : " << vm["A"].as<A>().s << std::endl;
   }
 
   if (vm.count("config")) {
