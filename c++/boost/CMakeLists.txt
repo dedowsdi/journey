@@ -1,6 +1,7 @@
 set (PROJECTS
     boost_program_options
     boost_filesystem
+    boost_iostreams
     )
 
 foreach(PROJECT ${PROJECTS})

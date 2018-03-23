@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
   po::options_description config("config options");
   config.add_options()
     ("int,i", po::value<int>(&_options.int_option)->default_value(5), "int option")
-    ("string,s", po::value<string>(&_options.string_option)->default_value("lalala"), "string option")
+    ("string,s", po::value<string>(&_options.string_option)->implicit_value("implicit")->default_value("default"), "string option")
     // multitoken : -v 1 2 3 4 5
     ("int_vec,v", po::value<vector<int>>(&_options.int_vec_option)->multitoken()->composing(), "int vec option, support multitoken")
     ("string_vec,b", po::value<vector<string>>(&_options.string_vec_option), "string vec option")
