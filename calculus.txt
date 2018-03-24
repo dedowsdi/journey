@@ -402,6 +402,30 @@ f(x)
     10! ≈ 3598695.964813 
   (b) 60! ≈ 8.309443e81
 
+6.4.1-9. solve for x.
+  1. log_2_8 = x
+        x = 3
+
+6.4.9-12. use log_a_x ot lnx/lna to calculate each of the logarithms.
+  6.4.9. log_5_12 = ln12/ln5
+
+6.4.13-16. use natural logarithms to solve each of the exponential equations.
+  6.4.13. 2^x = 17
+    xln2 = ln17
+    x = ln17/ln2
+
+6.4.17-26. find the indicated derivative or integral
+  6.4.19. Dx_log_3_e^x
+    lhs = 1 / (e^x * ln3) * e^x = 1/ln3
+
+6.4.27-32, find dy/dx.
+  6.4.27. y = 10^(x^2) + (x^2)^10
+    dy/dx = ln10 * 10^(x^2) * 2x + 20x^19
+
+  6.4.30. y = 2^(e^x) + (2^e)^x
+    dy/dx = ln2 * 2^(e^x) * e^x + ln(2^e) * (2^e)^x
+  
+
 9.8.1-18
   find the terms throught x^5 in the Maclarin series for f(x).
   9.8.1. f(x) = tan(x) :

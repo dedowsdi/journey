@@ -42,11 +42,42 @@ public:
   std::string s;
 };
 
-// you must at least provide >> operator for custom type
+// you must at least provide >> operator for custom type if you don't providate
+// validate
 istream& operator>>(std::istream& is, A& a){
   is >> a.s;
   return is;
 }
+
+class B{
+public:
+  int i;
+};
+
+// By default, the conversion of option's value from string into C++ type is
+// done using iostreams, which sometimes is not convenient. The library allows
+// the user to customize the conversion for specific classes. In order to do so,
+// the user should provide suitable overload of the validate function.
+void validate(boost::any& v, const std::vector<std::string>& values, B*, int){
+
+  // make sure no previous assignment exists
+  po::validators::check_first_occurrence(v);
+
+  if (v.empty()) {
+    v = boost::any(B());
+  }
+  B* b = boost::any_cast<B>(&v);
+
+  // Extract the first string from 'values'. If there is more than
+  // one string, it's an error, and exception will be thrown.
+  const string& s = po::validators::get_single_string(values);
+  try {
+    b->i = stoi(s);
+  }catch(exception& e) {
+    throw po::validation_error(po::validation_error::invalid_option_value);
+  }
+}
+
 
 struct options{
   int int_option;
@@ -94,7 +125,8 @@ int main(int argc, char *argv[])
     // them in help if you don't specify one.
     ("data", po::value<string>()->default_value("data"), "data")
     // texual value of default_value is only used to display help info ?
-    ("A", po::value<A>()->default_value(A(), "default_A"), "A")
+    ("A", po::value<A>()->default_value(A(), "custom A with custom << operator"), "A")
+    ("B", po::value<B>()->default_value(B(), "custom B with custom validator function"), "B")
     ;
 
   // hidden
@@ -141,6 +173,10 @@ int main(int argc, char *argv[])
 
   if (vm.count("A")) {
     std::cout << "A : " << vm["A"].as<A>().s << std::endl;
+  }
+
+  if (vm.count("B")) {
+    std::cout << "B : " << vm["B"].as<B>().i << std::endl;
   }
 
   if (vm.count("config")) {
