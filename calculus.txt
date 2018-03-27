@@ -483,10 +483,15 @@ f(x)
 6.5.30. If Methuselah's parents had put $100 in the bank for him a t birth and he left it there, what would Methuselah
 have had at his death(969 years later) if interest was 4% compund anually?
   100 * (1.004)^969 = 3.201148e18
-  
 
-
-  
+8.1.1-24 find the indicated limit.
+  8.1.1.  lim_x_0_((2x-sinx)/x) L= lim_x_0_((2-cosx)/1) = 1
+  8.1.11. lim_t_1_((t^0.5 - t^2)/lnt) = lim_t_1_(t*(0.5/t^0.5 - 2t)) = -1.5
+  8.1.21. lim_x_0+_((1-cosx-xsinx)/(2-2cosx-(sinx)^2)) 
+        = lim_x_0+_((sinx-sinx-xcosx)/(2sinx-2sinxcosx))
+        = lim_x_0+_((-xcosx)/(2sinx-2sinxcosx))
+        = lim_x_0+_((-cosx -xsinx)/(2cosx-2(cosx)^2 + 2(sinx)^2))
+        = -∞
 
 9.8.1-18
   find the terms throught x^5 in the Maclarin series for f(x).
