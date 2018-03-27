@@ -119,6 +119,36 @@ relative error.
   absolute error is 0.728645
   relative error is dc/f(0.53) = 0.728645/79.096599 = 0.009212
 
+3.1.5-26. identify the critical points and find the maximum value and minimum value on the given interval.
+  3.1.5. f(x) = x^2 + 4x + 4; I = [-4, 0]
+    f'(x) = 2x + 4
+    stationary point: -2
+    end point: -4, 0
+    singular point:
+    f(-4) = f(0) = 4
+    f(-2) = 0
+    mimimum at -2, maximum at -4 and 0
+
+  3.1.15. g(x) = 1/(1+x^2);  I=(-∞,∞)
+    g'(x) = -2x/(1+x^2)^2
+    stationary point: 0
+    end point:
+    singular point:
+    g(0) = 1
+
+    maximum at 0
+
+  3.1.25. g(θ) = θ^2secθ ; i = [-π/4, π/4]
+    g'(θ) = 2θsecθ + θ^2secθtanθ
+          = θsecθ(2 + θtanθ)
+    stationary point: 0
+    end point:-π/4, π/4
+    singular point:
+    g(0) = 0
+    g(-π/4) = g(π/4) = π^2*sqrt(2)/16
+
+    mimimum at 0, maximum at -π/4, π/4
+
 3.6.1-21. A function is defined and a closed interval is given. Decide whether the Mean Value Theroem applies to the given
 function on the given interval. If it does, find all possible values of c; if not, state the reason. In Each problem,
 sketch the graph of the given function on the given interval.
@@ -424,6 +454,38 @@ f(x)
 
   6.4.30. y = 2^(e^x) + (2^e)^x
     dy/dx = ln2 * 2^(e^x) * e^x + ln(2^e) * (2^e)^x
+
+6.5.1. solve the given differential equation subject to the given condition.
+  dy/dt = -6y, y(0) = 4
+  |y| = |y0| * e^(-6t)
+      = 4e^(-6t)
+
+6.5.11. A polulation is growing at a rate proportional to it's size. after 5 years, the population size was 164000. After
+12 years, the population size was 235000. What was the original population size.
+  y = y0 * e^(kt)
+
+  164000 = y0 * e^(5t)
+  235000 = y0 * e^(12t)
+
+  solve and get y0 = 126840
+
+6.5.21. An object initially at 26C is placed in water having temperature 90C. if the temperature of the object rases to
+70C in 5 minutes, that will be the temperature after 10 minutes.
+  T = T1 + (T0 - T1)e^(kt)
+    = 90 - 64e^(kt)
+
+  70 = 90 - 64e^(5t)
+  e^(5t) = 0.3125
+  e^(10t) = 0.097656
+  T = 90 - 64e^(10t)
+    = 83.750016
+
+6.5.30. If Methuselah's parents had put $100 in the bank for him a t birth and he left it there, what would Methuselah
+have had at his death(969 years later) if interest was 4% compund anually?
+  100 * (1.004)^969 = 3.201148e18
+  
+
+
   
 
 9.8.1-18
