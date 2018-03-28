@@ -493,6 +493,50 @@ have had at his death(969 years later) if interest was 4% compund anually?
         = lim_x_0+_((-cosx -xsinx)/(2cosx-2(cosx)^2 + 2(sinx)^2))
         = -∞
 
+8.2.1-40. find the indicated limit.
+  8.2.1. lim_x_∞_(ln(x^10000)/x) L= lim_x_∞_(10000/x) = 0
+
+  8.2.11. lim_x_0_(xlnx^1000) 
+        = lim_x_0_(lnx^1000 / (1/x))
+        L= lim_x_0_(1000 / (x * -1/x^2))
+        = lim_x_0_(-1000x)
+        = 0
+
+  8.2.21. lim_x_π/2_(sinx^(cosx)) = 1
+
+  8.2.30. lim_x_∞_(1+1/x)^x
+    let y = (1+1/x)^x
+       lny = xln(1+1/x)
+    lim_x_∞_lny = lim_x_∞_(xln(1+1/x))
+              = lim_x_∞_(ln(1+1/x)/(1/x))
+             L= lim_x_∞_((1/x)' * (x+1)/x/(1/x)')
+               = lim_x_∞_((x+1/x)
+               = 1
+    lim_x_∞_y = e
+
+  8.2.31. lim_x_0+_(1+2e^x)^(1/x)
+    let y = (1+2e^x)^(1/x)
+      lny = (1/x) * ln(1+2e^x)
+      lim_x_0+_lny = ∞ * ln3
+      lim_x_0+_y = ∞
+
+8.2.41. find each limit. assume a > 0
+  a. lim_n_∞_a^(1/n)
+    y = a^(1/n)
+    lny = 1/n * lna
+    lim_n_∞_lny = 0
+    lim_n_∞_y = 1
+
+8.2.42. find each limit.
+  a. lim_x_0+_x^x
+    y = x^x
+    lny = xlnx
+    lim_x_0_lny = lim_x_0_(lnx/(1/x))
+                = lim_x_0_(lnx/(1/x))
+                L= lim_x_0_(-x^2/x)
+                = 0
+    lim_x_0_y = 1
+
 9.8.1-18
   find the terms throught x^5 in the Maclarin series for f(x).
   9.8.1. f(x) = tan(x) :
