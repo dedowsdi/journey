@@ -29,15 +29,6 @@ discontinunity is removable or nonremovable.
 1.6.62. let f(x) = 1/(x-1), then f(-2) = 1/3, f(2) = 1. Does the Intermediate Value Theorem imply the existence of a
 number c between -2 and 2 such taht f(c) = 0 ? Explain.
   1 and x-1 is C on R, f is C on R except on 1, 1 ∈ [-2,1], so f is not C on [-2,1], so you can not apply Intermediate
-  Value Theorem to i in this interval.
-
-2.7.1-12. Assume that each equation in Problems 1-12 dfines a differentiable function of x, find Dx_y by implicit
-differentiation.
-  2.7.1.y^2-x^2 = 1
-    2yy' -2x = 0
-    y' = x/y
-
-2.7.13-18. find the equation of the tangent line at the indicated point.
   2.7.13. x^3y + y^3x = 30; (1,3)
   3x^2*y + x^3*y + 3y^2*y'x + y^3 = 0
   y' = -(y^3+3x^2*y)/(x^3+3y^2*x)
@@ -484,6 +475,39 @@ f(x)
 have had at his death(969 years later) if interest was 4% compund anually?
   100 * (1.004)^969 = 3.201148e18
 
+7.2.1-36. use intergation by parts to evaluate each integral
+  7.2.1. ∫xe^xdx
+    u = x,  dv = e^xdx
+    du = dx,  v = e^x
+    origin = xe^x - ∫e^xdx = xe^x - e^x + C
+  
+  7.2.11 ∫ln3xdx
+    u = ln3x,  dv = dx
+    du = 1/x dx,  v = x
+    origin = xln3x - ∫dx = xln3x -X + C
+
+  7.2.21. ∫arctan(1/t)dt
+    u = arctan(1/t), dv = dt
+    du = -1/(1+t^2)dt, v = t
+    origin = arctan(1/t)*t + ∫t/(1+t^2)dt
+           =  arctan(1/t)*t + 0.5ln(t^2+1) + C
+
+7.2.37-48, apply intergation by parts twice to evalutate each integral.
+  7.2.41. ∫e^tcost dt
+    u=cost, dv = d^tdt
+    du=-sintdt, v = e^t
+    origin = e^t*cost + ∫e^t*sint dt
+      u=sint, dv=e^tdt
+      du=costdt, v=e^t
+    origin =  e^t*cost + sint*e^t - ∫e^tcost dt
+    ∫e^tcost dt = 0.5*(e^t*cost + sint*e^t)+C
+
+7.2.55-61. derive the given reductoin formula using integration by parts
+  7.2.55. ∫x^a*e^(βx) dx = x^a*e^(βx)/β - α/β *∫x^(α-1)*e^(βx)dx
+    u=x^α,  dv = e^(βx)dx
+    du=αx^(α-1)dx, v=e^(βx)/β
+  origin = x^a*e^(βx)/β - α/β *∫x^(α-1)*e^(βx)dx
+    
 8.1.1-24 find the indicated limit.
   8.1.1.  lim_x_0_((2x-sinx)/x) L= lim_x_0_((2-cosx)/1) = 1
   8.1.11. lim_t_1_((t^0.5 - t^2)/lnt) = lim_t_1_(t*(0.5/t^0.5 - 2t)) = -1.5
@@ -536,6 +560,230 @@ have had at his death(969 years later) if interest was 4% compund anually?
                 L= lim_x_0_(-x^2/x)
                 = 0
     lim_x_0_y = 1
+
+8.3.1-24, evaluate each improper integral or show that is diverges.
+  8.3.1. ∫_100_∞_e^xdx =[e^x]_100_∞ = ∞
+
+  8.3.11 ∫_e_∞_1/(xlnx) dx = [ln(lnx)]_e_∞ = ∞
+
+  8.3.20 ∫_-∞_∞_x/(e^(2|x|)) dx
+    ∫_0_∞_x/(e^(2|x|)) dx
+   =∫_0_∞_x*e^(-2x) dx
+     u = x, dv = e^-2x
+     du = dx, v = -0.5*e^(-2x)
+   = [-0.5x*e^(-2x)]_0_∞ + 0.5∫_0_∞_(e^(-2x)) dx
+   = -0.25[e^(-2x)]_0_∞
+   = 0.25
+
+   ∫_-∞_0_x/(e^(2|x|)) dx
+  = ∫_-∞_0_x*e^(2x) dx
+    u = x, dv = e^2x
+    du = dx, v = 0.5e^(2x)
+  = 0.5[e^(2x)*x]_-∞_0 - 0.5∫_-∞_0_e^(2x) dx
+  = -0.25[e^2x]_-∞_0
+  = -0.25
+
+  ∫_-∞_∞_x/(e^(2|x|)) dx = ∫_-∞_0_x/(e^(2|x|)) dx + ∫_0_∞_x/(e^(2|x|)) dx = 0
+
+8.4.1-32. evaluate each improper integral or show that is diverges.
+  8.4.1. ∫_1_3_(x-1)^(-1/3)dx
+        =lim_a->1+_∫_a_3_(x-1)^(-1/3)dx
+        =lim_a->1+_1.5[(x-1)^(2/3)]_a_3
+        =1.5*4^(1/3)
+
+  8.4.11. ∫_0_4_(2-3x)^(-1/3)dx
+        = ∫_0_2/3_(2-3x)^(-1/3)dx + ∫_2/3_4_(2-3x)^(-1/3)dx
+        = lim_a->2/3_1.5[(2-3x)^(2/3)]_0_a + lim_a->2/3_1.5[(2-3x)^(2/3)]_a_4
+        = 1.5 * 4^(1/3)  + 1.5 * 100^(1/3)
+
+  8.4.21. ∫_0_π/2_(sinx/(1-cosx))dx
+    lim_x->0_(sinx/(1-cosx)) = lim_x->0_(-cosx/sinx) = -∞
+    lhs = lim_a->0_-[ln(1-cosx)]_0_π/2
+        = ∞
+
+9.1.1-20. determine wheteer the sequence converges or diverges, and if confirges, find lim_n->∞_an
+  9.1.1. an = n/(3n-1)
+    lim_n->∞_an = 1/3
+
+  9.1.11. an = e^(2n) / (n^2+3n-1). diverges
+
+  9.1.10. an=(1+2/n)^(n/2)
+    lim_n->∞_an = e
+
+9.1.21-30. find an explicit formula for an for each sequence, determine whether the sequence converges or diverges, if
+it convertes, find lim_n->∞_an
+  9.1.25. 1, 2/(2^2-1^2), 3/(3^2-2^2), 4/(4^2-3^2),
+    an = 1, n = 1
+       = n/(n^2-(n-1)^2)
+       = n/(2n-1)
+    lim_n->∞_an = 0.5  
+
+9.1.31-36. use bound therom prove theat the sequence converges.
+  9.1.34. an = 1 + 1/2! + 1/3! + .... 1/n!
+             <=1 + 1/2 + 1/2^2 + .... 1/2^(n-1)
+              =2 if n->∞
+          so an is increasing and upboundded, so an converges
+
+9.2.1-14. indicate whether the given series convertes or diverges. If it converges, find it's sum.
+  9.2.1. Σ_k_1_∞_(1/7)^k = 1/7/(1-1/7) = 1/6
+
+  9.2.9. Σ_k_1_∞_(k!/100^k)
+    lim_k_1_∞_k!/(100^k) = ∞
+    diverges
+
+9.2.15-20. write the given decimal as in infinite series, then find the sum of the series, and finally, use the result
+to write the decimal as a ratio of two integers.
+  9.2.15. 0.2222222222222
+         = 0.2 + 0.02 + ....
+         = 0.2/(1-0.1)
+         = 2/9 
+
+9.2.25. A ball is dropped from a height of 100 feet. Each time it hits the floot, it rebounds to 2/3 it's previous
+height. Find the total distance it travels before comint to rest.
+  100 + Σ_k_1_∞_(2*100 * (2/3)^k)
+ =100 + 200 / (1-2/3) 
+ =700
+
+9.3.1-11. Use the integral Test to determine the convergence of divergence of each of the folowing series.
+  9.3.1. Σ_k_0_∞_(1/(1+3)),  it's just harmonic series without 1/1, 1/2, 1/3, so it converges.
+
+  9.3.11. Σ_k_1_∞_ke^(-3k^2)
+    ∫_1_∞_xe^(-3x^2) dx
+   =-1/6 *∫_1_∞_e^(-3x^2)*-6x dx
+   =-1/6 * [e^(-3x^2)]_1_∞
+   =1/(6e^3), it's finite
+   so series converges
+
+9.3.13-22. decide the convergence or divergence of the series. Give a reason for your conclusion
+  9.3.18. Σ_1_∞_ksin(1/k)
+    lim_k_∞_ksin(1/k)
+    =lim_k_∞_sin(1/k)/(1/k)
+    =lim_x_0+_sin(x)/x
+    =1
+    according to n-th term test, it diverges.
+
+9.3.23-26. estimate the error that is made by approximating the sum of the given series by the sum of the first five
+terms.
+  9.3.25. Σ_1_∞_1/(1+k^2)
+  E_t = ∫_5_∞_1/(1+x^2) dx
+      = [arctan(x)]_5_∞
+      = π/2 - arctan(5)
+
+9.3.33. For what values of p does Σ_n_2_∞_(1/(n * (ln(n))^p )) converge
+  let u = ln(x), du = 1/x dx
+  ∫_2_∞_(1/(x * (ln(x))^p ))
+  =∫_ln(2)_∞_u^-p du
+  according to p series test, it converges when p > 1
+
+9.4.1-4, use the limit Comparison Test to determine convergence or divergence.
+  9.4.1 Σ_n_1_∞_(n/(n^2+2n+3))
+    let b_n = 1/n
+    lim_n_∞_(a_n/b_n) = 1
+    b_n diverges, so series diverges
+
+9.4.5-10, use ratio test to determine convergence or divergence.
+  9.4.5. Σ_n_1_∞_(8^n/n!)
+    lim_n_∞_(a_n+1/a_n) = 8/(n+1) = 0
+    so it converges.
+
+9.4.11-34, determine convergence or divergence for each of the series.
+  9.4.11. Σ_n_1_∞_(n/(n+200))
+    lim_n_∞_a_n = 1
+    according to nth-term test, it diverges.
+
+  9.4.19. Σ_n_1_∞_(1/n(n+1)) 
+        = Σ_n_1_∞_1-1/2 + 1/2 -1/3 + 1/3 - 1/4 + ..... 1/n - 1/(n+1) 
+        = Σ_n_1_∞_1-1/(n+1) = 1, it converges
+
+  9.4.25. Σ_n_1_∞_(1/n^1.5)) 
+    it's just a p-series, p= 1.5 > 1, so it converges.
+
+  9.4.31. Σ_n_1_∞_(n^n/(2n)!)
+    lim_n_∞_(a_n+1/a_n) 
+  = lim_n_∞_((n+1)^n/(n^n * (2n+2)(2n+1)))
+  = lim_n_∞_(((n+1)/n)^n * 1/( * (2n+2)(2n+1)))
+  = e * 0
+  = 0
+  according to ratio test, it converges.
+
+9.5.1-6. shot that each alternating series converges, and then estimate the error made by using the partial sum S_9 as
+an approximation to the sum S of the series.
+  9.5.1. Σ_n_1_∞_(-1)^(n+1)*2/(3n+1)
+    lim_n_∞_2/(3n+1) = 0, an is also decreasing ,so it converges.
+    a_10 = 2/31
+
+9.5.7-12. show that each series converges absolutely.
+  9.5.7. Σ_n_1_∞_(-0.75)^n
+    absolute series is just a geometry series, so it converges absolutely.
+
+9.5.13-30. classify each series as absolutely convergent, conditionally convergent or divergent.
+  9.5.13. Σ_n_1_∞_(-1)^(n+1)(1/5n)
+    it's 1/5 * alternate harmonic series, so it converges donditionally.
+
+  9.5.19. Σ_n_1_∞(-1)^(n+1)(n^4/2^n)
+    lim_n->∞_|a_n+1|/|a_n| = (n+1)^4/(n^4*2) = 0.5
+
+  9.5.25. Σ_n_1_∞_(-1)^n * sin(n) / (n * sqrt(n))
+    Σ_n_1_∞_sin(n)/(n * sqrt(n))
+  <=Σ_n_1_∞_1/(n^1.5)
+    it's p-seripes with p = 1.5, so it converges absolutely.
+
+9.5.31. Prove that if Σa_n diverges, so does Σ|an|
+  |a_n|>a_n
+  so Σ|an| diverges.
+
+9.6.1-8. find the convergence set for the given power series.
+  9.6.1. Σ_n_1_∞_x^n/(n-1)!
+    lim_n_∞_|a_n+1/a_n| = lim_n_∞_|x/n| = 0
+    so it converges at R
+
+9.6.9-28, find the convergence set for the given power series.
+  9.6.9. a_n = x^n * (-1)^(n+1)/(n*(n+1))
+    lim_n_∞_|a_n+1/a_n| = lim_n_∞_|nx/(n+1)| = |x|, 
+    |x|<1 => -1 < x < 1
+    if x = 1, it's alternate series with nth term = 0
+    if x = -1, it's collapsing series
+    so  it converges at [-1, 1]
+
+  9.6.15. a^n = x^n*(-1)^n/n
+    lim_n_∞_|a_n+1/a_n| = lim_n_∞_|nx/(n+1)| = |x|
+    if x = 1, it's alternate harmonic series
+    if x = -1, it's harmonic serices
+    so it converges at (-1, 1]
+
+  9.6.20. a_n = 2^nx^n
+    lim_n_∞_|a_n+1/a_n| = lim_n_∞_2x
+    |2x| < 1 => -0.5<x<0.5
+    it diverges at x = ±0.5
+    so it converges at (-1,1)
+
+  9.6.25. a_n = (x+1)^n/2^n
+    lim_n_∞_|a_n+1/a_n| = lim_n_∞_|(x+1)/2|
+    |(x+1)/2| < 1 => -3<x<1
+    it diverges at x=-3 or 1
+    so it converges at (-3, 1)
+
+9.7.1-10. find the power series representation for f(x) and specify the radius of convergence.
+  9.7.1. f(x) = 1/(1+x)
+    Σ_n_0_∞_x^n = 1/(1-x), provided that x∈(-1,1)
+    f(x) = Σ_n_0_∞_(-x)^n
+
+9.7.11. Obtain the power series in x for ln[(1+x)/(1-x)]
+  ln(1+x) = Σ_n_1_∞_(-1)^(1+n)*x^n/n!
+  ln(1-x) = Σ_n_1_∞_-x^n/n!
+  original = ln(1+x) - ln(1-x)
+           = Σ_n_1_∞_2*x^(2n-1)/(2n-1)!
+
+9.7.25. Find the sum of each of the following series by recognizing how it is related to something familar.
+  (a) x-x^2 + x^3 -x^4...
+     =x/(1+x)
+
+  (b)1/2! + x/3! + x^2/4! + x^3/5! ....
+    =(e^x - 1 - x)/x^2
+
+  (c)2x+4x^2/2 + 8x^3/3 + 16x^4/4 + ....
+    =2x + (2x)^2/2 + (2x)^3/3 + (2x)^4/4 + ...
+    =-ln(1-2x)
 
 9.8.1-18
   find the terms throught x^5 in the Maclarin series for f(x).

@@ -1,5 +1,4 @@
 cmake_minimum_required (VERSION 2.6)
-
 project (osg)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;/usr/local/source/OpenSceneGraph/CMakeModules;${CMAKE_MODULE_PATH}")
@@ -27,6 +26,7 @@ set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it'
 #becareful cmake prebuilt find## use smallcase
 FIND_PACKAGE(PkgConfig REQUIRED)
 FIND_PACKAGE(OSG REQUIRED)
+find_package(Qt4  REQUIRED QtGui QtXml QtUiTools QtOpenGL)
 #FIND_PACKAGE(OSGDB REQUIRED)
 #FIND_PACKAGE(OSGUTIL REQUIRED)
 #FIND_PACKAGE(OSGVIEWER REQUIRED)
@@ -48,9 +48,10 @@ FIND_PACKAGE(OpenGL REQUIRED)
 include_directories(
     #${OPENTHREADS_INCLUDE_DIR}
     ${OSG_INCLUDE_DIR}
-    #${OSGDB_INCLUDE_DIR}
-    #${OSGUTIL_INCLUDE_DIR}
-    #${OSGVIEWER_INCLUDE_DIR}
+    ${QT_HEADERS_DIR}
+    ${QT_QTCORE_INCLUDE_DIR}
+    ${QT_QTGUI_INCLUDE_DIR}
+    ${QT_QTOPENGL_INCLUDE_DIR}
     common/include
     )
 
@@ -58,12 +59,11 @@ IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")
 ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-#generate cfg file
-
 #copy data faile
 FILE(COPY data/spline.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 FILE(COPY data/bezier.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 FILE(COPY data/nurb.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+FILE(COPY data/animation.gif DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 add_subdirectory(common)
 set(COMMON_LIBS common)

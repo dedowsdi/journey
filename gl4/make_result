@@ -1,0 +1,20 @@
+[  4%] Built target gl43
+[ 56%] Built target glc
+[ 60%] Built target common
+[ 64%] Built target deferred
+[ 68%] Built target lines
+[ 72%] Built target normalviewer
+[35m[1mScanning dependencies of target billboard[0m
+[ 74%] [32mBuilding CXX object demo/CMakeFiles/billboard.dir/billboard/billboard.cpp.o[0m
+[1m/home/pntandcnt/journey/gl4/demo/billboard/billboard.cpp:206:22: [0m[0;1;35mwarning: [0m[1munused variable 'p_mat' [-Wunused-variable][0m
+    const glm::mat4 &p_mat = program0.p_mat;
+[0;1;32m                     ^
+[0m1 warning generated.
+[ 76%] [32m[1mLinking CXX executable ../bin/billboardd[0m
+[ 76%] Built target billboard
+[35m[1mScanning dependencies of target geometry[0m
+[ 78%] [32mBuilding CXX object demo/CMakeFiles/geometry.dir/geometry/geometry.cpp.o[0m
+[ 80%] [32m[1mLinking CXX executable ../bin/geometryd[0m
+[ 80%] Built target geometry
+[35m[1mScanning dependencies of target helloworld[0m
+[ 82%] [32mBuilding CXX object demo/CMakeFiles/helloworld.dir/helloworld/helloworld.cpp.o[0m

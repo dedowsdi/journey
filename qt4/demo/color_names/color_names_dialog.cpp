@@ -8,6 +8,7 @@ ColorNamesDialog::ColorNamesDialog(QWidget *parent)
     sourceModel = new QStringListModel(this);
     sourceModel->setStringList(QColor::colorNames());
 
+    // wrap source model with sort filter
     proxyModel = new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(sourceModel);
     proxyModel->setFilterKeyColumn(0);
@@ -46,7 +47,7 @@ ColorNamesDialog::ColorNamesDialog(QWidget *parent)
 void ColorNamesDialog::reapplyFilter()
 {
     QRegExp::PatternSyntax syntax =
-            QRegExp::PatternSyntax(syntaxComboBox->itemData(
+            static_cast<QRegExp::PatternSyntax>(syntaxComboBox->itemData(
                     syntaxComboBox->currentIndex()).toInt());
     QRegExp regExp(filterLineEdit->text(), Qt::CaseInsensitive, syntax);
     proxyModel->setFilterRegExp(regExp);

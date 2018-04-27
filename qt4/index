@@ -21,8 +21,19 @@ ui
 main window
     main_window
 
+layout
+    find_file
+    preference
+
+dock
+    dock_widget
+
+qtype
+    variant
+
 item based widget
     flowchart_symbol_picker | list widget
+    rgba_editor             | list widget with wiget item
     coordinate_setter       | table widget
     settings_viewer         | tree widget
 
@@ -38,5 +49,3 @@ view with custom model
 
 custom delegate
     track_editor
-    
-

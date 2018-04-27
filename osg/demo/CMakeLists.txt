@@ -6,7 +6,7 @@ set (DEMOES
     quad
     octahedron
     tessellate
-	faceCollector
+    faceCollector
     transform
     switch
     lod
@@ -19,9 +19,9 @@ set (DEMOES
     fog
     light
     texture
-	translucent
+    translucent
     cartoonCow
-	cubicBezier
+    cubicBezier
     hudCamera
     loop
     compositeViewer
@@ -110,6 +110,39 @@ foreach(DEMO ${DEMOES})
         ${OPENGL_glu_LIBRARY}
         ${OSGWIDGET_LIBRARY}
         common
+        )
+endforeach()
+
+set(QT_DEMOES
+   qt4_single
+   qt4_qthread
+   qt4_widgets
+   )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+foreach(DEMO ${QT_DEMOES})
+    message("add ${DEMO}")
+    add_executable(${DEMO} ${DEMO}/${DEMO}.cpp)
+    set_target_properties(${DEMO} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+    target_link_libraries(${DEMO}
+        Qt4::QtGui Qt4::QtXml
+        ${OPENGL_gl_LIBRARY}
+        ${OPENGL_glu_LIBRARY}
+        ${OPENTHREADS_LIBRARY}
+        ${OSG_LIBRARY}
+        ${OSGDB_LIBRARY}
+        ${OSGUTIL_LIBRARY}
+        ${OSGVIEWER_LIBRARY}
+        ${OSGGA_LIBRARY}
+        ${OSGANIMATION_LIBRARY}
+        ${OSGTEXT_LIBRARY}
+        ${OSGPARTICLE_LIBRARY}
+        ${OSGSHADOW_LIBRARY}
+        ${OSGFX_LIBRARY}
+        ${OSGWIDGET_LIBRARY}
+        ${OSGQT_LIBRARY}
+        common
+        X11
         )
 endforeach()
 

@@ -109,10 +109,7 @@ public:
 
     // init quad
     q.build_mesh();
-    q.bind(0, prg.al_vertex);
-    q.bind(1, prg.al_normal);
-    q.bind(2, prg.al_texcoord);
-    q.bind(3, prg.al_tangent);
+    q.bind_vntt(prg.al_vertex, prg.al_normal, prg.al_texcoord, prg.al_tangent);
 
     // load maps
     fipImage diffuse_image = zxd::fipLoadImage("data/texture/bricks2.jpg");

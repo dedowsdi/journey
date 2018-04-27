@@ -1,0 +1,14 @@
+1. opencs world/cells. change "Cells" on the top left to "cells"
+   change typename of universalid 
+
+2. opencs world/cells. change table header "Sleep Forbidden" to "sleep forbidden"
+   CSMWorld::Columns::getName(...)
+
+3. opencs world/cells. hide interior sky
+   change column flag in data.cpp,  CSVWorld::Table::Table(..) will use the flag
+   to hide the column.
+
+4. add foo column to cell. it should appear only in cells, fill it with whatever
+   content you like.
+
+5. opencs world/cells. use custom rgba widget to edit color.

@@ -1,0 +1,84 @@
+ vim: tw=80 sw=2 ts=2 et
+
+steamed egg :
+  egg water
+  1   1.75
+
+sliced boiled chicken:
+  thrice yellow chicken. boiled for 11 minutes, turn off the fire, simmer for
+  20 minuts.
+
+bread:
+  strong flour | water+milk | yeast | butter | sugar | sault
+  100          | 60         | 0.6   | *      | *     | 2    
+
+  knead until dough is smooth, bouncy.
+
+  get a bow, put in some oil then your dough, cover it with plastic wrap.
+
+  first rise test:
+    Gently stick two fingers in the risen dough up to the second knuckle and
+    then take them out.  If the indentations remain the dough is “ripe” and
+    ready for punch down
+
+  second rise test:
+    Simply touch the side of the dough lightly with your fingertip. If part of
+    the indentation remains, the loaf is ripe and ready for the oven.
+
+salt in yeast dough:
+  Salt acts as a natural antioxidant in the dough and not only adds taste but
+  especially helps bring out the flavors and aromas present in the flour and
+  other ingredients.
+
+  Next to its role in boosting the flavor of your bread, salt plays a role in
+  tightening the gluten structure and adding strength to your dough. It helps
+  the loaf to hold on to the carbon dioxide gas that is formed during
+  fermentation, supporting good volume.
+
+  Salt slows down fermentation and enzyme activity in dough. The salt crystals
+  draw water away form their environment (salt is ‘hygroscopic’). When salt and
+  yeast compete for water, salt wins and the yeast is slowed down.
+
+  Because of its moisture maintaining properties, salt can prevent bread from
+  getting stale but it can also (this is especially true in humid environments)
+  absorb moisture from the air and leave you with soft crusts and soggy bread.
+
+how does sour dough make things rise:
+   Lactobacilli (remember, they're all around us; you don't need to "add" them)
+   break down flour's complex carbohydrates into simple sugars—exactly what
+   yeast needs for food. The yeast, feeding on these simple sugars, produces
+   carbon dioxide bubbles. 
+
+sour flavor in sour dough:
+  As byproducts of manufacturing simple sugars, lactobacilli produce flavorful
+  organic acids: lactic acid, which adds a rich, mellow flavor to bread; and to
+  a lesser degree over a longer period of time, acetic acid, which gives
+  sourdough bread its sour tang.
+
+steam in the oven:
+  In the first few minutes of baking, loaves of bread will rise rapidly as the
+  gases trapped inside expand and the yeast has a final burst of activity (this
+  is called "ovenspring"). Steaming within this time helps keep the crust soft.
+  This allows the bread to continue expanding freely.
+
+  The steam that has settled on the surface of the bread also dissolves sugars
+  in the dough. As the bread stops expanding and the steam begins to evaporate,
+  the sugars are left behind to caramelize (yum!) and create a glossy crust.
+
+  Steaming is really only useful during the first 5-10 minutes of baking while
+  the yeast is still active and the internal structure hasn't set. After this
+  time, the crust needs its own time to set and dry out.
+
+dough Hydration percentage = (water weight / flour weight) * 100
+
+flour:
+  flour protein percent:
+    whole-wheat flour:      16 - %
+    Bread Flour:            14 - 16%
+    high protein flour:     12 - 14%
+    All-Purpose (AP) Flour: 10 - 12%
+    Pastry Flour:           9%
+    Cake Flour:             7-8%
+
+  high gluten flours (like bread flour) soak up more water than lower gluten
+  flours (like all-purpose)

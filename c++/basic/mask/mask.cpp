@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <bitset>
+#include <algorithm>
 
 int main(int argc, char *argv[]) {
   unsigned int number = 0b11001100;

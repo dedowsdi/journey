@@ -31,6 +31,13 @@ bash:
     associatived array works like map
     declare -A m; m[a]=A ; m[b]=B ; m[c]=C ; unset m[b] ; echo ${#m[@]} ; echo ${!m[@]} ; echo ${m[@]}
 
+zsh:
+  array:
+    zsh array index starts at 1, unless KSH_ARRAYS option is set
+    l=(a b c d e) ; echo ${#l[@]} ;  unset l[1] ; echo ${l[@]}
+
+    typeset -A m; m[a]=A ; m[b]=B ; m[c]=C ; unset "m[b]" ; echo ${#m[@]} ; echo ${!m[@]} ; echo ${m[@]}
+
 -----------
 2018.01.06:
 
@@ -1177,6 +1184,7 @@ math:
 9.68m = 31.75853feet ≈ 32feet
 1yard = 3feet = 91.44cm
 1mile = 5280feet = 1609.344m
+1 league = 4,828.0417 meter (distance a man can cover in 1 hour)
 
 1pound = 0.45359237kg
 
@@ -1766,3 +1774,68 @@ qt4:
   
   viewport in qt works similar as viewport like opengl:
     paint->setViewport(x,y,with,height)
+
+----------
+2018.04.03
+
+linux:
+  use im-confg to swtich fcitx or ibus.
+  sort -h can sort someting like house number nicely.
+
+----------
+2018.04.03
+
+math:
+  0C = 32F
+  100C = 212F
+  which means 1C change is equal to 1.8F change
+  so to change from F to C:
+    (x-32)/1.8
+  to change from C to F
+    x*1.8 + 32
+
+----------
+2018.04.07
+
+linux:
+  change login shell to zsh:
+    chsh -s $(which zsh)
+
+----------
+2018.04.10
+
+linux:
+  you can use pushd, popd to use directory stack.
+  dirs will print everythign in the directory stack.
+
+----------
+2018.04.13
+
+linux:
+  vim:
+    use byzana-record to record gui animation.
+    use ttyrec to record tty screen animation, then use ttygif to convert
+    video record to gif.
+
+----------
+2018.04.26
+
+qt4:
+  editor widget created by item delegate in listwidget will be removed
+  immediately if lose focus.
+
+  setGeometry has no meaning in a layout.
+
+  backgound color and property like that can be changed via stylesheet.
+
+----------
+2018.04.26
+
+qt4:
+  A dialog is always a top-level widget, which means you must specify global
+  coordinates to position it. but if it has a parent, its default location is
+  centered on top of the parent's top-level widget (if it is not top-level
+  itself).
+
+vim:
+  viml string doesn't support negative index.
