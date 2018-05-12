@@ -11,4 +11,8 @@
 4. add foo column to cell. it should appear only in cells, fill it with whatever
    content you like.
 
-5. opencs world/cells. use custom rgba widget to edit color.
+5. add following option to esmtool:
+    --pure  no crap info  
+    --idonly print id only
+    --cellreftypes filter reference types when used with -C
+    --refcells find all cells that contain specified reference

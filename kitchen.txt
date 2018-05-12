@@ -9,8 +9,8 @@ sliced boiled chicken:
   20 minuts.
 
 bread:
-  strong flour | water+milk | yeast | butter | sugar | sault
-  100          | 60         | 0.6   | *      | *     | 2    
+  bread flour | water | yeast | butter | sugar | sault
+  100         | 62.5  | 0.6   | 7.5    | *     | 2
 
   knead until dough is smooth, bouncy.
 
@@ -43,6 +43,40 @@ salt in yeast dough:
   getting stale but it can also (this is especially true in humid environments)
   absorb moisture from the air and leave you with soft crusts and soggy bread.
 
+Fats
+  Fat that is incorporated in bread dough will inhibit gluten formation. The
+  resulting loaf will not rise quite as high as a loaf made without fat. On the
+  positive side, fats, especially butter and olive oil, add a lot of flavor to the
+  finished product. Fats keep the crumb tender and can help improve the shelf life
+  of your bread by a day or so. Almost any fat can be added to a bread dough.
+
+Eggs
+  Eggs added to dough help with rising. A bread dough rich with egg will rise
+  very high, because eggs are a leavening agent (think genoise or angel food
+  cake). As well, the fats from the yolk help to tenderize the crumb and lighten
+  the texture a bit. Eggs also contain the emulsifier lecithin. Lecithin can add
+  to the overall consistency of the loaf.
+
+Sugar
+  Adding more sugar to a recipe than the yeast can eat will, no surprise, add
+  sweetness to the finished product. Sugar aids in browning, can help tenderize
+  the bread and also holds onto moisture to help inhibit staling.
+
+  Be careful, though—too much sugar will severely inhibit gluten production. So,
+  unless you plan on adding additional gluten to the dough (in the form of vital
+  wheat gluten or gluten flour), keep the sugar in the recipe to no more than 2
+  tablespoons/cup of flou
+
+Milk
+  We’ve already established that liquid is necessary to make bread, but that
+  doesn’t mean we are limited to water. Replacing all or part of the water with
+  milk will lend itself to a more tender, sweeter product.
+
+  The sugar in milk, lactose, is not eaten by the yeast, so it is left to add a
+  subtle sweetness to the finished bread. Milk also increases the nutritional
+  value of the bread by adding additional proteins. A dough made with milk will
+  brown more readily than one made with water.
+
 how does sour dough make things rise:
    Lactobacilli (remember, they're all around us; you don't need to "add" them)
    break down flour's complex carbohydrates into simple sugars—exactly what
@@ -71,6 +105,10 @@ steam in the oven:
 
 dough Hydration percentage = (water weight / flour weight) * 100
 
+weight:
+  1 cup of bread flour : 120g
+  1 cup of water : 8 fl oz , 236.588ml
+
 flour:
   flour protein percent:
     whole-wheat flour:      16 - %
@@ -82,3 +120,32 @@ flour:
 
   high gluten flours (like bread flour) soak up more water than lower gluten
   flours (like all-purpose)
+
+cereal:
+  There are three parts of the cereal’s fruit that are used to make flour: the
+  endosperm, which provides starch and some protein; the germ, which contributes
+  most of the fat and a bit of protein; and the bran, which is where the fiber
+  lives.
+
+autolyse:
+  An autolyse is the gentle mixing of the flour and water in a bread recipe,
+  followed by a 20 to 60 minute rest period. After the rest, the remaining
+  ingredients are added and kneading begins. 
+
+  pros:
+    The flour fully hydrates. 
+    Gluten bonds begin developing with no effort on the part of the baker, and
+    kneading time is consequently reduced.
+    Fermentation proceeds at a slower pace, allowing for full flavor development
+    and better keeping quality.
+    The dough becomes more extensible (stretchy), which allows it to expand
+    easily.
+
+  during autolyse:
+    Two enzymes that are present in flour — protease and amylase — begin their
+    work during the autolyse:
+
+    The protease enzymes degrade the protein in the flour, which encourages
+    extensibility.
+    The amylase enzymes turn the flour’s starch into sugars that the yeast can
+    consume.

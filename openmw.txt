@@ -243,7 +243,7 @@ world model
     id
       A certain type of item, which is internally represented as a record.  Each
       ID is identified by a unique string. IDs are immutable. Example:
-      katana_goldbrand_unique
+      katana_goldbrand_unique. also called referenceable.
 
     reference
       An instance of an ID, that exists either somewhere in the world or in a

@@ -1839,3 +1839,101 @@ qt4:
 
 vim:
   viml string doesn't support negative index.
+
+----------
+2018.05.03
+
+git:
+  search deleted file:
+    git log --all --full-history -- **/filename
+
+----------
+2018.05.05
+
+vim:
+  autoload function only exists when it's called, which means you can't test if
+  an autoload functions exits like this:  exists(*plug#func)
+
+linux:
+  use ffempg to convert video format
+  ffempt -i input.avi output.mp4
+
+----------
+2018.05.09
+
+bash:
+  expand variable twice:
+    file=$(eval echo $file) # $file might be some variable
+
+----------
+2018.05.10
+
+bash:
+  Words of the form $'string' are treated specially. The word expands to
+  "string", with backslash-escaped characters replaced as specified by the ANSI
+  C standard. It is a ksh93 syntax also supported by bash, zsh, mksh and FreeBSD
+  sh.
+
+  always use array to store command line options with special characters.
+    optoins="--id 'seyda neen'"
+    et $options # this will generate erryr, 'seyda neen' will be split into
+    'seyda and neen'
+
+----------
+2018.05.11
+bash:
+  compgen -W wordlist -- word 
+
+  worldlists:
+    worldlist will be treated as current typing words. single quote needs to be
+    escaped, because worldlist treated it as starting quote around string:
+      "a b'c d" will be split into "a"  "bc d" because bash think you might be typing "b'c d'"
+
+    splited words will be expanded(just like echo splitedWord, no extra quote):
+      x=y
+      y=z
+      compgen -W "\$$x"  # will generate z
+
+    in bash "abc" can be typed in following ways(" works just like '):
+      abc
+      a''bc
+      a'b'c
+      a'bc'
+      ab'c'
+
+    which means following compgen will generate the same result
+      compgen -W "abc" "a"
+      compgen -W "abc" "a'"
+      compgen -W "abc" "a'b"
+      compgen -W "abc" "ab"
+      compgen -W "abc" "ab'"
+
+    if you have escaped ' in your splited word:
+      compgen -W "a\'bc" "a'b" # generate nothing, impossible to continue 
+                               # from a'b to generate a'bc (keep in mind, it
+                               # needs to be expanded again)
+      compgen -W "a\'bc" "a'"  # good to go, a''\'bc
+
+    if you really want to complete "a'bcdef" from "a'b":
+      compgen -W "a\'bcdef" "a\'b" # you must escape ' in both wordlist and
+                                   # word!! in your script
+
+    the same rule apply to \:
+      assume you want to generate "a\\bcd" from "a\\b",
+        a\b    -----> ab
+        a\\b   -----> a\b
+        a\\\\b -----> a\\b
+
+      so you must replace \ with \\\\ in both wordlist and word. Again, keep in
+      mind, splited wordlist and word need to be expand again, use the rule of
+      echo word, no extra quotes.
+
+    remember this: compgen complete possible typing !!! 
+
+bash:
+  word split:
+    word splitting only happens when something expaned
+    explicit null
+      x='' # $x will be treated as empty string
+    implicit null
+      x=   # $x will be nothing 

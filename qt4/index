@@ -25,6 +25,9 @@ layout
     find_file
     preference
 
+transform
+    transformations
+
 dock
     dock_widget
 

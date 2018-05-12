@@ -83,6 +83,7 @@ struct options{
   int int_option;
   float float_option;
   string string_option;
+  bool bool_option;
   vector<int> int_vec_option;
   vector<string> string_vec_option;
   string config_file;
@@ -92,6 +93,7 @@ struct options{
     cout << "int_option : "        << int_option        << std::endl;
     cout << "float_option : "      << float_option      << std::endl;
     cout << "string_option : "     << string_option     << std::endl;
+    cout << "bool_option : "       << bool_option       << std::endl;
     cout << "int_vec_option : "    << int_vec_option    << std::endl;
     cout << "string_vec_option : " << string_vec_option << std::endl;
   }
@@ -118,6 +120,7 @@ int main(int argc, char *argv[])
   config.add_options()
     ("int,i", po::value<int>(&_options.int_option)->default_value(5), "int option")
     ("string,s", po::value<string>(&_options.string_option)->implicit_value("implicit")->default_value("default"), "string option")
+    ("bool", po::bool_switch(&_options.bool_option), "bool option")
     // multitoken : -v 1 2 3 4 5
     ("int_vec,v", po::value<vector<int>>(&_options.int_vec_option)->multitoken()->composing(), "int vec option, support multitoken")
     ("string_vec,b", po::value<vector<string>>(&_options.string_vec_option), "string vec option")
