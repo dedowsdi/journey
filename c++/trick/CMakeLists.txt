@@ -6,6 +6,7 @@ set (PROJECTS
     type2type
     conversion
     typeinfo
+    pointer_traits
     )
 
 foreach(PROJECT ${PROJECTS})

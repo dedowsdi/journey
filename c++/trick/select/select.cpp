@@ -1,6 +1,6 @@
 #include <iostream>
 
-// select T or U
+// select T or U based on flag
 template <bool flag, typename T, typename U>
 struct Select {
   typedef T Result;

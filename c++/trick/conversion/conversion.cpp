@@ -19,7 +19,10 @@ class Conversion {
   static T MakeT();
 
 public:
-  enum { exists = sizeof(test(MakeT())) == sizeof(Small), sameType = false };
+  enum { 
+    exists = sizeof(test(MakeT())) == sizeof(Small), 
+    sameType = false 
+  };
 };
 
 // specialize to same type

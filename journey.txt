@@ -1937,3 +1937,19 @@ bash:
       x='' # $x will be treated as empty string
     implicit null
       x=   # $x will be nothing 
+
+----------
+2018.05.13
+
+vim:
+  unamed regiser always point to the last used register.
+    gv"sy
+    let @s='whatever'  " @" is equal to whatever, not something you copied into
+                       " s register in the 1st line.
+
+c++:
+  be very careful with std::function:
+    std::function<const std::string&(const void*) > totally accepts
+    [](const void*)->std::string
+    this can cause local reference problem, total night mare.
+  
