@@ -12,22 +12,6 @@ namespace zxd {
 
 class Blender;
 
-/*
- * copy world axes in target camera rotation
- */
-class MiniAxesCallback : public osg::NodeCallback {
-protected:
-  osg::Camera* mTargetCamera;
-
-public:
-  osg::Camera* getTargetCamera() const { return mTargetCamera; }
-  void setTargetCamera(osg::Camera* v) { mTargetCamera = v; }
-
-protected:
-  virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
-
-};
-
 class BlenderViewBase : public osgViewer::View {
 protected:
   osg::Vec4 mBorderColor;

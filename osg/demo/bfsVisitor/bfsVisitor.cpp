@@ -1,8 +1,6 @@
-/* -*-c++-*- OpenSceneGraph Cookbook
- * Chapter 2 Recipe 6
- * Author: Wang Rui <wangray84 at gmail dot com>
-*/
-
+/*
+ * by default, visitor is dfs
+ */
 #include <osg/Group>
 #include <deque>
 #include <osgDB/ReadFile>

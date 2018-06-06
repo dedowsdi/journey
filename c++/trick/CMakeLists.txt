@@ -6,7 +6,10 @@ set (PROJECTS
     type2type
     conversion
     typeinfo
-    pointer_traits
+    type_traits
+    type_list
+    gen_scatter_hierachy
+    gen_linear_hierachy
     )
 
 foreach(PROJECT ${PROJECTS})

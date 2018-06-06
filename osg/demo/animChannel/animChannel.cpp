@@ -1,3 +1,15 @@
+/*
+ * use AnimationPath if your animation can be done with single position,
+ * rotation, scale. Otherwise use Animation.
+ *
+ * In order to use animation:
+ *  
+ *   create a basic animation manager
+ *   create animation, set play mode, register in animation manager
+ *   choose a template channel, name it and it's updater name, add it to animation
+ *   create channel updater, add channel to it.
+ *   add animation manager to root update callbacks, play the animation.
+ */
 #include <osg/MatrixTransform>
 #include <osgAnimation/BasicAnimationManager>
 #include <osgAnimation/UpdateMatrixTransform>

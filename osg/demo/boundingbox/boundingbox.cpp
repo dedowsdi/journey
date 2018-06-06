@@ -22,6 +22,7 @@ public:
       osg::ComputeBoundsVisitor cbbv;
       node->accept(cbbv);
 
+      // localBB include local transform!
       osg::BoundingBox localBB = cbbv.getBoundingBox();
 
       //careful, getParentalNodePaths include self
@@ -88,7 +89,7 @@ int main(int argc, char** argv) {
 
   //draw bounding box
   osg::ref_ptr<osg::Geode> geode = new osg::Geode;
-  geode->addDrawable(new osg::ShapeDrawable(new osg::Box));
+  geode->addDrawable(new osg::ShapeDrawable(new osg::Box)); // unit box
 
   osg::ref_ptr<osg::MatrixTransform> boundingBoxNode = new osg::MatrixTransform;
   boundingBoxNode->addChild(geode.get());

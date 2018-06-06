@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>90</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>GuiEventhandler</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1000</x>
+      <y>100</y>
+      <w>320</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>StandardManipulator
+--
+_homeEye
+_homeCenter
+_homeUp
+_autoComputeHomePosition
+--
+/allocAnimationData()/
+/applyAnimationStep()/
+/setTransformation(eye, rotation)/
+/setTransformation(eye, center, up)/
+/getTransformation(eye, rotation)/
+/getTransformation(eye, center, up)/
+/getNode()/
+computeHomePosition(camera, useBB)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1010</x>
+      <y>400</y>
+      <w>320</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>/CameraManipulator/
+--
+_thrown
+_allowThrown
+_node // scene data
+--
+/setByMatrix(matrix)/
+/setByInverseMatrix(matrix)/
+/getMatrix(matrix)/
+/getInverseMatrix(matrix)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1060</x>
+      <y>700</y>
+      <w>180</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>OrbitManipulator
+--
+_center
+_rotation
+_distance</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1150</x>
+      <y>330</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1140</x>
+      <y>620</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>380</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>home related staff resides in world space.
+getInverseMatrix return view matrix
+
+OrbitManipulator:
+    _center : lookat center in world space
+    _rotation : rotation of view to world
+    _distance : distance from lookat eye to center
+
+    viewMatrix = trans(-center)
+                * inverse(_rotation)
+                * trans(0, 0, -distance)
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

@@ -33,13 +33,17 @@ osg::Geometry* createQuad(GLfloat width, GLfloat height) {
 
 int main(int argc, char* argv[]) {
   osg::ref_ptr<osg::Group> root = new osg::Group();
-  // create 10 billboards with different transform
+  // create billboards with different transform
   for (GLuint i = 0; i < NUM_TREES; i += NUM_TREES / 20) {
     osg::ref_ptr<osg::Billboard> bb = new osg::Billboard();
     // face camera,  keep z up
     bb->setMode(osg::Billboard::POINT_ROT_EYE);
 
+    // shift normal a little bit around 0 -1 0
     bb->setNormal(osg::Vec3(random(-0.1f, 0.1f), -1.0f, random(-0.1f, 0.1f)));
+
+    osg::StateSet* ss = bb->getOrCreateStateSet();
+    ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
 
     osg::Geometry* quad = createQuad(random(1, 5), random(0.5, 10));
 
@@ -49,8 +53,6 @@ int main(int argc, char* argv[]) {
       bb->addDrawable(quad,
         osg::Vec3(random(0, GROUND_WIDTH), random(0, GROUND_HEIGHT), 0.0f));
 
-      osg::StateSet* ss = bb->getOrCreateStateSet();
-      ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
     }
 
     // don't use MatrixTransform to scale billboard, it will break it.

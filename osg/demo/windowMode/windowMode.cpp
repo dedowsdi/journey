@@ -13,8 +13,8 @@ int main(int argc, char* argv[]) {
   viewer.addEventHandler(new osgViewer::StatsHandler);
   viewer.setSceneData(node);
 
-  viewer.setUpViewInWindow(50, 50, 800, 600);
-  viewer.apply(osgViewer::SingleWindow(50, 50, 800, 600));
+  //viewer.setUpViewInWindow(50, 50, 800, 600);
+  viewer.apply(new osgViewer::SingleWindow(50, 50, 800, 600));
 
   return viewer.run();
 }

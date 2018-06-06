@@ -1,3 +1,6 @@
+/*
+ * make sure to set geometry data variance to dynamic
+ */
 #include <osg/Geometry>
 #include <osg/Geode>
 #include <osgViewer/Viewer>

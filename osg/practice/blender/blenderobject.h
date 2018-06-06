@@ -58,6 +58,10 @@ public:
     mLoadPoint->removeChildren(0, mLoadPoint->getNumChildren());
   }
 
+  osg::Vec3 getPosition(){
+    return getMatrix().getTrans();
+  }
+
   osg::ref_ptr<osg::Group> getModel() const { return mModel; }
 };
 }

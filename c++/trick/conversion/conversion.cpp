@@ -9,9 +9,9 @@ class Conversion {
     char dummy[2];
   };
 
-  // if U can be converted to T, this will be called
+  // if T can be converted to U, this will be called
   static Small test(U);
-  // if U can not be converted to T, this will be called, compiler only choose
+  // if T can not be converted to U, this will be called, compiler only choose
   //... when everything else failed, this is the last possible choice.
   static Big test(...);
 
@@ -20,6 +20,7 @@ class Conversion {
 
 public:
   enum { 
+    // whether T can be converted to U
     exists = sizeof(test(MakeT())) == sizeof(Small), 
     sameType = false 
   };

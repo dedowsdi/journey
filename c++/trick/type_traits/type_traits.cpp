@@ -36,6 +36,19 @@ private:
     typedef U referenced_type;
   };
 
+  // const stripper
+  template<typename U>
+  struct const_traits{
+    enum {result = false};
+    typedef U unconst_type;
+  };
+
+  template<typename U>
+  struct const_traits<const U>{
+    enum {result = true};
+    typedef U unconst_type;
+  };
+
   // pointer to member, horrible.
   template <class U> struct pointer_to_member_traits
   {
@@ -53,10 +66,12 @@ public:
   enum {
     is_pointer = pointer_traits<T>::result,
     is_reference = reference_traits<T>::result,
-    is_member_pointer = pointer_to_member_traits<T>::result
+    is_member_pointer = pointer_to_member_traits<T>::result,
+    is_const_qualified = const_traits<T>::result
   };
   typedef typename pointer_traits<T>::pointee_type pointee_type;
   typedef typename reference_traits<T>::referenced_type referenced_type;
+  typedef typename const_traits<T>::unconst_type unconst_type;
 
 };
 
@@ -77,6 +92,12 @@ int main(int argc, char *argv[])
 
   std::cout << "is int reference ? " << type_traites<int>::is_reference << std::endl;
   std::cout << "is int& reference ? " << type_traites<int&>::is_reference << std::endl;
+
+  std::cout << "is int const qualified? " << type_traites<int>::is_const_qualified << std::endl;
+  std::cout << "is const int const qualified ? " << type_traites<const int>::is_const_qualified << std::endl;
+  std::cout << "is const int& const qualified ? " << type_traites<const int&>::is_const_qualified << std::endl;
+  std::cout << "is const int*  const qualified ? " << type_traites<const int*>::is_const_qualified << std::endl;
+  std::cout << "is int* const const qualified ? " << type_traites<int* const>::is_const_qualified << std::endl;
   
   return 0;
 }

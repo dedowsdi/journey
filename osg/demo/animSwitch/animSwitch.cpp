@@ -15,7 +15,7 @@ public:
   META_Node(osg, AnimatingSwitch);
 
   virtual void traverse(osg::NodeVisitor& nv) {
-    if (!((++_count) % 600)) {
+    if (!((++_count) % 60)) {
       setValue(0, !getValue(0));
       setValue(1, !getValue(1));
     }

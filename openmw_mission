@@ -16,3 +16,11 @@
     --idonly print id only
     --cellreftypes filter reference types when used with -C
     --refcells find all cells that contain specified reference
+
+6. implement et to search anything in esm.
+
+7. display a single weapon, load as less data as possible.
+
+8. implement bt to search anything in bsa
+
+9. display a single weapon in qt.

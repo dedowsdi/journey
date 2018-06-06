@@ -1953,3 +1953,34 @@ c++:
     [](const void*)->std::string
     this can cause local reference problem, total night mare.
   
+----------
+2018.05.14
+
+c++:
+  pod must not be derived class
+  
+----------
+2018.05.15
+
+c++:
+  don't put space between macro function name and (
+
+----------
+2018.05.16
+
+qt4:
+  you can not edit a table item with invalid variant data.
+  
+----------
+2018.05.23
+
+c++:
+  you can not specialize nested template class without specialize outer class.
+  But a partial specialization of a nested class is allowed.
+
+----------
+2018.05.26
+
+lldb:
+  sometimes if you failed to set breakpoint on a function, it might because it's
+  never called in the entire application.

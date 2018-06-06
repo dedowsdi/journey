@@ -5,26 +5,6 @@
 
 namespace zxd {
 
-void MiniAxesCallback::operator()(osg::Node* node, osg::NodeVisitor* nv) {
-  osg::MatrixTransform* mt = node->asTransform()->asMatrixTransform();
-
-  const osg::Matrix& targetView = mTargetCamera->getViewMatrix();
-
-  osg::Matrix m = mt->getMatrix();
-  osg::Vec3 translation;
-  osg::Quat rotation;
-  osg::Vec3 scale;
-  osg::Quat so;
-  m.decompose(translation, rotation, scale, so);
-
-  // copy rotation, reserve translation and scale
-  m = osg::Matrix::scale(scale) * zxd::Math::getMatR(targetView) *
-      osg::Matrix::translate(translation);
-  mt->setMatrix(m);
-
-  traverse(node, nv);
-}
-
 //------------------------------------------------------------------------------
 BlenderViewBase::BlenderViewBase(osg::GraphicsContext* gc) {
   _camera->setCullingMode(osg::CullSettings::NO_CULLING);
@@ -32,7 +12,7 @@ BlenderViewBase::BlenderViewBase(osg::GraphicsContext* gc) {
   // compute near far cause culling problem during grs operatoin
   _camera->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
 
-  mHudCamera = zxd::createHUDCamera();
+  mHudCamera = zxd::createHudCamera();
 
   mRoot = new osg::Group();
   mRoot->addChild(mHudCamera);
@@ -119,9 +99,7 @@ BlenderView::BlenderView(osg::GraphicsContext* gc, ViewType type)
   mMiniAxes->setLabel(true);
   mMiniAxes->setLineWidth(1.5f);
 
-  osg::ref_ptr<MiniAxesCallback> cb = new MiniAxesCallback();
-  cb->setTargetCamera(_camera);
-  mMiniAxes->setUpdateCallback(cb);
+  mMiniAxes->bindInverseView(_camera);
 
   mHudCamera->addChild(mMiniAxes);
   mHudCamera->addChild(textLeaf);

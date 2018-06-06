@@ -137,21 +137,21 @@ void Blender::toggleQuadView() {
         mFrontView->getCameraManipulator());
       camMan->setCenter(center);
       camMan->setDistance(distance);
-      camMan->setRotation(osg::PI_2, 0);
+      camMan->front();
     }
     {
       camMan = static_cast<zxd::BlenderManipulator*>(
         mRightView->getCameraManipulator());
       camMan->setCenter(center);
       camMan->setDistance(distance);
-      camMan->setRotation(osg::PI_2, osg::PI_2);
+      camMan->right();
     }
     {
       camMan =
         static_cast<zxd::BlenderManipulator*>(mTopView->getCameraManipulator());
       camMan->setCenter(center);
       camMan->setDistance(distance);
-      camMan->setRotation(0, 0);
+      camMan->top();
     }
 
     // mTopView->getCamera()->setViewMatrix(translate);
@@ -251,7 +251,7 @@ void Blender::createUserView(osg::GraphicsContext* gc) {
   osg::ref_ptr<zxd::BlenderManipulator> camMan = new zxd::BlenderManipulator();
   camMan->setCamera(mUserView->getCamera());
   camMan->setViewText(mUserView->getText());
-  camMan->setOrtho(false);
+  camMan->setLock(false);
   mUserView->setCameraManipulator(camMan);
 
   mUserView->getRoot()->addChild(mRoot);
@@ -276,7 +276,7 @@ zxd::BlenderView* Blender::createOrthoView(osg::GraphicsContext* gc) {
   camMan->setCamera(view->getCamera());
   camMan->setViewText(view->getText());
   view->setCameraManipulator(camMan);
-  camMan->setOrtho(true);
+  camMan->setLock(true);
 
   view->getRoot()->addChild(mRoot);
 

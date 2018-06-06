@@ -41,15 +41,29 @@ public:
   void setCamMan(osg::ref_ptr<osgGA::OrbitManipulator> v) { mCamMan = v; }
 };
 
-/*
- * TODO label disappeared sometimes
- */
 class Axes : public osg::MatrixTransform {
-protected:
+
+  /*
+   * copy world axes in target camera rotation
+   */
+  class AxesCallback : public osg::NodeCallback {
+  protected:
+    osg::Camera* mTargetCamera;
+
+  public:
+    osg::Camera* getTargetCamera() const { return mTargetCamera; }
+    void setTargetCamera(osg::Camera* v) { mTargetCamera = v; }
+
+  protected:
+    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+  };
+
+private:
   osg::ref_ptr<osg::Geometry> mAxes;
   osg::ref_ptr<osg::AutoTransform> mLabelX;
   osg::ref_ptr<osg::AutoTransform> mLabelY;
   osg::ref_ptr<osg::AutoTransform> mLabelZ;
+  osg::ref_ptr<AxesCallback> mCallback;
 
 public:
   Axes();
@@ -58,7 +72,10 @@ public:
   void setLineWidth(GLfloat w);
   GLfloat getLineWidth();
 
-protected:
+  void bindInverseView(osg::Camera* camera);
+  void unbindInverseView();
+
+private:
   osg::ref_ptr<osg::AutoTransform> createLabel(
     const osg::Vec3& v, const std::string& label);
 };

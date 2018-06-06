@@ -40,7 +40,6 @@ set (DEMOES
     lightAttribute
     upsidedown
     windowMode
-    cube3
     extrude
     revolution
     highlight
@@ -88,6 +87,7 @@ set (DEMOES
     cameraManipulator2D
     fixVerticalUp
     test
+    animPivot
     )
 
 foreach(DEMO ${DEMOES})

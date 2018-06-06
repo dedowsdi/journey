@@ -42,7 +42,7 @@ public:
   std::string s;
 };
 
-// you must at least provide >> operator for custom type if you don't providate
+// you must at least provide >> operator for custom type if you don't provide
 // validate
 istream& operator>>(std::istream& is, A& a){
   is >> a.s;

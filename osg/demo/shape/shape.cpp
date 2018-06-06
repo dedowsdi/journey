@@ -1,4 +1,4 @@
-#include <osg/ShapeDrawable>
+# include <osg/ShapeDrawable>
 #include <osg/Geode>
 #include <osgViewer/Viewer>
 

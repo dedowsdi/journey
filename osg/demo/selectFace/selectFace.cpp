@@ -60,8 +60,8 @@ public:
     osg::Matrix matrix = osg::computeLocalToWorld(result.nodePath);
     const std::vector<unsigned int>& selIndices = result.indexList;
     for (unsigned int i = 0; i < 3 && i < selIndices.size(); ++i) {
-      unsigned int pos = selIndices[i];
-      (*selVertices)[i] = (*vertices)[pos] * matrix;
+      unsigned int index = selIndices[i];
+      (*selVertices)[i] = (*vertices)[index] * matrix;
     }
     selVertices->dirty();
     _selector->dirtyBound();

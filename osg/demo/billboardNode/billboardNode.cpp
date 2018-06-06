@@ -1,8 +1,6 @@
-/* -*-c++-*- OpenSceneGraph Cookbook
- * Chapter 2 Recipe 8
- * Author: Wang Rui <wangray84 at gmail dot com>
-*/
-
+/*
+ *  cancel rotation in cull callback.
+ */
 #include <osg/MatrixTransform>
 #include <osgDB/ReadFile>
 #include <osgUtil/CullVisitor>

@@ -26,6 +26,7 @@ osg::AnimationPathCallback* createWheelAnimation( const osg::Vec3& base )
     osg::ref_ptr<osg::AnimationPath> wheelPath = new osg::AnimationPath;
     wheelPath->setLoopMode( osg::AnimationPath::LOOP );
     wheelPath->insert( 0.0, osg::AnimationPath::ControlPoint(base, osg::Quat()) );
+    // y offset is used to make it shake a little bit
     wheelPath->insert( 0.01, osg::AnimationPath::ControlPoint(
         base + osg::Vec3(0.0f, 0.02f, 0.0f), osg::Quat(osg::PI_2, osg::Z_AXIS)) );
     wheelPath->insert( 0.02, osg::AnimationPath::ControlPoint(

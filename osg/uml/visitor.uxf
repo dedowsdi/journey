@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
   <zoom_level>10</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>930</x>
-      <y>40</y>
+      <y>50</y>
       <w>330</w>
       <h>240</h>
     </coordinates>
@@ -29,7 +30,7 @@ _nodePath
     <id>UMLClass</id>
     <coordinates>
       <x>930</x>
-      <y>370</y>
+      <y>380</y>
       <w>180</w>
       <h>210</h>
     </coordinates>
@@ -43,8 +44,8 @@ traverse(nv)</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>340</x>
-      <y>60</y>
+      <x>60</x>
+      <y>0</y>
       <w>480</w>
       <h>360</h>
     </coordinates>
@@ -70,12 +71,50 @@ bg=blue</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>1000</x>
-      <y>270</y>
+      <y>280</y>
       <w>70</w>
       <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 accept</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>590</y>
+      <w>280</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>Callback
+--
+run(object, data)
+traverse(object, data)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>610</x>
+      <y>510</y>
+      <w>250</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0;230.0;10.0;230.0;220.0;150.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>40</x>
+      <y>440</y>
+      <w>390</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Callback also accepts node visitor?
+bg=blue</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

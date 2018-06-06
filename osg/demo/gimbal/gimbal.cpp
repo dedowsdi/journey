@@ -22,8 +22,6 @@ void createEulerXYZ(GLfloat x, GLfloat y, GLfloat z){
   std::cout << m << std::endl;
 }
 
-
-
 int main(int argc, char* argv[]) {
 
   //as long as x+z is the same, the output should be the same
@@ -31,9 +29,5 @@ int main(int argc, char* argv[]) {
   createEulerXYZ(0, osg::PI_2, osg::PI_2);
   createEulerXYZ(osg::PI_2, osg::PI_2, 0);
 
-  osgViewer::Viewer viewer;
-  viewer.addEventHandler(new osgViewer::StatsHandler);
-  //viewer.setSceneData();
-
-  return viewer.run();
+  return 0;
 }

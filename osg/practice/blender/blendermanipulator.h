@@ -21,18 +21,17 @@ class Blender;
 
 class BlenderManipulator : public osgGA::OrbitManipulator {
 protected:
-  bool mOrtho; //only 9 works in ortho view
-  osg::Vec2 mStartCursor;
+  bool mLock; // only setRotation, setCenter, setDistance works if mLock is true
   osg::Quat mStartRotation;
-  float mYaw, mPitch;
-  float mRotateStep;  // yaw, pitch step of numpad
-  float mPanStep;     // yaw, pitch step of numpad
+  float mYaw, mPitch; // intrinsic pitch, yaw in view space
+  float mRotateStep;  // yaw, pitch step of numpad 2 4 6 8
+  float mPanStep;     // pan step of arrow
   osg::ref_ptr<osgText::Text> mViewText;
 
-  // becareful fovy not in radian
   double mPerspFovy;
 
   osg::Camera* mCamera;
+  osg::Timer_t mStartTick;
 
 public:
   BlenderManipulator();
@@ -65,50 +64,41 @@ public:
   void updateRotation();
   void updateText();
 
-  void viewLeft(const osgGA::GUIEventAdapter& ea) {
-    animRotView(osg::PI_2, -osg::PI_2, ea.getTime());
-  }
-  void viewRight(const osgGA::GUIEventAdapter& ea) {
-    animRotView(osg::PI_2, osg::PI_2, ea.getTime());
-  }
-  void viewFront(const osgGA::GUIEventAdapter& ea) {
-    animRotView(osg::PI_2, 0, ea.getTime());
-  }
-  void viewBack(const osgGA::GUIEventAdapter& ea) {
-    animRotView(osg::PI_2, osg::PI, ea.getTime());
-  }
-  void viewTop(const osgGA::GUIEventAdapter& ea) {
-    animRotView(0, 0, ea.getTime());
-  }
-  void viewBottom(const osgGA::GUIEventAdapter& ea) {
-    animRotView(osg::PI, 0, ea.getTime());
-  }
-  // toggle left right, back front, bottom top
-  void viewInverse(const osgGA::GUIEventAdapter& ea);
 
-  void animRotView(float destPitch, float destYaw, float time);
+  void left(bool anim = false);
+  void right(bool anim = false);
+  void front(bool anim = false);
+  void back(bool anim = false);
+  void top(bool anim = false);
+  void bottom(bool anim = false);
+  void inverse(bool anim = false);
 
-  void animPanZoom(float destDistance, const osg::Vec3& destCenter, float time);
+  void animRotView(float destPitch, float destYaw);
+
+  void animPanZoom(float destDistance, const osg::Vec3& destCenter);
 
   void yaw(GLfloat v);
   void pitch(GLfloat v);
 
   void toggleProjectionType();
 
-  osg::ref_ptr<osgText::Text> getViewText() const { return mViewText; }
+  osg::ref_ptr<osgText::Text> getViewText() const {return mViewText; }
   void setViewText(osg::ref_ptr<osgText::Text> v) { mViewText = v; }
 
   osg::Camera* getCamera() const { return mCamera; }
   void setCamera(osg::Camera* v) { mCamera = v; }
 
-  bool getOrtho() const { return mOrtho; }
-  void setOrtho( bool v){mOrtho = v;}
+  bool getLock() const { return mLock; }
+  void setLock( bool v){mLock = v;}
 
   bool isOrthoType();
 
   float getDistance(){return _distance;}
 
   void setRotation(GLfloat pitch, float yaw);
+
+  osg::Timer_t getStartTick() const { return mStartTick; }
+  void setStartTick(osg::Timer_t v){ mStartTick = v; }
 
 protected:
   class BlenderAnimationData

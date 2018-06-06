@@ -11,6 +11,7 @@
 #include <osg/TexMat>
 #include "common.h"
 #include <osgText/Text>
+#include "zmath.h"
 
 namespace zxd {
 
@@ -55,6 +56,27 @@ void CameraViewCallback::operator()(osg::Node* node, osg::NodeVisitor* nv) {
   traverse(node, nv);
 }
 
+//--------------------------------------------------------------------
+void Axes::AxesCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
+{
+  osg::MatrixTransform* mt = node->asTransform()->asMatrixTransform();
+  const osg::Matrix& targetView = mTargetCamera->getViewMatrix();
+
+  osg::Matrix m = mt->getMatrix();
+  osg::Vec3 translation;
+  osg::Quat rotation;
+  osg::Vec3 scale;
+  osg::Quat so;
+  m.decompose(translation, rotation, scale, so);
+
+  // copy rotation, reserve translation and scale
+  m = osg::Matrix::scale(scale) * zxd::Math::getMatR(targetView) *
+      osg::Matrix::translate(translation);
+  mt->setMatrix(m);
+
+  traverse(node, nv);
+}
+
 //------------------------------------------------------------------------------
 Axes::Axes() {
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
@@ -84,7 +106,7 @@ Axes::Axes() {
     colors->setBinding(osg::Array::BIND_PER_VERTEX);
 
     mAxes->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 0, 6));
-    mAxes->setUseDisplayList(false);
+    //mAxes->setUseDisplayList(false);
   }
 
   leaf->addDrawable(mAxes);
@@ -134,6 +156,23 @@ GLfloat Axes::getLineWidth() {
   return lw ? lw->getWidth() : 1.0f;
 }
 
+//--------------------------------------------------------------------
+void Axes::bindInverseView(osg::Camera* camera)
+{
+  if (!mCallback.valid()){
+    mCallback = new Axes::AxesCallback();
+    addUpdateCallback(mCallback);
+  }
+
+  mCallback->setTargetCamera(camera);
+}
+
+//--------------------------------------------------------------------
+void Axes::unbindInverseView()
+{
+  removeUpdateCallback(mCallback);
+}
+
 //------------------------------------------------------------------------------
 osg::ref_ptr<osg::AutoTransform> Axes::createLabel(
   const osg::Vec3& v, const std::string& label) {
@@ -151,7 +190,7 @@ osg::ref_ptr<osg::AutoTransform> Axes::createLabel(
   osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
   leaf->addDrawable(text);
 
-  at->addChild(text);
+  at->addChild(leaf);
   return at;
 }
 

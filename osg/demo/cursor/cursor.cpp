@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
   root->addChild(lmt);
   root->addChild(new zxd::Dot());
 
-  osg::Camera* hudCamera = zxd::createHUDCamera();
+  osg::Camera* hudCamera = zxd::createHudCamera();
 
   osg::ref_ptr<zxd::DirectionArrow> arrow = new zxd::DirectionArrow();
   arrow->setMatrix(osg::Matrix::translate(osg::Vec3(300.0f, 300.0f, 0.0f)));

@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
   osg::ref_ptr<osg::Geode> textGeode = new osg::Geode;
   textGeode->addDrawable(text);
 
-  osg::ref_ptr<osg::Camera> hudCamera = zxd::createHUDCamera(0, 800, 0, 600, -1, 1);
+  osg::ref_ptr<osg::Camera> hudCamera = zxd::createHudCamera(0, 800, 0, 600, -1, 1);
   hudCamera->addChild(textGeode.get());
 
   osgViewer::Viewer viewer;

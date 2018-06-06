@@ -16,7 +16,10 @@ public:
   virtual void operator()(osg::StateAttribute* sa, osg::NodeVisitor* nv) {
     osg::Material* material = static_cast<osg::Material*>(sa);
     if (material) {
-      _motion->update(_fadein ? 0.001 : -0.001);
+      static double lastTime = nv->getFrameStamp()->getReferenceTime();
+      double deltaTime = nv->getFrameStamp() ->getReferenceTime() - lastTime;
+      lastTime = nv->getFrameStamp()->getReferenceTime();
+      _motion->update(_fadein ? deltaTime : -deltaTime);
       float alpha = _motion->getValue();
       material->setDiffuse(
         osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f, 1.0f, 1.0f, alpha));

@@ -70,8 +70,8 @@ public:
 
     const std::vector<unsigned int>& selIndices = result.indexList;
     for (unsigned int i = 0; i < 3 && i < selIndices.size(); ++i) {
-      unsigned int pos = selIndices[i];
-      osg::Vec3 vertex = (*vertices)[pos] * matrix;
+      unsigned int index = selIndices[i];
+      osg::Vec3 vertex = (*vertices)[index] * matrix;
       float distance = (vertex * vpMatrix - point).length();
       if (distance < 0.1f) { //threashold
         selVertices->front() = vertex;

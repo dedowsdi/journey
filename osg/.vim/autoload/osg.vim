@@ -4,7 +4,10 @@ function! osg#include()
   let class = matchstr(str, '\vosg\w*::(ref_ptr)@!\w*')
   if class != ""
     let head = substitute(class, '::', '/', '')
-    exec 'normal \cI<'.head.'>'
-    normal! ``
+    let pattern = '\V' . substitute(head, '/', '\/', 'g')
+    if !search(pattern, 'n')
+      exec 'normal \cI<'.head.'>'
+      normal! ``
+    endif
   endif
 endfunction

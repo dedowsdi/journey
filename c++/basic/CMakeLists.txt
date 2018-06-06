@@ -19,6 +19,8 @@ set (PROJECTS
     printf
     static
     array
+    mem_fn
+    parameter_pack
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -230,7 +230,7 @@ int main(int argc, char* argv[]) {
   leaf->addDrawable(gm);
   gm->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get());
 
-  osg::Camera* camera = zxd::createHUDCamera();
+  osg::Camera* camera = zxd::createHudCamera();
   // camera->getOrCreateStateSet()->setMode(GL_LIGHTING,
   // osg::StateAttribute::OFF);
   osg::Geode* help = createHelp();

@@ -1,6 +1,5 @@
-"build dir, such as ./build/Debug, ./build/RelWithDebInfo
+call myvim#switchRtp('./.vim')
 let g:mycppBuildDir = "./build/Debug"
-set rtp +=./.vim,./.vim/after
 "executable make target and path
 "let g:mycppMakes = {}
 "class name prefix

@@ -238,7 +238,7 @@ void createScene() {
   smTaitBryan->addSeqItem("yxz")->setUserValue("data", std::string("1 yxz"));
 
   // create help
-  osg::Camera* hudCamera = zxd::createHUDCamera();
+  osg::Camera* hudCamera = zxd::createHudCamera();
 
   GLuint width, height;
   zxd::getScreenResolution(width, height);

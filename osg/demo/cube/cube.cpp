@@ -34,9 +34,9 @@ osg::ref_ptr<osg::Geometry> createCube(const osg::Vec3& halfSize) {
   osg::Vec3 z = osg::Z_AXIS * halfSize.z();
 
   // front
-  va->push_back(-y);
-  va->push_back(x);
-  va->push_back(z);
+  va->push_back(-y); // center
+  va->push_back(x);  // right
+  va->push_back(z);  // up
   // back
   va->push_back(y);
   va->push_back(-x);
@@ -66,13 +66,13 @@ osg::ref_ptr<osg::Geometry> createCube(const osg::Vec3& halfSize) {
   for (GLuint i = 0; i < va->size();) {
     const osg::Vec3& center = va->at(i++);
     const osg::Vec3& right = va->at(i++);
-    const osg::Vec3& top = va->at(i++);
+    const osg::Vec3& up = va->at(i++);
 
     // create 2 triangles in counter clock wise order
-    positions->push_back(center - right + top);
-    positions->push_back(center - right - top);
-    positions->push_back(center + right - top);
-    positions->push_back(center + right + top);
+    positions->push_back(center - right + up);
+    positions->push_back(center - right - up);
+    positions->push_back(center + right - up);
+    positions->push_back(center + right + up);
 
     GLuint startIndex = positions->size() - 4;
 

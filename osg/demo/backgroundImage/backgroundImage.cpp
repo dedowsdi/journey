@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 
   //this is not a standard hud camera, it's background camera!, it clears
   //nothing.
-  osg::Camera* hudCamera = zxd::createHUDCamera();
+  osg::Camera* hudCamera = zxd::createHudCamera();
   hudCamera->setClearMask(0);
 
   hudCamera->addChild(geode);

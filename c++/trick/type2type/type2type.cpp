@@ -2,7 +2,8 @@
 
 // this class is devoid of any value, it's very cheap to create an object like
 // this. The only purpose of this class is to create an unique type based on
-// parameter, which will be used to implement overload.
+// parameter, which will be used to implement overload. It's better than
+// concrete class T, as it's construction might cause performance issue.
 template <typename T>
 struct Type2Type {
   typedef T OriginalType;

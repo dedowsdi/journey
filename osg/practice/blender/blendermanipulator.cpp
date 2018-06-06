@@ -15,20 +15,12 @@ BlenderManipulator::BlenderManipulator()
       mRotateStep(osg::PI_2 / 6.0f),
       mPanStep(0.06f),
       mCamera(0),
-      mOrtho(false) {
+      mLock(false) {
   setAnimationTime(0.2f);
   setAllowThrow(false);
 
-  // osg::Camera* camera = mBlender->getCamera();
-
   osg::DisplaySettings* ds = osg::DisplaySettings::instance();
-  double height = ds->getScreenHeight();
-  // double width = ds->getScreenWidth();
-  double distance = ds->getScreenDistance();  // what's this
-  double vfov = osg::RadiansToDegrees(atan2(height / 2.0f, distance) * 2.0);
-
-  // need this transfrom from ortho to persp
-  mPerspFovy = vfov;
+  mPerspFovy = osg::RadiansToDegrees(atan2(ds->getScreenHeight() / 2.0f, ds->getScreenDistance()) * 2.0);
 }
 
 //------------------------------------------------------------------------------
@@ -54,53 +46,53 @@ bool BlenderManipulator::handleKeyDown(
   switch (ea.getUnmodifiedKey()) {
     case osgGA::GUIEventAdapter::KEY_KP_End: {
       if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL)
-        viewBack(ea);
+        back(true);
       else
-        viewFront(ea);
+        front(true);
     } break;
 
     case osgGA::GUIEventAdapter::KEY_KP_Page_Down: {
       if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL)
-        viewRight(ea);
+        right(true);
       else
-        viewLeft(ea);
+        left(true);
     } break;
 
     case osgGA::GUIEventAdapter::KEY_KP_Home: {
       if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL)
-        viewBottom(ea);
+        bottom(true);
       else
-        viewTop(ea);
+        top(true);
     } break;
 
     case osgGA::GUIEventAdapter::KEY_KP_Page_Up: {
-      viewInverse(ea);
+      inverse(true);
     } break;
 
     case osgGA::GUIEventAdapter::KEY_KP_Left: {
       if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT)
         panModel(-mPanStep * -0.3f * _distance, 0);
       else
-        yaw(mRotateStep);
+        yaw(-mRotateStep);
     } break;
     case osgGA::GUIEventAdapter::KEY_KP_Right: {
       if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT)
         panModel(mPanStep * -0.3f * _distance, 0);
       else
-        yaw(-mRotateStep);
+        yaw(mRotateStep);
     } break;
 
     case osgGA::GUIEventAdapter::KEY_KP_Up: {
       if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT)
         panModel(0, mPanStep * -0.3f * _distance);
       else
-        pitch(mRotateStep);
+        pitch(-mRotateStep);
     } break;
     case osgGA::GUIEventAdapter::KEY_KP_Down: {
       if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT)
         panModel(0, -mPanStep * -0.3f * _distance);
       else
-        pitch(-mRotateStep);
+        pitch(mRotateStep);
     } break;
 
     case osgGA::GUIEventAdapter::KEY_Home:
@@ -111,13 +103,13 @@ bool BlenderManipulator::handleKeyDown(
       // zoom to selection
       zxd::BlenderObject* bo = sgBlender->getCurObject();
       if (bo) {
-        // osg::ComputeBoundsVisitor cbVisitor;
-        // bo->accept(cbVisitor);
-        // osg::BoundingSphere bs;
-        // bs.expandRadiusBy(cbVisitor.getBoundingBox());
+         osg::ComputeBoundsVisitor cbVisitor;
+         bo->accept(cbVisitor);
+         osg::BoundingSphere bs;
+         bs.expandRadiusBy(cbVisitor.getBoundingBox());
 
-        // what's the difference between this and the codes above ?
-        const osg::BoundingSphere& bs = bo->getBound();
+         //what's the difference between this and the codes above ?
+        //const osg::BoundingSphere& bs = bo->getBound();
 
         float fovy, aspectRatio, zNear, zFar;
         mCamera->getProjectionMatrix().getPerspective(
@@ -125,7 +117,7 @@ bool BlenderManipulator::handleKeyDown(
 
         float destDistance =
           bs.radius() / sinf(osg::DegreesToRadians(fovy) * 0.5f);
-        animPanZoom(destDistance, bo->getMatrix().getTrans(), ea.getTime());
+        animPanZoom(destDistance, bo->getMatrix().getTrans());
       }
     } break;
 
@@ -143,7 +135,7 @@ bool BlenderManipulator::handleKeyDown(
 bool BlenderManipulator::performMovementMiddleMouseButton(
   const double eventTimeDelta, const double dx, const double dy) {
 
-  if(getOrtho())
+  if(getLock())
     return true;
 
   // check shift status
@@ -156,8 +148,8 @@ bool BlenderManipulator::performMovementMiddleMouseButton(
     osg::Vec2 offset(
       _ga_t0->getX() - _ga_t1->getX(), _ga_t0->getY() - _ga_t1->getY());
     offset *= 0.01f;
-    mYaw -= offset.x();
-    mPitch += offset.y();
+    mYaw += offset.x();
+    mPitch -= offset.y();
     updateRotation();
   }
 
@@ -167,14 +159,15 @@ bool BlenderManipulator::performMovementMiddleMouseButton(
 //------------------------------------------------------------------------------
 void BlenderManipulator::setByMatrix(const osg::Matrixd& matrix) {
   _center = osg::Vec3d(0., 0., -_distance) * matrix;
-  // get yaw and pitch
 
+  // get yaw and pitch
   osg::Vec3 xAxis(matrix(0, 0), matrix(0, 1), matrix(0, 2));
   osg::Vec3 yAxis(matrix(1, 0), matrix(1, 1), matrix(1, 2));
   osg::Vec3 zAxis(matrix(2, 0), matrix(2, 1), matrix(2, 2));
 
-  mYaw = atan2(xAxis[1], xAxis[0]);
-  mPitch = zxd::Math::angleSigned(osg::Z_AXIS, zAxis, osg::X_AXIS);
+  // see updateRotation for math explanation
+  mYaw = -atan2(xAxis[1], xAxis[0]);
+  mPitch = -zxd::Math::angleSigned(osg::Z_AXIS, zAxis, xAxis);
   updateRotation();
 }
 
@@ -206,28 +199,27 @@ void BlenderManipulator::applyAnimationStep(
     zxd::Math::linearInterpolate(ad->mSrcDistance, ad->mDestDistance, f);
   _center = zxd::Math::linearInterpolate(ad->mSrcCenter, ad->mDestCenter, f);
 
-  // clamp to 0 -2p
-  if (currentProgress == 1) {
-    clampAngle();
-  }
-
+  clampAngle();
   updateRotation();
 }
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::updateRotation() {
   /*
-   * pitch along view x(local x), yaw along wolrd z
+   * in column major matrix system.
+   *
+   * pitch scene along view x(local x), yaw along wolrd z
    *
    * so q0 = p0 * I * y0
    *    q1 = p1 * q0 * y1
    *       = p0 * p1 * q0 * y0 * y1
    *  .......
    *    q = p * y
+   *    q_i = y_i * p_i
+   *
    *  so pitch and yaw an be accumulated
    */
-
-  _rotation = osg::Quat(mPitch, osg::X_AXIS) * osg::Quat(mYaw, osg::Z_AXIS);
+  _rotation = osg::Quat(-mPitch, osg::X_AXIS) * osg::Quat(-mYaw, osg::Z_AXIS);
   updateText();
 }
 
@@ -262,8 +254,62 @@ void BlenderManipulator::updateText() {
   mViewText->setText(rotType + " " + projType);
 }
 
+//--------------------------------------------------------------------
+void BlenderManipulator::left(bool anim/* = false*/) 
+{
+  if(!anim)
+    setRotation(-osg::PI_2, osg::PI_2); 
+  else
+    animRotView(-osg::PI_2, osg::PI_2); 
+}
+
+//--------------------------------------------------------------------
+void BlenderManipulator::right(bool anim/* = false*/) 
+{
+  if(!anim)
+    setRotation(-osg::PI_2, -osg::PI_2); 
+  else
+    animRotView(-osg::PI_2, -osg::PI_2); 
+}
+
+//--------------------------------------------------------------------
+void BlenderManipulator::front(bool anim/* = false*/) 
+{
+  if(!anim)
+    setRotation(-osg::PI_2, 0); 
+  else
+    animRotView(-osg::PI_2, 0); 
+}
+
+//--------------------------------------------------------------------
+void BlenderManipulator::back(bool anim/* = false*/) 
+{
+  if(!anim)
+    setRotation(-osg::PI_2, -osg::PI); 
+  else
+    animRotView(-osg::PI_2, -osg::PI); 
+}
+
+//--------------------------------------------------------------------
+void BlenderManipulator::top(bool anim/* = false*/) 
+{
+  if(!anim)
+    setRotation(0, 0); 
+  else
+    animRotView(0, 0); 
+}
+
+//--------------------------------------------------------------------
+void BlenderManipulator::bottom(bool anim/* = false*/) 
+{
+  if(!anim)
+    setRotation(-osg::PI, 0); 
+  else
+    animRotView(-osg::PI, 0); 
+}
+
 //------------------------------------------------------------------------------
-void BlenderManipulator::viewInverse(const osgGA::GUIEventAdapter& ea) {
+void BlenderManipulator::inverse(bool anim/* = false*/) {
   static float epsilon = 0.001f;
 
   auto ad = getBlenderAnimData();
@@ -288,7 +334,7 @@ void BlenderManipulator::viewInverse(const osgGA::GUIEventAdapter& ea) {
   destPitch = zxd::Math::clampAngle(destPitch);
   destYaw = zxd::Math::clampAngle(destYaw);
 
-  if (getOrtho()) {
+  if (!anim) {
     // no animation
     setRotation(destPitch, destYaw);
 
@@ -298,14 +344,13 @@ void BlenderManipulator::viewInverse(const osgGA::GUIEventAdapter& ea) {
     ad->init(this);
     ad->mDestPitch = destPitch;
     ad->mDestYaw = destYaw;
-    ad->start(ea.getTime());
+    ad->start(_ga_t0->getTime());
   }
 }
 
 //------------------------------------------------------------------------------
-void BlenderManipulator::animRotView(
-  float destPitch, float destYaw, float time) {
-  if (getOrtho()) return;
+void BlenderManipulator::animRotView( float destPitch, float destYaw) {
+  if (getLock()) return;
 
   // clamp angle, avoid circle rotation
   destPitch = zxd::Math::clampAngle(destPitch);
@@ -316,24 +361,24 @@ void BlenderManipulator::animRotView(
   ad->init(this);
   ad->mDestPitch = destPitch;
   ad->mDestYaw = destYaw;
-  ad->start(time);
+  ad->start(_ga_t0->getTime());
 }
 
 //------------------------------------------------------------------------------
 inline void BlenderManipulator::animPanZoom(
-  float destDistance, const osg::Vec3& destCenter, float time) {
-  if (getOrtho()) return;
+  float destDistance, const osg::Vec3& destCenter) {
+  if (getLock()) return;
 
   auto ad = getBlenderAnimData();
   ad->init(this);
   ad->mDestDistance = destDistance;
   ad->mDestCenter = destCenter;
-  ad->start(time);
+  ad->start(_ga_t0->getTime());
 }
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::yaw(GLfloat v) {
-  if (getOrtho()) return;
+  if (getLock()) return;
 
   mYaw += v;
   clampAngle();
@@ -342,7 +387,7 @@ void BlenderManipulator::yaw(GLfloat v) {
 
 //------------------------------------------------------------------------------
 void BlenderManipulator::pitch(GLfloat v) {
-  if (getOrtho()) return;
+  if (getLock()) return;
 
   mPitch += v;
   clampAngle();

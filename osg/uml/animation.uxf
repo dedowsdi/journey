@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
   <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
@@ -62,7 +63,7 @@ void playAnimation()</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>72</x>
-      <y>184</y>
+      <y>200</y>
       <w>80</w>
       <h>24</h>
     </coordinates>
@@ -76,27 +77,30 @@ void playAnimation()</panel_attributes>
       <x>104</x>
       <y>128</y>
       <w>24</w>
-      <h>72</h>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>344</x>
-      <y>184</y>
+      <x>384</x>
+      <y>152</y>
       <w>216</w>
-      <h>24</h>
+      <h>48</h>
     </coordinates>
-    <panel_attributes>Channel</panel_attributes>
+    <panel_attributes>Channel
+--
+_targetname
+_name</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>672</x>
-      <y>312</y>
+      <x>704</x>
+      <y>320</y>
       <w>80</w>
       <h>24</h>
     </coordinates>
@@ -107,8 +111,8 @@ void playAnimation()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>392</y>
+      <x>424</x>
+      <y>400</y>
       <w>192</w>
       <h>32</h>
     </coordinates>
@@ -135,29 +139,40 @@ KeyFrame
     <id>Relation</id>
     <coordinates>
       <x>144</x>
-      <y>184</y>
-      <w>216</w>
-      <h>24</h>
+      <y>168</y>
+      <w>256</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;250.0;10.0</additional_attributes>
+    <additional_attributes>10.0;50.0;300.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>456</x>
-      <y>272</y>
+      <x>496</x>
+      <y>256</y>
+      <w>24</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>496</x>
+      <y>360</y>
       <w>24</w>
       <h>56</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>456</x>
-      <y>344</y>
+      <x>488</x>
+      <y>424</y>
       <w>24</w>
       <h>64</h>
     </coordinates>
@@ -165,34 +180,24 @@ KeyFrame
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
   </element>
   <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>456</x>
-      <y>416</y>
-      <w>24</w>
-      <h>72</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
-  </element>
-  <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>352</x>
-      <y>312</y>
+      <x>392</x>
+      <y>304</y>
       <w>256</w>
-      <h>40</h>
+      <h>64</h>
     </coordinates>
     <panel_attributes>&lt;InterpolatorType&gt;
 TemplateSampler
-</panel_attributes>
+--
+getValueAt(time, result)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>352</x>
-      <y>240</y>
+      <x>392</x>
+      <y>224</y>
       <w>216</w>
       <h>40</h>
     </coordinates>
@@ -203,24 +208,24 @@ TemplateChannel</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>472</x>
-      <y>200</y>
+      <x>512</x>
+      <y>192</y>
       <w>24</w>
-      <h>56</h>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>600</x>
-      <y>312</y>
-      <w>88</w>
+      <x>640</x>
+      <y>320</y>
+      <w>80</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -284,16 +289,16 @@ TemplateInterpolatorBase
     <coordinates>
       <x>272</x>
       <y>320</y>
-      <w>96</w>
+      <w>136</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>416</x>
+      <x>448</x>
       <y>472</y>
       <w>136</w>
       <h>40</h>
@@ -308,11 +313,11 @@ TemplateKeyFrame
     <coordinates>
       <x>368</x>
       <y>480</y>
-      <w>64</w>
+      <w>96</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -339,8 +344,8 @@ TemplateKeyFrame
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>216</x>
-      <y>400</y>
+      <x>256</x>
+      <y>408</y>
       <w>128</w>
       <h>24</h>
     </coordinates>
@@ -350,13 +355,13 @@ TemplateKeyFrame
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>336</x>
-      <y>400</y>
-      <w>72</w>
+      <x>376</x>
+      <y>408</y>
+      <w>64</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -589,24 +594,24 @@ UpdateUniform</panel_attributes>
     <coordinates>
       <x>312</x>
       <y>88</y>
-      <w>96</w>
-      <h>112</h>
+      <w>136</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 m1=
 m2=target</panel_attributes>
-    <additional_attributes>100.0;120.0;10.0;10.0</additional_attributes>
+    <additional_attributes>150.0;80.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>592</x>
       <y>128</y>
-      <w>312</w>
-      <h>72</h>
+      <w>104</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 m2=data user</panel_attributes>
-    <additional_attributes>10.0;70.0;370.0;10.0</additional_attributes>
+    <additional_attributes>10.0;50.0;110.0;10.0</additional_attributes>
   </element>
 </diagram>

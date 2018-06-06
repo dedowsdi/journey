@@ -1,3 +1,7 @@
+/*
+ * if your contour composed of simple quads, you can set draw mode to
+ * GL_LINE_LOOP to draw border lines
+ */
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
 #include <osg/Geometry>
