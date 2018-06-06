@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "library-path": [
+            "e:/flash/util/zzutil.swc"
+        ],
+        "source-path": [
+            "."
+        ]
+    },
+    "files":[
+        "MouseChildren.as"
+    ]
+}

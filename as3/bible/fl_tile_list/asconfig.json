@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "library-path": [
+            "e:/flash/util/zzutil.swc",
+            "e:/flash/fl.swc"
+        ],
+        "source-path": [
+            "."
+        ]
+    },
+    "files":[
+        "FlTileList.as"
+    ]
+}

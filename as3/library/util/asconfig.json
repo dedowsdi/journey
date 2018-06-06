@@ -1,0 +1,17 @@
+{
+    "type": "lib",
+    "compilerOptions": {
+        "output": "zzutil.swc",
+        "source-path": [
+            "."
+        ]
+    },
+    "files":
+    [
+        "com/zz/Util.as",
+        "com/zz/button/MovieClipButtonBase.as",
+        "com/zz/button/MovieClipScaleButton.as",
+        "com/tuto/SimpleTextButton.as",
+        "Test.as"
+    ]
+}

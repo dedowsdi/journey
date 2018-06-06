@@ -1,0 +1,365 @@
+constant:
+    const i:int = 5;
+
+array literal:
+    [1,2,3]
+
+regular expressinon literal:
+    /balabala/
+
+xml literal:
+    <tag>...</tag>
+
+xml comment:
+    <!-- balabala --->
+
+javadoc comment:
+    /**
+    * Calculates time until birthdays.
+    * @param your birthday
+    * @return the number of days until your birthday, rounded up
+    */
+    public function daysUntilBirthday(bday:Date):int {...
+
+ActionScript 3.0 doesn’t have true block-level scope. But it does have levels
+of scope associated with the package block, class block, method block, and
+function blocks. Other blocks, like loop bodies, don’t actually have their own
+scope. You can declare variables in them, but when they are compiled, the code
+acts as if all variables in a function, including these, were declared at the
+top of the function. This is known as variable hoisting .
+
+untyped variables accept anything:
+    var x: * ;
+
+comma operator:
+    va rx = 1+1, 2+2, 3+3; // all expressions evaluated, last one is returned
+
+switch supports Number and String
+
+for..in deals with index or proerty name, while for each ... in  deals with
+data.
+
+as3 pass primitive type arg by value, complex type arg by reference.
+
+as3 function support default value just like c++
+
+rest parameter(variadic args):
+    // numbers is an array
+    function(... numbers){
+        for each( var n:Number in numbers){
+        }
+    }
+
+anonymous function:
+    // the main difference between annoymous function and normal one is that
+    // it's a variable
+    var f:Functoin = function():void{}
+    
+Hiding an object’s implementation and only providing access to an interface you carefully design is
+known as the black box principle.
+
+In any file, a maximum of one class may be made accessible to the world outside that file. This
+class must be contained in a package block, and it must be declared public.
+All the same rules apply for files containing variables or functions in package blocks
+    package balalbala{
+        public var youKnowMe;
+        public function youCanCallMe(){}
+        public class YouCanUseMe{}
+    }
+    class UsedOnlyInThisFile{}
+
+Importing a class does not automatically include that class in your compiled
+SWF. You can import a class but never reference it, and it will not be added to
+your compiled project. For a class to be compiled and included, you must
+actually use it in executable code.
+
+preventing inheritance:
+    public final class ...
+
+internal accessor:
+    // available to code within the same package
+    internal ...
+
+custom namespace?????
+
+explicit accessor for properties:
+    class Bala{
+        private var foo;
+        public function getFoo(){}
+        public function setFoo(value){}
+    }
+    
+implicit accessor for properties:
+    class Bala{
+        private var foo;
+        public function get foo(){}
+        public function set foo(value){}
+    }
+
+enumerations:
+    // there is no enumaterions in as3, but you can fake it
+    public final class Trick {
+        public static const WHEELIE:Trick = new Trick();
+        public static const BUNNYHOP:Trick = new Trick();
+        public static const STOPPIE:Trick = new Trick();
+    }
+
+virtual(override):
+    override public function ...
+
+there has no function overlode in as3
+
+super:
+    to invoke parent class constructor, you can call super(), if you don't call
+    it in child constructor, it will be called by the compiler at the beginning
+    of the constructor.
+
+    you can invoke other parent class method with super.foo()
+
+cast:
+    SomeType(variable)   // constructor style cast, throw if not successful
+    variable as SomeTime // return null, don't throw
+    always use constructor style cast if you are sure it should be successful
+
+determines the compatibility of a type
+    if(variable is SomeType){
+    }
+
+Dynamic classes are classes whose properties and methods can be changed, added,
+and removed at runtime
+    public dynamic class Foo{
+    }
+
+the compiler converts literal into object automatically:
+    "abc".length
+
+there has no difference between '' or "" quoted string
+
+escaped sequences:
+    \b Backspace character.
+    \f Form feed character. This character advances one page and is rarely used.
+    \n Newline character. Also known as line feed.
+    \r Carriage return character.
+    \t Tab character.
+    \unnnn Inserts a character with the four-digit hexadecimal Unicode code you
+    specify; for example, \u0416 is the Cyrillic character ‘zhe’ ( ).
+    \xnn Inserts a character with the two-digit hexadecimal ASCII code you specify;
+    for example, \x9D is the yen sign character (￥).
+    \’ Single quote (’) character.
+    \" Double quote (") character.
+    \\ Backslash (\) character.
+
+cast string to number:
+    // Although this looks like casting, it’s actually calling a global
+    // function called Number, which shadows the Number cast operation.
+    var n:Number = Number("123")
+    var n:Number = parseFloat("123")
+
+charcode:
+    var i:int = 'a'.charCodeAt(0);
+    va a:string = String.fromCharCode(97);
+
+String.slice(s,e) can took negative index, while substring can not
+
+The AIR runtime can have multiple stages because every top-level window has its own display list
+
+registration point only exist in cc, it doesn't exist in as3.
+point
+
+Almost all keyboard and mouse events bubble. (The exceptions are mouse rollover and rollout.)
+
+use textformat.align if you have fixed width text field(no matter it's
+content). use textfield.autosize if you have dynamic text content, auto size
+works on current textfield width(which is 100 if you don't manually set it)
+
+you can use textfield.textHeight to get text height.
+
+IME? 450
+
+if you want to stop input type textfield from input, disable it's mouse and tab
+
+you can cancel FocusEvent.KEY_FOUCS_CHANGE and FocusEvent.MOUSE_FOCUS_CHANGE,
+along with stopPropagation, you can trap use in your focus.
+
+The second you start defining your own tab order, Flash Player gives up entirely
+on automatic tab ordering, and only the objects you’ve defined tab orders for
+are reachable by tabbing.  tabbing,
+
+Because the focusRect property of every InteractiveObject defaults to null, you can disable
+or enable focus rectangles globally by setting the stageFocusRect property on the stage
+
+The context menu is indeed contextual: which menu appears depends on what your
+mouse is over when you right-click. Just like a mouse event, Flash Player
+searches for the topmost, visible, filled InteractiveObject under the mouse
+pointer for which mouse events are enabled, to determine the target of your
+click.  If this target has a contextMenu property set to an instance of
+flash.ui.ContextMenu, it displays this menu. Otherwise, it travels up the
+display list to the root display object looking for an InteractiveObject with a
+defined contextMenu property
+
+context menu @456
+
+use Vector if your element type is fixed:
+    var elements:Vector.<Type> = new Vector.<Type>();
+    var elements:Vector.<Type> = new <Type>[value1, value2 ...]
+ 
+use fixed sized Vector if performence is a big issue.
+
+by default, Automatically Declare Stage Instances is checked in the ActionScript Settings dialog
+box, and all named instances will be promoted to properties at compile time.
+    so you can get instance by directly by it's instance name.
+
+you can create symbols with linkage, and export it as swc in animate cc.
+
+if you want to use assets in a swf file, you must load it at run time, it's
+quite different from swc. This is a great technique for content-heavy web sites.
+
+All variables related to delay or time in ActionScript use milliseconds.
+
+bitmap in flash use argb8
+
+flex_sdk_4.6 doesn't support 64bit jdk:
+    java.home=C:/Program Files (x86)/Java/jdk1.8.0_171
+
+the collection of classes and methods in the Flash Player API that deal with
+bitmaps — has one striking property. It’s completely integrated into the
+display list.
+
+with and height will be ignored if you create instance from BitmapDataSymbal
+Linkage.
+
+Bitmap quality is affected most by each Bitmap’s smoothing parameter, but there
+are other factors at play. If the stage quality mode is StageQuality.LOW, all
+bitmap anti-aliasing is disabled regardless of the smoothing setting.
+Mipmapping automatically takes place in Flash Player 9.0.60 and later, which
+increases the quality of a bitmap when it’s scaled down.
+
+class are sealed by default, you must use dyanmic keyword to make it dynamic.
+
+literal object:
+    var obj:Object = {unquotedName:whatever}
+
+property name don't need to be an identifier unless you want to use it with dot.
+
+you can use anything as key in dictionary while you can use only string as key
+in object.
+
+you can use in operator to check if a key exists in object or dictionary. In
+operator always return false if you don't have access to the property. It's the
+same as hasOwnProperty?
+
+to delete a property:
+    delete obj["key"]
+
+The delete operator returns true if deletion succeeds. When using delete on a
+numerically indexed item in an Array, the length property is not updated. You
+cannot delete instance properties that are not dynamic, or local variables. To
+release objects, you can remove all references to them, such as by setting
+variables to null.
+
+After every write using an IDataOutput method, this position is moved up
+automatically to the end of the write.
+
+The Loader class is used to load SWF files or image (JPG, PNG, or GIF) files.
+Use the URLLoader class to load text or binary data.
+
+MP3 is the only format that Sound can load from a file. But you can embbed other
+formats to your swf.
+
+you can embbed sound using flexsdk like this:
+    [Embed(source="winter.mp3")]
+    public var WinterSong:Class;
+
+When you play a sound before it is finished loading, Flash Player automatically
+buffers the sound, making sure that a certain amount of audio is loaded before
+actually playing, regardless of when you ask the sound to play.
+
+video and audio format:
+    f4f mpeg4 container format
+    H.264 video codec
+    AAC audio codec
+
+in order ot use fl.controls library, you must drag it to stage at animate cc,
+export it as a swc.
+
+event.target is the target that triggered this event, not the dispatcher?
+event.currentTarget is the one current handling this event.
+
+If you set the useCapture flag to true when you add the event listener, you need
+to set it to true when removing it as well.
+
+Capture Phase
+In the capture phase, Flash Player steps through every parent display object
+starting with the Stage and working up to the object that called dispatchEvent()
+and treats each one as though it were the event target. The effect is that the
+event is broadcast from every level of the display list that is a parent of the
+display object that calls dispatchEvent(). Display objects that are not
+ancestors of the target object do not dispatch events. To listen for events in
+the capture phase, you have to set the useCapture flag to true when adding the
+event listener.
+
+Target Phase
+During this phase, the event is dispatched directly from the target object. This
+is the phase you should be familiar with from the examples presented thus far.
+It is the only phase that events partake in for objects not in the display list.
+
+Bubble Phase
+Optionally, the event may bubble back up, dispatching from each parent display
+object until the stage is reached. Whether an event bubbles is set when creating
+a new Event object.  The default setting depends on the class of the Event, but
+it is used for mouse and key events as well as other events dispatched by the
+Flash Player API. In general, I find the bubble phase is useful because you are
+guaranteed that the target phase event dispatcher has already had a chance to
+deal with the event by the time it is bubbling.
+
+By default, the target and bubble phases are listened for when calling
+addEventListener(). By setting useCapture to true, the capture phase is used
+instead. If you want to use all three phases, you have to add two separate event
+listeners: one with useCapture set to true and one with it set to false. 
+
+The event framework allows you to stop some of these default behaviors from
+occurring. Each Event object has a property called cancelable, a flag set in the
+constructor that lets you know whether the default behavior can be canceled. If
+this flag is set to true, as it is by default in TextEvent.TEXT_INPUT, the
+default behavior can be prevented using the method preventDefault(). The
+Event’s isDefaultPrevented property will let you know whether default behavior
+has been canceled.
+
+flash matrix is column major
+
+When you retrieve the transformation matrix from the Transform object, only a
+copy is returned
+
+ColorTransform object does not report the color of the artwork within a display
+object. It reports only on the color transform applied to the instance(or 0).
+
+Each of the multiplier properties (redMultiplier, greenMultiplier, and so on)
+can range from –1 to 1.  The ranges for the offset properties are from –255 to
+255.
+
+flash use left top as origin, x increases right, y increases down, z increases
+inside, the perspective is set up so that the vanishing point is in the center
+of the stage, infinitely far off in positive z.  
+
+There has no z-sortting in 3d displayobjects. DisplayObject is still flat even in 3d.
+
+ScaleZ does nothing.
+
+Set any one of the 3D-only properties, and the object will be rendered in 3D,
+although geometrically, there’s no special distinction between 2D and 3D
+DisplayObjects.
+
+To draw a display object in 3D, Flash Player first renders it down to a bitmap
+at its natural size. This has an effect similar to turning on cacheAsBitmap.
+
+you can use MovieClip.addFrameScript to replace action in flash professional.
+
+Just because you should close your paths when using fills doesn’t mean you have
+to. Flash Player fills the path you define as if you had connected the first and
+the last point on it
+
+Any time you apply a filter to a DisplayObject, its cacheAsBitmap property is
+set to true.
+
+When you read elements from the filters array, you get copies of, rather than
+references to, the actual filter objects.

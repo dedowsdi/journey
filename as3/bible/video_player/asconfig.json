@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "library-path": [
+            "e:/flash/util/zzutil.swc"
+        ],
+        "source-path": [
+            "."
+        ],
+        "use-network": false
+    },
+    "files":[
+        "VideoPlayer.as"
+    ]
+}

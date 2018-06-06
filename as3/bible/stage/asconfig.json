@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "library-path": [
+            "e:/flash/util/zzutil.swc"
+        ]
+    },
+    "files":[
+        "Stage.as"
+    ]
+}

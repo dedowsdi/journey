@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "library-path": [
+            "e:/flash/library/util/zzutil.swc"
+        ],
+        "source-path": [
+            "."
+        ]
+    },
+    "files":[
+        "MousePoint3D.as"
+    ]
+}
