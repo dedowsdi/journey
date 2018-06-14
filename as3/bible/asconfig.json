@@ -1,0 +1,56 @@
+{
+    "compilerOptions": {
+        "source-path": [
+            "."
+        ],
+        "library-path": [
+            "e:/source/journey/as3/library/util/zzutil.swc",
+            "e:/source/journey/as3/library/fl.swc"
+        ]
+    },
+    "files": [
+        // "AutoSimpleButton.as"
+        // "BitmapByteArray.as"
+        // "BitmapColorBound.as"
+        // "BitmapColorMap.as"
+        // "BitmapDraw.as"
+        // "BitmapDrawPixel.as"
+        // "BitmapFloodFill.as"
+        // "BitmapHistogram.as"
+        // "BitmapMerge.as"
+        // "BitmapNoise.as"
+        // "BitmapThreshold.as"
+        // "BlockMouse.as"
+        // "BlurFilter.as"
+        // "ByteArrayLoad.as"
+        // "Clone.as"
+        // "ColorTransform.as"
+        // "Cube.as"
+        // "Curve.as"
+        // "CustomCursor.as"
+        // "DispatchEvent.as"
+        // "DragEvent.as"
+        // "EventFlow.as"
+        // "FillPath.as"
+        // "FlTileList.as"
+        // "Focus.as"
+        // "KeyboardCode.as"
+        // "KeyboardConstant.as"
+        // "LoadSwf.as"
+        // "Mask.as"
+        // "MouseChildren.as"
+        // "MousePoint3D.as"
+        // "OverEvent.as"
+        // "PixelSnapping.as"
+        // "PositionTrackAndCursor.as"
+        // "SoundPlay.as"
+        // "Stage.as"
+        "Test.as"
+        // "TextFieldAuto.as"
+        // "TimerBasic.as"
+        // "TimerWorldClock.as"
+        // "Translate3DPoint.as"
+        // "VideoPlayer.as"
+        // "ZZScaleButton.as"
+    ]
+}
