@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "source-path": [
+            "."
+        ]
+    },
+    "files": [
+        "test.as"
+    ]
+
+}

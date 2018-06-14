@@ -5,9 +5,10 @@
         ],
         "source-path": [
             "."
-        ]
+        ],
+        "use-network": false
     },
     "files":[
-        "Clone.as"
+        "BitmapFloodFill.as"
     ]
 }

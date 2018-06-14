@@ -6,12 +6,16 @@ package
     import fl.controls.ScrollBarDirection;
     import fl.controls.listClasses.ImageCell;
     import fl.controls.ScrollPolicy;
+    import flash.events.Event;
 
     [SWF(width=800, height=600)]
     public class FlTileList extends Sprite{
         private var tl:TileList;
+        public var dp:DataProvider;
+
+
         public function FlTileList(){
-            var dp:DataProvider = new DataProvider;
+            dp = new DataProvider;
 
             // var cellStyle:Object = ImageCell.getStyleDefinition();
             // cellStyle.imagePadding = 10;
@@ -22,7 +26,7 @@ package
             for(var index:int = 0; index < len; index++)
             {
                 // dp.addItem({label:index, source:MyRect, scaleContent:false});
-                 dp.addItem({label:index, source:MyRect});
+                 dp.addItem({label:index, source:MyRect, iconSrc:MyIcon});
             }
 
             tl = new TileList;
@@ -40,8 +44,17 @@ package
             // tl.setStyle("contentPadding", 10); // padding for this while tile list
             // tl.move(10, 10);
             tl.buttonMode = true;
+            tl.iconField = "iconSrc";
             addChild(tl);
+
+            tl.addEventListener(Event.CHANGE, onChange);
         }
+
+        protected function onChange(evt:Event):void
+        {
+            trace(tl.selectedIndex);
+        }
+
     }
 }
 
@@ -51,11 +64,20 @@ import fl.controls.listClasses.CellRenderer;
 import fl.controls.listClasses.ImageCell;
 import fl.controls.ButtonLabelPlacement;
 
+class MyIcon extends Sprite{
+    public function MyIcon(){
+        this.graphics.beginFill(0x0000ff, 0.5);
+        this.graphics.drawCircle(0, 0, 100);
+        this.graphics.endFill();
+    }
+
+};
+
 class MyRect extends Sprite
 {
     public function MyRect(w:uint = 30, h:uint = 30)
     {
-        graphics.beginFill(0xff0000, 1);
+        graphics.beginFill(0xff0000, 0.5);
         graphics.drawRect(0, 0, w, h);
         graphics.endFill();
     }

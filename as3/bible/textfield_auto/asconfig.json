@@ -1,14 +1,13 @@
 {
     "compilerOptions": {
         "library-path": [
-            "e:/source/journey/as3/library/util/zzutil.swc",
-            "e:/source/journey/as3/library/fl.swc"
+            "e:/source/journey/as3/library/util/zzutil.swc"
         ],
         "source-path": [
             "."
         ]
     },
     "files":[
-        "FlTileList.as"
+        "TextFieldAuto.as"
     ]
 }
