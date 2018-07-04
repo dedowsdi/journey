@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "source-path": [
+            "."
+        ]
+    },
+    "files": [
+        "MainClass.as"
+    ]
+}

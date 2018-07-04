@@ -1,13 +1,12 @@
 {
     "compilerOptions": {
-        "source-path": [
-            "."
-        ],
         "library-path": [
-            "e:/source/journey/as3/library/util/zzutil.swc",
-            "e:/source/journey/as3/library/fl.swc"
-        ]
+            "e:/source/journey/as3/library/fl.swc",
+            "e:/source/journey/as3/library/util/zzutil.swc"
+        ],
+        "use-network": false
     },
+
     "files": [
         // "AutoSimpleButton.as"
         // "BitmapByteArray.as"
@@ -45,12 +44,20 @@
         // "PositionTrackAndCursor.as"
         // "SoundPlay.as"
         // "Stage.as"
-        "Test.as"
+        // "Test.as"
         // "TextFieldAuto.as"
         // "TimerBasic.as"
         // "TimerWorldClock.as"
         // "Translate3DPoint.as"
         // "VideoPlayer.as"
         // "ZZScaleButton.as"
+        // "PieMask.as"
+        // "FilterGlow.as"
+        // "FilterBevel.as"
+        // "FilterGradientBevel.as"
+        // "FilterShadow.as"
+        // "DrawApp.as"
+        // "GradientStrokeAndFill.as"
+        "GradientFill.as"
     ]
 }

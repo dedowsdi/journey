@@ -43,7 +43,7 @@ package
             ns.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 
             video.attachNetStream(ns);
-            ns.play("video.flv");
+            ns.play("resource/video.flv");
 
             playPauseButton = new TestButton(24, 24, "||");
             playPauseButton.x = 10;
@@ -119,6 +119,7 @@ package
             trace("width : ", evt.width);
             trace("height : ", evt.height);
         }
+
 
         protected function onUpdateProgress(evt:TimerEvent = null):void
         {
