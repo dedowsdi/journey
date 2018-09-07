@@ -54,12 +54,14 @@ void app::init_gl() {
   }
 
   GLXDrawable drawable = glXGetCurrentDrawable();
+  glXSwapIntervalEXT(dpy, drawable, m_swap_interval);
+
   unsigned int swap, maxSwap;
   if (drawable) {
     glXQueryDrawable(dpy, drawable, GLX_SWAP_INTERVAL_EXT, &swap);
     glXQueryDrawable(dpy, drawable, GLX_MAX_SWAP_INTERVAL_EXT, &maxSwap);
     printf(
-      "The swap interval is %u and the max swap interval is "
+      "current swap interval is %u and the max swap interval is "
       "%u\n",
       swap, maxSwap);
   }
@@ -85,7 +87,8 @@ void app::init_gl() {
 
 //--------------------------------------------------------------------
 void app::init_callback() {
-  // find no way to  store user pointer in glut, so use static instead
+  // lambda with capture can't be converted to c func pointer, so i have to use
+  // static variable
   static app *instance = this;
 
   auto display_callback = []() { instance->display(); };
@@ -120,6 +123,7 @@ void app::init_callback() {
   glutPassiveMotionFunc(passive_motion_callback);
   glutMotionFunc(motion_callback);
   glutIdleFunc(idle_callback);
+
 }
 
 //--------------------------------------------------------------------
@@ -179,6 +183,21 @@ void app::update_camera() {
 }
 
 //--------------------------------------------------------------------
+void app::drawText(const std::string& text)
+{
+  glWindowPos2i(10, m_info.wnd_height - 10);
+  glutBitmapString(GLUT_BITMAP_9_BY_15, (const GLubyte*)text.c_str());
+}
+
+//--------------------------------------------------------------------
+void app::drawFpsText()
+{
+  GLchar info[50];
+  sprintf(info, "fps : %.2f", m_fps);
+  drawText(info);
+}
+
+//--------------------------------------------------------------------
 void app::run(int argc, char **argv) {
   srand(time(0));
   init(argc, argv);
@@ -221,12 +240,6 @@ void app::finishe_reading() { m_reading = GL_FALSE; }
 
 //--------------------------------------------------------------------
 void app::loop() {
-  Display *dpy = glXGetCurrentDisplay();
-  GLXDrawable drawable = glXGetCurrentDrawable();
-
-  if (drawable) {
-    glXSwapIntervalEXT(dpy, drawable, m_swap_interval);
-  }
   // while(true){
   // glutMainLoopEvent();
   //}
@@ -278,6 +291,8 @@ void app::keyboard(unsigned char key, int x, int y) {
 
       Display *dpy = glXGetCurrentDisplay();
       GLXDrawable drawable = glXGetCurrentDrawable();
+      glXSwapIntervalEXT(dpy, drawable, m_swap_interval);
+
       unsigned int swap, maxSwap;
       if (drawable) {
         glXQueryDrawable(dpy, drawable, GLX_SWAP_INTERVAL_EXT, &swap);

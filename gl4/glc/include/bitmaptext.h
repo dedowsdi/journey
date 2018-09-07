@@ -1,7 +1,7 @@
 #ifndef BITMAP_TEXT_H
 #define BITMAP_TEXT_H
 
-#include "glad/glad.h"
+#include "gl.h"
 #include <string>
 #include "glm.h"
 #include "program.h"

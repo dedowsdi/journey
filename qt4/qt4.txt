@@ -1,0 +1,4 @@
+QSound doesn't work in X11(except for NAS),  use phonon instead.
+
+Make sure there exists a top level layout in dialog.(right click blank and
+choose layout)

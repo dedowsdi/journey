@@ -1,6 +1,6 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
-#include "glad/glad.h"
+#include "gl.h"
 #include "glm.h"
 #include "common.h"
 #include "array.h"

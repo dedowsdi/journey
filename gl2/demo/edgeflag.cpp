@@ -1,3 +1,8 @@
+/*
+ * if edge flag of current vertex is true:
+ *   line : line will be drawn between current vertex and the next one
+ *   point : current point will be drawn
+ */
 #include "app.h"
 
 namespace zxd {
@@ -8,7 +13,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "edge_flag";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB;
     m_info.wnd_width = 300;
     m_info.wnd_height = 300;
   }
@@ -41,7 +46,7 @@ class app0 : public app {
     glutBitmapString(
       GLUT_BITMAP_9_BY_15, (const unsigned char*)"p : switch polygon mode");
 
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

@@ -1,2 +1,2 @@
 call myvim#switchRtp('./.vim')
-let g:mycppBuildDir = "./build/clang/Debug"
+let g:mycppBuildDir = "./build/gcc/Debug"

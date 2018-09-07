@@ -48,8 +48,7 @@ class app0 : public app {
           glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
           /*  note viewport[3] is height of window in pixels, that why -1 is
            *  needed, only works if viewport height is the same as window
-           * height,
-           *  otherwise you need window height to get realy  */
+           *  height, otherwise you need window height to get realy  */
           realy = viewport[3] - (GLint)y - 1;
           printf("coordinates at cursor are (%4d, %4d)\n", x, realy);
           gluUnProject((GLdouble)x, (GLdouble)realy, 0.0, mvmatrix, projmatrix,

@@ -8,6 +8,7 @@ include(util)
 #set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 if( CMAKE_BUILD_TYPE STREQUAL ""  )
     set( CMAKE_BUILD_TYPE Debug CACHE STRING "One of: Debug Release
@@ -23,6 +24,12 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     
 ENDIF()
 
+IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # use drawf debug format for gdb, use -g3 to include macro
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gdwarf -g3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf -g3")
+ENDIF()
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -33,6 +40,7 @@ FIND_PACKAGE(PkgConfig REQUIRED)
 FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(Freetype REQUIRED)
 PKG_CHECK_MODULES(GLFW3 REQUIRED glfw3)
+find_package(Boost REQUIRED COMPONENTS filesystem)
 
 findLibraryRequird(FIP_LIBS freeimageplus)
 findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)
@@ -44,6 +52,7 @@ include_directories(
     ${FREETYPE_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIR_ft2build}
     ${FIP_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
     glc/include
     common/include
     )

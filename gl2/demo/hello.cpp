@@ -27,6 +27,7 @@ class app0 : public zxd::app {
      * force previously issued opengl commands to begin execution
      */
     glFlush();
+
   }
 
   void create_scene(void) {

@@ -1,11 +1,15 @@
 #!/bin/bash
 
 buildType=Debug
+compiler=gcc
 if [[ $# -gt 1 ]]; then
   buildType=$1
 fi
+if [[ $# -gt 2 ]]; then
+  compiler=$2
+fi
 
-buildDir=build/clang/$buildType
+buildDir=build/$compiler/$buildType
 currentDir=$(pwd)
 
 sh -c "cd $buildDir && \

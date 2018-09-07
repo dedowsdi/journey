@@ -1943,7 +1943,7 @@ bash:
 
 vim:
   unamed regiser always point to the last used register.
-    gv"sy
+    gv"sy              " chagne the last used register to s
     let @s='whatever'  " @" is equal to whatever, not something you copied into
                        " s register in the 1st line.
 
@@ -1984,3 +1984,67 @@ c++:
 lldb:
   sometimes if you failed to set breakpoint on a function, it might because it's
   never called in the entire application.
+
+----------
+2018.07.02
+
+linux:
+  showkey -a  // print key code
+
+----------
+2018.07.03
+
+vim:
+  ctrl-e can be replaced with 1ctrl-d, 1ctrl-d will set 'scroll' to 1 untile you
+  call another #ctrl-d or reenter the buffer.
+
+----------
+2018.07.04
+
+linux:
+  chang gnome default application:
+    edit /etc/gnome/defaluts.list
+
+----------
+2018.07.05
+
+vscode:
+  vscode cpp plugin failed to search default path if you use
+  compile_commands.json
+
+----------
+2018.07.06
+
+jq:
+  '.array[] | whatever '    # whatever will operator on every item in array
+
+gl:
+  linewidth won't scale in viewport
+
+----------
+2018.07.07
+
+c++:
+  only lambda with blank catpure can be converted to c function
+  you don't need capture static variable, you can use them directly.
+
+  g@  will set `[ and `] to motion selection start and end. '@' register will be
+      motion text
+
+----------
+2018.08.15
+
+c++:
+  you can define a macro in the same name as a global function. As the macro get
+  expanded, the global function will never be used.
+
+----------
+2018.08.18
+
+hsb(hsv) and hsl:
+  they are similar, but not the same.
+  hue part is exactly the same.
+       black    white
+  hsb  *,*,0    *,0,100
+  hsl  *,*,0    *,*,100
+

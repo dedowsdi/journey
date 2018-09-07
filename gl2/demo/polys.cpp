@@ -58,9 +58,9 @@ class app0 : public app {
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0, 1.0, 1.0);
 
-    /*  draw one solid, unstippled rectangle,	*/
-    /*  then two stippled rectangles		*/
+    /*  draw one solid 64*64, unstippled rectangle,	*/
     glRectf(32.0, 32.0, 96.0, 96.0);
+    /*  then two stippled 64*64 rectangles		*/
     glEnable(GL_POLYGON_STIPPLE);
     glPolygonStipple(fly);
     glRectf(96.0, 32.0, 160, 96.0);

@@ -24,7 +24,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "movelight";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -79,7 +79,7 @@ class app0 : public app {
       "wW : translate \n";
     glutBitmapString(GLUT_BITMAP_9_BY_15, info);
 
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

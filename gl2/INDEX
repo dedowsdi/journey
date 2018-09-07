@@ -11,12 +11,15 @@ Chapter 1: Introduction to OpenGL
 Chapter 2: State Management and Drawing Geometric Objects
 
 	lines.c		(1.0) : line stipple
+    snake_rect.c
+    snake_circle.c
 	polys.c		(1.0) : polygon stipple
     edgeFlag.c
 	varray.c	(1.1)
 	mvarray.c	(1.4)
     vbo.c       (1.5)
-    sprite
+    sprite.c
+    width.c
 
 Chapter 3: Vieweing
 

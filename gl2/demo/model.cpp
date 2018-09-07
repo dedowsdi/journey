@@ -84,9 +84,8 @@ class app0 : public app {
     glLoadIdentity();
 
     // this trick is used to place a*a area into viewport as much as possible.
-    // it scales the view port so the narrow edge is the same as a, just like
-    // find
-    // a rectangle with specific aspect ratio for a square.
+    // it scales the near rect so the narrow edge is the same as a, just like
+    // find a rectangle with specific aspect ratio for a square.
     if (w <= h)
       glOrtho(-50.0, 50.0, -50.0 * (GLfloat)h / (GLfloat)w,
         50.0 * (GLfloat)h / (GLfloat)w, -1.0, 1.0);

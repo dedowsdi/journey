@@ -102,6 +102,7 @@ std::vector<GLubyte> create_chess_image(GLuint width, GLuint height,
 }
 //--------------------------------------------------------------------
 void loadgl() {
+#ifndef CLANG_COMPLETE_ONLY
   if (!gladLoadGL()) {
     printf("glad failed to load gl");
     return;
@@ -110,6 +111,7 @@ void loadgl() {
   if (GLVersion.major < 2) {
     printf("your system doesn't support OpenGL >= 2!\n");
   }
+#endif
 
   print_gl_version();
   init_debug_output();

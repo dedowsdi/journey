@@ -23,6 +23,7 @@ void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
 
 //--------------------------------------------------------------------
 void app::init() {
+  m_shutdown = GL_FALSE;
   init_info();
   init_wnd();
   init_gl();
@@ -45,6 +46,7 @@ void app::init_info() {
 
 //--------------------------------------------------------------------
 void app::init_gl() {
+#ifndef CLANG_COMPLETE_ONLY
   if (!gladLoadGL()) {
     std::cerr << "glad failed to load gl" << std::endl;
     return;
@@ -52,6 +54,7 @@ void app::init_gl() {
   if (GLVersion.major < 4) {
     std::cerr << "Your system doesn't support OpenGL >= 4!" << std::endl;
   }
+#endif
   printf(
     "GL_VERSION : %s\n"
     "GL_SHADING_LANGUAGE_VERSION : %s\n"

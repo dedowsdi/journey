@@ -11,9 +11,6 @@
  *  it tracks current color and update material parameter which has been setup
  *  by glColorMaterial
  *
- *  the scene is wrong after toggle two side light model, don't know y, it's
- *  becoming right again if you chagne any other materials.
- *
  */
 #include "app.h"
 
@@ -32,7 +29,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "colormat";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -74,6 +71,9 @@ class app0 : public app {
 
     glPopMatrix();
 
+    GLint twoSides;
+    glGetIntegerv(GL_LIGHT_MODEL_TWO_SIDE, &twoSides);
+
     char info[512];
     sprintf(info,
       "q : diffuse : %.2f %.2f %.2f %.2f\n"
@@ -81,13 +81,16 @@ class app0 : public app {
       "e : specular : %.2f %.2f %.2f %.2f\n"
       "r : emission : %.2f %.2f %.2f %.2f\n"
       "uU : shiness : %.2f\n"
-      "i : toggle two side light model\n"
-      "o : toggle clip plane : 0 0 -1 0",
+      "i :  two side light model : %i\n"
+      "o : toggle clip plane : 0 0 -1 0 : %i\n",
       mat_diffuse[0], mat_diffuse[1], mat_diffuse[2], mat_diffuse[3],
       mat_ambient[0], mat_ambient[1], mat_ambient[2], mat_ambient[3],
       mat_specular[0], mat_specular[1], mat_specular[2], mat_specular[3],
       mat_emission[0], mat_emission[1], mat_emission[2], mat_emission[3],
-      mat_shiness);
+      mat_shiness,
+      twoSides,
+      glIsEnabled(GL_CLIP_PLANE0)
+      );
 
     glDisable(GL_COLOR_MATERIAL);
     glDisable(GL_DEPTH_TEST);
@@ -105,7 +108,7 @@ class app0 : public app {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
 
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

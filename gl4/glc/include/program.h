@@ -1,7 +1,7 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#include "glad/glad.h"
+#include "gl.h"
 #include "glm.h"
 #include <string>
 #include <vector>
@@ -88,6 +88,11 @@ public:
     link();
     bind_uniform_locations();
     bind_attrib_locations();
+  }
+
+  virtual void reload(){
+    clear();
+    init();
   }
 
   bool is_inited() { return object != -1; }

@@ -2,7 +2,6 @@
 #define CUBOID_H
 
 #include "geometry.h"
-#include "glad/glad.h"
 #include "glm.h"
 
 namespace zxd {

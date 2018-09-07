@@ -1,7 +1,6 @@
 #ifndef BEZIER_H
 #define BEZIER_H
 
-#include "glad/glad.h"
 #include "geometry.h"
 
 namespace zxd {

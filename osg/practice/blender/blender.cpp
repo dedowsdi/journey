@@ -537,6 +537,7 @@ bool OperationEventHandler::handle(
 //------------------------------------------------------------------------------
 void OperationEventHandler::createNewOperation(
   const osgGA::GUIEventAdapter& ea, ObjectOperation* op) {
+
   OSG_NOTICE << "create new operation " << std::endl;
   ObjectOperation* curOp = getCurOperation();
 

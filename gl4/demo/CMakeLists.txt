@@ -8,6 +8,11 @@ set (PROJECTS
     normalviewer
     billboard
     particle
+    sinewave
+    floodfill
+    threshold
+    plot
+    fs
     )
 
 foreach(PROJECT ${PROJECTS})
@@ -18,5 +23,6 @@ foreach(PROJECT ${PROJECTS})
     target_link_libraries(${PROJECT}
         m
         common
+        ${Boost_LIBRARIES}
         )
 endforeach()

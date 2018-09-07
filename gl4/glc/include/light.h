@@ -1,7 +1,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include "glad/glad.h"
+#include "gl.h"
 #include "glm.h"
 
 namespace zxd {

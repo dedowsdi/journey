@@ -91,6 +91,9 @@ set (DEMOES
     rtt
     outline
     geometry
+    snake_rect
+    snake_circle
+    width
     )
 
 foreach(DEMO ${DEMOES})

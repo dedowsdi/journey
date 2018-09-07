@@ -9,6 +9,7 @@ class app0 : public zxd::app {
     app::init_info();
     m_info.title = "double";
   }
+
   void display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     glPushMatrix();
@@ -17,11 +18,15 @@ class app0 : public zxd::app {
     glRectf(-25.0, -25.0, 25.0, 25.0);
     glPopMatrix();
 
-    // swap buffer if you are using double buffer
+    drawFpsText();
+
     glutSwapBuffers();
+
   }
 
   void update(void) {
+    if(!spinning)
+      return;
     spin = spin + 2.0;
     if (spin > 360.0) spin = spin - 360.0;
   }

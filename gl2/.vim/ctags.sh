@@ -16,6 +16,5 @@ ctags \
     /usr/include/GL/glu.h \
     /usr/include/GL/freeglut_ext.h \
     /usr/local/source/glm/glm/ \
+    glc/ \
     ./gl21/
-
-    

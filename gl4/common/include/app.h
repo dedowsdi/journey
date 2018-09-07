@@ -1,7 +1,11 @@
 /*
  * Changed from superbible.
  */
-#include "glad/glad.h"
+
+// you can't get argument information from libclang if you use glad/glad.h(which
+// use macro)
+
+#include "gl.h"
 #include <GLFW/glfw3.h>
 #include <string>
 #include "glm.h"
@@ -43,6 +47,7 @@ public:
 protected:
   GLboolean m_reading;
   GLboolean m_camera_moving;
+  GLboolean m_shutdown;
   GLuint m_move_dir;
   GLuint m_swap_interval{1};
   GLuint m_frame_number;
@@ -91,6 +96,7 @@ public:
   void start_reading();
   void stop_reading();
   void finishe_reading();
+  virtual bool is_shutdown(){ return m_shutdown == GL_TRUE;}
 
 protected:
   virtual void init_info();
@@ -105,7 +111,9 @@ protected:
   virtual void update_camera();
 
   virtual void loop();
-  virtual void shutdown() {}
+  virtual void shutdown() {
+    m_shutdown = GL_TRUE;
+  }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h);
   virtual void glfw_key(

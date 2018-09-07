@@ -3,7 +3,7 @@
  *  this program demonstrates vertex buffer usage
  *
  *  buffer object allow data to be stored in the server and transformed only
- * once.
+ *  once.
  *  if you want to use texcoord or other vertex dates, you can place them in the
  *  same buffer as position or in a seperated buffer.
  */
@@ -67,7 +67,7 @@ class app0 : public app {
     glBindBuffer(GL_ARRAY_BUFFER, buffers[VERTICES]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // pointer is treated as byte offset into the buffer object's data store if
-    // some valid buffer is  bound to GL_ARRAY_BUFFER
+    // some valid buffer is bound to GL_ARRAY_BUFFER
     glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0));
     glEnableClientState(GL_VERTEX_ARRAY);
 

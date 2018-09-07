@@ -1,6 +1,6 @@
 /*
  *  light.c
- *  this program demonstrates the use of the open_g_l lighting
+ *  this program demonstrates the use of the opengl lighting
  *  model.  A sphere is drawn using a grey material characteristic.
  *  A single light source illuminates the object.
  */

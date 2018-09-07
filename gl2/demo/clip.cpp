@@ -22,7 +22,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "clip";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -60,7 +60,7 @@ class app0 : public app {
     glColor3f(1.0, 1.0, 1.0);
     glutWireSphere(1.0, 20, 16);
 
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

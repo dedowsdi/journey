@@ -1,7 +1,7 @@
 /*
  *  mvarray.c
  *  this program demonstrates multiple vertex arrays,
- *  specifically the open_g_l routine glMultiDrawElements().
+ *  specifically the opengl routine glMultiDrawElements().
  *
  *  you can render multiple sets of primitives in a single call:
  *    glMultiDrawArrays

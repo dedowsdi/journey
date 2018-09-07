@@ -53,7 +53,7 @@ protected:
   GLboolean m_rmb_down;
   GLboolean m_mmb_down;
   GLuint m_move_dir;
-  GLuint m_swap_interval{4};
+  GLuint m_swap_interval{1};
   GLuint m_frame_number;
   GLdouble m_fps;
   GLdouble m_last_time;
@@ -119,6 +119,8 @@ protected:
   virtual void update_time();
   virtual void update_fps();
   virtual void update_camera();
+  virtual void drawText(const std::string& text);
+  virtual void drawFpsText();
 
   virtual void loop();
   virtual void shutdown() {}
@@ -136,4 +138,5 @@ protected:
   virtual void idle(void);
   GLuint glut_to_gl(GLuint y);
 };
+
 }

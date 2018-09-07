@@ -16,7 +16,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "sprite";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGBA;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGBA;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -57,7 +57,7 @@ class app0 : public app {
     glEnable(GL_TEXTURE_2D);
 
     // enable point sprite
-    glPointSize(30);
+    glPointSize(100);
     glTexEnvf(
       GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);  // enable point sprite
     glPointParameteri(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT);
@@ -69,7 +69,7 @@ class app0 : public app {
 
     glBegin(GL_POINTS);
     glColor3f(1.0f, 1.0f, 1.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f); // sprite center
     glTexCoord2f(0, 0);
     glEnd();
 
@@ -80,7 +80,7 @@ class app0 : public app {
     glutBitmapString(GLUT_BITMAP_9_BY_15, info);
     glEnable(GL_TEXTURE_2D);
 
-    glFlush();
+    glutSwapBuffers();
 
     ZCGEA
   }

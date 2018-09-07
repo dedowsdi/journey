@@ -3,7 +3,7 @@
 #define GLM_SWIZZLE
 #define GLM_META_PROG_HELPERS
 
-#include "glad/glad.h"
+#include "gl.h"
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -62,10 +62,10 @@ typedef std::vector<vec2> vec2_vector;
 typedef std::vector<vec3> vec3_vector;
 typedef std::vector<vec4> vec4_vector;
 
-typedef std::vector<std::vector<GLfloat>> float_vector2;
-typedef std::vector<std::vector<vec2>> vec2_vector2;
-typedef std::vector<std::vector<vec3>> vec3_vector2;
-typedef std::vector<std::vector<vec4>> vec4_vector2;
+typedef std::vector<std::vector<GLfloat> > float_vector2;
+typedef std::vector<std::vector<vec2> > vec2_vector2;
+typedef std::vector<std::vector<vec3> > vec3_vector2;
+typedef std::vector<std::vector<vec4> > vec4_vector2;
 
 typedef float_vector::iterator fv_i;
 typedef vec2_vector::iterator v2v_i;
