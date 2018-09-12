@@ -63,7 +63,7 @@ public:
     m_info.title = "fs";
   }
   virtual void create_scene() {
-    glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 
@@ -94,6 +94,7 @@ public:
 
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+
     prg.use();
     glUniform2f(prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
     glUniform1f(prg.ul_time, m_time);
@@ -102,12 +103,13 @@ public:
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    std::stringstream ss;
-    ss << m_time << "s" << std::endl;
-    m_text.print(ss.str(), 10, 492, vec4(1, 0, 0, 1));
-    glDisable(GL_BLEND);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //std::stringstream ss;
+    //ss << m_time << "s" << std::endl;
+    //m_text.print(ss.str(), 10, 492, vec4(1, 0, 0, 1));
+    //glDisable(GL_BLEND);
+
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {

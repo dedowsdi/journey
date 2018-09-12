@@ -1,12 +1,20 @@
+//#version 430 core
+
 in vec4 vertex;
 in vec3 normal;
 #ifdef WITH_TEX
 in vec2 texcoord;
 #endif
 
+#ifdef INSTANCE
+in mat4 mvp_mat;
+in mat4 mv_mat;
+in mat4 mv_mat_it;
+#else
 uniform mat4 mvp_mat;
 uniform mat4 mv_mat;
 uniform mat4 mv_mat_it;
+#endif
 
 out vs_out{
   vec3 v_vertex; // view space

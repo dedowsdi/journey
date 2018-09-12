@@ -31,11 +31,12 @@ public:
   // the most common case, assume vertex 0, normal 1, texcoord 2
   geometry_base& bind(GLint vertex, GLint normal, GLint texcoord);
   geometry_base& bind_vntt(GLint vertex, GLint normal, GLint texcoord, GLint tangent);
+  geometry_base& bind_vn(GLint vertex, GLint normal);
   geometry_base& bind_vc(GLint vertex, GLint color);
 
   GLuint num_arrays() { return m_attributes.size(); }
 
-  virtual void draw(GLuint primcount = 1) = 0;
+  virtual void draw(GLuint primcount = -1) = 0;
 
   // a wrapper of glDrawArrays and glDrawArraysInstanced[ARB]
   void draw_arrays(

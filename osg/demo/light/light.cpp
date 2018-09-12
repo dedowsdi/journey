@@ -36,21 +36,23 @@ int main(int argc, char* argv[]) {
   osg::Node* light1 = createLightSource(
     1, osg::Vec3(0.0f, -20.0f, 0.0f), osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
-  root->getOrCreateStateSet()->setMode(GL_LIGHT0, osg::StateAttribute::ON);
-  root->getOrCreateStateSet()->setMode(GL_LIGHT1, osg::StateAttribute::ON);
+  osg::StateSet* rootStateSet = root->getOrCreateStateSet();
+  rootStateSet->setMode(GL_LIGHT0, osg::StateAttribute::ON);
+  rootStateSet->setMode(GL_LIGHT1, osg::StateAttribute::ON);
 
   // create local light, which doesn't take effect on the plane
   osg::ref_ptr<osg::Group> group = new osg::Group();
   auto ss = group->getOrCreateStateSet();
   osg::ref_ptr<osg::Light> light = new osg::Light();
   light->setDiffuse(osg::Vec4(0.0, 1.0, 0.0, 1.0 ));
-  light->setPosition(osg::Vec4(0, 0, -2, 1));
-  //light->setLightNum(2); // should i set light number ?
+  light->setPosition(osg::Vec4(0, 0, -7, 1));
+  light->setLightNum(2);
   ss->setAttributeAndModes(light);
 
   root->addChild(light0);
   root->addChild(light1);
   root->addChild(group);
+  root->getOrCreateStateSet()->setAttributeAndModes(light);
 
   osgViewer::Viewer viewer;
   viewer.setSceneData(root.get());

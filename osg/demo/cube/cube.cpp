@@ -43,11 +43,11 @@ osg::ref_ptr<osg::Geometry> createCube(const osg::Vec3& halfSize) {
   va->push_back(z);
   // right
   va->push_back(x);
-  va->push_back(-y);
+  va->push_back(y);
   va->push_back(z);
   // left
   va->push_back(-x);
-  va->push_back(y);
+  va->push_back(-y);
   va->push_back(z);
   // top
   va->push_back(z);
@@ -89,8 +89,10 @@ osg::ref_ptr<osg::Geometry> createCube(const osg::Vec3& halfSize) {
   cube->addPrimitiveSet(indices.get());
 
   // generate smooth normal
+  osg::ref_ptr<osg::Geode> leaf  = new osg::Geode();
+  leaf->addDrawable(cube);
   osg::ref_ptr<osgUtil::SmoothingVisitor> sv = new osgUtil::SmoothingVisitor();
-  cube->accept(*sv);
+  leaf->accept(*sv);
 
   return cube;
 }

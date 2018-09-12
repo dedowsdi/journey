@@ -27,6 +27,7 @@ void blinn_program::attach_shaders() {
   sv.push_back("#version 330 core\n");
 #endif
   if (with_texcoord) sv.push_back("#define WITH_TEX\n");
+  if (instance) sv.push_back("#define INSTANCE\n");
   attach(GL_VERTEX_SHADER, sv, "data/shader/blinn.vs.glsl");
 
   sv.clear();
@@ -78,6 +79,13 @@ void blinn_program::bind_attrib_locations() {
   al_normal = attrib_location("normal");
   if (with_texcoord) {
     al_texcoord = attrib_location("texcoord");
+  }
+
+  if(instance)
+  {
+    al_mv_mat = attrib_location("mv_mat");
+    al_mvp_mat = attrib_location("mvp_mat");
+    al_mv_mat_it = attrib_location("mv_mat_it");
   }
 }
 

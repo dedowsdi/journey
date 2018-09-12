@@ -11,10 +11,14 @@ struct blinn_program : public zxd::program {
   GLint al_vertex;
   GLint al_normal;
   GLint al_texcoord;
+  GLint al_mv_mat;
+  GLint al_mvp_mat;
+  GLint al_mv_mat_it;
 
   GLint ul_map;
   GLint tex_unit;
   GLboolean with_texcoord;
+  GLboolean instance;
   std::string map_name;
 
   blinn_program()
@@ -22,6 +26,7 @@ struct blinn_program : public zxd::program {
         al_normal(-1),
         al_texcoord(-1),
         with_texcoord(GL_FALSE),
+        instance(GL_FALSE),
         map_name("diffuse_map"),
         tex_unit(0) {}
 

@@ -80,6 +80,16 @@ geometry_base& geometry_base::bind_vntt(
 }
 
 //--------------------------------------------------------------------
+geometry_base& geometry_base::bind_vn(GLint vertex, GLint normal)
+{
+  bind_vao();
+  GLint idx = 0;
+  if (vertex != -1) bind(idx++, vertex);
+  if (normal != -1) bind(idx++, normal);
+  return *this;
+}
+
+//--------------------------------------------------------------------
 geometry_base& geometry_base::bind_vc(GLint vertex, GLint color) {
   bind_vao();
   GLint idx = 0;
@@ -112,7 +122,7 @@ void geometry_base::build_mesh() {
 //--------------------------------------------------------------------
 void geometry_base::draw_arrays(
   GLenum mode, GLint first, GLsizei count, GLsizei primcount) const {
-  if (primcount == 1) {
+  if (primcount == -1) {
     glDrawArrays(mode, first, count);
   } else {
 #ifdef GL_VERSION_3_0

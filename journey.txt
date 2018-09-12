@@ -2048,3 +2048,8 @@ hsb(hsv) and hsl:
   hsb  *,*,0    *,0,100
   hsl  *,*,0    *,*,100
 
+----------
+2018.09.11
+
+osg:
+  make sure you specify array binding! it's default is undefined.

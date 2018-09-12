@@ -381,7 +381,7 @@ public:
   // 0 <= z <= 2pi
   static osg::Vec3 getEulerXYZ(const osg::Matrixf& m);
 
-  static inline float randomValue(float min, float max) {
+  static inline float randomValue(float min = 0.0, float max = 1.0) {
     return (min + (float)rand() / (RAND_MAX + 1.0f) * (max - min));
   }
 
