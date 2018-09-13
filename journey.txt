@@ -2052,4 +2052,4 @@ hsb(hsv) and hsl:
 2018.09.11
 
 osg:
-  make sure you specify array binding! it's default is undefined.
+  make sure you specify array binding when you set it to geometry.

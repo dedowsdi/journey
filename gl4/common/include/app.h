@@ -48,6 +48,7 @@ protected:
   GLboolean m_reading;
   GLboolean m_camera_moving;
   GLboolean m_shutdown;
+  GLboolean m_dirty_view; // will be true if camera rotated, it's child class's job to set it back to false.
   GLuint m_move_dir;
   GLuint m_swap_interval{1};
   GLuint m_frame_number;

@@ -24,6 +24,7 @@ void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
 //--------------------------------------------------------------------
 void app::init() {
   m_shutdown = GL_FALSE;
+  m_dirty_view = GL_TRUE;
   init_info();
   init_wnd();
   init_gl();
@@ -417,6 +418,8 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
   if (m_camera_mode == CM_YAW_PITCH) {
     if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
       return;
+
+    m_dirty_view = GL_TRUE;
     // yaw world, assume z up
     if (dtx != 0) {
       *m_v_mat *= glm::rotate(static_cast<GLfloat>(dtx * 0.02), vec3(0, 0, 1));
@@ -439,6 +442,8 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
   } else if (m_camera_mode == CM_ARCBALL) {
     if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
       return;
+
+    m_dirty_view = GL_TRUE;
     if (dtx != 0 || dty != 0) {
       mat4 w_mat_i = zxd::compute_window_mat_i(
         0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
@@ -471,6 +476,7 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
     if (glm::length(right) < 0.0001f) {
       return;
     }
+    m_dirty_view = GL_TRUE;
     right = glm::normalize(right);
 
     vec3 fixed_up = normalize(cross(right, forward));
@@ -486,6 +492,7 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
 void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
   // yoffset is negative if you scroll toward yourself
   if (m_v_mat) {
+    m_dirty_view = GL_TRUE;
     GLfloat scale = 1 - 0.1 * yoffset;
     (*m_v_mat)[3][0] *= scale;
     (*m_v_mat)[3][1] *= scale;

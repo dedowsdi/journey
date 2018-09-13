@@ -401,6 +401,10 @@ public:
     return osg::Vec3(
       randomValue(min, max), randomValue(min, max), randomValue(min, max));
   }
+  static inline osg::Vec3 randomVector3(float min, float max) {
+    return osg::Vec3(
+      randomValue(min, max), randomValue(min, max), randomValue(min, max));
+  }
   static inline osg::Vec4 randomVector4(float min, float max) {
     return osg::Vec4(randomValue(min, max), randomValue(min, max),
       randomValue(min, max), randomValue(min, max));

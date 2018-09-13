@@ -62,15 +62,15 @@ void matrix_attrib_pointer(
   glEnableVertexAttribArray(index + 3);
 
 #ifndef GL_VERSION_3_0
-  glVertexAttribDivisorARB(index + 0, 1);
-  glVertexAttribDivisorARB(index + 1, 1);
-  glVertexAttribDivisorARB(index + 2, 1);
-  glVertexAttribDivisorARB(index + 3, 1);
+  glVertexAttribDivisorARB(index + 0, divisor);
+  glVertexAttribDivisorARB(index + 1, divisor);
+  glVertexAttribDivisorARB(index + 2, divisor);
+  glVertexAttribDivisorARB(index + 3, divisor);
 #else
-  glVertexAttribDivisor(index + 0, 1);
-  glVertexAttribDivisor(index + 1, 1);
-  glVertexAttribDivisor(index + 2, 1);
-  glVertexAttribDivisor(index + 3, 1);
+  glVertexAttribDivisor(index + 0, divisor);
+  glVertexAttribDivisor(index + 1, divisor);
+  glVertexAttribDivisor(index + 2, divisor);
+  glVertexAttribDivisor(index + 3, divisor);
 #endif
 }
 
