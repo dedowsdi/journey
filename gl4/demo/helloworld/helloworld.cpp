@@ -42,6 +42,7 @@ public:
           break;
       }
     }
+    app::glfw_key(wnd, key, scancode, action, mods);
   }
 };
 }

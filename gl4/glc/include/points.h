@@ -14,6 +14,14 @@ public:
   virtual void draw(GLuint primcount);
 };
 
+class origin2 : public geometry_base{
+protected:
+  GLint build_vertex();
+
+public:
+  virtual void draw(GLuint primcount);
+};
+
 // draw points, it cretes buffer every time you called it, don't use it if
 // performance is an issue.
 template <typename tvec>

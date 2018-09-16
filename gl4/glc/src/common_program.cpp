@@ -216,4 +216,26 @@ void vertex_color_program::bind_attrib_locations() {
 void vertex_color_program::update_uniforms(const mat4& _mvp_mat) {
   glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(_mvp_mat));
 }
+
+//--------------------------------------------------------------------
+void texture_animation_program::attach_shaders()
+{
+  attach(GL_VERTEX_SHADER, "data/shader/texture_animation.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, "data/shader/texture_animation.fs.glsl");
+}
+
+//--------------------------------------------------------------------
+void texture_animation_program::bind_uniform_locations()
+{
+  uniform_location(&ul_mvp_mat, "mvp_mat");
+  uniform_location(&ul_diffuse_map, "diffuse_map");
+  uniform_location(&ul_tex_mat, "tex_mat");
+}
+
+//--------------------------------------------------------------------
+void texture_animation_program::bind_attrib_locations()
+{
+  al_vertex = attrib_location("vertex");
+  al_texcoord = attrib_location("texcoord");
+}
 }

@@ -119,6 +119,25 @@ struct vertex_color_program : public zxd::program {
   virtual void bind_attrib_locations();
   void update_uniforms(const mat4& _mvp_mat);
 };
+
+class texture_animation_program : public program
+{
+
+public:
+  GLint al_vertex;
+  GLint al_texcoord;
+  GLint ul_diffuse_map;
+  GLint ul_tex_mat;
+
+protected:
+
+  void attach_shaders();
+
+  void bind_uniform_locations();
+
+  void bind_attrib_locations();
+
+};
 }
 
 #endif /* COMMON_PROGRAM_H */

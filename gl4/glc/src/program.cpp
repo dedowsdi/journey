@@ -32,6 +32,14 @@ void program::link() {
 void program::use() { glUseProgram(object); }
 
 //--------------------------------------------------------------------
+void program::fix2d_camera(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top)
+{
+  v_mat = glm::mat4(1);
+  p_mat = glm::ortho(left, right, bottom, top);
+  vp_mat = p_mat * v_mat;
+}
+
+//--------------------------------------------------------------------
 GLint program::attrib_location(const std::string& name) {
   GLint location = glGetAttribLocation(object, name.c_str());
   if (location == -1) {

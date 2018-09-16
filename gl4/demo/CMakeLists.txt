@@ -13,6 +13,7 @@ set (PROJECTS
     threshold
     plot
     fs
+    texture_animation
     )
 
 foreach(PROJECT ${PROJECTS})

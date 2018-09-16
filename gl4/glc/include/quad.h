@@ -12,9 +12,11 @@ namespace zxd {
 void draw_quad(GLuint tex_index = 0);
 
 class quad : public geometry_base {
+protected:
+  GLfloat m_size;
 public:
   quad(const glm::vec3& half_diag) {}
-  quad(GLfloat size = 1) {}
+  quad(GLfloat size = 2) : m_size(size) {}
 
   GLint build_vertex();
   GLint build_normal();

@@ -144,7 +144,6 @@ protected:
 
 } prg;
 
-
 class purple_rain_app : public app
 {
 protected:

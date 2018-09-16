@@ -26,10 +26,11 @@ GLint quad::build_vertex() {
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve(4);
 
-  vertices.push_back(vec2(-1.0f, 1.0f));
-  vertices.push_back(vec2(-1.0f, -1.0f));
-  vertices.push_back(vec2(1.0f, 1.0f));
-  vertices.push_back(vec2(1.0f, -1.0f));
+  GLfloat hz = m_size * 0.5;
+  vertices.push_back(vec2(-hz, hz));
+  vertices.push_back(vec2(-hz, -hz));
+  vertices.push_back(vec2(hz, hz));
+  vertices.push_back(vec2(hz, -hz));
   return num_arrays() - 1;
 }
 

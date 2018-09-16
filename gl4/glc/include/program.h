@@ -99,6 +99,8 @@ public:
 
   void link();
   void use();
+  
+  void fix2d_camera(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top);
 
   virtual void attach_shaders(){};
   virtual void bind_uniform_locations(){};

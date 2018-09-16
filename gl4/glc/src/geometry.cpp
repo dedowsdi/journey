@@ -101,22 +101,54 @@ geometry_base& geometry_base::bind_vc(GLint vertex, GLint color) {
 }
 
 //--------------------------------------------------------------------
+geometry_base& geometry_base::bind_vt(GLint vertex, GLint texcoord)
+{
+  bind_vao();
+  GLint idx = 0;
+
+  if (vertex != -1) bind(idx++, vertex);
+  if (texcoord != -1) bind(idx++, texcoord);
+
+  return *this;
+}
+
+//--------------------------------------------------------------------
+geometry_base& geometry_base::bind_v(GLint vertex)
+{
+  bind_vao();
+  if (vertex != -1) bind(0, vertex);
+  return *this;
+}
+
+//--------------------------------------------------------------------
 void geometry_base::build_mesh() {
   GLint idx;
   idx = build_vertex();
   if (idx != -1) attrib_array(idx)->update_array_buffer();
 
-  idx = build_color();
-  if (idx != -1) attrib_array(idx)->update_array_buffer();
+  if(m_include_color)
+  {
+    idx = build_color();
+    if (idx != -1) attrib_array(idx)->update_array_buffer();
+  }
 
-  idx = build_normal();
-  if (idx != -1) attrib_array(idx)->update_array_buffer();
+  if(m_include_normal)
+  {
+    idx = build_normal();
+    if (idx != -1) attrib_array(idx)->update_array_buffer();
+  }
 
-  idx = build_texcoord();
-  if (idx != -1) attrib_array(idx)->update_array_buffer();
+  if(m_include_texcoord)
+  {
+    idx = build_texcoord();
+    if (idx != -1) attrib_array(idx)->update_array_buffer();
+  }
 
-  idx = build_tangent();
-  if (idx != -1) attrib_array(idx)->update_array_buffer();
+  if(m_include_tangent)
+  {
+    idx = build_tangent();
+    if (idx != -1) attrib_array(idx)->update_array_buffer();
+  }
 }
 
 //--------------------------------------------------------------------

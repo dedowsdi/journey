@@ -14,20 +14,21 @@
 #define NUM_DROPS 300000
 #define RADIUS 2000.0f
 
-// fixed boundingbox, avoid loop vertices.
-class RainGeometry : public osg::Geometry
+// fix bound
+struct RainComputeBoundCallback : public osg::Drawable::ComputeBoundingBoxCallback 
 {
-public:
-  virtual osg::BoundingBox computeBoundingBox() const
+  virtual osg::BoundingBox computeBound(const osg::Drawable&) const
   {
     return osg::BoundingBox(-RADIUS, -RADIUS, -100, RADIUS, RADIUS, RADIUS*2); 
   }
 };
 
-osg::ref_ptr<RainGeometry> rainGeometry;
+
+osg::ref_ptr<osg::Geometry> rainGeometry;
 void createRainGeometry()
 {
-  rainGeometry = new RainGeometry();
+  rainGeometry = new osg::Geometry();
+  rainGeometry->setComputeBoundingBoxCallback(new RainComputeBoundCallback());
 
   osg::ref_ptr<osg::Vec3Array> vertices  = new osg::Vec3Array(osg::Array::BIND_PER_VERTEX);
   osg::ref_ptr<osg::Vec3Array> colors  = new osg::Vec3Array(osg::Array::BIND_OVERALL);

@@ -1,0 +1,91 @@
+snippet gl4Main
+#include "app.h"
+#include "bitmaptext.h"
+
+#define WIDTH 800
+#define HEIGHT 800
+
+namespace zxd {
+
+class ${2:program_name} : public program
+{
+
+public:
+	GLint al_vertex;
+
+protected:
+
+	void attach_shaders()
+	{
+		attach(GL_VERTEX_SHADER, "data/shader/purple_rain.vs.glsl");
+		attach(GL_FRAGMENT_SHADER, "data/shader/purple_rain.fs.glsl");
+	}
+
+	void bind_uniform_locations()
+	{
+	}
+
+	void bind_attrib_locations()
+	{
+	}
+
+} prg;
+
+class ${1:app_name} : public app {
+protected:
+	bitmap_text m_text;
+
+public:
+	virtual void init_info() {
+		app::init_info();
+		m_info.title = "$1";
+		m_info.wnd_width = WIDTH;
+		m_info.wnd_height = HEIGHT;
+	}
+	virtual void create_scene() {
+		glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+
+		m_text.init();
+		m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+
+		prg.init();
+	}
+
+	virtual void update() {}
+
+	virtual void display() {
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		prg.use();
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		m_text.print("hello world", 10, 492);
+	}
+
+	virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+		app::glfw_resize(wnd, w, h);
+		m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+	}
+
+	virtual void glfw_key(
+		GLFWwindow *wnd, int key, int scancode, int action, int mods) {
+		if (action == GLFW_PRESS) {
+			switch (key) {
+				case GLFW_KEY_ESCAPE:
+					glfwSetWindowShouldClose(m_wnd, GL_TRUE);
+					break;
+				default:
+					break;
+			}
+		}
+		app::glfw_key(wnd, key, scancode, action, mods);
+	}
+};
+}
+
+int main(int argc, char *argv[]) {
+	zxd::$1 app;
+	app.run();
+}
+endsnippet

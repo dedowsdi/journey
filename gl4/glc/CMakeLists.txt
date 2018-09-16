@@ -25,6 +25,7 @@ set(GLC_SRCS
     src/array.cpp
     src/geometry.cpp
     src/axes.cpp
+    src/texmap_anim.cpp
     )
 
 add_library(glc 

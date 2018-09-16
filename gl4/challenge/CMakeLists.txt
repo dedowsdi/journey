@@ -3,6 +3,7 @@ set (PROJECTS
     menger_sponge_fractal
     snake
     purple_rain
+    space_invader
     )
 
 foreach(PROJECT ${PROJECTS})
