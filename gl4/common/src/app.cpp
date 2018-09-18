@@ -71,6 +71,9 @@ void app::init_gl() {
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
   glDebugMessageCallback(gl_debug_output, this);
   debug_message_control();
+
+  if(m_info.samples > 1)
+    glEnable(GL_MULTISAMPLE);;
 }
 
 //--------------------------------------------------------------------
@@ -511,5 +514,30 @@ void app::glfw_char(GLFWwindow *wnd, unsigned int codepoint) {
 void app::glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {}
 
 //--------------------------------------------------------------------
+vec2 app::current_mouse_position()
+{
+  dvec2 p;
+  glfwGetCursorPos(m_wnd, &p[0], &p[1]);
+  return glfw_to_gl(p);
+}
+
+//--------------------------------------------------------------------
+vec3 app::unproject(vec3 p, const mat4& m)
+{
+  vec4 sp(p, 1);
+  mat4 w_mat = zxd::compute_window_mat(0, 0, m_info.wnd_width, m_info.wnd_height);
+  mat4 xw_mat = w_mat * m;
+  vec4 res = glm::inverse(xw_mat) * sp;
+  return res.xyz() / res.w;
+}
+
+//--------------------------------------------------------------------
 GLdouble app::glfw_to_gl(GLdouble y) { return m_info.wnd_height - 1 - y; }
+
+//--------------------------------------------------------------------
+vec2 app::glfw_to_gl(vec2 p)
+{
+  return vec2(p.x, m_info.wnd_height - 1 - p.y);
+}
+
 }

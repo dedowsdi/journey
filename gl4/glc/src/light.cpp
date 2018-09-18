@@ -38,7 +38,7 @@ void light_source::bind_uniform_locations(
 
 //--------------------------------------------------------------------
 void light_source::update_uniforms(const glm::mat4& transform) {
-  glm::vec4 position1 = transform * position;
+  glm::vec4 position1 = transform * position; // works for both directional and point
   glm::vec3 spot_direction1 = glm::mat3(transform) * spot_direction;
 
   if (ul_ambient != -1) glUniform4fv(ul_ambient, 1, value_ptr(ambient));

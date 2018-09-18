@@ -127,18 +127,28 @@ public:
     vc_prg.init();
 
     // geometry
+    m_sphere.include_normal(true);
+    m_sphere.include_texcoord(true);
     m_sphere.build_mesh();
 
+    m_cuboid.include_normal(true);
+    m_cuboid.include_texcoord(true);
     m_cuboid.build_mesh();
 
+    m_cone.include_normal(true);
+    m_cone.include_texcoord(true);
     m_cone.build_mesh();
 
     m_cylinder.base(1);
     m_cylinder.top(0.5);
+    m_cylinder.include_normal(true);
+    m_cylinder.include_texcoord(true);
     m_cylinder.build_mesh();
 
     m_torus.rings(32);
     m_torus.sides(32);
+    m_torus.include_normal(true);
+    m_torus.include_texcoord(true);
     m_torus.build_mesh();
 
     m_xyplane.slice(8);
@@ -146,14 +156,22 @@ public:
     m_xyplane.height(8);
     m_xyplane.left(-4);
     m_xyplane.bottom(-4);
+    m_xyplane.include_normal(true);
+    m_xyplane.include_texcoord(true);
     m_xyplane.build_mesh();
 
+    m_disk0.include_normal(true);
+    m_disk0.include_texcoord(true);
     m_disk0.build_mesh();
 
     m_disk1.start(fpi4);
     m_disk1.sweep(fpi2);
+    m_disk1.include_normal(true);
+    m_disk1.include_texcoord(true);
     m_disk1.build_mesh();
 
+    m_axes.include_normal(true);
+    m_axes.include_color(true);
     m_axes.build_mesh();
 
     {
@@ -168,6 +186,8 @@ public:
       }
 
       m_bezier_surface.ctrl_points(vv);
+      m_bezier_surface.include_normal(true);
+      m_bezier_surface.include_texcoord(true);
       m_bezier_surface.build_mesh();
     }
 
@@ -186,6 +206,8 @@ public:
       m_nurb_surface.uniform_knots();
       m_nurb_surface.udegree(3);
       m_nurb_surface.vdegree(3);
+      m_nurb_surface.include_normal(true);
+      m_nurb_surface.include_texcoord(true);
       m_nurb_surface.build_mesh();
     }
 
@@ -196,6 +218,7 @@ public:
       ctrl_points.push_back(vec3(-1, 0, 2));
       ctrl_points.push_back(vec3(0, 0, 3));
       m_bezier.ctrl_points(ctrl_points);
+      m_bezier.include_texcoord(true);
       m_bezier.build_mesh();
     }
 
@@ -209,6 +232,7 @@ public:
       m_nurb.degree(3);
       m_nurb.ctrl_points(ctrl_points);
       m_nurb.uniform_knots();
+      m_nurb.include_texcoord(true);
       m_nurb.build_mesh();
     }
 

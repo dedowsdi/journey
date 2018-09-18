@@ -4,6 +4,8 @@ set (PROJECTS
     snake
     purple_rain
     space_invader
+    mitosis
+    solar
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -149,7 +149,7 @@ glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
 glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius = 0.8f);
 
 glm::mat4 compute_window_mat(
-  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
+  GLint x, GLint y, GLint width, GLint height, GLfloat n = -1, GLfloat f = 1);
 
 glm::mat4 compute_window_mat_i(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);
@@ -174,6 +174,13 @@ inline GLfloat pi(GLfloat a0, GLfloat d, uint n) {
 
 // get camera position in world space, no need to invert view matrix.
 vec3 eye_pos(const mat4& v_mat);
+GLfloat line_point_distance2(const vec3& point, const vec3& line_point, const vec3& line_direction);
+GLfloat line_point_distance(const vec3& point, const vec3& line_point, const vec3& line_direction);
+// return -1 if point resides in negative direction
+GLfloat ray_point_distance2(const vec3& point, const vec3& ray_start, const vec3& line_direction);
+GLfloat ray_point_distance(const vec3& point, const vec3& ray_start, const vec3& line_direction);
+
+
 }
 
 #endif /* GLM_H */

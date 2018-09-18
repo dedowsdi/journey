@@ -80,6 +80,19 @@ geometry_base& geometry_base::bind_vntt(
 }
 
 //--------------------------------------------------------------------
+geometry_base& geometry_base::bind_vnt(GLint vertex, GLint normal, GLint texcoord)
+{
+  bind_vao();
+  GLint idx = 0;
+
+  if (vertex != -1) bind(idx++, vertex);
+  if (normal != -1) bind(idx++, normal);
+  if (texcoord != -1) bind(idx++, texcoord);
+
+  return *this;
+}
+
+//--------------------------------------------------------------------
 geometry_base& geometry_base::bind_vn(GLint vertex, GLint normal)
 {
   bind_vao();

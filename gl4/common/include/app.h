@@ -127,6 +127,14 @@ protected:
   virtual void glfw_char(GLFWwindow *wnd, unsigned int codepoint);
   virtual void glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods);
 
+  vec2 current_mouse_position();
+
+  // screen to whaterver. 
+  // pass in p_mat to convert to view
+  // pass in vp_mat to convert to world
+  vec3 unproject(vec3 p, const mat4& m);
+
   GLdouble glfw_to_gl(GLdouble y);
+  vec2 glfw_to_gl(vec2 p);
 };
 }

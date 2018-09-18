@@ -544,6 +544,19 @@ public:
     GLdouble ratio = w / v.w();
     return v * ratio;
   }
+
+  template<typename T, typename  U>
+  static T mix(const T& x, const T& y, U a)
+  {
+    return x*(1-a) + y*a;
+  }
+
+  static GLfloat smoothstep(GLfloat edge0, GLfloat edge1, GLfloat x)
+  {
+    GLfloat t = osg::clampTo((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+    return t*t * (3 - 2 * t);
+  }
+
 };
 }
 

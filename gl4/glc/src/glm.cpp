@@ -295,4 +295,34 @@ mat3 make_mat3_row(const vec3& r0, const vec3& r1, const vec3& r2) {
 vec3 eye_pos(const mat4& v_mat) {
   return (-v_mat[3] * erase_translation(v_mat)).xyz();
 }
+
+//--------------------------------------------------------------------
+GLfloat line_point_distance2(const vec3& point, const vec3& line_point, const vec3& line_direction)
+{
+  vec3 v = point - line_point;
+  return glm::length2(v - line_direction * glm::dot(v, line_direction));
+}
+
+//--------------------------------------------------------------------
+GLfloat line_point_distance(const vec3& point, const vec3& line_point, const vec3& line_direction)
+{
+  return glm::sqrt(line_point_distance2(point, line_point, line_direction));
+}
+
+//--------------------------------------------------------------------
+GLfloat ray_point_distance2(const vec3& point, const vec3& ray_start, const vec3& line_direction)
+{
+  if(glm::dot(line_direction, point - ray_start) < 0)
+    return -1;
+
+  return  line_point_distance2(point, ray_start, line_direction);
+}
+
+//--------------------------------------------------------------------
+GLfloat ray_point_distance(const vec3& point, const vec3& ray_start, const vec3& line_direction)
+{
+  GLfloat d2 = ray_point_distance2(point, ray_start, line_direction);
+  return d2 == -1 ? -1 : glm::sqrt(d2);
+}
+
 }
