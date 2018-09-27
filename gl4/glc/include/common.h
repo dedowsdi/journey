@@ -49,8 +49,6 @@ namespace zxd {
 
 void uniform_location(GLint *loc, GLint program, const std::string &name);
 
-std::string read_file(const std::string &filepath);
-
 void matrix_attrib_pointer(
   GLint index, GLuint divisor = 1, GLboolean normalize = GL_FALSE);
 

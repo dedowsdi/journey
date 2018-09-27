@@ -1,6 +1,7 @@
 #include "common_program.h"
 #include "common.h"
 #include <sstream>
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -37,7 +38,7 @@ void blinn_program::attach_shaders() {
 #endif
   if (with_texcoord) sv.push_back("#define WITH_TEX\n");
   sv.push_back("#define LIGHT_COUNT 8\n");
-  sv.push_back(read_file("data/shader/blinn.frag"));
+  sv.push_back(stream_util::read_file("data/shader/blinn.frag"));
   attach(GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
 }
 
@@ -238,4 +239,25 @@ void texture_animation_program::bind_attrib_locations()
   al_vertex = attrib_location("vertex");
   al_texcoord = attrib_location("texcoord");
 }
+
+//--------------------------------------------------------------------
+void twod_program0::attach_shaders()
+{
+  attach(GL_VERTEX_SHADER, "data/shader/2d0.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, "data/shader/2d0.fs.glsl");
+}
+
+//--------------------------------------------------------------------
+void twod_program0::bind_uniform_locations()
+{
+  uniform_location(&ul_mvp_mat, "mvp_mat");
+  uniform_location(&ul_color, "color");
+}
+
+//--------------------------------------------------------------------
+void twod_program0::bind_attrib_locations()
+{
+  al_vertex = attrib_location("vertex");
+}
+
 }

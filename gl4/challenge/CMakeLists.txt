@@ -6,6 +6,9 @@ set (PROJECTS
     space_invader
     mitosis
     solar
+    maze_generator
+    noise_terrain
+    lorenz_system
     )
 
 foreach(PROJECT ${PROJECTS})
@@ -19,3 +22,5 @@ foreach(PROJECT ${PROJECTS})
         ${Boost_LIBRARIES}
         )
 endforeach()
+
+file(COPY lorenz_system/lorenz_system.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

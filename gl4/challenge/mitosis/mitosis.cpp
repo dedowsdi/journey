@@ -44,7 +44,6 @@ public:
   {
     m_pos = glm::linearRand(vec3(-1), vec3(1));
     m_pos = glm::normalize(m_pos) * glm::linearRand(0.0f, RADIUS);
-
     reset_velocity();
   }
 
@@ -92,7 +91,7 @@ public:
   {
     geometry.draw();
   }
-  
+
   vec3 pos() const { return m_pos; }
   void pos(vec3 v){ m_pos = v; }
 

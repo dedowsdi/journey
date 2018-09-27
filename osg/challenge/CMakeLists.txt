@@ -6,6 +6,9 @@ set (PROJECTS
     space_invader
     mitosis
     solar
+    maze_generator
+    noise_terrain
+    lorenz_system
     )
 
 foreach(PROJECT ${PROJECTS})

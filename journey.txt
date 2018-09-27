@@ -575,6 +575,7 @@ linux:
                 NUL (zero value) bytes
     /dev/full – produces a continuous stream of NUL (zero value) bytes when
                 read, and returns a "disk full" message when written to
+
     /dev/random and /dev/urandom – they produce a variable-length stream of
                                    pseudo-random numbers.
 

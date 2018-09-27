@@ -1,5 +1,6 @@
 set (PROJECTS
     rgb
+    mvp
     )
 
 foreach(PROJECT ${PROJECTS})
@@ -12,3 +13,8 @@ foreach(PROJECT ${PROJECTS})
         common
         )
 endforeach()
+
+
+IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    install(TARGETS mvp RUNTIME DESTINATION /usr/local/bin)
+ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")

@@ -22,29 +22,6 @@ void uniform_location(GLint *loc, GLint program, const std::string &name) {
 }
 
 //--------------------------------------------------------------------
-std::string read_file(const std::string &filepath) {
-  std::ifstream ifs(filepath);
-  if (!ifs) {
-    std::stringstream ss;
-    ss << "failed to open file " << filepath << std::endl;
-    throw std::runtime_error(ss.str());
-  }
-
-  // approximate size
-  ifs.seekg(std::ios::end);
-  GLuint size = ifs.tellg();
-  ifs.seekg(std::ios::beg);
-
-  std::string s;
-  s.reserve(size);
-
-  std::copy(std::istreambuf_iterator<char>(ifs),
-    std::istreambuf_iterator<char>(), std::back_inserter(s));
-
-  return s;
-}
-
-//--------------------------------------------------------------------
 void matrix_attrib_pointer(
   GLint index, GLuint divisor /* = 1*/, GLboolean normalize /* = GL_FALSE*/) {
   glVertexAttribPointer(

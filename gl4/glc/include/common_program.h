@@ -132,12 +132,23 @@ public:
 protected:
 
   void attach_shaders();
-
   void bind_uniform_locations();
-
   void bind_attrib_locations();
 
 };
+
+class twod_program0: public program
+{
+public:
+  GLint al_vertex;
+  GLint ul_color;
+
+protected:
+  void attach_shaders();
+  void bind_uniform_locations();
+  void bind_attrib_locations();
+};
+
 }
 
 #endif /* COMMON_PROGRAM_H */

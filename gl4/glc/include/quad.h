@@ -13,10 +13,11 @@ void draw_quad(GLuint tex_index = 0);
 
 class quad : public geometry_base {
 protected:
-  GLfloat m_size;
+  GLfloat m_width;
+  GLfloat m_height;
 public:
   quad(const glm::vec3& half_diag) {}
-  quad(GLfloat size = 2) : m_size(size) {}
+  quad(GLfloat size = 2) : m_width(size), m_height(size) {}
 
   GLint build_vertex();
   GLint build_normal();
@@ -24,6 +25,12 @@ public:
   GLint build_tangent();
 
   void draw(GLuint primcount = 1);
+
+  GLfloat width() const { return m_width; }
+  void width(GLfloat v){ m_width = v; }
+
+  GLfloat height() const { return m_height; }
+  void height(GLfloat v){ m_height = v; }
 
 };
 }

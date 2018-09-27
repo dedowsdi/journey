@@ -1,6 +1,6 @@
 /*
  * mean = 0
- * stand deviation = 1
+ * variance = 1
  * gaussian_step = 0.5
  * radius = 4
  */

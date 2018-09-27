@@ -11,7 +11,8 @@ set(GLC_SRCS
     src/sphere.cpp
     src/cuboid.cpp
     src/cone.cpp
-    src/stringutil.cpp
+    src/string_util.cpp
+    src/stream_util.cpp
     src/texutil.cpp
     src/cylinder.cpp
     src/torus.cpp
@@ -26,6 +27,8 @@ set(GLC_SRCS
     src/geometry.cpp
     src/axes.cpp
     src/texmap_anim.cpp
+    src/line.cpp
+    src/dict_script.cpp
     )
 
 add_library(glc 
@@ -34,4 +37,5 @@ add_library(glc
 
 target_link_libraries(glc
     X11
+    ${Boost_LIBRARIES}
     )

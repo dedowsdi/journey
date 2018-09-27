@@ -21,6 +21,7 @@
 #include "common.h"
 #include "sphere.h"
 #include "light.h"
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -91,7 +92,7 @@ struct glinn_program : public zxd::program {
     ss << "#version 430 core" << std::endl;
     ss << "#define LIGHT_COUNT " << light_count << std::endl;
     sv.push_back(ss.str());
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back(stream_util::read_file("data/shader/blinn.frag"));
     attach(
       GL_FRAGMENT_SHADER, sv, "data/shader/use_gbuffer.fs.glsl");
 

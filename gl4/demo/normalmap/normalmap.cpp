@@ -5,6 +5,7 @@
 #include "light.h"
 #include "quad.h"
 #include "texutil.h"
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -31,7 +32,7 @@ struct use_normal_map_view_program : public zxd::program {
     attach(GL_VERTEX_SHADER, "data/shader/use_normalmap_view.vs.glsl");
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back(stream_util::read_file("data/shader/blinn.frag"));
     attach(GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
 
     name("use_normalmap_view");
@@ -72,7 +73,7 @@ struct use_normal_map_tangent_progrm : public program {
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
     attach(GL_VERTEX_SHADER, sv, "data/shader/use_normalmap_tangent.vs.glsl");
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back(stream_util::read_file("data/shader/blinn.frag"));
     attach(GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
 
     name("use_normalmap_tangent");

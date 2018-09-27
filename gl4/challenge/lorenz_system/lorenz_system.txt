@@ -1,0 +1,4 @@
+start : 0.01 0 0
+sigma : 19
+rho :  28
+beta : 2.666667 

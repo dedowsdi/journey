@@ -10,7 +10,7 @@ class ZMath {
 public:
   static double gaussian(double x, double mean, double deviation) {
     static double r = 1 / std::sqrt(2 * pi);
-    double rd = 1 / deviation;
+    double rd = 1 / (deviation * deviation);
     return std::pow(e, -0.5 * std::pow((x - mean) * rd, 2)) * rd * r;
   }
 };

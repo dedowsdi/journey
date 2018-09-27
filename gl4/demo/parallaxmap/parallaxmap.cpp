@@ -22,6 +22,7 @@
 #include "quad.h"
 #include "texutil.h"
 #include "program.h"
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -53,7 +54,7 @@ struct parallax_program : public program {
     std::stringstream ss;
     ss << "#define PARALLAX_METHOD " << parallax_method << std::endl;
     sv.push_back(ss.str());
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back(stream_util::read_file("data/shader/blinn.frag"));
     attach(GL_FRAGMENT_SHADER, sv, "data/shader/parallaxmap.fs.glsl");
 
     name("parallaxmap");
