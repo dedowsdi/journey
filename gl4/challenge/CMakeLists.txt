@@ -9,6 +9,7 @@ set (PROJECTS
     maze_generator
     noise_terrain
     lorenz_system
+    reaction_diffusion
     )
 
 foreach(PROJECT ${PROJECTS})

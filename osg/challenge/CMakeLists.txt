@@ -9,7 +9,10 @@ set (PROJECTS
     maze_generator
     noise_terrain
     lorenz_system
+    reaction_diffusion
     )
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}"  )
 
 foreach(PROJECT ${PROJECTS})
     message("add challenge ${DPROJECT}")
