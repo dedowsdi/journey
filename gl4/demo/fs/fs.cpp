@@ -16,15 +16,33 @@ void thread_function()
   std::cout <<"test thread function" << std::endl;
 }
 
+
 namespace zxd {
 
 std::string fragment_shader;
+
+key_control_item *float0;
+key_control_item *float1;
+key_control_item *float2;
+key_control_item *float3;
+key_control_item *float4;
+key_control_item *float5;
+key_control_item *float6;
+key_control_item *float7;
 
 struct fs_program : public program{
 
   GLint ul_resolution;
   GLint ul_time;
   GLint ul_mouse;
+  GLint ul_float0;
+  GLint ul_float1;
+  GLint ul_float2;
+  GLint ul_float3;
+  GLint ul_float4;
+  GLint ul_float5;
+  GLint ul_float6;
+  GLint ul_float7;
 
   fs_program() {}
 
@@ -41,6 +59,15 @@ struct fs_program : public program{
     uniform_location(&ul_resolution, "resolution");
     uniform_location(&ul_time, "time");
     uniform_location(&ul_mouse, "mouse");
+
+    uniform_location(&ul_float0, "float0");
+    uniform_location(&ul_float1, "float1");
+    uniform_location(&ul_float2, "float2");
+    uniform_location(&ul_float3, "float3");
+    uniform_location(&ul_float4, "float4");
+    uniform_location(&ul_float5, "float5");
+    uniform_location(&ul_float6, "float6");
+    uniform_location(&ul_float7, "float7");
   }
 
   virtual void bind_attrib_locations(){
@@ -76,6 +103,7 @@ public:
     m_update_shader = GL_FALSE;
 
     glfwSetWindowPos(m_wnd, 1024, 100);
+
   }
 
   virtual void update() {

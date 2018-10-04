@@ -29,6 +29,7 @@ set(GLC_SRCS
     src/texmap_anim.cpp
     src/line.cpp
     src/dict_script.cpp
+    src/mat_stack.cpp
     )
 
 add_library(glc 

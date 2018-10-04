@@ -135,6 +135,16 @@ osg::Matrix mat4(const osg::Vec4& v0, const osg::Vec4& v1, const osg::Vec4& v2, 
 }
 
 //--------------------------------------------------------------------
+osg::Matrix transpose(const osg::Matrix& m)
+{
+  return osg::Matrix(m(0,0), m(1,0), m(2,0), m(3,0), 
+                     m(0,1), m(1,1), m(2,1), m(3,1), 
+                     m(0,2), m(1,2), m(2,2), m(3,2), 
+                     m(0,3), m(1,3), m(2,3), m(3,3));
+
+}
+
+//--------------------------------------------------------------------
 float smoothstep(float edge0, float edge1, float x)
 {
   float t = osg::clampTo((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);

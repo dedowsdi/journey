@@ -10,6 +10,10 @@ set (PROJECTS
     noise_terrain
     lorenz_system
     reaction_diffusion
+    fractal_tree
+    lsystem_tree
+    space_colonization_tree
+    space_colonization_tree_3d
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -9,6 +9,7 @@ set(COMMON_SRCS
     src/nurb.cpp
     src/submenu.cpp
     src/zmath.cpp
+    src/matstack.cpp
 )
 
 add_library(common SHARED ${COMMON_SRCS})

@@ -2,16 +2,27 @@
 #define POINTS_H
 #include "geometry.h"
 #include "common_program.h"
-#include "common.h"
 
 namespace zxd {
 
-class Points3 : public geometry_base {
-protected:
-  vec3_vector m_points;
 
+template <typename tvec>
+class points : public geometry_base {
 public:
-  virtual void draw(GLuint primcount);
+
+  GLuint build_mesh(const std::vector<tvec>& points)
+  {
+    template_array<tvec>& vertices = *(new template_array<tvec>);
+    attrib_array(num_arrays(), array_ptr(&vertices));
+    vertices.insert(vertices.end(), points.begin(), points.end());
+    vertices.update_array_buffer();
+    return num_arrays() - 1;
+  }
+  virtual void draw(GLuint primcount = -1)
+  {
+    draw_arrays(GL_POINTS, 0, attrib_array(0)->num_elements(), primcount);
+  }
+
 };
 
 class origin2 : public geometry_base{
@@ -57,6 +68,9 @@ void draw_points(
     draw_points(*iter, mvp_mat);
   }
 }
+
+
+
 }
 
 #endif /* POINTS_H */

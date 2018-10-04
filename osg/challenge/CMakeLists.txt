@@ -10,6 +10,9 @@ set (PROJECTS
     noise_terrain
     lorenz_system
     reaction_diffusion
+    fractal_tree
+    lsystem_tree
+    space_colonization_tree_3d
     )
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}"  )

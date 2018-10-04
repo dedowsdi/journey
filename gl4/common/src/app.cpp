@@ -281,6 +281,8 @@ void app::glfw_key(
   (void)scancode;
   (void)mods;
 
+  m_control.handle(wnd, key, scancode, action, mods);
+
   if (m_reading) {
     if (action == GLFW_PRESS) {
       switch (key) {

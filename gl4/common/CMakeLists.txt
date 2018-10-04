@@ -1,5 +1,6 @@
 set(COMMON_SRCS 
     src/app.cpp
+    src/param.cpp
     )
 
 add_library(common 

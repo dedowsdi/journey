@@ -28,6 +28,8 @@ namespace glm
   osg::Matrix mat4(float x); // diagonal
   osg::Matrix mat4(const osg::Vec4& v0,const osg::Vec4& v1,const osg::Vec4& v2,const osg::Vec4& v3);
 
+  osg::Matrix transpose(const osg::Matrix& m);
+
   float smoothstep(float edge0, float edge1, float x);
 
   template<typename T, typename  U>
@@ -44,6 +46,21 @@ namespace glm
   const float d2pi = dpi * 2;
   const float dpi2 = dpi / 2;
   const float dpi4 = dpi / 4;
+
+  const osg::Vec3 pxa(1, 0, 0);
+  const osg::Vec3 nxa(-1, 0, 0);
+  const osg::Vec3 pya(0, 1, 0);
+  const osg::Vec3 nya(0, -1, 0);
+  const osg::Vec3 pza(0, 0, 1);
+  const osg::Vec3 nza(0, 0, -1);
+  const osg::Vec4 hpxa(1, 0, 0, 1);
+  const osg::Vec4 hnxa(-1, 0, 0, 1);
+  const osg::Vec4 hpya(0, 1, 0, 1);
+  const osg::Vec4 hnya(0, -1, 0, 1);
+  const osg::Vec4 hpza(0, 0, 1, 1);
+  const osg::Vec4 hnza(0, 0, -1, 1);
+  const osg::Vec3 zp(0, 0, 0);
+  const osg::Vec4 hzp(0, 0, 0, 1);
 }
 
 

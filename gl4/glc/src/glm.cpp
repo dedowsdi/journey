@@ -80,6 +80,31 @@ vec3 transform_vector(const mat4& m, const vec3& v) {
   return r;
 }
 
+//--------------------------------------------------------------------
+mat4 rotate_to(const vec3& v0, const vec3& v1)
+{
+  GLfloat cos = glm::dot(v0, v1);
+  if(std::abs(cos - 1) < 0.00001) // is 0.00001 small enough?
+    return mat4(1);
+
+  if(std::abs(cos + 1) < 0.00001)
+  {
+    // use pxa or pya to find an axis to rotate v0 180 degrees
+    vec3 v2 = pxa;
+    // use pxa or pya to rotate 180 degree
+    if(glm::abs(glm::dot(v0, pxa) - 1 < 0.00001))
+      v2 = pya;
+
+    vec3 axis = glm::cross(v0, v2);
+    return glm::rotate(fpi2, axis);
+  }
+
+  GLfloat theta = glm::acos(cos);
+  vec3 axis = glm::cross(v0, v1);
+  axis = glm::normalize(axis);
+  return glm::rotate(theta, axis);
+}
+
 //------------------------------------------------------------------------------
 bool operator<(const vec3& lhs, const vec3& rhs) {
   return lhs.x < rhs.x && lhs.y < rhs.y && lhs.z < rhs.z;

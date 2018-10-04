@@ -77,6 +77,7 @@ typedef vec2_vector::const_iterator v2v_ci;
 typedef vec3_vector::const_iterator v3v_ci;
 typedef vec4_vector::const_iterator v4v_ci;
 
+
 // follow convention of glm, always return
 
 vec3 make_floor(const vec3& lhs, const vec3& rhs);
@@ -108,6 +109,9 @@ vec3 transform_position(const mat4& m, const vec3& v);
 
 // assume w is 0
 vec3 transform_vector(const mat4& m, const vec3& v);
+
+// v0, v1 must be normalized
+mat4 rotate_to(const vec3& v0, const vec3& v1);
 
 // assume w is 1
 bool operator<(const vec3& lhs, const vec3& rhs);

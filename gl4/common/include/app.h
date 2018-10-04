@@ -9,6 +9,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "glm.h"
+#include "param.h"
 
 namespace zxd {
 
@@ -67,6 +68,8 @@ protected:
   dvec2
     m_last_cursor_position;   // used to rotate camera when mid button pressed
   vec3 m_camera_translation;  // translation during CM_FREE mode
+
+  key_control m_control;
 
 public:
   app()
