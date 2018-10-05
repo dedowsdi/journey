@@ -2061,3 +2061,14 @@ osg:
 osg:
   if you want to use 2d project on xy plane, make sure you set camera's
   allowEventFocus to false.
+
+----------
+2018.10.04
+
+cpp:
+  if you place object directly into container such as vector, be very very
+  careful if you use pointer to such object, when vector space reallocated, all
+  poiner wile be invallidated.
+
+glsl:
+  pow(x,y) only works for positive x

@@ -14,6 +14,7 @@ set (PROJECTS
     lsystem_tree
     space_colonization_tree
     space_colonization_tree_3d
+    superellipse
     )
 
 foreach(PROJECT ${PROJECTS})

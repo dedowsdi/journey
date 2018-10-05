@@ -9,6 +9,9 @@
 #include <chrono>
 #include <exception>
 
+#define WIDTH 800
+#define HEIGHT 800
+
 namespace bfs = boost::filesystem;
 
 void thread_function()
@@ -19,36 +22,40 @@ void thread_function()
 
 namespace zxd {
 
-std::string fragment_shader;
+key_control_item* a;
+key_control_item* b;
+key_control_item* n;
 
 struct fs_program : public program{
 
   GLint ul_resolution;
-  GLint ul_time;
-  GLint ul_mouse;
+  GLint ul_a;
+  GLint ul_b;
+  GLint ul_n;
 
   fs_program() {}
 
   void attach_shaders(){
     attach(GL_VERTEX_SHADER, "data/shader/plot.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, fragment_shader);
+    attach(GL_FRAGMENT_SHADER, "data/shader/superellipse.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0){
-  }
 
+  }
 
   virtual void bind_uniform_locations(){
     uniform_location(&ul_resolution, "resolution");
-    uniform_location(&ul_time, "time");
-    uniform_location(&ul_mouse, "mouse");
+    uniform_location(&ul_a, "a");
+    uniform_location(&ul_b, "b");
+    uniform_location(&ul_n, "n");
   }
 
   virtual void bind_attrib_locations(){
   }
 } prg;
 
-class fs : public app {
+class superellipse_app : public app {
 protected:
   bitmap_text m_text;
   GLfloat m_time;
@@ -61,7 +68,10 @@ public:
 
   virtual void init_info() {
     app::init_info();
-    m_info.title = "fs";
+    m_info.title = "superellipse_app";
+    m_info.wnd_width = 800;
+    m_info.wnd_height = 800;
+    m_info.samples = 4;
   }
   virtual void create_scene() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -78,6 +88,9 @@ public:
 
     glfwSetWindowPos(m_wnd, 1024, 100);
 
+    a = m_control.add_control(GLFW_KEY_Q, 1, -10000, 10000, 0.1);
+    b = m_control.add_control(GLFW_KEY_W, 1, -10000, 10000, 0.1);
+    n = m_control.add_control(GLFW_KEY_E, 2, -10000, 10000, 0.1);
   }
 
   virtual void update() {
@@ -99,18 +112,21 @@ public:
 
     prg.use();
     glUniform2f(prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
-    glUniform1f(prg.ul_time, m_time);
-    glUniform2f(prg.ul_mouse, m_mouse.x, m_mouse.y);
+    glUniform1f(prg.ul_a, a->value);
+    glUniform1f(prg.ul_b, b->value);
+    glUniform1f(prg.ul_n, n->value);
 
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //std::stringstream ss;
-    //ss << m_time << "s" << std::endl;
-    //m_text.print(ss.str(), 10, 492, vec4(1, 0, 0, 1));
-    //glDisable(GL_BLEND);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    std::stringstream ss;
+    ss << "qQ : a : " << a->value << std::endl;
+    ss << "wW : b : " << b->value << std::endl;
+    ss << "eE : n : " << n->value << std::endl;
+    m_text.print(ss.str(), 10, HEIGHT - 20, vec4(1, 0, 0, 1));
+    glDisable(GL_BLEND);
 
   }
 
@@ -138,6 +154,8 @@ public:
           break;
       }
     }
+
+    app::glfw_key(wnd, key, scancode, action, mods);
   }
 
   virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) 
@@ -147,58 +165,11 @@ public:
   }
 };
 
-class ShaderObserver
-{
-private:
-  fs* m_app;
-  std::time_t m_last_w_time;
-
-public:
-
-  ShaderObserver(fs* app):
-    m_app(app)
-  {
-    m_last_w_time = bfs::last_write_time(fragment_shader);
-  }
-
-  void operator() ()
-  {
-    std::chrono::milliseconds interval(50);
-    while(true & !m_app->is_shutdown())
-    {
-      std::this_thread::sleep_for(interval);
-      try {
-        // throws if file is being written?
-        auto t = bfs::last_write_time(fragment_shader);
-        if(t != m_last_w_time)
-        {
-          m_last_w_time = t;
-          std::cout << "shader updated to " << std::ctime(&m_last_w_time) << std::endl;
-          m_app->update_shader(GL_TRUE);
-        }
-      }catch(std::exception& e) {
-        std::cout << e.what() << std::endl;
-      }
-    }
-  }
-
-};
 }
 
 
 int main(int argc, char *argv[]) {
-
-  if(argc < 2)
-  {
-    std::cout << "miss fragment file" << std::endl;
-  }
-
-  zxd::fragment_shader = argv[1];
-
-  zxd::fs app;
-
-  std::thread observer_thread((zxd::ShaderObserver(&app)));
-
+  zxd::superellipse_app app;
   app.run();
-  observer_thread.join();
+  return 0;
 }
