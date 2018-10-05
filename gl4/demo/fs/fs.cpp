@@ -54,6 +54,7 @@ protected:
   GLfloat m_time;
   GLboolean m_pause;
   GLboolean m_update_shader;
+  GLboolean m_display_uniform;
   GLuint m_vao;
   vec2 m_mouse;
 
@@ -78,6 +79,7 @@ public:
 
     glfwSetWindowPos(m_wnd, 1024, 100);
 
+    m_display_uniform = GL_TRUE;
   }
 
   virtual void update() {
@@ -105,12 +107,17 @@ public:
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //std::stringstream ss;
-    //ss << m_time << "s" << std::endl;
-    //m_text.print(ss.str(), 10, 492, vec4(1, 0, 0, 1));
-    //glDisable(GL_BLEND);
+    if(!m_display_uniform)
+      return;
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    std::stringstream ss;
+    ss << "resolution : " << m_info.wnd_width << " " << m_info.wnd_height << std::endl;
+    ss << "mouse : " << m_mouse.x << " " << m_mouse.y << std::endl;
+    ss << "time : " << m_time << std::endl;
+    m_text.print(ss.str(), 10, 492, vec4(1, 0, 0, 1));
+    glDisable(GL_BLEND);
 
   }
 
@@ -132,6 +139,10 @@ public:
 
         case GLFW_KEY_P:
           this->m_pause = !this->m_pause;
+          break;
+
+        case GLFW_KEY_U:
+          m_display_uniform ^= 1;
           break;
 
         default:
