@@ -172,7 +172,6 @@ public:
     prg.use();
     prg.update_lighting_uniforms(lights, lm, material0);
 
-    geometry.bind_vn(prg.al_vertex, prg.al_normal);
 
     std::for_each(m_cells.begin(), m_cells.end(),[&](decltype(*m_cells.begin()) v) {
       prg.update_model(v.m_m_mat());

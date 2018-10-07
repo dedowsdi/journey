@@ -22,7 +22,7 @@ namespace zxd {
 class ship_geometry : public geometry_base
 {
 protected:
-  virtual GLint build_vertex() { 
+  virtual void build_vertex() { 
 
     vec2_array& vertices = *(new vec2_array());
     attrib_array(num_arrays(), array_ptr(&vertices));
@@ -44,8 +44,6 @@ protected:
     for (size_t i = 7; i > 0; --i) {
       vertices.push_back(vertices[i] * vec2(-1, 1));
     }
-
-    return num_arrays() - 1;
   }
 
   virtual void draw(GLuint primcount = -1)
@@ -60,7 +58,7 @@ protected:
 class invader_geomtry : public geometry_base
 {
 protected:
-  virtual GLint build_vertex() { 
+  virtual void build_vertex() { 
 
     vec2_array& vertices = *(new vec2_array());
     attrib_array(num_arrays(), array_ptr(&vertices));
@@ -88,7 +86,6 @@ protected:
       }
     }
 
-    return num_arrays() - 1;
   }
 
   virtual void draw(GLuint primcount = -1)
@@ -102,7 +99,7 @@ protected:
 class bullet_geomtry : public geometry_base
 {
 protected:
-  virtual GLint build_vertex() { 
+  virtual void build_vertex() { 
 
     vec2_array& vertices = *(new vec2_array());
     attrib_array(num_arrays(), array_ptr(&vertices));
@@ -122,7 +119,6 @@ protected:
       vertices.push_back(v.xy());
     }
 
-    return num_arrays() - 1;
   }
 
   virtual void draw(GLuint primcount = -1)
@@ -136,7 +132,6 @@ protected:
 class program_name : public program
 {
 public:
-  GLint al_vertex;
   GLint ul_color;
 
 protected:
@@ -155,7 +150,7 @@ protected:
 
   void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
+    bind_attrib_location(0, "vertex");
   }
 
 } prg;
@@ -220,7 +215,6 @@ public:
   virtual void draw()
   {
     m_geometry->bind_vao();
-    m_geometry->bind_v(prg.al_vertex);
 
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat * m_mat()));
     glUniform3fv(prg.ul_color, 1, glm::value_ptr(m_color));

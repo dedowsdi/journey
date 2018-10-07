@@ -3,11 +3,10 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint nurb::build_vertex() {
+void nurb::build_vertex() {
   if (!valid()) {
     std::cout << "invalid b spline. n : " << n() << ", p : " << m_degree
               << ", m : " << m() << std::endl;
-    return 0;
   }
 
   vec4_array& vertices = *(new vec4_array());
@@ -18,18 +17,16 @@ GLint nurb::build_vertex() {
   for (uint i = 0; i <= m_partitions; ++i) {
     vertices.push_back(get(m_begin + dt * i));
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint nurb::build_texcoord() {
+void nurb::build_texcoord() {
   float_array& texcoords = *(new float_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
   for (int i = 0; i < num_vertices(); ++i) {
     texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

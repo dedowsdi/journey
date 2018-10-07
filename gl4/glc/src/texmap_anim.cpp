@@ -47,8 +47,6 @@ void texmap_anim::draw(const mat4& mvp, GLint tex_index)
     glBindTexture(GL_TEXTURE_2D, m_texture);
   }
 
-  m_quad.bind_vt(m_prg->al_vertex, m_prg->al_texcoord);
-
   glUniformMatrix4fv(m_prg->ul_mvp_mat, 1, 0, glm::value_ptr(mvp));
   glUniformMatrix4fv(m_prg->ul_tex_mat, 1, 0, glm::value_ptr(m_tex_mat));
   glUniform1i(m_prg->ul_diffuse_map, tex_index);

@@ -13,8 +13,6 @@ namespace stream_util
   glm::mat4 read_mat(std::istream& is);
 
   std::string read_file(const std::string &filepath);
-
 }
-
 
 #endif /* STREAM_H */

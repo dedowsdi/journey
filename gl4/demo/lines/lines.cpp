@@ -7,8 +7,7 @@ namespace zxd {
 
 class lines : public app {
   struct line_stipple_program : public zxd::program {
-    GLint al_vertex;
-
+    using program::update_model;
     GLint ul_color;
     GLint ul_viewport;
     GLint ul_pattern;
@@ -41,7 +40,7 @@ class lines : public app {
     }
 
     virtual void bind_attrib_locations() {
-      al_vertex = attrib_location("vertex");
+      bind_attrib_location(0, "vertex");
     };
   };
 
@@ -68,9 +67,8 @@ public:
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec2),
       value_ptr(vertices[0]), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(
-      m_program.al_vertex, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(m_program.al_vertex);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
     glDrawArrays(mode, 0, vertices.size());
   }

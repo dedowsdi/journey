@@ -246,16 +246,16 @@ public:
     if(m_vbo == -1)
       glGenBuffers(1, &m_vbo);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(vec2), glm::value_ptr(m_vertices.front()), GL_STATIC_DRAW);
-  }
-
-  void draw(GLint al_vertex, GLuint vertex_count)
-  {
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glVertexAttribPointer(al_vertex, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(al_vertex);
+    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(vec2), glm::value_ptr(m_vertices.front()), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
+  }
+
+  void draw(GLuint vertex_count)
+  {
+    glBindVertexArray(m_vao);
     glDrawArrays(GL_LINES, 0, vertex_count);
   }
 
@@ -328,11 +328,10 @@ public:
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
 
     glPointSize(5);
-    m_points.bind_v(prg.al_vertex);
     m_points.draw();
 
     glUniform4f(prg.ul_color, 1,1,1,1);
-    m_tree.draw(prg.al_vertex, m_draw_count);
+    m_tree.draw(m_draw_count);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

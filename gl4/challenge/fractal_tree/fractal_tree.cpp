@@ -136,8 +136,11 @@ public:
     mat4 m(1);
     b->compile(m_vertices, m);
 
+    glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(vec2), glm::value_ptr(m_vertices.front()), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
   }
 
   GLuint vao() const { return m_vao; }
@@ -149,13 +152,10 @@ public:
   GLfloat min_branch_len() const { return m_min_branch_len; }
   void min_branch_len(GLfloat v){ m_min_branch_len = v; }
 
-  void draw(GLint al_vertex)
+  void draw()
   {
     glBindVertexArray(m_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-    glVertexAttribPointer(al_vertex, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(al_vertex);
 
     glDrawArrays(GL_LINES, 0, m_vertices.size());
   }
@@ -229,7 +229,7 @@ public:
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
 
-    m_tree.draw(prg.al_vertex);
+    m_tree.draw();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

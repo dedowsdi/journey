@@ -1,6 +1,7 @@
 /*
  * each rain_drop drop is a unique geometry.
  * is it a bad way to crate rain_drop with DrawArraysInstance?
+ * may be it's better to create a total mesh.
  */
 #include "app.h"
 #include "program.h"
@@ -43,19 +44,30 @@ struct rain_drop_geometry
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(decltype(vertices)::value_type),
       value_ptr(vertices[0]), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
+
+    glGenBuffers(1, &posz_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, posz_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vec4) * NUM_DROPS,  0, GL_STREAM_DRAW);
+
+    glVertexAttribPointer(1, 4, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glVertexAttribDivisor(1, 1);
+    glEnableVertexAttribArray(1);
+
     
     //glVertexAttribPointer(
       //location, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
     //glEnableVertexAttribArray(location);
   }
-  void bind_attrib_locations(GLint al_vertex)
-  {
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer(
-      al_vertex, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(al_vertex);
-  }
+  //void bind_attrib_locations(GLint al_vertex)
+  //{
+    //glBindVertexArray(vao);
+    //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    //glVertexAttribPointer(
+      //al_vertex, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    //glEnableVertexAttribArray(al_vertex);
+  //}
 
   void draw(GLuint prim_count)
   {
@@ -117,9 +129,6 @@ class purple_rain_program : public program
 
 public:
   GLint ul_color;
-  GLint al_vertex;
-  GLint al_mvp_mats;
-  GLint al_posz;
 
 protected:
 
@@ -137,9 +146,9 @@ protected:
 
   void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
-    al_mvp_mats = attrib_location("mvp_mats");
-    al_posz = attrib_location("posz");
+    bind_attrib_location(0, "vertex");
+    //bind_attrib_location(1, "mvp_mats");
+    bind_attrib_location(1, "posz");
   }
 
 } prg;
@@ -185,9 +194,7 @@ protected:
     //glBindBuffer(GL_ARRAY_BUFFER, mvp_vbo);
     //glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * m_rains.size(),  0, GL_STREAM_DRAW);
 
-    glGenBuffers(1, &posz_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, posz_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vec4) * m_rains.size(),  0, GL_STREAM_DRAW);
+
 
   }
 
@@ -225,15 +232,6 @@ protected:
     glUniform3fv(prg.ul_color, 1, glm::value_ptr(RAIN_COLOR));
     glUniformMatrix4fv(prg.ul_vp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
 
-    m_geometry.bind_attrib_locations(prg.al_vertex);
-
-    //glBindBuffer(GL_ARRAY_BUFFER, mvp_vbo);
-    //matrix_attrib_pointer(prg.al_mvp_mats);
-
-    glBindBuffer(GL_ARRAY_BUFFER, posz_vbo);
-    glVertexAttribPointer(prg.al_posz, 4, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glVertexAttribDivisor(prg.al_posz, 1);
-    glEnableVertexAttribArray(prg.al_posz);
 
     m_geometry.draw(m_rains.size());
 

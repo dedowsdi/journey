@@ -149,8 +149,6 @@ protected:
 typedef std::vector<color_pane> color_pane_vector;
 
 struct rgb_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_color;
   GLint ul_gamma;
 
   void update_uniforms(GLboolean gamma = 0) {
@@ -166,9 +164,10 @@ struct rgb_program : public zxd::program {
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_gamma, "gamma");
   }
+
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_color = attrib_location("color");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "color");
   };
 } rgb_program;
 
@@ -241,8 +240,8 @@ protected:
 
     rgb_program.init();
     rgb_program.p_mat = ortho(0.0f, 1.0f, 0.0f, 1.0f);
-    glEnableVertexAttribArray(rgb_program.al_vertex);
-    glEnableVertexAttribArray(rgb_program.al_color);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
     glGenVertexArrays(1, &m_pane_vao);
     glGenVertexArrays(1, &m_border_vao);
@@ -264,17 +263,15 @@ protected:
     glGenBuffers(1, &m_border_vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_border_vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(vec2), 0, GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(
-      rgb_program.al_vertex, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(rgb_program.al_vertex);
+    glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
     glGenBuffers(1, &m_border_color_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_border_color_buffer);
     glBufferData(GL_ARRAY_BUFFER, m_border_colors.size() * sizeof(vec3),
       value_ptr(m_border_colors.front()), GL_DYNAMIC_DRAW);  // will be updated
-    glVertexAttribPointer(
-      rgb_program.al_color, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(rgb_program.al_color);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(1);
 
     resize_pane();
     reset_pane_vertex_buffer();
@@ -611,10 +608,9 @@ protected:
     glBindBuffer(GL_ARRAY_BUFFER, m_pane_vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, m_pane_vertices.size() * sizeof(vec2),
       value_ptr(m_pane_vertices.front()), GL_STATIC_DRAW);
-    glVertexAttribPointer(
-      rgb_program.al_vertex, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 
-    glEnableVertexAttribArray(rgb_program.al_vertex);
+    glEnableVertexAttribArray(0);
   }
 
   void reset_pane_color_buffer() {
@@ -626,10 +622,8 @@ protected:
     glBindBuffer(GL_ARRAY_BUFFER, m_pane_color_buffer);
     glBufferData(GL_ARRAY_BUFFER, m_pane_colors.size() * sizeof(vec3),
       value_ptr(m_pane_colors.front()), GL_DYNAMIC_DRAW);  // will be updated
-    glVertexAttribPointer(
-      rgb_program.al_color, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-
-    glEnableVertexAttribArray(rgb_program.al_color);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(1);
   }
 
   void update_border_vertex_buffer() {

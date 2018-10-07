@@ -15,9 +15,6 @@ struct sine_wave_program : public program{
   GLint ul_wave_period;
   GLint ul_mode;
 
-  GLint al_vertex;
-  GLint al_texcoord;
-
   sine_wave_program() {}
 
   void attach_shaders(){
@@ -40,8 +37,8 @@ struct sine_wave_program : public program{
   }
 
   virtual void bind_attrib_locations(){
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   }
 } prg;
 
@@ -70,11 +67,9 @@ public:
 
     prg.init();
 
+    m_quad.include_texcoord(true);
     m_quad.build_mesh();
-    //m_quad.bind_vntt(prg.al_vertex, -1, prg.al_texcoord, -1);
     m_quad.bind_vao();
-    m_quad.bind(0,  prg.al_vertex);
-    m_quad.bind(2,  prg.al_texcoord);
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

@@ -35,10 +35,10 @@ public:
         m_start(0),
         m_sweep(f2pi) {}
 
-  GLint build_vertex();
+  void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  GLint build_normal();
-  GLint build_texcoord();
+  void build_normal();
+  void build_texcoord();
 
   void draw(GLuint primcount = 1);
 

@@ -6,8 +6,8 @@
 namespace zxd {
 class axes : public geometry_base {
 public:
-  virtual GLint build_vertex();
-  virtual GLint build_color();
+  virtual void build_vertex();
+  virtual void build_color();
 
   void draw(GLuint primcount = 1);
 };

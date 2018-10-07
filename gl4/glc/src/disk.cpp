@@ -3,7 +3,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint disk::build_vertex() {
+void disk::build_vertex() {
   GLuint cv_ring = (m_slice + 1) * 2;
   GLuint cv_disk =
     m_inner == 0 ? cv_ring * (m_loop - 1) + m_slice + 2 : cv_ring * m_loop;
@@ -45,22 +45,20 @@ GLint disk::build_vertex() {
       vertices.push_back(vec3(radius1 * ct, radius1 * st, 0));
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint disk::build_normal() {
+void disk::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
   for (int i = 0; i < num_vertices(); ++i) {
     normals.push_back(vec3(0, 0, 1));
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint disk::build_texcoord() {
+void disk::build_texcoord() {
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
@@ -70,7 +68,6 @@ GLint disk::build_texcoord() {
     const vec3& vertex = vertices[i];
     texcoords.push_back(vertex.xy() * 0.5f / m_outer + 0.5f);
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

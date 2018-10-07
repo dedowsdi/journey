@@ -31,7 +31,6 @@ public:
 
 };
 
-
 class dict_script
 {
 protected:
@@ -45,6 +44,7 @@ protected:
 
 public:
   dict_script(const std::string& file_path);
+  dict_script();
   ~dict_script();
 
   std::string get(const std::string& key, const std::string& fallback = "");
@@ -54,8 +54,9 @@ public:
   glm::vec4 get(const std::string& key, const glm::vec4& fallback = vec4(0));
   glm::mat4 get(const std::string& key, const glm::mat4& fallback = mat4(1));
 
-  void track(float interval);
+  void track(float interval = 0.1);
 
+  void read(const std::string& file_path);
   bool changed();
   void update();
 

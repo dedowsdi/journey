@@ -53,7 +53,6 @@ public:
 
   void draw()
   {
-    quad0.bind_v(prg.al_vertex);
     mat4 m = prg.vp_mat * m_mat();
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(m));
     const vec4 color = this == current_cell ? HEAD_COLOR : (visited ? PATH_COLOR : CELL_COLOR);
@@ -65,7 +64,6 @@ public:
     {
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, 
           glm::value_ptr(m * glm::translate(vec3(-HALF_CELL_WIDTH,0,0))));
-      line_v.bind_v(prg.al_vertex);
       line_v.draw();
     }
 
@@ -73,7 +71,6 @@ public:
     {
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, 
           glm::value_ptr(m * glm::translate(vec3(HALF_CELL_WIDTH,0,0))));
-      line_v.bind_v(prg.al_vertex);
       line_v.draw();
     }
 
@@ -81,7 +78,6 @@ public:
     {
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, 
           glm::value_ptr(m * glm::translate(vec3(0,-HALF_CELL_HEIGHT,0))));
-      line_h.bind_v(prg.al_vertex);
       line_h.draw();
     }
 
@@ -89,7 +85,6 @@ public:
     {
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, 
           glm::value_ptr(m * glm::translate(vec3(0,HALF_CELL_HEIGHT,0))));
-      line_h.bind_v(prg.al_vertex);
       line_h.draw();
     }
   }
@@ -142,11 +137,14 @@ public:
     glBindVertexArray(vaos[QUAD_INDEX]);
     glBindBuffer(GL_ARRAY_BUFFER, vbos[QUAD_INDEX]);
     glBufferData(GL_ARRAY_BUFFER, m_quad_vertices.size() * sizeof(vec2) , 0, GL_DYNAMIC_DRAW);
-    
+    glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
     glBindVertexArray(vaos[LINE_INDEX]);
     glBindBuffer(GL_ARRAY_BUFFER, vbos[LINE_INDEX]);
     glBufferData(GL_ARRAY_BUFFER, m_line_vertices.size() * sizeof(vec2), 0, GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
   }
 
   GLuint index(GLuint row, GLuint col)
@@ -213,9 +211,6 @@ public:
     // draw quads
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
     glBindVertexArray(vaos[QUAD_INDEX]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbos[QUAD_INDEX]);
-    glVertexAttribPointer(prg.al_vertex, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_vertex);
 
     GLuint next = 0;
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(HEAD_COLOR));
@@ -236,9 +231,6 @@ public:
     // draw lines
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
     glBindVertexArray(vaos[LINE_INDEX]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbos[LINE_INDEX]);
-    glVertexAttribPointer(prg.al_vertex, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_vertex);
 
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(LINE_COLOR));
     glDrawArrays(GL_LINES, 0, m_num_lines * 2);

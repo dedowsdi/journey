@@ -76,17 +76,17 @@ void blinn_program::update_lighting_uniforms(
 
 //--------------------------------------------------------------------
 void blinn_program::bind_attrib_locations() {
-  al_vertex = attrib_location("vertex");
-  al_normal = attrib_location("normal");
+  bind_attrib_location(0, "vertex");
+  bind_attrib_location(1, "normal");
   if (with_texcoord) {
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(2, "texcoord");
   }
 
   if(instance)
   {
-    al_mv_mat = attrib_location("mv_mat");
-    al_mvp_mat = attrib_location("mvp_mat");
-    al_mv_mat_it = attrib_location("mv_mat_it");
+    bind_attrib_location(3, "mv_mat");
+    bind_attrib_location(7, "mvp_mat");
+    bind_attrib_location(11, "mv_mat_it");
   }
 }
 
@@ -108,8 +108,8 @@ void quad_program::bind_uniform_locations() {
 
 //--------------------------------------------------------------------
 void quad_program::bind_attrib_locations() {
-  al_vertex = attrib_location("vertex");
-  al_texcoord = attrib_location("texcoord");
+  bind_attrib_location(0, "vertex");
+  bind_attrib_location(1, "texcoord");
 }
 
 //--------------------------------------------------------------------
@@ -132,8 +132,8 @@ void quad_base::bind_uniform_locations() {
 
 //--------------------------------------------------------------------
 void quad_base::bind_attrib_locations() {
-  al_vertex = attrib_location("vertex");
-  al_texcoord = attrib_location("texcoord");
+  bind_attrib_location(0, "vertex");
+  bind_attrib_location(1, "texcoord");
   do_bind_attrib_locations();
 }
 
@@ -150,7 +150,7 @@ void point_program::bind_uniform_locations() {
 
 //--------------------------------------------------------------------
 void point_program::bind_attrib_locations() {
-  al_vertex = attrib_location("vertex");
+  bind_attrib_location(0, "vertex");
 }
 
 //--------------------------------------------------------------------
@@ -192,8 +192,8 @@ void normal_viewer_program::bind_uniform_locations() {
 
 //--------------------------------------------------------------------
 void normal_viewer_program::bind_attrib_locations() {
-  al_vertex = attrib_location("vertex");
-  al_normal = attrib_location("normal");
+  bind_attrib_location(0, "vertex");
+  bind_attrib_location(1, "normal");
 }
 
 //--------------------------------------------------------------------
@@ -209,8 +209,8 @@ void vertex_color_program::bind_uniform_locations() {
 
 //--------------------------------------------------------------------
 void vertex_color_program::bind_attrib_locations() {
-  al_vertex = attrib_location("vertex");
-  al_color = attrib_location("color");
+  bind_attrib_location(0, "vertex");
+  bind_attrib_location(1, "color");
 }
 
 //--------------------------------------------------------------------
@@ -236,8 +236,8 @@ void texture_animation_program::bind_uniform_locations()
 //--------------------------------------------------------------------
 void texture_animation_program::bind_attrib_locations()
 {
-  al_vertex = attrib_location("vertex");
-  al_texcoord = attrib_location("texcoord");
+  bind_attrib_location(0, "vertex");
+  bind_attrib_location(1, "texcoord");
 }
 
 //--------------------------------------------------------------------
@@ -257,7 +257,7 @@ void twod_program0::bind_uniform_locations()
 //--------------------------------------------------------------------
 void twod_program0::bind_attrib_locations()
 {
-  al_vertex = attrib_location("vertex");
+  bind_attrib_location(0, "vertex");
 }
 
 }

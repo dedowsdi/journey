@@ -15,6 +15,9 @@ set (PROJECTS
     space_colonization_tree
     space_colonization_tree_3d
     superellipse
+    supershape
+    flow_field
+    supershape3d
     )
 
 foreach(PROJECT ${PROJECTS})
@@ -30,3 +33,4 @@ foreach(PROJECT ${PROJECTS})
 endforeach()
 
 file(COPY lorenz_system/lorenz_system.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY supershape3d/supershape3d.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

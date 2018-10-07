@@ -4,7 +4,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint cylinder::build_vertex() {
+void cylinder::build_vertex() {
   GLuint num_vert_pole = m_slice + 1;
   GLuint num_vert_center = (m_slice + 1) * 2;
 
@@ -53,11 +53,10 @@ GLint cylinder::build_vertex() {
     vertices.push_back(
       vec3(m_top * glm::cos(theta), m_top * glm::sin(theta), m_height));
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint cylinder::build_normal() {
+void cylinder::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
@@ -94,11 +93,10 @@ GLint cylinder::build_normal() {
     normals.push_back(vec3(0, 0, 1));
   }
   assert(normals.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint cylinder::build_texcoord() {
+void cylinder::build_texcoord() {
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
@@ -131,7 +129,6 @@ GLint cylinder::build_texcoord() {
   }
 
   assert(texcoords.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

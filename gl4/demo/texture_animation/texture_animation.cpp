@@ -108,7 +108,6 @@ public:
     prg.use();
 
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    quad0.bind_vt(prg.al_vertex, prg.al_texcoord);
 
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat * glm::scale(vec3(100.0))));
     glUniformMatrix4fv(prg.ul_tex_mat, 1, 0, glm::value_ptr(m_tex_mat));

@@ -5,7 +5,6 @@
 
 namespace zxd {
 
-
 template <typename tvec>
 class points : public geometry_base {
 public:
@@ -15,11 +14,11 @@ public:
     template_array<tvec>& vertices = *(new template_array<tvec>);
     attrib_array(num_arrays(), array_ptr(&vertices));
     vertices.insert(vertices.end(), points.begin(), points.end());
-    vertices.update_array_buffer();
-    return num_arrays() - 1;
+    bind_and_update_buffer();
   }
   virtual void draw(GLuint primcount = -1)
   {
+    bind_vao();
     draw_arrays(GL_POINTS, 0, attrib_array(0)->num_elements(), primcount);
   }
 
@@ -27,7 +26,7 @@ public:
 
 class origin2 : public geometry_base{
 protected:
-  GLint build_vertex();
+  void build_vertex();
 
 public:
   virtual void draw(GLuint primcount);
@@ -50,9 +49,8 @@ void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat) {
   glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(tvec),
     value_ptr(points[0]), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(
-    prg.al_vertex, tvec::components, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(prg.al_vertex);
+  glVertexAttribPointer(0, tvec::components, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  glEnableVertexAttribArray(0);
 
   prg.use();
   prg.udpate_uniforms(mvp_mat);
@@ -68,8 +66,6 @@ void draw_points(
     draw_points(*iter, mvp_mat);
   }
 }
-
-
 
 }
 

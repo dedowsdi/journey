@@ -377,26 +377,27 @@ public:
     GLfloat vertices_bytes = m_vertices.size() * sizeof(vec4);
     GLfloat normal_byes = m_normals.size() * sizeof(vec3);
 
+    glBindVertexArray(m_vao);
+
+
+
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices_bytes + normal_byes, 0, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 4, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_bytes, glm::value_ptr(m_vertices.front()));
     glBufferSubData(GL_ARRAY_BUFFER, vertices_bytes, normal_byes, glm::value_ptr(m_normals.front()));
+    glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(m_vertices.size() * sizeof(vec4)));
+    glEnableVertexAttribArray(1);
+
 
     std::cout << "generate " << m_vertices.size() << " vertices" << std::endl;
   }
 
-  void draw(GLint al_vertex, GLint al_normal, GLuint branch_count)
+  void draw(GLuint branch_count)
   {
     glBindVertexArray(m_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-
-    glVertexAttribPointer(al_vertex, 4, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(al_vertex);
-
-    glVertexAttribPointer(al_normal, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(m_vertices.size() * sizeof(vec4)));
-    glEnableVertexAttribArray(al_normal);
-
     glDrawArrays(GL_TRIANGLES, 0,  branch_count * NUM_CYLINDER_FACE * 6);
   }
 
@@ -494,14 +495,12 @@ public:
     glUniformMatrix4fv(prg1.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
 
     glPointSize(5);
-    m_points.bind_v(prg.al_vertex);
     //m_points.draw();
 
     prg.use();
     prg.update_model(mat4(1));
     prg.update_lighting_uniforms(lights, lm, mtl);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    m_tree.draw(prg.al_vertex, prg.al_normal,  m_draw_branch_count);
+    m_tree.draw(m_draw_branch_count);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

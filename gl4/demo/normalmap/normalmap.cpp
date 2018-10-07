@@ -12,10 +12,6 @@ namespace zxd {
 quad q;
 
 struct use_normal_map_view_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_normal;
-  GLint al_tangent;
-  GLint al_texcoord;
   GLint ul_normal_map;
 
   virtual void update_model(const mat4 &_m_mat) {
@@ -46,18 +42,14 @@ struct use_normal_map_view_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
-    al_tangent = attrib_location("tangent");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
+    bind_attrib_location(2, "texcoord");
+    bind_attrib_location(3, "tangent");
   };
 } prg0;
 
 struct use_normal_map_tangent_progrm : public program {
-  GLint al_vertex;
-  GLint al_normal;
-  GLint al_tangent;
-  GLint al_texcoord;
   GLint ul_normal_map;
   GLint ul_m_camera;
 
@@ -85,10 +77,10 @@ struct use_normal_map_tangent_progrm : public program {
     uniform_location(&ul_m_camera, "m_camera");
   }
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
-    al_tangent = attrib_location("tangent");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
+    bind_attrib_location(2, "texcoord");
+    bind_attrib_location(3, "tangent");
   };
 } prg1;
 
@@ -121,11 +113,10 @@ public:
     prg1.p_mat = prg0.p_mat;
     prg1.v_mat = prg0.v_mat;
 
+    q.include_normal(true);
+    q.include_texcoord(true);
+    q.include_tangent(true);
     q.build_mesh();
-    q.bind_vntt(
-      prg0.al_vertex, prg0.al_normal, prg0.al_texcoord, prg0.al_tangent);
-    q.bind_vntt(
-      prg1.al_vertex, prg1.al_normal, prg1.al_texcoord, prg1.al_tangent);
 
     fipImage normal_image = zxd::fipLoadImage("data/texture/bricks.bmp");
 
@@ -168,7 +159,7 @@ public:
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // draw low quality mesh with normal map
+    glBindTexture(GL_TEXTURE_2D, normal_map);
     if (light_space == 0) {
       glUseProgram(prg0);
       prg0.update_model(mat4(1.0));
@@ -194,9 +185,9 @@ public:
     material.update_uniforms();
     q.draw();
 
-    glDisable(GL_SCISSOR_TEST);
-    glBindTexture(GL_TEXTURE_2D, normal_map);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    //glDisable(GL_SCISSOR_TEST);
+    //glBindTexture(GL_TEXTURE_2D, normal_map);
+    //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glViewport(0, 0, m_info.wnd_width, m_info.wnd_height);
     glEnable(GL_BLEND);

@@ -14,10 +14,10 @@ public:
   cuboid(const glm::vec3& half_diag) : m_half_diag(half_diag) {}
   cuboid(GLfloat size = 1) : m_half_diag(0.5 * size, 0.5 * size, 0.5 * size) {}
 
-  GLint build_vertex();
+  void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  GLint build_normal();
-  GLint build_texcoord();
+  void build_normal();
+  void build_texcoord();
 
   void draw(GLuint primcount = 1);
 };

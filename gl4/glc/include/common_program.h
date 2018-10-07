@@ -8,12 +8,6 @@ namespace zxd {
 
 struct blinn_program : public zxd::program {
   // GLint ul_eye;
-  GLint al_vertex;
-  GLint al_normal;
-  GLint al_texcoord;
-  GLint al_mv_mat;
-  GLint al_mvp_mat;
-  GLint al_mv_mat_it;
 
   GLint ul_map;
   GLint tex_unit;
@@ -22,10 +16,7 @@ struct blinn_program : public zxd::program {
   std::string map_name;
 
   blinn_program()
-      : al_vertex(-1),
-        al_normal(-1),
-        al_texcoord(-1),
-        with_texcoord(GL_FALSE),
+      : with_texcoord(GL_FALSE),
         instance(GL_FALSE),
         map_name("diffuse_map"),
         tex_unit(0) {}
@@ -46,8 +37,6 @@ struct blinn_program : public zxd::program {
 
 struct quad_program : public zxd::program {
   GLint ul_quad_map;
-  GLint al_vertex;
-  GLint al_texcoord;
   std::string quad_map_name;
 
   quad_program() : quad_map_name("quad_map") {}
@@ -63,8 +52,6 @@ struct quad_program : public zxd::program {
 
 struct quad_base : public zxd::program {
   GLint ul_quad_map;
-  GLint al_vertex;
-  GLint al_texcoord;
   std::string quad_map_name;
 
   quad_base() : quad_map_name("quad_map") {}
@@ -85,7 +72,6 @@ struct quad_base : public zxd::program {
 };
 
 struct point_program : public zxd::program {
-  GLint al_vertex;
 
   void attach_shaders();
 
@@ -97,8 +83,6 @@ struct point_program : public zxd::program {
 };
 
 struct normal_viewer_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_normal;
 
   GLint ul_normal_length;
   GLint ul_color;
@@ -111,8 +95,6 @@ struct normal_viewer_program : public zxd::program {
 };
 
 struct vertex_color_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_color;
 
   void attach_shaders();
   virtual void bind_uniform_locations();
@@ -140,7 +122,6 @@ protected:
 class twod_program0: public program
 {
 public:
-  GLint al_vertex;
   GLint ul_color;
 
 protected:

@@ -4,7 +4,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint cuboid::build_vertex() {
+void cuboid::build_vertex() {
   vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve(24);
@@ -52,11 +52,10 @@ GLint cuboid::build_vertex() {
     vertices.push_back(origin + xstep + ystep);
     vertices.push_back(origin + ystep);
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint cuboid::build_normal() {
+void cuboid::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
@@ -66,11 +65,10 @@ GLint cuboid::build_normal() {
   for (int i = 0; i < 6; ++i) normals.push_back(vec3(-1, 0, 0));
   for (int i = 0; i < 6; ++i) normals.push_back(vec3(0, 0, 1));
   for (int i = 0; i < 6; ++i) normals.push_back(vec3(0, 0, -1));
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint cuboid::build_texcoord() {
+void cuboid::build_texcoord() {
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
@@ -83,7 +81,6 @@ GLint cuboid::build_texcoord() {
     texcoords.push_back(glm::vec2(1, 1));
     texcoords.push_back(glm::vec2(0, 1));
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

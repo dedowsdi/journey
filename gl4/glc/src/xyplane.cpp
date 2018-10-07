@@ -3,7 +3,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint xyplane::build_vertex() {
+void xyplane::build_vertex() {
   vec2_array& vertices = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve((m_slice + 1) * (m_slice + 1));
@@ -29,11 +29,10 @@ GLint xyplane::build_vertex() {
       vertices.push_back(v1);
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint xyplane::build_normal() {
+void xyplane::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
@@ -43,11 +42,10 @@ GLint xyplane::build_normal() {
   }
 
   assert(normals.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint xyplane::build_texcoord() {
+void xyplane::build_texcoord() {
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
@@ -67,7 +65,6 @@ GLint xyplane::build_texcoord() {
     }
   }
   assert(texcoords.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

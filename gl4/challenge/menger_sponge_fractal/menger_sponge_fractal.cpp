@@ -119,6 +119,7 @@ protected:
 
     set_v_mat(&prg.v_mat);
 
+    geometry.include_normal(true);
     geometry.build_mesh();
     // additonal instance attribute
     glGenBuffers(1, &m_b_mv_mats);
@@ -157,11 +158,10 @@ protected:
     prg.bind_lighting_uniform_locations(m_lights, m_light_model, m_material);
     prg.update_lighting_uniforms(m_lights, m_light_model, m_material);
 
-    geometry.bind_vn(prg.al_vertex, prg.al_normal);
-
     if(!prg.instance)
     {
       for (size_t i = 0; i < m_sponge.size(); ++i) {
+        std::cout << prg.mvp_mat << std::endl;
         prg.update_model(m_sponge[i].m_model_matrix);
         geometry.draw();
       }
@@ -203,18 +203,15 @@ protected:
     geometry.bind_vao();
     glBindBuffer(GL_ARRAY_BUFFER, m_b_mv_mats);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * m_sponge.size(), 0, GL_DYNAMIC_DRAW);
-    matrix_attrib_pointer(prg.al_mv_mat);
-    glEnableVertexAttribArray(prg.al_mv_mat);
+    matrix_attrib_pointer(3);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_b_mvp_mats);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * m_sponge.size(), 0, GL_DYNAMIC_DRAW);
-    matrix_attrib_pointer(prg.al_mvp_mat);
-    glEnableVertexAttribArray(prg.al_mvp_mat);
+    matrix_attrib_pointer(7);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_b_mv_mats_it);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * m_sponge.size(), 0, GL_DYNAMIC_DRAW);
-    matrix_attrib_pointer(prg.al_mv_mat_it);
-    glEnableVertexAttribArray(prg.al_mv_mat_it);
+    matrix_attrib_pointer(11);
 
     update_instance_attribute_buffers();
   }
@@ -232,6 +229,7 @@ protected:
       mv_mats.push_back(v_mat * m_sponge[i].m_model_matrix);
       mvp_mats.push_back(p_mat * mv_mats.back());
       mv_mats_it.push_back(glm::transpose(glm::inverse(mv_mats.back())));
+      std::cout << mvp_mats.back() << std::endl;
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, m_b_mv_mats);

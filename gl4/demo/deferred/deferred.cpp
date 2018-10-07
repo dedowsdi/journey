@@ -26,8 +26,6 @@
 namespace zxd {
 
 struct render_gbuffer_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_normal;
 
   virtual void update_model(const mat4 &_m_mat) {
     m_mat = _m_mat;
@@ -52,8 +50,8 @@ struct render_gbuffer_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
   };
 };
 
@@ -326,9 +324,8 @@ public:
     set_v_mat(&m_render_gbuffer_program.v_mat);
 
     // sphere and lights
+    m_sphere.include_normal(true);
     m_sphere.build_mesh();
-    m_sphere.bind(
-      m_render_gbuffer_program.al_vertex, m_render_gbuffer_program.al_normal);
 
     resetsphere();
 

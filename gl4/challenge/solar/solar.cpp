@@ -188,7 +188,6 @@ public:
     glEnable(GL_CULL_FACE);
 
     prg.use();
-    geometry.bind_vnt(prg.al_vertex, prg.al_normal, prg.al_texcoord);
 
     m_planet.draw(sun_mtl);
 

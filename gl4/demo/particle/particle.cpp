@@ -12,9 +12,6 @@ using namespace glm;
 namespace zxd {
 
 struct particle_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_xyzs;
-  GLint al_color;
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
   GLint ul_camera_up;
@@ -33,9 +30,9 @@ struct particle_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_xyzs = attrib_location("xyzs");
-    al_color = attrib_location("color");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "xyzs");
+    bind_attrib_location(2, "color");
   };
 };
 GLuint max_particles = 10000;
@@ -144,29 +141,26 @@ protected:
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), value_ptr(vertices[0]),
       GL_STATIC_DRAW);
 
-    glVertexAttribPointer(
-      prg.al_vertex, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_vertex);
+    glVertexAttribPointer( 0, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
     glGenBuffers(1, &xyzs_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, xyzs_buffer);
     glBufferData(
       GL_ARRAY_BUFFER, sizeof(vec4) * max_particles, 0, GL_STREAM_DRAW);
 
-    glVertexAttribPointer(
-      prg.al_xyzs, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_xyzs);
-    glVertexAttribDivisor(prg.al_xyzs, 1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(1);
+    glVertexAttribDivisor(1, 1);
 
     glGenBuffers(1, &color_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, color_buffer);
     glBufferData(
       GL_ARRAY_BUFFER, sizeof(vec4) * max_particles, 0, GL_STREAM_DRAW);
 
-    glVertexAttribPointer(
-      prg.al_color, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_color);
-    glVertexAttribDivisor(prg.al_color, 1);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(2);
+    glVertexAttribDivisor(2, 1);
 
     update();
   }

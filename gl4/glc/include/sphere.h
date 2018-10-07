@@ -20,10 +20,10 @@ public:
   sphere(GLfloat radius, GLuint slice, GLuint stack)
       : m_radius(radius), m_slice(slice), m_stack(stack) {}
 
-  GLint build_vertex();
+  void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
-  GLint build_normal();
-  GLint build_texcoord();
+  void build_normal();
+  void build_texcoord();
 
   void draw(GLuint primcount = 1);
 

@@ -4,7 +4,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint cone::build_vertex() {
+void cone::build_vertex() {
   GLfloat theta_step = f2pi / m_slice;  // azimuthal angle step
   GLfloat height_step = m_height / m_stack;
   GLfloat radius_step = m_radius / m_stack;
@@ -50,11 +50,10 @@ GLint cone::build_vertex() {
       vertices.push_back(vec3(r0 * cos_theta, r0 * sin_theta, h0));
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint cone::build_normal() {
+void cone::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
@@ -91,11 +90,10 @@ GLint cone::build_normal() {
     normals.push_back(normals[num_vert_bottom + i * 2]);
   }
   assert(normals.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint cone::build_texcoord() {
+void cone::build_texcoord() {
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
@@ -125,7 +123,6 @@ GLint cone::build_texcoord() {
   }
 
   assert(texcoords.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

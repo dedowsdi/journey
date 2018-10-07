@@ -9,6 +9,12 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
+void program::bind_attrib_location(GLuint index, const std::string& name)
+{
+  glBindAttribLocation(object, index, name.c_str());
+}
+
+//--------------------------------------------------------------------
 void program::link() {
   glLinkProgram(object);
   GLint status;

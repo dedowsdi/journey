@@ -152,9 +152,8 @@ void bitmap_text::print(const std::string& text, GLuint x, GLuint y,
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec4),
     value_ptr(vertices[0]), GL_STREAM_DRAW);
 
-  glVertexAttribPointer(m_program->al_vertex, 4, GL_FLOAT, GL_FALSE,
-    0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(m_program->al_vertex);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  glEnableVertexAttribArray(0);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, m_texture);

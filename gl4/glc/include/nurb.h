@@ -27,8 +27,8 @@ public:
   GLuint p() { return m_degree; }
   bool valid() { return m() == n() + p() + 1; }
 
-  virtual GLint build_vertex();
-  virtual GLint build_texcoord();
+  virtual void build_vertex();
+  virtual void build_texcoord();
   virtual void draw(GLuint primcount = 1);
 
   // get point by De Boor's algorithm

@@ -4,7 +4,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint bezier_surface::build_vertex() {
+void bezier_surface::build_vertex() {
   vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
@@ -27,11 +27,10 @@ GLint bezier_surface::build_vertex() {
       vertices.push_back(v0);
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint bezier_surface::build_normal() {
+void bezier_surface::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
@@ -62,11 +61,10 @@ GLint bezier_surface::build_normal() {
       normals.push_back(normalize(cross(right0, front0)));
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint bezier_surface::build_texcoord() {
+void bezier_surface::build_texcoord() {
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
@@ -80,7 +78,6 @@ GLint bezier_surface::build_texcoord() {
       texcoords.push_back(vec2(x, y0));
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

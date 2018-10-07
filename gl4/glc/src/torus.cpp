@@ -4,7 +4,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint torus::build_vertex() {
+void torus::build_vertex() {
   GLuint ring_size = (m_sides + 1) * 2;
   GLfloat pi2 = glm::pi<GLfloat>() * 2;
   GLfloat theta_step = pi2 / m_rings;
@@ -39,11 +39,10 @@ GLint torus::build_vertex() {
       vertices.push_back(v1);
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint torus::build_normal() {
+void torus::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
@@ -79,11 +78,10 @@ GLint torus::build_normal() {
   }
 
   assert(normals.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint torus::build_texcoord() {
+void torus::build_texcoord() {
   GLfloat pi2 = glm::pi<GLfloat>() * 2;
   GLfloat theta_step = pi2 / m_rings;
   GLfloat phi_step = pi2 / m_sides;
@@ -111,7 +109,6 @@ GLint torus::build_texcoord() {
   }
 
   assert(texcoords.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

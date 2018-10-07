@@ -29,11 +29,11 @@ public:
         m_udegree(3),
         m_vdegree(3){};
 
-  virtual GLint build_vertex();
+  virtual void build_vertex();
 
-  virtual GLint build_normal();
+  virtual void build_normal();
 
-  virtual GLint build_texcoord();
+  virtual void build_texcoord();
 
   virtual void draw(GLuint primcount = 1);
 

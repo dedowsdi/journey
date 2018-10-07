@@ -82,11 +82,9 @@ public:
 
     prg.init();
 
+    m_quad.include_texcoord(true);
     m_quad.build_mesh();
-    //m_quad.bind_vntt(prg.al_vertex, -1, prg.al_texcoord, -1);
     m_quad.bind_vao();
-    m_quad.bind(0,  prg.al_vertex);
-    m_quad.bind(2,  prg.al_texcoord);
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

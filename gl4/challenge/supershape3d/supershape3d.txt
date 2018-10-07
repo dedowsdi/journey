@@ -1,0 +1,14 @@
+# key           : value
+# -----------------------
+n1              : 1
+n2              : 1
+n3              : 1
+m               : 0
+a               : 1
+b               : 1
+slice           : 8
+stack           : 8
+longitude_start : -180
+longitude_end   : 180
+latitude_start  : -90
+latitude_end    : 90

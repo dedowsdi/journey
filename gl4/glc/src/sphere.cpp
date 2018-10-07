@@ -5,7 +5,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint sphere::build_vertex() {
+void sphere::build_vertex() {
   GLfloat phi_step = glm::pi<GLfloat>() / m_stack;
   GLfloat theta_step = 2 * glm::pi<GLfloat>() / m_slice;
 
@@ -56,11 +56,10 @@ GLint sphere::build_vertex() {
           r_times_sin_phi1 * sin_theta, r_times_cos_phi1));
     }
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint sphere::build_normal() {
+void sphere::build_normal() {
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   const vec3_array& vertices = *attrib_vec3_array(0);
@@ -70,11 +69,10 @@ GLint sphere::build_normal() {
   for (int i = 0; i < num_vertices(); ++i) {
     normals.push_back(glm::normalize(vertices[i]));
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint sphere::build_texcoord() {
+void sphere::build_texcoord() {
   // t ranges from 0.0 at z = - radius to 1.0 at z = radius (t increases
   // linearly along longitudinal lines), and s ranges from 0.0 at the +y axis,
   // to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x axis,
@@ -104,7 +102,6 @@ GLint sphere::build_texcoord() {
   }
 
   assert(texcoords.size() == num_vertices());
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

@@ -19,8 +19,8 @@ protected:
 public:
   bezier() : m_partitions(20), m_begin(0), m_end(1) {}
 
-  virtual GLint build_vertex();
-  virtual GLint build_texcoord();
+  virtual void build_vertex();
+  virtual void build_texcoord();
   virtual void draw(GLuint primcount = 1);
 
   unsigned int degree() { return n(); }

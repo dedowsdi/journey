@@ -3,7 +3,7 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-GLint bezier::build_vertex() {
+void bezier::build_vertex() {
   vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve(m_partitions + 1);
@@ -12,18 +12,16 @@ GLint bezier::build_vertex() {
   for (uint i = 0; i <= m_partitions; ++i) {
     vertices.push_back(get(m_begin + dt * i));
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------
-GLint bezier::build_texcoord() {
+void bezier::build_texcoord() {
   float_array& texcoords = *(new float_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
   for (int i = 0; i < num_vertices(); ++i) {
     texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
   }
-  return num_arrays() - 1;
 }
 
 //--------------------------------------------------------------------

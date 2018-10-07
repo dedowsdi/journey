@@ -11,7 +11,6 @@
 namespace zxd {
 
 struct bitmap_text_program : public zxd::program {
-  GLint al_vertex;
   GLint ul_text_color;
   GLint ul_font_map;
   bitmap_text_program() {}
@@ -20,8 +19,7 @@ struct bitmap_text_program : public zxd::program {
       0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
   }
   void update_uniforms(const glm::vec4& text_color) {
-    glUniformMatrix4fv(
-      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform4fv(ul_text_color, 1, value_ptr(text_color));
     glUniform1i(ul_font_map, 0);
   }
@@ -35,7 +33,7 @@ struct bitmap_text_program : public zxd::program {
     uniform_location(&ul_font_map, "font_map");
   }
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
+    bind_attrib_location(0, "vertex");
   }
 };
 

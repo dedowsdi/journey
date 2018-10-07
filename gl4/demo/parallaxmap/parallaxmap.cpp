@@ -27,10 +27,6 @@
 namespace zxd {
 
 struct parallax_program : public program {
-  GLint al_vertex;
-  GLint al_normal;
-  GLint al_tangent;
-  GLint al_texcoord;
   GLint ul_normal_map;
   GLint ul_diffuse_map;
   GLint ul_depth_map;
@@ -70,10 +66,10 @@ struct parallax_program : public program {
     uniform_location(&ul_height_scale, "height_scale");
   }
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
-    al_tangent = attrib_location("tangent");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
+    bind_attrib_location(2, "texcoord");
+    bind_attrib_location(3, "tangent");
   };
 } prg;
 
@@ -109,8 +105,10 @@ public:
     prg.v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
 
     // init quad
+    q.include_normal(true);
+    q.include_texcoord(true);
+    q.include_tangent(true);
     q.build_mesh();
-    q.bind_vntt(prg.al_vertex, prg.al_normal, prg.al_texcoord, prg.al_tangent);
 
     // load maps
     fipImage diffuse_image = zxd::fipLoadImage("data/texture/bricks2.jpg");

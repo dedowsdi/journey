@@ -30,8 +30,6 @@ vertex_color_program vc_prg;
 
 struct texline_program : public zxd::program {
   // GLint ul_eye;
-  GLint al_vertex;
-  GLint al_texcoord;
 
   GLint ul_diffuse_map;
 
@@ -51,8 +49,8 @@ struct texline_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   };
 } texline_prg;
 
@@ -269,14 +267,12 @@ public:
 
     mat4 m_mat = glm::translate(translation);
     blinn_prg.update_model(m_mat);
-    gm.bind(blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
     gm.draw();
 
     // bad performance
     if (m_render_normal) {
       nv_prg.use();
       nv_prg.update_model(m_mat);
-      gm.bind(nv_prg.al_vertex, nv_prg.al_normal, -1);
       gm.draw();
     }
   }
@@ -287,14 +283,12 @@ public:
     glUniform1i(texline_prg.ul_diffuse_map, 0);
     mat4 m_mat = glm::translate(translation);
     texline_prg.update_model(m_mat);
-    gm.bind(texline_prg.al_vertex, -1, texline_prg.al_texcoord);
     gm.draw();
   }
 
   void render_vertex_color(geometry_base &gm, const mat4 &mvp_mat) {
     vc_prg.use();
     vc_prg.update_uniforms(mvp_mat);
-    gm.bind_vc(vc_prg.al_vertex, vc_prg.al_color);
     gm.draw();
   }
 

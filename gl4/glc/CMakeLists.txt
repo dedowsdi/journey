@@ -30,6 +30,9 @@ set(GLC_SRCS
     src/line.cpp
     src/dict_script.cpp
     src/mat_stack.cpp
+    src/super_shape_2d.cpp
+    src/debugger.cpp
+    src/super_shape_3d.cpp
     )
 
 add_library(glc 

@@ -32,15 +32,6 @@ public:
   vec4_array_ptr attrib_vec4_array(GLuint index);
 
   virtual GLuint num_vertices();
-  geometry_base& bind(GLint attrib_index, GLint attrib_location);
-  // the most common case, assume vertex 0, normal 1, texcoord 2
-  geometry_base& bind(GLint vertex, GLint normal, GLint texcoord);
-  geometry_base& bind_vntt(GLint vertex, GLint normal, GLint texcoord, GLint tangent);
-  geometry_base& bind_vnt(GLint vertex, GLint normal, GLint texcoord);
-  geometry_base& bind_vn(GLint vertex, GLint normal);
-  geometry_base& bind_vc(GLint vertex, GLint color);
-  geometry_base& bind_vt(GLint vertex, GLint texcoord);
-  geometry_base& bind_v(GLint vertex);
 
   GLuint num_arrays() { return m_attributes.size(); }
 
@@ -53,11 +44,11 @@ public:
   void bind_vao();
 
   virtual void build_mesh();
-  virtual GLint build_vertex() { return -1; }
-  virtual GLint build_color() { return -1; }
-  virtual GLint build_normal() { return -1; }
-  virtual GLint build_texcoord() { return -1; }
-  virtual GLint build_tangent() { return -1; }
+  virtual void build_vertex() {}
+  virtual void build_color() {}
+  virtual void build_normal() {}
+  virtual void build_texcoord() {}
+  virtual void build_tangent() {}
 
   GLuint vao() const { return m_vao; }
 
@@ -72,6 +63,8 @@ public:
 
   GLboolean include_tangent() const { return m_include_tangent; }
   void include_tangent(GLboolean v){ m_include_tangent = v; }
+
+  void bind_and_update_buffer();
 
 };
 }

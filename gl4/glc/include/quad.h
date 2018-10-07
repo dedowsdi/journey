@@ -19,10 +19,10 @@ public:
   quad(const glm::vec3& half_diag) {}
   quad(GLfloat size = 2) : m_width(size), m_height(size) {}
 
-  GLint build_vertex();
-  GLint build_normal();
-  GLint build_texcoord();
-  GLint build_tangent();
+  void build_vertex();
+  void build_normal();
+  void build_texcoord();
+  void build_tangent();
 
   void draw(GLuint primcount = 1);
 

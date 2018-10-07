@@ -16,8 +16,6 @@ GLuint tex;
 namespace zxd {
 
 struct program0 : public zxd::program {
-  GLint al_vertex;
-  GLint al_translation;
   GLint ul_diffuse_map;
 
   virtual void attach_shaders() {
@@ -31,14 +29,12 @@ struct program0 : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_translation = attrib_location("translation");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "translation");
   };
 };
 
 struct program1 : public zxd::program {
-  GLint al_vertex;
-  GLint al_translation;
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
 
@@ -53,14 +49,12 @@ struct program1 : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_translation = attrib_location("translation");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "translation");
   };
 };
 
 struct program2 : public zxd::program {
-  GLint al_vertex;
-  GLint al_translation;
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
   GLint ul_camera_up;
@@ -77,8 +71,8 @@ struct program2 : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_translation = attrib_location("translation");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "translation");
   };
 };
 
@@ -150,13 +144,11 @@ protected:
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), value_ptr(vertices[0]),
       GL_STATIC_DRAW);
 
-    glVertexAttribPointer(
-      program0.al_vertex, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(program0.al_vertex);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(
-      program1.al_vertex, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(program1.al_vertex);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(1);
 
     // init billboards
     reset_billboards();
@@ -179,20 +171,17 @@ protected:
     glBufferData(GL_ARRAY_BUFFER, translations.size() * sizeof(vec3),
       value_ptr(translations[0]), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(
-      program0.al_translation, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(program0.al_translation);
-    glVertexAttribDivisor(program0.al_translation, 1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(1);
+    glVertexAttribDivisor(1, 1);
 
-    glVertexAttribPointer(
-      program1.al_translation, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(program1.al_translation);
-    glVertexAttribDivisor(program1.al_translation, 1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(1);
+    glVertexAttribDivisor(1, 1);
 
-    glVertexAttribPointer(
-      program2.al_translation, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(program2.al_translation);
-    glVertexAttribDivisor(program2.al_translation, 1);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(2);
+    glVertexAttribDivisor(2, 1);
   }
 
   virtual void display() {
@@ -203,7 +192,7 @@ protected:
 
     program0.vp_mat = program0.p_mat * program0.v_mat;
     const glm::mat4 &vp_mat = program0.vp_mat;
-    const glm::mat4 &p_mat = program0.p_mat;
+    //const glm::mat4 &p_mat = program0.p_mat;
     const glm::mat4 &v_mat = program0.v_mat;
 
     if (method == 0) {

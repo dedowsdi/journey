@@ -185,7 +185,6 @@ public:
 
     prg.use();
 
-    q.bind_vt(prg.al_vertex, prg.al_texcoord);
     glUniform1i(prg.ul_diffuse_map, 0);
     glUniform1f(prg.ul_da        ,  da);
     glUniform1f(prg.ul_db        ,  db);
@@ -204,7 +203,6 @@ public:
     glBindTexture(GL_TEXTURE_2D, tex[pp]);
     glUniform1i(prg1.ul_quad_map, 0);
 
-    q.bind_vt(prg.al_vertex, prg.al_texcoord);
     q.draw();
 
     glEnable(GL_BLEND);

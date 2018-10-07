@@ -12,8 +12,6 @@ vec4 normal_color(1.0);
 vec4 wire_color(0.0, 0.0, 0.0, 1.0);
 
 struct normal_viewer_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_normal;
 
   GLint ul_normal_length;
   GLint ul_color;
@@ -45,13 +43,12 @@ struct normal_viewer_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
   };
 };
 
 struct wire_program : public zxd::program {
-  GLint al_vertex;
   GLint ul_color;
 
   virtual void update_model(const mat4 &_m_mat) {
@@ -71,7 +68,7 @@ struct wire_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
+    bind_attrib_location(0, "vertex");
   };
 };
 

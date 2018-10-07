@@ -53,10 +53,13 @@ void file_observer::operator()()
 //--------------------------------------------------------------------
 dict_script::dict_script(const std::string& file_path):
   m_file_path(file_path),
-  m_atomic_changed(true),
   m_thread(0)
 {
-  update();
+  read(file_path);
+}
+
+dict_script::dict_script()
+{
 }
 
 //--------------------------------------------------------------------
@@ -115,6 +118,14 @@ void dict_script::track(float interval)
     m_thread = 0;
   }
   m_thread = new std::thread(file_observer(m_file_path, interval, &m_atomic_changed));
+}
+
+//--------------------------------------------------------------------
+void dict_script::read(const std::string& file_path)
+{
+  m_file_path = file_path;
+  m_atomic_changed.store(true);
+  update();
 }
 
 //--------------------------------------------------------------------

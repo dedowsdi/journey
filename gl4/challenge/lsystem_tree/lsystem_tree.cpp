@@ -131,9 +131,13 @@ public:
     if(m_vbo == -1)
       glGenBuffers(1, &m_vbo);
 
+    glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(vec2), 
         glm::value_ptr(m_vertices.front()), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
   }
 
@@ -143,13 +147,9 @@ public:
   GLfloat f_len() const { return m_f_len; }
   void f_len(GLfloat v){ m_f_len = v; }
 
-  void draw(GLint al_vertex)
+  void draw()
   {
     glBindVertexArray(m_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glVertexAttribPointer(al_vertex, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(al_vertex);
-
     glDrawArrays(GL_LINES, 0, m_vertices.size());
   }
 };
@@ -192,7 +192,7 @@ public:
     prg.mvp_mat = prg.p_mat * prg.v_mat * m_mat;
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
-    m_tree.draw(prg.al_vertex);
+    m_tree.draw();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

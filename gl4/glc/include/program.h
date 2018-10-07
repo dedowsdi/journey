@@ -85,15 +85,18 @@ public:
   virtual void init() {
     object = glCreateProgram();
     attach_shaders();
+    bind_attrib_locations(); // bind must be called before link, different from get
     link();
     bind_uniform_locations();
-    bind_attrib_locations();
   }
 
   virtual void reload(){
     clear();
     init();
   }
+
+  void bind_attrib_location(GLuint index, const std::string& name);
+  virtual void bind_attrib_locations(){}
 
   bool is_inited() { return object != -1; }
 
@@ -104,7 +107,6 @@ public:
 
   virtual void attach_shaders(){};
   virtual void bind_uniform_locations(){};
-  virtual void bind_attrib_locations(){};
   virtual void update_model(const glm::mat4& _m_mat) {}
   virtual void update_frame() {}
 
