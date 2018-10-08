@@ -45,6 +45,22 @@ void disk::build_vertex() {
       vertices.push_back(vec3(radius1 * ct, radius1 * st, 0));
     }
   }
+
+  m_primitive_sets.clear();
+  GLint cv_fan = m_slice + 2;
+  li = 0;
+  GLuint next = 0;
+
+  if (m_inner == 0) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, cv_fan));
+    ++li;
+    next += cv_fan;
+  }
+
+  for (; li < m_loop; ++li) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, cv_ring));
+    next += cv_ring;
+  }
 }
 
 //--------------------------------------------------------------------
@@ -70,24 +86,4 @@ void disk::build_texcoord() {
   }
 }
 
-//--------------------------------------------------------------------
-void disk::draw(GLuint primcount /* = 1*/) {
-  GLuint cv_ring = (m_slice + 1) * 2;
-  GLint cv_fan = m_slice + 2;
-  GLuint li = 0;
-  GLuint next = 0;
-
-  bind_vao();
-
-  if (m_inner == 0) {
-    draw_arrays(GL_TRIANGLE_FAN, 0, cv_fan, primcount);
-    ++li;
-    next += cv_fan;
-  }
-
-  for (; li < m_loop; ++li) {
-    draw_arrays(GL_TRIANGLE_STRIP, next, cv_ring, primcount);
-    next += cv_ring;
-  }
-}
 }

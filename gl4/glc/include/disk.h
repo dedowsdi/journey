@@ -40,8 +40,6 @@ public:
   void build_normal();
   void build_texcoord();
 
-  void draw(GLuint primcount = 1);
-
   GLfloat inner() const { return m_inner; }
   void inner(GLfloat v) { m_inner = v; }
 

@@ -43,6 +43,15 @@ vec4_array_ptr geometry_base::attrib_vec4_array(GLuint index) {
 GLuint geometry_base::num_vertices() { return attrib_array(0)->num_elements(); }
 
 //--------------------------------------------------------------------
+void geometry_base::draw()
+{
+  bind_vao();
+  for (int i = 0; i < m_primitive_sets.size(); ++i) {
+    m_primitive_sets[i]->draw();
+  }
+}
+
+//--------------------------------------------------------------------
 void geometry_base::build_mesh() {
   build_vertex();
 
@@ -80,16 +89,30 @@ void geometry_base::bind_and_update_buffer()
 }
 
 //--------------------------------------------------------------------
-void geometry_base::draw_arrays(
-  GLenum mode, GLint first, GLsizei count, GLsizei primcount) const {
-  if (primcount == -1) {
-    glDrawArrays(mode, first, count);
-  } else {
-#ifdef GL_VERSION_3_0
-    glDrawArraysInstanced(mode, first, count, primcount);
-#else
-    glDrawArraysInstancedARB(mode, first, count, primcount);
-#endif
+primitive_set* geometry_base::get_primitive_set(GLuint index)
+{
+  if(index >= m_primitive_sets.size())
+    throw std::runtime_error("primitive set index over flow");
+  return m_primitive_sets[index].get();
+}
+
+//--------------------------------------------------------------------
+GLuint geometry_base::get_num_primitive_set()
+{
+  return m_primitive_sets.size();
+}
+
+//--------------------------------------------------------------------
+void geometry_base::add_primitive_set(primitive_set* ps)
+{
+  m_primitive_sets.push_back(std::shared_ptr<primitive_set>(ps));
+}
+
+//--------------------------------------------------------------------
+void geometry_base::set_num_instance(GLuint count)
+{
+  for (int i = 0; i < m_primitive_sets.size(); ++i) {
+    m_primitive_sets[i]->num_instance(count);
   }
 }
 

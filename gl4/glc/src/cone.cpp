@@ -50,6 +50,14 @@ void cone::build_vertex() {
       vertices.push_back(vec3(r0 * cos_theta, r0 * sin_theta, h0));
     }
   }
+
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_pole));
+  GLuint next = num_vert_pole;
+  for (int i = 0; i < m_stack - 1; ++i, next += num_vert_center) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center));
+  }
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, next, num_vert_pole));
 }
 
 //--------------------------------------------------------------------
@@ -125,19 +133,4 @@ void cone::build_texcoord() {
   assert(texcoords.size() == num_vertices());
 }
 
-//--------------------------------------------------------------------
-void cone::draw(GLuint primcount /* = 1*/) {
-  GLuint num_vert_pole = m_slice + 2;  // pole + slice + 1
-  GLuint num_vert_center = (m_slice + 1) * 2;
-
-  bind_vao();
-
-  draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_pole, primcount);
-
-  GLuint next = num_vert_pole;
-  for (int i = 0; i < m_stack - 1; ++i, next += num_vert_center) {
-    draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
-  }
-  draw_arrays(GL_TRIANGLE_FAN, next, num_vert_pole, primcount);
-}
 }

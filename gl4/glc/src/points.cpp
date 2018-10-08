@@ -9,12 +9,8 @@ void origin2::build_vertex()
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.push_back(vec2(0));
 
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_POINTS, 0, 1));
 }
 
-//--------------------------------------------------------------------
-void origin2::draw(GLuint primcount)
-{
-  bind_vao();
-  draw_arrays(GL_POINTS, 0, 1, primcount);
-}
 }

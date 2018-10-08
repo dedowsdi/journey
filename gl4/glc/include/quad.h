@@ -24,8 +24,6 @@ public:
   void build_texcoord();
   void build_tangent();
 
-  void draw(GLuint primcount = 1);
-
   GLfloat width() const { return m_width; }
   void width(GLfloat v){ m_width = v; }
 

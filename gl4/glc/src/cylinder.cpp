@@ -53,6 +53,16 @@ void cylinder::build_vertex() {
     vertices.push_back(
       vec3(m_top * glm::cos(theta), m_top * glm::sin(theta), m_height));
   }
+
+  m_primitive_sets.clear();
+  GLuint num_vert_bottom = m_slice + 2;  // pole + slice + 1
+
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_bottom));
+  GLuint next = num_vert_bottom;
+  for (int i = 0; i < m_stack; ++i, next += num_vert_center) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center));
+  }
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, next, num_vert_bottom));
 }
 
 //--------------------------------------------------------------------
@@ -131,18 +141,4 @@ void cylinder::build_texcoord() {
   assert(texcoords.size() == num_vertices());
 }
 
-//--------------------------------------------------------------------
-void cylinder::draw(GLuint primcount /* = 1*/) {
-  GLuint num_vert_bottom = m_slice + 2;  // pole + slice + 1
-  GLuint num_vert_center = (m_slice + 1) * 2;
-
-  bind_vao();
-
-  draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_bottom, primcount);
-  GLuint next = num_vert_bottom;
-  for (int i = 0; i < m_stack; ++i, next += num_vert_center) {
-    draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
-  }
-  draw_arrays(GL_TRIANGLE_FAN, next, num_vert_bottom, primcount);
-}
 }

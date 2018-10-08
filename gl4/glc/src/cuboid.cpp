@@ -52,6 +52,9 @@ void cuboid::build_vertex() {
     vertices.push_back(origin + xstep + ystep);
     vertices.push_back(origin + ystep);
   }
+
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_TRIANGLES, 0, num_vertices()));
 }
 
 //--------------------------------------------------------------------
@@ -83,9 +86,4 @@ void cuboid::build_texcoord() {
   }
 }
 
-//--------------------------------------------------------------------
-void cuboid::draw(GLuint primcount /* = 1*/) {
-  bind_vao();
-  draw_arrays(GL_TRIANGLES, 0, num_vertices(), primcount);
-}
 }

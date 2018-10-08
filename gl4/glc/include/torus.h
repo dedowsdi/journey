@@ -29,8 +29,6 @@ public:
   void build_normal();
   void build_texcoord();
 
-  void draw(GLuint primcount = 1);
-
   GLfloat inner_radius() const { return m_inner_radius; }
   void inner_radius(GLfloat v) { m_inner_radius = v; }
 

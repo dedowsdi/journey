@@ -34,6 +34,7 @@ void line::build_mesh(const vec3& v0, const vec3& v1)
   vertices->update_array_buffer();
 
   attrib_array(0, array_ptr(vertices));
+  create_primitive_set();
 }
 
 //--------------------------------------------------------------------
@@ -60,12 +61,14 @@ void line::build_mesh(const vec2& v0, const vec2& v1)
   vertices->update_array_buffer();
 
   attrib_array(0, array_ptr(vertices));
+  create_primitive_set();
 }
 
 //--------------------------------------------------------------------
-void line::draw(GLuint primcount/* = -1*/)
+void line::create_primitive_set()
 {
-  bind_vao();
-  draw_arrays(m_mode, 0, attrib_array(0)->num_elements(), primcount);
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(m_mode, 0, attrib_array(0)->num_elements()));
 }
+
 }

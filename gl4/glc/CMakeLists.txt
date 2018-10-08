@@ -33,6 +33,7 @@ set(GLC_SRCS
     src/super_shape_2d.cpp
     src/debugger.cpp
     src/super_shape_3d.cpp
+    src/primitive_set.cpp
     )
 
 add_library(glc 

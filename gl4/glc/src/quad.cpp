@@ -31,6 +31,9 @@ void quad::build_vertex() {
   vertices.push_back(vec2(-hw, -hh));
   vertices.push_back(vec2(hw, hh));
   vertices.push_back(vec2(hw, -hh));
+
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, 0, 4));
 }
 
 //--------------------------------------------------------------------
@@ -67,21 +70,6 @@ void quad::build_tangent() {
   tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
   tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
   tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
-}
-
-//--------------------------------------------------------------------
-void quad::draw(GLuint primcount /* = 1*/) {
-  bind_vao();
-
-  if (primcount == 1) {
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-  } else {
-#ifdef GL_VERSION_3_0
-    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, primcount);
-#else
-    glDrawArraysInstancedARB(GL_TRIANGLE_STRIP, 0, 4, primcount);
-#endif
-  }
 }
 
 }

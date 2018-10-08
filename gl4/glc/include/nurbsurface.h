@@ -35,8 +35,6 @@ public:
 
   virtual void build_texcoord();
 
-  virtual void draw(GLuint primcount = 1);
-
   vec4 get(GLfloat u, GLfloat v);
 
   // get interim horizontal control points as specific u

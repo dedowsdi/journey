@@ -44,8 +44,6 @@ public:
   GLuint num_slice() const { return m_num_slice; }
   void num_slice(GLuint v){ m_num_slice = v; }
 
-  virtual void draw(GLuint primcount = -1);
-
   virtual void build_vertex();
 
 };

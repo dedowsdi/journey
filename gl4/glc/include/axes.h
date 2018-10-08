@@ -9,7 +9,6 @@ public:
   virtual void build_vertex();
   virtual void build_color();
 
-  void draw(GLuint primcount = 1);
 };
 }
 

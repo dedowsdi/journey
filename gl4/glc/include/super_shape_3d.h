@@ -27,7 +27,6 @@ protected:
 
 public:
   virtual void build_vertex();
-  virtual void draw(GLuint primcount = -1);
 
   GLfloat n1() const { return m_n1; }
   void n1(GLfloat v){ m_n1 = v; }

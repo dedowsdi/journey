@@ -15,11 +15,9 @@ public:
     attrib_array(num_arrays(), array_ptr(&vertices));
     vertices.insert(vertices.end(), points.begin(), points.end());
     bind_and_update_buffer();
-  }
-  virtual void draw(GLuint primcount = -1)
-  {
-    bind_vao();
-    draw_arrays(GL_POINTS, 0, attrib_array(0)->num_elements(), primcount);
+
+    m_primitive_sets.clear();
+    add_primitive_set(new draw_arrays(GL_POINTS, 0, points.size()));
   }
 
 };
@@ -29,7 +27,6 @@ protected:
   void build_vertex();
 
 public:
-  virtual void draw(GLuint primcount);
 };
 
 // draw points, it cretes buffer every time you called it, don't use it if

@@ -17,6 +17,9 @@ void nurb::build_vertex() {
   for (uint i = 0; i <= m_partitions; ++i) {
     vertices.push_back(get(m_begin + dt * i));
   }
+
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, num_vertices()));
 }
 
 //--------------------------------------------------------------------
@@ -29,11 +32,6 @@ void nurb::build_texcoord() {
   }
 }
 
-//--------------------------------------------------------------------
-void nurb::draw(GLuint primcount) {
-  bind_vao();
-  draw_arrays(GL_LINE_STRIP, 0, num_vertices(), primcount);
-}
 
 //--------------------------------------------------------------------
 vec4 nurb::get(GLfloat u) {

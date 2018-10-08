@@ -29,6 +29,13 @@ void nurb_surface::build_vertex() {
       vertices.push_back(v0);
     }
   }
+
+  m_primitive_sets.clear();
+  GLuint strip_size = (m_vpartition + 1) * 2;
+  for (GLuint i = 0; i < m_upartition; ++i) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+  }
+
 }
 
 //--------------------------------------------------------------------
@@ -84,15 +91,6 @@ void nurb_surface::build_texcoord() {
       texcoords.push_back(vec2(x, y1));
       texcoords.push_back(vec2(x, y0));
     }
-  }
-}
-
-//--------------------------------------------------------------------
-void nurb_surface::draw(GLuint primcount /* = 1*/) {
-  bind_vao();
-  GLuint strip_size = (m_vpartition + 1) * 2;
-  for (GLuint i = 0; i < m_upartition; ++i) {
-    draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size, primcount);
   }
 }
 

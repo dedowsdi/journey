@@ -161,7 +161,7 @@ protected:
     if(!prg.instance)
     {
       for (size_t i = 0; i < m_sponge.size(); ++i) {
-        std::cout << prg.mvp_mat << std::endl;
+        //std::cout << prg.mvp_mat << std::endl;
         prg.update_model(m_sponge[i].m_model_matrix);
         geometry.draw();
       }
@@ -171,7 +171,7 @@ protected:
     {
       if(m_dirty_view && ( m_sponge.size() <= 8000 || m_cooldown < 0))
         update_instance_attribute_buffers();
-      geometry.draw(m_sponge.size());
+      geometry.draw();
     }
 
     glEnable(GL_BLEND);
@@ -195,7 +195,10 @@ protected:
     }
 
     if(prg.instance)
+    {
       reset_instance_attribute_buffers();
+      geometry.set_num_instance(m_sponge.size());
+    }
   }
 
   void reset_instance_attribute_buffers()
@@ -229,7 +232,7 @@ protected:
       mv_mats.push_back(v_mat * m_sponge[i].m_model_matrix);
       mvp_mats.push_back(p_mat * mv_mats.back());
       mv_mats_it.push_back(glm::transpose(glm::inverse(mv_mats.back())));
-      std::cout << mvp_mats.back() << std::endl;
+      //std::cout << mvp_mats.back() << std::endl;
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, m_b_mv_mats);

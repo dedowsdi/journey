@@ -29,6 +29,13 @@ void xyplane::build_vertex() {
       vertices.push_back(v1);
     }
   }
+
+  m_primitive_sets.clear();
+  GLuint row_size = (m_slice + 1) * 2;
+  GLuint next = 0;
+  for (int i = 0; i < m_slice; ++i, next += row_size) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, row_size));
+  }
 }
 
 //--------------------------------------------------------------------
@@ -67,15 +74,4 @@ void xyplane::build_texcoord() {
   assert(texcoords.size() == num_vertices());
 }
 
-//--------------------------------------------------------------------
-void xyplane::draw(GLuint primcount /* = 1*/) {
-  GLuint row_size = (m_slice + 1) * 2;
-  GLuint next = 0;
-
-  bind_vao();
-
-  for (int i = 0; i < m_slice; ++i, next += row_size) {
-    draw_arrays(GL_TRIANGLE_STRIP, next, row_size, primcount);
-  }
-}
 }

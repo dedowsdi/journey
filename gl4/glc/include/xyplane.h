@@ -36,8 +36,6 @@ public:
   void build_normal();
   void build_texcoord();
 
-  void draw(GLuint primcount = 1);
-
   GLuint slice() const { return m_slice; }
   void slice(GLuint v) { m_slice = v; }
 

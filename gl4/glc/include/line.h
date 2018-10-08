@@ -20,7 +20,8 @@ public:
   void build_mesh(const vec2& v0, const vec2& v1, const vec4& color);
   void build_mesh(const vec2& v0, const vec2& v1);
 
-  void draw(GLuint primcount = -1);
+protected:
+  void create_primitive_set();
 
 };
 

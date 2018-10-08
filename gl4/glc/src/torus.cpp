@@ -39,6 +39,11 @@ void torus::build_vertex() {
       vertices.push_back(v1);
     }
   }
+
+  m_primitive_sets.clear();
+  for (int i = 0; i < m_rings; ++i) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, ring_size * i, ring_size));
+  }
 }
 
 //--------------------------------------------------------------------
@@ -111,14 +116,4 @@ void torus::build_texcoord() {
   assert(texcoords.size() == num_vertices());
 }
 
-//--------------------------------------------------------------------
-void torus::draw(GLuint primcount /* = 1*/) {
-  bind_vao();
-
-  GLuint ring_size = (m_sides + 1) * 2;
-
-  for (int i = 0; i < m_rings; ++i) {
-    draw_arrays(GL_TRIANGLE_STRIP, ring_size * i, ring_size, primcount);
-  }
-}
 }

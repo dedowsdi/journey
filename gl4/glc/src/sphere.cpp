@@ -56,6 +56,15 @@ void sphere::build_vertex() {
           r_times_sin_phi1 * sin_theta, r_times_cos_phi1));
     }
   }
+
+  m_primitive_sets.clear();
+  
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_pole));
+  GLuint next = num_vert_pole;
+  for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center));
+  }
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, next, num_vert_pole));
 }
 
 //--------------------------------------------------------------------
@@ -102,22 +111,6 @@ void sphere::build_texcoord() {
   }
 
   assert(texcoords.size() == num_vertices());
-}
-
-//--------------------------------------------------------------------
-void sphere::draw(GLuint primcount /* = 1*/) {
-  GLuint num_vert_pole = m_slice + 2;  // pole + slice + 1
-  GLuint num_vert_center = (m_slice + 1) * 2;
-
-  bind_vao();
-
-  draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_pole, primcount);
-
-  GLuint next = num_vert_pole;
-  for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
-    draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center, primcount);
-  }
-  draw_arrays(GL_TRIANGLE_FAN, next, num_vert_pole, primcount);
 }
 
 }

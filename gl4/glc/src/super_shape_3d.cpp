@@ -1,4 +1,5 @@
 #include "super_shape_3d.h"
+#include <memory>
 
 namespace zxd
 {
@@ -36,6 +37,9 @@ void super_shape_3d::build_vertex()
     }
   }
 
+  m_primitive_sets.clear();
+  GLuint num_vertices_per_stack = (m_slice + 1) * 2;
+
   // generate triangle strip latitude by latitude
   for (int i = 0; i < m_stack; ++i) {
     int stack_start0 = i * (m_slice + 1);
@@ -45,19 +49,12 @@ void super_shape_3d::build_vertex()
       vertices->push_back(points[stack_start1 + j]);
       vertices->push_back(points[stack_start0 + j]);
     }
-  }
-  std::cout << "create super shape 3d in " << vertices->size() << " vertices" << std::endl;
-}
 
-//--------------------------------------------------------------------
-void super_shape_3d::draw(GLuint primcount/* = -1*/)
-{
-  bind_vao();
-  GLuint num_vertices_per_stack = (m_slice + 1) * 2;
-  for (int i = 0; i < m_stack; ++i) {
-    draw_arrays(GL_TRIANGLE_STRIP, i*num_vertices_per_stack, num_vertices_per_stack, primcount);
+    m_primitive_sets.push_back( std::make_shared<draw_arrays>(
+          GL_TRIANGLE_STRIP, num_vertices_per_stack*i, num_vertices_per_stack));
   }
-  //draw_arrays(GL_POINTS, 0, attrib_array(0)->num_elements(), primcount);
+
+  std::cout << "create super shape 3d in " << vertices->size() << " vertices" << std::endl;
 }
 
 //--------------------------------------------------------------------

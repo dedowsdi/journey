@@ -5,6 +5,7 @@
 #include "common.h"
 #include "array.h"
 #include <memory>
+#include "primitive_set.h"
 
 namespace zxd {
 
@@ -19,6 +20,7 @@ protected:
   GLboolean m_include_color = GL_FALSE;
   GLboolean m_include_texcoord = GL_FALSE;
   GLboolean m_include_tangent = GL_FALSE;
+  primitive_set_vector m_primitive_sets;
 
 public:
   geometry_base(){}
@@ -35,11 +37,7 @@ public:
 
   GLuint num_arrays() { return m_attributes.size(); }
 
-  virtual void draw(GLuint primcount = -1) = 0;
-
-  // a wrapper of glDrawArrays and glDrawArraysInstanced[ARB]
-  void draw_arrays(
-    GLenum mode, GLint first, GLsizei count, GLsizei primcount) const;
+  virtual void draw();
 
   void bind_vao();
 
@@ -65,6 +63,11 @@ public:
   void include_tangent(GLboolean v){ m_include_tangent = v; }
 
   void bind_and_update_buffer();
+
+  primitive_set* get_primitive_set(GLuint index);
+  GLuint get_num_primitive_set();
+  void add_primitive_set(primitive_set* ps);
+  void set_num_instance(GLuint count);
 
 };
 }

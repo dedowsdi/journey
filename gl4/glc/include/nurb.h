@@ -29,7 +29,6 @@ public:
 
   virtual void build_vertex();
   virtual void build_texcoord();
-  virtual void draw(GLuint primcount = 1);
 
   // get point by De Boor's algorithm
   vec4 get(GLfloat u);

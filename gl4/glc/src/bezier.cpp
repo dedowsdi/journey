@@ -12,6 +12,9 @@ void bezier::build_vertex() {
   for (uint i = 0; i <= m_partitions; ++i) {
     vertices.push_back(get(m_begin + dt * i));
   }
+
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, num_vertices()));
 }
 
 //--------------------------------------------------------------------
@@ -232,11 +235,6 @@ vec3 bezier::tangent(
   return glm::normalize(v);
 }
 
-//--------------------------------------------------------------------
-void bezier::draw(GLuint primcount /* = 1*/) {
-  bind_vao();
-  draw_arrays(GL_LINE_STRIP, 0, num_vertices(), primcount);
-}
 
 //--------------------------------------------------------------------
 vec3 bezier::d(GLuint i, GLuint k) {

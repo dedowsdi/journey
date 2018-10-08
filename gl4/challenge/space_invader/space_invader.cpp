@@ -44,13 +44,11 @@ protected:
     for (size_t i = 7; i > 0; --i) {
       vertices.push_back(vertices[i] * vec2(-1, 1));
     }
+
+    m_primitive_sets.clear();
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices()));
   }
 
-  virtual void draw(GLuint primcount = -1)
-  {
-    this->bind_vao();
-    this->draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices(), primcount);
-  }
 
 } ship_geometry0;
 
@@ -86,12 +84,8 @@ protected:
       }
     }
 
-  }
-
-  virtual void draw(GLuint primcount = -1)
-  {
-    this->bind_vao();
-    this->draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices(), primcount);
+    m_primitive_sets.clear();
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices()));
   }
 
 } invader_geometry0;
@@ -119,13 +113,10 @@ protected:
       vertices.push_back(v.xy());
     }
 
+    m_primitive_sets.clear();
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices()));
   }
 
-  virtual void draw(GLuint primcount = -1)
-  {
-    this->bind_vao();
-    this->draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices(), primcount);
-  }
 
 } bullet_geometry0;
 

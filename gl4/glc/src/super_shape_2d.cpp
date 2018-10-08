@@ -3,12 +3,6 @@
 namespace zxd
 {
 
-//--------------------------------------------------------------------
-void super_shape_2d::draw(GLuint primcount/* = -1*/)
-{
-  bind_vao();
-  draw_arrays(GL_TRIANGLE_FAN, 0, attrib_array(0)->num_elements(), primcount);
-}
 
 //--------------------------------------------------------------------
 void super_shape_2d::build_vertex()
@@ -34,6 +28,8 @@ void super_shape_2d::build_vertex()
     vertices->push_back(glm::vec2(r * glm::cos(angle), r * glm::sin(angle)));
   }
 
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, attrib_array(0)->num_elements()));
 }
 
 }

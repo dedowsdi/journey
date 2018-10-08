@@ -15,6 +15,8 @@ void axes::build_vertex() {
   vertices.push_back(vec3(0, 0, 0));
   vertices.push_back(vec3(0, 0, 1));
 
+  m_primitive_sets.clear();
+  add_primitive_set(new draw_arrays(GL_LINES, 0, 6));
 }
 
 //--------------------------------------------------------------------
@@ -32,8 +34,4 @@ void axes::build_color() {
 
 }
 
-//--------------------------------------------------------------------
-void axes::draw(GLuint primcount /* = 1*/) {
-  draw_arrays(GL_LINES, 0, 6, primcount);
-}
 }

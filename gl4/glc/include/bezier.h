@@ -21,7 +21,6 @@ public:
 
   virtual void build_vertex();
   virtual void build_texcoord();
-  virtual void draw(GLuint primcount = 1);
 
   unsigned int degree() { return n(); }
   inline unsigned int n() { return m_ctrl_points.size() - 1; }

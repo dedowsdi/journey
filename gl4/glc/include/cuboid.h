@@ -18,8 +18,6 @@ public:
   // as i'm using strip and fan, normal should be vertex normal.
   void build_normal();
   void build_texcoord();
-
-  void draw(GLuint primcount = 1);
 };
 }
 
