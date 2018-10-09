@@ -40,6 +40,10 @@ public:
 
   GLuint rings() const { return m_rings; }
   void rings(GLuint v) { m_rings = v; }
+
+protected:
+  vec3 sphere_vertex();
+
 };
 }
 

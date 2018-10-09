@@ -1,5 +1,6 @@
 # key           : value
 # -----------------------
+type            : sphere
 n1              : 1
 n2              : 1
 n3              : 1
@@ -8,7 +9,7 @@ a               : 1
 b               : 1
 slice           : 8
 stack           : 8
-longitude_start : -180
-longitude_end   : 180
-latitude_start  : -90
-latitude_end    : 90
+phi_start       : -90
+phi_end         : 90
+theta_start     : -180
+theta_end       : 180

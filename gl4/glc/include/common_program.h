@@ -84,10 +84,11 @@ struct point_program : public zxd::program {
 
 struct normal_viewer_program : public zxd::program {
 
+  GLboolean smooth_normal = GL_FALSE;
   GLint ul_normal_length;
   GLint ul_color;
 
-  virtual void update_model(const mat4& _m_mat);
+  virtual void update_uniforms(const mat4& _m_mat, const mat4& _v_mat, const mat4& _p_mat);
   virtual void attach_shaders();
   virtual void bind_uniform_locations();
 

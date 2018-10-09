@@ -12,7 +12,7 @@ void geometry_base::attrib_array(GLuint index, array_ptr _array) {
 }
 
 //--------------------------------------------------------------------
-array_ptr geometry_base::attrib_array(GLuint index) {
+array_ptr geometry_base::attrib_array(GLuint index)  const{
   if (index >= m_attributes.size()) {
     std::cerr << " attribute index overflow : " << index << std::endl;
   }
@@ -20,22 +20,22 @@ array_ptr geometry_base::attrib_array(GLuint index) {
 }
 
 //--------------------------------------------------------------------
-float_array_ptr geometry_base::attrib_float_array(GLuint index) {
+float_array_ptr geometry_base::attrib_float_array(GLuint index) const {
   return std::static_pointer_cast<float_array>(attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec2_array_ptr geometry_base::attrib_vec2_array(GLuint index) {
+vec2_array_ptr geometry_base::attrib_vec2_array(GLuint index)  const{
   return std::static_pointer_cast<vec2_array>(attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec3_array_ptr geometry_base::attrib_vec3_array(GLuint index) {
+vec3_array_ptr geometry_base::attrib_vec3_array(GLuint index)  const{
   return std::static_pointer_cast<vec3_array>(attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec4_array_ptr geometry_base::attrib_vec4_array(GLuint index) {
+vec4_array_ptr geometry_base::attrib_vec4_array(GLuint index)  const{
   return std::static_pointer_cast<vec4_array>(attrib_array(index));
 }
 
@@ -83,6 +83,12 @@ void geometry_base::bind_and_update_buffer()
 {
   bind_vao();
   for (int i = 0; i < m_attributes.size(); ++i) {
+    if(m_attributes[i]->num_elements() == 0)
+    {
+      std::cout << "found empty array attribute : " << i << std::endl;
+      continue;
+    }
+
     m_attributes[i]->bind(i);
     m_attributes[i]->update_array_buffer();
   }
@@ -114,6 +120,18 @@ void geometry_base::set_num_instance(GLuint count)
   for (int i = 0; i < m_primitive_sets.size(); ++i) {
     m_primitive_sets[i]->num_instance(count);
   }
+}
+
+//--------------------------------------------------------------------
+void geometry_base::accept(primitive_functor& pf) const
+{
+  vec3_array* vertices = attrib_vec3_array(0).get();
+  pf.set_vertex_array(vertices->size(), &vertices->front());
+  for(const auto& item : m_primitive_sets)
+  {
+    item->accept(pf);
+  }
+  
 }
 
 //--------------------------------------------------------------------

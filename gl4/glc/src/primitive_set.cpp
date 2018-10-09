@@ -31,4 +31,10 @@ void draw_arrays::draw()
 #endif
   }
 }
+
+//--------------------------------------------------------------------
+void draw_arrays::accept(primitive_functor& functor) const
+{
+  functor.drawArrays(m_mode, m_first, m_count);
+}
 }

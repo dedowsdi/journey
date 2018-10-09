@@ -34,10 +34,7 @@ struct normal_viewer_program : public zxd::program {
   virtual void bind_uniform_locations() {
     uniform_location(&ul_p_mat, "p_mat");
     uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location(
-      &ul_mv_mat_it,
-      "mv_mat_it");
-
+    uniform_location( &ul_mv_mat_it, "mv_mat_it");
     uniform_location(&ul_normal_length, "normal_length");
     uniform_location(&ul_color, "color");
   }
@@ -102,6 +99,7 @@ protected:
 
     set_v_mat(&program.v_mat);
 
+    torus.include_normal(true);
     torus.build_mesh();
 
     m_text.init();

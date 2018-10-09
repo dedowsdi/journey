@@ -34,6 +34,8 @@ set(GLC_SRCS
     src/debugger.cpp
     src/super_shape_3d.cpp
     src/primitive_set.cpp
+    src/triangle_functor.cpp
+    src/geometry_util.cpp
     )
 
 add_library(glc 

@@ -27,11 +27,11 @@ public:
   virtual ~geometry_base() {}
 
   void attrib_array(GLuint index, array_ptr _array);
-  array_ptr attrib_array(GLuint index);
-  float_array_ptr attrib_float_array(GLuint index);
-  vec2_array_ptr attrib_vec2_array(GLuint index);
-  vec3_array_ptr attrib_vec3_array(GLuint index);
-  vec4_array_ptr attrib_vec4_array(GLuint index);
+  array_ptr attrib_array(GLuint index) const;
+  float_array_ptr attrib_float_array(GLuint index) const;
+  vec2_array_ptr attrib_vec2_array(GLuint index) const;
+  vec3_array_ptr attrib_vec3_array(GLuint index) const;
+  vec4_array_ptr attrib_vec4_array(GLuint index) const;
 
   virtual GLuint num_vertices();
 
@@ -68,6 +68,8 @@ public:
   GLuint get_num_primitive_set();
   void add_primitive_set(primitive_set* ps);
   void set_num_instance(GLuint count);
+
+  virtual void accept(primitive_functor& pf) const;
 
 };
 }

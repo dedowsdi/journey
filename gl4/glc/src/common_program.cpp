@@ -159,23 +159,31 @@ void point_program::udpate_uniforms(const mat4& _mvp_mat) {
 }
 
 //--------------------------------------------------------------------
-void normal_viewer_program::update_model(const mat4& _m_mat) {
-  m_mat = _m_mat;
-  mv_mat = v_mat * m_mat;
+void normal_viewer_program::update_uniforms(const mat4& _m_mat, const mat4& _v_mat, const mat4& _p_mat)
+{
+  mv_mat = _v_mat * _m_mat;
   mv_mat_it = glm::inverse(glm::transpose(mv_mat));
 
   glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
   glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
-  glUniformMatrix4fv(ul_p_mat, 1, 0, value_ptr(p_mat));
+  glUniformMatrix4fv(ul_p_mat, 1, 0, value_ptr(_p_mat));
 }
 
 //--------------------------------------------------------------------
 void normal_viewer_program::attach_shaders() {
+  string_vector sv;
+#ifdef GL_VERSION_3_3
+  sv.push_back("#version 330 core\n");
+#endif
+
+  if (smooth_normal)
+    sv.push_back("#define SMOOTH_NORMAL\n");
+
   attach(GL_VERTEX_SHADER, "data/shader/normal_viewer.vs.glsl");
 #ifdef GL_VERSION_3_3
-  attach(GL_GEOMETRY_SHADER, "data/shader/normal_viewer.gs.glsl");
+  attach(GL_GEOMETRY_SHADER, sv, "data/shader/normal_viewer.gs.glsl");
 #else
-  attach(GL_GEOMETRY_SHADER_ARB, "data/shader/normal_viewer.gs.glsl");
+  attach(GL_GEOMETRY_SHADER_ARB, sv, "data/shader/normal_viewer.gs.glsl");
 #endif
   attach(GL_FRAGMENT_SHADER, "data/shader/color.fs.glsl");
 }

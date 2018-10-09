@@ -9,7 +9,15 @@ namespace zxd
 
 class super_shape_3d : public geometry_base
 {
+public:
+  enum shape_type
+  {
+    ST_SPHERE,
+    ST_TORUS
+  };
+
 protected:
+  shape_type m_type = ST_SPHERE;
   GLfloat m_n1 = 1;
   GLfloat m_n2 = 1;
   GLfloat m_n3 = 1;
@@ -18,15 +26,17 @@ protected:
   GLfloat m_a = 1;
   GLfloat m_b = 1;
 
-  GLuint m_slice = 32; // longitude
-  GLuint m_stack = 32; // latitude
-  GLfloat m_longitude_start = -zxd::fpi;
-  GLfloat m_longitude_end = zxd::fpi;
-  GLfloat m_latitude_start = -zxd::fpi2;
-  GLfloat m_latitude_end = zxd::fpi2;
+  GLuint m_slice = 32; // theta subdivisions or side
+  GLuint m_stack = 32; // phi subdivisions or ring
+  GLfloat m_theta_start = -zxd::fpi; // second loop angle, sphere will be build stack by stack
+  GLfloat m_theta_end = zxd::fpi;
+  GLfloat m_phi_start = -zxd::fpi2; // first loop angle, torus will be build tube by tube
+  GLfloat m_phi_end = zxd::fpi2;
 
 public:
   virtual void build_vertex();
+  virtual void build_sphere_vertex();
+  virtual void build_torus_vertex();
 
   GLfloat n1() const { return m_n1; }
   void n1(GLfloat v){ m_n1 = v; }
@@ -55,22 +65,35 @@ public:
   GLuint stack() const { return m_stack; }
   void stack(GLuint v){ m_stack = v; }
 
-  GLfloat longitude_start() const { return m_longitude_start; }
-  void longitude_start(GLfloat v){ m_longitude_start = v; }
+  GLuint ring() const {return m_stack;}
+  void ring(GLuint v){m_stack = v;}
 
-  GLfloat longitude_end() const { return m_longitude_end; }
-  void longitude_end(GLfloat v){ m_longitude_end = v; }
+  GLuint side() const {return m_slice;}
+  void side(GLuint v){m_slice = v;}
 
-  GLfloat latitude_start() const { return m_latitude_start; }
-  void latitude_start(GLfloat v){ m_latitude_start = v; }
+  GLfloat theta_start() const { return m_theta_start; }
+  void theta_start(GLfloat v){ m_theta_start = v; }
 
-  GLfloat latitude_end() const { return m_latitude_end; }
-  void latitude_end(GLfloat v){ m_latitude_end = v; }
+  GLfloat theta_end() const { return m_theta_end; }
+  void theta_end(GLfloat v){ m_theta_end = v; }
+
+  GLfloat phi_start() const { return m_phi_start; }
+  void phi_start(GLfloat v){ m_phi_start = v; }
+
+  GLfloat phi_end() const { return m_phi_end; }
+  void phi_end(GLfloat v){ m_phi_end = v; }
+
+  shape_type type() const { return m_type; }
+  void type(shape_type v){ m_type = v; }
+
+  static std::string shape_type_to_string(shape_type type);
+  static shape_type shape_type_from_string(const std::string& s);
 
 protected:
   GLfloat supershape(GLfloat theta);
 
 };
+
 
 }
 
