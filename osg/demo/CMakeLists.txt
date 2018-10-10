@@ -88,6 +88,7 @@ set (DEMOES
     fixVerticalUp
     test
     animPivot
+    fx_transparency
     )
 
 foreach(DEMO ${DEMOES})

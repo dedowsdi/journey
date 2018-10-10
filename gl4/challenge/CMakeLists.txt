@@ -18,6 +18,7 @@ set (PROJECTS
     supershape
     flow_field
     supershape3d
+    firework
     )
 
 foreach(PROJECT ${PROJECTS})
