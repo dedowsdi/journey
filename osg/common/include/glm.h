@@ -13,7 +13,7 @@ namespace glm
   osg::Vec2 linearRand(const osg::Vec2& a, const osg::Vec2& b);
   osg::Vec3 linearRand(const osg::Vec3& a, const osg::Vec3& b);
   osg::Vec4 linearRand(const osg::Vec4& a, const osg::Vec4& b);
-  osg::Vec2 circleRand(float radius);
+  osg::Vec2 circularRand(float radius);
   osg::Vec2 diskRand(float radius);
   osg::Vec3 sphericalRand(float radius);
   osg::Vec3 ballRand(float radius);

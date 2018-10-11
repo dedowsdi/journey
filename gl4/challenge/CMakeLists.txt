@@ -19,6 +19,7 @@ set (PROJECTS
     flow_field
     supershape3d
     firework
+    poisson_disk_sample
     )
 
 foreach(PROJECT ${PROJECTS})

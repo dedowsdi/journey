@@ -43,7 +43,7 @@ osg::Vec4 linearRand(const osg::Vec4& a, const osg::Vec4& b)
 }
 
 //--------------------------------------------------------------------
-osg::Vec2 circleRand(float radius)
+osg::Vec2 circularRand(float radius)
 {
   osg::Vec2 v = linearRand(osg::Vec2(-1, -1), osg::Vec2(1, 1));
   v.normalize();
@@ -54,7 +54,7 @@ osg::Vec2 circleRand(float radius)
 //--------------------------------------------------------------------
 osg::Vec2 diskRand(float radius)
 {
-  return circleRand(radius) * linearRand(0, 1);
+  return circularRand(radius) * linearRand(0, 1);
 }
 
 //--------------------------------------------------------------------
