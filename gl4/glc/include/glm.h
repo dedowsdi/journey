@@ -25,6 +25,7 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
 #include <vector>
+#include <list>
 #include <iostream>
 #include <utility>
 
@@ -62,6 +63,9 @@ typedef std::vector<GLfloat> float_vector;
 typedef std::vector<vec2> vec2_vector;
 typedef std::vector<vec3> vec3_vector;
 typedef std::vector<vec4> vec4_vector;
+typedef std::list<vec2> vec2_list;
+typedef std::list<vec3> vec3_list;
+typedef std::list<vec4> vec4_list;
 
 typedef std::vector<std::vector<GLfloat> > float_vector2;
 typedef std::vector<std::vector<vec2> > vec2_vector2;

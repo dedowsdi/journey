@@ -524,7 +524,7 @@ git:
 
 gl:
   normal achieved from normal still needs to be normalized:
-    // be very careful about this!!, not easay to debug, totally nightmare
+   // be very careful about this!!, not easay to debug, totally nightmare
     vec3 t_normal = normalize(texture(normal_map, fi.texcoord).xyz * 2 - 1); 
 
 linux:

@@ -20,6 +20,7 @@ set (PROJECTS
     supershape3d
     firework
     poisson_disk_sample
+    diffusion_limited
     )
 
 foreach(PROJECT ${PROJECTS})
