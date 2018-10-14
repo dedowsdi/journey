@@ -21,6 +21,7 @@ set (PROJECTS
     firework
     poisson_disk_sample
     diffusion_limited
+    lexicograph
     )
 
 foreach(PROJECT ${PROJECTS})
