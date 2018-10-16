@@ -124,6 +124,9 @@ class twod_program0: public program
 {
 public:
   GLint ul_color;
+  GLint ul_diffuse_map;
+  bool with_texcoord = false;
+  bool instance = false;
 
 protected:
   void attach_shaders();

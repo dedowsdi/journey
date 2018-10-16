@@ -374,8 +374,7 @@ public:
     m_text.init();
     m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 
-    quad0.width(CELL_WIDTH);
-    quad0.height(CELL_HEIGHT);
+    quad0.setup(0, 0, CELL_WIDTH, CELL_HEIGHT);
     quad0.build_mesh();
 
     line_h.build_mesh(vec2(-HALF_CELL_WIDTH, 0), vec2(HALF_CELL_WIDTH, 0));

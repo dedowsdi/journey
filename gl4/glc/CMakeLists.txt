@@ -36,6 +36,7 @@ set(GLC_SRCS
     src/primitive_set.cpp
     src/triangle_functor.cpp
     src/geometry_util.cpp
+    src/circle.cpp
     )
 
 add_library(glc 

@@ -25,6 +25,7 @@ set (PROJECTS
     diastic_machine
     pixel_sort
     photo_mosaic
+    circle_pack
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -251,21 +251,42 @@ void texture_animation_program::bind_attrib_locations()
 //--------------------------------------------------------------------
 void twod_program0::attach_shaders()
 {
-  attach(GL_VERTEX_SHADER, "data/shader/2d0.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, "data/shader/2d0.fs.glsl");
+  string_vector sv;
+  sv.push_back("#version 330 core\n");
+  if(with_texcoord)
+  {
+    sv.push_back("#define WITH_TEXCOORD\n");
+  }
+  if(instance)
+  {
+    sv.push_back("#define INSTANCE\n");
+  }
+  attach(GL_VERTEX_SHADER, sv, "data/shader/2d0.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, sv, "data/shader/2d0.fs.glsl");
 }
 
 //--------------------------------------------------------------------
 void twod_program0::bind_uniform_locations()
 {
   uniform_location(&ul_mvp_mat, "mvp_mat");
-  uniform_location(&ul_color, "color");
+  if(with_texcoord)
+  {
+    uniform_location(&ul_diffuse_map, "diffuse_map");
+  }
+  else
+  {
+    uniform_location(&ul_color, "color");
+  }
 }
 
 //--------------------------------------------------------------------
 void twod_program0::bind_attrib_locations()
 {
   bind_attrib_location(0, "vertex");
+  if(with_texcoord)
+    bind_attrib_location(1, "texcoord");
+  if(instance)
+    bind_attrib_location(2, "m_mat");
 }
 
 }

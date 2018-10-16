@@ -20,20 +20,44 @@ void draw_quad(GLuint tex_index /* = 0*/) {
 }
 
 //--------------------------------------------------------------------
+quad::quad(const vec3& corner/* = vec3(-0.5,-0.5,0)*/,
+  const vec3& edge0_vec/* = vec3(1, 0, 0)*/,
+  const vec3& edge1_vec/* = vec3(1, 0, 0)*/)
+{
+  setup(corner, edge0_vec, edge1_vec);
+}
+
+//--------------------------------------------------------------------
+void quad::setup(const vec3& corner, const vec3& edge0_vec, const vec3& edge1_vec)
+{
+  m_v0 = corner;
+  m_v1 = corner + edge0_vec;
+  m_v2 = corner + edge0_vec + edge1_vec;
+  m_v3 = corner + edge1_vec;
+}
+
+//--------------------------------------------------------------------
+void quad::setup(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1)
+{
+  m_v0 = vec3(x0, y0, 0);
+  m_v1 = vec3(x1, y0, 0);
+  m_v2 = vec3(x1, y1, 0);
+  m_v3 = vec3(x0, y1, 0);
+}
+
+//--------------------------------------------------------------------
 void quad::build_vertex() {
-  vec2_array& vertices = *(new vec2_array());
+  vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve(4);
 
-  GLfloat hw = m_width * 0.5;
-  GLfloat hh = m_height * 0.5;
-  vertices.push_back(vec2(-hw, hh));
-  vertices.push_back(vec2(-hw, -hh));
-  vertices.push_back(vec2(hw, hh));
-  vertices.push_back(vec2(hw, -hh));
+  vertices.push_back(m_v0);
+  vertices.push_back(m_v1);
+  vertices.push_back(m_v2);
+  vertices.push_back(m_v3);
 
   m_primitive_sets.clear();
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, 0, 4));
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, 4));
 }
 
 //--------------------------------------------------------------------
@@ -54,10 +78,10 @@ void quad::build_texcoord() {
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(4);
 
-  texcoords.push_back(vec2{0.0f, 1.0f});
   texcoords.push_back(vec2{0.0f, 0.0f});
-  texcoords.push_back(vec2{1.0f, 1.0f});
   texcoords.push_back(vec2{1.0f, 0.0f});
+  texcoords.push_back(vec2{1.0f, 1.0f});
+  texcoords.push_back(vec2{0.0f, 1.0f});
 }
 
 //--------------------------------------------------------------------
