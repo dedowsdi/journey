@@ -2,7 +2,9 @@
 #include <osgViewer/ViewerEventHandlers>
 #include <osgUtil/PrintVisitor>
 #include <osg/Point>
+#include <osg/PolygonMode>
 #include <unordered_map>
+#include <osgUtil/SmoothingVisitor>
 #include "glm.h"
 
 #define NUM_LEAVES 300
@@ -14,7 +16,7 @@
 
 #define NUM_CYLINDER_FACE 5
 #define TRUNK_RADIUS 2.5f
-#define BRANCH_RADIUS 0.35f
+#define BRANCH_RADIUS 0.35f // radius of branch with no children
 
 class SpaceColonizationTree;
 struct Leaf;
@@ -54,6 +56,7 @@ struct Branch
   osg::Vec3 pos;
   osg::Vec3 dir;
   GLfloat size = 1.0;
+  GLuint num_children = 0;
   Branch* parent;
 
   Branch(Branch* _parent, const osg::Vec3& _pos, const osg::Vec3& d):
@@ -62,7 +65,10 @@ struct Branch
     dir(d)
   {
     if(parent)
+    {
+      ++parent->num_children;
       size = parent->size * BRANCH_SCALE;
+    }
   }
 
   inline GLfloat distance2(const Leaf& l) const
@@ -258,96 +264,84 @@ public:
     }
   }
 
-  void compile()
+  std::vector<osg::Vec3> createCircle(Branch* b)
   {
-    static osg::ref_ptr<osg::Vec4Array> unitCylinderVerticesPointer = new osg::Vec4Array;
-    static osg::ref_ptr<osg::Vec3Array> unitCylinderNormalsPointer = new osg::Vec3Array;
-    osg::Vec4Array& unitCylinderVertices = *unitCylinderVerticesPointer;
-    osg::Vec3Array& unitCylinderNormals = *unitCylinderNormalsPointer;
-    if(unitCylinderVertices.empty())
+    static std::vector<osg::Vec3> unitCircle;
+    if(unitCircle.empty())
     {
-      unitCylinderVertices.reserve(NUM_CYLINDER_FACE * 6);
-      unitCylinderNormals.reserve(unitCylinderVertices.size());
+      unitCircle.reserve(NUM_CYLINDER_FACE * 6);
 
-      osg::Vec4 next(1, 0, 0, 1);
+      osg::Vec3 next(1, 0, 0);
       osg::Matrix step_rotate = osg::Matrix::rotate(glm::f2pi/NUM_CYLINDER_FACE, glm::pza);
       for (int i = 0; i < NUM_CYLINDER_FACE; ++i) 
       {
-        osg::Vec4 v0 = next;
-        osg::Vec4 v3 = v0;
-        v3.z() = 1;
-
+        unitCircle.push_back(next);
         next = next * step_rotate;
-        const osg::Vec4& v1 = next;
-        osg::Vec4 v2 = v1;
-        v2.z() = 1;
-
-        osg::Vec3 n0 = osg::Vec3(v0.x(), v0.y(), v0.z());
-        n0.normalize();
-        osg::Vec3 n1 = osg::Vec3(v1.x(), v1.y(), v1.z());
-        n1.normalize();
-
-        unitCylinderVertices.push_back(v0);
-        unitCylinderVertices.push_back(v1);
-        unitCylinderVertices.push_back(v2);
-
-        unitCylinderVertices.push_back(v2);
-        unitCylinderVertices.push_back(v3);
-        unitCylinderVertices.push_back(v0);
-
-        unitCylinderNormals.push_back(n0);
-        unitCylinderNormals.push_back(n1);
-        unitCylinderNormals.push_back(n1);
-
-        unitCylinderNormals.push_back(n1);
-        unitCylinderNormals.push_back(n0);
-        unitCylinderNormals.push_back(n0);
-
       }
+      unitCircle.push_back(unitCircle.front());
     }
 
-    osg::ref_ptr<osg::Vec4Array> vertices = new osg::Vec4Array();
+    std::vector<osg::Vec3> circle;
+
+    const osg::Vec3& bottomCenter = b->parent ? b->parent->pos : b->pos - osg::Vec3(0,0,1);
+    const osg::Vec3& topCenter = b->pos;
+    osg::Vec3 cylinderAxis = topCenter- bottomCenter;
+    cylinderAxis.normalize();
+
+    GLfloat xyscale = b->num_children == 0 ? 
+      BRANCH_RADIUS : std::max(b->size * TRUNK_RADIUS, BRANCH_RADIUS);
+
+    osg::Matrix m = osg::Matrix::rotate(glm::pza, cylinderAxis);
+    m = osg::Matrix::scale(osg::Vec3(xyscale, xyscale, 1)) * m * osg::Matrix::translate(topCenter);
+
+    std::for_each(unitCircle.begin(), unitCircle.end(), 
+        [&](const osg::Vec3& v)->void {
+          circle.push_back(v * m);
+        });
+
+    return circle;
+  }
+
+  void compile()
+  {
+    osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
     setVertexArray(vertices);
     vertices->reserve(mBranches.size() * NUM_CYLINDER_FACE * 6);
 
-    osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array(osg::Array::BIND_PER_VERTEX);
-    setNormalArray(normals);
-    normals->reserve(vertices->capacity());
 
     // there will be gaps between Branch and Branch
-    GLfloat scale_bias = 1.1;
-
     for (int i = 0; i < mBranches.size(); ++i) {
       Branch* b = mBranches[i];
       
       if(!b->parent)
         continue;
 
-      // create  cylinder as Branch
-      const osg::Vec3& bottomCenter = b->parent->pos;
-      const osg::Vec3& topCenter = b->pos;
-      osg::Vec3 cylinderAxis = topCenter- bottomCenter;
-      GLfloat zscale = cylinderAxis.length();
-      cylinderAxis/= zscale;
+      std::vector<osg::Vec3> bottomCircle = createCircle(b->parent);
+      std::vector<osg::Vec3> topCircle = createCircle(b);
+
       // need a better way to control xyscale
       //GLfloat xyscale = glm::mix(trunkRadius, BRANCH_RADIUS,
           //glm::smoothstep(0.0, 1.0, static_cast<GLdouble>(i)/mBranches.size()));
       //OSG_NOTICE << xyscale << std::endl;
-      GLfloat xyscale = std::max(b->size * TRUNK_RADIUS, BRANCH_RADIUS);
-      osg::Matrix m = osg::Matrix::rotate(glm::pza, cylinderAxis);
-      m = osg::Matrix::scale(osg::Vec3(xyscale, xyscale, zscale * scale_bias)) * m * osg::Matrix::translate(bottomCenter);
-      osg::Matrix m_i = osg::Matrix::inverse(m);
 
-      for (int i = 0; i < unitCylinderVertices.size(); ++i) {
-        vertices->push_back(unitCylinderVertices[i] * m);
-        osg::Vec4 n = osg::Vec4(unitCylinderNormals[i], 0) * m_i;
-        normals->push_back(osg::Vec3(n.x(), n.y(), n.z()));
+      for (int i = 0; i < bottomCircle.size() - 1; ++i) {
+        vertices->push_back(bottomCircle[i]);
+        vertices->push_back(bottomCircle[i+1]);
+        vertices->push_back(topCircle[i+1]);
+
+        vertices->push_back(bottomCircle[i]);
+        vertices->push_back(topCircle[i+1]);
+        vertices->push_back(topCircle[i]);
       }
-
     }
 
     removePrimitiveSet(0, getNumPrimitiveSets());
     addPrimitiveSet(new osg::DrawArrays(GL_TRIANGLES, 0, vertices->size()));
+
+    osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
+    leaf->addDrawable(this);
+    osgUtil::SmoothingVisitor sm;
+    leaf->accept(sm);
 
     OSG_NOTICE << "generate " << vertices->size() << " vertices" << std::endl;
   }
@@ -437,7 +431,8 @@ class InputHandler : public osgGA::GUIEventHandler
 int main(int argc, char* argv[])
 {
   root = new osg::Group;
-  osg::StateSet* ss = root->getOrCreateStateSet();
+  //osg::StateSet* ss = root->getOrCreateStateSet();
+  //ss->setAttributeAndModes(new osg::PolygonMode(osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE));
 
   tree = new SpaceColonizationTree();
   tree->minAttract(MIN_ATTRACT);

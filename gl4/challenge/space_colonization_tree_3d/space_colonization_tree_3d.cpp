@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include "points.h"
 #include <algorithm>
+#include "geometry_util.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -56,6 +57,7 @@ struct branch
 {
   vec3 pos;
   vec3 dir;
+  GLuint num_children = 0;
   GLfloat size = 1.0;
   branch* parent;
 
@@ -65,7 +67,10 @@ struct branch
     dir(d)
   {
     if(parent)
+    {
       size = parent->size * BRANCH_SCALE;
+      ++parent->num_children;
+    }
   }
 
   inline GLfloat distance2(const leaf& l) const
@@ -80,7 +85,7 @@ struct branch
  */
 typedef std::vector<branch*> branch_vector;
 
-class space_colonization_tree
+class space_colonization_tree : public geometry_base
 {
 protected:
   GLuint m_vao = -1;
@@ -106,7 +111,7 @@ public:
     m_branches.clear();
   }
 
-  void accept(leaf_list& leaves)
+  void accept_leaves(leaf_list& leaves)
   {
     grow_to_reach(leaves);
     attracted_to_leaves(leaves);
@@ -270,135 +275,93 @@ public:
     }
   }
 
-  void compile()
+  std::vector<vec3> createCircle(branch* b)
   {
-    static vec4_vector unit_cylinder_vertices;
-    static vec3_vector unit_cylinder_normals;
-    if(unit_cylinder_vertices.empty())
+    static std::vector<vec4> unitCircle;
+    if(unitCircle.empty())
     {
-      unit_cylinder_vertices.reserve(NUM_CYLINDER_FACE * 6);
-      unit_cylinder_normals.reserve(unit_cylinder_vertices.size());
+      unitCircle.reserve(NUM_CYLINDER_FACE * 6);
 
       vec4 next(1, 0, 0, 1);
-      mat4 step_rotate = glm::rotate(f2pi/NUM_CYLINDER_FACE, pza);
+      glm::mat4 step_rotate = glm::rotate(f2pi/NUM_CYLINDER_FACE, pza);
       for (int i = 0; i < NUM_CYLINDER_FACE; ++i) 
       {
-        vec4 v0 = next;
-        vec4 v3 = v0;
-        v3.z = 1;
-
+        unitCircle.push_back(next);
         next = step_rotate * next;
-        const vec4& v1 = next;
-        vec4 v2 = v1;
-        v2.z = 1;
-
-        vec3 n0 = glm::normalize(v0.xyz());
-        vec3 n1 = glm::normalize(v1.xyz());
-
-        unit_cylinder_vertices.push_back(v0);
-        unit_cylinder_vertices.push_back(v1);
-        unit_cylinder_vertices.push_back(v2);
-
-        unit_cylinder_vertices.push_back(v2);
-        unit_cylinder_vertices.push_back(v3);
-        unit_cylinder_vertices.push_back(v0);
-
-        unit_cylinder_normals.push_back(n0);
-        unit_cylinder_normals.push_back(n1);
-        unit_cylinder_normals.push_back(n1);
-
-        unit_cylinder_normals.push_back(n1);
-        unit_cylinder_normals.push_back(n0);
-        unit_cylinder_normals.push_back(n0);
-
       }
+      unitCircle.push_back(unitCircle.front());
     }
 
-    m_vertices.clear();
-    m_normals.clear();
-    m_vertices.reserve(m_branches.size() * NUM_CYLINDER_FACE * 6);
-    m_normals.reserve(m_vertices.capacity());
+    std::vector<vec3> circle;
+
+    const vec3& bottomCenter = b->parent ? b->parent->pos : b->pos - vec3(0,0,1);
+    const vec3& topCenter = b->pos;
+    vec3 cylinderAxis = glm::normalize(topCenter- bottomCenter);
+
+    GLfloat xyscale = b->num_children == 0 ? 
+      BRANCH_RADIUS : std::max(b->size * TRUNK_RADIUS, BRANCH_RADIUS);
+
+    glm::mat4 m = zxd::rotate_to(pza, cylinderAxis);
+    m = glm::translate(topCenter) * m * glm::scale(vec3(xyscale, xyscale, 1));
+
+    std::for_each(unitCircle.begin(), unitCircle.end(), 
+        [&](const vec4& v)->void {
+          circle.push_back((m * v).xyz());
+          //std::cout << circle.back() << std::endl;
+        });
+
+    return circle;
+  }
+
+  void compile()
+  {
+    vec3_array_ptr vertices(new vec3_array());
+    attrib_array(0, vertices);
+    vertices->reserve(m_branches.size() * NUM_CYLINDER_FACE * 6);
 
     // there will be gaps between branch and branch
-    GLfloat scale_bias = 1.1;
-
     for (int i = 0; i < m_branches.size(); ++i) {
       branch* b = m_branches[i];
       
       if(!b->parent)
         continue;
 
-      // create  cylinder as branch
-      const vec3& bottom_center = b->parent->pos;
-      const vec3& top_center = b->pos;
-      vec3 cylinder_axis = top_center - bottom_center;
-      GLfloat zscale = glm::length(cylinder_axis);
-      cylinder_axis /= zscale;
+      std::vector<vec3> bottom_circle = createCircle(b->parent);
+      std::vector<vec3> top_circle = createCircle(b);
+
       // need a better way to control xyscale
-      //GLfloat xyscale = glm::mix(TRUNK_RADIUS, BRANCH_RADIUS,
+      //GLfloat xyscale = glm::mix(trunkRadius, BRANCH_RADIUS,
           //glm::smoothstep(0.0, 1.0, static_cast<GLdouble>(i)/m_branches.size()));
-      //std::cout << xyscale << std::endl;
-      GLfloat xyscale = glm::max(b->size * TRUNK_RADIUS, BRANCH_RADIUS);
-      mat4 m = zxd::rotate_to(pza, cylinder_axis);
-      m = glm::translate(bottom_center) * m * glm::scale(vec3(xyscale, xyscale, zscale * scale_bias));
-      mat4 m_i = glm::inverse(m);
+      //OSG_NOTICE << xyscale << std::endl;
 
-      for (int i = 0; i < unit_cylinder_vertices.size(); ++i) {
-        m_vertices.push_back(m * unit_cylinder_vertices[i]);
-        vec4 n = m_i * vec4(unit_cylinder_normals[i], 0);
-        m_normals.push_back(n.xyz());
+      for (int i = 0; i < bottom_circle.size() - 1; ++i) {
+        vertices->push_back(bottom_circle[i]);
+        vertices->push_back(bottom_circle[i+1]);
+        vertices->push_back(top_circle[i+1]);
+
+        vertices->push_back(bottom_circle[i]);
+        vertices->push_back(top_circle[i+1]);
+        vertices->push_back(top_circle[i]);
       }
-
-      //for (int i = 0; i < NUM_CYLINDER_FACE; ++i) {
-        //const vec4& v0 = *(m_vertices.rbegin()+6*i);
-        ////const vec4& v3 = *(m_vertices.rbegin()+6*i+1);
-        //const vec4& v2 = *(m_vertices.rbegin()+6*i+2);
-        //vec3 n0 = glm::normalize(v0.xyz() - bottom_center);
-        //vec3 n1 = glm::normalize(v2.xyz() - top_center);
-        ////vec3 normal = glm::cross(v2.xyz() - v0.xyz(), v3.xyz() - v0.xyz());
-        ////normal = glm::normalize(normal);
-        //m_normals.push_back(n0);
-        //m_normals.push_back(n1);
-        //m_normals.push_back(n1);
-
-        //m_normals.push_back(n1);
-        //m_normals.push_back(n0);
-        //m_normals.push_back(n0);
-      //}
-
     }
 
-    if(m_vao == -1)
-      glGenVertexArrays(1, &m_vao);
+    bind_vao();
+    vertices->bind(0);
+    vertices->update_array_buffer();
 
-    if(m_vbo == -1)
-      glGenBuffers(1, &m_vbo);
+    remove_primitive_sets(0, get_num_primitive_set());
+    add_primitive_set(new draw_arrays(GL_TRIANGLES, 0, vertices->size()));
 
-    GLfloat vertices_bytes = m_vertices.size() * sizeof(vec4);
-    GLfloat normal_byes = m_normals.size() * sizeof(vec3);
+    geometry_util::smooth(*this, 1);
 
-    glBindVertexArray(m_vao);
-
-
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertices_bytes + normal_byes, 0, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 4, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(0);
-
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_bytes, glm::value_ptr(m_vertices.front()));
-    glBufferSubData(GL_ARRAY_BUFFER, vertices_bytes, normal_byes, glm::value_ptr(m_normals.front()));
-    glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(m_vertices.size() * sizeof(vec4)));
-    glEnableVertexAttribArray(1);
-
-
-    std::cout << "generate " << m_vertices.size() << " vertices" << std::endl;
+    std::cout << "generate " << vertices->size() << " vertices" << std::endl;
   }
 
-  void draw(GLuint branch_count)
+  void draw_branches(GLuint branch_count)
   {
-    glBindVertexArray(m_vao);
-    glDrawArrays(GL_TRIANGLES, 0,  branch_count * NUM_CYLINDER_FACE * 6);
+    draw_arrays* da = static_cast<draw_arrays*>(get_primitive_set(0));
+    da->count(branch_count * NUM_CYLINDER_FACE * 6);
+    geometry_base::draw();
   }
 
   GLuint num_vertices(){return m_vertices.size();}
@@ -442,7 +405,7 @@ public:
     prg1.init();
 
     prg.init();
-    prg.v_mat = glm::lookAt(vec3(0, -100, 100), vec3(0), vec3(0,0,1));
+    prg.v_mat = glm::lookAt(vec3(0, -500, 500), vec3(0), vec3(0,0,1));
     prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 2000.0f);
     set_v_mat(&prg.v_mat);
 
@@ -472,7 +435,7 @@ public:
       m_leaves.emplace_back(pos.xyz());
     }
 
-    m_tree.accept(m_leaves);
+    m_tree.accept_leaves(m_leaves);
     m_tree.compile();
 
     m_points.build_mesh(vertices);
@@ -498,9 +461,9 @@ public:
     //m_points.draw();
 
     prg.use();
-    prg.update_model(mat4(1));
+    prg.update_model(glm::translate(vec3(0, 0, -100)));
     prg.update_lighting_uniforms(lights, lm, mtl);
-    m_tree.draw(m_draw_branch_count);
+    m_tree.draw_branches(m_draw_branch_count);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

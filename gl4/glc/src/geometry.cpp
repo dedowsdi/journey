@@ -115,6 +115,14 @@ void geometry_base::add_primitive_set(primitive_set* ps)
 }
 
 //--------------------------------------------------------------------
+void geometry_base::remove_primitive_sets(GLuint index, GLuint count)
+{
+  if(index + count > m_primitive_sets.size())
+    throw std::runtime_error("error, too many remove count");
+  m_primitive_sets.erase(m_primitive_sets.begin() + index, m_primitive_sets.begin() + index + count);
+}
+
+//--------------------------------------------------------------------
 void geometry_base::set_num_instance(GLuint count)
 {
   for (int i = 0; i < m_primitive_sets.size(); ++i) {
