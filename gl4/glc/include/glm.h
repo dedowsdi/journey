@@ -117,6 +117,15 @@ vec3 transform_vector(const mat4& m, const vec3& v);
 // v0, v1 must be normalized
 mat4 rotate_to(const vec3& v0, const vec3& v1);
 
+vec3 rgb2hsb(const vec3& c);
+
+//  Function from Iñigo Quiles
+//  https://www.shadertoy.com/view/MsS3Wc
+vec3 hsb2rgb(const vec3& c);
+
+GLfloat color_difference2(const vec3& c0, const vec3& c1);
+GLfloat color_difference_256_2(const vec3& c0, const vec3& c1);
+
 // assume w is 1
 bool operator<(const vec3& lhs, const vec3& rhs);
 

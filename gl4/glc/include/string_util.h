@@ -29,9 +29,11 @@ namespace string_util
     return ss.str();
   }
 
-  std::string trim(const std::string& s, bool left = true, bool right = true);
-
+  std::string trim(const std::string& s, bool left = true, bool right = true, const std::string& token = " \t");
   std::string replace_string(const std::string& s, const std::string& a, const std::string& b);
+  std::vector<std::string> split(const std::string& s, const std::string& token = " \t\n", unsigned splitCount = -1);
+  // assume pattern is greedy
+  std::vector<std::string> split_regex(const std::string& s, const std::string& pattern = R"(\s+)", unsigned splitCount = -1);
 
   glm::vec2 stovec2(const std::string& s);
   glm::vec3 stovec3(const std::string& s);

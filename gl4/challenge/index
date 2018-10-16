@@ -5,12 +5,27 @@ TODO
 35 agar
 42 TSP with genetic algorithm
 43 TSP with genetic algorithm and crossover
+46 word interactor
+47 mad libs
+48 word counter 1
+49 word counter 2
+50 TF_ITF
+51 CLAPPY BIRD
+52 markov chain
+53 markov chain
+54 context free grama
+55 afinn
+56 afinn
+57 saving p5.js drawing to firebase
+58 asteroids
+59 asteroids
+61 white house social media data visualization
 
 finished
 1. starfield
 2. menger sponge fractal 
-3. purple rain
-4. snake
+3. snake
+4. purple rain
 5. space invader
 6. mitosis
 7. solar
@@ -30,3 +45,6 @@ finished
 21. supershape3d
 22. firework
 23. poisson disk sample
+24. blobby
+25. diastic mingchine
+26. pixel sort

@@ -1,5 +1,6 @@
 #include "string_util.h"
 #include "stream_util.h"
+#include <regex>
 
 namespace string_util
 {
@@ -17,7 +18,7 @@ std::string basename(const std::string& filename) {
 }
 
 //--------------------------------------------------------------------
-std::string trim(const std::string& s, bool left/* = true*/, bool right/* = true*/)
+std::string trim(const std::string& s, bool left/* = true*/, bool right/* = true*/, const std::string& token)
 {
   if(!left && !right)
     return s;
@@ -26,7 +27,7 @@ std::string trim(const std::string& s, bool left/* = true*/, bool right/* = true
 
   if(left)
   {
-    auto pos = s.find_first_not_of(" \t");
+    auto pos = s.find_first_not_of(token);
     if(pos != std::string::npos)
       result = s.substr(pos);
   }
@@ -35,7 +36,7 @@ std::string trim(const std::string& s, bool left/* = true*/, bool right/* = true
     return result;
 
   const std::string& candidate = left ? result : s;
-  auto pos = candidate.find_last_not_of(" \t");
+  auto pos = candidate.find_last_not_of(token);
 
   return pos == std::string::npos ? candidate : candidate.substr(0, pos + 1);
 }
@@ -51,6 +52,54 @@ std::string replace_string(const std::string& s, const std::string& a, const std
       pos = res.find(a, pos);
   }
   return res;
+}
+
+//--------------------------------------------------------------------
+std::vector<std::string> split(const std::string& s, const std::string& token/* = " \t\n"*/, unsigned splitCount/* = -1*/)
+{
+  std::vector<std::string> words;
+
+  std::string::size_type index = s.find_first_not_of(token);
+  while(index != std::string::npos)
+  {
+    auto next_index = s.find_first_of(token, index);
+    auto count = next_index == std::string::npos ? next_index : next_index - index;
+    words.push_back(s.substr(index, count));
+    index = s.find_first_not_of(token, next_index);
+  }
+  return words;
+}
+
+//--------------------------------------------------------------------
+std::vector<std::string> split_regex(const std::string& s, const std::string& pattern/* = R"(\s+)"*/, unsigned splitCount/* = -1*/)
+{
+  std::vector<std::string> words;
+  std::regex re(pattern);
+  std::smatch m;
+
+  std::string::const_iterator beg = s.begin();
+  // searh once before while loop, make sure beg starts at non pattern match
+  // character.
+  if(std::regex_search(beg, s.end(), m, re))
+  {
+    // add starting word if s doesn't starts with pattern
+    if(m.begin()->first != beg)
+      words.push_back(std::string(s.begin(), m.begin()->first));
+
+    beg = m.begin()->second;
+  }
+  else
+  {
+    words.push_back(s);
+    return words;
+  }
+
+  while(std::regex_search(beg, s.end(), m, re))
+  {
+    words.push_back(std::string(beg, m.begin()->first));
+    beg = m.begin()->second;
+  }
+  return words;
 }
 
 //--------------------------------------------------------------------

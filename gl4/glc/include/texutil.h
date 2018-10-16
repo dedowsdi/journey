@@ -6,6 +6,7 @@
 
 namespace zxd {
 fipImage fipLoadImage(const std::string& file);
+fipImage fipLoadImage32(const std::string& file);
 
 void save_texture(const std::string& filename, GLenum target, GLuint level,
   GLenum format, GLenum type, GLuint size);

@@ -22,6 +22,9 @@ set (PROJECTS
     poisson_disk_sample
     diffusion_limited
     lexicograph
+    diastic_machine
+    pixel_sort
+    photo_mosaic
     )
 
 foreach(PROJECT ${PROJECTS})

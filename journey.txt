@@ -2072,3 +2072,10 @@ cpp:
 
 glsl:
   pow(x,y) only works for positive x
+
+----------
+2.18.10.15
+
+freeimage:
+  some image use 8 bpp, but it might be color index.
+  I should always convert image to 32bits before i use it in opengl.

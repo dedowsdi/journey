@@ -1,6 +1,7 @@
 snippet gl4Main
 #include "app.h"
 #include "bitmaptext.h"
+#include <sstream>
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -58,7 +59,9 @@ public:
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		m_text.print("hello world", 10, m_info.wnd_height - 20);
+		std::stringstream ss;
+		ss << "";
+		m_text.print(ss.str(), 10, m_info.wnd_height - 20);
 		glDisable(GL_BLEND);
 	}
 

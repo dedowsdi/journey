@@ -15,6 +15,23 @@ fipImage fipLoadImage(const std::string& file) {
     std::cerr << "error : failed to load " << file << std::endl;
   }
 
+  std::cout << "load image:" << file << " width:" << fip.getWidth() << ", height:" << fip.getHeight()
+            << " bpp:" << fip.getBitsPerPixel() << std::endl;
+
+  return fip;
+}
+
+//--------------------------------------------------------------------
+fipImage fipLoadImage32(const std::string& file)
+{
+  fipImage fip = fipLoadImage(file);
+  int bpp = fip.getBitsPerPixel();
+  if(bpp != 32)
+  {
+    std::cout << "convert " << file << " to 32 bits" << std::endl;
+    if(!fip.convertTo32Bits())
+      std::cout << "convert failed!!" << std::endl;
+  }
   return fip;
 }
 

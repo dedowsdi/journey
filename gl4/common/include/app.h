@@ -91,6 +91,9 @@ public:
     return static_cast<GLfloat>(m_info.wnd_width) / m_info.wnd_height;
   }
 
+  GLfloat wnd_width() {return m_info.wnd_width;}
+  GLfloat wnd_height() {return m_info.wnd_height;}
+
   mat4 *v_mat() const { return m_v_mat; }
   void set_v_mat(mat4 *v) { m_v_mat = v; }
 
