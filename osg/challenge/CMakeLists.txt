@@ -15,6 +15,7 @@ set (PROJECTS
     space_colonization_tree_3d
     firework
     poisson_disk_sample
+    levy_flight
     )
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}"  )

@@ -46,6 +46,8 @@ public:
   };
 
 protected:
+  GLboolean m_pause; // pause update
+  GLint m_update_count; // update count during pause
   GLboolean m_reading;
   GLboolean m_camera_moving;
   GLboolean m_shutdown;
@@ -73,7 +75,10 @@ protected:
 
 public:
   app()
-      : m_camera_mode(CM_YAW_PITCH),
+      : 
+        m_pause(false),
+        m_update_count(0),
+        m_camera_mode(CM_YAW_PITCH),
         m_v_mat(0),
         m_reading(GL_FALSE),
         m_camera_moving(GL_FALSE),

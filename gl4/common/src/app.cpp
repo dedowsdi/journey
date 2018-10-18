@@ -255,7 +255,9 @@ void app::loop() {
     update_time();
     update_fps();
     update_camera();
-    update();
+    if(!m_pause || m_update_count > 0)
+      update();
+    if(m_pause && m_update_count > 0) --m_update_count;
     display();
     glfwSwapBuffers(m_wnd);
     glfwPollEvents();
@@ -319,6 +321,14 @@ void app::glfw_key(
         glfwSwapInterval(m_swap_interval ^= 1);
         std::cout << "swap interval : " << m_swap_interval << std::endl;
       } break;
+
+      case GLFW_KEY_F9:
+        m_pause = !m_pause;
+        break;
+
+      case GLFW_KEY_F10:
+        ++m_update_count;
+        break;
 
       default:
         break;

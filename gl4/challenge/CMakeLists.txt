@@ -26,6 +26,8 @@ set (PROJECTS
     pixel_sort
     photo_mosaic
     circle_pack
+    astar
+    levy_flight
     )
 
 foreach(PROJECT ${PROJECTS})

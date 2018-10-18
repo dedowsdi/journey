@@ -175,6 +175,7 @@ void draw_line(const glm::vec3& p0, const glm::vec3& p1, const glm::mat4& mvp, G
   }
 
   prg.use();
+  glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
   glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, value_ptr(mvp));
 
   glBindVertexArray(vao);
