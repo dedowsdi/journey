@@ -28,6 +28,8 @@ set (PROJECTS
     circle_pack
     astar
     levy_flight
+    islamic_pattern
+    rose
     )
 
 foreach(PROJECT ${PROJECTS})

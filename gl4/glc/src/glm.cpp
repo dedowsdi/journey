@@ -237,6 +237,32 @@ GLfloat max_abs_component(const vec3& v) {
 }
 
 //--------------------------------------------------------------------
+GLuint gcd(GLuint a, GLuint b)
+{
+  if(a == b)
+    return a;
+
+  GLuint x = a;
+  GLuint y = b;
+
+  if(a < b)
+  {
+    x = b;
+    y = a;
+  }
+
+  while(true)
+  {
+    GLuint c = x % y;
+    if(c == 0)
+      return y;
+
+    x = y;
+    y = c;
+  }
+}
+
+//--------------------------------------------------------------------
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
   const glm::mat4& w_mat_i, GLfloat radius /* = 0.8*/) {
   glm::vec4 n0 = w_mat_i * glm::vec4(p0, 0, 1);
