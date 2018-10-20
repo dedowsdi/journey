@@ -16,6 +16,7 @@ set (PROJECTS
     firework
     poisson_disk_sample
     levy_flight
+    attraction_repulsion
     )
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}"  )

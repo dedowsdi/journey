@@ -16,7 +16,7 @@
 namespace zxd {
 
 GLboolean draw_flow_field = GL_TRUE;
-twod_program0 prg;
+lightless_program prg;
 GLfloat field_width  = WIDTH/FF_COL;
 GLfloat field_height = HEIGHT/FF_ROW;
 GLfloat zoff = 0;

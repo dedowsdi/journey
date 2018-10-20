@@ -12,7 +12,7 @@
 
 namespace zxd {
 
-twod_program0 prg;
+lightless_program prg;
 key_control_item* kci_n;
 key_control_item* kci_d;
 key_control_item* kci_slice;

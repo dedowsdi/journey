@@ -37,7 +37,7 @@ const S& Container(const std::priority_queue<T, S, C>& q) {
 
 struct cell;
 
-twod_program0 prg;
+lightless_program prg;
 vec4 open_set_color = vec4(0,1,0,1);
 vec4 closed_set_color = vec4(1,0,0,1);
 vec4 path_color = vec4(0,0,1,1);

@@ -39,7 +39,7 @@
 
 namespace zxd {
 
-twod_program0 prg;
+lightless_program prg;
 GLint iteration_count = 4;
 GLfloat angle = 25.0f;
 

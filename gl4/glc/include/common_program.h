@@ -120,7 +120,7 @@ protected:
 
 };
 
-class twod_program0: public program
+class lightless_program: public program
 {
 public:
   GLint ul_color;

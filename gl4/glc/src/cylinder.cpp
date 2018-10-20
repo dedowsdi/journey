@@ -18,6 +18,8 @@ void cylinder::build_vertex() {
   vertices.push_back(vec3(0.0));
   for (int i = 0; i <= m_slice; ++i) {
     GLfloat theta = -theta_step * i;  // apply - for back face
+    if(i == m_slice)
+      theta = 0;
     vertices.push_back(
       vec3(m_base * glm::cos(theta), m_base * glm::sin(theta), 0));
   }
@@ -35,6 +37,8 @@ void cylinder::build_vertex() {
     for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
       GLfloat theta = theta_step * j;
+      if(j == m_slice)
+        theta = 0;
       GLfloat cos_theta = std::cos(theta);
       GLfloat sin_theta = std::sin(theta);
 

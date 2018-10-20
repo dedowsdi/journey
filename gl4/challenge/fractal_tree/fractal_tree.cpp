@@ -11,7 +11,7 @@
 
 namespace zxd {
 
-twod_program0 prg;
+lightless_program prg;
 
 key_control_item* trunk_len;
 key_control_item* min_branch_len;

@@ -9,22 +9,24 @@ void cone::build_vertex() {
   GLfloat height_step = m_height / m_stack;
   GLfloat radius_step = m_radius / m_stack;
 
-  GLuint num_vert_pole = m_slice + 1;
-  GLuint num_vert_center = (m_slice + 1) * 2;
+  GLuint circle_size = m_slice + 1;
+  GLuint strip_size = circle_size * 2;
 
   vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve(num_vert_pole * 2 + num_vert_center * (m_stack - 1));
+  vertices.reserve(m_stack * strip_size + m_slice + 2);
 
-  // add bottom fan
-  vertices.push_back(vec3(0.0));
-  for (int i = 0; i <= m_slice; ++i) {
-    GLfloat theta = -theta_step * i;  // apply - for back face
-    vertices.push_back(
-      vec3(m_radius * glm::cos(theta), m_radius * glm::sin(theta), 0));
+  // create bottom
+  vertices.push_back(vec3(0));
+  for (int i = 0; i <= m_slice; ++i) 
+  {
+    GLfloat angle = -theta_step * i; // in c order
+    if(i == m_slice)
+      angle = 0;
+    vertices.push_back(vec3(cos(angle), sin(angle), 0));
   }
 
-  // create stack from bottom to top, different sphere.
+  // create stack from bottom to top, different from sphere.
   // build triangle strip as
   //    0 2
   //    1 3
@@ -34,30 +36,23 @@ void cone::build_vertex() {
     GLfloat r0 = radius_step * (m_stack - i);
     GLfloat r1 = r0 - radius_step;
 
-    // add hat
-    if (i == m_stack - 1) vertices.push_back(glm::vec3(0, 0, m_height));
-
     for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
       GLfloat theta = theta_step * j;
+      if(j == m_slice)
+        theta = 0;
       GLfloat cos_theta = std::cos(theta);
       GLfloat sin_theta = std::sin(theta);
 
-      if (i != m_stack - 1) {
-        vertices.push_back(vec3(r1 * cos_theta, r1 * sin_theta, h1));
-      }
-
+      vertices.push_back(vec3(r1 * cos_theta, r1 * sin_theta, h1));
       vertices.push_back(vec3(r0 * cos_theta, r0 * sin_theta, h0));
     }
   }
 
   m_primitive_sets.clear();
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_pole));
-  GLuint next = num_vert_pole;
-  for (int i = 0; i < m_stack - 1; ++i, next += num_vert_center) {
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center));
-  }
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, next, num_vert_pole));
+  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, m_slice+2));
+  for (int i = 0; i < m_stack; ++i)
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, m_slice+2 + strip_size * i, strip_size));
 }
 
 //--------------------------------------------------------------------
@@ -85,7 +80,6 @@ void cone::build_normal() {
     normals.push_back(normal);
   }
 
-  // normals for 1 - last 2 stacks
   for (int i = 1; i < m_stack - 1; ++i) {
     // no reallocate will happen here
     normals.insert(normals.end(), normals.begin() + num_vert_bottom,
@@ -93,10 +87,11 @@ void cone::build_normal() {
   }
 
   // normals for last stacks
-  normals.push_back(vec3(0, 0, 1));
   for (int i = 0; i <= m_slice; ++i) {
+    normals.push_back(vec3(0, 0, 1));
     normals.push_back(normals[num_vert_bottom + i * 2]);
   }
+
   assert(normals.size() == num_vertices());
 }
 
@@ -117,16 +112,13 @@ void cone::build_texcoord() {
     GLfloat t0 = static_cast<GLfloat>(i + 1) / m_stack;
     GLfloat t1 = static_cast<GLfloat>(i) / m_stack;
 
-    // add pole
-    if (i == m_stack - 1) texcoords.push_back(glm::vec2(1, 0));
 
     for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
 
       texcoords.push_back(glm::vec2(s, t0));
-
-      if (i != m_stack - 1) texcoords.push_back(glm::vec2(s, t1));
+      texcoords.push_back(glm::vec2(s, t1));
     }
   }
 

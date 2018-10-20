@@ -9,17 +9,18 @@ void sphere::build_vertex() {
   GLfloat phi_step = glm::pi<GLfloat>() / m_stack;
   GLfloat theta_step = 2 * glm::pi<GLfloat>() / m_slice;
 
-  GLuint num_vert_pole = m_slice + 1;
-  GLuint num_vert_center = (m_slice + 1) * 2;
+  GLuint circle_size = m_slice + 1;
+  GLuint strip_size = circle_size * 2;
 
   vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve(num_vert_pole * 2 + num_vert_center * (m_stack - 2));
+  vertices.reserve((m_stack * strip_size));
 
   // create sphere stack by stack along z
   // build triangle strip as
   //    0 2
   //    1 3
+  // pole strip will not be created as triangle fan, as it mess up texture
   for (int i = 0; i < m_stack; ++i) {
     GLfloat phi0 = i * phi_step;
     GLfloat phi1 = phi0 + phi_step;
@@ -34,37 +35,25 @@ void sphere::build_vertex() {
     GLfloat r_times_cos_phi0 = m_radius * cos_phi0;
     GLfloat r_times_cos_phi1 = m_radius * cos_phi1;
 
-    // add pole
-    if (i == 0) vertices.push_back(glm::vec3(0, 0, m_radius));
-    if (i == m_stack - 1) vertices.push_back(glm::vec3(0, 0, -m_radius));
-
     for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
-      GLfloat theta = theta_step * (i == m_stack - 1 ? -j : j);
+      GLfloat theta = theta_step * j;
+      if(j == m_slice) theta = 0; // avoid precision problem
+
       GLfloat cos_theta = std::cos(theta);
       GLfloat sin_theta = std::sin(theta);
 
-      // x = rho * sin(phi) * cos(theta)
-      // x = rho * sin(phi) * sin(theta)
-      // z = rho * cos(phi)
-      if (i != 0)
-        vertices.push_back(vec3(r_times_sin_phi0 * cos_theta,
-          r_times_sin_phi0 * sin_theta, r_times_cos_phi0));
+      vertices.push_back(vec3(r_times_sin_phi0 * cos_theta,
+        r_times_sin_phi0 * sin_theta, r_times_cos_phi0));
 
-      if (i != m_stack - 1)
-        vertices.push_back(vec3(r_times_sin_phi1 * cos_theta,
-          r_times_sin_phi1 * sin_theta, r_times_cos_phi1));
+      vertices.push_back(vec3(r_times_sin_phi1 * cos_theta,
+        r_times_sin_phi1 * sin_theta, r_times_cos_phi1));
     }
   }
 
   m_primitive_sets.clear();
-  
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, num_vert_pole));
-  GLuint next = num_vert_pole;
-  for (int i = 0; i < m_stack - 2; ++i, next += num_vert_center) {
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, num_vert_center));
-  }
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, next, num_vert_pole));
+  for (int i = 0; i < m_stack; ++i)
+    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
 }
 
 //--------------------------------------------------------------------
@@ -95,18 +84,13 @@ void sphere::build_texcoord() {
     GLfloat t0 = 1 - static_cast<GLfloat>(i) / m_stack;
     GLfloat t1 = 1 - static_cast<GLfloat>(i + 1) / m_stack;
 
-    // add pole
-    if (i == 0) texcoords.push_back(glm::vec2(1, 0));
-    if (i == m_stack - 1) texcoords.push_back(glm::vec2(0, 0));
-
     for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
       if (i == m_stack - 1) s = 1 - s;
 
-      if (i != 0) texcoords.push_back(glm::vec2(s, t0));
-
-      if (i != m_stack - 1) texcoords.push_back(glm::vec2(s, t1));
+      texcoords.push_back(glm::vec2(s, t0));
+      texcoords.push_back(glm::vec2(s, t1));
     }
   }
 

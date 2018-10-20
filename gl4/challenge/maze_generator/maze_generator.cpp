@@ -25,7 +25,7 @@
 
 namespace zxd {
 
-twod_program0 prg;
+lightless_program prg;
 
 quad quad0;
 line line_h(GL_LINES);

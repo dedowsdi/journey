@@ -249,7 +249,7 @@ void texture_animation_program::bind_attrib_locations()
 }
 
 //--------------------------------------------------------------------
-void twod_program0::attach_shaders()
+void lightless_program::attach_shaders()
 {
   string_vector sv;
   sv.push_back("#version 330 core\n");
@@ -261,12 +261,12 @@ void twod_program0::attach_shaders()
   {
     sv.push_back("#define INSTANCE\n");
   }
-  attach(GL_VERTEX_SHADER, sv, "data/shader/2d0.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, sv, "data/shader/2d0.fs.glsl");
+  attach(GL_VERTEX_SHADER, sv, "data/shader/lightless.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, sv, "data/shader/lightless.fs.glsl");
 }
 
 //--------------------------------------------------------------------
-void twod_program0::bind_uniform_locations()
+void lightless_program::bind_uniform_locations()
 {
   uniform_location(&ul_mvp_mat, "mvp_mat");
   if(with_texcoord)
@@ -280,7 +280,7 @@ void twod_program0::bind_uniform_locations()
 }
 
 //--------------------------------------------------------------------
-void twod_program0::bind_attrib_locations()
+void lightless_program::bind_attrib_locations()
 {
   bind_attrib_location(0, "vertex");
   if(with_texcoord)

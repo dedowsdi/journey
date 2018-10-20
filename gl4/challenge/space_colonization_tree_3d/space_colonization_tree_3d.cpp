@@ -40,7 +40,7 @@ light_vector lights;
 light_model lm;
 material mtl;
 
-twod_program0 prg1;
+lightless_program prg1;
 
 struct leaf
 {

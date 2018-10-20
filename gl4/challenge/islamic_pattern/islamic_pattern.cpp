@@ -10,7 +10,7 @@
 
 namespace zxd {
 
-twod_program0 prg;
+lightless_program prg;
 
 vec4 corner_color = vec4(1,1,1,1);
 vec4 x_color = vec4(1,0,0,1);

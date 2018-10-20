@@ -20,8 +20,8 @@ mat4_vector m_mats;
 GLuint vbo;
 circle geometry;
 
-twod_program0 prg0; // picture prg
-twod_program0 prg1; // circle prg
+lightless_program prg0; // picture prg
+lightless_program prg1; // circle prg
 
 class auto_grow_circle;
 typedef std::vector<auto_grow_circle> circle_vector;

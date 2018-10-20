@@ -30,6 +30,7 @@ set (PROJECTS
     levy_flight
     islamic_pattern
     rose
+    attraction_repulsion
     )
 
 foreach(PROJECT ${PROJECTS})

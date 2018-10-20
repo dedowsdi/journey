@@ -28,7 +28,7 @@
 
 namespace zxd {
 
-twod_program0 prg;
+lightless_program prg;
 
 struct leaf
 {

@@ -9,7 +9,7 @@
 
 namespace zxd {
 
-twod_program0 prg;
+lightless_program prg;
 super_shape_2d shape;
 
 key_control_item* n1;
