@@ -31,6 +31,7 @@ namespace glm
   osg::Matrix transpose(const osg::Matrix& m);
 
   float smoothstep(float edge0, float edge1, float x);
+  float linearstep(float edge0, float edge1, float x);
 
   template<typename T, typename  U>
   T mix(const T& x, const T& y, U a)

@@ -151,4 +151,10 @@ float smoothstep(float edge0, float edge1, float x)
   return t*t * (3 - 2 * t);
 }
 
+//--------------------------------------------------------------------
+float linearstep(float edge0, float edge1, float x)
+{
+  return osg::clampTo((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+}
+
 }
