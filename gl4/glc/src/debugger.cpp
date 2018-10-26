@@ -47,6 +47,7 @@ void draw_point(const glm::vec3& point, const glm::mat4& mvp, GLfloat size, cons
   }
 
   prg.use();
+  glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
   glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, value_ptr(mvp));
 
   glBindVertexArray(vao);
@@ -217,6 +218,7 @@ void draw_line(const glm::vec2& p0, const glm::vec2& p1, const glm::mat4& mvp, G
   }
 
   prg.use();
+  glUniform4fv(prg.ul_color, 1, value_ptr(color));
   glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, value_ptr(mvp));
 
   glBindVertexArray(vao);

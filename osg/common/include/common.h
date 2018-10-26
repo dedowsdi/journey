@@ -28,7 +28,7 @@ extern osg::Camera* createRTTCamera(osg::Camera::BufferComponent buffer,
   osg::Texture* tex, bool isAbsolute = false);
 
 osg::Camera* createHudCamera(double left, double right, double bottom,
-  double top, double near, double far);
+  double top, double near = -1, double far = 1);
 // create 1:1 hud camera
 osg::Camera* createHudCamera(
   GLuint screenIdentifier = 0, double near = -1, double far = 1);

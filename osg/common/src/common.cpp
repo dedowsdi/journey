@@ -94,11 +94,8 @@ osg::Camera* createHudCamera(double left, double right, double bottom,
 
   camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
   camera->setAllowEventFocus(false);  // no event
-  // clear depth only, make sure text render on current graph
   camera->setClearMask(GL_DEPTH_BUFFER_BIT);
   camera->setRenderOrder(osg::Camera::POST_RENDER);
-  // camera->setProjectionMatrix(osg::Matrix::ortho2D(left, right, bottom,
-  // top));
   camera->setProjectionMatrix(
     osg::Matrix::ortho(left, right, bottom, top, near, far));
   camera->setViewMatrix(osg::Matrix::identity());

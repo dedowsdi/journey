@@ -9,6 +9,7 @@
 
 namespace glm
 {
+  float random();
   float linearRand(float a, float b);
   osg::Vec2 linearRand(const osg::Vec2& a, const osg::Vec2& b);
   osg::Vec3 linearRand(const osg::Vec3& a, const osg::Vec3& b);

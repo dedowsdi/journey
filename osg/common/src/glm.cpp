@@ -5,9 +5,16 @@ namespace glm
 {
 
 //--------------------------------------------------------------------
+float random()
+{
+  return linearRand(0, 1);
+}
+
+//--------------------------------------------------------------------
 float linearRand(float a, float b)
 {
-  static std::mt19937 engine;
+  static std::random_device rd;
+  static std::mt19937 engine(rd);
   std::uniform_real_distribution<float> dist(a, b);
   return dist(engine);
 }

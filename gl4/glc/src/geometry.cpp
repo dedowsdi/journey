@@ -1,5 +1,6 @@
 #include "geometry.h"
 #include "common.h"
+#include "string_util.h"
 
 namespace zxd {
 
@@ -92,6 +93,14 @@ void geometry_base::bind_and_update_buffer()
     m_attributes[i]->bind(i);
     m_attributes[i]->update_array_buffer();
   }
+}
+
+//--------------------------------------------------------------------
+void geometry_base::bind_and_update_buffer(GLint index)
+{
+  bind_vao();
+  if(index >= m_attributes.size())
+    throw std::runtime_error("illegal attrib index " + string_util::to(index));
 }
 
 //--------------------------------------------------------------------

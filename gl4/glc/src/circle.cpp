@@ -21,7 +21,7 @@ void circle::build_vertex()
     vertices->push_back(vec2(x, y));
   }
 
-  GLenum mode = m_type == FILL ? GL_TRIANGLE_STRIP : GL_LINE_STRIP;
+  GLenum mode = m_type == FILL ? GL_TRIANGLE_FAN : GL_LINE_STRIP;
   add_primitive_set(new draw_arrays(mode, 0, vertices->size()));
 }
 

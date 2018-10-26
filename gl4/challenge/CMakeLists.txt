@@ -31,6 +31,13 @@ set (PROJECTS
     islamic_pattern
     rose
     attraction_repulsion
+    butterfly
+    fractal_spirograph
+    forward_kinematics
+    inverse_kinematics
+    shakespeare_monkey
+    smart_rocket
+    bloop
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -63,6 +63,7 @@ public:
   void include_tangent(GLboolean v){ m_include_tangent = v; }
 
   void bind_and_update_buffer();
+  void bind_and_update_buffer(GLint index);
 
   primitive_set* get_primitive_set(GLuint index);
   GLuint get_num_primitive_set();

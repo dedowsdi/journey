@@ -1,6 +1,5 @@
 TODO
 23 3d cloth with toxiclibs
-32 smart rocket
 34 flappy bird
 35 agar
 42 TSP with genetic algorithm
@@ -22,7 +21,21 @@ TODO
 61 white house social media data visualization
 74 mapping earthquake data
 75 3d earthquake data visualization
-76 steering behavior
+79 plinko 1
+80 plinko 2
+81 plinko 3
+82 plinko 4
+83 texture cloth simulation 1
+84 texture cloth simulation 2
+91 countdown timer
+92 pong
+93 bfs 1
+94 bfs 2
+95 evolutionary steering behavior 1
+96 evolutionary steering behavior 2
+97 evolutionary steering behavior 3
+98 evolutionary steering behavior 4
+99 evolutionary steering behavior 5
 
 finished
 1. starfield
@@ -57,3 +70,11 @@ finished
 30. islamic_pattern
 31. rose
 32. attraction and repulsion
+33. steer
+34. butterfly
+35. fractal spirograph
+36. forward kinematics
+37. inverse kinematics
+38. shakespear monkey
+39. smart rocket
+40. bloop

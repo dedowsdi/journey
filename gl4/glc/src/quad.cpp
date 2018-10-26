@@ -8,13 +8,16 @@ namespace zxd {
 void draw_quad(GLuint tex_index /* = 0*/) {
   static quad q;
   static quad_program prg;
-  q.build_mesh();
+  if (q.vao() == -1) {
+    q.include_texcoord(true);
+    q.build_mesh();
+  }
 
   if (prg.object == -1) {
     prg.init();
   }
 
-  glUseProgram(prg.object);
+  prg.use();
   prg.update_uniforms(tex_index);
   q.draw();
 }
@@ -94,6 +97,30 @@ void quad::build_tangent() {
   tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
   tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
   tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
+}
+
+//--------------------------------------------------------------------
+GLfloat quad::left()
+{
+  return glm::min(m_v0.x, m_v3.x);
+}
+
+//--------------------------------------------------------------------
+GLfloat quad::right()
+{
+  return glm::max(m_v1.x, m_v2.x);
+}
+
+//--------------------------------------------------------------------
+GLfloat quad::bottom()
+{
+  return glm::min(m_v0.y, m_v1.y);
+}
+
+//--------------------------------------------------------------------
+GLfloat quad::top()
+{
+  return glm::max(m_v2.y, m_v3.y);
 }
 
 }
