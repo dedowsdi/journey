@@ -38,6 +38,7 @@ set (PROJECTS
     shakespeare_monkey
     smart_rocket
     bloop
+    clock
     )
 
 foreach(PROJECT ${PROJECTS})

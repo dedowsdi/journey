@@ -38,6 +38,7 @@ set(GLC_SRCS
     src/geometry_util.cpp
     src/circle.cpp
     src/rose.cpp
+    src/capsule2d.cpp
     )
 
 add_library(glc 
