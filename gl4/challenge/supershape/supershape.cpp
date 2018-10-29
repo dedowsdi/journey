@@ -3,6 +3,7 @@
 #include "common_program.h"
 #include "super_shape_2d.h"
 #include <sstream>
+#include "debugger.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -78,6 +79,8 @@ public:
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
     shape.draw();
+    
+    debugger::draw_point(shape.attrib_vec2_array(0)->get_vector(), mvp_mat, 5, vec4(0,0,0,1));
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

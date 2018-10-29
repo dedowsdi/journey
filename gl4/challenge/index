@@ -43,6 +43,9 @@ TODO
 107 frogger 4
 108 acrostic
 110 wikipedia api
+114 number guessing chatbot
+115 voice chatbot
+
 finished
 1. starfield
 2. menger sponge fractal 
@@ -85,3 +88,5 @@ finished
 39. smart rocket
 40. bloop
 41. movie recommender(k nearest neighbour)
+42. pring10
+43. recursion

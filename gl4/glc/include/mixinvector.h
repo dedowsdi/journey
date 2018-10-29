@@ -55,6 +55,8 @@ public:
 
   virtual ~mixin_vector() {}
 
+  vector_type& get_vector(){return _impl;}
+
   void clear() { _impl.clear(); }
   void resize(size_type new_size, const value_type& fill_value = value_type()) {
     _impl.resize(new_size, fill_value);

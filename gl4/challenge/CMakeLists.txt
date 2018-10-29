@@ -40,6 +40,7 @@ set (PROJECTS
     bloop
     clock
     movie_recommender
+    recursion
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
