@@ -14,16 +14,7 @@ void rose::build_vertex()
   GLuint n = m_n / g;
   GLuint d = m_d / g;
 
-  GLfloat period;
-  if(d&1)
-  {
-    period = d * fpi * (n&1 ? 1 : 2);
-  }
-  else
-  {
-    // n is odd
-    period = d*fpi*2;
-  }
+  GLfloat period = d&1 && n&1 && m_offset == 0 ? (d * fpi) : (d * f2pi);
 
   vertices->clear();
   vertices->reserve(m_slice + 1);
@@ -36,7 +27,7 @@ void rose::build_vertex()
   {
     GLfloat theta = start_angle + step_angle * i;
     GLfloat ktheta = k*theta;
-    GLfloat r = cos(ktheta);
+    GLfloat r = cos(ktheta) + m_offset;
     GLfloat x = r * cos(theta) * m_radius;
     GLfloat y = r * sin(theta) * m_radius;
     vertices->push_back(vec2(x,y));
