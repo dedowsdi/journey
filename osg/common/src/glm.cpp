@@ -13,8 +13,7 @@ float random()
 //--------------------------------------------------------------------
 float linearRand(float a, float b)
 {
-  static std::random_device rd;
-  static std::mt19937 engine(rd);
+  static std::mt19937 engine;
   std::uniform_real_distribution<float> dist(a, b);
   return dist(engine);
 }

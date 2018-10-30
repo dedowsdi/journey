@@ -19,6 +19,7 @@ set (PROJECTS
     attraction_repulsion
     steer
     fractal_spirograph
+    cube_wave
     )
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}"  )

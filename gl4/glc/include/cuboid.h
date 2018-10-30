@@ -18,6 +18,9 @@ public:
   // as i'm using strip and fan, normal should be vertex normal.
   void build_normal();
   void build_texcoord();
+
+  const glm::vec3& half_diag() const { return m_half_diag; }
+  void half_diag(const glm::vec3& v){ m_half_diag = v; }
 };
 }
 

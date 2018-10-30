@@ -5,6 +5,12 @@ using namespace glm;
 namespace zxd {
 
 //--------------------------------------------------------------------
+mat4 isometric_projection(GLfloat d, const vec3& center, const vec3& up/* = pza*/)
+{
+  return glm::lookAt(vec3(d, -d, d), center, up);
+}
+
+//--------------------------------------------------------------------
 vec3 make_floor(const vec3& lhs, const vec3& rhs) {
   return vec3(
     std::min(lhs.x, rhs.x), std::min(lhs.y, rhs.y), std::min(lhs.z, rhs.z));

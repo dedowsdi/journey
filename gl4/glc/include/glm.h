@@ -82,8 +82,12 @@ typedef vec3_vector::const_iterator v3v_ci;
 typedef vec4_vector::const_iterator v4v_ci;
 
 
-// follow convention of glm, always return
+// create a cube in 1st quadrant, stick it's 3 laterials to frame axes, look at
+// origin from the longest vertex, the angle between any two projected axes
+// should be 120
+mat4 isometric_projection(GLfloat d, const vec3& center = vec3(0), const vec3& up = pza);
 
+// follow convention of glm, always return
 vec3 make_floor(const vec3& lhs, const vec3& rhs);
 
 vec3 make_ceil(const vec3& lhs, const vec3& rhs);

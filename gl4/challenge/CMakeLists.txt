@@ -41,6 +41,7 @@ set (PROJECTS
     clock
     movie_recommender
     recursion
+    cube_wave
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
