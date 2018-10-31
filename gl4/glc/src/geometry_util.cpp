@@ -126,4 +126,112 @@ void smooth(zxd::geometry_base& geometry, unsigned normal_attrib_index)
 
   std::cout << "finish smooth" << std::endl;
 }
+
+//--------------------------------------------------------------------
+zxd::vec3_vector create_circle(GLfloat radius, GLuint slices,
+    const glm::vec3& center, const glm::vec3& normal)
+{
+  vec3_vector vertices;
+  vertices.reserve(slices+1);
+  GLfloat step_angle = f2pi / slices;
+  for (int i = 0; i < slices; ++i) {
+    GLfloat angle = step_angle * i;
+    vertices.push_back(vec3(radius* cos(angle), radius * sin(angle), 0));
+  }
+  vertices.push_back(vertices.front());
+
+  return transform(vertices, glm::translate(center) * zxd::rotate_to_any(pza, normal));
+}
+
+//--------------------------------------------------------------------
+zxd::vec3_vector extrude_along_line_strip(const zxd::vec3_vector& vertices, GLfloat radius,
+    GLuint num_faces/* = 6*/, GLuint type/* = 0*/)
+{
+
+  if(vertices.size() < 2)
+    throw std::runtime_error("you need at least 2 vertiices to extrude along");
+
+  vec3_vector result;
+
+  vec3_vector circle = create_circle(radius, num_faces);
+
+  vec3_vector circle0 = transform(circle,
+      glm::translate(vertices.front()) * zxd::rotate_to_any(pza, vertices.at(1) - vertices.at(0)));
+
+  if(type == 0)
+  {
+    result.reserve(num_faces * vertices.size() * 2);
+    // triangle strip for each face
+    std::vector<vec3_vector> strips;
+    strips.resize(num_faces);
+    for (int i = 0; i < num_faces; ++i)
+      strips[i].reserve(vertices.size() * 2);
+
+    for (int j = 0; j < circle0.size() - 1; ++j) 
+    {
+      vec3_vector& strip = strips[0];
+      strip.push_back(circle0[j]);
+      strip.push_back(circle0[j+1]);
+    }
+
+    for (int i = 1; i < vertices.size(); ++i) {
+      vec3_vector circle1 = transform(circle, 
+          glm::translate(vertices.at(i)) * zxd::rotate_to_any(pza, vertices.at(i) - vertices.at(i-1)));
+
+      for (int j = 0; j < circle0.size() - 1; ++j) 
+      {
+        vec3_vector& strip = strips[j];
+        strip.push_back(circle1[j]);
+        strip.push_back(circle1[j+1]);
+      }
+    }
+
+    for (int i = 0; i < strips.size(); ++i) {
+      result.insert(result.end(),
+          std::make_move_iterator(strips[i].begin()), std::make_move_iterator(strips[i].end()));
+    }
+
+    assert(result.size() == (num_faces * vertices.size() * 2));
+  }
+  else if(type == 1)
+  {
+    result.reserve((num_faces + 1) * vertices.size());
+    // triangles
+    for (int i = 1; i < vertices.size(); ++i) {
+      vec3_vector circle1 = transform(circle, 
+          glm::translate(vertices.at(i)) * zxd::rotate_to_any(pza, vertices.at(i) - vertices.at(i-1)));
+
+      for (int j = 0; j < circle0.size() - 1; ++j) {
+        result.push_back(circle0.at(j));
+        result.push_back(circle0.at(j+1));
+        result.push_back(circle1.at(j+1));
+
+        result.push_back(circle0.at(j));
+        result.push_back(circle1.at(j+1));
+        result.push_back(circle1.at(j));
+      }
+      circle0 = std::move(circle1);
+    }
+
+    assert(result.size() == (num_faces + 1) * vertices.size());
+  }
+
+  std::cout << "finished extruding, generate " << result.size() << " vertices" << std::endl;
+  return result;
+}
+
+//--------------------------------------------------------------------
+zxd::vec3_vector transform(const zxd::vec3_vector& vertices, const glm::mat4& m)
+{
+  vec3_vector result;
+  result.reserve(vertices.size());
+
+  for(auto& item : vertices)
+  {
+    vec4 v = m * vec4(item, 1);
+    result.push_back(v.xyz());
+  }
+  return result;
+}
+
 }

@@ -350,7 +350,7 @@ int main(int argc, char* argv[])
 
   text = new osgText::Text;
   text->setDataVariance(osg::Object::DYNAMIC);
-  text->setFont(osgText::readFontFile("fronts/arial.ttf"));
+  text->setFont(osgText::readFontFile("fonts/arial.ttf"));
   text->setCharacterSize(20);
   text->setPosition(osg::Vec3(-w + 20, h - 30, 0));
   osg::ref_ptr<osg::Geode> textLeaf = new osg::Geode();

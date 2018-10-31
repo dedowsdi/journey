@@ -10,6 +10,7 @@ set(COMMON_SRCS
     src/submenu.cpp
     src/zmath.cpp
     src/matstack.cpp
+    src/geometryutil.cpp
 )
 
 add_library(common SHARED ${COMMON_SRCS})

@@ -2098,3 +2098,10 @@ cpp:
       }
 
 
+----------
+2.18.10.30
+
+cpp:
+
+named return value optimization (NRVO) (copy elision) is commonly implemented by
+compiler(don't have to). It's preferable to return by value, even in c++11.

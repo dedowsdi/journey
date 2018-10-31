@@ -121,6 +121,8 @@ vec3 transform_vector(const mat4& m, const vec3& v);
 // v0, v1 must be normalized
 mat4 rotate_to(const vec3& v0, const vec3& v1);
 
+mat4 rotate_to_any(const vec3& v0, const vec3& v1);
+
 vec3 rgb2hsb(const vec3& c);
 
 //  Function from Iñigo Quiles

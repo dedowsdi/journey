@@ -112,6 +112,12 @@ mat4 rotate_to(const vec3& v0, const vec3& v1)
 }
 
 //--------------------------------------------------------------------
+mat4 rotate_to_any(const vec3& v0, const vec3& v1)
+{
+  return rotate_to(glm::normalize(v0), glm::normalize(v1));
+}
+
+//--------------------------------------------------------------------
 vec3 rgb2hsb(const vec3& c)
 {
   vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);

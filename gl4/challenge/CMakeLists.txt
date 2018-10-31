@@ -42,6 +42,7 @@ set (PROJECTS
     movie_recommender
     recursion
     cube_wave
+    knot
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
