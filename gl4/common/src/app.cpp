@@ -256,7 +256,13 @@ void app::loop() {
     update_fps();
     update_camera();
     if(!m_pause || m_update_count > 0)
+    {
+      if(m_time_update)
+        m_timer.reset();
       update();
+      if(m_time_update)
+        std::cout << "update : " << m_timer.time_miliseconds() << "ms" << std::endl;
+    }
     if(m_pause && m_update_count > 0) --m_update_count;
     display();
     glfwSwapBuffers(m_wnd);
@@ -371,6 +377,9 @@ void app::glfw_key(
           vec3 center = eye + 10.0f * -glm::row(*m_v_mat, 2).xyz();
           *m_v_mat = glm::lookAt(eye, center, pza);
         }
+        break;
+      case GLFW_KEY_F8:
+        m_time_update ^= 1;
         break;
       case GLFW_KEY_LEFT:
         m_move_dir |= MD_LEFT;

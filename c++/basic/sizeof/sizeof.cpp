@@ -27,6 +27,13 @@ struct C {
   C(...) {}
 };
 
+
+struct D {
+  bool b;
+  float f;
+  float f1[2];
+};
+
 template <typename T>
 T makeType();
 
@@ -43,6 +50,7 @@ int main(int argc, char *argv[]) {
   printSize(void *);
   printSize(A);
   printSize(B);
+  printSize(D);
 
   B b;
   printSize(b);

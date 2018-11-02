@@ -23,6 +23,9 @@ namespace glm
   osg::Vec3 gaussRand(const osg::Vec3& mean, const osg::Vec3& deviation);
   osg::Vec4 gaussRand(const osg::Vec4& mean, const osg::Vec4& deviation);
 
+  template <typename T>
+  T floor(const T& t);
+
   osg::Vec3 vec3(float x);
   osg::Vec4 vec4(float x);
 
@@ -63,6 +66,17 @@ namespace glm
   const osg::Vec4 hnza(0, 0, -1, 1);
   const osg::Vec3 zp(0, 0, 0);
   const osg::Vec4 hzp(0, 0, 0, 1);
+
+//--------------------------------------------------------------------
+template <typename T>
+T floor(const T& t)
+{
+  T result;
+  for (int i = 0; i < T::num_components; ++i)
+    result[i] = std::floor(t[i]);
+  return result;
+}
+
 }
 
 

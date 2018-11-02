@@ -134,6 +134,28 @@ protected:
   void bind_attrib_locations();
 };
 
+class billboard_program: public program
+{
+public:
+  GLint ul_camera_pos;
+  GLint ul_camera_up;
+
+  bool tex_offset = false;
+  bool use_camera_up = true;
+  bool scale = false;
+  bool rotate = false;
+
+public:
+  void update_uniforms();
+
+protected:
+  void attach_shaders();
+  void bind_uniform_locations();
+  void bind_attrib_locations();
+
+
+};
+
 }
 
 #endif /* COMMON_PROGRAM_H */

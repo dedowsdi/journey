@@ -10,6 +10,7 @@
 #include <string>
 #include "glm.h"
 #include "param.h"
+#include "timer.h"
 
 namespace zxd {
 
@@ -52,6 +53,7 @@ protected:
   GLboolean m_camera_moving;
   GLboolean m_shutdown;
   GLboolean m_dirty_view; // will be true if camera rotated, it's child class's job to set it back to false.
+  GLboolean m_time_update = GL_FALSE;
   GLuint m_move_dir;
   GLuint m_swap_interval{1};
   GLuint m_frame_number;
@@ -72,6 +74,8 @@ protected:
   vec3 m_camera_translation;  // translation during CM_FREE mode
 
   key_control m_control;
+
+  timer m_timer;
 
 public:
   app()

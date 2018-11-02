@@ -43,6 +43,7 @@ set (PROJECTS
     recursion
     cube_wave
     knot
+    snow
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

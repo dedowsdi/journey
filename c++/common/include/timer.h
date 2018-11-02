@@ -7,12 +7,20 @@ class Timer {
 public:
   Timer() : mStart(std::chrono::steady_clock::now()) {}
 
-  inline void reset() { mStart = std::chrono::steady_clock::now(); }
+  void reset() { mStart = std::chrono::steady_clock::now(); }
 
-  inline double time() {
-    std::chrono::duration<double> elapsedTime =
-      std::chrono::steady_clock::now() - mStart;
-    return elapsedTime.count();
+  std::chrono::steady_clock::duration time() {
+    return std::chrono::steady_clock::now() - mStart;
+  }
+
+  double seconds()
+  {
+    return std::chrono::duration<double, std::ratio<1, 1>>(time()).count();
+  }
+
+  double miliseconds()
+  {
+    return std::chrono::duration<double, std::ratio<1, 1000>>(time()).count();
   }
 
 protected:

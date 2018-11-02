@@ -19,7 +19,7 @@ void _sort(_It beg, _It end) {
     // one
     typename _It::value_type key = *i;
     _It j = i - 1;
-    while (j != beg && *j > key) {
+    while (j >= beg && *j > key) {
       *(j + 1) = *j;
       --j;
     }

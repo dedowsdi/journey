@@ -11,6 +11,7 @@ set(COMMON_SRCS
     src/zmath.cpp
     src/matstack.cpp
     src/geometryutil.cpp
+    src/streamutil.cpp
 )
 
 add_library(common SHARED ${COMMON_SRCS})

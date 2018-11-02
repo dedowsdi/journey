@@ -19,10 +19,10 @@ void main() {
   ev = normalize(ev);
 
   vec3 up = camera_up;
-  vec3 right = normalize(cross(up, ev));
-  up = cross(ev, right);
+  vec3 side = normalize(cross(up, ev));
+  up = cross(ev, side);
 
-  mat4 m_mat = mat4(mat3(right, up, ev));
+  mat4 m_mat = mat4(mat3(side, up, ev));
   m_mat[3].xyz = translation;
 
   vo.texcoord = vertex.zw;

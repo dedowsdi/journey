@@ -15,9 +15,9 @@ uniform mat4 vp_mat;
 
 void main() {
   vec3 w_xa = vec3(v_mat[0][0], v_mat[1][0], v_mat[2][0]);
-  vec3 w_xy = vec3(v_mat[0][1], v_mat[1][1], v_mat[2][1]);
+  vec3 w_ya = vec3(v_mat[0][1], v_mat[1][1], v_mat[2][1]);
 
-  vec3 v = translation + w_xa * vertex.x + w_xy * vertex.y;
+  vec3 v = translation + w_xa * vertex.x + w_ya * vertex.y;
   vo.texcoord = vertex.zw;
 
   gl_Position = vp_mat * vec4(v, 1);

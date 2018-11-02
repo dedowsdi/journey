@@ -90,6 +90,7 @@ glm::vec4 vertices[] = {
 // clang-format on
 
 GLuint vao;
+GLuint vbo;
 vec3_vector translations;
 
 class billboard_app : public app {
@@ -135,20 +136,25 @@ protected:
     //glGenerateMipmap(GL_TEXTURE_2D);
 
     // create vertex buffer
-    GLuint vbo;
     glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    GLuint vertex_buffer;
+    glGenBuffers(1, &vertex_buffer);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), value_ptr(vertices[0]),
       GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(1);
+    glVertexAttribDivisor(1, 1);
 
     // init billboards
     reset_billboards();
@@ -162,26 +168,9 @@ protected:
         glm::linearRand(glm::vec3(-30.0f), glm::vec3(30.0f)));
     }
 
-    // setup instance attribute
-    glBindVertexArray(vao);
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, translations.size() * sizeof(vec3),
       value_ptr(translations[0]), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(1);
-    glVertexAttribDivisor(1, 1);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(1);
-    glVertexAttribDivisor(1, 1);
-
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(2);
-    glVertexAttribDivisor(2, 1);
   }
 
   virtual void display() {

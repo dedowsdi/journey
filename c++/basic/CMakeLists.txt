@@ -21,6 +21,10 @@ set (PROJECTS
     array
     mem_fn
     parameter_pack
+    stl_sort
+    adl
+    copy_elision
+    copy_swap
     )
 
 foreach(PROJECT ${PROJECTS})

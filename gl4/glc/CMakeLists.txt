@@ -39,6 +39,8 @@ set(GLC_SRCS
     src/circle.cpp
     src/rose.cpp
     src/capsule2d.cpp
+    src/texpack.cpp
+    src/timer.cpp
     )
 
 add_library(glc 

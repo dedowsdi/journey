@@ -289,4 +289,61 @@ void lightless_program::bind_attrib_locations()
     bind_attrib_location(2, "m_mat");
 }
 
+//--------------------------------------------------------------------
+void billboard_program::attach_shaders()
+{
+  string_vector sv;
+  sv.push_back("#version 430 core\n");
+  if(use_camera_up)
+    sv.push_back("#define USE_CAMERA_UP\n");
+  if(scale)
+    sv.push_back("#define SCALE\n");
+  if(rotate)
+    sv.push_back("#define ROTATE\n");
+  if(tex_offset)
+    sv.push_back("#define TEX_OFFSET\n");
+
+  attach(GL_VERTEX_SHADER, sv, "data/shader/billboard.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, sv, "data/shader/billboard.fs.glsl");
+}
+
+//--------------------------------------------------------------------
+void billboard_program::bind_uniform_locations()
+{
+  uniform_location(&ul_vp_mat, "vp_mat");
+  uniform_location(&ul_camera_pos, "camera_pos");
+  if(use_camera_up)
+    uniform_location(&ul_camera_up, "camera_up");
+}
+
+//--------------------------------------------------------------------
+void billboard_program::bind_attrib_locations()
+{
+  // It is permissible to bind a generic attribute index to an attribute
+  // variable name that is never used in a vertex shader.
+  bind_attrib_location(0, "vertex");
+  bind_attrib_location(1, "texcoord");
+  bind_attrib_location(2, "translation");
+  bind_attrib_location(3, "size");
+  bind_attrib_location(4, "angle");
+}
+
+//--------------------------------------------------------------------
+void billboard_program::update_uniforms()
+{
+  vp_mat = p_mat * v_mat;
+  glUniformMatrix4fv(ul_vp_mat, 1, 0, glm::value_ptr(vp_mat));
+
+  vec3 camera_pos = -v_mat[3].xyz();
+  camera_pos = vec3(glm::dot(v_mat[0].xyz(), camera_pos),
+      glm::dot(v_mat[1].xyz(), camera_pos),
+      glm::dot(v_mat[2].xyz(), camera_pos));
+  glUniform3fv(ul_camera_pos, 1,  glm::value_ptr(camera_pos));
+
+  if(use_camera_up)
+  {
+    glUniform3fv(ul_camera_up, 1,  glm::value_ptr(glm::row(v_mat, 1).xyz()));
+  }
+}
+
 }

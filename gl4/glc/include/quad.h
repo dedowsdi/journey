@@ -48,8 +48,28 @@ public:
   GLfloat right();
   GLfloat bottom();
   GLfloat top();
+};
+
+class billboard_quad : public geometry_base
+{
+protected:
+  vec2 m_v0 = vec2(-5);
+  vec2 m_v1 = vec2(5);
+  vec2 m_texcoord0 = vec2(0);
+  vec2 m_texcoord1 = vec2(1);
+
+public:
+  billboard_quad(){}
+
+  void rect(const vec2& v0, const vec2& v1);
+  void texcoord(const vec2& tc0, const vec2& tc1);
+
+protected:
+  void build_vertex();
+  void build_texcoord();
 
 };
+
 }
 
 #endif /* QUAD_H */
