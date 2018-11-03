@@ -2124,3 +2124,8 @@ cpp:
   You don’t have to qualify the namespace for functions if one or more argument
   types are defined in the namespace of the function.
 
+-----------
+2018.11.2
+
+gl:
+  The contents of the back buffer become undefined after a swap.

@@ -250,7 +250,7 @@ void app::finishe_reading() { m_reading = GL_FALSE; }
 //--------------------------------------------------------------------
 void app::loop() {
   // TODO swap interval not working on my laptop gt635m
-  glfwSwapInterval(m_swap_interval);
+  //glfwSwapInterval(m_swap_interval);
   while (!glfwWindowShouldClose(m_wnd)) {
     update_time();
     update_fps();
@@ -259,7 +259,9 @@ void app::loop() {
     {
       if(m_time_update)
         m_timer.reset();
+
       update();
+
       if(m_time_update)
         std::cout << "update : " << m_timer.time_miliseconds() << "ms" << std::endl;
     }

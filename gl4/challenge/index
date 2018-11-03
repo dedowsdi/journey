@@ -49,6 +49,11 @@ TODO
 119 image chrome extension 2
 120 word definition
 121 the game of life
+125 langton's ant
+127 snakes & ladders 1
+127 snakes & ladders 2
+127 snakes & ladders 3
+130 xor problem
 
 finished
 1. starfield
@@ -97,3 +102,5 @@ finished
 44. cube wave
 45. knot
 46. snow
+47. floyd steinberg dithering
+48. double pendulum

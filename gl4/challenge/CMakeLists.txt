@@ -44,6 +44,8 @@ set (PROJECTS
     cube_wave
     knot
     snow
+    floyd_steinberg_dithering
+    double_pendulum
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

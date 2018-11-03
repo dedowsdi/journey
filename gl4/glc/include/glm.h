@@ -36,10 +36,12 @@ static const GLfloat fpi = glm::pi<GLfloat>();
 static const GLfloat f2pi = fpi * 2;
 static const GLfloat fpi2 = fpi / 2;
 static const GLfloat fpi4 = fpi / 4;
+static const GLfloat fpi8 = fpi / 8;
 static const GLdouble dpi = glm::pi<GLdouble>();
 static const GLfloat d2pi = dpi * 2;
 static const GLfloat dpi2 = dpi / 2;
 static const GLfloat dpi4 = dpi / 4;
+static const GLfloat dpi8 = dpi / 8;
 
 static const glm::vec3 pxa(1, 0, 0);
 static const glm::vec3 nxa(-1, 0, 0);
@@ -123,11 +125,17 @@ mat4 rotate_to(const vec3& v0, const vec3& v1);
 
 mat4 rotate_to_any(const vec3& v0, const vec3& v1);
 
+// use rect center as origin, hw, hh as minimum half width and height, adjusted
+// according to aspect
+mat4 rect_ortho(GLfloat hw, GLfloat hh, GLfloat aspect, GLfloat n = -1, GLfloat f = 1);
+
 vec3 rgb2hsb(const vec3& c);
 
 //  Function from Iñigo Quiles
 //  https://www.shadertoy.com/view/MsS3Wc
 vec3 hsb2rgb(const vec3& c);
+
+float rgb2luminance(const vec3& c, const vec3& weight = vec3(0.3086, 0.6094, 0.0820));
 
 GLfloat color_difference2(const vec3& c0, const vec3& c1);
 GLfloat color_difference_256_2(const vec3& c0, const vec3& c1);

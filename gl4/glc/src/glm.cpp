@@ -118,6 +118,16 @@ mat4 rotate_to_any(const vec3& v0, const vec3& v1)
 }
 
 //--------------------------------------------------------------------
+mat4 rect_ortho(GLfloat hw, GLfloat hh, GLfloat aspect, GLfloat n/* = -1*/, GLfloat f/* = 1*/)
+{
+  if(aspect >= 1)
+    hw *= aspect;
+  else
+    hh /= aspect;
+  return glm::ortho(-hw, hw, -hh, hh, n, f);
+}
+
+//--------------------------------------------------------------------
 vec3 rgb2hsb(const vec3& c)
 {
   vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -134,6 +144,12 @@ vec3 hsb2rgb(const vec3& c)
   vec3 rgb = clamp(abs(mod(c.x*6.0f+vec3(0.0,4.0,2.0), 6.0f)-3.0f)-1.0f, 0.0f, 1.0f);
   rgb = rgb*rgb*(3.0f-2.0f*rgb);
   return c.z * mix(vec3(1.0), rgb, c.y);
+}
+
+//--------------------------------------------------------------------
+float rgb2luminance(const vec3& c, const vec3& weight/* = vec3(0.3086, 0.6094, 0.0820)*/)
+{
+  return glm::dot(c, weight);
 }
 
 //--------------------------------------------------------------------
