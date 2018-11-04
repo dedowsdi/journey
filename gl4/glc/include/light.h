@@ -55,7 +55,7 @@ struct light_model {
 
   light_model() : ambient(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f)), local_viewer(0) {}
 
-  void bind_uniform_locations(GLint program, const std::string& name);
+  void bind_uniform_locations(GLint program, const std::string& name = "lm");
   void update_uniforms();
 #ifndef GL_VERSION_3_0
   void pipeline();
@@ -76,7 +76,7 @@ struct material {
   GLint ul_shininess;
 
   material();
-  void bind_uniform_locations(GLuint program, const std::string& name);
+  void bind_uniform_locations(GLuint program, const std::string& name = "mtl");
   void update_uniforms();
 #ifndef GL_VERSION_3_0
   void pipeline();

@@ -46,6 +46,8 @@ set (PROJECTS
     snow
     floyd_steinberg_dithering
     double_pendulum
+    octree_point
+    octree_region
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
