@@ -62,6 +62,16 @@ TODO
 137 pi 2
 138 pi 3
 139 pi 4
+143 neural netwook cool predictor
+144 flappy bird 1
+145 flappy bird 2
+146 flappy bird 3
+147 flappy bird 4
+148 flappy bird 5
+149 scrolling text
+152 linear regression with tensorflow.js
+153 polynomial regression with tensorflow.js
+154 xor problem with tensorflow.js
 
 finished
 1. starfield
@@ -112,3 +122,6 @@ finished
 46. snow
 47. floyd steinberg dithering
 48. double pendulum
+49. ripple
+50. fire
+51. sandpiles

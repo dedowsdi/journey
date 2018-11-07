@@ -41,6 +41,7 @@ set(GLC_SRCS
     src/capsule2d.cpp
     src/texpack.cpp
     src/timer.cpp
+    src/pingpong.cpp
     )
 
 add_library(glc 

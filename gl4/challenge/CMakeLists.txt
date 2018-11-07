@@ -48,6 +48,9 @@ set (PROJECTS
     double_pendulum
     octree_point
     octree_region
+    ripple
+    fire
+    sandpiles
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

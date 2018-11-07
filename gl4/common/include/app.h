@@ -44,6 +44,7 @@ public:
     GLboolean cursor;
     GLboolean stereo;
     GLboolean debug;
+    GLboolean decorated;
   };
 
 protected:

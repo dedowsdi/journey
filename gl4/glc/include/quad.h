@@ -9,7 +9,7 @@
 namespace zxd {
 
 // draw single 2d quad
-void draw_quad(GLuint tex_index = 0);
+void draw_quad(GLuint tex, GLuint tui = 0);
 
 class quad : public geometry_base {
 protected:

@@ -37,6 +37,12 @@ GLfloat angle_any(const vec3& lhs, const vec3& rhs) {
 }
 
 //--------------------------------------------------------------------
+GLfloat random()
+{
+  return min(rand(), RAND_MAX - 1)/static_cast<GLfloat>(RAND_MAX);
+}
+
+//--------------------------------------------------------------------
 vec3 face_normal(const vec3& v0, const vec3& v1, const vec3& v2) {
   vec3 v01 = v1 - v0;
   vec3 v02 = v2 - v0;

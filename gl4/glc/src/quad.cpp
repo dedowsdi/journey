@@ -5,7 +5,10 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void draw_quad(GLuint tex_index /* = 0*/) {
+void draw_quad(GLuint tex, GLuint tui/* = 0*/)
+{
+  glActiveTexture(tui + GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, tex);
   static quad q;
   static quad_program prg;
   if (q.vao() == -1) {
@@ -18,7 +21,7 @@ void draw_quad(GLuint tex_index /* = 0*/) {
   }
 
   prg.use();
-  prg.update_uniforms(tex_index);
+  prg.update_uniforms(tui);
   q.draw();
 }
 

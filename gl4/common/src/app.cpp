@@ -37,12 +37,13 @@ void app::init_info() {
   m_info.wnd_height = 512;
   m_info.major_version = 4;
   m_info.minor_version = 3;
-  m_info.samples = 1;
+  m_info.samples = 4;
   m_info.fullscreen = GL_FALSE;
   m_info.vsync = GL_FALSE;
   m_info.cursor = GL_TRUE;
   m_info.stereo = GL_FALSE;
   m_info.debug = GL_TRUE;
+  m_info.decorated = GL_TRUE;
 }
 
 //--------------------------------------------------------------------
@@ -72,8 +73,8 @@ void app::init_gl() {
   glDebugMessageCallback(gl_debug_output, this);
   debug_message_control();
 
-  if(m_info.samples > 1)
-    glEnable(GL_MULTISAMPLE);;
+  if(m_info.samples == 1)
+    glDisable(GL_MULTISAMPLE);;
 }
 
 //--------------------------------------------------------------------
@@ -103,6 +104,7 @@ void app::init_wnd() {
   glfwWindowHint(GLFW_SAMPLES, m_info.samples);
   glfwWindowHint(GLFW_STEREO, m_info.stereo);
   glfwWindowHint(GLFW_DEPTH_BITS, m_info.stereo);
+  glfwWindowHint(GLFW_DECORATED, m_info.decorated);
 
   if (m_info.fullscreen) {
     if (m_info.wnd_width == 0 || m_info.wnd_height == 0) {

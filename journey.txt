@@ -1814,7 +1814,7 @@ linux:
 
 linux:
   vim:
-    use byzana-record to record gui animation.
+    use byzanz-record to record gui animation.
     use ttyrec to record tty screen animation, then use ttygif to convert
     video record to gif.
 
@@ -2129,3 +2129,16 @@ cpp:
 
 gl:
   The contents of the back buffer become undefined after a swap.
+
+-----------
+2018.11.5
+
+cpp:
+  you can not return raw array with fixed size, but you can return std::array.
+
+opengl:
+  a buffer texture is simply a way for the shader to directly access a large
+  array of data, generally larger than uniform buffer objects allow.
+
+linux:
+  use simple screen recorder to record screen video.

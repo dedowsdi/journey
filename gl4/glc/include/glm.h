@@ -102,6 +102,8 @@ mat4 create_mat4(const vec3& xa, const vec3& ya, const vec3& za);
 // radian between any vector, no need to normalize first
 GLfloat angle_any(const vec3& lhs, const vec3& rhs);
 
+GLfloat random();
+
 // radian between any vector, no need to normalize first
 GLfloat oriented_angle_any(const vec3& lhs, const vec3& rhs, const vec3& ref);
 
