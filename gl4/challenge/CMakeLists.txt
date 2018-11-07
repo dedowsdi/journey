@@ -51,6 +51,7 @@ set (PROJECTS
     ripple
     fire
     sandpiles
+    barnsley_fern
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

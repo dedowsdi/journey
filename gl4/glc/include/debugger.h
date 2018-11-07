@@ -16,6 +16,10 @@ namespace debugger
   void draw_point(const std::vector<T>& vertices, const glm::mat4& mvp, 
       GLfloat size = 1, const glm::vec4& color = glm::vec4(1));
 
+  template<typename It>
+  void draw_point(It beg, It end, const glm::mat4& mvp, 
+      GLfloat size = 1, const glm::vec4& color = glm::vec4(1));
+
   template<typename T>
   void draw_line(const T& p0, const T& p1, const glm::mat4& mvp,
       GLfloat width = 1, const glm::vec4& color = glm::vec4(1));
@@ -85,6 +89,14 @@ void draw_point(const T& point, const glm::mat4& mvp, GLfloat size/* = 1*/,  con
 template<typename T>
 void draw_point(const std::vector<T>& vertices, const glm::mat4& mvp, GLfloat size/* = 1*/, const glm::vec4& color/* = glm::vec4(1)*/)
 {
+  draw_point(vertices.begin(), vertices.end(), mvp, size, color);
+}
+
+//--------------------------------------------------------------------
+template<typename It>
+void draw_point(It beg, It end, const glm::mat4& mvp, 
+    GLfloat size/* = 1*/, const glm::vec4& color/* = glm::vec4(1)*/)
+{
   using namespace glm;
   static debugger_program prg;
   static debugger_drawable dd;
@@ -92,8 +104,9 @@ void draw_point(const std::vector<T>& vertices, const glm::mat4& mvp, GLfloat si
   if(!prg.is_inited())
     prg.init();
 
-  dd.init_vao(T::components);
-  dd.update_buffer(sizeof(T) * vertices.size(), glm::value_ptr(vertices.front()));
+  dd.init_vao(It::value_type::components);
+  GLuint vertex_count = std::distance(beg, end);
+  dd.update_buffer(sizeof(typename It::value_type) * vertex_count , &*beg);
 
   prg.use();
   glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
@@ -102,7 +115,7 @@ void draw_point(const std::vector<T>& vertices, const glm::mat4& mvp, GLfloat si
   dd.bind_vao();
 
   glPointSize(size);
-  glDrawArrays(GL_POINTS, 0, vertices.size());
+  glDrawArrays(GL_POINTS, 0, vertex_count);
 }
 
 //--------------------------------------------------------------------
