@@ -12,10 +12,10 @@ void circle::build_vertex()
   if(m_type == FILL)
     vertices->push_back(vec2(0));
 
-  GLfloat stepAngle = f2pi/m_slice;
+  GLfloat stepAngle = (m_end - m_start)/m_slice;
   for (int i = 0; i <= m_slice; ++i) 
   {
-    GLfloat theta = i * stepAngle;
+    GLfloat theta = m_start + i * stepAngle;
     GLfloat x = m_radius * cos(theta);
     GLfloat y = m_radius * sin(theta);
     vertices->push_back(vec2(x, y));

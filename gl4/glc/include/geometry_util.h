@@ -22,6 +22,7 @@ namespace geometry_util
       GLuint num_faces = 6, GLuint type = 0);
 
   zxd::vec3_vector transform(const zxd::vec3_vector& vertices, const glm::mat4& m);
+  zxd::vec3_vector vec2_vector_to_vec3_vector(const zxd::vec2_vector& vertices);
 }
 
 

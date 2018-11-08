@@ -15,6 +15,8 @@ public:
   };
 protected:
   GLfloat m_radius = 1;
+  GLfloat m_start = 0;
+  GLfloat m_end = fpi2;
   GLuint m_slice = 16;
   CIRCLE_TYPE m_type = FILL;
 
@@ -30,6 +32,12 @@ public:
 
   GLuint slice() const { return m_slice; }
   void slice(GLuint v){ m_slice = v; }
+
+  GLfloat start() const { return m_start; }
+  void start(GLfloat v){ m_start = v; }
+
+  GLfloat end() const { return m_end; }
+  void end(GLfloat v){ m_end = v; }
 };
 
 }

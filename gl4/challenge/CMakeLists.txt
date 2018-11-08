@@ -52,6 +52,7 @@ set (PROJECTS
     fire
     sandpiles
     barnsley_fern
+    recaman_sequence
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

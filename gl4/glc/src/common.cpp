@@ -131,8 +131,8 @@ void print_gl_version() {
     glGetString(GL_RENDERER), glGetString(GL_VENDOR),
     glGetString(GL_SHADING_LANGUAGE_VERSION)
 #ifndef GL_VERSION_3_0
-      ,
-    gluGetString(GLU_VERSION)
+      //,
+    //gluGetString(GLU_VERSION)
 #endif
       );
 }

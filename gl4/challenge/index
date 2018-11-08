@@ -72,6 +72,7 @@ TODO
 152 linear regression with tensorflow.js
 153 polynomial regression with tensorflow.js
 154 xor problem with tensorflow.js
+158 recaman's sequence audio
 
 finished
 1. starfield
@@ -125,3 +126,4 @@ finished
 49. ripple
 50. fire
 51. sandpiles
+52. recaman sequence

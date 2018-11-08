@@ -234,4 +234,18 @@ zxd::vec3_vector transform(const zxd::vec3_vector& vertices, const glm::mat4& m)
   return result;
 }
 
+//--------------------------------------------------------------------
+zxd::vec3_vector vec2_vector_to_vec3_vector(const zxd::vec2_vector& vertices)
+{
+  vec3_vector res;
+  res.reserve(vertices.size());
+  //res.assign(vertices.begin(), vertices.end());
+  for(auto& vertex : vertices)
+  {
+    res.push_back(vec3(vertex, 0));
+  }
+  
+  return res;
+}
+
 }

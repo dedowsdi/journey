@@ -70,9 +70,6 @@ struct bloom_program : public program {
   GLint ul_hdr_map;
   GLint ul_brightness_map;
 
-  GLint al_vertex;
-  GLint al_texcoord;
-
   virtual void attach_shaders() {
     attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "data/shader/bloom.fs.glsl");
@@ -91,8 +88,8 @@ struct bloom_program : public program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   }
 } bloom_prg;
 
@@ -187,6 +184,7 @@ class app0 : public app {
     blur_prg.init();
     bloom_prg.init();
 
+    quad0.include_texcoord(true);
     quad0.build_mesh();
   }
 
@@ -201,7 +199,6 @@ class app0 : public app {
 
     filter_prg.use();
     filter_prg.update_uniforms();
-    quad0.bind(filter_prg.al_vertex, -1, filter_prg.al_texcoord);
     quad0.draw();
 
     // blur brightness texture
@@ -213,7 +210,6 @@ class app0 : public app {
       glBindTexture(GL_TEXTURE_2D, tex);
       blur_prg.horizontal = index ^ 1;
       blur_prg.update_uniforms();
-      quad0.bind(blur_prg.al_vertex, -1, blur_prg.al_texcoord);
       quad0.draw();
     }
 
@@ -229,7 +225,6 @@ class app0 : public app {
 
     bloom_prg.use();
     bloom_prg.update_uniforms(0, 1);
-    quad0.bind(bloom_prg.al_vertex, -1, bloom_prg.al_texcoord);
 
     quad0.draw();
 

@@ -2,7 +2,7 @@
 #define COMMON_H
 #include "gl.h"
 #ifndef GL_VERSION_3_0
-#include <GL/glu.h>
+//#include <GL/glu.h>
 #endif
 #include <string>
 #include <iterator>

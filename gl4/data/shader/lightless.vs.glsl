@@ -10,6 +10,14 @@ out VS_OUT
 }vo;
 #endif
 
+#ifdef WITH_COLOR
+in vec4 color;
+out VS_OUT
+{
+  vec4 color;
+}vo;
+#endif
+
 #ifdef INSTANCE
 in mat4 m_mat;
 #endif
@@ -20,6 +28,9 @@ void main(void)
 {
 #ifdef WITH_TEXCOORD
   vo.texcoord = texcoord;
+#endif
+#ifdef WITH_COLOR
+  vo.color = color;
 #endif
 
 #ifdef INSTANCE

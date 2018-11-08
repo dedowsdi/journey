@@ -73,10 +73,13 @@ void app::init_gl() {
     "GL_SHADING_LANGUAGE_VERSION : %s\n"
     "GL_RENDERER : %s\n"
     "GL_VENDOR : %s\n"
-    "GL_SHADING_LANGUAGE_VERSION : %s\n",
+    "GL_SHADING_LANGUAGE_VERSION : %s\n"
+    "GLU VERSION : %s\n",
     glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION),
     glGetString(GL_RENDERER), glGetString(GL_VENDOR),
-    glGetString(GL_SHADING_LANGUAGE_VERSION));
+    glGetString(GL_SHADING_LANGUAGE_VERSION),
+    gluGetString(GLU_VERSION)
+    );
 
   // init debugger
   glEnable(GL_DEBUG_OUTPUT);

@@ -126,6 +126,7 @@ public:
   GLint ul_color;
   GLint ul_diffuse_map;
   bool with_texcoord = false;
+  bool with_color = false;
   bool instance = false;
 
 protected:

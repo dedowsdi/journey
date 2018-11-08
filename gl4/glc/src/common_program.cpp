@@ -251,6 +251,9 @@ void texture_animation_program::bind_attrib_locations()
 //--------------------------------------------------------------------
 void lightless_program::attach_shaders()
 {
+  if(with_texcoord && with_color)
+    throw std::runtime_error("you should not include tex and color at the same time");
+
   string_vector sv;
   sv.push_back("#version 330 core\n");
   if(with_texcoord)
@@ -261,6 +264,11 @@ void lightless_program::attach_shaders()
   {
     sv.push_back("#define INSTANCE\n");
   }
+  if(with_color)
+  {
+    sv.push_back("#define WITH_COLOR\n");
+  }
+
   attach(GL_VERTEX_SHADER, sv, "data/shader/lightless.vs.glsl");
   attach(GL_FRAGMENT_SHADER, sv, "data/shader/lightless.fs.glsl");
 }
@@ -273,7 +281,7 @@ void lightless_program::bind_uniform_locations()
   {
     uniform_location(&ul_diffuse_map, "diffuse_map");
   }
-  else
+  else if(!with_color)
   {
     uniform_location(&ul_color, "color");
   }
@@ -285,6 +293,8 @@ void lightless_program::bind_attrib_locations()
   bind_attrib_location(0, "vertex");
   if(with_texcoord)
     bind_attrib_location(1, "texcoord");
+  if(with_color)
+    bind_attrib_location(1, "color");
   if(instance)
     bind_attrib_location(2, "m_mat");
 }
