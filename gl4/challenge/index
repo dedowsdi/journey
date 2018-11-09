@@ -73,6 +73,7 @@ TODO
 153 polynomial regression with tensorflow.js
 154 xor problem with tensorflow.js
 158 recaman's sequence audio
+160 3d rendering with rotation and projection
 
 finished
 1. starfield
@@ -127,3 +128,4 @@ finished
 50. fire
 51. sandpiles
 52. recaman sequence
+53. hypercube

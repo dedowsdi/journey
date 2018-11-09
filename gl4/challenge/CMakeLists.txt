@@ -54,6 +54,7 @@ set (PROJECTS
     barnsley_fern
     recaman_sequence
     spritesheet
+    hypercube
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
