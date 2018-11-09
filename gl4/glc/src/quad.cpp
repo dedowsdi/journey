@@ -34,12 +34,15 @@ quad::quad(const vec3& corner/* = vec3(-0.5,-0.5,0)*/,
 }
 
 //--------------------------------------------------------------------
-void quad::setup(const vec3& corner, const vec3& edge0_vec, const vec3& edge1_vec)
+void quad::setup(const vec3& corner, const vec3& edge0_vec, const vec3& edge1_vec,
+  const vec2& tc0 , const vec2& tc1)
 {
   m_v0 = corner;
   m_v1 = corner + edge0_vec;
   m_v2 = corner + edge0_vec + edge1_vec;
   m_v3 = corner + edge1_vec;
+  m_tc0 = tc0;
+  m_tc1 = tc1;
 }
 
 //--------------------------------------------------------------------
@@ -84,10 +87,10 @@ void quad::build_texcoord() {
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(4);
 
-  texcoords.push_back(vec2{0.0f, 0.0f});
-  texcoords.push_back(vec2{1.0f, 0.0f});
-  texcoords.push_back(vec2{1.0f, 1.0f});
-  texcoords.push_back(vec2{0.0f, 1.0f});
+  texcoords.push_back(m_tc0);
+  texcoords.push_back(vec2(m_tc1.x, m_tc0.y));
+  texcoords.push_back(m_tc1);
+  texcoords.push_back(vec2(m_tc0.x, m_tc1.y));
 }
 
 //--------------------------------------------------------------------

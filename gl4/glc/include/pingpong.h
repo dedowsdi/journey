@@ -23,5 +23,25 @@ public:
   void swap();
 };
 
+// n ping + 1 opong
+class npingpong
+{
+protected:
+  std::vector<GLuint> m_resources;
+  GLuint m_current;
+
+public:
+
+  GLuint pong();
+  GLuint last_ping();
+  GLuint first_ping();
+  GLuint get(GLuint index);
+  GLuint size();
+
+  void add_resource(GLuint resource);
+  void shift();
+
+};
+
 
 #endif /* PINGPONG_H */

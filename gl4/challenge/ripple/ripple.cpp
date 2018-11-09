@@ -4,6 +4,7 @@
 #include <sstream>
 #include "common_program.h"
 #include "quad.h"
+#include "pingpong.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -13,7 +14,7 @@ namespace zxd {
 quad q;
 
 // need to access 2 buffers and right to the other one
-GLuint tex[3];
+npingpong tex;
 GLuint fbo;
 GLuint current = 2; // current rtt
 
@@ -89,9 +90,9 @@ public:
     prg.v_mat = prg.p_mat = prg.vp_mat = mat4(1);
 
 
-    tex[0] = createTexture();
-    tex[1] = createTexture();
-    tex[2] = createTexture();
+    tex.add_resource(createTexture());
+    tex.add_resource(createTexture());
+    tex.add_resource(createTexture());
 
     glGenFramebuffers(1, &fbo);
 
@@ -108,18 +109,15 @@ public:
   virtual void update() {
     GLint f = kci_ripple_frame->value;
     if((m_frame_number % f) == 0)
-    {
-      current = ++current % 3;
-    }
+      tex.shift();
 
     createRipple(glm::linearRand(ivec2(0, 0), ivec2(WIDTH - 1, HEIGHT - 1)));
-
   }
 
   void createRipple(ivec2(pos))
   {
     vec3 p(kci_ripple_start->value);
-    glBindTexture(GL_TEXTURE_2D, tex[(current + 2) % 3]);
+    glBindTexture(GL_TEXTURE_2D, tex.first_ping());
     glTexSubImage2D(GL_TEXTURE_2D, 0, pos.x, pos.y, 1, 1, GL_RGB, GL_FLOAT, glm::value_ptr(p));
   }
 
@@ -127,14 +125,14 @@ public:
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex[current], 0);
+      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex.pong(), 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       printf("incomplete frame buffer\n");
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tex[(current+2)%3]);
+    glBindTexture(GL_TEXTURE_2D, tex.first_ping());
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, tex[(current+1)%3]);
+    glBindTexture(GL_TEXTURE_2D, tex.last_ping());
     prg.use();
     glUniform1i(prg.ul_buffer0, 0);
     glUniform1i(prg.ul_buffer1, 1);
@@ -144,9 +142,7 @@ public:
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //glClear(GL_COLOR_BUFFER_BIT);
     
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tex[current]);
-    draw_quad(0);
+    draw_quad(tex.pong(), 0);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

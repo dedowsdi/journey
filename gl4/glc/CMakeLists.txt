@@ -39,7 +39,7 @@ set(GLC_SRCS
     src/circle.cpp
     src/rose.cpp
     src/capsule2d.cpp
-    src/texpack.cpp
+    src/spritesheet.cpp
     src/timer.cpp
     src/pingpong.cpp
     )

@@ -53,6 +53,7 @@ set (PROJECTS
     sandpiles
     barnsley_fern
     recaman_sequence
+    spritesheet
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

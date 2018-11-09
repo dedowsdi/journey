@@ -11,8 +11,8 @@
 #include "pingpong.h"
 #include "quad.h"
 
-#define WIDTH 640
-#define HEIGHT 360
+#define WIDTH 1280
+#define HEIGHT 720
 
 namespace zxd {
 
@@ -24,6 +24,7 @@ GLuint slices = 1024;
 GLuint draw_step = slices/16;
 GLuint line_width = 4;
 GLuint blur_times = 7;
+GLuint numbers = 300;
 GLfloat last_max_number = 2;
 GLfloat max_number = 2;
 GLfloat right = 2;
@@ -179,7 +180,7 @@ public:
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
 
-    sequence = recaman_sequence(150);
+    sequence = recaman_sequence(numbers);
 
     circle unit_circle;
     unit_circle.type(circle::LINE);

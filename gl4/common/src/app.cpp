@@ -79,10 +79,10 @@ void app::init_gl() {
 
 //--------------------------------------------------------------------
 void app::debug_message_control() {
-  GLuint ids[] = {131185};
+  //GLuint ids[] = {131185};
 
-  glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
-    sizeof(ids) / sizeof(GLuint), ids, GL_FALSE);
+  //glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
+    //sizeof(ids) / sizeof(GLuint), ids, GL_FALSE);
 }
 
 //--------------------------------------------------------------------

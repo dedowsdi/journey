@@ -9,7 +9,7 @@
 #include <sstream>
 #include "common_program.h"
 #include "quad.h"
-#include "texpack.h"
+#include "spritesheet.h"
 #include "texutil.h"
 #include <algorithm>
 #include <chrono>
@@ -79,7 +79,7 @@ class snow_app : public app {
 protected:
   bitmap_text m_text;
   std::vector<snow*> m_snows;
-  texpack* m_flakes = 0;
+  spritesheet* m_flakes = 0;
 
 public:
   ~snow_app()
@@ -127,10 +127,10 @@ public:
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(),
         0, GL_RGBA, GL_UNSIGNED_BYTE, image.accessPixels());
 
-    m_flakes = new texpack(tex, 16, 16);
+    m_flakes = new spritesheet(tex, 16, 16);
 
     quad.rect(vec2(-0.5), vec2(0.5));
-    quad.texcoord(vec2(0), m_flakes->tile_size());
+    quad.texcoord(vec2(0), m_flakes->sprite_size());
     quad.include_texcoord(true);
     quad.build_mesh();
 
@@ -141,7 +141,7 @@ public:
       float angle = glm::linearRand(0.0f, f2pi);
       snow* s = new snow(pos, vec2(size), angle);
       s->random();
-      s->texcoord = m_flakes->get_random_tile();
+      s->texcoord = m_flakes->get_random_sprite();
       m_snows.push_back(s);
     }
 

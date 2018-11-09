@@ -1,7 +1,7 @@
 #version 430 core
 // https://web.archive.org/web/20160116150939/http://freespace.virgin.net/hugo.elias/graphics/x_water.htm
 
-// run in constant speed, nomatter how many ripples there are
+// run in constant speed, no matter how many ripples there are
 
 in vs_out
 {

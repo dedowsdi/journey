@@ -2142,3 +2142,34 @@ opengl:
 
 linux:
   use simple screen recorder to record screen video.
+
+-----------
+2018.11.8
+
+gl:
+  you must use multisample texture if you want to enable multisample durint
+  rtt.:
+     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex);
+     glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA8, width, height, false);
+     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+     GL_TEXTURE_2D_MULTISAMPLE, tex, 0)
+
+  you can sample multisample texture like this:
+    uniform int texSamples;
+    uniform sampler2DMS tex;
+
+    vec4 textureMultisample(sampler2DMS sampler, ivec2 coord)
+    {
+        vec4 color = vec4(0.0);
+
+        for (int i = 0; i < texSamples; i++)
+            color += texelFetch(sampler, coord, i);
+
+        color /= float(texSamples);
+
+        return color;
+    }
+
+  it's quite bulky, you might want to use default framebuffer and
+  glCopyTexImage2D instead.
