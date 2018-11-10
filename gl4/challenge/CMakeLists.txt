@@ -55,6 +55,7 @@ set (PROJECTS
     recaman_sequence
     spritesheet
     hypercube
+    lissajous
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

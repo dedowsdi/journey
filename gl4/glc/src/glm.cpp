@@ -297,6 +297,12 @@ GLuint gcd(GLuint a, GLuint b)
 }
 
 //--------------------------------------------------------------------
+GLuint lcm(GLuint a, GLuint b)
+{
+  return a*b/gcd(a,b);
+}
+
+//--------------------------------------------------------------------
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
   const glm::mat4& w_mat_i, GLfloat radius /* = 0.8*/) {
   glm::vec4 n0 = w_mat_i * glm::vec4(p0, 0, 1);

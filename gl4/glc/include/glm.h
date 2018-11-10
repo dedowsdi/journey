@@ -178,6 +178,7 @@ void generate_face_normals(_It beg, _It end, _OutIt out) {
 }
 
 GLuint gcd(GLuint a, GLuint b);
+GLuint lcm(GLuint a, GLuint b);
 
 // p0 and p1 is in window space
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,

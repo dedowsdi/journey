@@ -42,6 +42,7 @@ set(GLC_SRCS
     src/spritesheet.cpp
     src/timer.cpp
     src/pingpong.cpp
+    src/lissajous.cpp
     )
 
 add_library(glc 
