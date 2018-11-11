@@ -43,12 +43,15 @@ vec2 lissajous::get_at_angle(GLfloat angle)
     return vec2(cos(xangle), sin(yangle)) * m_radius;
   else
   {
+    GLfloat scale = 1;
+    if(m_rose_offset != 0)
+      scale = m_rose_offset > 0 ? 1.0 / (1 + m_rose_offset) : 1.0 / (1 - m_rose_offset);
     GLfloat k = static_cast<GLfloat>(m_rose_n) / m_rose_d;
     GLfloat rx = cos(k * xangle) + m_rose_offset;
     GLfloat x = rx * cos(xangle) * m_radius;
     GLfloat ry = cos(k * yangle) + m_rose_offset;
     GLfloat y = ry * sin(yangle) * m_radius;
-    return vec2(x, y);
+    return vec2(x, y) * scale;
   }
 }
 

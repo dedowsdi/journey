@@ -20,7 +20,6 @@ vec4 lissa_color = vec4(1, 0, 1, 1);
 vec4 dot_color = vec4(0, 1, 0, 1);
 vec4 line_color = vec4(1, 0, 0, 1);
 GLfloat scale = 0.9f;
-GLfloat rose_scale = 1; // need to shrink if rose_offset is not 0
 
 GLuint lissa_type = 1;
 GLuint rose_n = 2;
@@ -104,32 +103,6 @@ public:
         lisas.push_back(lisa);
       }
     }
-
-    if(lissa_type == 0)
-    {
-      scale = 0.9f;
-      return;
-    }
-
-    const auto& vertices = lisas[0].attrib_vec2_array(0)->get_vector();
-    vec2 min_ext = vec2(500);
-    vec2 max_ext = vec2(-500);
-    for (int i = 0; i < vertices.size(); ++i) {
-      const vec2& v = vertices[i];
-      if(min_ext.x > v.x) min_ext.x = v.x;
-      if(min_ext.y > v.y) min_ext.y = v.y;
-      if(max_ext.x < v.x) max_ext.x = v.x;
-      if(max_ext.y < v.y) max_ext.y = v.y;
-    }
-
-    rose_scale = glm::max(glm::abs(min_ext.x), glm::abs(min_ext.y));
-    rose_scale = glm::max(rose_scale, glm::max(max_ext.x, max_ext.y));
-    if(rose_scale > 1)
-      rose_scale = 1.0/rose_scale;
-    else
-      rose_scale = 1.0;
-
-    scale = 0.9f * rose_scale;
 
   }
 

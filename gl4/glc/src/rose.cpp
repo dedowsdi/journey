@@ -23,6 +23,11 @@ void rose::build_vertex()
 
   GLfloat step_angle = period *(m_end - m_start) / m_slice;
   GLfloat start_angle = m_start * period;
+
+  GLfloat scale = 1;
+  if(m_offset != 0)
+    scale = m_offset > 0 ? 1.0 / (1 + m_offset) : 1.0 / (1 - m_offset);
+
   for (int i = 0; i <= m_slice; ++i) 
   {
     GLfloat theta = start_angle + step_angle * i;
@@ -30,7 +35,7 @@ void rose::build_vertex()
     GLfloat r = cos(ktheta) + m_offset;
     GLfloat x = r * cos(theta) * m_radius;
     GLfloat y = r * sin(theta) * m_radius;
-    vertices->push_back(vec2(x,y));
+    vertices->push_back(vec2(x,y) * scale);
   }
 
   add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, vertices->size()));
