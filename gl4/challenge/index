@@ -76,6 +76,11 @@ TODO
 160 3d rendering with rotation and projection
 162 bubble sort visualization
 163 snake game redux
+167 mastodon fractal tree 1
+168 mastodon fractal tree 2
+169 binary to decimal conversoin
+170 bit shifting
+171 logo interpreter
 
 finished
 1. starfield
@@ -131,3 +136,5 @@ finished
 51. sandpiles
 52. recaman sequence
 53. hypercube
+54. lissajous
+55. seven segment

@@ -56,6 +56,7 @@ set (PROJECTS
     spritesheet
     hypercube
     lissajous
+    seven_segment
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

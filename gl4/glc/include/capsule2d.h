@@ -7,10 +7,17 @@ namespace zxd
 
 class capsule2d : public geometry_base
 {
+public:
+  enum CAPSULE_TYPE
+  {
+    CT_CIRCLE,
+    CT_POINT
+  };
 protected:
-  GLfloat m_radius = 1;
-  GLfloat m_width = 4; // total width
+  GLfloat m_radius = 0.125;
+  GLfloat m_width = 1; // total width
   GLuint m_slice = 32;
+  CAPSULE_TYPE m_type = CT_CIRCLE;
 
 public:
 
@@ -25,6 +32,8 @@ public:
 
   void build_vertex();
 
+  CAPSULE_TYPE type() const { return m_type; }
+  void type(CAPSULE_TYPE v){ m_type = v; }
 };
 
 }

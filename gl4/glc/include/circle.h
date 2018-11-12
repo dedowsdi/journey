@@ -16,7 +16,7 @@ public:
 protected:
   GLfloat m_radius = 1;
   GLfloat m_start = 0;
-  GLfloat m_end = fpi2;
+  GLfloat m_end = f2pi;
   GLuint m_slice = 16;
   CIRCLE_TYPE m_type = FILL;
 

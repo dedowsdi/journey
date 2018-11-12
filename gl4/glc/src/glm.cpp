@@ -126,10 +126,11 @@ mat4 rotate_to_any(const vec3& v0, const vec3& v1)
 //--------------------------------------------------------------------
 mat4 rect_ortho(GLfloat hw, GLfloat hh, GLfloat aspect, GLfloat n/* = -1*/, GLfloat f/* = 1*/)
 {
-  if(aspect >= 1)
-    hw *= aspect;
+  GLfloat project_aspect = hw/hh;
+  if(project_aspect >= aspect)
+    hh *= project_aspect/aspect;
   else
-    hh /= aspect;
+    hw *= project_aspect/aspect;
   return glm::ortho(-hw, hw, -hh, hh, n, f);
 }
 
