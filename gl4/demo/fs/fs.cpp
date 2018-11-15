@@ -63,6 +63,7 @@ public:
   virtual void init_info() {
     app::init_info();
     m_info.title = "fs";
+    m_info.samples = 16;
   }
   virtual void create_scene() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -116,6 +117,8 @@ public:
     ss << "resolution : " << m_info.wnd_width << " " << m_info.wnd_height << std::endl;
     ss << "mouse : " << m_mouse.x << " " << m_mouse.y << std::endl;
     ss << "time : " << m_time << std::endl;
+    ss << "samples : " << m_info.samples << std::endl;
+    ss << "fps : " << m_fps << std::endl;
     m_text.print(ss.str(), 10, 492, vec4(1, 0, 0, 1));
     glDisable(GL_BLEND);
 

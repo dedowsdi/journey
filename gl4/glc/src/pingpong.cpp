@@ -31,15 +31,16 @@ GLuint npingpong::pong()
 //--------------------------------------------------------------------
 GLuint npingpong::last_ping()
 {
-  if(m_resources.size() <= 1)
+  if(m_resources.empty() )
     throw std::runtime_error("not enough resources");
-  return m_resources[m_resources.size() - 2];
+
+  return m_resources.size() == 1 ? m_resources.front() : m_resources[m_resources.size() - 2];
 }
 
 //--------------------------------------------------------------------
 GLuint npingpong::first_ping()
 {
-  if(m_resources.size() <= 1)
+  if(m_resources.empty())
     throw std::runtime_error("not enough resources");
   return m_resources.front();
 }

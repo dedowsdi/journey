@@ -20,7 +20,7 @@ void printFloat() {
       std::cout << std::setw(11) << s.substr(1, 8);
       std::cout << s.substr(9) << std::endl;
     });
-  std::cout << "float = (-1)^signed * (1.significand_b)^(expoinent - 127)" << std::endl;
+  std::cout << "float = (-1)^signed * 2^(expoinent - 127) * (1.significand_b)" << std::endl;
   std::cout.flags(flags);
 }
 

@@ -1,7 +1,7 @@
 #version 430 core
 
 #define NUM_ITERATIONS 100
-#define BOUNDARY 8
+#define BOUNDARY 2
 
 uniform vec2 resolution;
 uniform vec2 mouse;
@@ -17,10 +17,6 @@ out vec4 frag_color;
 // it does not diverte(remains bounded in absolute value)
 float julia_set(vec2 st, vec2 c)
 {
-  // use st as complex plane(x as real, y as imaginary)
-  float ca = st.x;
-  float cb = st.y;
-
   // firt iterations
   float za = st.x;
   float zb = st.y;
@@ -34,7 +30,7 @@ float julia_set(vec2 st, vec2 c)
     za = a + c.x;
     zb = b + c.y;
 
-    if(abs(za + zb) > BOUNDARY)
+    if(abs(za) > BOUNDARY)
       break;
   }
 

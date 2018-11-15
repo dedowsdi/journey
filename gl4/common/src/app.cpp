@@ -79,10 +79,13 @@ void app::init_gl() {
 
 //--------------------------------------------------------------------
 void app::debug_message_control() {
-  //GLuint ids[] = {131185};
+  // GL_DEBUG_SEVERITY_NOTIFICATION : GL_DEBUG_SOURCE_API : GL_DEBUG_TYPE_OTHER : 131185 : Buffer detailed info:
+  // Buffer object 1 (bound to GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB (0), and GL_ARRAY_BUFFER_ARB, usage hint
+  // is GL_STREAM_DRAW) will use VIDEO memory as the source for buffer object operations.
+  GLuint ids[] = {131185};
 
-  //glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
-    //sizeof(ids) / sizeof(GLuint), ids, GL_FALSE);
+  glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
+    sizeof(ids) / sizeof(GLuint), ids, GL_FALSE);
 }
 
 //--------------------------------------------------------------------
@@ -429,20 +432,24 @@ void app::glfw_key(
 
 //--------------------------------------------------------------------
 void app::glfw_mouse_button(GLFWwindow *wnd, int button, int action, int mods) {
-  if (action == GLFW_PRESS && GLFW_MOUSE_BUTTON_MIDDLE == button) {
+  //if (action == GLFW_PRESS && GLFW_MOUSE_BUTTON_MIDDLE == button) {
     glfwGetCursorPos(
       m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
     m_last_cursor_position[1] = glfw_to_gl(m_last_cursor_position[1]);
-  }
+  //}
 }
 
 //--------------------------------------------------------------------
 void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
-  if (!m_v_mat) return;
 
   y = glfw_to_gl(y);
   GLdouble dtx = x - m_last_cursor_position[0];
   GLdouble dty = y - m_last_cursor_position[1];
+  m_last_cursor_position[0] = x;
+  m_last_cursor_position[1] = y;
+
+  if (!m_v_mat) return;
+
   if (m_camera_mode == CM_YAW_PITCH) {
     if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
       return;
@@ -465,8 +472,6 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
                  glm::rotate(static_cast<GLfloat>(-dty * 0.02), vec3(1, 0, 0)) *
                  *m_v_mat;
     }
-    m_last_cursor_position[0] = x;
-    m_last_cursor_position[1] = y;
   } else if (m_camera_mode == CM_ARCBALL) {
     if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
       return;
@@ -484,8 +489,6 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
       // rotate, translate world back
       *m_v_mat = glm::translate(translation) * m * *m_v_mat;
     }
-    m_last_cursor_position[0] = x;
-    m_last_cursor_position[1] = y;
   } else if (m_camera_mode == CM_FREE) {
     // fix cursor
     glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);

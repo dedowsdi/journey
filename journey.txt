@@ -2173,3 +2173,27 @@ gl:
 
   it's quite bulky, you might want to use default framebuffer and
   glCopyTexImage2D instead.
+
+-------------
+2018.11.13
+cpp:
+  int a = 'a';
+  const char& b = a;
+  ++a;
+  std::cout << b;
+  // will output 'a', because there is a temporary char that is bound to b,
+  whose life time is expended to the life time of b.
+
+--------------
+2018.11.14
+cpp:
+  division is slowr than multiplication, but lots of compiler will optimize a
+  literal constant express, some even optimize for variables.
+
+prefix sum operation is an algorithm that, given an array of input values,
+computes a new array where each element of the output array is the sum of all of
+the values of the input array up to (and optionally including) the current array
+element. A prefix sum operation that includes the current element is known as an
+inclusive prefix sum, and one that does not is known as an exclusive prefix sum.
+
+DMA: direct memory access

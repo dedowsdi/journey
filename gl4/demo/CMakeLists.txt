@@ -14,6 +14,7 @@ set (PROJECTS
     plot
     fs
     texture_animation
+    prefix_sum_1d
     )
 
 foreach(PROJECT ${PROJECTS})

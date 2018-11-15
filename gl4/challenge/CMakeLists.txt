@@ -57,6 +57,7 @@ set (PROJECTS
     hypercube
     lissajous
     seven_segment
+    mandelbrot_set
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
