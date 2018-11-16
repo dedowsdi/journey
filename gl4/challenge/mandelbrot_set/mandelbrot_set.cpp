@@ -275,8 +275,6 @@ public:
       colors.push_back(vec4(color, 1));
     }
 
-    std::cout << colors.back() << std::endl;
-
     update_colors();
   }
 
@@ -360,7 +358,9 @@ public:
       glReadPixels(0, 0, WIDTH, HEIGHT, GL_RED, GL_FLOAT, &pixels.front());
       t.reset();
       for(auto item : pixels)
+      {
         ++histogram[item];
+      }
     }
 
     std::partial_sum(histogram.begin(), histogram.end(), hues.begin());

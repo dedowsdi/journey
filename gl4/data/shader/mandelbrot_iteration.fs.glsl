@@ -1,12 +1,13 @@
 //#version 430 core
 
-#define ONE_OVER_LOG2 1.44269504088896f
 #ifndef MAX_ITERATIONS
 #define MAX_ITERATIONS 500
 #endif
 
 #define BOUNDARY 64
 #define BOUNDARY2 4096
+#define ONE_OVER_LOG2 1.44269504088896f
+#define ONE_OVER_LOG_BOUNDARY = 4.158883083359671
 
 uniform dvec2 resolution;
 uniform dvec4 rect; // left bottom right top
@@ -32,21 +33,19 @@ float mandelbrot_set(dvec2 st)
 {
   // use st as complex plane(x as real, y as imaginary)
   dvec2 c = st;
-  dvec2 z = st;
+  dvec2 z = dvec2(0);
 
   int i = 0;
-  while (++i < MAX_ITERATIONS) 
+  while (dot(z,z) < BOUNDARY2 && i < MAX_ITERATIONS) 
   {
+    ++i;
     z = dvec2(z.x * z.x - z.y * z.y, 2 * z.x * z.y) + c;
-
-    if(dot(z,z) > BOUNDARY2)
-      break;
   }
 
   if(i < MAX_ITERATIONS)
   {
-    //float log_zn = log( x*x + y*y ) * 0.5f;
-    //float nu = log(log_zn / ONE_OVER_LOG2) / ONE_OVER_LOG2;
+    //float log_zn = log( float(dot(z, z)) ) * 0.5f;
+    //float nu = log(log_zn * ONE_OVER_LOG2) * ONE_OVER_LOG_BOUNDARY;
     //return float(i) + 1 - nu;
     return max(0.0f, float(i)  + 1 - log2(log2(float(dot(z, z))) * 0.5f));
   }
