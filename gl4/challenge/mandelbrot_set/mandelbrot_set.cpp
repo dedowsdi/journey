@@ -36,8 +36,9 @@ std::vector<GLfloat> hues;
 dvec2 center = dvec2(-0.714483886562187, 0.350309627591928);
 dvec2 radius = dvec2(1.3);
 dvec4 rect;
-bool verbose = false;
+bool verbose = true;
 bool direct_draw = false;
+bool use_cpu_shader = false;
 bool use_pbo = false;
 bool zoom_in = false;
 bool zoom_out = false;
@@ -56,6 +57,20 @@ vec3( 0.978261,   0.327490,   0.499281 ),
 };
 
 key_control_item* kci_iterations;
+
+class mandelbrot_compute_program : public program
+{
+protected:
+
+  void attach_shaders()
+  {
+    string_vector sv;
+    sv.push_back("#version 430 core\n");
+    sv.push_back("#define MAX_ITERATIONS " + string_util::to(iterations) + "\n");
+    attach(GL_COMPUTE_SHADER, sv, "shader/mandelbrot.cs.glsl");
+  }
+
+} cpu_prg;
 
 class mandelbrot_iteration_program : public program
 {
@@ -212,20 +227,24 @@ public:
     reset_colors();
   }
 
-  void reset_iteration(const key_control_item* kci)
+  void reset_iteration(const key_control_item* kci = 0)
   {
     iterations = kci_iterations->value;
     histogram.resize(iterations+1);
     hues.resize(histogram.size());
 
-    iter_prg.reload();
     if(direct_draw)
     {
+      iter_prg.reload();
       iter_prg.use();
       glUniform4fv(iter_prg.ul_colors, colors.size(), glm::value_ptr(colors.front()));
     }
     else
     {
+      if(use_cpu_shader)
+        cpu_prg.reload();
+      else
+        iter_prg.reload();
       color_prg.reload();
       color_prg.use();
       glUniform4fv(color_prg.ul_colors, colors.size(), glm::value_ptr(colors.front()));
@@ -318,7 +337,7 @@ public:
     //glEnable(GL_MULTISAMPLE);
   }
 
-  void render_smooth_histogram()
+  void rtt_histogram()
   {
     // render iterations
     glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
@@ -362,6 +381,29 @@ public:
         ++histogram[item];
       }
     }
+  }
+
+  void cs_histogram()
+  {
+    cpu_prg.use();
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0,  GL_WRITE_ONLY, GL_R32F);
+    glUniform4dv(0, 1, glm::value_ptr(rect));
+    glDispatchCompute(32, 32, 1);
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, &pixels.front());
+    for(auto item : pixels)
+    {
+      ++histogram[item];
+    }
+  }
+
+  void render_smooth_histogram()
+  {
+    if(use_cpu_shader)
+      cs_histogram();
+    else
+      rtt_histogram();
 
     std::partial_sum(histogram.begin(), histogram.end(), hues.begin());
     //std::cout << "update hues cost " << t.time_miliseconds() << "ms" << std::endl;
@@ -415,8 +457,9 @@ public:
     {
       ss << "u : random smooth colors" << std::endl;
       ss << "p : print colors" << std::endl;
-      ss << "j : pbo : " << use_pbo << std::endl;
+      ss << "j : use compute shade : " << use_cpu_shader << std::endl;
       ss << "k : direct draw : " << direct_draw << std::endl;
+      ss << "l : pbo : " << use_pbo << std::endl;
     }
     ss << "center : " << center.x << " " << center.y << std::endl;
     ss << "radius : " << radius.x << " " << radius.y << std::endl;
@@ -451,15 +494,18 @@ public:
         case GLFW_KEY_DOWN:
           zoom_out ^= 1;
           break;
-        case GLFW_KEY_J:
+        case GLFW_KEY_L:
           use_pbo ^= 1;
           break;
         case GLFW_KEY_K:
-          {
-            direct_draw ^= 1;
-            reset_iteration(0);
-            update_colors();
-          }
+          direct_draw ^= 1;
+          reset_iteration();
+          update_colors();
+          break;
+        case GLFW_KEY_J:
+          use_cpu_shader ^= 1;
+          reset_iteration();
+          update_colors();
           break;
         default:
           break;

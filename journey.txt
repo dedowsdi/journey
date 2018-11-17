@@ -2197,3 +2197,10 @@ element. A prefix sum operation that includes the current element is known as an
 inclusive prefix sum, and one that does not is known as an exclusive prefix sum.
 
 DMA: direct memory access
+
+--------------
+2018.11.17
+
+gl:
+  by default, gl_FragCoord starts at (0.5, 0.5),  this can be change by layout
+  qualifier.

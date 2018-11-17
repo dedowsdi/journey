@@ -1,5 +1,10 @@
 //#version 430 core
 
+layout (local_size_x = 16, local_size_y = 16) in;
+
+layout (r32f, binding = 0)  uniform image2D img;
+layout (location = 0) uniform dvec4 rect; // left bottom right top
+
 #ifndef MAX_ITERATIONS
 #define MAX_ITERATIONS 500
 #endif
@@ -7,22 +12,6 @@
 #define BOUNDARY 256
 #define BOUNDARY2 65536
 #define ONE_OVER_LOG2 1.44269504088896f
-#define ONE_OVER_LOG_BOUNDARY = 4.158883083359671
-
-uniform dvec2 resolution;
-uniform dvec4 rect; // left bottom right top
-
-#ifdef DIRECT_DRAW
-
-#ifndef NUM_COLORS
-#define NUM_COLORS 256
-#endif
-uniform vec4 colors[NUM_COLORS];
-out vec4 frag_color;
-
-#else
-out float frag_color;
-#endif
 
 // f(z) = z*z + c, z starts as 0, c is some complex number
 // f(0) = c
@@ -57,15 +46,8 @@ float mandelbrot_set(dvec2 st)
 
 void main(void)
 {
-  dvec2 st = gl_FragCoord.xy / resolution;
-  float iterations = float(mandelbrot_set(mix(rect.xy, rect.zw, st)));
-
-#ifdef DIRECT_DRAW
-  int c0 = int(floor(iterations*NUM_COLORS/MAX_ITERATIONS )) % NUM_COLORS;
-  int c1 = (c0+1) % NUM_COLORS;
-  frag_color = mix(colors[c0], colors[c1], fract(iterations));
-#else
-  frag_color = iterations;
-#endif
-
+  dvec2 c = mix(rect.xy, rect.zw,
+          dvec2(gl_GlobalInvocationID.xy + dvec2(0.5))/(gl_NumWorkGroups.xy * gl_WorkGroupSize.xy));
+  float iterations = float(mandelbrot_set(c));
+  imageStore(img, ivec2(gl_GlobalInvocationID.xy), vec4(iterations));
 }

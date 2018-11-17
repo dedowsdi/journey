@@ -11,7 +11,7 @@
 namespace zxd {
 
 std::vector<GLfloat> input_data;
-GLint num_data = 2048;
+GLint num_data = 1024*1024;
 
 timer clock;
 GLuint buffers[2];
@@ -87,7 +87,7 @@ public:
 
     glFinish();
     clock.reset();
-    glDispatchCompute(1, 1, 1);
+    glDispatchCompute(1024, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BUFFER_BINDING);
     glFinish();
     std::cout << "gpu took " << clock.time_miliseconds() << "ms to partial sum "
@@ -97,10 +97,10 @@ public:
     float* ptr = static_cast<GLfloat*>(glMapBufferRange(
           GL_SHADER_STORAGE_BUFFER, 0, 4*num_data, GL_MAP_READ_BIT));
 
-    for (int i = 0; i < num_data; ++i) 
-    {
-      std::cout << *ptr++ << std::endl;
-    }
+    //for (int i = 0; i < num_data; ++i) 
+    //{
+      //std::cout << *ptr++ << std::endl;
+    //}
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
   }
