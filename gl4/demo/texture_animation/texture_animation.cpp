@@ -26,8 +26,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/texture_animation.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/texture_animation.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/texture_animation.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/texture_animation.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -71,7 +71,7 @@ public:
     quad0.include_texcoord(GL_TRUE);
     quad0.build_mesh();
 
-    fipImage fi = fipLoadImage("data/texture/explosion.jpg");
+    fipImage fi = fipLoadResource("texture/explosion.jpg");
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

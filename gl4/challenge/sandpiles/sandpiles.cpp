@@ -50,8 +50,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/sandpiles_topple.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/sandpiles_topple.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -81,8 +81,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/sandpiles_render.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/sandpiles_render.fs.glsl");
   }
 
   void bind_uniform_locations()

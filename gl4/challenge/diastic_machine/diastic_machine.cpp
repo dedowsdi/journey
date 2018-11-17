@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
   std::string seed = argv[1];
   std::string filepath = argv[2];
-  std::string file_content = stream_util::read_file(filepath);
+  std::string file_content = stream_util::read_resource(filepath);
   auto words = string_util::split_regex(file_content, R"(\W+)");
 
   std::string::size_type next_index = 0;

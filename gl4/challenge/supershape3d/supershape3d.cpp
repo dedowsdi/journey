@@ -21,7 +21,7 @@ material mtl;
 GLuint diffuse_map;
 
 super_shape_3d shape;
-std::string script_file = "supershape3d.txt";
+std::string script_file = "challenge/supershape3d/supershape3d.txt";
 dict_script dict;
 GLenum polygon_mode = GL_LINE;
 bool show_normal = true;

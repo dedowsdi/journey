@@ -161,6 +161,6 @@ public:
 
 int main(int argc, char *argv[]) {
   zxd::dither_app app;
-  zxd::img = zxd::fipLoadImage32("data/texture/sunflower.png");
+  zxd::img = zxd::fipLoadResource32("texture/sunflower.png");
   app.run();
 }

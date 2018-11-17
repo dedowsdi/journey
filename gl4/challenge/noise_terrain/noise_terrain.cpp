@@ -29,8 +29,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/noise_terrain.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/noise_terrain.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/noise_terrain.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/noise_terrain.fs.glsl");
   }
 
   void bind_uniform_locations()

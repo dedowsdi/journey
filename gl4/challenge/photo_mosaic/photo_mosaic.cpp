@@ -69,7 +69,7 @@ public:
       glBindTexture(GL_TEXTURE_2D, m_tex);
     }
 
-    m_img = fipLoadImage32(file);
+    m_img = fipLoadResource32(file);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_img.getWidth(), m_img.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, m_img.accessPixels());
     glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -138,8 +138,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/photo_mosaic.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/photo_mosaic.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/photo_mosaic.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/photo_mosaic.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -283,7 +283,7 @@ public:
 
     pack.rows(32);
     pack.cols(16);
-    pack.read_pack("data/texture/wow_ui.jpg");
+    pack.read_pack("texture/wow_ui.jpg");
 
     geometry.init();
     update_mosaic(0);
@@ -344,7 +344,7 @@ int main(int argc, char *argv[]) {
   }
 
   zxd::file_path = argv[1];
-  zxd::img = zxd::fipLoadImage32(zxd::file_path);
+  zxd::img = zxd::fipLoadResource32(zxd::file_path);
   zxd::photo_mosaic_app app;
   app.run();
 }

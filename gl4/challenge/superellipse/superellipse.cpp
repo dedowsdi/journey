@@ -36,8 +36,8 @@ struct fs_program : public program{
   fs_program() {}
 
   void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "data/shader/plot.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/superellipse.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/plot.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/superellipse.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0){

@@ -58,8 +58,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/fire.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/fire.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/fire.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/fire.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -86,8 +86,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/fire.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/coolmap.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/fire.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/coolmap.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -113,8 +113,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/warp.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/warp.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -141,8 +141,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/fire_heat.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/fire_heat.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -361,7 +361,7 @@ public:
 }
 
 int main(int argc, char *argv[]) {
-  img = zxd::fipLoadImage32("data/texture/ren.jpg");
+  img = zxd::fipLoadResource32("texture/ren.jpg");
   zxd::fire_app app;
   app.run();
 }

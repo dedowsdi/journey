@@ -19,8 +19,8 @@ struct plot_program : public program
   plot_program() {}
 
   void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "data/shader/plot.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/plot.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/plot.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/plot.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0){

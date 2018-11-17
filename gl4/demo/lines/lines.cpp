@@ -24,9 +24,9 @@ class lines : public app {
       glUniform1i(ul_factor, factor);
     }
     virtual void attach_shaders() {
-      attach(GL_VERTEX_SHADER, "data/shader/stipple.vs.glsl");
-      attach(GL_GEOMETRY_SHADER, "data/shader/stipple.gs.glsl");
-      attach(GL_FRAGMENT_SHADER, "data/shader/stipple.fs.glsl");
+      attach(GL_VERTEX_SHADER, "shader/stipple.vs.glsl");
+      attach(GL_GEOMETRY_SHADER, "shader/stipple.gs.glsl");
+      attach(GL_FRAGMENT_SHADER, "shader/stipple.fs.glsl");
 
       p_mat = glm::ortho(0.0f, 400.0f, 0.0f, 150.0f);
       v_mat = mat4(1.0);

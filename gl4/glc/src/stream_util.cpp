@@ -1,8 +1,12 @@
-#include "stream_util.h"
 #include <fstream>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+
+#include <boost/filesystem.hpp>
+
+#include "string_util.h"
+#include "stream_util.h"
 
 namespace stream_util
 {
@@ -69,6 +73,12 @@ glm::mat4 read_mat(std::istream& is)
 }
 
 //--------------------------------------------------------------------
+std::string read_resource(const std::string &filepath)
+{
+  return read_file(get_resource(filepath));
+}
+
+//--------------------------------------------------------------------
 std::string read_file(const std::string &filepath)
 {
   std::ifstream ifs(filepath);
@@ -90,5 +100,31 @@ std::string read_file(const std::string &filepath)
     std::istreambuf_iterator<char>(), std::back_inserter(s));
 
   return s;
+}
+
+//--------------------------------------------------------------------
+std::string get_resource(const std::string& name)
+{
+  namespace bfs = boost::filesystem;
+  // from osg
+  std::vector<std::string> resources = {"."};
+  char* resource_list = std::getenv("GL_FILE_PATH");
+  if(resource_list != NULL)
+  {
+    std::vector<std::string> extra = string_util::split(resource_list, ";");
+    resources.insert(resources.end(), 
+        std::make_move_iterator(extra.begin()), std::make_move_iterator(extra.end()));
+  }
+
+  for(auto& dir : resources)
+  {
+    bfs::path p(dir);
+    p.normalize();
+    p /= name;
+    if(bfs::exists(p))
+      return p.string();
+  }
+
+  throw std::runtime_error(name + " not found in all resources");
 }
 }

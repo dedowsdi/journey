@@ -12,7 +12,9 @@ namespace stream_util
   glm::vec2 read_vec2(std::istream& is);
   glm::mat4 read_mat(std::istream& is);
 
+  std::string read_resource(const std::string &filepath);
   std::string read_file(const std::string &filepath);
+  std::string get_resource(const std::string& name);
 }
 
 #endif /* STREAM_H */

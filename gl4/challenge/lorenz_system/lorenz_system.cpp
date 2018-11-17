@@ -55,8 +55,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/lorenz_system.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/lorenz_system.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/lorenz_system.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/lorenz_system.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -66,8 +66,8 @@ protected:
 
   void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
-    al_color = attrib_location("color");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "color");
   }
 
 } prg;
@@ -170,7 +170,7 @@ public:
     vertices.resize(count);
     colors.resize(count);
 
-    m_dict_script = new dict_script("lorenz_system.txt");
+    m_dict_script = new dict_script(stream_util::get_resource("challenge/lorenz_system/lorenz_system.txt"));
     m_dict_script->track(0.1);
 
     reset_buffer();

@@ -70,7 +70,7 @@ void program::uniform_location(GLint* location, const std::string& name) {
 //--------------------------------------------------------------------
 void program::attach(GLenum type, const std::string& file) {
   string_vector sv;
-  sv.push_back(stream_util::read_file(file));
+  sv.push_back(stream_util::read_resource(file));
   if (!attach(type, sv))
     std::cout << "faild to compile " << file << std::endl;
 }
@@ -111,7 +111,7 @@ bool program::attach(GLenum type, const string_vector& source) {
 void program::attach(
   GLenum type, const string_vector& source, const std::string& file) {
   string_vector combined_source(source);
-  combined_source.push_back(stream_util::read_file(file));
+  combined_source.push_back(stream_util::read_resource(file));
   if (!attach(type, combined_source))
     std::cout << "failed to compile " << file << std::endl;
 }

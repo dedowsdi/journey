@@ -71,7 +71,7 @@ public:
   virtual void init_info() {
     app::init_info();
     m_info.title = "sine wave";
-    m_image = fipLoadImage("data/texture/z.png");
+    m_image = fipLoadResource("texture/z.png");
     m_info.wnd_width = m_image.getWidth();
     m_info.wnd_height = m_image.getHeight();
   }

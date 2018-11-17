@@ -53,8 +53,6 @@ class reaction_diffusion_program : public program
 {
 
 public:
-  GLint al_vertex;
-  GLint al_texcoord;
   GLint ul_diffuse_map;
   GLint ul_da;
   GLint ul_db;
@@ -66,8 +64,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/reaction_diffusion.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/reaction_diffusion.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/reaction_diffusion.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/reaction_diffusion.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -82,8 +80,8 @@ protected:
 
   void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   }
 } prg;
 
@@ -91,16 +89,14 @@ class reaction_diffusion_draw_program : public program
 {
 
 public:
-  GLint al_vertex;
-  GLint al_texcoord;
   GLint ul_quad_map;
 
 protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/reaction_diffusion_draw.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/reaction_diffusion_draw.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/reaction_diffusion_draw.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/reaction_diffusion_draw.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -110,8 +106,8 @@ protected:
 
   void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   }
 } prg1;
 

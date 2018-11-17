@@ -249,7 +249,7 @@ int main(int argc, char *argv[]) {
   }
 
   zxd::file_path = argv[1];
-  zxd::img = zxd::fipLoadImage32(zxd::file_path);
+  zxd::img = zxd::fipLoadResource32(zxd::file_path);
 
   zxd::app_name app;
   app.run();

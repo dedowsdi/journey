@@ -129,8 +129,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/space_invader.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/space_invader.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/space_invader.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/space_invader.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -433,7 +433,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    fipImage fi = fipLoadImage("data/texture/explosion.jpg");
+    fipImage fi = fipLoadResource("texture/explosion.jpg");
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, fi.getWidth(), fi.getHeight(), 0,
         GL_BGR, GL_UNSIGNED_BYTE, fi.accessPixels());

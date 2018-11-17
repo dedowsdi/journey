@@ -1,11 +1,14 @@
-#include "bitmaptext.h"
-#include "texutil.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include "common.h"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#include "bitmaptext.h"
+#include "texutil.h"
+#include "common.h"
+#include "stream_util.h"
 
 namespace zxd {
 //--------------------------------------------------------------------
@@ -25,7 +28,7 @@ void bitmap_text::init() {
   // load font format information
   std::string fmtfile = m_fmt_file;
   std::string texfile;
-  std::ifstream ifs(fmtfile);
+  std::ifstream ifs(stream_util::get_resource(fmtfile));
 
   if (!ifs) {
     std::stringstream ss;
@@ -84,7 +87,7 @@ void bitmap_text::init() {
     throw std::runtime_error(ss.str());
   }
 
-  fipImage fip = zxd::fipLoadImage(texfile);
+  fipImage fip = zxd::fipLoadResource(texfile);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   glGenTextures(1, &m_texture);

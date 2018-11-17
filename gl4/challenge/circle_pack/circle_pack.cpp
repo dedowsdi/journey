@@ -294,7 +294,7 @@ public:
 
 int main(int argc, char *argv[]) {
 
-  zxd::img = zxd::fipLoadImage32("data/texture/z.png");
+  zxd::img = zxd::fipLoadResource32("texture/z.png");
 
   zxd::circle_pack_app app;
   app.run();

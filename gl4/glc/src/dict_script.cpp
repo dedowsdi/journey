@@ -1,8 +1,9 @@
 #include "dict_script.h"
-#include <fstream>
-#include <stdexcept>
 #include "string_util.h"
 #include "stream_util.h"
+
+#include <fstream>
+#include <stdexcept>
 #include <chrono>
 #include <thread>
 

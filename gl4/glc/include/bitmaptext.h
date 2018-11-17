@@ -24,8 +24,8 @@ struct bitmap_text_program : public zxd::program {
     glUniform1i(ul_font_map, 0);
   }
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/bitmap_text.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/bitmap_text.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/bitmap_text.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/bitmap_text.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");
@@ -70,7 +70,7 @@ protected:
   std::map<GLchar, glyph> m_glyph_dict;
 
 public:
-  bitmap_text(const std::string& fmtfile = "data/font/DejaVuSansMono_15_9.fmt");
+  bitmap_text(const std::string& fmtfile = "font/DejaVuSansMono_15_9.fmt");
   ~bitmap_text();
   void init();
   // must be called at least once

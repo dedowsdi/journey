@@ -1,5 +1,7 @@
-#include "texutil.h"
 #include <iostream>
+
+#include "texutil.h"
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -33,6 +35,18 @@ fipImage fipLoadImage32(const std::string& file)
       std::cout << "convert failed!!" << std::endl;
   }
   return fip;
+}
+
+//--------------------------------------------------------------------
+fipImage fipLoadResource(const std::string& file)
+{
+  return fipLoadImage(stream_util::get_resource(file));
+}
+
+//--------------------------------------------------------------------
+fipImage fipLoadResource32(const std::string& file)
+{
+  return fipLoadImage32(stream_util::get_resource(file));
 }
 
 //--------------------------------------------------------------------

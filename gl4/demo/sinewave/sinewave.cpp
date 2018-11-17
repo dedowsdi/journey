@@ -18,8 +18,8 @@ struct sine_wave_program : public program{
   sine_wave_program() {}
 
   void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/sinewave.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/sinewave.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0){
@@ -78,7 +78,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    fipImage image = fipLoadImage("data/texture/bricks2.jpg");
+    fipImage image = fipLoadResource("texture/bricks2.jpg");
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.getWidth(), image.getHeight(),
         0, GL_BGR, GL_UNSIGNED_BYTE, image.accessPixels());
 

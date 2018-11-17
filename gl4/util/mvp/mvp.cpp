@@ -367,7 +367,7 @@ int main(int argc, char *argv[])
   // get space matrixes and vector
 
   ELEMENT elem = INITIAL;
-  file_content = stream_util::read_file(file_path);
+  file_content = stream_util::read_resource(file_path);
   replace_contents();
   std::stringstream ifs(file_content);
   std::string line;

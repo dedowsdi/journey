@@ -73,8 +73,8 @@ public:
 protected:
   virtual void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/snake.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/snake.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/snake.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/snake.fs.glsl");
   };
   virtual void bind_uniform_locations()
   {

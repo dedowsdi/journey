@@ -19,8 +19,8 @@ struct particle_program : public zxd::program {
   vec3 camera_up;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/particle.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/particle.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/particle.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/particle.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_vp_mat, "vp_mat");
@@ -108,7 +108,7 @@ protected:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    auto image = zxd::fipLoadImage("data/texture/flare.png");
+    auto image = zxd::fipLoadResource("texture/flare.png");
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(),
       0, GL_BGR, GL_UNSIGNED_BYTE, image.accessPixels());

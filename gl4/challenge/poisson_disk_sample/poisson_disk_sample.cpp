@@ -58,8 +58,8 @@ struct dot_program : public program
   GLint ul_color;
   void attach_shaders() override
   {
-    attach(GL_VERTEX_SHADER, "data/shader/dot.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/dot.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/dot.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/dot.fs.glsl");
   }
 
   void bind_attrib_locations() override

@@ -122,7 +122,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    fipImage image = fipLoadImage32("data/texture/f32.png");
+    fipImage image = fipLoadResource32("texture/f32.png");
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(),
         0, GL_RGBA, GL_UNSIGNED_BYTE, image.accessPixels());

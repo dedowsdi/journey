@@ -233,8 +233,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/firework.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/firework.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/firework.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/firework.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -256,8 +256,8 @@ class trail_program : public program
 protected:
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/filter.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/filter_blank.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/filter.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/filter_blank.fs.glsl");
   }
 } filter_prg;
 

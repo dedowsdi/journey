@@ -40,8 +40,8 @@ struct texline_program : public zxd::program {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/texline.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/texline.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/texline.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/texline.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");

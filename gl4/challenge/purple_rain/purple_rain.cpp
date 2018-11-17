@@ -134,8 +134,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/purple_rain.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/purple_rain.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/purple_rain.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/purple_rain.fs.glsl");
   }
 
   void bind_uniform_locations()

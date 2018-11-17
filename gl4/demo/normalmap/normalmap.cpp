@@ -25,11 +25,11 @@ struct use_normal_map_view_program : public zxd::program {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/use_normalmap_view.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/use_normalmap_view.vs.glsl");
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    sv.push_back(stream_util::read_file("data/shader/blinn.frag"));
-    attach(GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
+    sv.push_back(stream_util::read_resource("shader/blinn.frag"));
+    attach(GL_FRAGMENT_SHADER, sv, "shader/use_normalmap_view.fs.glsl");
 
     name("use_normalmap_view");
   }
@@ -64,9 +64,9 @@ struct use_normal_map_tangent_progrm : public program {
   virtual void attach_shaders() {
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    attach(GL_VERTEX_SHADER, sv, "data/shader/use_normalmap_tangent.vs.glsl");
-    sv.push_back(stream_util::read_file("data/shader/blinn.frag"));
-    attach(GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
+    attach(GL_VERTEX_SHADER, sv, "shader/use_normalmap_tangent.vs.glsl");
+    sv.push_back(stream_util::read_resource("shader/blinn.frag"));
+    attach(GL_FRAGMENT_SHADER, sv, "shader/use_normalmap_tangent.fs.glsl");
 
     name("use_normalmap_tangent");
   }
@@ -118,7 +118,7 @@ public:
     q.include_tangent(true);
     q.build_mesh();
 
-    fipImage normal_image = zxd::fipLoadImage("data/texture/bricks.bmp");
+    fipImage normal_image = zxd::fipLoadResource("texture/bricks.bmp");
 
     glGenTextures(1, &normal_map);
     glBindTexture(GL_TEXTURE_2D, normal_map);

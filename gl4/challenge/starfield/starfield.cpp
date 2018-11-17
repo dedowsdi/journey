@@ -22,8 +22,8 @@ struct star_program : public zxd::program {
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/starfield.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/starfield.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/starfield.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader/starfield.fs.glsl");
   }
 
   virtual void bind_uniform_locations()
@@ -114,7 +114,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    fipImage img = zxd::fipLoadImage("data/texture/flare.png");
+    fipImage img = zxd::fipLoadResource("texture/flare.png");
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.getWidth(), img.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.accessPixels());
 

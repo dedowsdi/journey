@@ -24,7 +24,7 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_COMPUTE_SHADER, "data/shader/prefix_sum_1d.cs.glsl");
+    attach(GL_COMPUTE_SHADER, "shader/prefix_sum_1d.cs.glsl");
   }
 
   void bind_uniform_locations()

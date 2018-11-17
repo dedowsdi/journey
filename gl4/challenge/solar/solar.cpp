@@ -166,7 +166,7 @@ public:
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-      fipImage fi = fipLoadImage("data/texture/" + texture_files[i]);
+      fipImage fi = fipLoadResource("texture/" + texture_files[i]);
       
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fi.getWidth(), fi.getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, fi.accessPixels());
     }

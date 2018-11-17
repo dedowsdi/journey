@@ -68,7 +68,7 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
     string_vector sv;
     sv.push_back("#version 430 core\n");
     sv.push_back("#define MAX_ITERATIONS " + string_util::to(iterations) + "\n");
@@ -77,7 +77,7 @@ protected:
       sv.push_back("#define DIRECT_DRAW");
       sv.push_back("#define NUM_COLORS " + string_util::to(num_colors) + "\n");
     }
-    attach(GL_FRAGMENT_SHADER, sv, "data/shader/mandelbrot_iteration.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, sv, "shader/mandelbrot_iteration.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -108,12 +108,12 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
     string_vector sv;
     sv.push_back("#version 430 core\n");
     sv.push_back("#define MAX_ITERATIONS " + string_util::to(iterations) + "\n");
     sv.push_back("#define NUM_COLORS " + string_util::to(num_colors) + "\n");
-    attach(GL_FRAGMENT_SHADER, sv, "data/shader/mandelbrot_color.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, sv, "shader/mandelbrot_color.fs.glsl");
   }
 
   void bind_uniform_locations()
