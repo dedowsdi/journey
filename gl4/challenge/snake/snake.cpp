@@ -1,5 +1,7 @@
 #include "app.h"
 #include "program.h"
+#include "common_program.h"
+
 #include <algorithm>
 #include <list>
 
@@ -12,10 +14,12 @@
 #define COOLDOWN 0.15
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-#define COLOR vec3(1)
+#define COLOR vec4(1)
 
 namespace  zxd
 {
+
+lightless_program prg;
 
 // geometry
 class rect
@@ -49,12 +53,8 @@ public:
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2),
       value_ptr(vertices[0]), GL_STATIC_DRAW);
 
-  }
-
-  void bind(GLint vertex_location)
-  {
-    glVertexAttribPointer(vertex_location, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(vertex_location);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
   }
 
   void draw()
@@ -64,28 +64,6 @@ public:
   }
 } geometry(CELL_SIZE);
 
-struct snake_program : public program
-{
-public:
-  GLint ul_color;
-  GLint al_vertex;
-
-protected:
-  virtual void attach_shaders()
-  {
-    attach(GL_VERTEX_SHADER, "shader/snake.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/snake.fs.glsl");
-  };
-  virtual void bind_uniform_locations()
-  {
-    uniform_location(&ul_color, "color");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-  };
-  virtual void bind_attrib_locations()
-  {
-    al_vertex = attrib_location("vertex");
-  };
-} prg;
 
 struct cell
 {
@@ -203,8 +181,7 @@ public:
   void draw()
   {
     prg.use();
-    geometry.bind(prg.al_vertex);
-    glUniform3fv(prg.ul_color, 1, glm::value_ptr(COLOR));
+    glUniform4fv(prg.ul_color, 1, glm::value_ptr(COLOR));
 
     // draw snake
     for (size_t i = 0; i < m_body.size(); ++i) 

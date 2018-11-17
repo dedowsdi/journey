@@ -2,6 +2,8 @@
 #include "bitmaptext.h"
 #include "dict_script.h"
 #include "stream_util.h"
+#include "common_program.h"
+
 #include <sstream>
 
 #define WIDTH 800
@@ -44,33 +46,7 @@ bool operator!=(const setting& lhs, const setting& rhs)
   return !operator==(lhs, rhs);
 }
 
-class program_name : public program
-{
-
-public:
-  GLint al_vertex;
-  GLint al_color;
-
-protected:
-
-  void attach_shaders()
-  {
-    attach(GL_VERTEX_SHADER, "shader/lorenz_system.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/lorenz_system.fs.glsl");
-  }
-
-  void bind_uniform_locations()
-  {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-  }
-
-  void bind_attrib_locations()
-  {
-    bind_attrib_location(0, "vertex");
-    bind_attrib_location(1, "color");
-  }
-
-} prg;
+lightless_program prg;
 
 void update_buffer()
 {
@@ -109,6 +85,12 @@ void reset_buffer()
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
   glBufferData(GL_ARRAY_BUFFER, count * sizeof(vec3), value_ptr(vertices[0]), GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+  glEnableVertexAttribArray(0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+  glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+  glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
   glBufferData(GL_ARRAY_BUFFER, count * sizeof(vec3), value_ptr(vertices[0]), GL_STATIC_DRAW);
@@ -159,6 +141,7 @@ public:
     m_text.init();
     m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 
+    prg.with_color = true;
     prg.init();
     prg.v_mat = glm::lookAt(vec3(0, -100, 100), vec3(0), pza);
     prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 10000.0f);
@@ -195,14 +178,6 @@ public:
     prg.use();
 
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-    glVertexAttribPointer(prg.al_vertex, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_vertex);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-    glVertexAttribPointer(prg.al_color, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_color);
-
     prg.mvp_mat = prg.p_mat * prg.v_mat;
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
 

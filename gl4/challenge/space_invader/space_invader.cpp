@@ -2,10 +2,12 @@
 #include "bitmaptext.h"
 #include "geometry.h"
 #include "points.h"
-#include <list>
-#include <sstream>
 #include "texmap_anim.h"
 #include "texutil.h"
+#include "common_program.h"
+
+#include <list>
+#include <sstream>
 
 #define WIDTH 800.0f
 #define HEIGHT 800.0f
@@ -18,6 +20,8 @@
 #define BULLET_SIZE 15
 
 namespace zxd {
+
+lightless_program prg;
 
 class ship_geometry : public geometry_base
 {
@@ -48,7 +52,6 @@ protected:
     m_primitive_sets.clear();
     add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices()));
   }
-
 
 } ship_geometry0;
 
@@ -120,32 +123,6 @@ protected:
 
 } bullet_geometry0;
 
-class program_name : public program
-{
-public:
-  GLint ul_color;
-
-protected:
-
-  void attach_shaders()
-  {
-    attach(GL_VERTEX_SHADER, "shader/space_invader.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/space_invader.fs.glsl");
-  }
-
-  void bind_uniform_locations()
-  {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_color, "color");
-  }
-
-  void bind_attrib_locations()
-  {
-    bind_attrib_location(0, "vertex");
-  }
-
-} prg;
-
 texture_animation_program prg1;
 
 class base // base for ship, bullet, invader
@@ -153,7 +130,7 @@ class base // base for ship, bullet, invader
 protected:
   bool m_dead;
   vec2 m_pos;
-  vec3 m_color;
+  vec4 m_color;
   GLfloat m_size;
   vec2 m_velocity;
   GLfloat m_speed;
@@ -175,8 +152,8 @@ public:
   void pos(const vec2& v){ m_pos = v; }
   void pos(GLfloat x, GLfloat y){ m_pos = vec2(x, y); }
 
-  const vec3& color() const { return m_color; }
-  void color(const vec3& v){ m_color = v; }
+  const vec4& color() const { return m_color; }
+  void color(const vec4& v){ m_color = v; }
 
   GLfloat size() const { return m_size; }
   void size(GLfloat v){ m_size = v; }
@@ -208,7 +185,7 @@ public:
     m_geometry->bind_vao();
 
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat * m_mat()));
-    glUniform3fv(prg.ul_color, 1, glm::value_ptr(m_color));
+    glUniform4fv(prg.ul_color, 1, glm::value_ptr(m_color));
 
     m_geometry->draw();
   }
@@ -268,7 +245,7 @@ public :
   invader()
   {
     geometry(&invader_geometry0);
-    color(vec3(0.5, 0, 0.5));
+    color(vec4(0.5, 0, 0.5, 1));
     size(SIZE);
     m_angle = glm::linearRand(0.0f, f2pi);
   }
@@ -311,7 +288,7 @@ public:
   bullet()
   {
     geometry(&bullet_geometry0);
-    m_color = vec3(0.5, 0, 1);
+    m_color = vec4(0.5, 0, 1, 1);
     m_speed = BULLET_SPEED;
     m_velocity = vec2(0, m_speed);
     m_size = BULLET_SIZE;
@@ -379,7 +356,7 @@ public:
   virtual void reset()
   {
     base::reset();
-    color(vec3(0));
+    color(vec4(0, 0, 0, 1));
     size(SIZE);
     m_fire_cooldown = FIRE_COOLDOWN;
     m_speed = SHIP_SPEED;
