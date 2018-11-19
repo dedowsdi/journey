@@ -23,8 +23,8 @@ public:
   const vec3& acc() const { return m_acc; }
   void acc(const vec3& v){ m_acc = v; }
 
-  void udpate();
-  void applyForce(const vec3& force);
+  virtual void update();
+  void apply_force(const vec3& force);
 };
 
 }

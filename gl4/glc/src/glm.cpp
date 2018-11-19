@@ -146,6 +146,20 @@ vec3 rgb2hsb(const vec3& c)
 }
 
 //--------------------------------------------------------------------
+vec3 clamp_length(const vec3& v, GLfloat min_lenth,  GLfloat max_length)
+{
+  GLfloat l2 = glm::length2(v);
+
+  if(l2 < min_lenth * min_lenth)
+    return v / glm::sqrt(l2) * min_lenth;
+
+  if(l2 > max_length * max_length)
+    return v / glm::sqrt(l2) * max_length;
+
+  return v;
+}
+
+//--------------------------------------------------------------------
 vec3 hsb2rgb(const vec3& c)
 {
   vec3 rgb = clamp(abs(mod(c.x*6.0f+vec3(0.0,4.0,2.0), 6.0f)-3.0f)-1.0f, 0.0f, 1.0f);

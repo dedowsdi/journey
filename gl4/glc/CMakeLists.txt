@@ -43,6 +43,7 @@ set(GLC_SRCS
     src/timer.cpp
     src/pingpong.cpp
     src/lissajous.cpp
+    src/movable.cpp
     )
 
 add_library(glc 

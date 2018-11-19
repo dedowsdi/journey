@@ -134,6 +134,8 @@ mat4 rect_ortho(GLfloat hw, GLfloat hh, GLfloat aspect, GLfloat n = -1, GLfloat 
 
 vec3 rgb2hsb(const vec3& c);
 
+vec3 clamp_length(const vec3& v, GLfloat min_lenth,  GLfloat max_length);
+
 //  Function from Iñigo Quiles
 //  https://www.shadertoy.com/view/MsS3Wc
 vec3 hsb2rgb(const vec3& c);
