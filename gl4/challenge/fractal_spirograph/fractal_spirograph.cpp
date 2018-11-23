@@ -141,13 +141,13 @@ public:
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    m_graph = std::shared_ptr<circle_graph>(new circle_graph());
+    m_graph = std::make_shared<circle_graph>();
     m_graph->radius(180);
     m_graph->pos(vec2(WIDTH*0.5, HEIGHT*0.5));
 
     auto graph = m_graph;
     for (int i = 1; i < static_cast<int>(kci_circles->value); ++i) {
-      auto child = std::shared_ptr<circle_graph>(new circle_graph);
+      auto child = std::make_shared<circle_graph>();
       child->radius(graph->radius() / 3.0);
       GLfloat r = child->radius() * (kci_type->value == 0 ? 1 : -1) + graph->radius() ;
       child->pos(graph->pos() +  vec2(0, r));

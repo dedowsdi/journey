@@ -154,8 +154,8 @@ std::shared_ptr<program> gaussian_blur_filter::get_program()
 {
   if(!m_program)
   {
-    gaussian_blur_program* prg = new gaussian_blur_program;
-    m_program = std::shared_ptr<gaussian_blur_program>(prg);
+    auto prg = std::make_shared<gaussian_blur_program>();
+    m_program = prg;
     prg->mean = m_mean;
     prg->deviation = m_deviation;
     prg->step = m_step;

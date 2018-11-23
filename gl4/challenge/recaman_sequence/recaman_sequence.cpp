@@ -191,13 +191,13 @@ public:
     vec3_vector unit_vertices = geometry_util::vec2_vector_to_vec3_vector(
         unit_circle.attrib_vec2_array(0)->get_vector());
 
-    vec2_array* vertices = new vec2_array();
-    mesh.attrib_array(0, std::shared_ptr<vec2_array>(vertices));
+    auto vertices = std::make_shared<vec2_array>();
+    mesh.attrib_array(0, vertices);
     vertices->reserve((slices*1) * (sequence.size() - 1));
     // build mesh based on sequence
     
-    vec4_array* colors = new vec4_array();
-    mesh.attrib_array(1, std::shared_ptr<vec4_array>(colors));
+    auto colors = std::make_shared<vec4_array>();
+    mesh.attrib_array(1, colors);
     colors->reserve(vertices->capacity());
 
     vec2 r = glm::linearRand(vec2(0), vec2(1000));

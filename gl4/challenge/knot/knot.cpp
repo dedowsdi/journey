@@ -144,8 +144,8 @@ public:
   {
     vec3_vector vertices = geometry_util::extrude_along_line_strip(line_strip, extrude_radius, num_faces);
 
-    vec3_array* vertex_array = new vec3_array();
-    knot.attrib_array(0, std::shared_ptr<vec3_array>(vertex_array));
+    auto vertex_array = std::make_shared<vec3_array>();
+    knot.attrib_array(0, vertex_array);
     vertex_array->get_vector() = std::move(vertices);
     knot.bind_and_update_buffer();
 

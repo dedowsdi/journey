@@ -6,8 +6,8 @@ namespace zxd
 //--------------------------------------------------------------------
 void rose::build_vertex()
 {
-  vec2_array* vertices = new vec2_array();
-  attrib_array(0, std::shared_ptr<vec2_array>(vertices));
+  auto vertices = std::make_shared<vec2_array>();
+  attrib_array(0, vertices);
 
   // simplify n and d
   GLuint g = zxd::gcd(m_n, m_d);

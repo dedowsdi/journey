@@ -120,6 +120,7 @@ GLuint geometry_base::get_num_primitive_set()
 //--------------------------------------------------------------------
 void geometry_base::add_primitive_set(primitive_set* ps)
 {
+  // this might cause problem, i should use shared_ptr as argument!!!
   m_primitive_sets.push_back(std::shared_ptr<primitive_set>(ps));
 }
 

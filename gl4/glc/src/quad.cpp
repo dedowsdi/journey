@@ -167,8 +167,8 @@ void billboard_quad::texcoord(const vec2& tc0, const vec2& tc1)
 //--------------------------------------------------------------------
 void billboard_quad::build_vertex()
 {
-  vec2_array* vertices = new vec2_array();
-  attrib_array(0, std::shared_ptr<vec2_array>(vertices));
+  auto vertices = std::make_shared<vec2_array>();
+  attrib_array(0, vertices);
   vertices->push_back(m_v0);
   vertices->push_back(vec2(m_v1.x, m_v0.y));
   vertices->push_back(m_v1);
@@ -181,8 +181,8 @@ void billboard_quad::build_vertex()
 //--------------------------------------------------------------------
 void billboard_quad::build_texcoord()
 {
-  vec2_array* texcoords = new vec2_array();
-  attrib_array(1, std::shared_ptr<vec2_array>(texcoords));
+  auto texcoords = std::make_shared<vec2_array>();
+  attrib_array(1, texcoords);
   texcoords->push_back(m_texcoord0);
   texcoords->push_back(vec2(m_texcoord1.x, m_texcoord0.y));
   texcoords->push_back(m_texcoord1);
