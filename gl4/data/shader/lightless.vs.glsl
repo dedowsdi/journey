@@ -1,9 +1,9 @@
 //#version 330 core
 
-in vec4 vertex;
+layout(location = 0) in vec4 vertex;
 
 #ifdef WITH_TEXCOORD
-in vec2 texcoord;
+layout(location = 1) in vec2 texcoord;
 out VS_OUT
 {
   vec2 texcoord;

@@ -37,11 +37,15 @@ static const GLfloat f2pi = fpi * 2;
 static const GLfloat fpi2 = fpi / 2;
 static const GLfloat fpi4 = fpi / 4;
 static const GLfloat fpi8 = fpi / 8;
+static const GLfloat fpi16 = fpi / 16;
+static const GLfloat fpi32 = fpi / 32;
 static const GLdouble dpi = glm::pi<GLdouble>();
 static const GLfloat d2pi = dpi * 2;
 static const GLfloat dpi2 = dpi / 2;
 static const GLfloat dpi4 = dpi / 4;
 static const GLfloat dpi8 = dpi / 8;
+static const GLfloat dpi16 = dpi / 16;
+static const GLfloat dpi32 = dpi / 32;
 
 static const glm::vec3 pxa(1, 0, 0);
 static const glm::vec3 nxa(-1, 0, 0);
@@ -127,6 +131,14 @@ vec3 transform_vector(const mat4& m, const vec3& v);
 mat4 rotate_to(const vec3& v0, const vec3& v1);
 
 mat4 rotate_to_any(const vec3& v0, const vec3& v1);
+
+// rotate dir by random orthogonal axis in angle, assume dir normalized
+vec3 rotate_in_cone(const vec3& ndir, GLfloat angle);
+
+// dir must be normalized!
+vec3 random_orthogonal(const vec3& ndir);
+
+float gaussian_weight(double x, double mean, double deviation);
 
 // use rect center as origin, hw, hh as minimum half width and height, adjusted
 // according to aspect

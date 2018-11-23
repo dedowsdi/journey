@@ -1,5 +1,8 @@
 #include "pingpong.h"
 
+namespace zxd
+{
+
 //--------------------------------------------------------------------
 pingpong::pingpong(GLuint r0, GLuint r1)
 {
@@ -18,6 +21,12 @@ void pingpong::set(GLuint r0, GLuint r1)
 void pingpong::swap()
 {
   std::swap(m_ping, m_pong);
+}
+
+//--------------------------------------------------------------------
+GLuint* pingpong::pointer()
+{
+  return &m_ping;
 }
 
 //--------------------------------------------------------------------
@@ -73,3 +82,6 @@ void npingpong::shift()
   m_resources.push_back(temp.back());
   m_resources.insert(m_resources.end(), temp.begin(), temp.end() - 1);
 }
+
+}
+

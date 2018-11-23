@@ -36,7 +36,11 @@ void program::link() {
 }
 
 //--------------------------------------------------------------------
-void program::use() { glUseProgram(object); }
+void program::use() {
+  if(!is_inited())
+    init();
+  glUseProgram(object);
+}
 
 //--------------------------------------------------------------------
 void program::fix2d_camera(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top)

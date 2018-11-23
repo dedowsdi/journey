@@ -49,6 +49,7 @@ public:
   virtual void build_tangent() {}
 
   GLuint vao() const { return m_vao; }
+  bool is_inited() const { return m_vao != -1;}
 
   GLboolean include_normal() const { return m_include_normal; }
   void include_normal(GLboolean v){ m_include_normal = v; }

@@ -4,7 +4,7 @@
 // reset stiple counter for each line segment
 
 layout(lines) in;
-layout(line_strip, max_vertices = 2) out;
+layout(line_strip, max_vertices = 1024) out;
 
 uniform ivec4 viewport;
 noperspective out float stipple_count;

@@ -1,0 +1,6 @@
+UB undefined behavior
+IB implemention-defined behavior
+ODR one definition rule
+RVO return value optimization
+RAII resource acquisition is initialization
+ADL agrument dependent look up

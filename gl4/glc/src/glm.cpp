@@ -124,6 +124,36 @@ mat4 rotate_to_any(const vec3& v0, const vec3& v1)
 }
 
 //--------------------------------------------------------------------
+vec3 rotate_in_cone(const vec3& ndir, GLfloat angle)
+{
+  return ndir * cos(angle) + random_orthogonal(ndir) * sin(angle);
+}
+
+//--------------------------------------------------------------------
+vec3 random_orthogonal(const vec3& ndir)
+{
+  if(glm::length2(ndir) < 0.00001)
+  {
+    std::cout << "failed to get random orthogonal for ndir with tiny magnitude" << std::endl;
+    return vec3(1, 0, 0);
+  }
+
+  vec3 ref = glm::sphericalRand(1.0);
+  while(glm::abs(glm::dot(ndir, ref)) > 0.99999f)
+    ref = glm::sphericalRand(1.0);
+  return glm::normalize(glm::cross(ndir, ref));
+}
+
+//--------------------------------------------------------------------
+float gaussian_weight(double x, double mean, double deviation)
+{
+  static float e = 2.71828182845904523536028747135266249775724709369995;
+  static float r = 1 / std::sqrt(2 * fpi);
+  float rd = 1 / (deviation * deviation);
+  return std::pow(e, -0.5f * std::pow((x - mean) * rd, 2)) * rd * r;
+}
+
+//--------------------------------------------------------------------
 mat4 rect_ortho(GLfloat hw, GLfloat hh, GLfloat aspect, GLfloat n/* = -1*/, GLfloat f/* = 1*/)
 {
   GLfloat project_aspect = hw/hh;

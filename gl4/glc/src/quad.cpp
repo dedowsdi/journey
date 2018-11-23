@@ -4,6 +4,21 @@
 
 namespace zxd {
 
+namespace
+{
+quad ndc_quad;
+}
+
+quad& get_ndc_quad()
+{
+  if(!ndc_quad.is_inited())
+  {
+    ndc_quad.include_texcoord(true);
+    ndc_quad.build_mesh();
+  }
+  return ndc_quad;
+}
+
 //--------------------------------------------------------------------
 void draw_quad(GLuint tex, GLuint tui/* = 0*/)
 {
@@ -23,6 +38,12 @@ void draw_quad(GLuint tex, GLuint tui/* = 0*/)
   prg.use();
   prg.update_uniforms(tui);
   q.draw();
+}
+
+//--------------------------------------------------------------------
+void draw_quad()
+{
+  get_ndc_quad().draw();
 }
 
 //--------------------------------------------------------------------

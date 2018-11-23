@@ -8,8 +8,13 @@
 
 namespace zxd {
 
-// draw single 2d quad
+class quad;
+// draw single fullscreen 2d quad
 void draw_quad(GLuint tex, GLuint tui = 0);
+
+// call draw, nothing else. you must build program context before call this
+void draw_quad();
+quad& get_nd_quad();
 
 class quad : public geometry_base {
 protected:

@@ -2,11 +2,11 @@
  * mean = 0
  * variance = 1
  * gaussian_step = 0.5
- * radius = 4
+ * RADIUS = 4
  */
 #version 330 core
 
-#define radius 4
+#define RADIUS 4
 
 in vs_out
 {
@@ -29,7 +29,7 @@ void main(void) {
   }
 
   vec4 color = weights[0] * texture2D(quad_map, fi.texcoord);
-  for (int i = 1; i <= radius; i++) {
+  for (int i = 1; i <= RADIUS; i++) {
     color += weights[i] * texture2D(quad_map, fi.texcoord + tex_step * i);
     color += weights[i] * texture2D(quad_map, fi.texcoord - tex_step * i);
   }

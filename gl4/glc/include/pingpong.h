@@ -2,6 +2,9 @@
 #define PINGPONG_H
 #include "glm.h"
 
+namespace zxd
+{
+
 class pingpong
 {
 protected:
@@ -21,6 +24,8 @@ public:
   void set(GLuint r0, GLuint r1);
 
   void swap();
+
+  GLuint* pointer();
 };
 
 // n ping + 1 opong
@@ -42,6 +47,8 @@ public:
   void shift();
 
 };
+
+}
 
 
 #endif /* PINGPONG_H */

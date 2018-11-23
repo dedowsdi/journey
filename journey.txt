@@ -2204,3 +2204,11 @@ DMA: direct memory access
 gl:
   by default, gl_FragCoord starts at (0.5, 0.5),  this can be change by layout
   qualifier.
+
+--------------
+2018.11.18
+
+
+cpp:
+  be careful about stuff defined directly in src file, if it doesn't have
+  internal linkage, you might get multiple difiniton error.

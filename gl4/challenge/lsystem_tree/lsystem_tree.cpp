@@ -27,6 +27,9 @@
 #include "app.h"
 #include "bitmaptext.h"
 #include "common_program.h"
+#include "lsystem.h"
+
+
 #include <algorithm>
 #include <mat_stack.h>
 #include <sstream>
@@ -42,32 +45,6 @@ namespace zxd {
 lightless_program prg;
 GLint iteration_count = 4;
 GLfloat angle = 25.0f;
-
-struct lsystem
-{
-  typedef std::map<char, std::string> rule;
-  //std::string axiom;
-  
-  rule rules;
-
-  std::string generate(const std::string& axiom, GLuint count)
-  {
-    if(count == 0)
-      return axiom;
-
-    std::string s;
-    for(char c : axiom)
-    {
-      auto iter = rules.find(c);
-      if(iter == rules.end())
-        s.push_back(c);
-      else
-        s += iter->second;
-    }
-
-    return generate(s, --count);
-  }
-};
 
 class lsystem_tree
 {
@@ -205,7 +182,7 @@ public:
 
   void update_tree()
   {
-    m_lsystem.rules['F'] = "FF+[+F-F-F]-[-F+F+F]";
+    m_lsystem.add_rule('F', "FF+[+F-F-F]-[-F+F+F]");
     std::string text = m_lsystem.generate("F", iteration_count);
 
     //std::cout << text << std::endl;

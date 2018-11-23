@@ -6,8 +6,6 @@ namespace zxd {
 
 //--------------------------------------------------------------------
 void sphere::build_vertex() {
-  GLfloat phi_step = glm::pi<GLfloat>() / m_stack;
-  GLfloat theta_step = 2 * glm::pi<GLfloat>() / m_slice;
 
   GLuint circle_size = m_slice + 1;
   GLuint strip_size = circle_size * 2;
@@ -16,38 +14,21 @@ void sphere::build_vertex() {
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve((m_stack * strip_size));
 
+  vec3_vector sphere_points = get_sphere_points(m_radius, m_slice, m_stack);
+  GLint stack_size = m_slice + 1;
   // create sphere stack by stack along z
   // build triangle strip as
   //    0 2
   //    1 3
   // pole strip will not be created as triangle fan, as it mess up texture
   for (int i = 0; i < m_stack; ++i) {
-    GLfloat phi0 = i * phi_step;
-    GLfloat phi1 = phi0 + phi_step;
-
-    GLfloat sin_phi0 = std::sin(phi0);
-    GLfloat sin_phi1 = std::sin(phi1);
-    GLfloat cos_phi0 = std::cos(phi0);
-    GLfloat cos_phi1 = std::cos(phi1);
-
-    GLfloat r_times_sin_phi0 = m_radius * sin_phi0;
-    GLfloat r_times_sin_phi1 = m_radius * sin_phi1;
-    GLfloat r_times_cos_phi0 = m_radius * cos_phi0;
-    GLfloat r_times_cos_phi1 = m_radius * cos_phi1;
+    GLint stack_start = stack_size * i;
+    GLuint next_stack_start = stack_start + stack_size;
 
     for (int j = 0; j <= m_slice; j++) {
       // loop last stack in reverse order
-      GLfloat theta = theta_step * j;
-      if(j == m_slice) theta = 0; // avoid precision problem
-
-      GLfloat cos_theta = std::cos(theta);
-      GLfloat sin_theta = std::sin(theta);
-
-      vertices.push_back(vec3(r_times_sin_phi0 * cos_theta,
-        r_times_sin_phi0 * sin_theta, r_times_cos_phi0));
-
-      vertices.push_back(vec3(r_times_sin_phi1 * cos_theta,
-        r_times_sin_phi1 * sin_theta, r_times_cos_phi1));
+      vertices.push_back(sphere_points[stack_start + j]);
+      vertices.push_back(sphere_points[next_stack_start + j]);
     }
   }
 
@@ -95,6 +76,38 @@ void sphere::build_texcoord() {
   }
 
   assert(texcoords.size() == num_vertices());
+}
+
+//--------------------------------------------------------------------
+vec3_vector sphere::get_sphere_points(GLfloat radius, GLuint slices, GLuint stacks)
+{
+  vec3_vector sphere_point;
+  sphere_point.reserve((stacks + 1) * (slices + 1));
+  GLfloat phi_step = glm::pi<GLfloat>() / stacks;
+  GLfloat theta_step = f2pi / slices;
+  for (int i = 0; i <= stacks; ++i) {
+    GLfloat phi = i * phi_step;
+
+    GLfloat sin_phi = std::sin(phi);
+    GLfloat cos_phi = std::cos(phi);
+
+    GLfloat r_times_sin_phi = radius * sin_phi;
+    GLfloat r_times_cos_phi = radius * cos_phi;
+
+    for (int j = 0; j <= slices; j++) {
+      // loop last stack in reverse order
+      GLfloat theta = theta_step * j;
+      if(j == slices) theta = 0; // avoid precision problem
+
+      GLfloat cos_theta = std::cos(theta);
+      GLfloat sin_theta = std::sin(theta);
+
+      sphere_point.push_back(vec3(r_times_sin_phi * cos_theta,
+            r_times_sin_phi * sin_theta, r_times_cos_phi));
+    }
+  }
+
+  return sphere_point;
 }
 
 }

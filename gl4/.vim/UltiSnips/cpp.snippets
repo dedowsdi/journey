@@ -35,55 +35,69 @@ protected:
 	bitmap_text m_text;
 
 public:
-	virtual void init_info() {
-		app::init_info();
-		m_info.title = "$1";
-		m_info.wnd_width = WIDTH;
-		m_info.wnd_height = HEIGHT;
-	}
-	virtual void create_scene() {
-		glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+	virtual void init_info();
+	virtual void create_scene();
 
-		m_text.init();
-		m_text.reshape(wnd_width(), wnd_height());
+	virtual void update();
 
-		prg.init();
-	}
+	virtual void display();
 
-	virtual void update() {}
-
-	virtual void display() {
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		prg.use();
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		std::stringstream ss;
-		ss << "";
-		m_text.print(ss.str(), 10, m_info.wnd_height - 20);
-		glDisable(GL_BLEND);
-	}
-
-	virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
-		app::glfw_resize(wnd, w, h);
-		m_text.reshape(m_info.wnd_width, m_info.wnd_height);
-	}
+	virtual void glfw_resize(GLFWwindow *wnd, int w, int h);
 
 	virtual void glfw_key(
-		GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-		if (action == GLFW_PRESS) {
-			switch (key) {
-				case GLFW_KEY_ESCAPE:
-					glfwSetWindowShouldClose(m_wnd, GL_TRUE);
-					break;
-				default:
-					break;
-			}
-		}
-		app::glfw_key(wnd, key, scancode, action, mods);
-	}
+		GLFWwindow *wnd, int key, int scancode, int action, int mods);
 };
+
+void $1:init_info() {
+	app::init_info();
+	m_info.title = "$1";
+	m_info.wnd_width = WIDTH;
+	m_info.wnd_height = HEIGHT;
+}
+
+void create_scene() {
+	glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+
+	m_text.init();
+	m_text.reshape(wnd_width(), wnd_height());
+
+	prg.init();
+}
+
+void $1:update() {}
+
+void $1:display() {
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	prg.use();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	std::stringstream ss;
+	ss << "";
+	m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+	glDisable(GL_BLEND);
+}
+
+void $1:glfw_resize(GLFWwindow *wnd, int w, int h) {
+	app::glfw_resize(wnd, w, h);
+	m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+}
+
+void $1:glfw_key(
+	GLFWwindow *wnd, int key, int scancode, int action, int mods) {
+	if (action == GLFW_PRESS) {
+		switch (key) {
+			case GLFW_KEY_ESCAPE:
+				glfwSetWindowShouldClose(m_wnd, GL_TRUE);
+				break;
+			default:
+				break;
+		}
+	}
+	app::glfw_key(wnd, key, scancode, action, mods);
+}
+
 }
 
 int main(int argc, char *argv[]) {

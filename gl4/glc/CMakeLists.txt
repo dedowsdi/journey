@@ -44,6 +44,8 @@ set(GLC_SRCS
     src/pingpong.cpp
     src/lissajous.cpp
     src/movable.cpp
+    src/lsystem.cpp
+    src/filter.cpp
     )
 
 add_library(glc 

@@ -33,6 +33,8 @@ public:
 
   GLuint stack() const { return m_stack; }
   void stack(GLuint v) { m_stack = v; }
+
+  static vec3_vector get_sphere_points(GLfloat radius, GLuint slices, GLuint stacks);
 };
 }
 
