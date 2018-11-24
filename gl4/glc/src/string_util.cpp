@@ -75,30 +75,13 @@ std::vector<std::string> split_regex(const std::string& s, const std::string& pa
 {
   std::vector<std::string> words;
   std::regex re(pattern);
-  std::smatch m;
 
-  std::string::const_iterator beg = s.begin();
-  // searh once before while loop, make sure beg starts at non pattern match
-  // character.
-  if(std::regex_search(beg, s.end(), m, re))
-  {
-    // add starting word if s doesn't starts with pattern
-    if(m.begin()->first != beg)
-      words.push_back(std::string(s.begin(), m.begin()->first));
+  std::sregex_token_iterator token_beg(s.begin(), s.end(), re, -1);
+  std::sregex_token_iterator token_end;
 
-    beg = m.begin()->second;
-  }
-  else
-  {
-    words.push_back(s);
-    return words;
-  }
+  while(token_beg != token_end && splitCount--)
+    words.push_back(*token_beg++);
 
-  while(std::regex_search(beg, s.end(), m, re))
-  {
-    words.push_back(std::string(beg, m.begin()->first));
-    beg = m.begin()->second;
-  }
   return words;
 }
 
