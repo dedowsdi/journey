@@ -220,11 +220,7 @@ mat4 make_mat4_row(
 mat3 make_mat3_row(
   const vec3& r0, const vec3& r1, const vec3& r2);
 
-inline GLfloat pi(GLfloat a0, GLfloat d, uint n) {
-  GLfloat m = 1;
-  while (n--) m *= a0 + n * d;  // reverse order of pi
-  return m;
-}
+GLfloat pi(GLfloat a0, GLfloat d, uint n);
 
 // get camera position in world space, no need to invert view matrix.
 vec3 eye_pos(const mat4& v_mat);

@@ -54,7 +54,7 @@ struct branch
   {
   }
 
-  inline GLfloat distance2(const leaf& l) const
+  GLfloat distance2(const leaf& l) const
   {
     return glm::length2(l.pos - pos);
   }

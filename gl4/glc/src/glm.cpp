@@ -479,6 +479,14 @@ mat3 make_mat3_row(const vec3& r0, const vec3& r1, const vec3& r2) {
 }
 
 //--------------------------------------------------------------------
+GLfloat pi(GLfloat a0, GLfloat d, uint n) 
+{
+  GLfloat m = 1;
+  while (n--) m *= a0 + n * d;  // reverse order of pi
+  return m;
+}
+
+//--------------------------------------------------------------------
 vec3 eye_pos(const mat4& v_mat) {
   return (-v_mat[3] * erase_translation(v_mat)).xyz();
 }

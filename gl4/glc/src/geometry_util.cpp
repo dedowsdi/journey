@@ -9,7 +9,7 @@ namespace geometry_util
 
 struct less_vec3_ptr
 {
-  inline bool operator() (const vec3* lhs,const vec3* rhs) const
+  bool operator() (const vec3* lhs,const vec3* rhs) const
   {
     //return *lhs < *rhs;
     const vec3& l = *lhs;
@@ -47,7 +47,7 @@ struct smooth_triangle_functor
       m_coord_set.insert(vptr++);
   }
 
-  inline void update_normal(const vec3& normal,const vec3* vptr)
+  void update_normal(const vec3& normal,const vec3* vptr)
   {
     // accumulate normal for vertex that has same position
     auto p = m_coord_set.equal_range(vptr);
@@ -58,7 +58,7 @@ struct smooth_triangle_functor
     }
   }
 
-  inline void operator() ( const vec3 &v1, const vec3 &v2, const vec3 &v3, bool treat_vertex_data_as_temporary )
+  void operator() ( const vec3 &v1, const vec3 &v2, const vec3 &v3, bool treat_vertex_data_as_temporary )
   {
     if (!treat_vertex_data_as_temporary)
     {

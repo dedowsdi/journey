@@ -23,7 +23,7 @@ public:
   virtual void build_texcoord();
 
   unsigned int degree() { return n(); }
-  inline unsigned int n() { return m_ctrl_points.size() - 1; }
+  unsigned int n() { return m_ctrl_points.size() - 1; }
 
   // get point at t
   vec3 get(GLfloat t);
