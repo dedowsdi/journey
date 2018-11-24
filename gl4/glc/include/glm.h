@@ -32,35 +32,36 @@
 namespace zxd {
 using namespace glm;
 
-static const GLfloat fpi = glm::pi<GLfloat>();
-static const GLfloat f2pi = fpi * 2;
-static const GLfloat fpi2 = fpi / 2;
-static const GLfloat fpi4 = fpi / 4;
-static const GLfloat fpi8 = fpi / 8;
-static const GLfloat fpi16 = fpi / 16;
-static const GLfloat fpi32 = fpi / 32;
-static const GLdouble dpi = glm::pi<GLdouble>();
-static const GLfloat d2pi = dpi * 2;
-static const GLfloat dpi2 = dpi / 2;
-static const GLfloat dpi4 = dpi / 4;
-static const GLfloat dpi8 = dpi / 8;
-static const GLfloat dpi16 = dpi / 16;
-static const GLfloat dpi32 = dpi / 32;
+// no static, const variable in namespace has internal linkage
+const GLfloat fpi = glm::pi<GLfloat>();
+const GLfloat f2pi = fpi * 2;
+const GLfloat fpi2 = fpi / 2;
+const GLfloat fpi4 = fpi / 4;
+const GLfloat fpi8 = fpi / 8;
+const GLfloat fpi16 = fpi / 16;
+const GLfloat fpi32 = fpi / 32;
+const GLdouble dpi = glm::pi<GLdouble>();
+const GLfloat d2pi = dpi * 2;
+const GLfloat dpi2 = dpi / 2;
+const GLfloat dpi4 = dpi / 4;
+const GLfloat dpi8 = dpi / 8;
+const GLfloat dpi16 = dpi / 16;
+const GLfloat dpi32 = dpi / 32;
 
-static const glm::vec3 pxa(1, 0, 0);
-static const glm::vec3 nxa(-1, 0, 0);
-static const glm::vec3 pya(0, 1, 0);
-static const glm::vec3 nya(0, -1, 0);
-static const glm::vec3 pza(0, 0, 1);
-static const glm::vec3 nza(0, 0, -1);
-static const glm::vec4 hpxa(1, 0, 0, 1);
-static const glm::vec4 hnxa(-1, 0, 0, 1);
-static const glm::vec4 hpya(0, 1, 0, 1);
-static const glm::vec4 hnya(0, -1, 0, 1);
-static const glm::vec4 hpza(0, 0, 1, 1);
-static const glm::vec4 hnza(0, 0, -1, 1);
-static const glm::vec3 zp(0, 0, 0);
-static const glm::vec4 hzp(0, 0, 0, 1);
+const glm::vec3 pxa(1, 0, 0);
+const glm::vec3 nxa(-1, 0, 0);
+const glm::vec3 pya(0, 1, 0);
+const glm::vec3 nya(0, -1, 0);
+const glm::vec3 pza(0, 0, 1);
+const glm::vec3 nza(0, 0, -1);
+const glm::vec4 hpxa(1, 0, 0, 1);
+const glm::vec4 hnxa(-1, 0, 0, 1);
+const glm::vec4 hpya(0, 1, 0, 1);
+const glm::vec4 hnya(0, -1, 0, 1);
+const glm::vec4 hpza(0, 0, 1, 1);
+const glm::vec4 hnza(0, 0, -1, 1);
+const glm::vec3 zp(0, 0, 0);
+const glm::vec4 hzp(0, 0, 0, 1);
 
 typedef std::vector<mat2> mat2_vector;
 typedef std::vector<mat3> mat3_vector;
@@ -87,7 +88,6 @@ typedef float_vector::const_iterator fv_ci;
 typedef vec2_vector::const_iterator v2v_ci;
 typedef vec3_vector::const_iterator v3v_ci;
 typedef vec4_vector::const_iterator v4v_ci;
-
 
 // create a cube in 1st quadrant, stick it's 3 laterials to frame axes, look at
 // origin from the longest vertex, the angle between any two projected axes
@@ -233,7 +233,6 @@ GLfloat line_point_distance(const vec3& point, const vec3& line_point, const vec
 // return -1 if point resides in negative direction
 GLfloat ray_point_distance2(const vec3& point, const vec3& ray_start, const vec3& line_direction);
 GLfloat ray_point_distance(const vec3& point, const vec3& ray_start, const vec3& line_direction);
-
 
 }
 
