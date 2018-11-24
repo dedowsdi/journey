@@ -177,9 +177,9 @@ void lightning::update_vertex_count()
   if(vertex_count * sizeof(vec3) > buffer_size)
   {
     glBindBuffer(GL_ARRAY_BUFFER, buffer.ping());
-    glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof(vec3), 0, GL_DYNAMIC_COPY);
+    glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof(vec3), 0, GL_STREAM_COPY);
     glBindBuffer(GL_ARRAY_BUFFER, buffer.pong());
-    glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof(vec3), 0, GL_DYNAMIC_COPY);
+    glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof(vec3), 0, GL_STREAM_COPY);
     buffer_size = vertex_count * sizeof(vec3);
   }
 }
