@@ -5,7 +5,7 @@
 namespace zxd
 {
 template <typename T, typename U>
-class get_first
+struct get_first
 {
   const T& operator()(const std::pair<T,U>& item)
   {
@@ -14,13 +14,24 @@ class get_first
 };
 
 template <typename T, typename U>
-class get_second
+struct get_second
 {
   const T& operator()(const std::pair<T,U>& item)
   {
     return item.second;
   }
 };
+
+// Vec must provide operator []
+template<typename Vec, unsigned char Index = 0>
+struct sort_by_elem_at
+{
+  bool operator()(const Vec& lhs, const Vec& rhs)
+  {
+    return lhs[Index] < rhs[Index];
+  }
+};
+
 }
 
 

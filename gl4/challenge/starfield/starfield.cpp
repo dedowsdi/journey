@@ -17,7 +17,6 @@ namespace zxd
 {
 
 struct star_program : public zxd::program {
-  GLint al_vertex;
   GLint ul_diffuse_map;
 
   void attach_shaders()
@@ -33,11 +32,7 @@ struct star_program : public zxd::program {
 
   virtual void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
-  }
-
-  virtual void udpate_uniforms(const mat4& _mvp_mat)
-  {
+    bind_attrib_location(0, "vertex");
   }
 } prg;
 

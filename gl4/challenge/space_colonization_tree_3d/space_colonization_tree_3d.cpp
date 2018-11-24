@@ -8,6 +8,8 @@
  * it's too close to a branch. grow new branch from closest branch, use it's
  * original dir + leaf-branch as new dir
  *
+ * @TODO the lighting is wrong, normal must be wrong.
+ *
  */
 #include "app.h"
 #include "bitmaptext.h"
@@ -29,7 +31,7 @@
 #define ANIM_TIME 5
 #define BRANCH_SCALE 0.96f
 
-#define NUM_CYLINDER_FACE 5
+#define NUM_CYLINDER_FACE 8
 #define TRUNK_RADIUS 2.5f
 #define BRANCH_RADIUS 0.35f
 
@@ -242,7 +244,7 @@ public:
         {
           auto it = std::find_if(new_branches.begin(), new_branches.end(), 
               [&](const std::pair<branch*, vec3>& item)->bool {
-              return item.first == iter->first && item.second == iter->second;
+                return item.first == iter->first && item.second == iter->second;
               });
           if(it != new_branches.end())
           {
@@ -412,7 +414,7 @@ public:
     // setup light
     light_source l0;
     l0.diffuse = vec4(1);
-    l0.position = vec4(1, -1, 1, 0);
+    l0.position = vec4(0, 0, 1, 0);
     l0.specular = vec4(1);
     lights.push_back(l0);
     

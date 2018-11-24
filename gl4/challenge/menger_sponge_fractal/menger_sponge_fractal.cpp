@@ -166,8 +166,7 @@ protected:
         geometry.draw();
       }
     }
-
-    if(prg.instance)
+    else
     {
       if(m_dirty_view && ( m_sponge.size() <= 8000 || m_cooldown < 0))
         update_instance_attribute_buffers();

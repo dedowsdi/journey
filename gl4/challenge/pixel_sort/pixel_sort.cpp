@@ -3,6 +3,8 @@
 #include "texutil.h"
 #include "quad.h"
 #include "common_program.h"
+#include "functor.h"
+
 #include <algorithm>
 #include <sstream>
 
@@ -11,51 +13,13 @@
 
 namespace zxd {
 
-struct color_compare_functor
-{
-  bool r(const u8vec3& lhs, const u8vec3& rhs)
-  {
-    return lhs.r < rhs.r;
-  }
-  bool g(const u8vec3& lhs, const u8vec3& rhs)
-  {
-    return lhs.g < rhs.g;
-  }
-  bool b(const u8vec3& lhs, const u8vec3& rhs)
-  {
-    return lhs.b < rhs.b;
-  }
-  bool hue(const u8vec3& lhs, const u8vec3& rhs)
-  {
-    vec3 v0(lhs.x/255.0f, lhs.y/255.0f, lhs.z/255.0f);
-    auto hsb0 = rgb2hsb(v0);
-    vec3 v1(rhs.x/255.0f, rhs.y/255.0f, rhs.z/255.0f);
-    auto hsb1 = rgb2hsb(v1);
-    return hsb0.x < hsb1.x;
-  }
-  bool saturation(const u8vec3& lhs, const u8vec3& rhs)
-  {
-    vec3 v0(lhs.x/255.0f, lhs.y/255.0f, lhs.z/255.0f);
-    auto hsb0 = rgb2hsb(v0);
-    vec3 v1(rhs.x/255.0f, rhs.y/255.0f, rhs.z/255.0f);
-    auto hsb1 = rgb2hsb(v1);
-    return hsb0.y < hsb1.y;
-  }
-  bool brightness(const u8vec3& lhs, const u8vec3& rhs)
-  {
-    vec3 v0(lhs.x/255.0f, lhs.y/255.0f, lhs.z/255.0f);
-    auto hsb0 = rgb2hsb(v0);
-    vec3 v1(rhs.x/255.0f, rhs.y/255.0f, rhs.z/255.0f);
-    auto hsb1 = rgb2hsb(v1);
-    return hsb0.z < hsb1.z;
-  }
-};
-
 std::string file_path;
 fipImage img;
 quad q;
 GLuint tex0, tex1; // original, sorted
-std::vector<u8vec3> pixels; // pixels of tex1
+std::vector<u8vec3> rgb_pixels; // rgb_pixels of tex1
+std::vector<vec3> hsb_pixels; // hsb cache
+std::vector<u8vec3> pixels;
 
 quad_program prg;
 
@@ -83,6 +47,20 @@ public:
     }
   }
 
+  void sort_by_hsb_at(int component_index)
+  {
+    std::vector<int> indexes(pixels.size());
+    std::iota(indexes.begin(), indexes.end(), 0);
+    std::sort(indexes.begin(), indexes.end(), 
+        [&](int id0, int id1)->bool
+        {
+          return hsb_pixels[id0][component_index] < hsb_pixels[id1][component_index];
+        });
+
+    for (int i = 0; i < indexes.size(); ++i) 
+      pixels[i] = rgb_pixels[indexes[i]];
+  }
+
   virtual void create_scene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
@@ -102,9 +80,18 @@ public:
         GL_BGRA, GL_UNSIGNED_BYTE, img.accessPixels());
     glGenerateMipmap(GL_TEXTURE_2D);
     
-    pixels.resize(img.getWidth() * img.getHeight());
+    rgb_pixels.resize(img.getWidth() * img.getHeight());
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, glm::value_ptr(pixels.front()));
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, glm::value_ptr(rgb_pixels.front()));
+
+    // build cache
+    hsb_pixels.reserve(rgb_pixels.size());
+    for(auto& pixel : rgb_pixels)
+    {
+      vec3 v(pixel.x/255.0f, pixel.y/255.0f, pixel.z/255.0f);
+      hsb_pixels.push_back(rgb2hsb(v));
+    }
+    pixels = rgb_pixels;
 
     glGenTextures(1, &tex1);
     glBindTexture(GL_TEXTURE_2D, tex1);
@@ -127,55 +114,30 @@ public:
 
   void sort_pixels()
   {
-    color_compare_functor functor;
     switch(sort_type)
     {
       case 0:
-        {
-          auto cmp = std::bind(std::mem_fn(&color_compare_functor::r), functor, 
-              std::placeholders::_1, std::placeholders::_2);
-          std::sort(pixels.begin(), pixels.end(), cmp);
-        }
+          std::sort(pixels.begin(), pixels.end(), zxd::sort_by_elem_at<u8vec3, 0>());
         break;
 
       case 1:
-        {
-          auto cmp = std::bind(std::mem_fn(&color_compare_functor::g), functor, 
-              std::placeholders::_1, std::placeholders::_2);
-          std::sort(pixels.begin(), pixels.end(), cmp);
-        }
+          std::sort(pixels.begin(), pixels.end(), zxd::sort_by_elem_at<u8vec3, 1>());
         break;
 
       case 2:
-        {
-          auto cmp = std::bind(std::mem_fn(&color_compare_functor::b), functor, 
-              std::placeholders::_1, std::placeholders::_2);
-          std::sort(pixels.begin(), pixels.end(), cmp);
-        }
+          std::sort(pixels.begin(), pixels.end(), zxd::sort_by_elem_at<u8vec3, 2>());
         break;
 
       case 3:
-        {
-          auto cmp = std::bind(std::mem_fn(&color_compare_functor::hue), functor, 
-              std::placeholders::_1, std::placeholders::_2);
-          std::sort(pixels.begin(), pixels.end(), cmp);
-        }
+        sort_by_hsb_at(0);
         break;
 
       case 4:
-        {
-          auto cmp = std::bind(std::mem_fn(&color_compare_functor::saturation), functor, 
-              std::placeholders::_1, std::placeholders::_2);
-          std::sort(pixels.begin(), pixels.end(), cmp);
-        }
+        sort_by_hsb_at(1);
         break;
 
       case 5:
-        {
-          auto cmp = std::bind(std::mem_fn(&color_compare_functor::brightness), functor, 
-              std::placeholders::_1, std::placeholders::_2);
-          std::sort(pixels.begin(), pixels.end(), cmp);
-        }
+        sort_by_hsb_at(2);
         break;
       default:break;
     }
@@ -210,7 +172,7 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "q : sort pixels : " << sort_type_str[sort_type] << std::endl;
+    ss << "q : sort rgb_pixels : " << sort_type_str[sort_type] << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(0,0,0,1));
     glDisable(GL_BLEND);
   }
