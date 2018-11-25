@@ -20,6 +20,7 @@
 #include "points.h"
 #include <algorithm>
 #include "geometry_util.h"
+#include "functor.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -171,11 +172,11 @@ public:
     // grow from last one in current branch
     GLuint start_index = m_branches.size() - 1;
 
-    std::unordered_map<branch*, vec3> last_new_branches;
+    std::unordered_multimap<branch*, vec3> last_new_branches;
     while(true)
     {
       // loop every leaf, search it's attract branch
-      std::unordered_map<branch*, vec3> new_branches;
+      std::unordered_multimap<branch*, vec3> new_branches;
       for(auto iter = leaves.begin(); iter != leaves.end();)
       {
         branch* ab = 0;
@@ -240,18 +241,12 @@ public:
       // handle oscillate problems
       if(!last_new_branches.empty())
       {
-        for(auto iter = last_new_branches.begin(); iter != last_new_branches.end(); ++iter)
-        {
-          auto it = std::find_if(new_branches.begin(), new_branches.end(), 
-              [&](const std::pair<branch*, vec3>& item)->bool {
-                return item.first == iter->first && item.second == iter->second;
-              });
-          if(it != new_branches.end())
-          {
-            std::cout << "found duplicated branch, deleted" << std::endl;
-            new_branches.erase(it);
-          }
-        }
+        zxd::erase_if(new_branches,
+            [&](const auto& item)->bool
+            {
+              return std::find(last_new_branches.begin(), last_new_branches.end(), item)
+                != last_new_branches.end();
+            });
       }
 
       last_new_branches = new_branches;

@@ -8,7 +8,7 @@ include(util)
 #set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread")
 
 if( CMAKE_BUILD_TYPE STREQUAL ""  )
     set( CMAKE_BUILD_TYPE Debug CACHE STRING "One of: Debug Release
@@ -20,7 +20,7 @@ IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 ENDIF()
 
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool -std=c++11 -Wno-missing-braces -Wno-writable-strings -Wno-reorder")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool -Wno-missing-braces -Wno-writable-strings -Wno-reorder")
     
 ENDIF()
 

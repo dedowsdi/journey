@@ -32,6 +32,18 @@ struct sort_by_elem_at
   }
 };
 
+template<typename AssociativeContainer, typename PredicateT>
+void erase_if(AssociativeContainer& ctn, const PredicateT& pt)
+{
+  for(auto iter = ctn.begin(); iter != ctn.end(); )
+  {
+    if(pt(*iter))
+      iter = ctn.erase(iter);
+    else
+      ++iter;
+  }
+}
+
 }
 
 
