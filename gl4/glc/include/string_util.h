@@ -2,8 +2,10 @@
 #define STRING_UTIL_H
 #include <string>
 #include <sstream>
-#include "glm.h"
+#include <iterator>
 #include <exception>
+
+#include "glm.h"
 
 namespace string_util 
 {
@@ -34,6 +36,8 @@ namespace string_util
   std::vector<std::string> split(const std::string& s, const std::string& token = " \t\n", unsigned splitCount = -1);
   // assume pattern is greedy
   std::vector<std::string> split_regex(const std::string& s, const std::string& pattern = R"(\s+)", unsigned splitCount = -1);
+  template<typename It>
+  std::string join(It beg, It end, const std::string& seperator = ",");
 
   glm::vec2 stovec2(const std::string& s);
   glm::vec3 stovec3(const std::string& s);
@@ -72,6 +76,24 @@ const std::string bash_inverse_off     = "\033[27m";
 
 const std::string bash_warning         = "\033[0;1;31m";
 
+
+//--------------------------------------------------------------------
+template<typename It>
+std::string join(It beg, It end, const std::string& seperator/* = ","*/)
+{
+  if(beg == end)
+    return "";
+
+  typedef typename std::iterator_traits<It>::value_type value_type;
+  std::ostringstream oss;
+  auto lbo = beg;
+  std::advance(lbo, std::distance(beg, end) - 1);
+
+  std::copy(beg, lbo, std::ostream_iterator<value_type>(oss, seperator.c_str()));
+  oss << *lbo;
+
+  return oss.str();
+}
 };
 
 #endif /* STRING_UTIL_H */

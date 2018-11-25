@@ -25,6 +25,7 @@ set (PROJECTS
     adl
     copy_elision
     copy_swap
+    init
     )
 
 foreach(PROJECT ${PROJECTS})

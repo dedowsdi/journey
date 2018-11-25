@@ -15,6 +15,7 @@ set (PROJECTS
     fs
     texture_animation
     prefix_sum_1d
+    tessellate
     )
 
 foreach(PROJECT ${PROJECTS})
