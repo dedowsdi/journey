@@ -1,4 +1,5 @@
 #include "geometry.h"
+
 #include "common.h"
 #include "string_util.h"
 

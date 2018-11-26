@@ -1,6 +1,8 @@
 #include "string_util.h"
-#include "stream_util.h"
+
 #include <regex>
+
+#include "stream_util.h"
 
 namespace string_util
 {

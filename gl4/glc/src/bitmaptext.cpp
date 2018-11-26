@@ -1,11 +1,11 @@
+#include "bitmaptext.h"
+
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-#include "bitmaptext.h"
 #include "texutil.h"
 #include "common.h"
 #include "stream_util.h"

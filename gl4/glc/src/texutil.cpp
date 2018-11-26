@@ -1,6 +1,7 @@
+#include "texutil.h"
+
 #include <iostream>
 
-#include "texutil.h"
 #include "stream_util.h"
 
 namespace zxd {

@@ -1,6 +1,8 @@
 #include "sphere.h"
-#include "common.h"
+
 #include <memory>
+
+#include "common.h"
 
 namespace zxd {
 

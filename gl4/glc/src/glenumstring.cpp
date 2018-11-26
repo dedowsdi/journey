@@ -1,6 +1,8 @@
 #include "glenumstring.h"
-#include <GL/glu.h>
+
 #include <cstring>
+
+#include <GL/glu.h>
 
 //--------------------------------------------------------------------
 const char* gl_tex_wrap_to_string(GLenum e) {

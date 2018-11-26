@@ -1,6 +1,8 @@
 #include "common_program.h"
-#include "common.h"
+
 #include <sstream>
+
+#include "common.h"
 #include "stream_util.h"
 
 namespace zxd {

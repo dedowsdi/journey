@@ -1,4 +1,5 @@
 #include "quad.h"
+
 #include "common.h"
 #include "common_program.h"
 

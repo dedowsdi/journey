@@ -1,4 +1,5 @@
 #include "light.h"
+
 #include "common.h"
 
 namespace zxd {

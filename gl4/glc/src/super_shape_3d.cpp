@@ -1,5 +1,7 @@
 #include "super_shape_3d.h"
+
 #include <memory>
+
 #include "geometry_util.h"
 
 namespace zxd

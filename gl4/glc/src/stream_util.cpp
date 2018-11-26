@@ -1,12 +1,12 @@
+#include "stream_util.h"
+
 #include <fstream>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
 
 #include <boost/filesystem.hpp>
-
 #include "string_util.h"
-#include "stream_util.h"
 
 namespace stream_util
 {

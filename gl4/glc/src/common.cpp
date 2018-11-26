@@ -1,6 +1,8 @@
 #include "common.h"
+
 #include <fstream>
 #include <sstream>
+
 #include "glm.h"
 #include "glenumstring.h"
 

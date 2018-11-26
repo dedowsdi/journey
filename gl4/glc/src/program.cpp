@@ -1,9 +1,11 @@
 #include "program.h"
+
 #include <algorithm>
 #include <functional>
+#include <sstream>
+
 #include "glenumstring.h"
 #include "common.h"
-#include <sstream>
 #include "stream_util.h"
 
 namespace zxd {

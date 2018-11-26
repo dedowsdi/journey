@@ -1,4 +1,5 @@
 #include "cuboid.h"
+
 #include "common.h"
 
 namespace zxd {

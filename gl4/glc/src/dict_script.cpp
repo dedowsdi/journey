@@ -1,6 +1,4 @@
 #include "dict_script.h"
-#include "string_util.h"
-#include "stream_util.h"
 
 #include <fstream>
 #include <stdexcept>
@@ -8,6 +6,8 @@
 #include <thread>
 
 #include <boost/filesystem.hpp>
+#include "string_util.h"
+#include "stream_util.h"
 
 namespace bfs = boost::filesystem;
 

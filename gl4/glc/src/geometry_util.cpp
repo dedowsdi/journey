@@ -1,6 +1,8 @@
 #include "geometry_util.h"
-#include "geometry.h"
+
 #include <set>
+
+#include "geometry.h"
 #include "triangle_functor.h"
 
 using namespace zxd;
