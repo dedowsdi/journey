@@ -1,5 +1,5 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef GL_GLC_COMMON_H
+#define GL_GLC_COMMON_H
 #include "gl.h"
 #ifndef GL_VERSION_3_0
 //#include <GL/glu.h>
@@ -114,4 +114,4 @@ void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
 void print_gl_version();
 }
 
-#endif /* COMMON_H */
+#endif /* GL_GLC_COMMON_H */

@@ -1,5 +1,5 @@
-#ifndef DICT_SCRIPT_H
-#define DICT_SCRIPT_H
+#ifndef GL_GLC_DICT_SCRIPT_H
+#define GL_GLC_DICT_SCRIPT_H
 
 #include <map>
 #include <string>
@@ -68,4 +68,4 @@ protected:
 
 }
 
-#endif /* DICT_SCRIPT_H */
+#endif /* GL_GLC_DICT_SCRIPT_H */

@@ -1,5 +1,5 @@
-#ifndef PINGPONG_H
-#define PINGPONG_H
+#ifndef GL_GLC_PINGPONG_H
+#define GL_GLC_PINGPONG_H
 #include "glm.h"
 
 namespace zxd
@@ -51,4 +51,4 @@ public:
 }
 
 
-#endif /* PINGPONG_H */
+#endif /* GL_GLC_PINGPONG_H */

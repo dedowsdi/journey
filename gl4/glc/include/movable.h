@@ -1,5 +1,5 @@
-#ifndef MOVABLE_H
-#define MOVABLE_H
+#ifndef GL_GLC_MOVABLE_H
+#define GL_GLC_MOVABLE_H
 #include "glm.h"
 
 namespace zxd
@@ -30,4 +30,4 @@ public:
 }
 
 
-#endif /* MOVABLE_H */
+#endif /* GL_GLC_MOVABLE_H */

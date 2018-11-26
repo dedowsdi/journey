@@ -1,5 +1,5 @@
-#ifndef TRIANGLE_FUNCTOR_H
-#define TRIANGLE_FUNCTOR_H
+#ifndef GL_GLC_TRIANGLE_FUNCTOR_H
+#define GL_GLC_TRIANGLE_FUNCTOR_H
 
 // changed from osg
 #include "primitive_set.h"
@@ -106,4 +106,4 @@ protected:
 
 }
 
-#endif /* TRIANGLE_FUNCTOR_H */
+#endif /* GL_GLC_TRIANGLE_FUNCTOR_H */

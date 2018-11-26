@@ -1,5 +1,5 @@
-#ifndef TEXUTIL_H
-#define TEXUTIL_H
+#ifndef GL_GLC_TEXUTIL_H
+#define GL_GLC_TEXUTIL_H
 #include "gl.h"
 #include <string>
 #include <FreeImagePlus.h>
@@ -14,4 +14,4 @@ void save_texture(const std::string& filename, GLenum target, GLuint level,
   GLenum format, GLenum type, GLuint size);
 }
 
-#endif /* TEXUTIL_H */
+#endif /* GL_GLC_TEXUTIL_H */

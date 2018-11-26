@@ -1,5 +1,5 @@
-#ifndef CAPSULE2_H
-#define CAPSULE2_H
+#ifndef GL_GLC_CAPSULE2_H
+#define GL_GLC_CAPSULE2_H
 #include "geometry.h"
 
 namespace zxd
@@ -39,4 +39,4 @@ public:
 }
 
 
-#endif /* CAPSULE2_H */
+#endif /* GL_GLC_CAPSULE2_H */

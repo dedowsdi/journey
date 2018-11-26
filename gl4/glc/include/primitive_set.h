@@ -1,5 +1,5 @@
-#ifndef PRIMITIVE_SET_H
-#define PRIMITIVE_SET_H
+#ifndef GL_GLC_PRIMITIVE_SET_H
+#define GL_GLC_PRIMITIVE_SET_H
 #include "gl.h"
 #include <memory>
 #include <vector>
@@ -78,4 +78,4 @@ public:
 }
 
 
-#endif /* PRIMITIVE_SET_H */
+#endif /* GL_GLC_PRIMITIVE_SET_H */

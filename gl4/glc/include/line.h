@@ -1,5 +1,5 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef GL_GLC_LINE_H
+#define GL_GLC_LINE_H
 #include "geometry.h"
 
 namespace zxd 
@@ -28,4 +28,4 @@ protected:
 }
 
 
-#endif /* LINE_H */
+#endif /* GL_GLC_LINE_H */

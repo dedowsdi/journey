@@ -1,5 +1,5 @@
-#ifndef AXES_H
-#define AXES_H
+#ifndef GL_GLC_AXES_H
+#define GL_GLC_AXES_H
 
 #include "geometry.h"
 
@@ -12,4 +12,4 @@ public:
 };
 }
 
-#endif /* AXES_H */
+#endif /* GL_GLC_AXES_H */

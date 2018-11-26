@@ -1,5 +1,5 @@
-#ifndef DISK_H
-#define DISK_H
+#ifndef GL_GLC_DISK_H
+#define GL_GLC_DISK_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -60,4 +60,4 @@ public:
 };
 }
 
-#endif /* DISK_H */
+#endif /* GL_GLC_DISK_H */

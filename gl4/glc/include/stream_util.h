@@ -1,5 +1,5 @@
-#ifndef STREAM_H
-#define STREAM_H
+#ifndef GL_GLC_STREAM_H
+#define GL_GLC_STREAM_H
 
 #include "glm.h"
 #include <istream>
@@ -17,4 +17,4 @@ namespace stream_util
   std::string get_resource(const std::string& name);
 }
 
-#endif /* STREAM_H */
+#endif /* GL_GLC_STREAM_H */

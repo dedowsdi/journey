@@ -1,5 +1,5 @@
-#ifndef GLENUMSTRING_H
-#define GLENUMSTRING_H
+#ifndef GL_GLC_GLENUMSTRING_H
+#define GL_GLC_GLENUMSTRING_H
 
 #include "gl.h"
 
@@ -39,4 +39,4 @@ const char* glu_nurb_sample_method_to_string(GLenum e);
 GLenum glu_nurb_sample_methodl_from_string(const char* s);
 #endif
 
-#endif /* GLENUMSTRING_H */
+#endif /* GL_GLC_GLENUMSTRING_H */

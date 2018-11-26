@@ -1,5 +1,5 @@
-#ifndef LISSAJOUS_H
-#define LISSAJOUS_H
+#ifndef GL_GLC_LISSAJOUS_H
+#define GL_GLC_LISSAJOUS_H
 #include "geometry.h"
 
 namespace zxd
@@ -60,4 +60,4 @@ public:
 }
 
 
-#endif /* LISSAJOUS_H */
+#endif /* GL_GLC_LISSAJOUS_H */

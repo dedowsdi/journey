@@ -1,5 +1,5 @@
-#ifndef BEZIER_H
-#define BEZIER_H
+#ifndef GL_GLC_BEZIER_H
+#define GL_GLC_BEZIER_H
 
 #include "geometry.h"
 
@@ -76,4 +76,4 @@ private:
 };
 }
 
-#endif /* BEZIER_H */
+#endif /* GL_GLC_BEZIER_H */

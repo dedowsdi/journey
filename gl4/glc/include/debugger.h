@@ -1,5 +1,5 @@
-#ifndef DEBUGGER_H
-#define DEBUGGER_H
+#ifndef GL_GLC_DEBUGGER_H
+#define GL_GLC_DEBUGGER_H
 #include "gl.h"
 #include "glm.h"
 #include "common_program.h"
@@ -176,4 +176,4 @@ GLfloat width/* = 1*/, const glm::vec4& color/* = glm::vec4(1)*/)
 }
 
 
-#endif /* DEBUGGER_H */
+#endif /* GL_GLC_DEBUGGER_H */

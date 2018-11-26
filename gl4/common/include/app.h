@@ -5,6 +5,9 @@
 // you can't get argument information from libclang if you use glad/glad.h(which
 // use macro)
 
+#ifndef GL4_COMMON_APP_H
+#define GL4_COMMON_APP_H
+
 #include "gl.h"
 #include <GLFW/glfw3.h>
 #include <string>
@@ -154,3 +157,4 @@ protected:
   vec2 glfw_to_gl(vec2 p);
 };
 }
+#endif /* ifndef GL4_COMMON_APP_H */

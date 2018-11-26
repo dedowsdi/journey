@@ -1,5 +1,5 @@
-#ifndef BEZIERSURFACE_H
-#define BEZIERSURFACE_H
+#ifndef GL_GLC_BEZIERSURFACE_H
+#define GL_GLC_BEZIERSURFACE_H
 #include "geometry.h"
 
 namespace zxd {
@@ -72,4 +72,4 @@ public:
 };
 }
 
-#endif /* BEZIERSURFACE_H */
+#endif /* GL_GLC_BEZIERSURFACE_H */

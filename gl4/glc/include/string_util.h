@@ -1,5 +1,5 @@
-#ifndef STRING_UTIL_H
-#define STRING_UTIL_H
+#ifndef GL_GLC_STRING_UTIL_H
+#define GL_GLC_STRING_UTIL_H
 #include <string>
 #include <sstream>
 #include <iterator>
@@ -96,4 +96,4 @@ std::string join(It beg, It end, const std::string& seperator/* = ","*/)
 }
 };
 
-#endif /* STRING_UTIL_H */
+#endif /* GL_GLC_STRING_UTIL_H */

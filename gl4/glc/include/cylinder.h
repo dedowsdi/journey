@@ -1,5 +1,5 @@
-#ifndef CYLINDER_H
-#define CYLINDER_H
+#ifndef GL_GLC_CYLINDER_H
+#define GL_GLC_CYLINDER_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -49,4 +49,4 @@ public:
 };
 }
 
-#endif /* CYLINDER_H */
+#endif /* GL_GLC_CYLINDER_H */

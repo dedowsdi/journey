@@ -1,5 +1,5 @@
-#ifndef ARRAY
-#define ARRAY
+#ifndef GL_GLC_ARRAY_H
+#define GL_GLC_ARRAY_H
 #include "mixinvector.h"
 #include "glm.h"
 #include <memory>
@@ -64,4 +64,4 @@ void template_array<T>::update_array_buffer() {
 }
 }
 
-#endif /* ARRAY */
+#endif /* GL_GLC_ARRAY_H */

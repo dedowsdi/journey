@@ -1,5 +1,5 @@
-#ifndef TEXMAP_ANIM_H
-#define TEXMAP_ANIM_H
+#ifndef GL_GLC_TEXMAP_ANIM_H
+#define GL_GLC_TEXMAP_ANIM_H
 
 #include "gl.h"
 #include "common_program.h"
@@ -82,4 +82,4 @@ public:
 }
 
 
-#endif /* TEXMAP_ANIM_H */
+#endif /* GL_GLC_TEXMAP_ANIM_H */

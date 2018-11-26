@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#ifndef GL_GLC_GEOMETRY_H
+#define GL_GLC_GEOMETRY_H
 #include "gl.h"
 #include "glm.h"
 #include "common.h"
@@ -77,4 +77,4 @@ public:
 };
 }
 
-#endif /* GEOMETRY_H */
+#endif /* GL_GLC_GEOMETRY_H */

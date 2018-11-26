@@ -1,5 +1,5 @@
-#ifndef PROGRAM_H
-#define PROGRAM_H
+#ifndef GL_GLC_PROGRAM_H
+#define GL_GLC_PROGRAM_H
 
 #include "gl.h"
 #include "glm.h"
@@ -144,4 +144,4 @@ public:
 };
 }
 
-#endif /* PROGRAM_H */
+#endif /* GL_GLC_PROGRAM_H */

@@ -1,5 +1,5 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#ifndef GL_GLC_LIGHT_H
+#define GL_GLC_LIGHT_H
 
 #include "gl.h"
 #include "glm.h"
@@ -84,4 +84,4 @@ struct material {
 };
 }
 
-#endif /* LIGHT_H */
+#endif /* GL_GLC_LIGHT_H */

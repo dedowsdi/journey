@@ -1,5 +1,5 @@
-#ifndef SUPER_SHAPE_2D_H
-#define SUPER_SHAPE_2D_H
+#ifndef GL_GLC_SUPER_SHAPE_2D_H
+#define GL_GLC_SUPER_SHAPE_2D_H
 #include "geometry.h"
 
 namespace zxd
@@ -52,4 +52,4 @@ public:
 
 
 
-#endif /* SUPER_SHAPE_2D_H */
+#endif /* GL_GLC_SUPER_SHAPE_2D_H */

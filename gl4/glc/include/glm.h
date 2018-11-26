@@ -1,5 +1,5 @@
-#ifndef GLM_H
-#define GLM_H
+#ifndef GL_GLC_GLM_H
+#define GL_GLC_GLM_H
 #define GLM_SWIZZLE
 #define GLM_META_PROG_HELPERS
 
@@ -232,4 +232,4 @@ GLfloat ray_point_distance(const vec3& point, const vec3& ray_start, const vec3&
 
 }
 
-#endif /* GLM_H */
+#endif /* GL_GLC_GLM_H */

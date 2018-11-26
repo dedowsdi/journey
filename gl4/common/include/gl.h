@@ -1,5 +1,5 @@
-#ifndef GL_H
-#define GL_H
+#ifndef GL_GL_H
+#define GL_GL_H
 
 #ifdef CLANG_COMPLETE_ONLY
     #define GL_GLEXT_PROTOTYPES
@@ -9,4 +9,4 @@
     #include "glad/glad.h"
 #endif
 
-#endif /* GL_H */
+#endif /* GL_GL_H */

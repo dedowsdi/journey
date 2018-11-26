@@ -1,5 +1,5 @@
-#ifndef POINTS_H
-#define POINTS_H
+#ifndef GL_GLC_POINTS_H
+#define GL_GLC_POINTS_H
 #include "geometry.h"
 #include "common_program.h"
 
@@ -66,4 +66,4 @@ void draw_points(
 
 }
 
-#endif /* POINTS_H */
+#endif /* GL_GLC_POINTS_H */

@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_UTIL_H
-#define GEOMETRY_UTIL_H
+#ifndef GL_GLC_GEOMETRY_UTIL_H
+#define GL_GLC_GEOMETRY_UTIL_H
 #include "glm.h"
 
 namespace zxd
@@ -26,4 +26,4 @@ namespace geometry_util
 }
 
 
-#endif /* GEOMETRY_UTIL_H */
+#endif /* GL_GLC_GEOMETRY_UTIL_H */

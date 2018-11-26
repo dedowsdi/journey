@@ -1,5 +1,5 @@
-#ifndef TORUS_H
-#define TORUS_H
+#ifndef GL_GLC_TORUS_H
+#define GL_GLC_TORUS_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -47,4 +47,4 @@ protected:
 };
 }
 
-#endif /* TORUS_H */
+#endif /* GL_GLC_TORUS_H */

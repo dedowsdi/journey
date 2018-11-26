@@ -1,5 +1,5 @@
-#ifndef NURBSURFACE_H
-#define NURBSURFACE_H
+#ifndef GL_GLC_NURBSURFACE_H
+#define GL_GLC_NURBSURFACE_H
 #include "geometry.h"
 
 namespace zxd {
@@ -100,4 +100,4 @@ public:
 };
 }
 
-#endif /* NURBSURFACE_H */
+#endif /* GL_GLC_NURBSURFACE_H */

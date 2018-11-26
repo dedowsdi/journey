@@ -1,5 +1,5 @@
-#ifndef NURB_H
-#define NURB_H
+#ifndef GL_GLC_NURB_H
+#define GL_GLC_NURB_H
 
 #include <algorithm>
 #include "geometry.h"
@@ -101,4 +101,4 @@ protected:
 };
 }
 
-#endif /* NURB_H */
+#endif /* GL_GLC_NURB_H */

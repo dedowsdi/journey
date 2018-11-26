@@ -1,5 +1,5 @@
-#ifndef FILTER_H
-#define FILTER_H
+#ifndef GL_GLC_FILTER_H
+#define GL_GLC_FILTER_H
 #include "gl.h"
 #include <memory>
 
@@ -50,4 +50,4 @@ void bloom(GLuint hdr_map, GLuint blured_brightness_map, GLfloat exposure = 2.5f
 }
 
 
-#endif /* FILTER_H */
+#endif /* GL_GLC_FILTER_H */

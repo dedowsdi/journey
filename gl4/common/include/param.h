@@ -1,5 +1,5 @@
-#ifndef PARAM_H
-#define PARAM_H
+#ifndef GL4_COMMON_PARAM_H
+#define GL4_COMMON_PARAM_H
 #include "gl.h"
 #include <functional>
 #include <vector>
@@ -50,4 +50,4 @@ protected:
 
 
 
-#endif /* PARAM_H */
+#endif /* GL4_COMMON_PARAM_H */

@@ -1,5 +1,5 @@
-#ifndef ROSE_H
-#define ROSE_H
+#ifndef GL_GLC_ROSE_H
+#define GL_GLC_ROSE_H
 #include "geometry.h"
 
 namespace zxd
@@ -45,4 +45,4 @@ public:
 
 
 
-#endif /* ROSE_H */
+#endif /* GL_GLC_ROSE_H */

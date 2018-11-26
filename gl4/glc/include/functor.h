@@ -1,5 +1,5 @@
-#ifndef FUNCTOR_H
-#define FUNCTOR_H
+#ifndef GL_GLC_FUNCTOR_H
+#define GL_GLC_FUNCTOR_H
 #include <map>
 
 namespace zxd
@@ -47,4 +47,4 @@ void erase_if(AssociativeContainer& ctn, const PredicateT& pt)
 }
 
 
-#endif /* FUNCTOR_H */
+#endif /* GL_GLC_FUNCTOR_H */

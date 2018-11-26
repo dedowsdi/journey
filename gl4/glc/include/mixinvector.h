@@ -1,6 +1,6 @@
 // changed from openscenegraph
-#ifndef MIXINVECTOR_H
-#define MIXINVECTOR_H
+#ifndef GL_GLC_MIXINVECTOR_H
+#define GL_GLC_MIXINVECTOR_H
 
 #include <vector>
 
@@ -224,4 +224,4 @@ inline void swap(std::vector<ValueT>& left, mixin_vector<ValueT>& right) {
 
 }  // namespace osg
 
-#endif /* MIXINVECTOR_H */
+#endif /* GL_GLC_MIXINVECTOR_H */

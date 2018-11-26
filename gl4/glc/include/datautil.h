@@ -1,5 +1,5 @@
-#ifndef DATAUTIL_H
-#define DATAUTIL_H
+#ifndef GL_GLC_DATAUTIL_H
+#define GL_GLC_DATAUTIL_H
 
 namespace data_util
 {
@@ -25,4 +25,4 @@ void insertion_sort(_It beg, _It end, Compare comp) {
 }
 
 
-#endif /* DATAUTIL_H */
+#endif /* GL_GLC_DATAUTIL_H */

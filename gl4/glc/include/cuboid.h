@@ -1,5 +1,5 @@
-#ifndef CUBOID_H
-#define CUBOID_H
+#ifndef GL_GLC_CUBOID_H
+#define GL_GLC_CUBOID_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -24,4 +24,4 @@ public:
 };
 }
 
-#endif /* CUBOID_H */
+#endif /* GL_GLC_CUBOID_H */

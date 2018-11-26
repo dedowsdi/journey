@@ -1,5 +1,5 @@
-#ifndef CIRCLE_H
-#define CIRCLE_H
+#ifndef GL_GLC_CIRCLE_H
+#define GL_GLC_CIRCLE_H
 
 #include "geometry.h"
 namespace zxd
@@ -43,4 +43,4 @@ public:
 }
 
 
-#endif /* CIRCLE_H */
+#endif /* GL_GLC_CIRCLE_H */

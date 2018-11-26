@@ -1,5 +1,5 @@
-#ifndef XYPLANE_H
-#define XYPLANE_H
+#ifndef GL_GLC_XYPLANE_H
+#define GL_GLC_XYPLANE_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -54,4 +54,4 @@ public:
 };
 }
 
-#endif /* XYPLANE_H */
+#endif /* GL_GLC_XYPLANE_H */

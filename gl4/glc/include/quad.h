@@ -1,5 +1,5 @@
-#ifndef QUAD_H
-#define QUAD_H
+#ifndef GL_GLC_QUAD_H
+#define GL_GLC_QUAD_H
 #include "program.h"
 #include "glm.h"
 #include <array>
@@ -86,4 +86,4 @@ protected:
 
 }
 
-#endif /* QUAD_H */
+#endif /* GL_GLC_QUAD_H */

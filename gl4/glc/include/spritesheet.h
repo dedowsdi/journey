@@ -1,5 +1,5 @@
-#ifndef SPRITESHEET_H
-#define SPRITESHEET_H
+#ifndef GL_GLC_SPRITESHEET_H
+#define GL_GLC_SPRITESHEET_H
 
 
 #include "glm.h"
@@ -37,4 +37,4 @@ public:
 
 }
 
-#endif /* SPRITESHEET_H */
+#endif /* GL_GLC_SPRITESHEET_H */

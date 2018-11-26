@@ -1,5 +1,5 @@
-#ifndef CONE_H
-#define CONE_H
+#ifndef GL_GLC_CONE_H
+#define GL_GLC_CONE_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -40,4 +40,4 @@ public:
 };
 }
 
-#endif /* CONE_H */
+#endif /* GL_GLC_CONE_H */

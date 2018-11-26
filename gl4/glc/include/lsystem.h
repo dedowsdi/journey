@@ -1,5 +1,5 @@
-#ifndef LSYSTEM_H
-#define LSYSTEM_H
+#ifndef GL_GLC_LSYSTEM_H
+#define GL_GLC_LSYSTEM_H
 
 #include <map>
 
@@ -24,4 +24,4 @@ public:
 }
 
 
-#endif /* LSYSTEM_H */
+#endif /* GL_GLC_LSYSTEM_H */

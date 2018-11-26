@@ -1,5 +1,5 @@
-#ifndef BITMAP_TEXT_H
-#define BITMAP_TEXT_H
+#ifndef GL_GLC_BITMAP_TEXT_H
+#define GL_GLC_BITMAP_TEXT_H
 
 #include "gl.h"
 #include <string>
@@ -83,4 +83,4 @@ public:
 };
 }
 
-#endif /* BITMAP_TEXT_H */
+#endif /* GL_GLC_BITMAP_TEXT_H */

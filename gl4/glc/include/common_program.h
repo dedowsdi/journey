@@ -1,5 +1,5 @@
-#ifndef COMMON_PROGRAM_H
-#define COMMON_PROGRAM_H
+#ifndef GL_GLC_COMMON_PROGRAM_H
+#define GL_GLC_COMMON_PROGRAM_H
 
 #include "program.h"
 #include "light.h"
@@ -159,4 +159,4 @@ protected:
 
 }
 
-#endif /* COMMON_PROGRAM_H */
+#endif /* GL_GLC_COMMON_PROGRAM_H */

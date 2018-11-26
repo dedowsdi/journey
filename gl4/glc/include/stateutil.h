@@ -1,5 +1,5 @@
-#ifndef STATEUTIL_H
-#define STATEUTIL_H
+#ifndef GL_GLC_STATEUTIL_H
+#define GL_GLC_STATEUTIL_H
 #include "glad/glad.h"
 
 template <GLenum type>
@@ -26,4 +26,4 @@ public:
   }
 };
 
-#endif /* STATEUTIL_H */
+#endif /* GL_GLC_STATEUTIL_H */

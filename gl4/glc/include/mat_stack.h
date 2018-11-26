@@ -1,5 +1,5 @@
-#ifndef MAT_STACK_H
-#define MAT_STACK_H
+#ifndef GL_GLC_MAT_STACK_H
+#define GL_GLC_MAT_STACK_H
 
 #include "glm.h"
 #include <stack>
@@ -37,4 +37,4 @@ public:
 }
 
 
-#endif /* MAT_STACK_H */
+#endif /* GL_GLC_MAT_STACK_H */

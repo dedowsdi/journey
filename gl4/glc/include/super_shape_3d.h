@@ -1,5 +1,5 @@
-#ifndef SUPER_SHAPE_3D_H
-#define SUPER_SHAPE_3D_H
+#ifndef GL_GLC_SUPER_SHAPE_3D_H
+#define GL_GLC_SUPER_SHAPE_3D_H
 
 #include "geometry.h"
 #include "glm.h"
@@ -98,4 +98,4 @@ protected:
 }
 
 
-#endif /* SUPER_SHAPE_3D_H */
+#endif /* GL_GLC_SUPER_SHAPE_3D_H */
