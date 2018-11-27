@@ -75,6 +75,31 @@ public:
   virtual void accept(primitive_functor& functor) const;
 };
 
+class draw_elements : public primitive_set
+{
+protected:
+  GLint m_offset;
+  GLenum m_type;
+  GLsizei m_count;
+
+public:
+  draw_elements(GLenum mode, GLint count, GLenum type, GLint offset, GLuint num_instance = 0);
+  virtual void draw();
+
+  GLenum type() const { return m_type; }
+  void type(GLenum v){ m_type = v; }
+
+  GLsizei count() const { return m_count; }
+  void count(GLsizei v){ m_count = v; }
+
+  GLint offset() const { return m_offset; }
+  void offset(GLint v){ m_offset = v; }
+
+  virtual void accept(primitive_functor& functor) const;
+};
+
+
+
 }
 
 

@@ -176,8 +176,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     // draw trace first
-    glBindTexture(GL_TEXTURE_2D, fbo_tex);
-    draw_quad(0);
+    draw_quad(fbo_tex, 0);
 
     // draw circle
     prg.use();

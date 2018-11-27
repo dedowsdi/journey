@@ -1,4 +1,5 @@
 #include "primitive_set.h"
+#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
 namespace zxd
 {
@@ -36,5 +37,35 @@ void draw_arrays::draw()
 void draw_arrays::accept(primitive_functor& functor) const
 {
   functor.drawArrays(m_mode, m_first, m_count);
+}
+
+//--------------------------------------------------------------------
+draw_elements::draw_elements(GLenum mode, GLint count, GLenum type, GLint offset, GLuint num_instance):
+  primitive_set(mode, num_instance),
+  m_count(count),
+  m_type(type),
+  m_offset(offset)
+{
+}
+
+//--------------------------------------------------------------------
+void draw_elements::draw()
+{
+  if (m_num_instance == 0) {
+    glDrawElements(m_mode, m_count, m_type, BUFFER_OFFSET(m_offset));
+  } else {
+#ifdef GL_VERSION_3_0
+    glDrawElementsInstanced(m_mode, m_count, m_type, BUFFER_OFFSET(m_offset), m_num_instance);
+#else
+    glDrawElementsInstancedARB(m_mode, m_count, m_type, BUFFER_OFFSET(m_offset), m_num_instance);
+#endif
+  }
+}
+
+//--------------------------------------------------------------------
+void draw_elements::accept(primitive_functor& functor) const
+{
+	//@TODO implement
+	throw new std::runtime_error("unimplemented zxd::draw_elements::accept(primitive_functor & functor) const:const,virtual called");
 }
 }

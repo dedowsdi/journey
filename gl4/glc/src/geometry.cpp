@@ -92,8 +92,11 @@ void geometry_base::bind_and_update_buffer()
     }
 
     m_attributes[i]->bind(i);
-    m_attributes[i]->update_array_buffer();
+    m_attributes[i]->update_buffer();
   }
+
+  if(m_elements)
+    m_elements->update_buffer();
 }
 
 //--------------------------------------------------------------------

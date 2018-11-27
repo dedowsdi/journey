@@ -2208,7 +2208,12 @@ gl:
 --------------
 2018.11.18
 
-
 cpp:
   be careful about stuff defined directly in src file, if it doesn't have
   internal linkage, you might get multiple difiniton error.
+
+--------------
+2018.11.26
+
+vim:
+  don't input space between event in autocmd

@@ -124,7 +124,7 @@ void smooth(zxd::geometry_base& geometry, unsigned normal_attrib_index)
   }
   geometry.bind_vao();
   normals->bind(normal_attrib_index);
-  normals->update_array_buffer();
+  normals->update_buffer();
 
   std::cout << "finish smooth" << std::endl;
 }

@@ -11,6 +11,7 @@ using namespace glm;
 namespace zxd {
 
 define_gl_type_traits(GLint, GL_INT);
+define_gl_type_traits(GLuint, GL_UNSIGNED_INT);
 define_gl_type_traits(GLfloat, GL_FLOAT);
 define_gl_type_traits(GLdouble, GL_DOUBLE);
 define_gl_type_traits(GLboolean, GL_BOOL);

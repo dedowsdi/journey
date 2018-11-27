@@ -13,10 +13,10 @@
 
 namespace zxd {
 
-GLuint ustride = 12;
-GLuint vstride = 3;
-GLuint uorder = 5;
-GLuint vorder = 4;
+GLuint ustride = 3;
+GLuint vstride = 12;
+GLuint uorder = 4;
+GLuint vorder = 5;
 GLboolean uonly = GL_FALSE;  // only render u dir line
 GLboolean rotate = GL_TRUE;
 

@@ -18,7 +18,7 @@ void line::build_mesh(const vec3& v0, const vec3& v1, const vec4& color)
 
   colors->push_back(color);
   colors->push_back(color);
-  colors->update_array_buffer();
+  colors->update_buffer();
 
   attrib_array(1, array_ptr(colors));
 }
@@ -31,7 +31,7 @@ void line::build_mesh(const vec3& v0, const vec3& v1)
   vertices->reserve(2);
   vertices->push_back(v0);
   vertices->push_back(v1);
-  vertices->update_array_buffer();
+  vertices->update_buffer();
 
   attrib_array(0, array_ptr(vertices));
   create_primitive_set();
@@ -45,7 +45,7 @@ void line::build_mesh(const vec2& v0, const vec2& v1, const vec4& color)
 
   colors->push_back(color);
   colors->push_back(color);
-  colors->update_array_buffer();
+  colors->update_buffer();
 
   attrib_array(1, array_ptr(colors));
 }
@@ -58,7 +58,7 @@ void line::build_mesh(const vec2& v0, const vec2& v1)
   vertices->reserve(2);
   vertices->push_back(v0);
   vertices->push_back(v1);
-  vertices->update_array_buffer();
+  vertices->update_buffer();
 
   attrib_array(0, array_ptr(vertices));
   create_primitive_set();

@@ -16,6 +16,7 @@ set (PROJECTS
     texture_animation
     prefix_sum_1d
     tessellate
+    teapot
     )
 
 foreach(PROJECT ${PROJECTS})

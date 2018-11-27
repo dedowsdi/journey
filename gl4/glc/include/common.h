@@ -74,6 +74,13 @@ struct glm_vecn<GLfloat> {
   typedef GLfloat value_type;
 };
 
+
+template <>
+struct glm_vecn<GLuint> {
+  static const GLuint components = 1;
+  typedef GLuint value_type;
+};
+
 // only works with seperated vertex data
 //_It::valuetype has to be glm::vec*
 template <typename _It>
