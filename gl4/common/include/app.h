@@ -48,6 +48,7 @@ public:
     GLboolean stereo;
     GLboolean debug;
     GLboolean decorated;
+    GLboolean double_buffer;
   };
 
 protected:

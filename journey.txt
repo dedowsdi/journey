@@ -2217,3 +2217,12 @@ cpp:
 
 vim:
   don't input space between event in autocmd
+
+--------------
+2018.11.27
+
+cpp:
+  becareful about std::accumulate(..., init), init is a template parameter, use
+  specific type, otherwise the result might be rounded
+  ternary operator has very low precedence, it'd better to group them with
+  parenthesis.

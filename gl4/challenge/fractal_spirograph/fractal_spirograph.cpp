@@ -18,6 +18,7 @@ lightless_program prg;
 
 GLuint fbo;
 GLuint fbo_tex;
+GLuint tex;
 
 key_control_item* kci_circles;
 key_control_item* kci_k;
@@ -96,9 +97,11 @@ public:
     m_info.title = "fractal_spirograph_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
+    m_info.samples = 8;
   }
   virtual void create_scene() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glEnable(GL_LINE_SMOOTH);
 
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -111,7 +114,10 @@ public:
     circle_geometry.build_mesh();
 
     glGenTextures(1, &fbo_tex);
-    glBindTexture(GL_TEXTURE_2D, fbo_tex);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, fbo_tex);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples, GL_RGB, WIDTH, HEIGHT, GL_TRUE);
+
+    glBindTexture(GL_TEXTURE_2D, tex);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -122,7 +128,7 @@ public:
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo_tex, 0);
+      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, fbo_tex, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       printf("incomplete frame buffer\n");
 
@@ -168,15 +174,13 @@ public:
       m_graph->update();
       debugger::draw_line(pen->last_pos(), pen->pos(), prg.vp_mat, 1, vec4(1,0,1,1));
     }
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBlitFramebuffer(0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
   }
 
   virtual void display() {
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // draw trace first
-    draw_quad(fbo_tex, 0);
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // draw circle
     prg.use();

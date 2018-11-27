@@ -44,6 +44,7 @@ void app::init_info() {
   m_info.stereo = GL_FALSE;
   m_info.debug = GL_TRUE;
   m_info.decorated = GL_TRUE;
+  m_info.double_buffer = GL_TRUE;
 }
 
 //--------------------------------------------------------------------
@@ -108,6 +109,7 @@ void app::init_wnd() {
   glfwWindowHint(GLFW_STEREO, m_info.stereo);
   glfwWindowHint(GLFW_DEPTH_BITS, m_info.stereo);
   glfwWindowHint(GLFW_DECORATED, m_info.decorated);
+  glfwWindowHint(GLFW_DOUBLEBUFFER, m_info.double_buffer);
 
   if (m_info.fullscreen) {
     if (m_info.wnd_width == 0 || m_info.wnd_height == 0) {
@@ -285,7 +287,7 @@ void app::loop() {
 void app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   (void)wnd;
   m_info.wnd_width = w;
-  m_info.wnd_width = h;
+  m_info.wnd_height = h;
   glViewport(0, 0, w, h);
 }
 

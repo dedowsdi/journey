@@ -55,6 +55,7 @@ void geometry_base::draw()
 
 //--------------------------------------------------------------------
 void geometry_base::build_mesh() {
+  m_primitive_sets.clear();
   build_vertex();
 
   if(m_include_color)

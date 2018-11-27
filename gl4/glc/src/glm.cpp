@@ -158,9 +158,9 @@ mat4 rect_ortho(GLfloat hw, GLfloat hh, GLfloat aspect, GLfloat n/* = -1*/, GLfl
 {
   GLfloat project_aspect = hw/hh;
   if(project_aspect >= aspect)
-    hh *= project_aspect/aspect;
+    hh *= project_aspect / aspect;
   else
-    hw *= project_aspect/aspect;
+    hw *= aspect / project_aspect;
   return glm::ortho(-hw, hw, -hh, hh, n, f);
 }
 

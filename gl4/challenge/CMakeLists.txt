@@ -60,6 +60,7 @@ set (PROJECTS
     mandelbrot_set
     evolutionary_steer
     lightning
+    chaos
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
