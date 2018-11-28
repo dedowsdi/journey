@@ -26,6 +26,7 @@ set (PROJECTS
     copy_elision
     copy_swap
     init
+    lifetime
     )
 
 foreach(PROJECT ${PROJECTS})

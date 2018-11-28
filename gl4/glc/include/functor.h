@@ -35,6 +35,17 @@ auto get_keys(const M& m);
 template <typename M>
 auto get_values(const M& m);
 
+// https://www.fluentcpp.com/2017/10/10/partitioning-with-the-stl/
+// turn
+//    ....a..b...c....d....
+//             ^
+//             to
+//    .......abcd..........
+//             ^
+template<typename BidirIterator, typename Predicate>
+std::pair<BidirIterator, BidirIterator> gather(BidirIterator first, BidirIterator last,
+    BidirIterator position, Predicate p);
+
 //--------------------------------------------------------------------
 template<typename AssociativeContainer, typename PredicateT>
 void erase_if(AssociativeContainer& ctn, const PredicateT& pt)
@@ -70,6 +81,15 @@ auto get_values(const M& m)
       get_first<typename M::value_type>());
 
   return values;
+}
+
+//--------------------------------------------------------------------
+template<typename BidirIterator, typename Predicate>
+std::pair<BidirIterator, BidirIterator> gather(BidirIterator first, BidirIterator last,
+    BidirIterator position, Predicate p)
+{
+  return { std::stable_partition(first, position, std::not1(p)),
+    std::stable_partition(position, last, p) };
 }
 
 }

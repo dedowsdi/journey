@@ -8,6 +8,7 @@ set (PROJECTS
     quick_sort
     nth_element
     count_sort
+    radix_sort
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -16,7 +16,8 @@ int start, end, count;
 double abde = 5;
 
 void randomData() {
-  std::mt19937 mt;
+  std::random_device rd;
+  std::mt19937 mt(rd());
   std::uniform_int_distribution<> dist(start, end);
   while (count--) {
     data.push_back(dist(mt));

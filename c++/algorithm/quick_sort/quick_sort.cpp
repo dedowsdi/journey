@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
   data = zxd::readFileToVector<int>(inputFile);
   zxd::Timer timer;
   quickSort(data.begin(), data.end());
-  std::cout << "sort tooks " << timer.time() << " seconds " << std::endl;
+  std::cout << "sort tooks " << timer.miliseconds() << "ms " << std::endl;
 
   if (!std::is_sorted(data.begin(), data.end())) {
     throw std::runtime_error("sort failed");

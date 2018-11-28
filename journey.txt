@@ -2226,3 +2226,18 @@ cpp:
   specific type, otherwise the result might be rounded
   ternary operator has very low precedence, it'd better to group them with
   parenthesis.
+
+--------------
+2018.11.28
+
+cpp:
+  lifetime of temporary object will be extened by the first const reference
+  bound to it, it's destoryed after the life time of that const reference
+  expired, be very very careful about this, some function such as std::min or
+  std::max use const reference arg and return const renference , if you call
+  them with temporary object, the temporary object's life time will be extended
+  by the const reference arg, not the return one, it will be destoryed after
+  std::min finished, and it cause UB, it will be a nightmare.
+
+  std::min and std::max always return the 1st one if a and b are equivalence.
+  use std::minmax instead if that's not what you want
