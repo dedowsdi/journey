@@ -1,0 +1,73 @@
+set family, required sorted. 7
+    set_difference                  A - B
+    set_intersection                A ^ B
+    set_union                       A V B
+    set_symmetry_difference         (A - B) V (B - A)
+    include                         if A include B
+    merge                           c = A + B
+    inplace_merge                   just like merge in merge sort
+
+search: 14
+    unsorted search: 10
+        find[_if[_not]]
+        count[_if[_not]]
+        adjacent_find                first two consecutive identical item
+        search                       find first of any item in a group
+        find_end                     find last of any item in a group
+        search_n                     first n censecutive identical items
+
+    sorted search: 4
+        binary_search
+        lower bound                     first value no less than
+        upper bound                     first value greater than
+        equal range                     <lower_bound, upper_bound>
+
+transform   you can transform yourself if you want
+
+filling: 8
+    fill[_n]                    operator=,   init n item with the same value,
+    uninitialized_fill[_n]      copy constructor, similar to placement new, init
+                                n item with the same value
+    generate[_n]                use unary functor to init
+    iota[_n]                    ++ init
+
+minmax: 6
+    min[_element]
+    max[_element]
+    minmax[_element]
+    c++11 add new overload to min and max for location list
+    max always return a if a and b are equivalent, use minmax if that's that
+    what you want.
+    min and max use const T& as argument, and return const T&, which means, if
+    you pass temporary object as argument, it's life time will be extend to the
+    life time as cosnt T& argument, which will end when the function returned,
+    be very very careful about this.
+
+sort: 7
+    sort                        quick sort
+    is_sorted                   
+    stable_sort                 keep relative order of equivalent item
+    partial_sort[_copy]
+    is_sorted_until
+    nth_element                 sort into less_than_nth + nth + greater than nth
+
+    you can sort a subrange of a collection by using a combination of
+    nth_element and partial-sort
+
+    boost::spread_sort          combine radix and quick sort
+
+partition: 5
+    partition[_copy]            return partition point: end of elemnts that pass
+                                predicate. The copy versoin use two output iter
+                                to seperate true and false items.
+    stable_partition            keep relative order
+    is_partitioned
+    partition_point             get partition point of partitioned
+
+    gather:
+         stable_partition on 0 to n with negated predicate, stable_partition on
+         n to last with predicate
+
+    boost::is_partitioned_until
+
+accumulate

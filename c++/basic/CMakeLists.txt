@@ -27,6 +27,7 @@ set (PROJECTS
     copy_swap
     init
     lifetime
+    forward
     )
 
 foreach(PROJECT ${PROJECTS})
