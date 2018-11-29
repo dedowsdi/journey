@@ -1,5 +1,6 @@
 set (PROJECTS
     tag_dispatch
+    enum_hack
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -35,6 +35,16 @@ auto get_keys(const M& m);
 template <typename M>
 auto get_values(const M& m);
 
+// the erase ... family, don't call them on list, list do it's own job
+template <typename Container, typename ValueType>
+void erase_remove(Container& ctn, const ValueType& v);
+
+template <typename Container, typename UnaryPredicate>
+void erase_remove_if(Container& ctn, UnaryPredicate p);
+
+template <typename Container>
+void erase_unique(Container& ctn);
+
 // https://www.fluentcpp.com/2017/10/10/partitioning-with-the-stl/
 // turn
 //    ....a..b...c....d....
@@ -81,6 +91,27 @@ auto get_values(const M& m)
       get_first<typename M::value_type>());
 
   return values;
+}
+
+//--------------------------------------------------------------------
+template <typename Container, typename ValueType>
+void erase_remove(Container& ctn, const ValueType& v)
+{
+  ctn.erase(std::remove(begin(ctn), end(ctn), v), end(ctn));
+}
+
+//--------------------------------------------------------------------
+template <typename Container, typename UnaryPredicate>
+void erase_remove_if(Container& ctn, UnaryPredicate p)
+{
+  ctn.erase(std::remove_if(begin(ctn), end(ctn), p), end(ctn));
+}
+
+//--------------------------------------------------------------------
+template <typename Container>
+void erase_unique(Container& ctn)
+{
+  ctn.erase(std::unique(begin(ctn), end(ctn)), end(ctn));
 }
 
 //--------------------------------------------------------------------

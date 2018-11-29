@@ -71,3 +71,25 @@ partition: 5
     boost::is_partitioned_until
 
 accumulate
+
+reorder: 7
+    next_permutation            will cycle if meet end
+    prev_premutatoin
+    is_premutation
+    rotate[_copy]               can be used to do slide
+    reverse
+    shuffle
+
+moving range: 6
+    copy[_n|_backward]              first output iter must not in the range of source
+    move[_backward]                 move style copy, first output iter must not in range of source
+    swap_range                      overlap not allowed
+
+heap: 3
+    push_heap                   pop up newly pushed elemnets
+    pop_heap                    swap front and end, pop down end, must follow by a pop_back
+    sort_heap                   n times pop_heap without pop_back
+
+remove:
+    std::remove                 note that the values of elements left at the end
+                                of the range are unspecified
