@@ -8,10 +8,16 @@ add_library(common
     )
 
 target_link_libraries(common
-    gl43
     glc
-    ${OPENGL_gl_LIBRARY}
+    gl43
     ${GLFW3_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     ${FIP_LIBS}
+    ${OPENGL_gl_LIBRARY}
+    X11
+    Xi
+    Xrandr
+    Xxf86vm
+    Xinerama
+    Xcursor
     )

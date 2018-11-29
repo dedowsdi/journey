@@ -9,11 +9,9 @@
 #include <algorithm>
 #include <iomanip>
 
-#define WIDTH 512.0
-#define HEIGHT 512.0
-
 namespace zxd {
 
+bool dirty = true;
 GLuint mtex;
 GLuint tex;
 GLuint btex;
@@ -21,7 +19,7 @@ GLuint tbo;
 GLuint mfbo;
 GLuint fbo;
 GLuint iterations = 500;
-GLuint num_colors = 64;
+GLuint num_colors = 512;
 // not so useful, it doesn't matter too much if an implicit synchronization is
 // forced, the scene is too simple.
 GLuint num_pbo = 5;
@@ -155,49 +153,74 @@ public:
   virtual void init_info() {
     app::init_info();
     m_info.title = "mandelbrot_set_app";
-    m_info.wnd_width = WIDTH;
-    m_info.wnd_height = HEIGHT;
+    m_info.wnd_width = 512;
+    m_info.wnd_height = 512;
     m_info.samples = 4;
     m_info.decorated = false;
+    m_info.fullscreen = false;
+    m_info.double_buffer = false;
   }
-  virtual void create_scene() {
-    //m_pause = true;
-    glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    glfwSetWindowPos(m_wnd, 100, 100);
-
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
-
-    q.include_texcoord(true);
-    q.build_mesh();
-
-    glGenTextures(1, &tex);
+  void resize_textrure()
+  {
+    if(!glIsTexture(tex))
+      glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, WIDTH, HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_info.wnd_width, m_info.wnd_height,
+        0, GL_RED, GL_UNSIGNED_BYTE, 0);
 
-    glGenFramebuffers(1, &fbo);
+    if(!glIsFramebuffer(fbo))
+      glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(
       GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       printf("incomplete frame buffer\n");
 
-    glGenTextures(1, &mtex);
+    if(!glIsTexture(mtex))
+      glGenTextures(1, &mtex);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mtex);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples, GL_R32F, WIDTH, HEIGHT, false);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples, GL_R32F,
+        m_info.wnd_width, m_info.wnd_height, false);
 
-    glGenFramebuffers(1, &mfbo);
+    //glDeleteFramebuffers(1, &mfbo);
+    if(!glIsFramebuffer(mfbo))
+      glGenFramebuffers(1, &mfbo);
     glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
     glFramebufferTexture2D(
       GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, mtex, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       printf("incomplete frame buffer\n");
+
+    pixels.resize(m_info.wnd_width*m_info.wnd_height);
+
+    pbo.clear();
+    GLuint* buffers = new GLuint[num_pbo];
+    glGenBuffers(num_pbo, buffers);
+    for (int i = 0; i < num_pbo; ++i) {
+      glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers[i]);
+      glBufferData(GL_PIXEL_PACK_BUFFER, m_info.wnd_width*m_info.wnd_height*sizeof(GLuint), 0, GL_DYNAMIC_DRAW);
+      pbo.add_resource(buffers[i]);
+    }
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    delete[] buffers;
+  }
+
+  virtual void create_scene() {
+    //m_pause = true;
+    glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+
+    m_text.init();
+
+    q.include_texcoord(true);
+    q.build_mesh();
+
+    resize_textrure();
 
     glGenBuffers(1, &tbo);
     glBindBuffer(GL_TEXTURE_BUFFER, tbo);
@@ -207,28 +230,21 @@ public:
     glBindTexture(GL_TEXTURE_BUFFER, btex);
     glTexBuffer(GL_TEXTURE_BUFFER, GL_R32F, tbo);
 
-    pixels.resize(WIDTH*HEIGHT);
-
     auto callback = std::bind(std::mem_fn(&mandelbrot_set_app::reset_iteration),
         this, std::placeholders::_1);
     kci_iterations = m_control.add_control(GLFW_KEY_Q, iterations, 10, 100000000, 100, callback);
-
-    GLuint* buffers = new GLuint[num_pbo];
-    glGenBuffers(num_pbo, buffers);
-    for (int i = 0; i < num_pbo; ++i) {
-      glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers[i]);
-      glBufferData(GL_PIXEL_PACK_BUFFER, WIDTH*HEIGHT*sizeof(GLuint), 0, GL_DYNAMIC_DRAW);
-      pbo.add_resource(buffers[i]);
-    }
-    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-    delete[] buffers;
-
     reset_iteration(0);
+
     reset_colors();
+
+    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    GLdouble aspect = radius.x / radius.y;
+    radius.x *= wnd_aspect() / aspect;
   }
 
   void reset_iteration(const key_control_item* kci = 0)
   {
+    dirty = true;
     iterations = kci_iterations->value;
     histogram.resize(iterations+1);
     hues.resize(histogram.size());
@@ -256,12 +272,14 @@ public:
 
   void reset_ctrl_colors()
   {
+    dirty = true;
     ctrl_colors.clear();
     ctrl_colors.push_back(glm::linearRand(vec3(0), vec3(1)));
     for (int i = 0; i < num_ctrl_colors; ++i) {
-      vec3 color = ctrl_colors.back() + glm::linearRand(vec3(0.05), vec3(0.15));
-      color -= glm::step(vec3(1), color);
-      ctrl_colors.push_back(color);
+      //vec3 color = ctrl_colors.back() + glm::linearRand(vec3(0.05), vec3(0.15));
+      //color -= glm::step(vec3(1), color);
+      //ctrl_colors.push_back(color);
+      ctrl_colors.push_back(glm::linearRand(vec3(0), vec3(1)));
     }
   }
 
@@ -273,13 +291,13 @@ public:
     // hues are not evenly distributed, the 1st 4 hues might occupies 80% , the
     // last one might occupies 10%
     float_vector ctrl_positions;
-    ctrl_positions.push_back(0);
-    ctrl_positions.push_back(0.4);
-    ctrl_positions.push_back(0.8);
-    for (int i = 0; i < num_colors - 4; ++i) {
-      ctrl_positions.push_back(0.8 + 0.2 * i / (num_ctrl_colors - 4));
+    //ctrl_positions.push_back(0);
+    //ctrl_positions.push_back(0.4);
+    //ctrl_positions.push_back(0.8);
+    for (int i = 0; i < num_colors; ++i) {
+      ctrl_positions.push_back( static_cast<GLfloat>(i) / num_ctrl_colors );
     }
-    ctrl_positions.push_back(1.0);
+    //ctrl_positions.push_back(1.0);
 
     colors.push_back(vec4(ctrl_colors.front(), 1));
     for (int i = 1; i < num_colors; ++i) {
@@ -328,11 +346,13 @@ public:
         return;
       radius *= zoom_speed;
       //glDisable(GL_MULTISAMPLE);
+      dirty = true;
     }
     else if(zoom_out)
     {
       radius /= zoom_speed;
       //glDisable(GL_MULTISAMPLE);
+      dirty = true;
     }
     //glEnable(GL_MULTISAMPLE);
   }
@@ -343,13 +363,14 @@ public:
     glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
 
     iter_prg.use();
-    glUniform2d(iter_prg.ul_resolution, WIDTH, HEIGHT);
+    glUniform2d(iter_prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
     glUniform4dv(iter_prg.ul_rect, 1, glm::value_ptr(rect));
     q.draw();
 
     // blit back to normal texture
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-    glBlitFramebuffer(0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBlitFramebuffer(0, 0, m_info.wnd_width, m_info.wnd_height,
+        0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
     // update historgram
@@ -367,14 +388,14 @@ public:
 
       //glReadBuffer(GL_COLOR_ATTACHMENT0);
       glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo.pong());
-      glReadPixels(0, 0, WIDTH, HEIGHT, GL_RED, GL_FLOAT, BUFFER_OFFSET(0));
+      glReadPixels(0, 0, m_info.wnd_width, m_info.wnd_height, GL_RED, GL_FLOAT, BUFFER_OFFSET(0));
 
       glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
     }
     else
     {
       glReadBuffer(GL_COLOR_ATTACHMENT0);
-      glReadPixels(0, 0, WIDTH, HEIGHT, GL_RED, GL_FLOAT, &pixels.front());
+      glReadPixels(0, 0, m_info.wnd_width, m_info.wnd_height, GL_RED, GL_FLOAT, &pixels.front());
       t.reset();
       for(auto item : pixels)
       {
@@ -430,12 +451,15 @@ public:
   {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     iter_prg.use();
-    glUniform2d(iter_prg.ul_resolution, WIDTH, HEIGHT);
+    glUniform2d(iter_prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
     glUniform4dv(iter_prg.ul_rect, 1, glm::value_ptr(rect));
     q.draw();
   }
 
   virtual void display() {
+
+    if(!dirty)
+      return;
 
     rect = dvec4(center - radius, center + radius);
 
@@ -443,6 +467,8 @@ public:
       render_smooth();
     else
       render_smooth_histogram();
+
+    dirty = false;
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -464,14 +490,19 @@ public:
     ss << "center : " << center.x << " " << center.y << std::endl;
     ss << "radius : " << radius.x << " " << radius.y << std::endl;
     ss.precision(1);
-    ss << "fps : " << m_fps << std::endl;
+    //ss << "fps : " << m_fps << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(0,0,1,1));
     glDisable(GL_BLEND);
+
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    resize_textrure();
+    GLdouble aspect = radius.x / radius.y;
+    radius.x *= wnd_aspect() / aspect;
+    dirty = true;
   }
 
   virtual void glfw_key(
@@ -544,8 +575,9 @@ public:
         glfwGetCursorPos(m_wnd, &pos.x, &pos.y);
         pos = glfw_to_gl(pos);
         dvec2 dt_pos = pos - m_last_cursor_position;
-        dvec2 offset = dt_pos / dvec2(WIDTH, HEIGHT) * (rect.zw() - rect.xy());
+        dvec2 offset = dt_pos / dvec2(m_info.wnd_width, m_info.wnd_height) * (rect.zw() - rect.xy());
         center -= offset;
+        dirty = true;
       }
     app::glfw_mouse_move(wnd, x, y);
   }

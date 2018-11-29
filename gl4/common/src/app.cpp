@@ -26,6 +26,10 @@ void app::init() {
   m_shutdown = GL_FALSE;
   m_dirty_view = GL_TRUE;
   init_info();
+
+  m_info.wm.z = m_info.wnd_width;
+  m_info.wm.w = m_info.wnd_height;
+
   init_wnd();
   init_gl();
 }
@@ -35,6 +39,7 @@ void app::init_info() {
   m_info.title = "app";
   m_info.wnd_width = 512;
   m_info.wnd_height = 512;
+  m_info.wm = uvec4(100, 100, 0, 0);
   m_info.major_version = 4;
   m_info.minor_version = 3;
   m_info.samples = 4;
@@ -76,6 +81,7 @@ void app::init_gl() {
 
   if(m_info.samples == 1)
     glDisable(GL_MULTISAMPLE);;
+  std::cout << "init gl finished" << std::endl;
 }
 
 //--------------------------------------------------------------------
@@ -111,28 +117,27 @@ void app::init_wnd() {
   glfwWindowHint(GLFW_DECORATED, m_info.decorated);
   glfwWindowHint(GLFW_DOUBLEBUFFER, m_info.double_buffer);
 
-  if (m_info.fullscreen) {
-    if (m_info.wnd_width == 0 || m_info.wnd_height == 0) {
-      const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-      m_info.wnd_width = mode->width;
-      m_info.wnd_height = mode->height;
-    }
-    m_wnd = glfwCreateWindow(m_info.wnd_width, m_info.wnd_height,
-      m_info.title.c_str(), glfwGetPrimaryMonitor(), NULL);
-    // glfwSwapInterval((int)m_info.flags.vsync);
-  } else {
-    m_wnd = glfwCreateWindow(
-      m_info.wnd_width, m_info.wnd_height, m_info.title.c_str(), NULL, NULL);
-    if (!m_wnd) {
-      std::cerr << "Failed to open window" << std::endl;
-      return;
-    }
+  if(m_info.fullscreen)
+  {
+    auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    m_wnd = glfwCreateWindow(mode->width, mode->height, m_info.title.c_str(), glfwGetPrimaryMonitor(), NULL);
+  }
+  else
+  {
+    m_wnd = glfwCreateWindow(m_info.wnd_width, m_info.wnd_height, m_info.title.c_str(), NULL, NULL);
+  }
+
+  if (!m_wnd) {
+    std::cerr << "Failed to open window" << std::endl;
+    return;
   }
 
   glfwMakeContextCurrent(m_wnd);
 
   // set up call back
   glfwSetWindowUserPointer(m_wnd, this);
+  if(!m_info.fullscreen)
+    glfwSetWindowPos(m_wnd, m_info.wm.x, m_info.wm.y);
 
   auto resizeCallback = [](GLFWwindow *wnd, int w, int h) {
     auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
@@ -172,6 +177,7 @@ void app::init_wnd() {
   glfwSetScrollCallback(m_wnd, scrollCallback);
   glfwSetCharCallback(m_wnd, charCallback);
   glfwSetCharModsCallback(m_wnd, charmodeCallback);
+  std::cout << "init wnd finished" << std::endl;
 }
 
 //--------------------------------------------------------------------
@@ -255,6 +261,22 @@ void app::stop_reading() { m_reading = GL_FALSE; }
 void app::finishe_reading() { m_reading = GL_FALSE; }
 
 //--------------------------------------------------------------------
+void app::toggle_full_screen()
+{
+  m_info.fullscreen ^= 1;
+  const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+  if(m_info.fullscreen)
+  {
+    glfwSetWindowMonitor(m_wnd, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+  }
+  else
+  {
+    glfwSetWindowMonitor(m_wnd, NULL, m_info.wm.x, m_info.wm.y, m_info.wm.z, m_info.wm.w, mode->refreshRate);
+  }
+
+}
+
+//--------------------------------------------------------------------
 void app::loop() {
   // TODO swap interval not working on my laptop gt635m
   //glfwSwapInterval(m_swap_interval);
@@ -262,6 +284,9 @@ void app::loop() {
     update_time();
     update_fps();
     update_camera();
+    // trigger resize for full screen, there are two resize events, don't know
+    // why?
+    glfwPollEvents();
     if(!m_pause || m_update_count > 0)
     {
       if(m_time_update)
@@ -286,6 +311,7 @@ void app::loop() {
 //--------------------------------------------------------------------
 void app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   (void)wnd;
+  std::cout << "resizing" << std::endl;
   m_info.wnd_width = w;
   m_info.wnd_height = h;
   glViewport(0, 0, w, h);
@@ -343,6 +369,11 @@ void app::glfw_key(
 
       case GLFW_KEY_F10:
         ++m_update_count;
+        break;
+
+      case GLFW_KEY_SPACE:
+        if(mods & GLFW_MOD_CONTROL)
+          toggle_full_screen();
         break;
 
       default:

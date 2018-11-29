@@ -69,6 +69,12 @@ GLuint npingpong::size()
 }
 
 //--------------------------------------------------------------------
+void npingpong::clear()
+{
+  m_resources.clear();
+}
+
+//--------------------------------------------------------------------
 void npingpong::add_resource(GLuint resource)
 {
   m_resources.push_back(resource);

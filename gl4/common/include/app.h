@@ -37,8 +37,9 @@ public:
 
   struct app_info {
     std::string title;
-    GLuint wnd_width;
+    GLuint wnd_width; // not resolution
     GLuint wnd_height;
+    uvec4 wm; // window mode x, y, width, height
     GLuint major_version;
     GLuint minor_version;
     GLuint samples;
@@ -118,6 +119,8 @@ public:
   void stop_reading();
   void finishe_reading();
   virtual bool is_shutdown(){ return m_shutdown == GL_TRUE;}
+
+  void toggle_full_screen();
 
 protected:
   virtual void init_info();

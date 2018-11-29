@@ -53,6 +53,5 @@ add_library(glc
     )
 
 target_link_libraries(glc
-    X11
     ${Boost_LIBRARIES}
     )

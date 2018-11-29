@@ -42,7 +42,7 @@ public:
   GLuint first_ping();
   GLuint get(GLuint index);
   GLuint size();
-
+  void clear();
   void add_resource(GLuint resource);
   void shift();
 

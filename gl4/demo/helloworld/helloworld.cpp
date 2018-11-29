@@ -10,6 +10,8 @@ public:
   virtual void init_info() {
     app::init_info();
     m_info.title = "hello world";
+    m_info.wnd_width = 512;
+    m_info.wnd_height = 512;
   }
   virtual void create_scene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
