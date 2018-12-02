@@ -120,6 +120,10 @@ void app::init_wnd() {
   if(m_info.fullscreen)
   {
     auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    // although wnd_width and wnd_height will be updated in resize, sometimes
+    // you need them in create_screen, which is called before resize.
+    m_info.wnd_width = mode->width;
+    m_info.wnd_height = mode->height;
     m_wnd = glfwCreateWindow(mode->width, mode->height, m_info.title.c_str(), glfwGetPrimaryMonitor(), NULL);
   }
   else
@@ -311,7 +315,7 @@ void app::loop() {
 //--------------------------------------------------------------------
 void app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   (void)wnd;
-  std::cout << "resizing" << std::endl;
+  std::cout << "resizing " <<  w << ":" << h << std::endl;
   m_info.wnd_width = w;
   m_info.wnd_height = h;
   glViewport(0, 0, w, h);

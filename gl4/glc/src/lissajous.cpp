@@ -55,4 +55,30 @@ vec2 lissajous::get_at_angle(GLfloat angle)
   }
 }
 
+//--------------------------------------------------------------------
+vec2 lissajous::tangent_at_angle(GLfloat angle)
+{
+  GLfloat xangle = m_xscale * angle;
+  GLfloat yangle = m_yscale * angle;
+
+  if(m_type == LT_CIRCLE)
+    return glm::normalize(vec2(-m_xscale * -sin(angle), -m_yscale * cos(angle)));
+
+  GLfloat k = static_cast<GLfloat>(m_rose_n) / m_rose_d;
+  GLfloat rx = cos(k * angle) + m_rose_offset;
+  GLfloat ry = cos(k * angle) + m_rose_offset;
+
+  GLfloat dx_dt = -rx * sin(angle) - k * sin(k*angle) * cos(angle);
+  GLfloat dy_dt = ry * cos(angle) - k * sin(k*angle) * sin(angle);
+
+  return glm::normalize(vec2(dx_dt * m_xscale, dy_dt * m_yscale));
+}
+
+//--------------------------------------------------------------------
+vec2 lissajous::normal_at_angle(GLfloat angle)
+{
+  vec2 tangent = tangent_at_angle(angle);
+  return vec2(tangent.y, -tangent.x);
+}
+
 }

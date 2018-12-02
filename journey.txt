@@ -445,8 +445,15 @@ ssh:
       use ssh-genkey to generate private and public key
       keep private key to your self, copy public key to server .ssh/authorized_keys
 
+      ssh-keygen -t rsa -b 2048
+      ssh-copy-id -i id_rsa.pub username@ip_address // no username for android
+
 android:
-  you can install termux in your android to use it like linux.
+  you can install termux in your android to use it like linux:
+    sshd
+    passwd
+
+
   termux use 8022 as default port for ssh.
 
 linux:

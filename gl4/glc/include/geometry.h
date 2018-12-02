@@ -42,6 +42,7 @@ public:
 
   void bind_vao();
 
+  void clear();
   virtual void build_mesh();
   virtual void build_vertex() {}
   virtual void build_color() {}

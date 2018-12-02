@@ -7,6 +7,11 @@ set family, required sorted. 7
     merge                           c = A + B
     inplace_merge                   just like merge in merge sort
 
+    you can use two different sorted types if you want. set_difference output
+    from collection1, others output from both collections.
+    The comparator use unspecified order, you might need doulbe functor trick
+    to do this(most time, for set_difference).
+
 search: 14
     unsorted search: 10
         find[_if[_not]]
@@ -17,10 +22,19 @@ search: 14
         search_n                     first n censecutive identical items
 
     sorted search: 4
-        binary_search
-        lower bound                     first value no less than
+        binary_search                   only return true or false
+        lower bound                     first value no less than, the compartor
+                                        use fixed order compare(lhs element, rhs
+                                        value)
         upper bound                     first value greater than
+                                        use fixed order compare(lhs value, rhs
+                                        element)
         equal range                     <lower_bound, upper_bound>
+                                        you can use equal range, compare 1st and
+                                        2nd to check if item found.
+                                        you can also use lower_bound, compare
+                                        end and search value to check if item
+                                        found.
 
 transform   you can transform yourself if you want
 

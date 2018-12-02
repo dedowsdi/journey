@@ -3,6 +3,11 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <functional>
+#include <memory>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
 
 namespace zxd
 {
@@ -45,6 +50,27 @@ void erase_remove_if(Container& ctn, UnaryPredicate p);
 template <typename Container>
 void erase_unique(Container& ctn);
 
+// only used to delete raw pointer in sequential container
+// you can not use remove style, as it leavs unspecified data in the end
+template <typename Container, typename UnaryPredicate>
+void erase_partition_delete(Container& ctn, UnaryPredicate p);
+
+// uniq key, not key value pair
+template<typename AssociativeContainer, typename DuplicatePolicy>
+void unique_associative(AssociativeContainer& container, DuplicatePolicy areDuplicates);
+
+template<typename Key, typename Value, typename Comparator>
+void unique(std::multimap<Key, Value, Comparator>& container);
+
+template<typename Key, typename Comparator>
+void unique(std::multiset<Key, Comparator>& container);
+
+template<typename Key, typename Value, typename Comparator>
+void unique(std::unordered_multimap<Key, Value, Comparator>& container);
+
+template<typename Key, typename Comparator>
+void unique(std::unordered_multiset<Key, Comparator>& container);
+
 // https://www.fluentcpp.com/2017/10/10/partitioning-with-the-stl/
 // turn
 //    ....a..b...c....d....
@@ -57,7 +83,7 @@ std::pair<BidirIterator, BidirIterator> gather(BidirIterator first, BidirIterato
     BidirIterator position, Predicate p);
 
 //--------------------------------------------------------------------
-template<typename AssociativeContainer, typename PredicateT>
+  template<typename AssociativeContainer, typename PredicateT>
 void erase_if(AssociativeContainer& ctn, const PredicateT& pt)
 {
   for(auto iter = ctn.begin(); iter != ctn.end(); )
@@ -70,7 +96,7 @@ void erase_if(AssociativeContainer& ctn, const PredicateT& pt)
 }
 
 //--------------------------------------------------------------------
-template <typename M>
+  template <typename M>
 auto get_keys(const M& m)
 {
   std::vector<typename M::key_type> keys;
@@ -82,7 +108,7 @@ auto get_keys(const M& m)
 }
 
 //--------------------------------------------------------------------
-template <typename M>
+  template <typename M>
 auto get_values(const M& m)
 {
   std::vector<typename M::mapped_type> values;
@@ -94,28 +120,109 @@ auto get_values(const M& m)
 }
 
 //--------------------------------------------------------------------
-template <typename Container, typename ValueType>
+  template <typename Container, typename ValueType>
 void erase_remove(Container& ctn, const ValueType& v)
 {
   ctn.erase(std::remove(begin(ctn), end(ctn), v), end(ctn));
 }
 
 //--------------------------------------------------------------------
-template <typename Container, typename UnaryPredicate>
+  template <typename Container, typename UnaryPredicate>
 void erase_remove_if(Container& ctn, UnaryPredicate p)
 {
   ctn.erase(std::remove_if(begin(ctn), end(ctn), p), end(ctn));
 }
 
 //--------------------------------------------------------------------
-template <typename Container>
+  template <typename Container>
 void erase_unique(Container& ctn)
 {
   ctn.erase(std::unique(begin(ctn), end(ctn)), end(ctn));
 }
 
 //--------------------------------------------------------------------
-template<typename BidirIterator, typename Predicate>
+  template <typename Container, typename UnaryPredicate>
+void erase_partition_delete(Container& ctn, UnaryPredicate p)
+{
+  auto iter = std::partition(begin(ctn), end(ctn), std::not1(p));
+  std::for_each(iter, end(ctn), std::default_delete<typename Container::value_type>());
+  ctn.erase(iter, end(ctn));
+}
+
+//--------------------------------------------------------------------
+  template<typename AssociativeContainer, typename DuplicatePolicy>
+void unique_associative(AssociativeContainer& container, DuplicatePolicy areDuplicates)
+{
+  if (container.empty())
+    return;
+
+  auto it = begin(container);
+  auto previousIt = it;
+  ++it;
+  while (it != end(container))
+  {
+    if (areDuplicates(*previousIt, *it))
+    {
+      it = container.erase(it);
+    }
+    else
+    {
+      previousIt = it;
+      ++it;
+    }
+  }
+}
+
+//--------------------------------------------------------------------
+  template<typename Key, typename Value, typename Comparator>
+void unique(std::multimap<Key, Value, Comparator>& container)
+{
+  auto value_comp = container.value_comp();
+  return unique_associative(container,
+      [&value_comp](std::pair<const Key, Value> const& element1, std::pair<const Key, Value> const& element2)
+      {
+        return !value_comp(element1, element2) && value_comp()(element2, element1);
+      });
+}
+
+//--------------------------------------------------------------------
+  template<typename Key, typename Comparator>
+void unique(std::multiset<Key, Comparator>& container)
+{
+  auto value_comp = container.value_comp();
+  return unique_associative(container,
+      [&value_comp](Key const& element1, Key const& element2)
+      {
+        return !value_comp()(element1, element2) && !value_comp()(element2, element1);
+      });
+}
+
+//--------------------------------------------------------------------
+  template<typename Key, typename Value, typename Comparator>
+void unique(std::unordered_multimap<Key, Value, Comparator>& container)
+{
+  auto key_eq = container.key_eq();
+  return unique_associative(container, 
+      [&key_eq](std::pair<const Key, Value> const& element1, std::pair<const Key, Value> const& element2)
+      {
+        return key_eq(element1.first, element2.first);
+      });
+}
+
+//--------------------------------------------------------------------
+  template<typename Key, typename Comparator>
+void unique(std::unordered_multiset<Key, Comparator>& container)
+{
+  auto key_eq = container.key_eq();
+  return unique_associative(container,
+      [&key_eq](Key const& element1, Key const& element2)
+      {
+        return key_eq(element1, element2);
+      });
+}
+
+//--------------------------------------------------------------------
+  template<typename BidirIterator, typename Predicate>
 std::pair<BidirIterator, BidirIterator> gather(BidirIterator first, BidirIterator last,
     BidirIterator position, Predicate p)
 {

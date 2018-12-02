@@ -148,6 +148,8 @@ vec3 rgb2hsb(const vec3& c);
 
 vec3 clamp_length(const vec3& v, GLfloat min_lenth,  GLfloat max_length);
 
+vec2 rotate(GLfloat angle, const vec2& v);
+
 //  Function from Iñigo Quiles
 //  https://www.shadertoy.com/view/MsS3Wc
 vec3 hsb2rgb(const vec3& c);

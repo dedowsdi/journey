@@ -43,6 +43,8 @@ public:
   GLfloat period();
   
   vec2 get_at_angle(GLfloat angle);
+  vec2 tangent_at_angle(GLfloat angle);
+  vec2 normal_at_angle(GLfloat angle);
 
   LISSA_TYPE type() const { return m_type; }
   void type(LISSA_TYPE v){ m_type = v; }

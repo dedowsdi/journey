@@ -39,7 +39,10 @@ public:
 
   GLfloat end() const { return m_end; }
   void end(GLfloat v){ m_end = v; }
-  };
+
+  static vec2 get_rose(GLfloat radius, GLfloat angle, GLuint n, GLuint d, GLfloat offset);
+
+};
 
 }
 

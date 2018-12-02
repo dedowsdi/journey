@@ -164,4 +164,12 @@ void geometry_base::bind_vao() {
   }
   glBindVertexArray(m_vao);
 }
+
+//--------------------------------------------------------------------
+void geometry_base::clear()
+{
+  m_primitive_sets.clear();
+  m_attributes.clear();
+  m_elements.reset();
+}
 }

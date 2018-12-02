@@ -1,0 +1,2 @@
+1. in unordered set or unordered map the elements with the same keys are
+guaranteed to be consecutive in the iteration order.

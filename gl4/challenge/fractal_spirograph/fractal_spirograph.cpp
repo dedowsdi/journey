@@ -1,18 +1,17 @@
+#include <sstream>
+#include <memory>
+
 #include "app.h"
 #include "bitmaptext.h"
-#include <sstream>
 #include "circle.h"
 #include "common_program.h"
-#include <memory>
 #include "debugger.h"
 #include "quad.h"
-
-#define WIDTH 800
-#define HEIGHT 800
+#include "rose.h"
+#include "lissajous.h"
+#include "mother_graph.h"
 
 namespace zxd {
-
-circle circle_geometry;
 
 lightless_program prg;
 
@@ -20,85 +19,80 @@ GLuint fbo;
 GLuint fbo_tex;
 GLuint tex;
 
-key_control_item* kci_circles;
-key_control_item* kci_k;
+GLfloat angular_scale = -2;
+GLfloat radius_scale = 0.33;
+GLfloat origin_scale = 1;
+
+bool display_pen = true;
+bool display_help = true;
+key_control_item* kci_circle_index;
+key_control_item* kci_angular_scale;
+key_control_item* kci_radius_scale;
+key_control_item* kci_origin_scale;
 key_control_item* kci_resolution;
-key_control_item* kci_type;
+key_control_item* kci_rose_n;
+key_control_item* kci_rose_d;
+key_control_item* kci_rose_offset;
+key_control_item* kci_lissa_type;
+key_control_item* kci_xscale;
+key_control_item* kci_yscale;
+key_control_item* kci_pen_width;
+
+int circle_index = 1;
+int circle_type;
+
+vec4 current_circle_color = vec4(1, 0, 0, 1);
+vec4 circle_color = vec4(1);
+GLfloat pen_width = 2;
 
 // translation only, no rotation
-class circle_graph
-{
-protected:
-  GLfloat m_angularSpeed = 0;
-  GLfloat m_angle = fpi2; // current orbit angle around parent
-  GLfloat m_radius;
-  vec2 m_pos = vec2(0); // current position
-  vec2 m_last_pos = vec2(0);
-
-  std::shared_ptr<circle_graph> m_parent;
-  std::shared_ptr<circle_graph> m_child;
-
-public:
-
-  GLfloat angularSpeed() const { return m_angularSpeed; }
-  void angularSpeed(GLfloat v){ m_angularSpeed = v; }
-
-  GLfloat radius() const { return m_radius; }
-  void radius(GLfloat v){ m_radius = v;}
-
-  const vec2& pos() const { return m_pos; }
-  void pos(const vec2& v){ m_pos = v; }
-
-  const vec2& last_pos() const { return m_last_pos; }
-  void last_pos(const vec2& v){ m_last_pos = v; }
-
-  void update()
-  {
-    if(m_parent)
-    {
-      m_last_pos = m_pos;
-      m_angle += m_angularSpeed;
-      GLfloat r = m_radius * (kci_type->value == 0 ? 1 : -1) + m_parent->radius() ;
-      pos(m_parent->pos() +  vec2(r * cos(m_angle), r * sin(m_angle)));
-    }
-  
-    if(m_child)
-      m_child->update();
-  }
-  
-  circle_graph* get_pen()
-  {
-    if(!m_child)
-      return this;
-
-    return m_child->get_pen();
-  }
-
-  //const mat4& scale_mat() const { return m_scale_mat; }
-  //void scale_mat(const mat4& v){ m_scale_mat = v; }
-  vec3 scale() {return vec3(m_radius); }
-
-  std::shared_ptr<circle_graph> parent() const { return m_parent; }
-  void parent(std::shared_ptr<circle_graph> v){ m_parent = v; }
-
-  std::shared_ptr<circle_graph> child() const { return m_child; }
-  void child(std::shared_ptr<circle_graph> v){ m_child = v; }
-
-};
 
 class fractal_spirograph_app : public app {
 protected:
   bitmap_text m_text;
-  std::shared_ptr<circle_graph> m_graph;
+  std::shared_ptr<mother_graph> m_graph;
+  mother_graph* m_current_graph;
 
 public:
   virtual void init_info() {
     app::init_info();
     m_info.title = "fractal_spirograph_app";
-    m_info.wnd_width = WIDTH;
-    m_info.wnd_height = HEIGHT;
-    m_info.samples = 8;
+    m_info.wnd_width = 720;
+    m_info.wnd_height = 720;
+    m_info.wm.x = 100;
+    m_info.wm.y = 100;
+    //m_info.fullscreen = true;
+    m_info.samples = 16;
   }
+
+  virtual void resize_buffer()
+  {
+    if(!glIsTexture(fbo_tex))
+      glGenTextures(1, &fbo_tex);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, fbo_tex);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples, GL_RGB,
+        m_info.wnd_width, m_info.wnd_height, GL_TRUE);
+
+    if(!glIsTexture(tex))
+      glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_info.wnd_width, m_info.wnd_height,
+        0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+    if(!glIsFramebuffer(fbo))
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(
+      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, fbo_tex, 0);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      printf("incomplete frame buffer\n");
+  }
+
   virtual void create_scene() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_LINE_SMOOTH);
@@ -107,62 +101,118 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
 
-    circle_geometry.slice(64);
-    circle_geometry.type(circle::LINE);
-    circle_geometry.build_mesh();
-
-    glGenTextures(1, &fbo_tex);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, fbo_tex);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples, GL_RGB, WIDTH, HEIGHT, GL_TRUE);
-
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, fbo_tex, 0);
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      printf("incomplete frame buffer\n");
-
-    auto callback = std::bind(std::mem_fn(&fractal_spirograph_app::reset_graph),
+    auto callback = std::bind(std::mem_fn(&fractal_spirograph_app::reset_current_graph),
         this, std::placeholders::_1);
-    kci_circles = m_control.add_control(GLFW_KEY_Q, 10, 2, 1000, 1, callback);
-    kci_k = m_control.add_control(GLFW_KEY_W, -2, -1000, 1000, 1, callback);
-    kci_resolution = m_control.add_control(GLFW_KEY_E, 10, 1, 10000, 1, callback);
-    kci_type = m_control.add_control(GLFW_KEY_R, 0, 0, 1, 1, callback);
+    auto index_callback = std::bind(std::mem_fn(&fractal_spirograph_app::rotate_index),
+        this, std::placeholders::_1);
 
-    reset_graph(0);
+    kci_circle_index = m_control.add_control(GLFW_KEY_Q, circle_index, 0, 1000, 1, index_callback);
+    kci_radius_scale = m_control.add_control(GLFW_KEY_W, radius_scale, 0.01, 100, 0.1, callback);
+    kci_origin_scale = m_control.add_control(GLFW_KEY_E, origin_scale, -100, 100, 1, callback);
+    kci_angular_scale = m_control.add_control(GLFW_KEY_R, angular_scale, -1000, 1000, 1, callback);
+    kci_resolution = m_control.add_control(GLFW_KEY_U, 10, 1, 10000, 1,
+        [this](auto* kci){this->restart();});
+    kci_rose_n = m_control.add_control(GLFW_KEY_J, 1, 1, 1000, 1, callback);
+    kci_rose_d = m_control.add_control(GLFW_KEY_K, 1, 1, 1000, 1, callback);
+    kci_rose_offset = m_control.add_control(GLFW_KEY_L, 0, -1000, 1000, 0.1, callback);
+    kci_lissa_type = m_control.add_control(GLFW_KEY_H, 0, 0, 1, 1, callback);
+    kci_xscale = m_control.add_control(GLFW_KEY_N, 1, 1, 100, 1, callback);
+    kci_yscale = m_control.add_control(GLFW_KEY_M, 1, 1, 100, 1, callback);
+
+    resize_buffer();
+    reset_graph();
   }
 
-  void reset_graph(const key_control_item* kci)
+  void rotate_index(const key_control_item* kci = 0)
+  {
+    int size = m_graph->size();
+    select_graph((static_cast<GLint>(kci_circle_index->value)) % size);
+  }
+
+  void select_graph(GLuint index)
+  {
+    circle_index = index;
+    update_current_graph_value();
+  }
+
+  void update_current_graph_value()
+  {
+    m_current_graph = m_graph->get_child_at(circle_index);
+    kci_radius_scale->value = m_current_graph->radius_scale();
+    kci_origin_scale->value = m_current_graph->origin_scale();
+    kci_angular_scale->value = m_current_graph->angular_scale();
+    kci_rose_n->value = m_current_graph->rose_n();
+    kci_rose_d->value = m_current_graph->rose_d();
+    kci_rose_offset->value = m_current_graph->rose_offset();
+    kci_lissa_type->value = m_current_graph->type();
+    kci_xscale->value = m_current_graph->xscale();
+    kci_yscale->value = m_current_graph->yscale();
+  }
+
+  void remove_graph()
+  {
+    if(m_graph->size() > 2)
+      m_graph->remove_pen();
+
+    select_graph(m_graph->size() - 1);
+    restart();
+  }
+
+  void add_graph()
+  {
+    auto pen = m_graph->get_pen();
+    pen->add_child();
+
+    select_graph(m_graph->size() - 1);
+
+    restart();
+  }
+
+  void restart(const key_control_item* kci = 0)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glClear(GL_COLOR_BUFFER_BIT);
+    m_graph->reset();
 
-    m_graph = std::make_shared<circle_graph>();
-    m_graph->radius(180);
-    m_graph->pos(vec2(WIDTH*0.5, HEIGHT*0.5));
+    auto hh = m_graph->max_height() * 1.0f;
+    prg.p_mat = zxd::rect_ortho(hh, hh, wnd_aspect());
+  }
 
-    auto graph = m_graph;
-    for (int i = 1; i < static_cast<int>(kci_circles->value); ++i) {
-      auto child = std::make_shared<circle_graph>();
-      child->radius(graph->radius() / 3.0);
-      GLfloat r = child->radius() * (kci_type->value == 0 ? 1 : -1) + graph->radius() ;
-      child->pos(graph->pos() +  vec2(0, r));
-      child->last_pos(child->pos());
-      graph->child(child);
-      child->parent(graph);
-      child->angularSpeed(glm::radians(glm::pow(kci_k->value, i)) / kci_resolution->value);
-      graph = child;
-    }
+  void reset_graph()
+  {
+    m_graph = std::make_shared<mother_graph>();
+    m_graph->angular_scale(-2);
+    m_graph->origin_scale(1);
+    m_graph->radius_scale(0.33);
+    m_graph->angular_speed(0.1);
+    m_graph->radius(100);
+    m_graph->rose_n(3);
+    m_graph->rose_d(1);
+    m_graph->rose_offset(0);
+    m_graph->type(lissajous::LT_ROSE);
+    m_graph->xscale(1);
+    m_graph->yscale(1);
+    m_graph->add_child();
+
+    select_graph(1);
+
+    restart();
+  }
+
+  void reset_current_graph(const key_control_item* kci)
+  {
+    m_current_graph->angular_scale(kci_angular_scale->value);
+    m_current_graph->radius_scale(kci_radius_scale->value);
+    m_current_graph->origin_scale(kci_origin_scale->value);
+    m_current_graph->type(static_cast<lissajous::LISSA_TYPE>(kci_lissa_type->value));
+    m_current_graph->rose_n(kci_rose_n->value);
+    m_current_graph->rose_d(kci_rose_d->value);
+    m_current_graph->rose_offset(kci_rose_offset->value);
+    m_current_graph->xscale(kci_xscale->value);
+    m_current_graph->yscale(kci_yscale->value);
+
+    restart();
   }
 
   virtual void update() {
@@ -170,44 +220,72 @@ public:
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     auto pen = m_graph->get_pen();
 
+    glEnable(GL_BLEND);
+    glBlendColor(0, 0, 0, 0.5);
+    glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     for (int i = 0; i < kci_resolution->value; ++i) {
-      m_graph->update();
-      debugger::draw_line(pen->last_pos(), pen->pos(), prg.vp_mat, 1, vec4(1,0,1,1));
+      m_graph->update(kci_resolution->value);
+      debugger::draw_line(pen->last_pos(), pen->pos(), prg.p_mat, pen_width, vec4(1,0,1,1));
     }
+    glDisable(GL_BLEND);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glBlitFramebuffer(0, 0, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBlitFramebuffer(0, 0, m_info.wnd_width, m_info.wnd_height, 0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
   }
 
   virtual void display() {
 
     //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    glLineWidth(1);
     // draw circle
     prg.use();
-    glUniform4f(prg.ul_color, 1,1,1,1);
-    std::shared_ptr<circle_graph> graph = m_graph;
-    while(graph)
+    std::shared_ptr<mother_graph> graph = m_graph;
+    if(display_pen)
     {
-      //std::cout << graph->pos() << std::endl;
-      mat4 mvp_mat = glm::scale(glm::translate(prg.vp_mat, vec3(graph->pos(), 0)), graph->scale());
-      glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
-      circle_geometry.draw();
-      graph = graph->child();
+      int i = 0;
+      while(graph)
+      {
+        //std::cout << graph->pos() << std::endl;
+        mat4 mvp_mat = glm::rotate(glm::translate(prg.p_mat, vec3(graph->pos(), 0)),
+            graph->angle() / graph->radius_scale(), pza);
+        glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
+        const vec4& color = i++ == circle_index ? current_circle_color : circle_color;
+        glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
+        graph->debug_draw();
+        graph = graph->child();
+      }
     }
+
+    if(!display_help)
+      return;
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "qQ : circles : " << kci_circles->value << std::endl;
-    ss << "wW : k : " << kci_k->value << std::endl;
-    ss << "eE : resolutions : " << kci_resolution->value << std::endl;
-    ss << "rR : type : " << kci_type->value << std::endl;
+    ss << "num circles :  " << m_graph->size() << std::endl;
+    ss << "qQ : circle index : " << circle_index << std::endl;
+    ss << "wW : radius scale : " << m_current_graph->radius_scale() << std::endl;
+    ss << "eE : origin_scale : " << m_current_graph->origin_scale() << std::endl;
+    ss << "rR : angular_scale : " << m_current_graph->angular_scale() << std::endl;
+    ss << "uU : resolutions : " << kci_resolution->value << std::endl;
+    ss << "iI : add remove circle : " << std::endl;
+    ss << "jJ : rose_n : " <<kci_rose_n->value << std::endl;
+    ss << "kK : rose_d : " <<kci_rose_d->value << std::endl;
+    ss << "lL : rose_offset : " <<kci_rose_offset->value << std::endl;
+    ss << "hH: lissa type : " <<kci_lissa_type->value << std::endl;
+    ss << "nN : xscale : " <<kci_xscale->value << std::endl;
+    ss << "mM : yscale : " <<kci_yscale->value << std::endl;
+
+    ss << "p : reset : " << std::endl;
+    ss << "z : toggle help : " << std::endl;
+    ss << "x : restart : " << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
+    resize_buffer();
     m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   }
 
@@ -218,6 +296,29 @@ public:
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
+
+        case GLFW_KEY_I:
+          if(mods & GLFW_MOD_SHIFT)
+            remove_graph();
+          else
+            add_graph();
+          break;
+
+        case GLFW_KEY_Z:
+          display_pen ^= 1;
+          display_help ^= 1;
+          break;
+
+        case GLFW_KEY_X:
+          restart();
+          break;
+
+        case GLFW_KEY_P:
+          reset_graph();
+          break;
+
+          break;
+
         default:
           break;
       }

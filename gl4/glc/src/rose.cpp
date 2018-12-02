@@ -41,4 +41,22 @@ void rose::build_vertex()
   add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, vertices->size()));
 }
 
+//--------------------------------------------------------------------
+vec2 rose::get_rose(GLfloat radius, GLfloat angle, GLuint n_, GLuint d_, GLfloat offset)
+{
+  GLuint g = zxd::gcd(n_, d_);
+  GLuint n = n_ / g;
+  GLuint d = d_ / g;
+  GLfloat k = static_cast<GLfloat>(n) / d;
+
+  GLfloat scale = offset == 0 ? 1 : 1.0 / (1 + abs(offset));
+
+  GLfloat ktheta = k*angle;
+  GLfloat r = (cos(ktheta) + offset) * radius * scale;
+  GLfloat x = r * cos(angle);
+  GLfloat y = r * sin(angle);
+
+  return vec2(x, y);
+}
+
 }

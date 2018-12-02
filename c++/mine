@@ -1,0 +1,16 @@
+1. std::remove leveas unspecified data in the end, don't do anything with
+   them, otherwise you should use std::partition.
+
+2. std::min or std::max take const T& and return const T&, which means if you
+   pass rvalue as arg, it's life time is bound to the argument, not the return
+   one, it will be expired after min or max finished it's life time.
+
+3. most algorithm take functor by value, don't use state in functor.
+
+4. std::set_difference expect its input to be sorted,  it is possible to use it
+   (or any algorithm on sorted elements) based on a comparator (let’s call it C)
+   different from the comparator used for sort, provided that the elements are also
+   sorted by this comparator C. (C is less stricter than sort comparator).
+
+5. the relative order of initialization of non-local static objects defined in
+   different translation units is undefined
