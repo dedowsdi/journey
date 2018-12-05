@@ -1,0 +1,4 @@
+gcc                         msvc
+
+__PRETTY_FUNCTION__         __FUNCSIG__ (not so pretty as gcc version)
++captureless lambda         error

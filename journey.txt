@@ -2248,3 +2248,53 @@ cpp:
 
   std::min and std::max always return the 1st one if a and b are equivalence.
   use std::minmax instead if that's not what you want
+
+--------------
+2018.12.03
+
+cpp:
+  if you want, you can put do something like
+    int type<T>::static_variable = 5;
+  in template header file, it won't violate ODL. It's kind of "inline"
+
+  captureless lambda types are always implicitly convertible to functoin
+  pointer. If you absolutely need the function-pointer convertion to happen, add
+  a unary + before []. (there is no unary+ operator for lambda type, but there
+  is unary+ operator for ponter type, this trick deosn't work on msvc, because
+  there have 4 different calling convensions)
+
+  to distinguish value category:
+    xvalue is expiring value, it must involves &&
+    xvalue + prvalue = rvalue
+    xvalue + lvalue = glvalue
+
+---------------
+2018.12.04
+
+cpp:
+  during vector memory reallocation, the contents are moved if their move
+  constructor is noexcept.
+
+  after c++11, it always takes constant time to compare size() and 0 for all stl
+  container, why?
+
+  reserve does notheing if new capacity is not greater then current
+  you can use shink_to_fit (might reallocate) or
+  vector(vec.begin(), vec.end()).swap(vec) to reduce capacity.
+
+  there is no guarantee that capacity is actually brought down exactly to size.
+  Capacity is really up to your STL implementation. But with these techniques,
+  it will be as small as it can get.
+
+  unamed object is created and destroyed immediately.
+
+  if you want you dan define inline multiple times, as long as they are all the
+  same.
+
+  dont return const pointer type, ultimate function call will be an rvalue, and
+  rvalues of non-class type cannot be const, meaning that const will be ignored
+  anyway
+
+  names in template base classes are ignored in C++(because you might
+  specilize template base to exclude that name), you must use this->to include
+  them back

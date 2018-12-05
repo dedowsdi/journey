@@ -28,6 +28,11 @@ set (PROJECTS
     init
     lifetime
     forward
+    reference
+    transparent
+    variable_template
+    template_type_deduction
+    dependent_name
     )
 
 foreach(PROJECT ${PROJECTS})

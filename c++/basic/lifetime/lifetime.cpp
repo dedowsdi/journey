@@ -35,8 +35,28 @@ int main(int argc, char *argv[])
   // std::min finished, so following statement will cause undefined behavor, be
   // very very careful with.
   const A& a = std::min(getA(), getA());
+  std::cout << "0" << std::endl;
+  {
+    A b;
+    {
+      // if you bind const lref to rref, no temporary object exists, becareful
+      const A& a = std::move(b);
+      std::cout << "1" << std::endl;
+      // life time of a ends here
+    }
+    std::cout << "2" << std::endl;
+  }
+
+  std::cout << "------------------" << std::endl;
+
+  {
+    getA(); // destroyed immediately
+    A&& c = getA(); // life time of return value will be bound to c
+    std::cout << "3" << std::endl;
+  }
+
   // do what every with a
-  std::cout << "2" << std::endl;
+  std::cout << "9" << std::endl;
   
   return 0;
 }

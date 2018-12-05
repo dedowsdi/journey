@@ -3,7 +3,8 @@
 
 2. std::min or std::max take const T& and return const T&, which means if you
    pass rvalue as arg, it's life time is bound to the argument, not the return
-   one, it will be expired after min or max finished it's life time.
+   one, it will be expired after min or max finished it's life time. But if you
+   you get the return by value, you get a copy or a move, you will be fine.
 
 3. most algorithm take functor by value, don't use state in functor.
 
@@ -14,3 +15,6 @@
 
 5. the relative order of initialization of non-local static objects defined in
    different translation units is undefined
+
+6. stl doesn't work with overloaded function, there is a solution:
+    https://www.fluentcpp.com/2017/08/01/overloaded-functions-stl/
