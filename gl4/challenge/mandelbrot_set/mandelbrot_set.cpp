@@ -42,16 +42,14 @@ bool zoom_in = false;
 bool zoom_out = false;
 double zoom_speed = 0.93;
 
-GLuint num_ctrl_colors = 8;
+GLuint num_ctrl_colors = 6;
 vec3_vector ctrl_colors = {
-vec3( 0.082822,   0.886431,   0.992302 ),
-vec3( 0.852562,   0.655708,   0.088364 ),
-vec3( 0.181833,   0.015290,   0.139939 ),
-vec3( 0.258060,   0.164505,   0.248577 ),
-vec3( 0.384889,   0.225105,   0.306453 ),
-vec3( 0.470631,   0.284218,   0.407847 ),
-vec3( 0.557881,   0.359090,   0.519534 ),
-vec3( 0.978261,   0.327490,   0.499281 ),
+  vec3(0  , 7  , 100) / 255.0f,
+  vec3(32 , 107, 203) / 255.0f,
+  vec3(237, 255, 255) / 255.0f,
+  vec3(255, 170, 0)   / 255.0f,
+  vec3(0  , 2  , 0)   / 255.0f,
+  vec3(0  , 7  , 100) / 255.0f
 };
 
 key_control_item* kci_iterations;
@@ -87,7 +85,7 @@ protected:
     sv.push_back("#define MAX_ITERATIONS " + string_util::to(iterations) + "\n");
     if(direct_draw)
     {
-      sv.push_back("#define DIRECT_DRAW");
+      sv.push_back("#define DIRECT_DRAW\n");
       sv.push_back("#define NUM_COLORS " + string_util::to(num_colors) + "\n");
     }
     attach(GL_FRAGMENT_SHADER, sv, "shader/mandelbrot_iteration.fs.glsl");
@@ -155,7 +153,7 @@ public:
     m_info.title = "mandelbrot_set_app";
     m_info.wnd_width = 512;
     m_info.wnd_height = 512;
-    m_info.samples = 4;
+    m_info.samples = 16;
     m_info.decorated = false;
     m_info.fullscreen = false;
     m_info.double_buffer = false;
@@ -290,13 +288,20 @@ public:
 
     // hues are not evenly distributed, the 1st 4 hues might occupies 80% , the
     // last one might occupies 10%
-    float_vector ctrl_positions;
+    //float_vector ctrl_positions = {0, 0.16, 0.42, 0.6425, 0.8575, 1};
+    float_vector ctrl_positions = {0, 0.16, 0.42, 0.6425, 0.8575};
+    GLfloat weight_step = (1 - ctrl_positions[4]) / (num_ctrl_colors - 5);
+    for (int i = 5; i < num_ctrl_colors; ++i) {
+      ctrl_positions.push_back(ctrl_positions.back() + weight_step );
+    }
+    //float_vector ctrl_positions = {0, 0.16, 0.42, 0.83, 0.95, 1};
+    //float_vector ctrl_positions;
     //ctrl_positions.push_back(0);
     //ctrl_positions.push_back(0.4);
     //ctrl_positions.push_back(0.8);
-    for (int i = 0; i < num_colors; ++i) {
-      ctrl_positions.push_back( static_cast<GLfloat>(i) / num_ctrl_colors );
-    }
+    //for (int i = 0; i < num_colors; ++i) {
+      //ctrl_positions.push_back( static_cast<GLfloat>(i) / num_ctrl_colors );
+    //}
     //ctrl_positions.push_back(1.0);
 
     colors.push_back(vec4(ctrl_colors.front(), 1));
@@ -308,7 +313,8 @@ public:
       GLfloat p1 = ctrl_positions[ci1];
       GLfloat p0 = ctrl_positions[ci0];
       vec3 color = glm::mix(ctrl_colors[ci0], ctrl_colors[ci1], 
-          glm::smoothstep(0.0f, 1.0f, (idx - p0)/(p1 - p0)));
+          //glm::smoothstep(0.0f, 1.0f, (idx - p0)/(p1 - p0)));
+          zxd::cubic_in_out((idx - p0)/(p1 - p0)));
       colors.push_back(vec4(color, 1));
     }
 

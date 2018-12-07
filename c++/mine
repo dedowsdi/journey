@@ -18,3 +18,6 @@
 
 6. stl doesn't work with overloaded function, there is a solution:
     https://www.fluentcpp.com/2017/08/01/overloaded-functions-stl/
+
+7. If an exception is thrown while another exception is active, the C++ behavior
+   is to call the terminate() method

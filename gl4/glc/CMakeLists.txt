@@ -46,6 +46,7 @@ set(GLC_SRCS
     src/movable.cpp
     src/lsystem.cpp
     src/filter.cpp
+    src/cycle_path.cpp
     )
 
 add_library(glc 

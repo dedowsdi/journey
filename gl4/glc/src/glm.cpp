@@ -362,6 +362,16 @@ GLuint ilcm(GLuint a, GLuint b)
 }
 
 //--------------------------------------------------------------------
+GLfloat cubic_in_out(GLfloat x)
+{
+  if(x <= 0.5)
+    return 4 * x * x * x;
+
+  x = 2 * x - 2;
+  return 0.5 * x * x * x + 1;
+}
+
+//--------------------------------------------------------------------
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
   const glm::mat4& w_mat_i, GLfloat radius /* = 0.8*/) {
   glm::vec4 n0 = w_mat_i * glm::vec4(p0, 0, 1);

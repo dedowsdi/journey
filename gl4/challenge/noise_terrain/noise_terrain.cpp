@@ -22,9 +22,6 @@ vec3_vector vertices;
 class program_name : public program
 {
 
-public:
-  GLint al_vertex;
-
 protected:
 
   void attach_shaders()
@@ -40,7 +37,7 @@ protected:
 
   void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
+    bind_attrib_location(0, "vertex");
   }
 
 } prg;
@@ -99,21 +96,33 @@ public:
   void update_buffer(vec2 noise_offset)
   {
     vec2 noise_pos = noise_offset;
-    GLint row_size = (NUM_COLS + 1) * 2;
 
-    for (int i = 0; i < NUM_ROWS; ++i) {
+    float_vector heights;
+    heights.reserve((NUM_ROWS+1) * (NUM_COLS+1));
 
-      noise_pos.y += NOISE_STEP ;
+    for (int y = 0; y <= NUM_ROWS; ++y) 
+    {
+      noise_pos.y += NOISE_STEP;
       noise_pos.x = noise_offset.x;
-      GLint row_start = row_size * i;
-
-      for (int j = 0; j <= NUM_COLS; ++j) {
+      for (int x = 0; x <= NUM_COLS; ++x) 
+      {
         noise_pos.x += NOISE_STEP;
-
-        vertices.at(row_start + j * 2).z = NOISE_HEIGHT*glm::perlin(noise_pos + vec2(0, NOISE_STEP));
-        vertices.at(row_start + j * 2 + 1).z = NOISE_HEIGHT*glm::perlin(noise_pos);
+        heights.push_back(NOISE_HEIGHT * glm::perlin(noise_pos));
       }
     }
+
+    GLint row_size = (NUM_COLS + 1);
+
+    for (int y = 0; y < NUM_ROWS; ++y) 
+    {
+      GLint row_start = row_size * 2 * y;
+      for (int x = 0; x <= NUM_COLS; ++x) 
+      {
+        vertices.at(row_start + x*2).z = heights[row_size * y + row_size + x];
+        vertices.at(row_start + x*2 + 1).z = heights[row_size * y + x];
+      }
+    }
+
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -133,8 +142,8 @@ public:
     prg.use();
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer(prg.al_vertex, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.al_vertex);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
     prg.mvp_mat = prg.p_mat * prg.v_mat;
 
@@ -144,7 +153,7 @@ public:
     GLint count = (NUM_COLS + 1) * 2;
     for (int i = 0; i < NUM_ROWS; ++i) {
       glDrawArrays(GL_TRIANGLE_STRIP, next, count);
-      next +=  count;
+      next += count;
     }
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

@@ -2298,3 +2298,18 @@ cpp:
   names in template base classes are ignored in C++(because you might
   specilize template base to exclude that name), you must use this->to include
   them back
+
+---------------
+2018.12.06
+cpp:
+   assignment is right-associative
+
+   copy constructor will call parent copy constructor if you don't provider one,
+   copy assignment do nothing for parent part.
+
+linux:
+  stop x server:
+    sudo service lightdm stop
+    sudo init 3
+
+

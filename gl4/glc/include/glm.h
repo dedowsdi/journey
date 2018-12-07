@@ -67,6 +67,9 @@ typedef std::vector<mat2> mat2_vector;
 typedef std::vector<mat3> mat3_vector;
 typedef std::vector<mat4> mat4_vector;
 typedef std::vector<GLint> int_vector;
+typedef std::vector<GLuint> uint_vector;
+typedef std::vector<GLshort> short_vector;
+typedef std::vector<GLushort> ushort_vector;
 typedef std::vector<GLfloat> float_vector;
 typedef std::vector<vec2> vec2_vector;
 typedef std::vector<vec3> vec3_vector;
@@ -197,6 +200,10 @@ GLuint gcd(GLuint a, GLuint b);
 GLuint lcm(GLuint a, GLuint b);
 // least common multiple of 1/a and 1/b
 GLuint ilcm(GLuint a, GLuint b);
+
+// assume x [0, 1]
+GLfloat cubic_in_out(GLfloat x);
+
 
 // p0 and p1 is in window space
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,

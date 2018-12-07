@@ -61,6 +61,7 @@ set (PROJECTS
     evolutionary_steer
     lightning
     chaos
+    secret_garden
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

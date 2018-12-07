@@ -7,6 +7,7 @@ uniform float db = 0.5;
 uniform float feed = 0.055;
 uniform float kill = 0.062;
 uniform float delta_time = 1;
+uniform float time;
 
 in VS_OUT
 {
@@ -55,6 +56,28 @@ float laplacian_b(vec2 t, vec2 uv_step)
   return b;
 }
 
+float random(vec2 st)
+{
+  return fract(sin(dot(st, vec2(12.9898,78.233))) * 43758.5453123);
+}
+
+float random(float f)
+{
+  return fract(sin(f) * 10000);
+}
+
+// Value noise by Inigo Quilez - iq/2013
+// https://www.shadertoy.com/view/lsf3WH
+float noise(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    vec2 u = f*f*(3.0-2.0*f);
+    return mix( mix( random( i + vec2(0.0,0.0) ),
+                     random( i + vec2(1.0,0.0) ), u.x),
+                mix( random( i + vec2(0.0,1.0) ),
+                     random( i + vec2(1.0,1.0) ), u.x), u.y);
+}
+
 void main(void)
 {
   vec4 color = texture(diffuse_map, fi.texcoord);
@@ -65,6 +88,10 @@ void main(void)
   ivec2 tsize = textureSize(diffuse_map, 0);
   vec2 uv_step = vec2(1.0) / tsize;
 
+  //float nfeed = noise(gl_FragCoord.xy * 1.23 + time * 0.5) * 0.02 + feed;
+  //float nkill = noise(gl_FragCoord.xy * 2.34 + time * 0.3) * 0.01 + kill;
+
+  // r as a, g as b
   frag_color.r =  a + (da * laplacian_a(fi.texcoord, uv_step) - abb + feed * (1-a)) * delta_time;
   frag_color.g =  b + (db * laplacian_b(fi.texcoord, uv_step) + abb - (kill+feed)*b) * delta_time;
 }

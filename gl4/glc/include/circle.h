@@ -11,7 +11,8 @@ public:
   enum CIRCLE_TYPE
   {
     FILL,
-    LINE
+    LINE,
+    PIE_LINE,
   };
 protected:
   GLfloat m_radius = 1;

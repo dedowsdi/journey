@@ -22,7 +22,7 @@ void main(void)
   float hue0 = texelFetch(hue_buffer, int(iterations)).r ;
   float hue1 = texelFetch(hue_buffer, int(ceil(iterations))).r ;
   float hue = mix(hue0, hue1, fract(iterations)) * itotal;
-  hue *= hue;
+  //hue *= hue;
   int c0 = int(floor(hue * (NUM_COLORS - 1)));
   frag_color = colors[c0];
   //frag_color = vec4(hue);

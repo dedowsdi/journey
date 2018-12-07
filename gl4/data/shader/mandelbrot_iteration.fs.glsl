@@ -61,11 +61,10 @@ void main(void)
   float iterations = float(mandelbrot_set(mix(rect.xy, rect.zw, st)));
 
 #ifdef DIRECT_DRAW
-  int c0 = int(floor(iterations*NUM_COLORS/MAX_ITERATIONS )) % NUM_COLORS;
+  int c0 = int(floor(iterations*NUM_COLORS/MAX_ITERATIONS)) % NUM_COLORS;
   int c1 = (c0+1) % NUM_COLORS;
-  frag_color = mix(colors[c0], colors[c1], fract(iterations));
+  frag_color = mix(colors[c0], colors[c1], iterations / MAX_ITERATIONS);
 #else
   frag_color = iterations;
 #endif
-
 }
