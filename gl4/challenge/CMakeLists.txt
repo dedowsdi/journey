@@ -62,6 +62,7 @@ set (PROJECTS
     lightning
     chaos
     secret_garden
+    eyeball
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

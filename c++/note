@@ -1,0 +1,24 @@
+1.  if you define friend function in class, it's implicitly inline.
+
+2.  you never need a class definition to declare a function using that class,
+    not even if the function passes or returns the class type by value
+
+3.  you can only bind base ref to derived if derived public inherits base.
+
+4.  function don't declare parameters that are truly arrays, but they can
+    delcare parameters that are references to arrays.
+
+5.  EBO only works in single inheritance
+
+6.  before seeing whether a function is accessible, C++ first identifies the
+    function that's the best match for the call. It checks accessibility only after
+    finding the best-match function
+
+7.  At most one user-defined conversion (constructor or conversion function) is
+    implicitly applied to a single value.
+
+8.  list is the only standard container that offers transactional semantics for
+    multiple-element insertions.
+    deque is the only standard STL container whose iterators may be invalidated
+    without also invalidating its pointers and references
+    

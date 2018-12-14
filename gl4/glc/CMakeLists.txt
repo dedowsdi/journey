@@ -47,6 +47,7 @@ set(GLC_SRCS
     src/lsystem.cpp
     src/filter.cpp
     src/cycle_path.cpp
+    src/fractal_spiral.cpp
     )
 
 add_library(glc 

@@ -35,17 +35,17 @@ private:
 	bitmap_text m_text;
 
 public:
-	virtual void init_info();
-	virtual void create_scene();
+	void init_info() override;
+	void create_scene() override;
 
-	virtual void update();
+	void update() override;
 
-	virtual void display();
+	void display() override;
 
-	virtual void glfw_resize(GLFWwindow *wnd, int w, int h);
+	void glfw_resize(GLFWwindow *wnd, int w, int h) override;
 
-	virtual void glfw_key(
-		GLFWwindow *wnd, int key, int scancode, int action, int mods);
+	void glfw_key(
+		GLFWwindow *wnd, int key, int scancode, int action, int mods) override;
 };
 
 void $1::init_info() {

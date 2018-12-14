@@ -7,6 +7,7 @@
  */
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Monster
 {
@@ -16,27 +17,35 @@ public:
   Monster(int i_):
     i(i_)
   {
-    std::cout << "Monster(int i_)" << std::endl;
+    std::cout << __PRETTY_FUNCTION__<< std::endl;
   }
 
   Monster(const std::string& s)
   {
-    std::cout << "Monster(const std::string& s)" << std::endl;
+    std::cout << __PRETTY_FUNCTION__<< std::endl;
   }
 
   Monster(const Monster& m)
   {
     i = m.i;
-    std::cout << "Monster(const Monster& m)" << std::endl;
+    std::cout << __PRETTY_FUNCTION__<< std::endl;
   }
 
-  // if you don't list initialization, Monster m1 = {5} will degrad to Monster m1 = 5;
+  // if you don't define list initialization, Monster m1 = {5} will degrad to Monster m1 = 5;
   Monster(const std::initializer_list<int>& il)
   {
     i = *il.begin();
-    std::cout << "Monster(std::initializer_list<int>& il)" << std::endl;
+    std::cout << __PRETTY_FUNCTION__<< std::endl;
   }
 
+};
+
+class Uncopyable
+{
+public:
+  Uncopyable(){}
+  Uncopyable(const Uncopyable& c) = delete;
+  Uncopyable& operator= (Uncopyable c) = delete;
 };
 
 int main(int argc, char *argv[])
@@ -53,7 +62,10 @@ int main(int argc, char *argv[])
   Monster m12 = Monster{m1}; // copy constructor, careful, just ignore the =
   Monster m2 = {5, 2};
   Monster m3 = std::string("abc");
+
+  Uncopyable u0, u1;
+  //Uncopyable u2 = u0;
+  //u1 = u0;
   
   return 0;
 }
-

@@ -35,7 +35,7 @@ GLfloat lissajous::period()
 }
 
 //--------------------------------------------------------------------
-vec2 lissajous::get_at_angle(GLfloat angle)
+vec2 lissajous::get_at_angle(GLfloat angle) const
 {
   GLfloat xangle = m_xscale * angle;
   GLfloat yangle = m_yscale * angle;
@@ -56,7 +56,7 @@ vec2 lissajous::get_at_angle(GLfloat angle)
 }
 
 //--------------------------------------------------------------------
-vec2 lissajous::tangent_at_angle(GLfloat angle)
+vec2 lissajous::tangent_at_angle(GLfloat angle) const
 {
   GLfloat xangle = m_xscale * angle;
   GLfloat yangle = m_yscale * angle;
@@ -75,7 +75,7 @@ vec2 lissajous::tangent_at_angle(GLfloat angle)
 }
 
 //--------------------------------------------------------------------
-vec2 lissajous::normal_at_angle(GLfloat angle)
+vec2 lissajous::normal_at_angle(GLfloat angle) const
 {
   vec2 tangent = tangent_at_angle(angle);
   return vec2(tangent.y, -tangent.x);

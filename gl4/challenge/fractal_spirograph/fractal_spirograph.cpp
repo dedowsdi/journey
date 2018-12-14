@@ -9,7 +9,7 @@
 #include "quad.h"
 #include "rose.h"
 #include "lissajous.h"
-#include "mother_graph.h"
+#include "fractal_spiral.h"
 
 namespace zxd {
 
@@ -50,8 +50,8 @@ GLfloat pen_width = 2;
 class fractal_spirograph_app : public app {
 protected:
   bitmap_text m_text;
-  std::shared_ptr<mother_graph> m_graph;
-  mother_graph* m_current_graph;
+  std::shared_ptr<spiral_seed> m_graph;
+  spiral_seed* m_current_graph;
 
 public:
   virtual void init_info() {
@@ -175,13 +175,13 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
     m_graph->reset();
 
-    auto hh = m_graph->max_height() * 1.0f;
+    auto hh = m_graph->approximate_height(180) * 1.05f;
     prg.p_mat = zxd::rect_ortho(hh, hh, wnd_aspect());
   }
 
   void reset_graph()
   {
-    m_graph = std::make_shared<mother_graph>();
+    m_graph = std::make_shared<spiral_seed>();
     m_graph->angular_scale(-2);
     m_graph->origin_scale(1);
     m_graph->radius_scale(0.33);
@@ -223,10 +223,16 @@ public:
     glEnable(GL_BLEND);
     glBlendColor(0, 0, 0, 0.5);
     glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-    for (int i = 0; i < kci_resolution->value; ++i) {
+
+    GLuint resolution = kci_resolution->value;
+    vec2_vector lines;
+    lines.reserve(resolution + 1);
+    lines.push_back(pen->pos());
+    for (int i = 0; i < resolution; ++i) {
       m_graph->update(kci_resolution->value);
-      debugger::draw_line(pen->last_pos(), pen->pos(), prg.p_mat, pen_width, vec4(1,0,1,1));
+      lines.push_back(pen->pos());
     }
+    debugger::draw_line(GL_LINE_STRIP, lines, prg.p_mat, pen_width, vec4(1,0,1,1));
     glDisable(GL_BLEND);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glBlitFramebuffer(0, 0, m_info.wnd_width, m_info.wnd_height, 0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
@@ -239,7 +245,7 @@ public:
     glLineWidth(1);
     // draw circle
     prg.use();
-    std::shared_ptr<mother_graph> graph = m_graph;
+    std::shared_ptr<spiral_seed> graph = m_graph;
     if(display_pen)
     {
       int i = 0;
@@ -247,11 +253,16 @@ public:
       {
         //std::cout << graph->pos() << std::endl;
         mat4 mvp_mat = glm::rotate(glm::translate(prg.p_mat, vec3(graph->pos(), 0)),
-            graph->angle() / graph->radius_scale(), pza);
+            graph->rotate_angle(), pza);
         glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
         const vec4& color = i++ == circle_index ? current_circle_color : circle_color;
         glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
         graph->debug_draw();
+        if(graph->parent())
+        {
+          debugger::draw_point(graph->parent()->lisa().get_at_angle(graph->angle()),
+              prg.p_mat, 10, vec4(0,1,0,1));
+        }
         graph = graph->child();
       }
     }

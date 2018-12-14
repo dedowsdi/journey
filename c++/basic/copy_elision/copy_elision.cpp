@@ -19,17 +19,17 @@ class A
 public:
   A()
   {
-    std::cout << "A()" << std::endl;
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
   }
 
   A(const A& a)
   {
-    std::cout << "A(const A& a)" << std::endl;
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
   }
 
   A& operator=(const A& a)
   {
-    std::cout << "A& operator=(const A& a)" << std::endl;
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     return *this;
   }
 
@@ -46,13 +46,13 @@ A generate_a()
 // passin l value
 A return_param(A a)
 {
-  std::cout << "return_param(A a)" << std::endl;
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
   return a;
 }
 
 A return_int_param(int i)
 {
-  std::cout << "return_int_param(int i)" << std::endl;
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
   return A();
 }
 
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
   // b will still need to be inited with cctor
   A c = return_param(generate_a());
   std::cout << "---------------------------" << std::endl;
-  // all copy clided
+  // all copy elided
   A d = return_int_param(5);
 
   return 0;

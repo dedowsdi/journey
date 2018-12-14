@@ -4,3 +4,5 @@ ODR one definition rule
 RVO return value optimization
 RAII resource acquisition is initialization
 ADL agrument dependent look up
+EBO empty base optimization (size of stand zero-size free standing class is not 0)
+TMP template meta programming

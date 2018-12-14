@@ -21,3 +21,14 @@
 
 7. If an exception is thrown while another exception is active, the C++ behavior
    is to call the terminate() method
+
+8. std::endl implictly call flush.
+
+9. static_cast<super>(derived), super has not & or *, compiller will create a
+   temporary super object for you, that's not what you want.
+
+10. default parameters are statically bound while virtual stuff are dynamically
+    bound>
+
+11. std::vector<bool>::operator[] return std::vector<bool>::reference, nou
+    bool&, be very careful if you want to use auto on a temporary bool vector.

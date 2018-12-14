@@ -1,24 +1,30 @@
-#include "mother_graph.h"
+#include "fractal_spiral.h"
 
 namespace zxd
 {
 
 //--------------------------------------------------------------------
-GLfloat mother_graph::max_height()
+GLfloat spiral_seed::approximate_height(GLuint times)
 {
-  //return m_child ? radius() + m_child->max_height() : radius() * (1 + m_origin_scale);
-  GLfloat h = radius();
-  auto g = m_child;
-  while(g)
-  {
-    h += g->radius() * (1 + g->origin_scale());
-    g = g->child();
+  GLfloat original_angle = m_child->angle();
+  auto pen = get_pen();
+
+  GLfloat step_angle = f2pi / times;
+  GLfloat l2 = 0;
+  for (int i = 0; i < times; ++i) {
+    reset(step_angle * i);
+    GLfloat l = glm::length2(pen->pos());
+    if(l > l2)
+      l2 = l;
   }
-  return h;
+
+  reset(original_angle);
+
+  return sqrt(l2);
 }
 
 //--------------------------------------------------------------------
-mother_graph* mother_graph::get_graph_at(int level)
+spiral_seed* spiral_seed::get_graph_at(int level)
 {
   if(level == 0)
     return this;
@@ -27,7 +33,7 @@ mother_graph* mother_graph::get_graph_at(int level)
 }
 
 //--------------------------------------------------------------------
-void mother_graph::angular_speed(GLfloat v, bool broad_cast/* = false*/)
+void spiral_seed::angular_speed(GLfloat v, bool broad_cast/* = false*/)
 { 
   m_angular_speed = v;
   if(broad_cast && m_child)
@@ -35,7 +41,7 @@ void mother_graph::angular_speed(GLfloat v, bool broad_cast/* = false*/)
 }
 
 //--------------------------------------------------------------------
-void mother_graph::radius_scale(GLfloat v, bool broad_cast/* = false*/)
+void spiral_seed::radius_scale(GLfloat v, bool broad_cast/* = false*/)
 { 
   m_radius_scale = v;
   if(broad_cast && m_child)
@@ -43,7 +49,7 @@ void mother_graph::radius_scale(GLfloat v, bool broad_cast/* = false*/)
 }
 
 //--------------------------------------------------------------------
-void mother_graph::origin_scale(GLfloat v, bool broad_cast/* = false*/)
+void spiral_seed::origin_scale(GLfloat v, bool broad_cast/* = false*/)
 {
   m_origin_scale = v;
   if(broad_cast && m_child)
@@ -51,26 +57,26 @@ void mother_graph::origin_scale(GLfloat v, bool broad_cast/* = false*/)
 }
 
 //--------------------------------------------------------------------
-void mother_graph::remove_pen()
+void spiral_seed::remove_pen()
 {
   auto pen = get_pen();
   pen->parent()->remove_child();
 }
 
 //--------------------------------------------------------------------
-void mother_graph::remove_child()
+void spiral_seed::remove_child()
 {
   if(m_child)
     m_child.reset();
 }
 
 //--------------------------------------------------------------------
-void mother_graph::add_child()
+void spiral_seed::add_child()
 {
   if(m_child)
     throw std::runtime_error("only 1 graph allowed");
 
-  auto graph = std::make_shared<mother_graph>();
+  auto graph = std::make_shared<spiral_seed>();
   child(graph);
   graph->parent(this);
   graph->angular_scale(m_angular_scale);
@@ -88,7 +94,7 @@ void mother_graph::add_child()
 }
 
 //--------------------------------------------------------------------
-void mother_graph::update(GLint resolution)
+void spiral_seed::update(GLint resolution)
 {
   if(m_parent)
   {
@@ -101,28 +107,32 @@ void mother_graph::update(GLint resolution)
 }
 
 //--------------------------------------------------------------------
-void mother_graph::update_pos()
+void spiral_seed::update_pos()
 {
+  m_rotate_angle = m_parent->rotate_angle() + m_angle / radius_scale();
   m_last_pos = m_pos;
   vec2 touch_point = m_parent->m_lisa.get_at_angle(m_angle);
   vec2 normal = m_parent->m_lisa.normal_at_angle(m_angle);
   GLfloat r = m_origin_scale * radius();
   vec2 origin = touch_point + r * normal;
   // TODO, rotate angle broke in rose, need to get actural arc length of lissa rose
-  GLfloat parent_rotate_angle = m_parent->m_angle / m_parent->radius_scale();
-  origin = zxd::rotate(parent_rotate_angle, origin);
+  origin = zxd::rotate(m_parent->rotate_angle(), origin);
   pos(m_parent->pos() + origin);
 }
 
 //--------------------------------------------------------------------
-void mother_graph::reset()
+void spiral_seed::reset(GLfloat angle)
 {
   if(m_parent)
   {
-    m_angle = fpi2;
+    m_angle = angle;
     update_scale();
     update_pos();
     m_last_pos = pos();
+  }
+  else
+  {
+    m_angle = m_rotate_angle = 0;
   }
 
   m_lisa.clear();
@@ -130,11 +140,11 @@ void mother_graph::reset()
   m_lisa.build_mesh();
 
   if(m_child)
-    m_child->reset();
+    m_child->reset(angle);
 }
 
 //--------------------------------------------------------------------
-void mother_graph::update_scale()
+void spiral_seed::update_scale()
 {
   if(!m_parent)
     return;
@@ -144,7 +154,7 @@ void mother_graph::update_scale()
 }
 
 //--------------------------------------------------------------------
-mother_graph* mother_graph::get_child_at(int depth)
+spiral_seed* spiral_seed::get_child_at(int depth)
 {
   if(depth == 0)
     return this;
@@ -153,4 +163,3 @@ mother_graph* mother_graph::get_child_at(int depth)
 }
 
 }
-

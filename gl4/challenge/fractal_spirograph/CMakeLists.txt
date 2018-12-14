@@ -1,6 +1,5 @@
 set(SRC
     fractal_spirograph.cpp
-    mother_graph.cpp
     )
 
 add_executable(fractal_spirograph ${SRC})

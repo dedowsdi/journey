@@ -80,7 +80,7 @@ void app::init_gl() {
   debug_message_control();
 
   if(m_info.samples == 1)
-    glDisable(GL_MULTISAMPLE);;
+    glDisable(GL_MULTISAMPLE);
   std::cout << "init gl finished" << std::endl;
 }
 
@@ -303,7 +303,10 @@ void app::loop() {
     }
     if(m_pause && m_update_count > 0) --m_update_count;
     display();
-    glfwSwapBuffers(m_wnd);
+    if(m_info.double_buffer)
+      glfwSwapBuffers(m_wnd);
+    else
+      glFinish();
     glfwPollEvents();
     ++m_frame_number;
   }

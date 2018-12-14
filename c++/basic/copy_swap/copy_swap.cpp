@@ -13,7 +13,12 @@ protected:
   Data* mData;
 public:
 
-  friend void swap(Resource& r0, Resource& r1)
+  // custom swap.
+  // another way(suggest by effective c++) to do this is define swap as menber,
+  // then add a nonmenber swap in the same namespace, a specialization swap for this
+  // type in std namespace(in case someone use std::swap for this type), if
+  // this class is a template, use overload instead of specialization.
+  friend void swap(Resource& r0, Resource& r1) noexcept  // most of time, no throw
   {
     std::swap(r0.mData, r1.mData);
   }

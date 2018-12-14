@@ -2,6 +2,7 @@ set (PROJECTS
     tag_dispatch
     enum_hack
     raii
+    nvl
     )
 
 foreach(PROJECT ${PROJECTS})

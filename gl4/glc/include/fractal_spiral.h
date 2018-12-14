@@ -1,36 +1,20 @@
-#ifndef GL4_CHALLENGE_MOTHER_GRAPH_H
-#define GL4_CHALLENGE_MOTHER_GRAPH_H value
+#ifndef GL4_GLC_FRACTAL_SPIRAL_H
+#define GL4_GLC_FRACTAL_SPIRAL_H
 
 #include "gl.h"
 #include "lissajous.h"
 
 namespace zxd
 {
-class mother_graph
+class spiral_seed
 {
-protected:
-
-  GLfloat m_angular_speed;
-  GLfloat m_angle = fpi2; // current orbit angle around parent
-  GLfloat m_radius_scale;
-  GLfloat m_origin_scale;
-  GLfloat m_angular_scale;
-  lissajous m_lisa;
-
-  vec2 m_pos = vec2(0); // current position
-  vec2 m_last_pos = vec2(0);
-
-  mother_graph* m_parent;
-  std::shared_ptr<mother_graph> m_child;
-
 public:
 
   int size() { return m_child ? m_child->size() + 1 : 1; }
 
-  GLfloat max_height() ;
+  GLfloat approximate_height(GLuint times = 360) ;
 
-  mother_graph* get_graph_at(int level) ;
-
+  spiral_seed* get_graph_at(int level) ;
 
   GLfloat angular_speed() const { return m_angular_speed; }
   void angular_speed(GLfloat v, bool broad_cast = false);
@@ -43,6 +27,9 @@ public:
 
   GLfloat angle() const { return m_angle; }
   void angle(GLfloat v){ m_angle = v; }
+
+  GLfloat rotate_angle() const { return m_rotate_angle; }
+  void rotate_angle(GLfloat v){ m_rotate_angle = v; }
 
   GLfloat angular_scale() const { return m_angular_scale; }
   void angular_scale(GLfloat v){ m_angular_scale = v; }
@@ -74,33 +61,52 @@ public:
   const vec2& last_pos() const { return m_last_pos; }
   void last_pos(const vec2& v){ m_last_pos = v; }
 
+  const lissajous& lisa() {return m_lisa;}
+
   void remove_pen() ;
   void remove_child() ;
   void add_child() ;
   void update(GLint resolution) ;
-  void update_pos() ;
 
-  mother_graph* get_pen() { return m_child ? m_child->get_pen() : this; }
+  spiral_seed* get_pen() { return m_child ? m_child->get_pen() : this; }
 
   void debug_draw() { m_lisa.draw(); }
 
-  void reset() ;
-  void update_scale() ;
+  void reset(GLfloat angle = fpi2) ;
 
-  mother_graph* get_child_at(int depth) ;
+  spiral_seed* get_child_at(int depth) ;
 
   //const mat4& scale_mat() const { return m_scale_mat; }
   //void scale_mat(const mat4& v){ m_scale_mat = v; }
   vec3 scale() {return vec3(radius()); }
 
-  mother_graph* parent() const { return m_parent; }
-  void parent(mother_graph* v){ m_parent = v; }
+  spiral_seed* parent() const { return m_parent; }
+  void parent(spiral_seed* v){ m_parent = v; }
 
-  std::shared_ptr<mother_graph> child() const { return m_child; }
-  void child(std::shared_ptr<mother_graph> v){ m_child = v; }
+  const std::shared_ptr<spiral_seed> child() const { return m_child; }
+  void child(std::shared_ptr<spiral_seed> v){ m_child = v; }
+
+private:
+
+  void update_pos() ;
+  void update_scale() ;
+
+  GLfloat m_angular_speed;
+  GLfloat m_angle = 0; // current orbit angle around parent
+  GLfloat m_rotate_angle = 0;
+  GLfloat m_radius_scale;
+  GLfloat m_origin_scale;
+  GLfloat m_angular_scale;
+  lissajous m_lisa;
+
+  vec2 m_pos = vec2(0); // current position
+  vec2 m_last_pos = vec2(0);
+
+  spiral_seed* m_parent;
+  std::shared_ptr<spiral_seed> m_child;
 
 };
 
 }
 
-#endif /* ifndef GL4_CHALLENGE_MOTHER_GRAPH_H */
+#endif /* ifndef GL4_GLC_FRACTAL_SPIRAL_H */
