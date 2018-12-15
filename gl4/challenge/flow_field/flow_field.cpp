@@ -24,9 +24,9 @@ GLfloat xoff_start;
 GLfloat yoff_start;
 GLfloat zoff_start;
 
-key_control_item* xoff_step;
-key_control_item* yoff_step;
-key_control_item* zoff_step;
+ xoff_step;
+ yoff_step;
+ zoff_step;
 
 struct field_cell
 {

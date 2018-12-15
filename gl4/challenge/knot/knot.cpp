@@ -17,9 +17,9 @@ namespace zxd {
 GLuint num_knots = 2;
 GLuint knot_index = 0;
 
-key_control_item* kci_slices;
-key_control_item* kci_extrude_radius;
-key_control_item* kci_num_faces;
+kcip kci_slices;
+kcip kci_extrude_radius;
+kcip kci_num_faces;
 
 
 GLuint slices;
@@ -73,7 +73,7 @@ public:
     auto callback = std::bind(std::mem_fn(&knot_app::reset_knot), this, std::placeholders::_1);
     kci_slices = m_control.add_control(GLFW_KEY_Q, 1000, 10, 1000000, 10, callback);
     kci_num_faces = m_control.add_control(GLFW_KEY_W, 6, 3, 256, 1, callback);
-    kci_extrude_radius = m_control.add_control(GLFW_KEY_E, 3, 0.01, 100, 1, callback);
+    kci_extrude_radius = m_control.add_control<GLfloat>(GLFW_KEY_E, 3, 0.01, 100, 1, callback);
 
     reset_knot();
   }
@@ -121,11 +121,11 @@ public:
     update_geometry(line_strip);
   }
 
-  void reset_knot(const key_control_item* kci = 0)
+  void reset_knot(const kci* kci = 0)
   {
-    slices = kci_slices->value;
-    num_faces = kci_num_faces->value;
-    extrude_radius = kci_extrude_radius->value;
+    slices = kci_slices->get_int();
+    num_faces = kci_num_faces->get_int();
+    extrude_radius = kci_extrude_radius->get_float();
 
     if(knot_index == 0)
     {

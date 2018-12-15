@@ -24,3 +24,5 @@
     
 9.  during template function initialization, compilers are obliged to make sure
     that all source code(all branches) is valid, even if it's not executed
+
+10. C++ guarantees it's always safe to delete the null pointer

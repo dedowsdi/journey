@@ -11,8 +11,8 @@
 namespace zxd {
 
 std::string file_path;
-key_control_item* kci_rows;
-key_control_item* kci_cols;
+kcip kci_rows;
+kcip kci_cols;
 fipImage img; // photo
 
 // a single tile in image pack
@@ -252,7 +252,7 @@ struct photo
   {
     glBindTexture(GL_TEXTURE_2D, pack.tex());
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, kci_cols->value * kci_rows->value * 6);
+    glDrawArrays(GL_TRIANGLES, 0, kci_cols->get_float() * kci_rows->get_float() * 6);
   }
 
 }geometry;
@@ -289,9 +289,9 @@ public:
     update_mosaic(0);
   }
 
-  virtual void update_mosaic(const key_control_item* kci)
+  virtual void update_mosaic(const kci* kci)
   {
-    geometry.update(kci_rows->value, kci_cols->value);
+    geometry.update(kci_rows->get_float(), kci_cols->get_float());
   }
 
   virtual void update() {}
@@ -309,8 +309,8 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "qQ : rows : " << kci_rows->value << std::endl;;
-    ss << "wW : cols : " << kci_cols->value << std::endl;;
+    ss << "qQ : rows : " << kci_rows->get_float() << std::endl;;
+    ss << "wW : cols : " << kci_cols->get_float() << std::endl;;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20);
     glDisable(GL_BLEND);
   }

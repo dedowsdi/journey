@@ -13,13 +13,13 @@ namespace zxd {
 lightless_program prg;
 super_shape_2d shape;
 
-key_control_item* n1;
-key_control_item* n2;
-key_control_item* n3;
-key_control_item* a;
-key_control_item* b;
-key_control_item* m;
-key_control_item* slice;
+kcip n1;
+kcip n2;
+kcip n3;
+kcip a;
+kcip b;
+kcip m;
+kcip slice;
 
 class supershape_app : public app {
 protected:
@@ -43,28 +43,28 @@ public:
     prg.fix2d_camera(0, m_info.wnd_width, 0, m_info.wnd_height);
 
     auto callback = std::bind(std::mem_fn(&supershape_app::update_shape), this, std::placeholders::_1);
-    n1 = m_control.add_control(GLFW_KEY_Q, 1, -10000, 10000, 0.1, callback);
-    n2 = m_control.add_control(GLFW_KEY_W, 1, -10000, 10000, 0.1, callback);
-    n3 = m_control.add_control(GLFW_KEY_E, 1, -10000, 10000, 0.1, callback);
-    m = m_control.add_control(GLFW_KEY_R, 0, -10000, 10000, 0.1, callback);
-    a = m_control.add_control(GLFW_KEY_U, 1, -10000, 10000, 0.1, callback);
-    b = m_control.add_control(GLFW_KEY_I, 1, -10000, 10000, 0.1, callback);
-    slice = m_control.add_control(GLFW_KEY_O, 64, -10000, 10000, 1, callback);
+    n1 = m_control.add_control<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1, callback);
+    n2 = m_control.add_control<GLfloat>(GLFW_KEY_W, 1, -10000, 10000, 0.1, callback);
+    n3 = m_control.add_control<GLfloat>(GLFW_KEY_E, 1, -10000, 10000, 0.1, callback);
+    m = m_control.add_control<GLfloat>(GLFW_KEY_R, 0, -10000, 10000, 0.1, callback);
+    a = m_control.add_control<GLfloat>(GLFW_KEY_U, 1, -10000, 10000, 0.1, callback);
+    b = m_control.add_control<GLfloat>(GLFW_KEY_I, 1, -10000, 10000, 0.1, callback);
+    slice = m_control.add_control<GLint>(GLFW_KEY_O, 64, -10000, 10000, 1, callback);
     update_shape(0);
   }
 
   virtual void update() {}
 
-  void update_shape(const key_control_item* item)
+  void update_shape(const kci* item)
   {
-    shape.n1(n1->value);
-    shape.n2(n2->value);
-    shape.n3(n3->value);
-    shape.a(a->value);
-    shape.b(b->value);
-    shape.m(m->value);
+    shape.n1(n1->get_float());
+    shape.n2(n2->get_float());
+    shape.n3(n3->get_float());
+    shape.a(a->get_float());
+    shape.b(b->get_float());
+    shape.m(m->get_float());
     shape.radius(100);
-    shape.num_slice(slice->value);
+    shape.num_slice(slice->get_int());
     shape.build_mesh();
   }
 
@@ -85,13 +85,13 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "qQ : n1 : " << n1->value << std::endl;
-    ss << "wW : n2 : " << n2->value << std::endl;
-    ss << "eE : n3 : " << n3->value << std::endl;
-    ss << "rR : m : " << m->value << std::endl;
-    ss << "uU : a : " << a->value << std::endl;
-    ss << "iI : b : " << b->value << std::endl;
-    ss << "oO : slice : " << slice->value << std::endl;
+    ss << "qQ : n1 : " << n1->get_float() << std::endl;
+    ss << "wW : n2 : " << n2->get_float() << std::endl;
+    ss << "eE : n3 : " << n3->get_float() << std::endl;
+    ss << "rR : m : " << m->get_float() << std::endl;
+    ss << "uU : a : " << a->get_float() << std::endl;
+    ss << "iI : b : " << b->get_float() << std::endl;
+    ss << "oO : slice : " << slice->get_int() << std::endl;
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

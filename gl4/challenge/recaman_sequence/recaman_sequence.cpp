@@ -23,7 +23,7 @@ GLuint draw_count = 0;
 GLuint slices = 1024;
 GLuint draw_step = slices/16;
 GLuint line_width = 4;
-GLuint blur_times = 7;
+GLint blur_times = 7;
 GLuint numbers = 300;
 GLfloat last_max_number = 2;
 GLfloat max_number = 2;
@@ -40,8 +40,8 @@ GLuint brightness_map;
 GLuint fbo;
 pingpong blur_tex;
 
-key_control_item* kci_blur_times;
-key_control_item* kci_bloom_exposure;
+kcip kci_blur_times;
+kcip kci_bloom_exposure;
 
 quad q;
 
@@ -248,13 +248,13 @@ public:
     blur_tex.pong(create_texture());
 
     kci_blur_times = m_control.add_control(GLFW_KEY_Q, blur_times, 1, 99, 1);
-    kci_bloom_exposure = m_control.add_control(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
+    kci_bloom_exposure = m_control.add_control<GLfloat>(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
   }
 
   virtual void update() 
   {
-    blur_times = kci_blur_times->value;
-    bloom_exposure = kci_bloom_exposure->value;
+    blur_times = kci_blur_times->get_int();
+    bloom_exposure = kci_bloom_exposure->get_float();
 
     draw_count += draw_step;
 

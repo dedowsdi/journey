@@ -16,9 +16,9 @@ vec4 corner_color = vec4(1,1,1,1);
 vec4 x_color = vec4(1,0,0,1);
 vec4 inner_color = vec4(0,0,1,1);
 
-key_control_item* kci_theta;
-key_control_item* kci_delta;
-key_control_item* kci_sides;
+kcip kci_theta;
+kcip kci_delta;
+kcip kci_sides;
 
 // always be right
 class polygon
@@ -227,18 +227,18 @@ public:
     m_polygon.delta(0.25);
 
     auto callback = std::bind(std::mem_fn(&islamic_pattern_app::update_polygon), this, std::placeholders::_1);
-    kci_theta = m_control.add_control(GLFW_KEY_Q, 60, 0, 90, 1, callback);
-    kci_delta = m_control.add_control(GLFW_KEY_W, 0, 0, 1, 0.01, callback);
+    kci_theta = m_control.add_control<GLfloat>(GLFW_KEY_Q, 60, 0, 90, 1, callback);
+    kci_delta = m_control.add_control<GLfloat>(GLFW_KEY_W, 0, 0, 1, 0.01, callback);
     kci_sides = m_control.add_control(GLFW_KEY_E, 4, 4, 6, 2, callback);
 
     update_polygon(0);
   }
 
-  void update_polygon(const key_control_item* kci)
+  void update_polygon(const kci* kci)
   {
-    m_polygon.theta(glm::radians(kci_theta->value));
-    m_polygon.delta(kci_delta->value);
-    m_polygon.sides(kci_sides->value);
+    m_polygon.theta(glm::radians(kci_theta->get_float()));
+    m_polygon.delta(kci_delta->get_float());
+    m_polygon.sides(kci_sides->get_int());
     if(m_polygon.sides() == 4)
     {
       m_polygon.radius(POLYGON_WIDTH / glm::sqrt(2));
@@ -292,15 +292,12 @@ public:
 
     }
 
-
-
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "q : theta " << kci_theta->value << std::endl;
-    ss << "w : delta " << kci_delta->value << std::endl;
-    ss << "e : sides " << kci_sides->value << std::endl;
+    ss << "q : theta " << kci_theta->get_float() << std::endl;
+    ss << "w : delta " << kci_delta->get_float() << std::endl;
+    ss << "e : sides " << kci_sides->get_int() << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(1,0,0,1));
     glDisable(GL_BLEND);
   }

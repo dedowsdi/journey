@@ -52,7 +52,7 @@ vec3_vector ctrl_colors = {
   vec3(0  , 7  , 100) / 255.0f
 };
 
-key_control_item* kci_iterations;
+kcip kci_iterations;
 
 class mandelbrot_compute_program : public program
 {
@@ -230,7 +230,7 @@ public:
 
     auto callback = std::bind(std::mem_fn(&mandelbrot_set_app::reset_iteration),
         this, std::placeholders::_1);
-    kci_iterations = m_control.add_control(GLFW_KEY_Q, iterations, 10, 100000000, 100, callback);
+    kci_iterations = m_control.add_control<GLint>(GLFW_KEY_Q, iterations, 10, 100000000, 100, callback);
     reset_iteration(0);
 
     reset_colors();
@@ -240,10 +240,10 @@ public:
     radius.x *= wnd_aspect() / aspect;
   }
 
-  void reset_iteration(const key_control_item* kci = 0)
+  void reset_iteration(const kci* kci = 0)
   {
     dirty = true;
-    iterations = kci_iterations->value;
+    iterations = kci_iterations->get_int();
     histogram.resize(iterations+1);
     hues.resize(histogram.size());
 

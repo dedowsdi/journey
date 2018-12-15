@@ -49,15 +49,15 @@ bool stop = false;
 bool draw_polygon = false;
 bool display_help = true;
 
-key_control_item* kci_edges;
-key_control_item* kci_ratio;
-key_control_item* kci_draw_per_frame;
-key_control_item* kci_alpha;
-key_control_item* kci_pick;
-key_control_item* kci_draw_method;
-key_control_item* kci_point_power;
-key_control_item* kci_length_power;
-key_control_item* kci_radius;
+kcip kci_edges;
+kcip kci_ratio;
+kcip kci_draw_per_frame;
+kcip kci_alpha;
+kcip kci_pick;
+kcip kci_draw_method;
+kcip kci_point_power;
+kcip kci_length_power;
+kcip kci_radius;
 
 circle polygon;
 vec2_vector* vertices;
@@ -81,7 +81,7 @@ protected:
 public:
   virtual void init_info();
   virtual void create_scene();
-  void reset_polygon(const key_control_item* kci = 0);
+  void reset_polygon(const kci* kci = 0);
 
   virtual void update();
 
@@ -131,19 +131,19 @@ void chaos_app::create_scene() {
   reset_polygon();
 }
 
-void chaos_app::reset_polygon(const key_control_item* kci)
+void chaos_app::reset_polygon(const kci* kci)
 {
   glClear(GL_COLOR_BUFFER_BIT);
 
-  edges = kci_edges->value;
-  ratio = kci_ratio->value;
-  draw_per_frame = kci_draw_per_frame->value;
-  alpha = kci_alpha->value;
-  pick = kci_pick->value;
-  draw_method = kci_draw_method->value;
-  point_power = kci_point_power->value;
-  length_power = kci_length_power->value;
-  pick_radius = kci_radius->value;
+  edges = kci_edges->get_float();
+  ratio = kci_ratio->get_float();
+  draw_per_frame = kci_draw_per_frame->get_float();
+  alpha = kci_alpha->get_float();
+  pick = kci_pick->get_float();
+  draw_method = kci_draw_method->get_float();
+  point_power = kci_point_power->get_float();
+  length_power = kci_length_power->get_float();
+  pick_radius = kci_radius->get_float();
 
   polygon.slice(edges);
   polygon.radius(radius);

@@ -22,17 +22,17 @@ int patch_vertices[] = {4, 3, 4};
 vec4 tess_level_outer = vec4(3);
 vec2 tess_level_inner = vec2(3);
 
-key_control_item* kci_outer0;
-key_control_item* kci_outer1;
-key_control_item* kci_outer2;
-key_control_item* kci_outer3;
+kcip kci_outer0;
+kcip kci_outer1;
+kcip kci_outer2;
+kcip kci_outer3;
 
-key_control_item* kci_inner0;
-key_control_item* kci_inner1;
-key_control_item* kci_primitive_type;
-key_control_item* kci_winding;
-key_control_item* kci_spacing;
-key_control_item* kci_point_mode;
+kcip kci_inner0;
+kcip kci_inner1;
+kcip kci_primitive_type;
+kcip kci_winding;
+kcip kci_spacing;
+kcip kci_point_mode;
 
 const char* primitive_types[] = {"quads", "triangles", "isolines"};
 const char* face_windings[] = {"ccw", "cw"};
@@ -77,12 +77,12 @@ protected:
 
 }prg ;
 
-void reload_program(const key_control_item* kci = 0)
+void reload_program(const kci* = 0)
 {
-  primitive_type = kci_primitive_type->value;
-  face_winding = kci_winding->value;
-  spacing = kci_spacing->value;
-  point_mode = kci_point_mode->value == 1;
+  primitive_type = kci_primitive_type->get_int();
+  face_winding = kci_winding->get_int();
+  spacing = kci_spacing->get_int();
+  point_mode = kci_point_mode->get_int() == 1;
 
   std::stringstream ss;
   ss << primitive_types[primitive_type] << ", " << face_windings[face_winding]
@@ -174,13 +174,13 @@ void tessellate_app::create_scene() {
     isoline.add_primitive_set(new draw_arrays(GL_PATCHES, 0, 4));
   }
 
-  kci_outer0 = m_control.add_control(GLFW_KEY_Q, tess_level_outer[0], 1, 100, 0.5);
-  kci_outer1 = m_control.add_control(GLFW_KEY_W, tess_level_outer[1], 1, 100, 0.5);
-  kci_outer2 = m_control.add_control(GLFW_KEY_E, tess_level_outer[2], 1, 100, 0.5);
-  kci_outer3 = m_control.add_control(GLFW_KEY_R, tess_level_outer[3], 1, 100, 0.5);
+  kci_outer0 = m_control.add_control<GLfloat>(GLFW_KEY_Q, tess_level_outer[0], 1, 100, 0.5);
+  kci_outer1 = m_control.add_control<GLfloat>(GLFW_KEY_W, tess_level_outer[1], 1, 100, 0.5);
+  kci_outer2 = m_control.add_control<GLfloat>(GLFW_KEY_E, tess_level_outer[2], 1, 100, 0.5);
+  kci_outer3 = m_control.add_control<GLfloat>(GLFW_KEY_R, tess_level_outer[3], 1, 100, 0.5);
 
-  kci_inner0 = m_control.add_control(GLFW_KEY_U, tess_level_inner[0], 2, 100, 0.5);
-  kci_inner1 = m_control.add_control(GLFW_KEY_I, tess_level_inner[1], 2, 100, 0.5);
+  kci_inner0 = m_control.add_control<GLfloat>(GLFW_KEY_U, tess_level_inner[0], 2, 100, 0.5);
+  kci_inner1 = m_control.add_control<GLfloat>(GLFW_KEY_I, tess_level_inner[1], 2, 100, 0.5);
 
   kci_primitive_type = m_control.add_control(GLFW_KEY_A, 0, 0, 2, 1, reload_program);
   kci_winding = m_control.add_control(GLFW_KEY_S, 0, 0, 1, 1, reload_program);
@@ -192,8 +192,8 @@ void tessellate_app::create_scene() {
 
 
 void tessellate_app::update() {
-  tess_level_outer = vec4(kci_outer0->value, kci_outer1->value, kci_outer2->value, kci_outer3->value);
-  tess_level_inner = vec2(kci_inner0->value, kci_inner1->value);
+  tess_level_outer = vec4(kci_outer0->get_float(), kci_outer1->get_float(), kci_outer2->get_float(), kci_outer3->get_float());
+  tess_level_inner = vec2(kci_inner0->get_float(), kci_inner1->get_float());
 
   glPatchParameterfv(GL_PATCH_DEFAULT_OUTER_LEVEL, glm::value_ptr(tess_level_outer));
   glPatchParameterfv(GL_PATCH_DEFAULT_INNER_LEVEL, glm::value_ptr(tess_level_inner));

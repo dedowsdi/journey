@@ -25,18 +25,18 @@ GLfloat origin_scale = 1;
 
 bool display_pen = true;
 bool display_help = true;
-key_control_item* kci_circle_index;
-key_control_item* kci_angular_scale;
-key_control_item* kci_radius_scale;
-key_control_item* kci_origin_scale;
-key_control_item* kci_resolution;
-key_control_item* kci_rose_n;
-key_control_item* kci_rose_d;
-key_control_item* kci_rose_offset;
-key_control_item* kci_lissa_type;
-key_control_item* kci_xscale;
-key_control_item* kci_yscale;
-key_control_item* kci_pen_width;
+kcip kci_circle_index;
+kcip kci_angular_scale;
+kcip kci_radius_scale;
+kcip kci_origin_scale;
+kcip kci_resolution;
+kcip kci_rose_n;
+kcip kci_rose_d;
+kcip kci_rose_offset;
+kcip kci_lissa_type;
+kcip kci_xscale;
+kcip kci_yscale;
+kcip kci_pen_width;
 
 int circle_index = 1;
 int circle_type;
@@ -108,26 +108,26 @@ public:
         this, std::placeholders::_1);
 
     kci_circle_index = m_control.add_control(GLFW_KEY_Q, circle_index, 0, 1000, 1, index_callback);
-    kci_radius_scale = m_control.add_control(GLFW_KEY_W, radius_scale, 0.01, 100, 0.1, callback);
-    kci_origin_scale = m_control.add_control(GLFW_KEY_E, origin_scale, -100, 100, 1, callback);
-    kci_angular_scale = m_control.add_control(GLFW_KEY_R, angular_scale, -1000, 1000, 1, callback);
+    kci_radius_scale = m_control.add_control<GLfloat>(GLFW_KEY_W, radius_scale, 0.01, 100, 0.1, callback);
+    kci_origin_scale = m_control.add_control<GLfloat>(GLFW_KEY_E, origin_scale, -100, 100, 1, callback);
+    kci_angular_scale = m_control.add_control<GLfloat>(GLFW_KEY_R, angular_scale, -1000, 1000, 1, callback);
     kci_resolution = m_control.add_control(GLFW_KEY_U, 10, 1, 10000, 1,
         [this](auto* kci){this->restart();});
     kci_rose_n = m_control.add_control(GLFW_KEY_J, 1, 1, 1000, 1, callback);
     kci_rose_d = m_control.add_control(GLFW_KEY_K, 1, 1, 1000, 1, callback);
-    kci_rose_offset = m_control.add_control(GLFW_KEY_L, 0, -1000, 1000, 0.1, callback);
+    kci_rose_offset = m_control.add_control<GLfloat>(GLFW_KEY_L, 0, -1000, 1000, 0.1, callback);
     kci_lissa_type = m_control.add_control(GLFW_KEY_H, 0, 0, 1, 1, callback);
-    kci_xscale = m_control.add_control(GLFW_KEY_N, 1, 1, 100, 1, callback);
-    kci_yscale = m_control.add_control(GLFW_KEY_M, 1, 1, 100, 1, callback);
+    kci_xscale = m_control.add_control<GLint>(GLFW_KEY_N, 1, 1, 100, 1, callback);
+    kci_yscale = m_control.add_control<GLint>(GLFW_KEY_M, 1, 1, 100, 1, callback);
 
     resize_buffer();
     reset_graph();
   }
 
-  void rotate_index(const key_control_item* kci = 0)
+  void rotate_index(const kci* kci = 0)
   {
     int size = m_graph->size();
-    select_graph((static_cast<GLint>(kci_circle_index->value)) % size);
+    select_graph(kci_circle_index->get_int() % size);
   }
 
   void select_graph(GLuint index)
@@ -139,15 +139,15 @@ public:
   void update_current_graph_value()
   {
     m_current_graph = m_graph->get_child_at(circle_index);
-    kci_radius_scale->value = m_current_graph->radius_scale();
-    kci_origin_scale->value = m_current_graph->origin_scale();
-    kci_angular_scale->value = m_current_graph->angular_scale();
-    kci_rose_n->value = m_current_graph->rose_n();
-    kci_rose_d->value = m_current_graph->rose_d();
-    kci_rose_offset->value = m_current_graph->rose_offset();
-    kci_lissa_type->value = m_current_graph->type();
-    kci_xscale->value = m_current_graph->xscale();
-    kci_yscale->value = m_current_graph->yscale();
+    kci_radius_scale->set(m_current_graph->radius_scale());
+    kci_origin_scale->set(m_current_graph->origin_scale());
+    kci_angular_scale->set(m_current_graph->angular_scale());
+    kci_rose_n->set<GLint>(m_current_graph->rose_n());
+    kci_rose_d->set<GLint>(m_current_graph->rose_d());
+    kci_rose_offset->set(m_current_graph->rose_offset());
+    kci_lissa_type->set<GLint>(m_current_graph->type());
+    kci_xscale->set<GLint>(m_current_graph->xscale());
+    kci_yscale->set<GLint>(m_current_graph->yscale());
   }
 
   void remove_graph()
@@ -169,7 +169,7 @@ public:
     restart();
   }
 
-  void restart(const key_control_item* kci = 0)
+  void restart(const kci* kci = 0)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -200,17 +200,17 @@ public:
     restart();
   }
 
-  void reset_current_graph(const key_control_item* kci)
+  void reset_current_graph(const kci* kci)
   {
-    m_current_graph->angular_scale(kci_angular_scale->value);
-    m_current_graph->radius_scale(kci_radius_scale->value);
-    m_current_graph->origin_scale(kci_origin_scale->value);
-    m_current_graph->type(static_cast<lissajous::LISSA_TYPE>(kci_lissa_type->value));
-    m_current_graph->rose_n(kci_rose_n->value);
-    m_current_graph->rose_d(kci_rose_d->value);
-    m_current_graph->rose_offset(kci_rose_offset->value);
-    m_current_graph->xscale(kci_xscale->value);
-    m_current_graph->yscale(kci_yscale->value);
+    m_current_graph->angular_scale(kci_angular_scale->get_float());
+    m_current_graph->radius_scale(kci_radius_scale->get_float());
+    m_current_graph->origin_scale(kci_origin_scale->get_float());
+    m_current_graph->type(static_cast<lissajous::LISSA_TYPE>(kci_lissa_type->get_int()));
+    m_current_graph->rose_n(kci_rose_n->get_int());
+    m_current_graph->rose_d(kci_rose_d->get_int());
+    m_current_graph->rose_offset(kci_rose_offset->get_float());
+    m_current_graph->xscale(kci_xscale->get_int());
+    m_current_graph->yscale(kci_yscale->get_int());
 
     restart();
   }
@@ -224,12 +224,12 @@ public:
     glBlendColor(0, 0, 0, 0.5);
     glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
 
-    GLuint resolution = kci_resolution->value;
+    GLuint resolution = kci_resolution->get_int();
     vec2_vector lines;
     lines.reserve(resolution + 1);
     lines.push_back(pen->pos());
     for (int i = 0; i < resolution; ++i) {
-      m_graph->update(kci_resolution->value);
+      m_graph->update(kci_resolution->get_int());
       lines.push_back(pen->pos());
     }
     debugger::draw_line(GL_LINE_STRIP, lines, prg.p_mat, pen_width, vec4(1,0,1,1));
@@ -278,14 +278,14 @@ public:
     ss << "wW : radius scale : " << m_current_graph->radius_scale() << std::endl;
     ss << "eE : origin_scale : " << m_current_graph->origin_scale() << std::endl;
     ss << "rR : angular_scale : " << m_current_graph->angular_scale() << std::endl;
-    ss << "uU : resolutions : " << kci_resolution->value << std::endl;
+    ss << "uU : resolutions : " << kci_resolution->get_int() << std::endl;
     ss << "iI : add remove circle : " << std::endl;
-    ss << "jJ : rose_n : " <<kci_rose_n->value << std::endl;
-    ss << "kK : rose_d : " <<kci_rose_d->value << std::endl;
-    ss << "lL : rose_offset : " <<kci_rose_offset->value << std::endl;
-    ss << "hH: lissa type : " <<kci_lissa_type->value << std::endl;
-    ss << "nN : xscale : " <<kci_xscale->value << std::endl;
-    ss << "mM : yscale : " <<kci_yscale->value << std::endl;
+    ss << "jJ : rose_n : " <<kci_rose_n->get_int() << std::endl;
+    ss << "kK : rose_d : " <<kci_rose_d->get_int() << std::endl;
+    ss << "lL : rose_offset : " <<kci_rose_offset->get_float() << std::endl;
+    ss << "hH: lissa type : " <<kci_lissa_type->get_int() << std::endl;
+    ss << "nN : xscale : " <<kci_xscale->get_int() << std::endl;
+    ss << "mM : yscale : " <<kci_yscale->get_int() << std::endl;
 
     ss << "p : reset : " << std::endl;
     ss << "z : toggle help : " << std::endl;

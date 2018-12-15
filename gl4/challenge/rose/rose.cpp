@@ -12,13 +12,13 @@
 namespace zxd {
 
 lightless_program prg;
-key_control_item* kci_n;
-key_control_item* kci_d;
-key_control_item* kci_slice;
-key_control_item* kci_start;
-key_control_item* kci_end;
-key_control_item* kci_line_width;
-key_control_item* kci_offset;
+kcip kci_n;
+kcip kci_d;
+kcip kci_slice;
+kcip kci_start;
+kcip kci_end;
+kcip kci_line_width;
+kcip kci_offset;
 
 class app_name : public app {
 protected:
@@ -47,25 +47,25 @@ public:
     kci_n = m_control.add_control(GLFW_KEY_Q, 1, 1, 1000, 1, callback);
     kci_d = m_control.add_control(GLFW_KEY_W, 1, 1, 1000, 1, callback);
     kci_slice = m_control.add_control(GLFW_KEY_E, 1024, 1, 1000, 1, callback);
-    kci_line_width = m_control.add_control(GLFW_KEY_R, 1, 1, 50, 1, callback);
-    kci_start = m_control.add_control(GLFW_KEY_U, 0, 0, 1, 0.01, callback);
-    kci_end = m_control.add_control(GLFW_KEY_I, 1, 0, 1, 0.01, callback);
-    kci_offset = m_control.add_control(GLFW_KEY_O, 0, -999, 999, 0.1, callback);
+    kci_line_width = m_control.add_control<GLfloat>(GLFW_KEY_R, 1, 1, 50, 1, callback);
+    kci_start = m_control.add_control<GLfloat>(GLFW_KEY_U, 0, 0, 1, 0.01, callback);
+    kci_end = m_control.add_control<GLfloat>(GLFW_KEY_I, 1, 0, 1, 0.01, callback);
+    kci_offset = m_control.add_control<GLfloat>(GLFW_KEY_O, 0, -999, 999, 0.1, callback);
 
     update_rose(0);
   }
 
-  void update_rose(const key_control_item* kci)
+  void update_rose(const kci* kci)
   {
-    glLineWidth(kci_line_width->value);
+    glLineWidth(kci_line_width->get_float());
     m_rose.radius(1);
     m_rose.slice(128);
-    m_rose.n(kci_n->value);
-    m_rose.d(kci_d->value);
-    m_rose.start(kci_start->value);
-    m_rose.end(kci_end->value);
-    m_rose.slice(kci_slice->value);
-    m_rose.offset(kci_offset->value);
+    m_rose.n(kci_n->get_int());
+    m_rose.d(kci_d->get_int());
+    m_rose.start(kci_start->get_float());
+    m_rose.end(kci_end->get_float());
+    m_rose.slice(kci_slice->get_int());
+    m_rose.offset(kci_offset->get_float());
     m_rose.build_mesh();
 
     //const auto& vertices = m_rose.vertices();
@@ -97,13 +97,13 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "q : n : " << kci_n->value << std::endl;
-    ss << "w : d : " << kci_d->value << std::endl;
-    ss << "e : slice : " << kci_slice->value << std::endl;
-    ss << "r : line width : " << kci_line_width->value << std::endl;
-    ss << "u : start : " << kci_start->value << std::endl;
-    ss << "i : end : " << kci_end->value << std::endl;
-    ss << "o : offset : " << kci_offset->value << std::endl;
+    ss << "q : n : " << kci_n->get_int() << std::endl;
+    ss << "w : d : " << kci_d->get_int() << std::endl;
+    ss << "e : slice : " << kci_slice->get_int() << std::endl;
+    ss << "r : line width : " << kci_line_width->get_float() << std::endl;
+    ss << "u : start : " << kci_start->get_float() << std::endl;
+    ss << "i : end : " << kci_end->get_float() << std::endl;
+    ss << "o : offset : " << kci_offset->get_float() << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20);
     glDisable(GL_BLEND);
   }

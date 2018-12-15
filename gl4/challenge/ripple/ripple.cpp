@@ -18,9 +18,9 @@ npingpong tex;
 GLuint fbo;
 GLuint current = 2; // current rtt
 
-key_control_item* kci_dampen;
-key_control_item* kci_ripple_start;
-key_control_item* kci_ripple_frame;
+kcip kci_dampen;
+kcip kci_ripple_start;
+kcip kci_ripple_frame;
 
 GLuint createTexture()
 {
@@ -101,13 +101,13 @@ public:
 
     current = 1;
 
-    kci_dampen = m_control.add_control(GLFW_KEY_Q, 0.99, 0, 10, 0.01);
-    kci_ripple_start = m_control.add_control(GLFW_KEY_W, 1, 0, 500, 1);
+    kci_dampen = m_control.add_control<GLfloat>(GLFW_KEY_Q, 0.99, 0, 10, 0.01);
+    kci_ripple_start = m_control.add_control<GLfloat>(GLFW_KEY_W, 1, 0, 500, 1);
     kci_ripple_frame = m_control.add_control(GLFW_KEY_E, 2, 1, 60, 1);
   }
 
   virtual void update() {
-    GLint f = kci_ripple_frame->value;
+    GLint f = kci_ripple_frame->get_int();
     if((m_frame_number % f) == 0)
       tex.shift();
 
@@ -116,7 +116,7 @@ public:
 
   void createRipple(ivec2(pos))
   {
-    vec3 p(kci_ripple_start->value);
+    vec3 p(kci_ripple_start->get_float());
     glBindTexture(GL_TEXTURE_2D, tex.first_ping());
     glTexSubImage2D(GL_TEXTURE_2D, 0, pos.x, pos.y, 1, 1, GL_RGB, GL_FLOAT, glm::value_ptr(p));
   }
@@ -136,7 +136,7 @@ public:
     prg.use();
     glUniform1i(prg.ul_buffer0, 0);
     glUniform1i(prg.ul_buffer1, 1);
-    glUniform1f(prg.ul_dampen, kci_dampen->value);
+    glUniform1f(prg.ul_dampen, kci_dampen->get_float());
     q.draw();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -148,9 +148,9 @@ public:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << " fps : " << m_fps << std::endl;
-    ss << " qQ : dampen : " << kci_dampen->value << std::endl;
-    ss << " wW : ripple start : " << kci_ripple_start->value << std::endl;
-    ss << " eE : ripple frame : " << kci_ripple_frame->value << std::endl;
+    ss << " qQ : dampen : " << kci_dampen->get_float() << std::endl;
+    ss << " wW : ripple start : " << kci_ripple_start->get_float() << std::endl;
+    ss << " eE : ripple frame : " << kci_ripple_frame->get_int() << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20);
     glDisable(GL_BLEND);
   }

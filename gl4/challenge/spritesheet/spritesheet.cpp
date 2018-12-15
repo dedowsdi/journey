@@ -27,9 +27,9 @@ GLfloat ripple_dampen = 0.85;
 GLfloat ripple_start = 1.8;
 GLuint  ripple_frame = 4;
 
-key_control_item* kci_ripple_dampen;
-key_control_item* kci_ripple_start;
-key_control_item* kci_ripple_frame;
+kcip kci_ripple_dampen;
+kcip kci_ripple_start;
+kcip kci_ripple_frame;
 quad q;
 
 class ripple_program : public program
@@ -206,9 +206,9 @@ public:
 
   virtual void update() 
   {
-    ripple_start = kci_ripple_start->value;
-    ripple_dampen = kci_ripple_dampen->value;
-    ripple_frame = kci_ripple_frame->value;
+    ripple_start = kci_ripple_start->get_float();
+    ripple_dampen = kci_ripple_dampen->get_float();
+    ripple_frame = kci_ripple_frame->get_float();
 
     if((m_frame_number % ripple_frame) == 0)
       ripple_tex.shift();

@@ -22,9 +22,9 @@ void thread_function()
 
 namespace zxd {
 
-key_control_item* a;
-key_control_item* b;
-key_control_item* n;
+kcip a;
+kcip b;
+kcip n;
 
 struct fs_program : public program{
 
@@ -88,9 +88,9 @@ public:
 
     glfwSetWindowPos(m_wnd, 1024, 100);
 
-    a = m_control.add_control(GLFW_KEY_Q, 1, -10000, 10000, 0.1);
-    b = m_control.add_control(GLFW_KEY_W, 1, -10000, 10000, 0.1);
-    n = m_control.add_control(GLFW_KEY_E, 2, -10000, 10000, 0.1);
+    a = m_control.add_control<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1);
+    b = m_control.add_control<GLfloat>(GLFW_KEY_W, 1, -10000, 10000, 0.1);
+    n = m_control.add_control<GLfloat>(GLFW_KEY_E, 2, -10000, 10000, 0.1);
   }
 
   virtual void update() {
@@ -112,9 +112,9 @@ public:
 
     prg.use();
     glUniform2f(prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
-    glUniform1f(prg.ul_a, a->value);
-    glUniform1f(prg.ul_b, b->value);
-    glUniform1f(prg.ul_n, n->value);
+    glUniform1f(prg.ul_a, a->get_float());
+    glUniform1f(prg.ul_b, b->get_float());
+    glUniform1f(prg.ul_n, n->get_float());
 
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -122,9 +122,9 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "qQ : a : " << a->value << std::endl;
-    ss << "wW : b : " << b->value << std::endl;
-    ss << "eE : n : " << n->value << std::endl;
+    ss << "qQ : a : " << a->get_float() << std::endl;
+    ss << "wW : b : " << b->get_float() << std::endl;
+    ss << "eE : n : " << n->get_float() << std::endl;
     m_text.print(ss.str(), 10, HEIGHT - 20, vec4(1, 0, 0, 1));
     glDisable(GL_BLEND);
 

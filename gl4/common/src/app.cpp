@@ -383,6 +383,14 @@ void app::glfw_key(
           toggle_full_screen();
         break;
 
+      case GLFW_KEY_LEFT_BRACKET:
+        m_control.index(m_control.index() - 1);
+        break;
+
+      case GLFW_KEY_RIGHT_BRACKET:
+        m_control.index(m_control.index() + 1);
+        break;
+
       default:
         break;
     }

@@ -60,8 +60,8 @@ blinn_program blinn_prg;
 mat4 m_mat;
 std::vector<lightning> lightnings;
 
-key_control_item* kci_blur_times;
-key_control_item* kci_bloom_exposure;
+kcip kci_blur_times;
+kcip kci_bloom_exposure;
 
 GLuint create_texture(GLvoid* data = 0);
 
@@ -158,8 +158,8 @@ void lightining_app::create_scene() {
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     printf("incomplete frame buffer\n");
 
-  kci_blur_times = m_control.add_control(GLFW_KEY_Q, blur_times, 1, 99, 1);
-  kci_bloom_exposure = m_control.add_control(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
+  kci_blur_times = m_control.add_control<GLint>(GLFW_KEY_Q, blur_times, 1, 99, 1);
+  kci_bloom_exposure = m_control.add_control<GLfloat>(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
 
   // sphere lightning
   vec3_vector sphere_point = sphere::get_sphere_points( outer_ball_radius,
@@ -198,8 +198,8 @@ void lightining_app::update()
   if(m_frame_number % 2 != 0)
     return;
 
-  blur_times = kci_blur_times->value;
-  bloom_exposure = kci_bloom_exposure->value;
+  blur_times = kci_blur_times->get_int();
+  bloom_exposure = kci_bloom_exposure->get_float();
 
   GLfloat slice_per_second = 2.0/3.0;
   GLfloat angle_per_second = f2pi / outer_ball_slices * slice_per_second;

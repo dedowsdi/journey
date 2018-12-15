@@ -1,11 +1,14 @@
+#include <sstream>
+
 #include "app.h"
 #include "bitmaptext.h"
 #include "common_program.h"
 #include "dict_script.h"
 #include "super_shape_3d.h"
 #include "glenumstring.h"
-#include <sstream>
 #include "common.h"
+#include "stream_util.h"
+
 #define RADIUS 1
 
 #define WIDTH 800
@@ -78,7 +81,7 @@ public:
 
     prg.bind_lighting_uniform_locations(lights, lm, mtl);
 
-    dict.read(script_file);
+    dict.read(stream_util::get_resource(script_file));
     dict.track();
     update_shape();
 

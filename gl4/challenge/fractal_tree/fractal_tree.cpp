@@ -13,12 +13,12 @@ namespace zxd {
 
 lightless_program prg;
 
-key_control_item* trunk_len;
-key_control_item* min_branch_len;
-key_control_item* left_angle_min;
-key_control_item* left_angle_max;
-key_control_item* right_angle_min;
-key_control_item* right_angle_max;
+kcip trunk_len;
+kcip min_branch_len;
+kcip left_angle_min;
+kcip left_angle_max;
+kcip right_angle_min;
+kcip right_angle_max;
 
 struct branch
 {
@@ -197,23 +197,23 @@ public:
     prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
 
     auto update_callback = std::bind(std::mem_fn(&fractal_tree_app::update_tree), this, std::placeholders::_1);
-    trunk_len = m_control.add_control(GLFW_KEY_Q, 200, 10, 400, 10, update_callback);
-    min_branch_len = m_control.add_control(GLFW_KEY_W, 2, 0.1, 10, 0.5, update_callback);
-    left_angle_min = m_control.add_control(GLFW_KEY_U, fpi4, -10000, 10000, 0.1, update_callback);
-    left_angle_max = m_control.add_control(GLFW_KEY_I, fpi4, -10000, 10000, 0.1, update_callback);
-    right_angle_min = m_control.add_control(GLFW_KEY_O, -fpi4, -10000, 10000, 0.1, update_callback);
-    right_angle_max = m_control.add_control(GLFW_KEY_P, -fpi4, -10000, 10000, 0.1, update_callback);
+    trunk_len = m_control.add_control<GLfloat>(GLFW_KEY_Q, 200, 10, 400, 10, update_callback);
+    min_branch_len = m_control.add_control<GLfloat>(GLFW_KEY_W, 2, 0.1, 10, 0.5, update_callback);
+    left_angle_min = m_control.add_control<GLfloat>(GLFW_KEY_U, fpi4, -10000, 10000, 0.1, update_callback);
+    left_angle_max = m_control.add_control<GLfloat>(GLFW_KEY_I, fpi4, -10000, 10000, 0.1, update_callback);
+    right_angle_min = m_control.add_control<GLfloat>(GLFW_KEY_O, -fpi4, -10000, 10000, 0.1, update_callback);
+    right_angle_max = m_control.add_control<GLfloat>(GLFW_KEY_P, -fpi4, -10000, 10000, 0.1, update_callback);
 
     m_tree.transform(glm::translate(vec3(WIDTH * 0.5 , 0, 0)));
     update_tree(0);
   }
 
-  void update_tree(const key_control_item* item)
+  void update_tree(const kci* item)
   {
-    m_tree.trunk_len(trunk_len->value);
-    m_tree.min_branch_len(min_branch_len->value);
-    m_tree.left_rotate_range(vec2(left_angle_min->value, left_angle_max->value));
-    m_tree.right_rotate_range(vec2(right_angle_min->value, right_angle_max->value));
+    m_tree.trunk_len(trunk_len->get_float());
+    m_tree.min_branch_len(min_branch_len->get_float());
+    m_tree.left_rotate_range(vec2(left_angle_min->get_float(), left_angle_max->get_float()));
+    m_tree.right_rotate_range(vec2(right_angle_min->get_float(), right_angle_max->get_float()));
     m_tree.rebuild();
     m_tree.compile();
   }
@@ -234,12 +234,12 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "qQ : trunk len " << trunk_len->value << std::endl;
-    ss << "wW : min branch len " << min_branch_len->value << std::endl;
-    ss << "uU : left rotate min " << left_angle_min->value << std::endl;
-    ss << "iI : left rotate max " << left_angle_max->value << std::endl;
-    ss << "oO : right rotate min " << right_angle_min->value << std::endl;
-    ss << "pP : right rotate max " << right_angle_max->value << std::endl;
+    ss << "qQ : trunk len " << trunk_len->get_float() << std::endl;
+    ss << "wW : min branch len " << min_branch_len->get_float() << std::endl;
+    ss << "uU : left rotate min " << left_angle_min->get_float() << std::endl;
+    ss << "iI : left rotate max " << left_angle_max->get_float() << std::endl;
+    ss << "oO : right rotate min " << right_angle_min->get_float() << std::endl;
+    ss << "pP : right rotate max " << right_angle_max->get_float() << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20);
     glDisable(GL_BLEND);
   }

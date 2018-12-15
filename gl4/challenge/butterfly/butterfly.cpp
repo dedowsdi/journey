@@ -11,6 +11,7 @@
 namespace zxd {
 
 lightless_program prg;
+kcip color;
 
 class butterfly
 {
@@ -119,6 +120,8 @@ public:
     m_butterfly.radius(300);
     m_butterfly.slice(1024);
     m_butterfly.build_mesh();
+
+    color = m_control.add_control(GLFW_KEY_Q, vec4(1), vec4(0), vec4(1), vec4(0.1));
   }
 
   virtual void update() {
@@ -135,13 +138,15 @@ public:
     mat4 mvp_mat = prg.vp_mat * glm::translate(vec3(WIDTH * 0.5f, HEIGHT * 0.5f, 0)) * m_mat
     * glm::rotate(-fpi4, pza);
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
+    glUniform4fv(prg.ul_color, 1, glm::value_ptr(color->get<vec4>()));
 
     m_butterfly.draw();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "";
+    ss << "qQ : color : " << color->get<vec4>() << std::endl;
+    ss << "index : " << m_control.index() << std::endl;
     m_text.print(ss.str(), 10, m_info.wnd_height - 20);
     glDisable(GL_BLEND);
   }

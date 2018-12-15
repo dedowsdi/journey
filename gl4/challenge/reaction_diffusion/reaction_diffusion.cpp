@@ -32,12 +32,12 @@ GLfloat kill = 0.0605;
 GLfloat delta_time = 1;
 GLuint speed = 20;
 
-key_control_item* kci_da;
-key_control_item* kci_db;
-key_control_item* kci_feed;
-key_control_item* kci_kill;
-key_control_item* kci_delta_time;
-key_control_item* kci_speed;
+kcip kci_da;
+kcip kci_db;
+kcip kci_feed;
+kcip kci_kill;
+kcip kci_delta_time;
+kcip kci_speed;
 cycle_path pacman_path(1, 4, 1, 4, 2, 1);
 
 std::shared_ptr<lightless_program> ll_prg;
@@ -198,21 +198,21 @@ void reaction_diffusion_app::create_scene() {
       printf("incomplete frame buffer%i\n", fbo[i]);
   }
 
-  auto update_value = [&](const key_control_item* item){
-    da         = kci_da->value;
-    db         = kci_db->value;
-    feed       = kci_feed->value;
-    kill       = kci_kill->value;
-    delta_time = kci_delta_time->value;
-    speed      = kci_speed->value;
+  auto update_value = [&](const kci* item){
+    da         = kci_da->get_float();
+    db         = kci_db->get_float();
+    feed       = kci_feed->get_float();
+    kill       = kci_kill->get_float();
+    delta_time = kci_delta_time->get_float();
+    speed      = kci_speed->get_float();
   };
 
-  kci_da = m_control.add_control(GLFW_KEY_Q, da, -10, 10, 0.1, update_value);
-  kci_db = m_control.add_control(GLFW_KEY_W, db, -10, 10, 0.1, update_value);
-  kci_feed = m_control.add_control(GLFW_KEY_E, feed, -10, 10, 0.001, update_value);
-  kci_kill = m_control.add_control(GLFW_KEY_R, kill, -10, 10, 0.001, update_value);
-  kci_delta_time = m_control.add_control(GLFW_KEY_U, delta_time, -10, 10, 0.1, update_value);
-  kci_speed = m_control.add_control(GLFW_KEY_I, speed, 1, 50, 1, update_value);
+  kci_da = m_control.add_control<GLfloat>(GLFW_KEY_Q, da, -10, 10, 0.1, update_value);
+  kci_db = m_control.add_control<GLfloat>(GLFW_KEY_W, db, -10, 10, 0.1, update_value);
+  kci_feed = m_control.add_control<GLfloat>(GLFW_KEY_E, feed, -10, 10, 0.001, update_value);
+  kci_kill = m_control.add_control<GLfloat>(GLFW_KEY_R, kill, -10, 10, 0.001, update_value);
+  kci_delta_time = m_control.add_control<GLfloat>(GLFW_KEY_U, delta_time, -10, 10, 0.1, update_value);
+  kci_speed = m_control.add_control<GLfloat>(GLFW_KEY_I, speed, 1, 50, 1, update_value);
 
   circle0.type(circle::FILL);
   circle0.slice(256);

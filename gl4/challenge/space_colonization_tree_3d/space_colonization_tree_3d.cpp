@@ -344,7 +344,7 @@ public:
 
     bind_vao();
     vertices->bind(0);
-    vertices->update_array_buffer();
+    vertices->update_buffer();
 
     remove_primitive_sets(0, get_num_primitive_set());
     add_primitive_set(new draw_arrays(GL_TRIANGLES, 0, vertices->size()));
