@@ -67,16 +67,14 @@ vec2 original_texcoord(eyeball ball, vec2 st)
 
 void main(void)
 {
-  vec2 st = gl_FragCoord.xy / resolution;
-  st = st * 2.0f - 1.0f;
+  vec2 st = gl_FragCoord.xy;
   vec2 ost;
 
   for (int i = 0; i < NUM_EYEBALLS; i++) {
     ost = original_texcoord(eyeballs[i], st);
     if(ost != st) break;
   }
-  st = ost;
-  st = (st + 1.0f) * 0.5f;
+  st = ost / resolution;
 
   frag_color = texture(quad_map, st);
 }

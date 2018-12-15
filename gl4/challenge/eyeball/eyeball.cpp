@@ -17,6 +17,7 @@ namespace zxd {
 const GLuint resolution = 256;
 const GLuint num_vertices = 60000;
 const GLfloat pen_width = 1.5;
+GLfloat fractal_half_height;
 GLuint build_eye_frames = 80;
 GLuint draw_start = 0;
 GLuint draw_step = num_vertices / build_eye_frames;
@@ -67,9 +68,6 @@ protected:
 } prg;
 
 class eyeball_app : public app {
-private:
-  bitmap_text m_text;
-  std::shared_ptr<spiral_seed> m_seed;
 
 public:
   void init_info() override;
@@ -84,6 +82,16 @@ public:
   void glfw_key( GLFWwindow *wnd, int key, int scancode, int action, int mods) override;
 
   void glfw_mouse_move(GLFWwindow *wnd, double x, double y) override;
+
+private:
+
+  vec2 world_to_wnd(const vec2& v);
+  GLfloat world_to_wnd(GLfloat radius);
+  void resize_eyeball();
+
+  bitmap_text m_text;
+  std::shared_ptr<spiral_seed> m_seed;
+
 };
 
 void eyeball_app::init_info() {
@@ -133,7 +141,7 @@ void eyeball_app::create_scene() {
   child->angular_scale(-2);
   child->radius_scale(1.33);
 
-  auto hh = m_seed->approximate_height(180) * 1.05f;
+  fractal_half_height = m_seed->approximate_height(180) * 1.05f;
 
   vertices.reserve(num_vertices);
   auto pen = m_seed->get_pen();
@@ -153,46 +161,12 @@ void eyeball_app::create_scene() {
   glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
   glEnableVertexAttribArray(0);
 
-  // two eyeballs
-  vec2 eye_pos = {50.0f, 0.0f};
-  GLfloat eye_size = 35;
-  GLfloat eye_scale = eye_size / hh;
-  mat4 m0 = glm::scale(glm::translate(vec3(eye_pos, 0)), vec3(eye_scale, eye_scale, 1));
-  mat4 m1 = glm::scale(glm::translate(vec3(-eye_pos, 0)), vec3(eye_scale, eye_scale, 1));
-  eyeballs.push_back({m0, 0.05, eye_size/100 * 0.85f, eye_pos/100.0f, eye_pos/100.0f });
-  eyeballs.push_back({m1, 0.05, eye_size/100 * 0.85f, -eye_pos/100.0f, -eye_pos/100.0f });
-
-  // multisample rtt
-  glGenTextures(1, &mtex);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mtex);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples,
-      GL_RGB, m_info.wnd_width, m_info.wnd_height, true);
-
   glGenFramebuffers(1, &mfbo);
-  glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, mtex, 0);
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    printf("incomplete frame buffer\n");
-
-  // normal tex, will be bound to fbo to copy texture from multisample texture
-  glGenTextures(1, &tex);
-  glBindTexture(GL_TEXTURE_2D, tex);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_info.wnd_width, m_info.wnd_height,
-      0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+  glGenTextures(1, &mtex);
   glGenFramebuffers(1, &fbo);
-  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-  glFramebufferTexture2D(
-    GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    printf("incomplete frame buffer\n");
+  glGenTextures(1, &tex);
 
-  glClear(GL_COLOR_BUFFER_BIT);
-
+  resize_eyeball();
 }
 
 void eyeball_app::update() {
@@ -206,7 +180,7 @@ void eyeball_app::update() {
   if(bug_pos.x < -100) bug_pos.x += 100;
   if(bug_pos.y < -100) bug_pos.y += 100;
 
-  target_pos = bug_pos / vec2(100);
+  target_pos = world_to_wnd(bug_pos);
 
   for (auto& eb : eyeballs) {
     eb.pupil_pos = target_pos;
@@ -285,6 +259,9 @@ void eyeball_app::display() {
 void eyeball_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
   m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+
+  ll_prg.p_mat = prg.p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
+  resize_eyeball();
 }
 
 void eyeball_app::glfw_key(
@@ -310,8 +287,60 @@ void eyeball_app::glfw_key(
 void eyeball_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y){
   app::glfw_mouse_move(wnd, x, y);
   target_pos = vec2(x, glfw_to_gl(y));
-  target_pos /= vec2(m_info.wnd_width, m_info.wnd_height);
-  target_pos = target_pos * 2.0f - 1.0f;
+}
+
+vec2 eyeball_app::world_to_wnd(const vec2& v) {
+  mat4 m = zxd::compute_window_mat(0, 0, m_info.wnd_width, m_info.wnd_height) * prg.p_mat;
+  return (m * vec4(v, 0, 1)).xy();
+}
+
+GLfloat eyeball_app::world_to_wnd(GLfloat radius){
+  //mat4 m = zxd::compute_window_mat(0, 0, m_info.wnd_width, m_info.wnd_height) * prg.p_mat;
+  GLfloat double_right_inverse = 0.5f * prg.p_mat[0][0];
+  return radius * m_info.wnd_width * double_right_inverse ;
+}
+
+void eyeball_app::resize_eyeball(){
+
+  draw_start = 0;
+
+  // multisample rtt
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mtex);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples,
+      GL_RGB, m_info.wnd_width, m_info.wnd_height, true);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, mtex, 0);
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    printf("incomplete frame buffer\n");
+
+  // normal tex, will be bound to fbo to copy texture from multisample texture
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_info.wnd_width, m_info.wnd_height,
+      0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+  glFramebufferTexture2D(
+    GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    printf("incomplete frame buffer\n");
+
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  eyeballs.clear();
+  // two eyeballs
+  vec2 eye_pos = {50.0f, 0.0f};
+  GLfloat eye_size = 35;
+  GLfloat eye_wnd_size = world_to_wnd(eye_size);
+  GLfloat eye_scale = eye_size / fractal_half_height;
+  mat4 m0 = glm::scale(glm::translate(vec3(eye_pos, 0)), vec3(eye_scale, eye_scale, 1));
+  mat4 m1 = glm::scale(glm::translate(vec3(-eye_pos, 0)), vec3(eye_scale, eye_scale, 1));
+  eyeballs.push_back({m0, eye_wnd_size * 0.2f, eye_wnd_size, world_to_wnd(eye_pos),  world_to_wnd(eye_pos)});
+  eyeballs.push_back({m1, eye_wnd_size * 0.2f, eye_wnd_size, world_to_wnd(-eye_pos), -world_to_wnd(-eye_pos)});
 }
 
 }

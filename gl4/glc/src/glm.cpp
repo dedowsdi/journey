@@ -404,8 +404,8 @@ glm::mat4 compute_window_mat(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f) {
   glm::mat4 m;
 
-  // m = glm::translate(vec3(x, y, 0)) * glm::scale(vec3(width, height, 1)) +
-  // glm::translate(vec3(0.5)) * glm::scale(vec3(0.5));
+  //m = glm::translate(vec3(1)) * glm::scale(vec3(width*0.5, height*0.5, 0.5f))
+    //* glm::translate(vec3(x, y, 0));
 
   m[0][0] = width / 2.0;
   m[1][1] = height / 2.0;

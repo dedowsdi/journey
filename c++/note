@@ -22,3 +22,5 @@
     deque is the only standard STL container whose iterators may be invalidated
     without also invalidating its pointers and references
     
+9.  during template function initialization, compilers are obliged to make sure
+    that all source code(all branches) is valid, even if it's not executed
