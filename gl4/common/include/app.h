@@ -20,7 +20,7 @@ void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
 class app {
 public:
   enum camera_mode {
-    CM_YAW_PITCH,  // yaw world, pitch camera
+    CM_PITCH_YAW,  // translate pitch yaw
     CM_ARCBALL,
     CM_FREE  // yaw, pitch camera
   };
@@ -84,7 +84,7 @@ public:
       : 
         m_pause(false),
         m_update_count(0),
-        m_camera_mode(CM_YAW_PITCH),
+        m_camera_mode(CM_PITCH_YAW),
         m_v_mat(0),
         m_reading(GL_FALSE),
         m_camera_moving(GL_FALSE),
@@ -129,6 +129,8 @@ protected:
   virtual void update_time();
   virtual void update_fps();
   virtual void update_camera();
+
+  void rotate_camera_mouse_move(GLdouble x, GLdouble y);
 
   virtual void loop();
   virtual void shutdown() {

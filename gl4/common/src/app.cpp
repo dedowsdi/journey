@@ -224,6 +224,81 @@ void app::update_camera() {
 }
 
 //--------------------------------------------------------------------
+void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
+{
+  GLdouble dtx = x - m_last_cursor_position[0];
+  GLdouble dty = y - m_last_cursor_position[1];
+
+  if (!m_v_mat)
+    return;
+
+  if (m_camera_mode == CM_PITCH_YAW) {
+    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
+      return;
+
+    m_dirty_view = GL_TRUE;
+    // yaw world, assume z up
+    if (dtx != 0) {
+      *m_v_mat *= glm::rotate(static_cast<GLfloat>(dtx * 0.02), vec3(0, 0, 1));
+    }
+
+    // pitch camera, but reserve center
+    if (dty != 0) {
+      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+
+      // clear translation
+      set_col(*m_v_mat, 3, zp);
+
+      // rotate, translate world back
+      *m_v_mat = glm::translate(translation) *
+                 glm::rotate(static_cast<GLfloat>(-dty * 0.02), vec3(1, 0, 0)) *
+                 *m_v_mat;
+    }
+  } else if (m_camera_mode == CM_ARCBALL) {
+    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
+      return;
+
+    m_dirty_view = GL_TRUE;
+    if (dtx != 0 || dty != 0) {
+      mat4 w_mat_i = zxd::compute_window_mat_i(
+        0, 0, wnd_width(), wnd_height(), 0, 1);
+      mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
+
+      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+
+      set_col(*m_v_mat, 3, zp);
+      *m_v_mat = glm::translate(translation) * m * *m_v_mat;
+    }
+  } else if (m_camera_mode == CM_FREE) {
+    // fix cursor
+    glfwSetCursorPos(m_wnd, wnd_width() / 2.0, wnd_height()/ 2.0);
+
+    dtx = x - 0.5 * wnd_width();
+    dty = y - 0.5 * wnd_height();
+
+    *m_v_mat = glm::rotate(static_cast<GLfloat>(-dty) * 0.002f, vec3(1, 0, 0)) *
+               glm::rotate(static_cast<GLfloat>(dtx) * 0.002f, vec3(0, 1, 0)) *
+               *m_v_mat;
+
+    vec3 forward = -glm::row(*m_v_mat, 2).xyz();
+    vec3 right = cross(forward, pza);
+    if (glm::length(right) < 0.00001f) {
+      return;
+    }
+    m_dirty_view = GL_TRUE;
+    right = glm::normalize(right);
+
+    vec3 fixed_up = normalize(cross(right, forward));
+
+    // reserve eye position, use old eye position to deduce new world
+    // translation, eye position is in world space, so it should be rotated
+    // first, then translate
+    *m_v_mat = glm::translate(
+      make_mat4_row(right, fixed_up, -forward), -eye_pos(*m_v_mat));
+  }
+}
+
+//--------------------------------------------------------------------
 void app::run() {
   srand(time(0));
   init();
@@ -233,7 +308,7 @@ void app::run() {
 
 //--------------------------------------------------------------------
 void app::set_camera_mode(camera_mode v) {
-  static std::string modes[] = {"CM_YAW_PITCH", "CM_ARCBALL", "CM_FREE"};
+  static std::string modes[] = {"CM_PITCH_YAW", "CM_ARCBALL", "CM_FREE"};
   m_camera_mode = v;
   std::cout << "current camera mode : " << modes[m_camera_mode] << std::endl;
 
@@ -489,82 +564,9 @@ void app::glfw_mouse_button(GLFWwindow *wnd, int button, int action, int mods) {
 
 //--------------------------------------------------------------------
 void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
-
   y = glfw_to_gl(y);
-  GLdouble dtx = x - m_last_cursor_position[0];
-  GLdouble dty = y - m_last_cursor_position[1];
-  m_last_cursor_position[0] = x;
-  m_last_cursor_position[1] = y;
-
-  if (!m_v_mat) return;
-
-  if (m_camera_mode == CM_YAW_PITCH) {
-    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
-      return;
-
-    m_dirty_view = GL_TRUE;
-    // yaw world, assume z up
-    if (dtx != 0) {
-      *m_v_mat *= glm::rotate(static_cast<GLfloat>(dtx * 0.02), vec3(0, 0, 1));
-    }
-
-    // pitch camera, but reserve center
-    if (dty != 0) {
-      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
-
-      // translate world to camera
-      set_col(*m_v_mat, 3, zp);
-
-      // rotate, translate world back
-      *m_v_mat = glm::translate(translation) *
-                 glm::rotate(static_cast<GLfloat>(-dty * 0.02), vec3(1, 0, 0)) *
-                 *m_v_mat;
-    }
-  } else if (m_camera_mode == CM_ARCBALL) {
-    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
-      return;
-
-    m_dirty_view = GL_TRUE;
-    if (dtx != 0 || dty != 0) {
-      mat4 w_mat_i = zxd::compute_window_mat_i(
-        0, 0, wnd_width(), wnd_height(), 0, 1);
-      mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
-
-      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
-      // translate world to camera
-      set_col(*m_v_mat, 3, zp);
-
-      // rotate, translate world back
-      *m_v_mat = glm::translate(translation) * m * *m_v_mat;
-    }
-  } else if (m_camera_mode == CM_FREE) {
-    // fix cursor
-    glfwSetCursorPos(m_wnd, wnd_width() / 2.0, wnd_height()/ 2.0);
-
-    *m_v_mat = glm::rotate(static_cast<GLfloat>(-dty) * 0.002f, vec3(1, 0, 0)) *
-               glm::rotate(static_cast<GLfloat>(dtx) * 0.002f, vec3(0, 1, 0)) *
-               *m_v_mat;
-
-    // use lookat to fix camera up, reserve camera position.
-    // vec3 eye = eye_pos(*m_v_mat);
-    // vec3 center = eye + 10.0f * -glm::row(*m_v_mat, 2).xyz();
-    //*m_v_mat = glm::lookAt(eye, center, pza);
-
-    vec3 forward = -glm::row(*m_v_mat, 2).xyz();
-    vec3 right = cross(forward, pza);
-    if (glm::length(right) < 0.0001f) {
-      return;
-    }
-    m_dirty_view = GL_TRUE;
-    right = glm::normalize(right);
-
-    vec3 fixed_up = normalize(cross(right, forward));
-
-    // reserve eye position, use old eye position to deduce new world
-    // translation
-    *m_v_mat = glm::translate(
-      make_mat4_row(right, fixed_up, -forward), -eye_pos(*m_v_mat));
-  }
+  rotate_camera_mouse_move(x, y);
+  m_last_cursor_position = vec2(x, y);
 }
 
 //--------------------------------------------------------------------

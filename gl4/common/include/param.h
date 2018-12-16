@@ -8,7 +8,7 @@
 #include "gl.h"
 #include <glm/glm.hpp>
 
-class GLFWwindow;
+struct GLFWwindow;
 
 namespace zxd
 {
