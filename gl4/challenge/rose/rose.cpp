@@ -42,6 +42,8 @@ public:
 
     prg.init();
     prg.fix2d_camera(-1, 1, -1, 1);
+    set_p_mat(&prg.p_mat);
+    set_camera_mode(CM_ORTHO);
 
     auto callback = std::bind(std::mem_fn(&app_name::update_rose), this, std::placeholders::_1);
     kci_n = m_control.add_control(GLFW_KEY_Q, 1, 1, 1000, 1, callback);
@@ -90,7 +92,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.p_mat * prg.v_mat));
     glUniform4f(prg.ul_color, 1,1,1,1);
     m_rose.draw();
 

@@ -22,7 +22,8 @@ public:
   enum camera_mode {
     CM_PITCH_YAW,  // translate pitch yaw
     CM_ARCBALL,
-    CM_FREE  // yaw, pitch camera
+    CM_FREE,  // pitch, yaw, reserve camera position, no skiew
+    CM_ORTHO  // ortho projection, scale only
   };
   enum move_dir {
     MD_LEFT = 1 << 0,
@@ -70,6 +71,7 @@ protected:
   app_info m_info;
   GLFWwindow *m_wnd;
   mat4 *m_v_mat;
+  mat4 *m_p_mat; // only used for orthogonal projection zoom
 
   dvec2
     m_last_cursor_position;   // used to rotate camera when mid button pressed
@@ -80,21 +82,7 @@ protected:
   timer m_timer;
 
 public:
-  app()
-      : 
-        m_pause(false),
-        m_update_count(0),
-        m_camera_mode(CM_PITCH_YAW),
-        m_v_mat(0),
-        m_reading(GL_FALSE),
-        m_camera_moving(GL_FALSE),
-        m_move_dir(0),
-        m_frame_number(0),
-        m_fps(0),
-        m_last_time(0),
-        m_current_time(0),
-        m_delta_time(0),
-        m_camera_move_speed(1.5) {}
+  app();
 
   void init();
   virtual void run();
@@ -107,6 +95,7 @@ public:
 
   mat4 *v_mat() const { return m_v_mat; }
   void set_v_mat(mat4 *v) { m_v_mat = v; }
+  void set_p_mat(mat4 *v) { m_p_mat = v; }
 
   camera_mode get_camera_mode() const { return m_camera_mode; }
   void set_camera_mode(camera_mode v);

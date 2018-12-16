@@ -22,6 +22,24 @@ void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
 }
 
 //--------------------------------------------------------------------
+app::app()
+  : 
+    m_pause(false),
+    m_update_count(0),
+    m_camera_mode(CM_PITCH_YAW),
+    m_v_mat(0),
+    m_p_mat(0),
+    m_reading(GL_FALSE),
+    m_camera_moving(GL_FALSE),
+    m_move_dir(0),
+    m_frame_number(0),
+    m_fps(0),
+    m_last_time(0),
+    m_current_time(0),
+    m_delta_time(0),
+    m_camera_move_speed(1.5) {}
+
+//--------------------------------------------------------------------
 void app::init() {
   m_shutdown = GL_FALSE;
   m_dirty_view = GL_TRUE;
@@ -571,10 +589,22 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
 
 //--------------------------------------------------------------------
 void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
-  // yoffset is negative if you scroll toward yourself
-  if (m_v_mat) {
-    m_dirty_view = GL_TRUE;
-    GLfloat scale = 1 - 0.1 * yoffset;
+
+  GLfloat scale = 1 - 0.1 * yoffset;
+  if(m_camera_mode == CM_ORTHO)
+  {
+    if(!m_p_mat)
+      return;
+
+    (*m_p_mat)[0][0] /= scale;
+    (*m_p_mat)[1][1] /= scale;
+  }
+  else
+  {
+    if(!m_v_mat)
+      return;
+
+    m_dirty_view = true;
     (*m_v_mat)[3][0] *= scale;
     (*m_v_mat)[3][1] *= scale;
     (*m_v_mat)[3][2] *= scale;
