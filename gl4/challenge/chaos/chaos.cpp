@@ -186,7 +186,12 @@ void chaos_app::reset_polygon(const kci* kci)
   point = vertices->at(0);
 
   if(draw_polygon)
+  {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     polygon.draw();
+    glDisable(GL_BLEND);
+  }
 }
 
 void chaos_app::pick_next()

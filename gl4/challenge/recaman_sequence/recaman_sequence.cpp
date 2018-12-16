@@ -175,7 +175,7 @@ public:
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_LINE_SMOOTH);
-    glEnable(GL_MULTISAMPLE);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -302,7 +302,11 @@ public:
     prg.use();
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
     glLineWidth(line_width);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     mesh.draw();
+    glDisable(GL_BLEND);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuse_map);
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, WIDTH, HEIGHT, 0);

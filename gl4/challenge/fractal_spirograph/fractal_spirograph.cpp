@@ -221,8 +221,7 @@ public:
     auto pen = m_graph->get_pen();
 
     glEnable(GL_BLEND);
-    glBlendColor(0, 0, 0, 0.5);
-    glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     GLuint resolution = kci_resolution->get_int();
     vec2_vector lines;

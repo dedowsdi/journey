@@ -94,7 +94,6 @@ void lightining_app::init_info() {
 }
 
 void lightining_app::create_scene() {
-  glEnable(GL_LINE_SMOOTH);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

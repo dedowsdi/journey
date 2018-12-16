@@ -44,9 +44,15 @@ void pacman::draw(const mat4& m_mat)
 
   glLineWidth(3);
   glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
   glUniformMatrix4fv(m_program->ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   glUniform4fv(m_program->ul_color, 1, glm::value_ptr(m_outline_color));
   m_outline.draw();
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glDisable(GL_BLEND);
 
   mvp_mat = glm::translate(mvp_mat, vec3(0, m_radius * 0.4f,  0));
   glUniformMatrix4fv(m_program->ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));

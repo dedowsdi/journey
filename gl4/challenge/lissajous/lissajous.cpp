@@ -113,6 +113,9 @@ public:
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(base_color));
     GLfloat t = m_current_time * 0.5f;
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // draw 1st col and row
     vec2 lt = vec2(-radius * (cols+1), radius * (rows+1)) + vec2(radius, -radius);
     for (int i = 0; i <= cols; ++i) {
