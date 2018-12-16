@@ -37,10 +37,10 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, m_info.wnd_width, 0, m_info.wnd_height);
+    prg.fix2d_camera(0, wnd_width(), 0, wnd_height());
 
     auto callback = std::bind(std::mem_fn(&supershape_app::update_shape), this, std::placeholders::_1);
     n1 = m_control.add_control<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1, callback);
@@ -95,13 +95,13 @@ public:
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

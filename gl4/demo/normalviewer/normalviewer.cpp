@@ -103,7 +103,7 @@ protected:
     torus.build_mesh();
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void display() {
@@ -132,7 +132,7 @@ protected:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << "qQ : normal length : " << normal_length << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 25);
+    m_text.print(ss.str(), 10, wnd_height()- 25);
     glDisable(GL_BLEND);
   }
 

@@ -171,7 +171,7 @@ protected:
   {
     glClearColor(BG_COLOR.x, BG_COLOR.y, BG_COLOR.z, 1);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     m_geometry.build_mesh();
 
@@ -239,7 +239,7 @@ protected:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << m_fps << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(0, 0, 0, 1));
+    m_text.print(ss.str(), 10, wnd_height()- 20, vec4(0, 0, 0, 1));
     glDisable(GL_BLEND);
   }
 };

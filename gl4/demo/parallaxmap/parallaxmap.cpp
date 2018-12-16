@@ -170,7 +170,7 @@ public:
     bind_uniform_locations(prg);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void display() {
@@ -211,7 +211,7 @@ public:
        << std::endl;
     ss << "w : height_scale : " << height_scale << std::endl;
     ss << "fps : " << m_fps << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 25);
+    m_text.print(ss.str(), 10, wnd_height()- 25);
     glDisable(GL_BLEND);
   }
 

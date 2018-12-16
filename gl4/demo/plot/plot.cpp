@@ -58,7 +58,7 @@ public:
   virtual void create_scene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     glGenVertexArrays(1, &m_vao);
 
@@ -104,7 +104,7 @@ public:
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     prg.use();
-    glUniform2f(prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
+    glUniform2f(prg.ul_resolution, wnd_width(), wnd_height());
     glUniform1i(prg.ul_mode, m_mode);
     glUniform1f(prg.ul_exponent, m_exponent);
     glUniform1f(prg.ul_line_width, m_line_width);
@@ -130,7 +130,7 @@ public:
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

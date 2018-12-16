@@ -108,7 +108,7 @@ protected:
   virtual void create_scene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     // init program
     program0.init();
@@ -223,7 +223,7 @@ protected:
     ss << "q : method : " << methods[method] << std::endl;
     ss << "wW : billboard number : " << num_billboards << std::endl;
     ss << "fps : " << m_fps << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 25);
+    m_text.print(ss.str(), 10, wnd_height()- 25);
     glDisable(GL_BLEND);
   }
 

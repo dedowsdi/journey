@@ -169,7 +169,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_info.wnd_width, m_info.wnd_height,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, wnd_width(), wnd_height(),
         0, GL_RED, GL_UNSIGNED_BYTE, 0);
 
     if(!glIsFramebuffer(fbo))
@@ -184,7 +184,7 @@ public:
       glGenTextures(1, &mtex);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mtex);
     glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples, GL_R32F,
-        m_info.wnd_width, m_info.wnd_height, false);
+        wnd_width(), wnd_height(), false);
 
     //glDeleteFramebuffers(1, &mfbo);
     if(!glIsFramebuffer(mfbo))
@@ -195,14 +195,14 @@ public:
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       printf("incomplete frame buffer\n");
 
-    pixels.resize(m_info.wnd_width*m_info.wnd_height);
+    pixels.resize(wnd_width()*wnd_height());
 
     pbo.clear();
     GLuint* buffers = new GLuint[num_pbo];
     glGenBuffers(num_pbo, buffers);
     for (int i = 0; i < num_pbo; ++i) {
       glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers[i]);
-      glBufferData(GL_PIXEL_PACK_BUFFER, m_info.wnd_width*m_info.wnd_height*sizeof(GLuint), 0, GL_DYNAMIC_DRAW);
+      glBufferData(GL_PIXEL_PACK_BUFFER, wnd_width()*wnd_height()*sizeof(GLuint), 0, GL_DYNAMIC_DRAW);
       pbo.add_resource(buffers[i]);
     }
     glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
@@ -235,7 +235,7 @@ public:
 
     reset_colors();
 
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
     GLdouble aspect = radius.x / radius.y;
     radius.x *= wnd_aspect() / aspect;
   }
@@ -369,14 +369,14 @@ public:
     glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
 
     iter_prg.use();
-    glUniform2d(iter_prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
+    glUniform2d(iter_prg.ul_resolution, wnd_width(), wnd_height());
     glUniform4dv(iter_prg.ul_rect, 1, glm::value_ptr(rect));
     q.draw();
 
     // blit back to normal texture
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-    glBlitFramebuffer(0, 0, m_info.wnd_width, m_info.wnd_height,
-        0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBlitFramebuffer(0, 0, wnd_width(), wnd_height(),
+        0, 0, wnd_width(), wnd_height(), GL_COLOR_BUFFER_BIT, GL_LINEAR);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
     // update historgram
@@ -394,14 +394,14 @@ public:
 
       //glReadBuffer(GL_COLOR_ATTACHMENT0);
       glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo.pong());
-      glReadPixels(0, 0, m_info.wnd_width, m_info.wnd_height, GL_RED, GL_FLOAT, BUFFER_OFFSET(0));
+      glReadPixels(0, 0, wnd_width(), wnd_height(), GL_RED, GL_FLOAT, BUFFER_OFFSET(0));
 
       glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
     }
     else
     {
       glReadBuffer(GL_COLOR_ATTACHMENT0);
-      glReadPixels(0, 0, m_info.wnd_width, m_info.wnd_height, GL_RED, GL_FLOAT, &pixels.front());
+      glReadPixels(0, 0, wnd_width(), wnd_height(), GL_RED, GL_FLOAT, &pixels.front());
       t.reset();
       for(auto item : pixels)
       {
@@ -457,7 +457,7 @@ public:
   {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     iter_prg.use();
-    glUniform2d(iter_prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
+    glUniform2d(iter_prg.ul_resolution, wnd_width(), wnd_height());
     glUniform4dv(iter_prg.ul_rect, 1, glm::value_ptr(rect));
     q.draw();
   }
@@ -497,14 +497,14 @@ public:
     ss << "radius : " << radius.x << " " << radius.y << std::endl;
     ss.precision(1);
     //ss << "fps : " << m_fps << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(0,0,1,1));
+    m_text.print(ss.str(), 10, wnd_height()- 20, vec4(0,0,1,1));
     glDisable(GL_BLEND);
 
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
     resize_textrure();
     GLdouble aspect = radius.x / radius.y;
     radius.x *= wnd_aspect() / aspect;
@@ -581,7 +581,7 @@ public:
         glfwGetCursorPos(m_wnd, &pos.x, &pos.y);
         pos = glfw_to_gl(pos);
         dvec2 dt_pos = pos - m_last_cursor_position;
-        dvec2 offset = dt_pos / dvec2(m_info.wnd_width, m_info.wnd_height) * (rect.zw() - rect.xy());
+        dvec2 offset = dt_pos / dvec2(wnd_width(), wnd_height()) * (rect.zw() - rect.xy());
         center -= offset;
         dirty = true;
       }

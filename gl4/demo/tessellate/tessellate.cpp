@@ -219,13 +219,13 @@ void tessellate_app::display() {
   ss << "qwer : tess level outer : " << tess_level_outer << std::endl;;
   ss << "ui : tess level inner : " << tess_level_inner << std::endl;;
   ss << "asdf : layout : " << prg.layout << std::endl;
-  m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+  m_text.print(ss.str(), 10, wnd_height()- 20);
   glDisable(GL_BLEND);
 }
 
 void tessellate_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void tessellate_app::glfw_key(

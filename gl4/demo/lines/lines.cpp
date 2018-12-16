@@ -91,7 +91,7 @@ public:
   virtual void create_scene() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     m_program.init();
 

@@ -266,14 +266,14 @@ public:
     std::stringstream ss;
     ss << "fps " << m_fps << std::endl;
     ss << "num circles " << m_circles.size() << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(0,0,0,1));
+    m_text.print(ss.str(), 10, wnd_height()- 20, vec4(0,0,0,1));
     glDisable(GL_BLEND);
 
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

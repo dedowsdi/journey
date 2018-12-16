@@ -311,13 +311,13 @@ void lightining_app::display() {
     ss << "u : use cpu : " << use_cpu << std::endl;
   }
   ss << "fps : " << m_fps << std::endl;
-  m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+  m_text.print(ss.str(), 10, wnd_height()- 20);
   glDisable(GL_BLEND);
 }
 
 void lightining_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void lightining_app::glfw_key(

@@ -120,13 +120,13 @@ void chaos_app::create_scene() {
   auto callback = std::bind(std::mem_fn(&chaos_app::reset_polygon), this, std::placeholders::_1);
   kci_draw_per_frame = m_control.add_control(GLFW_KEY_Q, draw_per_frame , 1, 10000, 10, callback);
   kci_edges = m_control.add_control(GLFW_KEY_W, edges, 3, 1000, 1, callback);
-  kci_ratio = m_control.add_control(GLFW_KEY_E, ratio, -100, 100, 0.05, callback);
-  kci_alpha = m_control.add_control(GLFW_KEY_R, alpha, 0, 1, 0.02, callback);
+  kci_ratio = m_control.add_control<GLfloat>(GLFW_KEY_E, ratio, -100, 100, 0.05, callback);
+  kci_alpha = m_control.add_control<GLfloat>(GLFW_KEY_R, alpha, 0, 1, 0.02, callback);
   kci_pick = m_control.add_control(GLFW_KEY_U, pick, 0, 2, 1, callback);
   kci_draw_method = m_control.add_control(GLFW_KEY_I, draw_method, 0, 2, 1, callback);
-  kci_point_power = m_control.add_control(GLFW_KEY_O, point_power, -100, 100, 0.1, callback);
-  kci_length_power = m_control.add_control(GLFW_KEY_P, length_power, -100, 100, 0.1, callback);
-  kci_radius = m_control.add_control(GLFW_KEY_A, pick_radius, 1, 1000, 1, callback);
+  kci_point_power = m_control.add_control<GLfloat>(GLFW_KEY_O, point_power, -100, 100, 0.1, callback);
+  kci_length_power = m_control.add_control<GLfloat>(GLFW_KEY_P, length_power, -100, 100, 0.1, callback);
+  kci_radius = m_control.add_control<GLfloat>(GLFW_KEY_A, pick_radius, 1, 1000, 1, callback);
 
   reset_polygon();
 }
@@ -135,12 +135,12 @@ void chaos_app::reset_polygon(const kci* kci)
 {
   glClear(GL_COLOR_BUFFER_BIT);
 
-  edges = kci_edges->get_float();
+  edges = kci_edges->get_int();
   ratio = kci_ratio->get_float();
-  draw_per_frame = kci_draw_per_frame->get_float();
+  draw_per_frame = kci_draw_per_frame->get_int();
   alpha = kci_alpha->get_float();
-  pick = kci_pick->get_float();
-  draw_method = kci_draw_method->get_float();
+  pick = kci_pick->get_int();
+  draw_method = kci_draw_method->get_int();
   point_power = kci_point_power->get_float();
   length_power = kci_length_power->get_float();
   pick_radius = kci_radius->get_float();
@@ -267,7 +267,7 @@ void chaos_app::display() {
   }
 
   glEnable(GL_SCISSOR_TEST);
-  glScissor(0, m_info.wnd_height-300, 300, 300);
+  glScissor(0, wnd_height()-300, 300, 300);
   glClear(GL_COLOR_BUFFER_BIT);
 
   if(!display_help)
@@ -288,14 +288,14 @@ void chaos_app::display() {
   ss << "c : random color" << std::endl;
   ss << "h : toggle help " << std::endl;
   ss << "fps : " << m_fps << std::endl;
-  m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+  m_text.print(ss.str(), 10, wnd_height()- 20);
   glDisable(GL_BLEND);
   glDisable(GL_SCISSOR_TEST);
 }
 
 void chaos_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void chaos_app::glfw_key(

@@ -76,7 +76,7 @@ public:
   virtual void create_scene() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     glGenVertexArrays(1, &m_vao);
 
@@ -111,7 +111,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniform2f(prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
+    glUniform2f(prg.ul_resolution, wnd_width(), wnd_height());
     glUniform1f(prg.ul_a, a->get_float());
     glUniform1f(prg.ul_b, b->get_float());
     glUniform1f(prg.ul_n, n->get_float());
@@ -132,7 +132,7 @@ public:
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   GLboolean update_shader() const { return m_update_shader; }

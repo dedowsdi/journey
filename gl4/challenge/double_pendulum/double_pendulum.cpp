@@ -71,7 +71,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_info.wnd_width, m_info.wnd_height,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wnd_width(), wnd_height(),
         0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     glGenFramebuffers(1, &m_fbo);
@@ -135,13 +135,13 @@ public:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << "";
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

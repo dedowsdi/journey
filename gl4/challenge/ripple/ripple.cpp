@@ -151,13 +151,13 @@ public:
     ss << " qQ : dampen : " << kci_dampen->get_float() << std::endl;
     ss << " wW : ripple start : " << kci_ripple_start->get_float() << std::endl;
     ss << " eE : ripple frame : " << kci_ripple_frame->get_int() << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

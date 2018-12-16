@@ -78,7 +78,7 @@ public:
   virtual void create_scene() {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
 
@@ -117,7 +117,7 @@ public:
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
@@ -148,7 +148,7 @@ public:
     GLchar* pixels = new GLchar[m_image.getWidth() * m_image.getHeight() * 3];
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-    rand_rgb_flood_fill(reinterpret_cast<glm::u8vec3 *>(pixels), ivec2(m_info.wnd_width, m_info.wnd_height), cursor); 
+    rand_rgb_flood_fill(reinterpret_cast<glm::u8vec3 *>(pixels), ivec2(wnd_width(), wnd_height()), cursor); 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_image.getWidth(), m_image.getHeight(),
         0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 

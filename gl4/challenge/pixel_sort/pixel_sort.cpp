@@ -65,7 +65,7 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
 
@@ -173,13 +173,13 @@ public:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << "q : sort rgb_pixels : " << sort_type_str[sort_type] << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(0,0,0,1));
+    m_text.print(ss.str(), 10, wnd_height()- 20, vec4(0,0,0,1));
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

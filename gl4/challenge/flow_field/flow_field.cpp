@@ -24,9 +24,9 @@ GLfloat xoff_start;
 GLfloat yoff_start;
 GLfloat zoff_start;
 
- xoff_step;
- yoff_step;
- zoff_step;
+kcip xoff_step;
+kcip yoff_step;
+kcip zoff_step;
 
 struct field_cell
 {
@@ -55,7 +55,7 @@ const vec2& get_field_force(GLshort row, GLshort col, GLfloat time)
     cell.time = time;
     //std::cout << row << ":" << col << std::endl;
     GLfloat angle = glm::perlin(
-        glm::vec3(xoff_step->value * col + xoff_start, yoff_step->value * row + yoff_start, zoff)) * f2pi;
+        glm::vec3(xoff_step->get_float() * col + xoff_start, yoff_step->get_float() * row + yoff_start, zoff)) * f2pi;
     cell.force = vec2(glm::cos(angle), glm::sin(angle)) * FORCE_MAGNITUDE;
   }
   return cell.force;
@@ -155,7 +155,7 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
@@ -163,9 +163,9 @@ public:
     //flow_fields.reserve(FF_ROW * FF_COL);
     flow_fields.resize(FF_ROW * FF_COL);
 
-    xoff_step = m_control.add_control(GLFW_KEY_W, 0.05, -10000, 10000, 0.01);
-    yoff_step = m_control.add_control(GLFW_KEY_E, 0.05, -10000, 10000, 0.01);
-    zoff_step = m_control.add_control(GLFW_KEY_R, 0.002, -10000, 10000, 0.002);
+    xoff_step = m_control.add_control<GLfloat>(GLFW_KEY_W, 0.05, -10000, 10000, 0.01);
+    yoff_step = m_control.add_control<GLfloat>(GLFW_KEY_E, 0.05, -10000, 10000, 0.01);
+    zoff_step = m_control.add_control<GLfloat>(GLFW_KEY_R, 0.002, -10000, 10000, 0.002);
 
     particles.resize(NUM_PARTICLE);
 
@@ -186,7 +186,7 @@ public:
   }
 
   virtual void update() {
-    zoff += zoff_step->value;
+    zoff += zoff_step->get_float();
 
     for (int i = 0; i < particles.size(); ++i) 
     {
@@ -257,18 +257,18 @@ public:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
     ss << "q : draw flow field" << std::endl;
-    ss << "w : xoff step : " << xoff_step->value <<  std::endl;
-    ss << "e : yoff step : " << yoff_step->value <<  std::endl;
-    ss << "r : zoff step : " << zoff_step->value <<  std::endl;
+    ss << "w : xoff step : " << xoff_step->get_float() <<  std::endl;
+    ss << "e : yoff step : " << yoff_step->get_float() <<  std::endl;
+    ss << "r : zoff step : " << zoff_step->get_float() <<  std::endl;
     ss << "fps : " << m_fps << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
 
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

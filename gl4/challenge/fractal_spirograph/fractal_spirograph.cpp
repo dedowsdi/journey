@@ -71,7 +71,7 @@ public:
       glGenTextures(1, &fbo_tex);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, fbo_tex);
     glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples, GL_RGB,
-        m_info.wnd_width, m_info.wnd_height, GL_TRUE);
+        wnd_width(), wnd_height(), GL_TRUE);
 
     if(!glIsTexture(tex))
       glGenTextures(1, &tex);
@@ -81,7 +81,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_info.wnd_width, m_info.wnd_height,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wnd_width(), wnd_height(),
         0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
     if(!glIsFramebuffer(fbo))
@@ -235,7 +235,7 @@ public:
     debugger::draw_line(GL_LINE_STRIP, lines, prg.p_mat, pen_width, vec4(1,0,1,1));
     glDisable(GL_BLEND);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glBlitFramebuffer(0, 0, m_info.wnd_width, m_info.wnd_height, 0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBlitFramebuffer(0, 0, wnd_width(), wnd_height(), 0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
   }
 
   virtual void display() {
@@ -290,14 +290,14 @@ public:
     ss << "p : reset : " << std::endl;
     ss << "z : toggle help : " << std::endl;
     ss << "x : restart : " << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
     resize_buffer();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

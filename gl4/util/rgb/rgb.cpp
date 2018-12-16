@@ -236,7 +236,7 @@ protected:
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_LINE_SMOOTH);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     rgb_program.init();
     rgb_program.p_mat = ortho(0.0f, 1.0f, 0.0f, 1.0f);
@@ -286,7 +286,7 @@ protected:
 
     glUseProgram(rgb_program);
     glViewport(
-      0, m_info.wnd_height * 0.1, m_info.wnd_width, m_info.wnd_height * 0.9);
+      0, wnd_height()* 0.1, wnd_width(), m_info.wnd_height * 0.9);
 
     // render pane
     glBindVertexArray(m_pane_vao);
@@ -304,7 +304,7 @@ protected:
     glDrawArrays(GL_LINE_LOOP, 0, 4);
     glLineWidth(1);
 
-    glViewport(0, 0, m_info.wnd_width, m_info.wnd_height);
+    glViewport(0, 0, wnd_width(), wnd_height());
     // render text
     // for (int i = 0; i < m_panes.size(); ++i) {
     // color_pane &pane = m_panes[i];
@@ -314,8 +314,8 @@ protected:
     // ss << color.r << " " << color.g << " " << color.b;
     // glEnable(GL_BLEND);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // m_text.print(ss.str(), pane.x() * m_info.wnd_width + 5,
-    // pane.y() * m_info.wnd_height + 8, vec4(0, 0, 0, 1));
+    // m_text.print(ss.str(), pane.x() * wnd_width() + 5,
+    // pane.y() * wnd_height()+ 8, vec4(0, 0, 0, 1));
     // glDisable(GL_BLEND);
     //}
     glEnable(GL_BLEND);
@@ -359,7 +359,7 @@ protected:
       ss << " [ctrl|alt]qQ : red" << std::endl;
       ss << " [ctrl|alt]wW : green" << std::endl;
       ss << " [ctrl|alt]eE : blue" << std::endl;
-      m_text.print(ss.str(), 1, m_info.wnd_height - 25, vec4(0, 0, 1, 1));
+      m_text.print(ss.str(), 1, wnd_height()- 25, vec4(0, 0, 1, 1));
     }
     glDisable(GL_BLEND);
   }

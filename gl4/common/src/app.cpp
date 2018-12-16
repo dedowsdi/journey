@@ -27,8 +27,8 @@ void app::init() {
   m_dirty_view = GL_TRUE;
   init_info();
 
-  m_info.wm.z = m_info.wnd_width;
-  m_info.wm.w = m_info.wnd_height;
+  m_info.wm.z = wnd_width();
+  m_info.wm.w = wnd_height();
 
   init_wnd();
   init_gl();
@@ -128,7 +128,7 @@ void app::init_wnd() {
   }
   else
   {
-    m_wnd = glfwCreateWindow(m_info.wnd_width, m_info.wnd_height, m_info.title.c_str(), NULL, NULL);
+    m_wnd = glfwCreateWindow(wnd_width(), wnd_height(), m_info.title.c_str(), NULL, NULL);
   }
 
   if (!m_wnd) {
@@ -242,7 +242,7 @@ void app::set_camera_mode(camera_mode v) {
 
     // hide, fix cursor
     glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
+    glfwSetCursorPos(m_wnd, wnd_width() / 2.0, wnd_height()/ 2.0);
 
     glfwGetCursorPos(
       m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
@@ -527,7 +527,7 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
     m_dirty_view = GL_TRUE;
     if (dtx != 0 || dty != 0) {
       mat4 w_mat_i = zxd::compute_window_mat_i(
-        0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
+        0, 0, wnd_width(), wnd_height(), 0, 1);
       mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
 
       glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
@@ -539,7 +539,7 @@ void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
     }
   } else if (m_camera_mode == CM_FREE) {
     // fix cursor
-    glfwSetCursorPos(m_wnd, m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
+    glfwSetCursorPos(m_wnd, wnd_width() / 2.0, wnd_height()/ 2.0);
 
     *m_v_mat = glm::rotate(static_cast<GLfloat>(-dty) * 0.002f, vec3(1, 0, 0)) *
                glm::rotate(static_cast<GLfloat>(dtx) * 0.002f, vec3(0, 1, 0)) *
@@ -601,19 +601,19 @@ vec2 app::current_mouse_position()
 vec3 app::unproject(vec3 p, const mat4& m)
 {
   vec4 sp(p, 1);
-  mat4 w_mat = zxd::compute_window_mat(0, 0, m_info.wnd_width, m_info.wnd_height);
+  mat4 w_mat = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height());
   mat4 xw_mat = w_mat * m;
   vec4 res = glm::inverse(xw_mat) * sp;
   return res.xyz() / res.w;
 }
 
 //--------------------------------------------------------------------
-GLdouble app::glfw_to_gl(GLdouble y) { return m_info.wnd_height - 1 - y; }
+GLdouble app::glfw_to_gl(GLdouble y) { return wnd_height()- 1 - y; }
 
 //--------------------------------------------------------------------
 vec2 app::glfw_to_gl(vec2 p)
 {
-  return vec2(p.x, m_info.wnd_height - 1 - p.y);
+  return vec2(p.x, wnd_height()- 1 - p.y);
 }
 
 }

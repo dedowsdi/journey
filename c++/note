@@ -26,3 +26,6 @@
     that all source code(all branches) is valid, even if it's not executed
 
 10. C++ guarantees it's always safe to delete the null pointer
+
+11. placement new is used inside vector to create objects in the vector's unused
+    capacity.

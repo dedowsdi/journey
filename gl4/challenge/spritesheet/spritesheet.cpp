@@ -199,16 +199,16 @@ public:
 
     glGenFramebuffers(1, &fbo);
 
-    kci_ripple_dampen = m_control.add_control(GLFW_KEY_Q, ripple_dampen, 0, 10, 0.01);
-    kci_ripple_start = m_control.add_control(GLFW_KEY_W, ripple_start, 0, 500, 1);
-    kci_ripple_frame = m_control.add_control(GLFW_KEY_E, ripple_frame, 1, 60, 1);
+    kci_ripple_dampen = m_control.add_control<GLfloat>(GLFW_KEY_Q, ripple_dampen, 0, 10, 0.01);
+    kci_ripple_start = m_control.add_control<GLfloat>(GLFW_KEY_W, ripple_start, 0, 500, 1);
+    kci_ripple_frame = m_control.add_control<GLint>(GLFW_KEY_E, ripple_frame, 1, 60, 1);
   }
 
   virtual void update() 
   {
     ripple_start = kci_ripple_start->get_float();
     ripple_dampen = kci_ripple_dampen->get_float();
-    ripple_frame = kci_ripple_frame->get_float();
+    ripple_frame = kci_ripple_frame->get_int();
 
     if((m_frame_number % ripple_frame) == 0)
       ripple_tex.shift();
@@ -267,13 +267,13 @@ public:
     ss << " qQ : dampen : " << ripple_dampen << std::endl;
     ss << " wW : ripple start : " << ripple_start << std::endl;
     ss << " eE : ripple frame : " << ripple_frame << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

@@ -215,7 +215,7 @@ void eyeball_app::display() {
     glDisable(GL_BLEND);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-    glBlitFramebuffer(0, 0, m_info.wnd_width, m_info.wnd_height, 0, 0, m_info.wnd_width, m_info.wnd_height,
+    glBlitFramebuffer(0, 0, wnd_width(), wnd_height(), 0, 0, m_info.wnd_width, m_info.wnd_height,
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
     
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -229,7 +229,7 @@ void eyeball_app::display() {
   {
     prg.use();
     glUniform1i(0, 0);
-    glUniform2f(1, m_info.wnd_width, m_info.wnd_height);
+    glUniform2f(1, wnd_width(), wnd_height());
     glBindTexture(GL_TEXTURE_2D, tex);
     prg.uniform1f("eyeballs[0].r0", eyeballs[0].r0);
     prg.uniform1f("eyeballs[0].r1", eyeballs[0].r1);
@@ -252,13 +252,13 @@ void eyeball_app::display() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   std::stringstream ss;
   ss << "";
-  m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+  m_text.print(ss.str(), 10, wnd_height()- 20);
   glDisable(GL_BLEND);
 }
 
 void eyeball_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+  m_text.reshape(wnd_width(), wnd_height());
 
   ll_prg.p_mat = prg.p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
   resize_eyeball();
@@ -290,14 +290,14 @@ void eyeball_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y){
 }
 
 vec2 eyeball_app::world_to_wnd(const vec2& v) {
-  mat4 m = zxd::compute_window_mat(0, 0, m_info.wnd_width, m_info.wnd_height) * prg.p_mat;
+  mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * prg.p_mat;
   return (m * vec4(v, 0, 1)).xy();
 }
 
 GLfloat eyeball_app::world_to_wnd(GLfloat radius){
-  //mat4 m = zxd::compute_window_mat(0, 0, m_info.wnd_width, m_info.wnd_height) * prg.p_mat;
+  //mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * prg.p_mat;
   GLfloat double_right_inverse = 0.5f * prg.p_mat[0][0];
-  return radius * m_info.wnd_width * double_right_inverse ;
+  return radius * wnd_width() * double_right_inverse ;
 }
 
 void eyeball_app::resize_eyeball(){
@@ -307,7 +307,7 @@ void eyeball_app::resize_eyeball(){
   // multisample rtt
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mtex);
   glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_info.samples,
-      GL_RGB, m_info.wnd_width, m_info.wnd_height, true);
+      GL_RGB, wnd_width(), wnd_height(), true);
 
   glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, mtex, 0);
@@ -321,7 +321,7 @@ void eyeball_app::resize_eyeball(){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_info.wnd_width, m_info.wnd_height,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wnd_width(), wnd_height(),
       0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
   glBindFramebuffer(GL_FRAMEBUFFER, fbo);
   glFramebufferTexture2D(

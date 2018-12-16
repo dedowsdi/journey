@@ -172,10 +172,10 @@ public:
     height = img.getHeight();
 #ifdef RECORD
     m_info.wnd_width = 480;
-    m_info.wnd_height = m_info.wnd_width * static_cast<GLfloat>(height)/width;
+    m_info.wnd_height = wnd_width() * static_cast<GLfloat>(height)/width;
     m_info.decorated = GL_FALSE;
-    std::cout << "wnd width : " << m_info.wnd_width << std::endl;
-    std::cout << "wnd height : " << m_info.wnd_height << std::endl;
+    std::cout << "wnd width : " << wnd_width() << std::endl;
+    std::cout << "wnd height : " << wnd_height()<< std::endl;
 #else
     m_info.wnd_width = width;
     m_info.wnd_height = height;
@@ -304,7 +304,7 @@ public:
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, m_info.wnd_width, m_info.wnd_height);
+    glViewport(0, 0, wnd_width(), wnd_height());
 
     if(display_cool_map)
       draw_quad(cool_map[cool_current], 0);
@@ -329,13 +329,13 @@ public:
     std::stringstream ss;
     ss << "q : display cool map : " << display_cool_map << std::endl;
     ss << "w : warp : " << warp << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

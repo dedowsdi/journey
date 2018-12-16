@@ -103,7 +103,7 @@ public:
 
     // text
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     // program
     blinn_prg.with_texcoord = 1;

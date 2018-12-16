@@ -90,7 +90,7 @@ protected:
     m_cooldown = 0;
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     m_sponge.push_back(cell(vec3(0), SPONGE_SIZE));
 
@@ -178,7 +178,7 @@ protected:
     std::stringstream ss;
     ss << "fps : " << m_fps << std::endl;
     ss << "q : subdivide" << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 

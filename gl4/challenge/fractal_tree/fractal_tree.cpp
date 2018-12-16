@@ -191,7 +191,7 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
@@ -240,13 +240,13 @@ public:
     ss << "iI : left rotate max " << left_angle_max->get_float() << std::endl;
     ss << "oO : right rotate min " << right_angle_min->get_float() << std::endl;
     ss << "pP : right rotate max " << right_angle_max->get_float() << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

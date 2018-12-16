@@ -69,13 +69,13 @@ void secret_garden_app::display() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   std::stringstream ss;
   ss << "";
-  m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+  m_text.print(ss.str(), 10, wnd_height()- 20);
   glDisable(GL_BLEND);
 }
 
 void secret_garden_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void secret_garden_app::glfw_key(

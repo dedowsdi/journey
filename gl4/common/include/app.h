@@ -1,10 +1,6 @@
 /*
  * Changed from superbible.
  */
-
-// you can't get argument information from libclang if you use glad/glad.h(which
-// use macro)
-
 #ifndef GL4_COMMON_APP_H
 #define GL4_COMMON_APP_H
 
@@ -103,7 +99,7 @@ public:
   void init();
   virtual void run();
   GLfloat wnd_aspect() {
-    return static_cast<GLfloat>(m_info.wnd_width) / m_info.wnd_height;
+    return static_cast<GLfloat>(wnd_width()) / wnd_height();
   }
 
   GLfloat wnd_width() {return m_info.wnd_width;}

@@ -196,14 +196,14 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, m_info.wnd_width, m_info.wnd_height);
+    glViewport(0, 0, wnd_width(), wnd_height());
 
     m_numspheres = 100;
     m_num_lights = 20;
-    g_buffer_size = vec2(m_info.wnd_width, m_info.wnd_height);
+    g_buffer_size = vec2(wnd_width(), wnd_height());
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     // gbuffer textures
     glGenTextures(1, &mg_vertex);

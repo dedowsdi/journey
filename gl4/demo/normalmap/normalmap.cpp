@@ -153,7 +153,7 @@ public:
     set_v_mat(&prg0.v_mat);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void display() {
@@ -189,7 +189,7 @@ public:
     //glBindTexture(GL_TEXTURE_2D, normal_map);
     //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    glViewport(0, 0, m_info.wnd_width, m_info.wnd_height);
+    glViewport(0, 0, wnd_width(), wnd_height());
     glEnable(GL_BLEND);
     glDisable(GL_SCISSOR_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -199,7 +199,7 @@ public:
     ss << "w : local viewer " << static_cast<GLint>(light_model.local_viewer)
        << std::endl;
     ss << "fps : " << m_fps << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 25);
+    m_text.print(ss.str(), 10, wnd_height()- 25);
     glDisable(GL_BLEND);
   }
 

@@ -298,13 +298,13 @@ public:
     ss << "q : theta " << kci_theta->get_float() << std::endl;
     ss << "w : delta " << kci_delta->get_float() << std::endl;
     ss << "e : sides " << kci_sides->get_int() << std::endl;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(1,0,0,1));
+    m_text.print(ss.str(), 10, wnd_height()- 20, vec4(1,0,0,1));
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

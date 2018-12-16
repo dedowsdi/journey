@@ -163,7 +163,7 @@ void reaction_diffusion_app::init_info() {
 void reaction_diffusion_app::create_scene() {
 
   m_text.init();
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+  m_text.reshape(wnd_width(), wnd_height());
 
   prg.init();
   prg1.init();
@@ -322,13 +322,13 @@ void reaction_diffusion_app::display() {
   ss << "y : : pacman " << add_pacman << std::endl;
   ss << "h : display help :" << display_help << std::endl;
   ss << m_fps;
-  m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(0, 0, 1, 1));
+  m_text.print(ss.str(), 10, wnd_height()- 20, vec4(0, 0, 1, 1));
   glDisable(GL_BLEND);
 }
 
 void reaction_diffusion_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void reaction_diffusion_app::glfw_key(
@@ -359,7 +359,7 @@ void reaction_diffusion_app::glfw_key(
 void reaction_diffusion_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y)
 {
   vec2 pos(x, glfw_to_gl(y));
-  pos /= vec2(m_info.wnd_width, m_info.wnd_height);
+  pos /= vec2(wnd_width(), wnd_height());
   pos = (pos*2.0f - 1.0f) * vec2(100, 100);
   create_circle_seeds(pos, 20, false);
 }

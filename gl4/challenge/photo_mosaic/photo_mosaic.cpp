@@ -252,7 +252,7 @@ struct photo
   {
     glBindTexture(GL_TEXTURE_2D, pack.tex());
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, kci_cols->get_float() * kci_rows->get_float() * 6);
+    glDrawArrays(GL_TRIANGLES, 0, kci_cols->get_int() * kci_rows->get_int() * 6);
   }
 
 }geometry;
@@ -272,11 +272,11 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     auto kci_callback = std::bind(std::mem_fn(&photo_mosaic_app::update_mosaic), this, std::placeholders::_1);
-    kci_rows = m_control.add_control(GLFW_KEY_Q, img.getHeight()/20, 1, 10000, 1, kci_callback);
-    kci_cols = m_control.add_control(GLFW_KEY_W, img.getWidth()/20, 1, 10000, 1, kci_callback);
+    kci_rows = m_control.add_control<GLint>(GLFW_KEY_Q, img.getHeight()/20, 1, 10000, 1, kci_callback);
+    kci_cols = m_control.add_control<GLint>(GLFW_KEY_W, img.getWidth()/20, 1, 10000, 1, kci_callback);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     prg.fix2d_camera(0, img.getWidth(), 0, img.getHeight());
@@ -291,7 +291,7 @@ public:
 
   virtual void update_mosaic(const kci* kci)
   {
-    geometry.update(kci_rows->get_float(), kci_cols->get_float());
+    geometry.update(kci_rows->get_int(), kci_cols->get_int());
   }
 
   virtual void update() {}
@@ -309,15 +309,15 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "qQ : rows : " << kci_rows->get_float() << std::endl;;
-    ss << "wW : cols : " << kci_cols->get_float() << std::endl;;
-    m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+    ss << "qQ : rows : " << kci_rows->get_int() << std::endl;;
+    ss << "wW : cols : " << kci_cols->get_int() << std::endl;;
+    m_text.print(ss.str(), 10, wnd_height()- 20);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

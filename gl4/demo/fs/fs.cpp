@@ -68,7 +68,7 @@ public:
   virtual void create_scene() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     glGenVertexArrays(1, &m_vao);
 
@@ -101,7 +101,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniform2f(prg.ul_resolution, m_info.wnd_width, m_info.wnd_height);
+    glUniform2f(prg.ul_resolution, wnd_width(), wnd_height());
     glUniform1f(prg.ul_time, m_time);
     glUniform2f(prg.ul_mouse, m_mouse.x, m_mouse.y);
 
@@ -114,7 +114,7 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "resolution : " << m_info.wnd_width << " " << m_info.wnd_height << std::endl;
+    ss << "resolution : " << wnd_width() << " " << wnd_height()<< std::endl;
     ss << "mouse : " << m_mouse.x << " " << m_mouse.y << std::endl;
     ss << "time : " << m_time << std::endl;
     ss << "samples : " << m_info.samples << std::endl;
@@ -126,7 +126,7 @@ public:
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   GLboolean update_shader() const { return m_update_shader; }

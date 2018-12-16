@@ -129,7 +129,7 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
 
     light_source light0;
     light0.diffuse = vec4(1);
@@ -180,13 +180,13 @@ public:
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    m_text.print("", 10, m_info.wnd_height - 10);
+    m_text.print("", 10, wnd_height()- 10);
     glDisable(GL_BLEND);
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(m_info.wnd_width, m_info.wnd_height);
+    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
