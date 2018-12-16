@@ -8,7 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "glm.h"
-#include "param.h"
+#include "kci.h"
 #include "timer.h"
 
 namespace zxd {

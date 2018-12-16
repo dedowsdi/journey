@@ -1,4 +1,4 @@
-#include "param.h"
+#include "kci.h"
 #include <GLFW/glfw3.h>
 #include "glm.h"
 

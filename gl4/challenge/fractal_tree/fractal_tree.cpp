@@ -2,7 +2,6 @@
 #include "bitmaptext.h"
 #include "common_program.h"
 #include <sstream>
-#include "param.h"
 
 #define WIDTH 800
 #define HEIGHT 800

@@ -1,5 +1,5 @@
-#ifndef GL4_COMMON_PARAM_H
-#define GL4_COMMON_PARAM_H
+#ifndef GL4_COMMON_KCI_H
+#define GL4_COMMON_KCI_H
 #include <vector>
 #include <map>
 #include <memory>
@@ -215,4 +215,4 @@ std::shared_ptr<kci_template<T>> key_control::add_control(
 }
 
 }
-#endif /* GL4_COMMON_PARAM_H */
+#endif /* GL4_COMMON_KCI_H */
