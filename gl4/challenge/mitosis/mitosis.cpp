@@ -2,6 +2,7 @@
 #include "bitmaptext.h"
 #include "common_program.h"
 #include "sphere.h"
+#include "geometry_test.h"
 #include <algorithm>
 
 #define WIDTH 800
@@ -223,7 +224,7 @@ public:
       if(t > d2)
         continue;
 
-      GLfloat ray_distance2 = zxd::ray_point_distance2(iter->pos(), camera_pos, ray_dir);
+      GLfloat ray_distance2 = geometry_test::ray_point_distance2(iter->pos(), camera_pos, ray_dir);
       if(ray_distance2 != -1 && ray_distance2 <= iter->radius() * iter->radius())
       {
         it = iter;

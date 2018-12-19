@@ -2,7 +2,6 @@
 #define GL_GLC_DISK_H
 
 #include "geometry.h"
-#include "glm.h"
 
 namespace zxd {
 

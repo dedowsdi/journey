@@ -154,7 +154,6 @@ protected:
   void bind_uniform_locations();
   void bind_attrib_locations();
 
-
 };
 
 }

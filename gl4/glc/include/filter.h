@@ -49,5 +49,4 @@ void bloom(GLuint hdr_map, GLuint blured_brightness_map, GLfloat exposure = 2.5f
 
 }
 
-
 #endif /* GL_GLC_FILTER_H */

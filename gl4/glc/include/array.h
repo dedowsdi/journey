@@ -1,11 +1,17 @@
 #ifndef GL_GLC_ARRAY_H
 #define GL_GLC_ARRAY_H
-#include "mixinvector.h"
-#include "glm.h"
 #include <memory>
-#include "common.h"
+#include <iostream>
+
+#include <glm/fwd.hpp>
+#include "gl.h"
+#include "mixinvector.h"
+
+#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
 namespace zxd {
+
+using namespace glm;
 
 class array {
 protected:
@@ -61,6 +67,61 @@ typedef std::shared_ptr<vec2_array> vec2_array_ptr;
 typedef std::shared_ptr<vec3_array> vec3_array_ptr;
 typedef std::shared_ptr<vec4_array> vec4_array_ptr;
 
+//template <typename T> constexpr GLenum gl_type_enum = GL_FLOAT;
+//template<> constexpr GLenum gl_type_enum<GLchar> = GL_BYTE;
+//template<> constexpr GLenum gl_type_enum<GLubyte> = GL_UNSIGNED_BYTE;
+//template<> constexpr GLenum gl_type_enum<GLshort> = GL_SHORT;
+//template<> constexpr GLenum gl_type_enum<GLushort> = GL_UNSIGNED_SHORT;
+//template<> constexpr GLenum gl_type_enum<GLint> = GL_INT;
+//template<> constexpr GLenum gl_type_enum<GLuint> = GL_UNSIGNED_INT;
+//template<> constexpr GLenum gl_type_enum<GLdouble> = GL_DOUBLE;
+// partial specialization cause odr problem in gcc 5.4.0, why?
+//template<typename T, precision P> constexpr GLenum gl_type_enum<tvec2<T, P>> = gl_type_enum<T>;
+//template<typename T, precision P> constexpr GLenum gl_type_enum<tvec3<T, P>> = gl_type_enum<T>;
+//template<typename T, precision P> constexpr GLenum gl_type_enum<tvec4<T, P>> = gl_type_enum<T>;
+//template<> constexpr GLenum gl_type_enum<GLboolean> = GL_BOOL; // the same as GLubyte
+
+template <typename T> 
+struct gl_type_enum {static constexpr GLuint value = GL_FLOAT;};
+
+template<> struct gl_type_enum<GLchar> {static constexpr GLuint value = GL_BYTE;};
+template<> struct gl_type_enum<GLubyte> {static constexpr GLuint value = GL_UNSIGNED_BYTE;};
+template<> struct gl_type_enum<GLshort> {static constexpr GLuint value = GL_SHORT;};
+template<> struct gl_type_enum<GLushort> {static constexpr GLuint value = GL_UNSIGNED_SHORT;};
+template<> struct gl_type_enum<GLint> {static constexpr GLuint value = GL_INT;};
+template<> struct gl_type_enum<GLuint> {static constexpr GLuint value = GL_UNSIGNED_INT;};
+template<> struct gl_type_enum<GLdouble> {static constexpr GLuint value = GL_DOUBLE;};
+template<typename T, precision P>
+struct gl_type_enum<tvec2<T, P>> {static constexpr GLuint value = gl_type_enum<T>::value;};
+template<typename T, precision P>
+struct gl_type_enum<tvec3<T, P>> {static constexpr GLuint value = gl_type_enum<T>::value;};
+template<typename T, precision P>
+struct gl_type_enum<tvec4<T, P>> {static constexpr GLuint value = gl_type_enum<T>::value;};
+
+// partial specialization cause odr problem, but why?
+//template<typename T, precision P> constexpr GLenum gl_type_enum<tvec2<T, P>> = gl_type_enum<T>;
+//template<typename T, precision P> constexpr GLenum gl_type_enum<tvec3<T, P>> = gl_type_enum<T>;
+//template<typename T, precision P> constexpr GLenum gl_type_enum<tvec4<T, P>> = gl_type_enum<T>;
+//template<> constexpr GLenum gl_type_enum<GLboolean> = GL_BOOL; // the same as GLubyte
+
+// following code violate odr in gcc 5.4.0
+//template <typename T> constexpr GLuint glm_type_components = 1;
+//template <typename T, precision P> GLuint glm_type_components<tvec2<T,P>> = 2;
+//template <typename T, precision P> GLuint glm_type_components<tvec3<T,P>> = 3;
+//template <typename T, precision P> GLuint glm_type_components<tvec4<T,P>> = 4;
+
+template <typename T>
+struct glm_type_components { static constexpr GLuint value = 1; };
+
+template <typename T, precision P>
+struct glm_type_components<tvec2<T, P>> { static constexpr GLuint value = 2; };
+
+template <typename T, precision P>
+struct glm_type_components<tvec3<T, P>> { static constexpr GLuint value = 3; };
+
+template <typename T, precision P>
+struct glm_type_components<tvec4<T, P>> { static constexpr GLuint value = 4; };
+
 //--------------------------------------------------------------------
 template<typename T>
 template_array<T>::template_array(GLenum target/* = GL_ARRAY_BUFFER*/, GLenum usage/* = GL__DRAW*/):
@@ -72,9 +133,8 @@ template_array<T>::template_array(GLenum target/* = GL_ARRAY_BUFFER*/, GLenum us
 template <typename T>
 void template_array<T>::bind(GLint location) {
   bind_buffer();
-  glVertexAttribPointer(location, glm_vecn<T>::components,
-    gl_type_traits<typename glm_vecn<T>::value_type>::gltype, GL_FALSE, 0,
-    BUFFER_OFFSET(0));
+  glVertexAttribPointer(location, glm_type_components<T>::value, gl_type_enum<T>::value,
+      GL_FALSE, 0, BUFFER_OFFSET(0));
   glEnableVertexAttribArray(location);
 }
 

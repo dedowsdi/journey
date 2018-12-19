@@ -1,14 +1,16 @@
 #ifndef GL_GLC_GEOMETRY_H
 #define GL_GLC_GEOMETRY_H
+
 #include "gl.h"
-#include "glm.h"
-#include "common.h"
+
+#include <glm/fwd.hpp>
 #include "array.h"
-#include <memory>
 #include "primitive_set.h"
 
 namespace zxd {
 
+class array;
+typedef std::shared_ptr<array> array_ptr;
 typedef std::vector<array_ptr> array_vector;
 
 class geometry_base {

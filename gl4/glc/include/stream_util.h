@@ -1,12 +1,14 @@
 #ifndef GL_GLC_STREAM_H
 #define GL_GLC_STREAM_H
 
-#include "glm.h"
+#include "gl.h"
+#include <glm/fwd.hpp>
 #include <istream>
+#include <vector>
 
 namespace stream_util
 {
-  zxd::float_vector read_floats(std::istream& is, GLuint count = -1);
+  std::vector<float> read_floats(std::istream& is, GLuint count = -1);
   glm::vec4 read_vec4(std::istream& is);
   glm::vec3 read_vec3(std::istream& is);
   glm::vec2 read_vec2(std::istream& is);

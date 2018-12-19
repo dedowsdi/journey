@@ -6,48 +6,29 @@ set(GLC_SRCS
     src/light.cpp
     src/program.cpp
     src/common_program.cpp
-    src/quad.cpp
     src/geometry.cpp
-    src/sphere.cpp
-    src/cuboid.cpp
-    src/cone.cpp
     src/string_util.cpp
     src/stream_util.cpp
     src/texutil.cpp
-    src/cylinder.cpp
-    src/torus.cpp
-    src/xyplane.cpp
-    src/disk.cpp
-    src/points.cpp
-    src/bezier.cpp
-    src/nurb.cpp
-    src/beziersurface.cpp
-    src/nurbsurface.cpp
     src/array.cpp
     src/geometry.cpp
-    src/axes.cpp
     src/texmap_anim.cpp
-    src/line.cpp
     src/dict_script.cpp
     src/mat_stack.cpp
-    src/super_shape_2d.cpp
     src/debugger.cpp
-    src/super_shape_3d.cpp
     src/primitive_set.cpp
     src/triangle_functor.cpp
     src/geometry_util.cpp
-    src/circle.cpp
-    src/rose.cpp
-    src/capsule2d.cpp
     src/spritesheet.cpp
     src/timer.cpp
     src/pingpong.cpp
-    src/lissajous.cpp
     src/movable.cpp
     src/lsystem.cpp
     src/filter.cpp
     src/cycle_path.cpp
     src/fractal_spiral.cpp
+    src/geometry_test.cpp
+    src/common_geometry.cpp
     )
 
 add_library(glc 

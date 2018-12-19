@@ -7,15 +7,16 @@
 
 #include <boost/filesystem.hpp>
 #include "string_util.h"
+#include <glm/glm.hpp>
 
 namespace stream_util
 {
 
 //--------------------------------------------------------------------
-zxd::float_vector read_floats(std::istream& is, GLuint count)
+std::vector<float> read_floats(std::istream& is, GLuint count)
 {
   bool count_check = count != -1;
-  zxd::float_vector floats;
+  std::vector<float> floats;
   GLfloat f;
   while(count && is)
   {

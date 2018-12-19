@@ -3,6 +3,7 @@
 #include <regex>
 
 #include "stream_util.h"
+#include <glm/glm.hpp>
 
 namespace string_util
 {

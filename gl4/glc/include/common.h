@@ -5,8 +5,12 @@
 //#include <GL/glu.h>
 #endif
 #include <string>
+#include <vector>
 #include <iterator>
-#include "glm.h"
+
+#define GLM_META_PROG_HELPERS
+#include <glm/fwd.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
@@ -52,15 +56,6 @@ void uniform_location(GLint *loc, GLint program, const std::string &name);
 void matrix_attrib_pointer(
   GLint index, GLuint divisor = 1, GLboolean normalize = GL_FALSE);
 
-template <typename T>
-struct gl_type_traits {
-  static GLenum gltype;
-};
-
-#define define_gl_type_traits(type, value) \
-  template <>                              \
-  GLenum gl_type_traits<type>::gltype = value;
-
 // handle difference between float and vec
 template <typename T>
 struct glm_vecn {
@@ -80,34 +75,6 @@ struct glm_vecn<GLuint> {
   static const GLuint components = 1;
   typedef GLuint value_type;
 };
-
-// only works with seperated vertex data
-//_It::valuetype has to be glm::vec*
-template <typename _It>
-void setup_vertex_attrib(GLint attrib, _It beg, _It end,
-  GLenum usage = GL_STATIC_DRAW, GLboolean normalize = GL_FALSE) {
-  typedef typename std::iterator_traits<_It>::value_type tvec;
-
-  GLuint vbo;
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(tvec) * std::distance(beg, end),
-    glm::value_ptr(*beg), usage);
-  glVertexAttribPointer(attrib, tvec::components,
-    gl_type_traits<typename tvec::value_type>::gltype, normalize, 0,
-    BUFFER_OFFSET(0));
-
-  glEnableVertexAttribArray(attrib);
-}
-
-template <typename T>
-void setup_vertex_attrib(GLint attrib, const T &t) {
-  setup_vertex_attrib(attrib, t.begin(), t.end());
-}
-
-#define setup_vertex_al_builtin_array(attrib, array) \
-  setup_vertex_attrib(                               \
-    attrib, array, array + sizeof(array) / sizeof(decltype(array[0])));
 
 std::vector<GLubyte> create_chess_image(GLuint width, GLuint height,
   GLuint grid_width, GLuint grid_height,

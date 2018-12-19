@@ -1,5 +1,4 @@
 #include "debugger.h"
-
 #include "program.h"
 
 namespace debugger

@@ -81,5 +81,4 @@ public:
 
 }
 
-
 #endif /* GL_GLC_TEXMAP_ANIM_H */

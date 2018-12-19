@@ -3,18 +3,21 @@
 #define GLM_SWIZZLE
 #define GLM_META_PROG_HELPERS
 
+#include <vector>
+#include <list>
+#include <iostream>
+#include <utility>
+
 #include "gl.h"
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+
+#include <glm/glm.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include <glm/mat3x3.hpp>
-#include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -24,10 +27,6 @@
 
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
-#include <vector>
-#include <list>
-#include <iostream>
-#include <utility>
 
 namespace zxd {
 using namespace glm;
@@ -204,7 +203,6 @@ GLuint ilcm(GLuint a, GLuint b);
 // assume x [0, 1]
 GLfloat cubic_in_out(GLfloat x);
 
-
 // p0 and p1 is in window space
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
   const glm::mat4& w_mat_i, GLfloat radius = 0.8f);
@@ -231,14 +229,10 @@ mat3 make_mat3_row(
 
 GLfloat pi(GLfloat a0, GLfloat d, uint n);
 
+GLfloat triangle_area(const vec3& p0, const vec3& p1, const vec3& p2);
+
 // get camera position in world space, no need to invert view matrix.
 vec3 eye_pos(const mat4& v_mat);
-GLfloat line_point_distance2(const vec3& point, const vec3& line_point, const vec3& line_direction);
-GLfloat line_point_distance(const vec3& point, const vec3& line_point, const vec3& line_direction);
-// return -1 if point resides in negative direction
-GLfloat ray_point_distance2(const vec3& point, const vec3& ray_start, const vec3& line_direction);
-GLfloat ray_point_distance(const vec3& point, const vec3& ray_start, const vec3& line_direction);
-
 }
 
 #endif /* GL_GLC_GLM_H */
