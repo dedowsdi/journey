@@ -2,7 +2,8 @@
 #define GL_GL_H
 
 #ifdef CLANG_COMPLETE_ONLY
-    #include "GL/gl3w.h"
+#define GL_GLEXT_PROTOTYPES
+    #include "GL/gl.h"
 #else
     #include "glad/glad.h"
 #endif
