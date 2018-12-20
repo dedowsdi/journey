@@ -12,7 +12,7 @@ public:
   A() = default;
   ~A()
   {
-    std::cout << "~A()" << std::endl;
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
   }
 };
 
@@ -25,6 +25,23 @@ bool operator< (const A& lhs, const A& rhs)
 A getA()
 {
   return A();
+}
+
+int foo(const A& a)
+{
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
+  return 5;
+}
+
+int goo(int i)
+{
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
+  return i;
+}
+
+void hoo(int i)
+{
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 
@@ -55,6 +72,13 @@ int main(int argc, char *argv[])
     std::cout << "3" << std::endl;
   }
 
+  std::cout << "------------------" << std::endl;
+  {
+    hoo(goo(foo(getA()))); // A will be destroyed after this statement
+    std::cout << "4" << std::endl;
+  }
+
+  std::cout << "------------------" << std::endl;
   // do what every with a
   std::cout << "9" << std::endl;
   
