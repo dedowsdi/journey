@@ -31,6 +31,24 @@ struct sort_by_elem_at
   bool operator()(const Vec& lhs, const Vec& rhs) { return lhs[Index] < rhs[Index]; }
 };
 
+struct dereference
+{
+  template <typename T>
+  const T& operator*(const T* p) const
+  {
+    return *p;
+  }
+};
+
+struct dereference_less
+{
+  template <typename P>
+  bool operator()(P* lhs, P* rhs)
+  {
+    return *lhs < *rhs;
+  }
+};
+
 template<typename AssociativeContainer, typename PredicateT>
 void erase_if(AssociativeContainer& ctn, const PredicateT& pt);
 
