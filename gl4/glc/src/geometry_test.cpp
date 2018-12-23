@@ -61,11 +61,11 @@ bool is_point_in_triangle(const vec3& p, const vec3& c0, const vec3& c1, const v
   vec3 v01 = c1 - c0;
   vec3 v02 = c2 - c0;
   vec3 n = cross(v01, v02);
-  if(dot(n, cross(v01, c0 - p)) < 0)
+  if(dot(n, cross(v01, p - c0)) < 0)
     return false;
-  if(dot(n, cross(c2 - c1, c1 - p)) < 0)
+  if(dot(n, cross(c2 - c1, p - c1)) < 0)
     return false;
-  if(dot(n, cross(-v02, c2 - p)) < 0)
+  if(dot(n, cross(-v02, p - c2)) < 0)
     return false;
   return true;
 }

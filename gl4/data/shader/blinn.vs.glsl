@@ -15,6 +15,7 @@ uniform mat4 mvp_mat;
 uniform mat4 mv_mat;
 uniform mat4 mv_mat_it;
 #endif
+uniform float normal_scale = 1.0f; // set this to -1 if you need back face lighting
 
 out vs_out{
   vec3 v_vertex; // view space
@@ -24,9 +25,10 @@ out vs_out{
 #endif
 } vo;
 
+
 void main(void)
 {
-  vo.v_normal = mat3(mv_mat_it) * normal;
+  vo.v_normal = mat3(mv_mat_it) * normal * normal_scale;
   vo.v_vertex = (mv_mat * (vertex / vertex.w)).xyz;
 #ifdef WITH_TEX
   vo.texcoord = texcoord;

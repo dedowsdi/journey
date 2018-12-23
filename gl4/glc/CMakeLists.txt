@@ -29,6 +29,7 @@ set(GLC_SRCS
     src/fractal_spiral.cpp
     src/geometry_test.cpp
     src/common_geometry.cpp
+    src/teardrop.cpp
     )
 
 add_library(glc 

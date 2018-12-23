@@ -83,7 +83,7 @@ public:
   operator GLuint() { return object; }
 
   virtual void init() {
-    object = glCreateProgram();
+    create_program();
     attach_shaders();
     bind_attrib_locations(); // bind must be called before link, different from get
     link();
@@ -93,6 +93,10 @@ public:
   virtual void reload(){
     clear();
     init();
+  }
+
+  void create_program(){
+    object = glCreateProgram();
   }
 
   void bind_attrib_location(GLuint index, const std::string& name);
