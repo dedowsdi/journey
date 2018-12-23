@@ -59,11 +59,11 @@ template <typename M>
 auto get_values(const M& m);
 
 // the erase ... family, don't call them on list, list do it's own job
-template <typename Container, typename ValueType>
-void erase_remove(Container& ctn, const ValueType& v);
+template <typename SequenceContainer, typename ValueType>
+void erase_remove(SequenceContainer& ctn, const ValueType& v);
 
-template <typename Container, typename UnaryPredicate>
-void erase_remove_if(Container& ctn, UnaryPredicate p);
+template <typename SequenceContainer, typename UnaryPredicate>
+void erase_remove_if(SequenceContainer& ctn, UnaryPredicate p);
 
 template <typename Container>
 void erase_unique(Container& ctn);

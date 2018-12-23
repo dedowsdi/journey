@@ -247,73 +247,6 @@ bool operator>(const vec3& lhs, const vec3& rhs) {
   return lhs != rhs && !operator<(lhs, rhs);
 }
 
-//------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const vec2& v) {
-  static GLuint w = 12;
-  static GLuint p = 6;
-  os << std::left << std::fixed;
-  // os << std::left;
-  os << std::setw(w) << std::setprecision(p) << v.x   // x
-     << std::setw(w) << std::setprecision(p) << v.y;  // y
-  return os;
-}
-
-//------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const vec3& v) {
-  static GLuint w = 12;
-  static GLuint p = 6;
-  os << std::left << std::fixed;
-  // os << std::left;
-  os << std::setw(w) << std::setprecision(p) << v.x   // x
-     << std::setw(w) << std::setprecision(p) << v.y   // y
-     << std::setw(w) << std::setprecision(p) << v.z;  // z
-  return os;
-}
-
-//------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const vec4& v) {
-  static GLuint w = 12;
-  static GLuint p = 6;
-  os << std::left << std::fixed;
-  os << std::setw(w) << std::setprecision(p) << v.x  // x
-     << std::setw(w) << std::setprecision(p) << v.y  // y
-     << std::setw(w) << std::setprecision(p) << v.z  // z
-     << std::setw(w) << std::setprecision(p) << v.w;
-  return os;
-}
-
-//------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const mat2& m) {
-  for (int i = 0; i < 2; ++i) {
-    os << row(m, i) << std::endl;
-  }
-  return os;
-}
-
-//------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const mat3& m) {
-  for (int i = 0; i < 3; ++i) {
-    os << row(m, i) << std::endl;
-  }
-  return os;
-}
-
-//------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const mat4& m) {
-  for (int i = 0; i < 4; ++i) {
-    os << row(m, i) << std::endl;
-  }
-  return os;
-}
-
-//------------------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os, const vec3_vector& v) {
-  auto size = v.size();
-  for (size_t i = 0; i < size; ++i) {
-    os << v[i] << std::endl;
-  }
-  return os;
-}
 
 //--------------------------------------------------------------------
 GLfloat max_abs_component(const vec3& v) {
@@ -515,5 +448,77 @@ vec3 eye_pos(const mat4& v_mat) {
   return (-v_mat[3] * erase_translation(v_mat)).xyz();
 }
 
+}
+
+namespace std
+{
+
+//------------------------------------------------------------------------------
+ostream& operator<<(ostream& os, const vec2& v) {
+  static GLuint w = 12;
+  static GLuint p = 6;
+  os << left << fixed;
+  // os << left;
+  os << setw(w) << setprecision(p) << v.x   // x
+     << setw(w) << setprecision(p) << v.y;  // y
+  return os;
+}
+
+//------------------------------------------------------------------------------
+ostream& operator<<(ostream& os, const vec3& v) {
+  static GLuint w = 12;
+  static GLuint p = 6;
+  os << left << fixed;
+  // os << left;
+  os << setw(w) << setprecision(p) << v.x   // x
+     << setw(w) << setprecision(p) << v.y   // y
+     << setw(w) << setprecision(p) << v.z;  // z
+  return os;
+}
+
+//------------------------------------------------------------------------------
+ostream& operator<<(ostream& os, const vec4& v) {
+  static GLuint w = 12;
+  static GLuint p = 6;
+  os << left << fixed;
+  os << setw(w) << setprecision(p) << v.x  // x
+     << setw(w) << setprecision(p) << v.y  // y
+     << setw(w) << setprecision(p) << v.z  // z
+     << setw(w) << setprecision(p) << v.w;
+  return os;
+}
+
+//------------------------------------------------------------------------------
+ostream& operator<<(ostream& os, const mat2& m) {
+  for (int i = 0; i < 2; ++i) {
+    os <<  row(m,i) << endl;
+  }
+  return os;
+}
+
+//------------------------------------------------------------------------------
+ostream& operator<<(ostream& os, const mat3& m) {
+  for (int i = 0; i < 3; ++i) {
+    os <<  row(m,i) << endl;
+  }
+  return os;
+}
+
+//------------------------------------------------------------------------------
+ostream& operator<<(ostream& os, const mat4& m) {
+  for (int i = 0; i < 4; ++i) {
+    os <<  row(m,i) << endl;
+  }
+  return os;
+}
+
+//------------------------------------------------------------------------------
+ostream& operator<<(ostream& os, const zxd::vec3_vector& v) {
+  auto size = v.size();
+  for (size_t i = 0; i < size; ++i) {
+    os <<  v[i] << endl;
+  }
+  return os;
+}
 
 }

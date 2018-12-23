@@ -42,7 +42,8 @@ GLfloat line_line_distance(const vec3& p0, const vec3& d0, const vec3& p1, const
 
 bool is_point_in_triangle(const vec3& p, const vec3& c0, const vec3& c1, const vec3& c2);
 
-// ld and pn noeed not be normalized
+// ld and pn need not be normalized
+// result.first is true if there are one and only one intersection
 bool_vec3_pair intersect_line_plane(const vec3& lp, const vec3& ld, const vec4& plane);
 
 struct line_relation {

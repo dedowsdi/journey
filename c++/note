@@ -29,3 +29,13 @@
 
 11. placement new is used inside vector to create objects in the vector's unused
     capacity.
+
+12. std::copy(.., std::ostream_iterator<T>(std::cout)) only works if:
+        namespace std // required to be std
+        {
+            std::ostream& operator<<(std::ostream& os, const T& t)
+            {
+                ..  
+                return os;
+            }
+        }

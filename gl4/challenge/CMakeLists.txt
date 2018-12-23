@@ -63,6 +63,7 @@ set (PROJECTS
     chaos
     secret_garden
     eyeball
+    teardrop
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

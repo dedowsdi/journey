@@ -166,14 +166,6 @@ bool operator<(const vec3& lhs, const vec3& rhs);
 
 bool operator>(const vec3& lhs, const vec3& rhs);
 
-std::ostream& operator<<(std::ostream& os, const vec2& v);
-std::ostream& operator<<(std::ostream& os, const vec3& v);
-std::ostream& operator<<(std::ostream& os, const vec4& v);
-std::ostream& operator<<(std::ostream& os, const mat2& m);
-std::ostream& operator<<(std::ostream& os, const mat3& m);
-std::ostream& operator<<(std::ostream& os, const mat4& m);
-std::ostream& operator<<(std::ostream& os, const vec3_vector& v);
-
 GLfloat max_abs_component(const vec3& v);
 
 //--------------------------------------------------------------------
@@ -233,6 +225,18 @@ GLfloat triangle_area(const vec3& p0, const vec3& p1, const vec3& p2);
 
 // get camera position in world space, no need to invert view matrix.
 vec3 eye_pos(const mat4& v_mat);
+}
+
+namespace std
+{
+using namespace glm;
+ostream& operator<<(ostream& os, const vec2& v);
+ostream& operator<<(ostream& os, const vec3& v);
+ostream& operator<<(ostream& os, const vec4& v);
+ostream& operator<<(ostream& os, const mat2& m);
+ostream& operator<<(ostream& os, const mat3& m);
+ostream& operator<<(ostream& os, const mat4& m);
+ostream& operator<<(ostream& os, const zxd::vec3_vector& v);
 }
 
 #endif /* GL_GLC_GLM_H */

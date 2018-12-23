@@ -18,6 +18,7 @@
 #include "points.h"
 #include "nurbsurface.h"
 #include "axes.h"
+#include "teardrop.h"
 
 namespace zxd {
 
@@ -75,6 +76,7 @@ protected:
   bezier_surface m_bezier_surface;
   nurb_surface m_nurb_surface;
   axes m_axes;
+  teardrop m_teardrop;
 
 public:
   geometry_app() : m_camera_pos(0, -8, 8), m_render_normal(GL_FALSE) {}
@@ -171,6 +173,11 @@ public:
     m_axes.include_normal(true);
     m_axes.include_color(true);
     m_axes.build_mesh();
+
+    m_teardrop.include_normal(true);
+    m_teardrop.include_texcoord(true);
+    m_teardrop.xy_scale(0.85);
+    m_teardrop.build_mesh();
 
     {
       vec3_vector2 vv;
@@ -310,6 +317,7 @@ public:
     render_blinn(m_cylinder, vec3(0, 2, 0));
     render_blinn(m_torus, vec3(0, -2.5, 0));
     render_blinn(m_bezier_surface, vec3(-3, -3, 0));
+    render_blinn(m_teardrop, vec3(-3, -5, 0));
     {
       glPointSize(3);
       draw_points(m_bezier_surface.ctrl_points(), blinn_prg.mvp_mat);

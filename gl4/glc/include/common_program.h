@@ -10,6 +10,7 @@ struct blinn_program : public zxd::program {
   // GLint ul_eye;
 
   GLint ul_map;
+  GLint ul_normal_scale;
   GLint tex_unit;
   GLboolean with_texcoord;
   GLboolean instance;

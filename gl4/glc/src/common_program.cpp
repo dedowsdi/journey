@@ -52,6 +52,7 @@ void blinn_program::bind_uniform_locations() {
   if (with_texcoord) {
     uniform_location(&ul_map, map_name);
   }
+  uniform_location(&ul_normal_scale, "normal_scale");
 }
 
 //--------------------------------------------------------------------
