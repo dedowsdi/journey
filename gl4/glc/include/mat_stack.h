@@ -1,11 +1,14 @@
 #ifndef GL_GLC_MAT_STACK_H
 #define GL_GLC_MAT_STACK_H
 
-#include "glm.h"
+#include "gl.h"
 #include <stack>
+#include <glm/fwd.hpp>
 
 namespace zxd
 {
+
+using namespace glm;
 
 //mimic gl2 matrix stack
 class mat_stack
@@ -20,6 +23,7 @@ public:
   void pop();
   const mat4& top() const;
   mat4& top();
+  void clear(const mat4& m);
 
   void rotate(GLfloat r, const vec3& axis);
   void translate(const vec3& v);
@@ -35,6 +39,5 @@ public:
 };
 
 }
-
 
 #endif /* GL_GLC_MAT_STACK_H */

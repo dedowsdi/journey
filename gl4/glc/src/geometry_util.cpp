@@ -1,6 +1,8 @@
 #include "geometry_util.h"
 
 #include <set>
+#include <numeric>
+#include <limits>
 
 #include "geometry.h"
 #include "triangle_functor.h"
@@ -247,6 +249,60 @@ vec3_vector vec2_vector_to_vec3_vector(const vec2_vector& vertices)
   }
   
   return res;
+}
+
+//--------------------------------------------------------------------
+std::pair<vec3, vec3> bounding_box(vv3_cit beg, vv3_cit end)
+{
+  auto min_value = vec3(std::numeric_limits<GLfloat>::max());
+  auto max_value = -min_value;
+
+  while(beg != end)
+  {
+    const auto& item = *beg;
+    if(max_value.x < item.x)
+      max_value.x = item.x;
+    if(max_value.y < item.y)
+      max_value.y = item.y;
+    if(max_value.z < item.z)
+      max_value.z = item.z;
+
+    if(item.x < min_value.x)
+      min_value.x = item.x;
+    if(item.y < min_value.y)
+      min_value.y = item.y;
+    if(item.z < min_value.z)
+      min_value.z = item.z;
+
+    ++beg;
+  }
+
+  return std::make_pair(min_value, max_value);
+}
+
+//--------------------------------------------------------------------
+std::pair<vec2, vec2> bounding_box(vv2_cit beg, vv2_cit end)
+{
+  auto min_value = vec2(std::numeric_limits<GLfloat>::max());
+  auto max_value = -min_value;
+
+  while(beg != end)
+  {
+    const auto& item = *beg;
+    if(max_value.x < item.x)
+      max_value.x = item.x;
+    if(max_value.y < item.y)
+      max_value.y = item.y;
+
+    if(item.x < min_value.x)
+      min_value.x = item.x;
+    if(item.y < min_value.y)
+      min_value.y = item.y;
+
+    ++beg;
+  }
+
+  return std::make_pair(min_value, max_value);
 }
 
 }

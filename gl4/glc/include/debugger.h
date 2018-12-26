@@ -28,6 +28,10 @@ namespace debugger
   void draw_line(GLenum mode, const std::vector<T>& vertices, const glm::mat4& mvp, 
       GLfloat width = 1, const glm::vec4& color = glm::vec4(1));
 
+  template<typename It>
+  void draw_line(GLenum mode, It beg, It end, const glm::mat4& mvp, 
+      GLfloat width = 1, const glm::vec4& color = glm::vec4(1));
+
 class debugger_program : public zxd::program
 {
 public:
@@ -101,6 +105,9 @@ void draw_point(It beg, It end, const glm::mat4& mvp,
   static debugger_program prg;
   static debugger_drawable dd;
 
+  if(beg == end)
+    return;
+
   if(!prg.is_inited())
     prg.init();
 
@@ -170,6 +177,36 @@ GLfloat width/* = 1*/, const glm::vec4& color/* = glm::vec4(1)*/)
 
   glLineWidth(width);
   glDrawArrays(mode, 0, vertices.size());
+}
+
+//--------------------------------------------------------------------
+template<typename It>
+void draw_line(GLenum mode, It beg, It end, const glm::mat4& mvp, 
+GLfloat width/* = 1*/, const glm::vec4& color/* = glm::vec4(1)*/)
+{
+  static debugger_program prg;
+  static debugger_drawable dd;
+
+  if(beg == end)
+    return;
+
+  if(!prg.is_inited())
+    prg.init();
+
+  auto count = std::distance(beg, end);
+  using value_type = typename std::iterator_traits<It>::value_type ;
+
+  dd.init_vao(value_type::components);
+  dd.update_buffer(sizeof(value_type) * count, &*beg);
+
+  prg.use();
+  glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
+  glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, value_ptr(mvp));
+
+  dd.bind_vao();
+
+  glLineWidth(width);
+  glDrawArrays(mode, 0, count);
 }
 
 

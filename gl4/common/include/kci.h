@@ -29,6 +29,15 @@ public:
   template <typename T> const T& get() const;
   template <typename T> void set(const T& value);
 
+  template <typename T> const T& min_value() const;
+  template <typename T> void min_value(const T& value);
+
+  template <typename T> const T& max_value() const;
+  template <typename T> void max_value(const T& value);
+
+  template <typename T> const T& step() const;
+  template <typename T> void step(const T& value);
+
   // common handy types
   GLint get_uint() const {return get<GLuint>();}
   GLint get_int() const {return get<GLint>();}
@@ -128,17 +137,17 @@ public:
 
   void do_apply_step(GLfloat step_scale, GLuint index) override;
 
-  T value() const { return m_value; }
-  void value(T v){ m_value = v; }
+  const T& value() const { return m_value; }
+  void value(const T& v){ m_value = v; }
 
-  T min_value() const { return m_min_value; }
-  void min_value(T v){ m_min_value = v; }
+  const T& min_value() const { return m_min_value; }
+  void min_value(const T& v){ m_min_value = v; }
 
-  T max_value() const { return m_max_value; }
-  void max_value(T v){ m_max_value = v; }
+  const T& max_value() const { return m_max_value; }
+  void max_value(const T& v){ m_max_value = v; }
 
-  T step() const { return m_step; }
-  void step(T v){ m_step = v; }
+  const T& step() const { return m_step; }
+  void step(const T& v){ m_step = v; }
 
 private:
   T m_value;
@@ -157,6 +166,36 @@ template <typename T> const T& kci::get() const
 template <typename T> void kci::set(const T& value)
 {
   dynamic_cast<kci_template<T>&>(*this).set(value);
+}
+
+template <typename T> const T& kci::min_value() const
+{
+  return dynamic_cast<const kci_template<T>&>(*this).min_value();
+}
+
+template <typename T> void kci::min_value(const T& value)
+{
+  dynamic_cast<kci_template<T>&>(*this).min_value(value);
+}
+
+template <typename T> const T& kci::max_value() const
+{
+  return dynamic_cast<const kci_template<T>&>(*this).max_value();
+}
+
+template <typename T> void kci::max_value(const T& value)
+{
+  dynamic_cast<kci_template<T>&>(*this).max_value(value);
+}
+
+template <typename T> const T& kci::step() const
+{
+  return dynamic_cast<const kci_template<T>&>(*this).step();
+}
+
+template <typename T> void kci::step(const T& value)
+{
+  dynamic_cast<kci_template<T>&>(*this).step(value);
 }
 
 //--------------------------------------------------------------------

@@ -128,6 +128,12 @@ void geometry_base::add_primitive_set(primitive_set* ps)
 }
 
 //--------------------------------------------------------------------
+void geometry_base::clear_primitive_sets()
+{
+  m_primitive_sets.clear();
+}
+
+//--------------------------------------------------------------------
 void geometry_base::remove_primitive_sets(GLuint index, GLuint count)
 {
   if(index + count > m_primitive_sets.size())

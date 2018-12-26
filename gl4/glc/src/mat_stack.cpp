@@ -1,4 +1,5 @@
 #include "mat_stack.h"
+#include "glm.h"
 
 namespace zxd
 {
@@ -12,7 +13,7 @@ mat_stack::mat_stack()
 //--------------------------------------------------------------------
 void mat_stack::push()
 {
-  m_stack.push(m_stack.top());
+  m_stack.push(top());
 }
 
 //--------------------------------------------------------------------
@@ -43,45 +44,53 @@ mat4& mat_stack::top()
 }
 
 //--------------------------------------------------------------------
+void mat_stack::clear(const mat4& m)
+{
+  while(!m_stack.empty())
+    m_stack.pop();
+  m_stack.push(m);
+}
+
+//--------------------------------------------------------------------
 void mat_stack::rotate(GLfloat r, const vec3& axis)
 {
-  m_stack.top() = glm::rotate(m_stack.top(), r, axis);
+  top() = glm::rotate(top(), r, axis);
 }
 
 //--------------------------------------------------------------------
 void mat_stack::translate(const vec3& v)
 {
-  m_stack.top() = glm::translate(m_stack.top(), v);
+  top() = glm::translate(top(), v);
 }
 
 //--------------------------------------------------------------------
 void mat_stack::scale(const vec3& s)
 {
-  m_stack.top() = glm::scale(m_stack.top(), s);
+  top() = glm::scale(top(), s);
 }
 
 //--------------------------------------------------------------------
 void mat_stack::load_identity()
 {
-  m_stack.top() = mat4(1);
+  top() = mat4(1);
 }
 
 //--------------------------------------------------------------------
 void mat_stack::load_mat4(const mat4& m)
 {
-  m_stack.top() = m;
+  top() = m;
 }
 
 //--------------------------------------------------------------------
 void mat_stack::multily(const mat4& m)
 {
-  m_stack.top() = (m_stack.top() * m);
+  top() = top() * m;
 }
 
 //--------------------------------------------------------------------
 void mat_stack::preMultily(const mat4& m)
 {
-  m_stack.top() = (m * m_stack.top());
+  top() = m * top();
 }
 
 //--------------------------------------------------------------------

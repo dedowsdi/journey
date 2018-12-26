@@ -2,6 +2,7 @@
 #define GL_GLC_GEOMETRY_UTIL_H
 
 #include <vector>
+#include <iterator>
 
 #include <glm/fwd.hpp>
 #include <glm/vec3.hpp>
@@ -34,6 +35,13 @@ namespace geometry_util
 
   vec3_vector transform(const vec3_vector& vertices, const mat4& m);
   vec3_vector vec2_vector_to_vec3_vector(const vec2_vector& vertices);
+
+  using vv3_cit = std::vector<vec3>::const_iterator;
+  std::pair<vec3, vec3> bounding_box(vv3_cit beg, vv3_cit end);
+  
+  using vv2_cit = std::vector<vec2>::iterator;
+  std::pair<vec2, vec2> bounding_box(vv2_cit beg, vv2_cit end);
+
 }
 
 

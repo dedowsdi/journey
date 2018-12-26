@@ -73,6 +73,7 @@ public:
   primitive_set* get_primitive_set(GLuint index);
   GLuint get_num_primitive_set();
   void add_primitive_set(primitive_set* ps);
+  void clear_primitive_sets();
   void remove_primitive_sets(GLuint index, GLuint count);
   void set_num_instance(GLuint count);
 

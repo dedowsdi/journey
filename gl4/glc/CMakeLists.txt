@@ -30,6 +30,7 @@ set(GLC_SRCS
     src/geometry_test.cpp
     src/common_geometry.cpp
     src/teardrop.cpp
+    src/turtle.cpp
     )
 
 add_library(glc 
