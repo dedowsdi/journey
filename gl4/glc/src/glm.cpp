@@ -7,7 +7,7 @@ namespace zxd {
 //--------------------------------------------------------------------
 mat4 isometric_projection(GLfloat d, const vec3& center, const vec3& up/* = pza*/)
 {
-  return glm::lookAt(vec3(d, -d, d), center, up);
+  return glm::lookAt(center + vec3(d, -d, d), center, up);
 }
 
 //--------------------------------------------------------------------
@@ -96,21 +96,24 @@ vec3 transform_vector(const mat4& m, const vec3& v) {
 mat4 rotate_to(const vec3& v0, const vec3& v1)
 {
   GLfloat cos = glm::dot(v0, v1);
-  if(std::abs(cos - 1) < 0.00001) // is 0.00001 small enough?
+  // the same direction
+  if(std::abs(cos - 1) < 0.000001f) // is 0.00001 small enough?
     return mat4(1);
 
-  if(std::abs(cos + 1) < 0.00001)
+  // reverse directoin
+  if(std::abs(cos + 1) < 0.000001f)
   {
     // use pxa or pya to find an axis to rotate v0 180 degrees
     vec3 v2 = pxa;
     // use pxa or pya to rotate 180 degree
-    if(glm::abs(glm::dot(v0, pxa) - 1 < 0.00001))
+    if(1.0f - glm::abs(glm::dot(v0, pxa)) < 0.000001f)
       v2 = pya;
 
     vec3 axis = glm::cross(v0, v2);
-    return glm::rotate(fpi2, axis);
+    return glm::rotate(fpi, axis);
   }
 
+  // normal case
   GLfloat theta = glm::acos(cos);
   vec3 axis = glm::cross(v0, v1);
   axis = glm::normalize(axis);

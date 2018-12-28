@@ -31,6 +31,7 @@ set(GLC_SRCS
     src/common_geometry.cpp
     src/teardrop.cpp
     src/turtle.cpp
+    src/capsule3d.cpp
     )
 
 add_library(glc 

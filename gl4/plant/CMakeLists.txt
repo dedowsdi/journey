@@ -1,5 +1,6 @@
 set (PROJECTS
     turtle
+    plant1_5
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

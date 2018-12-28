@@ -19,6 +19,7 @@
 #include "nurbsurface.h"
 #include "axes.h"
 #include "teardrop.h"
+#include "capsule3d.h"
 
 namespace zxd {
 
@@ -77,6 +78,7 @@ protected:
   nurb_surface m_nurb_surface;
   axes m_axes;
   teardrop m_teardrop;
+  capsule3d m_capsule;
 
 public:
   geometry_app() : m_camera_pos(0, -8, 8), m_render_normal(GL_FALSE) {}
@@ -179,6 +181,10 @@ public:
     m_teardrop.xy_scale(0.85);
     m_teardrop.build_mesh();
 
+    m_capsule.include_normal(true);
+    m_capsule.include_texcoord(true);
+    m_capsule.build_mesh();
+
     {
       vec3_vector2 vv;
       for (int i = 0; i < 5; ++i) {
@@ -279,7 +285,7 @@ public:
     // bad performance
     if (m_render_normal) {
       nv_prg.use();
-      nv_prg.update_model(m_mat);
+      nv_prg.update_uniforms(m_mat, blinn_prg.v_mat, blinn_prg.p_mat);
       gm.draw();
     }
   }
@@ -318,6 +324,7 @@ public:
     render_blinn(m_torus, vec3(0, -2.5, 0));
     render_blinn(m_bezier_surface, vec3(-3, -3, 0));
     render_blinn(m_teardrop, vec3(-3, -5, 0));
+    render_blinn(m_capsule, vec3(-1, -5, 0));
     {
       glPointSize(3);
       draw_points(m_bezier_surface.ctrl_points(), blinn_prg.mvp_mat);

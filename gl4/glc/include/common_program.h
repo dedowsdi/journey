@@ -12,6 +12,7 @@ struct blinn_program : public zxd::program {
   GLint ul_map;
   GLint ul_normal_scale;
   GLint tex_unit;
+  GLint light_count = 1;
   GLboolean with_texcoord;
   GLboolean instance;
   std::string map_name;

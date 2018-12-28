@@ -1,12 +1,13 @@
 snippet gl4Main
-#include "app.h"
-#include "bitmaptext.h"
 #include <sstream>
 
-#define WIDTH 800
-#define HEIGHT 800
+#include "app.h"
+#include "bitmaptext.h"
 
 namespace zxd {
+
+const GLint width = 800;
+const GLint height = 800;
 
 class ${2:program_name} : public program
 {

@@ -37,7 +37,9 @@ app::app()
     m_last_time(0),
     m_current_time(0),
     m_delta_time(0),
-    m_camera_move_speed(1.5) {}
+    m_camera_move_speed(1.5),
+    m_world_center(vec3(0))
+  {}
 
 //--------------------------------------------------------------------
 void app::init() {
@@ -236,6 +238,7 @@ void app::update_camera() {
     if (m_move_dir & MD_BACK) dir.z = -1;
 
     dir = glm::normalize(dir);
+
     (*m_v_mat)[3] +=
       vec4(dir * static_cast<GLfloat>(m_delta_time * m_camera_move_speed), 0);
   }
@@ -253,6 +256,8 @@ void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
   if (m_camera_mode == CM_PITCH_YAW) {
     if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
       return;
+
+    *m_v_mat = glm::translate(*m_v_mat, +m_world_center);
 
     m_dirty_view = GL_TRUE;
     // yaw world, assume z up
@@ -272,12 +277,17 @@ void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
                  glm::rotate(static_cast<GLfloat>(-dty * 0.02), vec3(1, 0, 0)) *
                  *m_v_mat;
     }
+
+    *m_v_mat = glm::translate(*m_v_mat, -m_world_center);
+
+
   } else if (m_camera_mode == CM_ARCBALL) {
     if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
       return;
 
     m_dirty_view = GL_TRUE;
     if (dtx != 0 || dty != 0) {
+      *m_v_mat = glm::translate(*m_v_mat, +m_world_center);
       mat4 w_mat_i = zxd::compute_window_mat_i(
         0, 0, wnd_width(), wnd_height(), 0, 1);
       mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
@@ -286,6 +296,7 @@ void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
 
       set_col(*m_v_mat, 3, zp);
       *m_v_mat = glm::translate(translation) * m * *m_v_mat;
+      *m_v_mat = glm::translate(*m_v_mat, -m_world_center);
     }
   } else if (m_camera_mode == CM_FREE) {
     // fix cursor
@@ -605,9 +616,11 @@ void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
       return;
 
     m_dirty_view = true;
+    *m_v_mat = glm::translate(*m_v_mat, +m_world_center);
     (*m_v_mat)[3][0] *= scale;
     (*m_v_mat)[3][1] *= scale;
     (*m_v_mat)[3][2] *= scale;
+    *m_v_mat = glm::translate(*m_v_mat, -m_world_center);
   }
 }
 

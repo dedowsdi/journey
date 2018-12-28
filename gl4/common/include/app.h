@@ -70,6 +70,7 @@ protected:
   camera_mode m_camera_mode;
   app_info m_info;
   GLFWwindow *m_wnd;
+  vec3 m_world_center;
   mat4 *m_v_mat;
   mat4 *m_p_mat; // only used for orthogonal projection zoom
 
@@ -96,6 +97,9 @@ public:
   mat4 *v_mat() const { return m_v_mat; }
   void set_v_mat(mat4 *v) { m_v_mat = v; }
   void set_p_mat(mat4 *v) { m_p_mat = v; }
+
+  const vec3& world_center() const { return m_world_center; }
+  void world_center(const vec3& v){ m_world_center = v; }
 
   camera_mode get_camera_mode() const { return m_camera_mode; }
   void set_camera_mode(camera_mode v);

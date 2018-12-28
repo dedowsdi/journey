@@ -25,7 +25,6 @@ out vs_out{
 #endif
 } vo;
 
-
 void main(void)
 {
   vo.v_normal = mat3(mv_mat_it) * normal * normal_scale;

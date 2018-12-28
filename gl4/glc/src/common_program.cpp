@@ -39,16 +39,19 @@ void blinn_program::attach_shaders() {
   sv.push_back("#version 330 core\n");
 #endif
   if (with_texcoord) sv.push_back("#define WITH_TEX\n");
-  sv.push_back("#define LIGHT_COUNT 8\n");
+  sv.push_back("#define LIGHT_COUNT " + std::to_string(light_count) + "\n");
   sv.push_back(stream_util::read_resource("shader/blinn.frag"));
   attach(GL_FRAGMENT_SHADER, sv, "shader/blinn.fs.glsl");
 }
 
 //--------------------------------------------------------------------
 void blinn_program::bind_uniform_locations() {
-  uniform_location(&ul_mv_mat, "mv_mat");
-  uniform_location(&ul_mv_mat_it, "mv_mat_it");
-  uniform_location(&ul_mvp_mat, "mvp_mat");
+  if(!this->instance)
+  {
+    uniform_location(&ul_mv_mat, "mv_mat");
+    uniform_location(&ul_mv_mat_it, "mv_mat_it");
+    uniform_location(&ul_mvp_mat, "mvp_mat");
+  }
   if (with_texcoord) {
     uniform_location(&ul_map, map_name);
   }

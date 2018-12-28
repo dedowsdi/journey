@@ -66,9 +66,7 @@ void sphere::build_texcoord() {
     GLfloat t1 = 1 - static_cast<GLfloat>(i + 1) / m_stack;
 
     for (int j = 0; j <= m_slice; j++) {
-      // loop last stack in reverse order
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
-      if (i == m_stack - 1) s = 1 - s;
 
       texcoords.push_back(glm::vec2(s, t0));
       texcoords.push_back(glm::vec2(s, t1));
