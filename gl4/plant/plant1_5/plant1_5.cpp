@@ -177,6 +177,15 @@ void plant1_5_app::create_scene() {
   glGenBuffers(3, instance_buffer);
   capsule.bind_vao();
 
+  glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MV_MAT]);
+  matrix_attrib_pointer(3, 1, 0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MVP_MAT]);
+  matrix_attrib_pointer(7, 1, 0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MV_MAT_IT]);
+  matrix_attrib_pointer(11, 1, 0);
+
   reset_pattern();
 }
 
@@ -451,19 +460,14 @@ void plant1_5_app::update_models()
     capsule.get_primitive_set(i)->num_instance(m_mats.size());
   }
 
-  capsule.bind_vao();
-
   glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MV_MAT]);
   glBufferData(GL_ARRAY_BUFFER, buffer_size, 0, GL_DYNAMIC_DRAW);
-  matrix_attrib_pointer(3, 1, 0);
 
   glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MVP_MAT]);
   glBufferData(GL_ARRAY_BUFFER, buffer_size, 0, GL_DYNAMIC_DRAW);
-  matrix_attrib_pointer(7, 1, 0);
 
   glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MV_MAT_IT]);
   glBufferData(GL_ARRAY_BUFFER, buffer_size, 0, GL_DYNAMIC_DRAW);
-  matrix_attrib_pointer(11, 1, 0);
 
   rotate_mat = mat4(1);
 

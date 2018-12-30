@@ -49,6 +49,18 @@ void rotate_operation::operator()(turtle* t) const
 }
 
 //--------------------------------------------------------------------
+void push_operation::operator()(turtle* t) const
+{
+  t->push();
+}
+
+//--------------------------------------------------------------------
+void pop_operation::operator()(turtle* t) const
+{
+  t->pop();
+}
+
+//--------------------------------------------------------------------
 std::vector<vec3> turtle::generate(const std::string& pattern, const mat4& start_transform)
 {
   m_transform.clear(start_transform);
@@ -95,6 +107,12 @@ void turtle::rotate(GLfloat angle, const vec3& axis)
 void turtle::load_transform(const mat4& m)
 {
   m_transform.load_mat4(m);
+}
+
+//--------------------------------------------------------------------
+const mat4& turtle::get_transform() const
+{
+  return m_transform.top();
 }
 
 //--------------------------------------------------------------------

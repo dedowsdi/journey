@@ -107,3 +107,7 @@ heap: 3
 remove:
     std::remove                 note that the values of elements left at the end
                                 of the range are unspecified
+
+mismatch
+lexicographical_compare
+equal

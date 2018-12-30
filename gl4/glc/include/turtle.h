@@ -73,6 +73,18 @@ private:
   vec3 m_axis;
 };
 
+class push_operation: public turtle_operation
+{
+public:
+  void operator()(turtle* t) const override;
+};
+
+class pop_operation: public turtle_operation
+{
+public:
+  void operator()(turtle* t) const override;
+};
+
 using spto = std::shared_ptr<turtle_operation>;
 
 // lsystem turtle, not logo
@@ -89,6 +101,7 @@ public:
   void rotate(GLfloat angle, const vec3& axis);
 
   void load_transform(const mat4& m);
+  const mat4& get_transform() const;
 
   void push();
   void pop();
