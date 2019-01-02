@@ -107,6 +107,15 @@ void geometry_base::bind_and_update_buffer(GLint index)
 }
 
 //--------------------------------------------------------------------
+void geometry_base::rebind(GLint array_index, GLint attrib_index)
+{
+  if(array_index >= m_attributes.size())
+    throw std::overflow_error("array index overflow");
+  attrib_array(array_index)->bind(attrib_index);
+  //glDisableVertexAttribArray(array_index);
+}
+
+//--------------------------------------------------------------------
 primitive_set* geometry_base::get_primitive_set(GLuint index)
 {
   if(index >= m_primitive_sets.size())

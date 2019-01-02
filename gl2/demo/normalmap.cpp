@@ -16,10 +16,12 @@
  * in order to render normal map, i use tex*2 - 1 as ndc, so the corresponding
  * normal will be rendered at resolution * tex.
  */
+#include <sstream>
+
 #include "app.h"
 #include "program.h"
 #include "light.h"
-#include <sstream>
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -73,31 +75,25 @@ vec2 texcoords[4] = {
 // clang-format on
 
 struct render_normalmap_program : public zxd::program {
-  GLint al_texcoord;
-  GLint al_normal;
 
   virtual void update_model(const mat4 &_m_mat) {
     m_mat = _m_mat;
   }
   virtual void attach_shaders() {
     attach(
-      GL_VERTEX_SHADER, "data/shader/render_normalmap.vs.glsl");
+      GL_VERTEX_SHADER, "shader2/render_normalmap.vs.glsl");
     attach(
-      GL_FRAGMENT_SHADER, "data/shader/render_normalmap.fs.glsl");
+      GL_FRAGMENT_SHADER, "shader2/render_normalmap.fs.glsl");
   }
   virtual void bind_uniform_locations() {}
 
   virtual void bind_attrib_locations() {
-    al_texcoord = attrib_location("texcoord");
-    al_normal = attrib_location("normal");
+    bind_attrib_location(0, "normal");
+    bind_attrib_location(1, "texcoord");
   };
 } render_prg;
 
 struct use_normal_map_view_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_normal;
-  GLint al_tangent;
-  GLint al_texcoord;
   GLint ul_normal_map;
 
   virtual void update_model(const mat4 &_m_mat) {
@@ -112,12 +108,12 @@ struct use_normal_map_view_program : public zxd::program {
   }
   virtual void attach_shaders() {
     attach(
-      GL_VERTEX_SHADER, "data/shader/use_normalmap_view.vs.glsl");
+      GL_VERTEX_SHADER, "shader2/use_normalmap_view.vs.glsl");
     string_vector sv;
     sv.push_back("#version 120\n #define LIGHT_COUNT 1\n");
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back(stream_util::read_resource("shader2/blinn.frag"));
     attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_view.fs.glsl");
+      GL_FRAGMENT_SHADER, sv, "shader2/use_normalmap_view.fs.glsl");
 
     name("use_normalmap_view");
   }
@@ -130,18 +126,14 @@ struct use_normal_map_view_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
-    al_tangent = attrib_location("tangent");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
+    bind_attrib_location(2, "tangent");
+    bind_attrib_location(3, "texcoord");
   };
 } prg0;
 
 struct use_normal_map_tangent_program : public program {
-  GLint al_vertex;
-  GLint al_normal;
-  GLint al_tangent;
-  GLint al_texcoord;
   GLint ul_normal_map;
   GLint ul_m_camera;
 
@@ -157,10 +149,10 @@ struct use_normal_map_tangent_program : public program {
     string_vector sv;
     sv.push_back("#version 120\n #define LIGHT_COUNT 1\n");
     attach(
-      GL_VERTEX_SHADER, sv, "data/shader/use_normalmap_tangent.vs.glsl");
-    sv.push_back(read_file("data/shader/blinn.frag"));
+      GL_VERTEX_SHADER, sv, "shader2/use_normalmap_tangent.vs.glsl");
+    sv.push_back(stream_util::read_resource("shader2/blinn.frag"));
     attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/use_normalmap_tangent.fs.glsl");
+      GL_FRAGMENT_SHADER, sv, "shader2/use_normalmap_tangent.fs.glsl");
 
     name("use_normalmap_tangent");
   }
@@ -171,10 +163,10 @@ struct use_normal_map_tangent_program : public program {
     uniform_location(&ul_m_camera, "m_camera");
   }
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
-    al_tangent = attrib_location("tangent");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
+    bind_attrib_location(2, "tangent");
+    bind_attrib_location(3, "texcoord");
   };
 } prg1;
 
@@ -255,16 +247,53 @@ class app0 : public app {
     glGenVertexArrays(1, &pyramid0.vao);
     glBindVertexArray(pyramid0.vao);
 
-    setup_vertex_al_builtin_array(render_prg.al_normal, pyramid0.normals);
-    setup_vertex_al_builtin_array(render_prg.al_texcoord, pyramid0.texcoords);
+    {
+      GLuint vbo;
+      glGenBuffers(1, &vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, vbo);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(pyramid0.normals) + sizeof(pyramid0.texcoords), 0, GL_STATIC_DRAW );
+
+      auto normal_size = sizeof(pyramid0.normals);
+      glBufferSubData(GL_ARRAY_BUFFER, 0, normal_size, glm::value_ptr(pyramid0.normals[0]));
+      glBufferSubData(GL_ARRAY_BUFFER, normal_size, sizeof(pyramid0.texcoords), glm::value_ptr(pyramid0.texcoords[0]));
+
+      glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
+      glVertexAttribPointer(1, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(normal_size));
+      glEnableVertexAttribArray(0);
+      glEnableVertexAttribArray(1);
+    }
 
     glGenVertexArrays(1, &pyramid1.vao);
     glBindVertexArray(pyramid1.vao);
+    {
+      GLuint vbo;
+      glGenBuffers(1, &vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, vbo);
+      auto total_size = sizeof(pyramid1.vertices) + sizeof(pyramid1.normals)
+          + sizeof(pyramid1.tangents) + sizeof(pyramid1.texcoords);
+      glBufferData(GL_ARRAY_BUFFER, total_size, 0, GL_STATIC_DRAW );
 
-    setup_vertex_al_builtin_array(prg0.al_vertex, pyramid1.vertices);
-    setup_vertex_al_builtin_array(prg0.al_normal, pyramid1.normals);
-    setup_vertex_al_builtin_array(prg0.al_tangent, pyramid1.tangents);
-    setup_vertex_al_builtin_array(prg0.al_texcoord, pyramid1.texcoords);
+      auto start = 0;
+      auto size = sizeof(pyramid1.vertices);
+      glBufferSubData(GL_ARRAY_BUFFER, start, size, glm::value_ptr(pyramid1.vertices[0]));
+      glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(start));
+      start += size;
+      size = sizeof(pyramid1.normals);
+      glBufferSubData(GL_ARRAY_BUFFER, start, size, glm::value_ptr(pyramid1.normals[0]));
+      glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(start));
+      start += size;
+      size = sizeof(pyramid1.tangents);
+      glBufferSubData(GL_ARRAY_BUFFER, start, size, glm::value_ptr(pyramid1.tangents[0]));
+      glVertexAttribPointer(2, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(start));
+      start += size;
+      size = sizeof(pyramid1.texcoords);
+      glBufferSubData(GL_ARRAY_BUFFER, start, size, glm::value_ptr(pyramid1.texcoords[0]));
+      glVertexAttribPointer(3, 2, GL_FLOAT, 0, 0, BUFFER_OFFSET(start));
+      glEnableVertexAttribArray(0);
+      glEnableVertexAttribArray(1);
+      glEnableVertexAttribArray(2);
+      glEnableVertexAttribArray(3);
+    }
 
     glGenTextures(1, &normal_map);
     glBindTexture(GL_TEXTURE_2D, normal_map);

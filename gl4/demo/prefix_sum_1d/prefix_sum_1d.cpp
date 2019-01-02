@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "timer.h"
 #include "algorithm"
@@ -24,7 +24,7 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_COMPUTE_SHADER, "shader/prefix_sum_1d.cs.glsl");
+    attach(GL_COMPUTE_SHADER, "shader4/prefix_sum_1d.cs.glsl");
   }
 
   void bind_uniform_locations()

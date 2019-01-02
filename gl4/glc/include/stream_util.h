@@ -16,6 +16,8 @@ namespace stream_util
 
   std::string read_resource(const std::string &filepath);
   std::string read_file(const std::string &filepath);
+  // no space no linebreak
+  std::string read_string(const std::string &filepath);
   std::string get_resource(const std::string& name);
 }
 

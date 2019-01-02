@@ -2,7 +2,7 @@
 
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "quad.h"
 #include "texutil.h"
@@ -58,8 +58,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/fire.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/fire.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/fire.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/fire.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -86,8 +86,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/fire.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/coolmap.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/fire.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/coolmap.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -113,8 +113,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/warp.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/warp.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -141,8 +141,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/fire_heat.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/fire_heat.fs.glsl");
   }
 
   void bind_uniform_locations()

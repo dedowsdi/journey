@@ -15,6 +15,7 @@ struct blinn_program : public zxd::program {
   GLint light_count = 1;
   GLboolean with_texcoord;
   GLboolean instance;
+  GLboolean legacy = GL_FALSE;
   std::string map_name;
 
   blinn_program()

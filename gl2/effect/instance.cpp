@@ -1,9 +1,10 @@
-#include "glad/glad.h"
+#include <sstream>
+
 #include "app.h"
 #include "program.h"
 #include "light.h"
 #include "sphere.h"
-#include <sstream>
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -33,11 +34,6 @@ class app0 : public app {
 
   struct instance_program : public zxd::program {
     // GLint ul_eye;
-    GLint al_vertex;
-    GLint al_normal;
-    GLint al_mvp_mat;
-    GLint al_mv_mat;
-    GLint al_mv_mat_it;
 
     virtual void update_frame() {
       v_mat_it = glm::inverse(glm::transpose(v_mat));
@@ -52,12 +48,12 @@ class app0 : public app {
       // everything is done on vertex attribute
     }
     virtual void attach_shaders() {
-      attach(GL_VERTEX_SHADER, "data/shader/instance.vs.glsl");
+      attach(GL_VERTEX_SHADER, "shader2/instance.vs.glsl");
       string_vector sv;
-      sv.push_back("#define LIGHT_COUNT 8\n");
-      sv.push_back(read_file("data/shader/blinn.frag"));
+      sv.push_back("#define LIGHT_COUNT 3\n");
+      sv.push_back(stream_util::read_resource("shader2/blinn.frag"));
       attach(
-        GL_FRAGMENT_SHADER, sv, "data/shader/blinn.fs.glsl");
+        GL_FRAGMENT_SHADER, sv, "shader2/blinn.fs.glsl");
     }
     virtual void bind_uniform_locations() {
       light_model.bind_uniform_locations(object, "lm");
@@ -70,11 +66,11 @@ class app0 : public app {
     }
 
     virtual void bind_attrib_locations() {
-      al_vertex = attrib_location("vertex");
-      al_normal = attrib_location("normal");
-      al_mvp_mat = attrib_location("mvp_mat");
-      al_mv_mat = attrib_location("mv_mat");
-      al_mv_mat_it = attrib_location("mv_mat_it");
+      bind_attrib_location(0, "vertex");
+      bind_attrib_location(1, "normal");
+      bind_attrib_location(2, "mvp_mat");
+      bind_attrib_location(6, "mv_mat");
+      bind_attrib_location(10, "mv_mat_it");
     }
 
   } prg;
@@ -85,7 +81,7 @@ class app0 : public app {
 
     mat4 model = mat4(1.0f);
     prg.update_model(model);
-    sphere0.draw(num_instance);
+    sphere0.draw();
   }
 
   // update transform attribute
@@ -118,7 +114,7 @@ class app0 : public app {
       glBufferData(GL_ARRAY_BUFFER, mvp_mats.size() * sizeof(mat4),
         value_ptr(mvp_mats[0]), GL_STATIC_DRAW);
 
-      matrix_attrib_pointer(prg.al_mvp_mat);
+      matrix_attrib_pointer(2);
     }
 
     {
@@ -128,7 +124,7 @@ class app0 : public app {
       glBufferData(GL_ARRAY_BUFFER, mv_mats.size() * sizeof(mat4),
         value_ptr(mv_mats[0]), GL_STATIC_DRAW);
 
-      matrix_attrib_pointer(prg.al_mv_mat);
+      matrix_attrib_pointer(6);
     }
 
     {
@@ -138,7 +134,7 @@ class app0 : public app {
       glBufferData(GL_ARRAY_BUFFER, mv_mat_its.size() * sizeof(mat4),
         value_ptr(mv_mat_its[0]), GL_STATIC_DRAW);
 
-      matrix_attrib_pointer(prg.al_mv_mat_it);
+      matrix_attrib_pointer(10);
     }
   }
 
@@ -209,8 +205,9 @@ class app0 : public app {
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 50.0f);
     prg.v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
 
+    sphere0.include_normal(true);
     sphere0.build_mesh();
-    sphere0.bind(prg.al_vertex, prg.al_normal, -1);
+    sphere0.set_num_instance(num_instance);
 
     reset_mat_attribute();
   }
@@ -229,6 +226,7 @@ class app0 : public app {
     switch (key) {
       case 'q':
         num_instance += 100;
+        sphere0.set_num_instance(num_instance);
         reset_mat_attribute();
         break;
 

@@ -54,6 +54,7 @@ include_directories(
     ${FIP_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     glc/include
+    glc/utfcpp/source
     common/include
     )
 

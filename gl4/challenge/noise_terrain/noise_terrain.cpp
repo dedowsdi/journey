@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -26,8 +26,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/noise_terrain.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/noise_terrain.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/noise_terrain.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/noise_terrain.fs.glsl");
   }
 
   void bind_uniform_locations()

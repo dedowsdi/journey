@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common_program.h"
 #include "capsule2d.h"

@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "geometry.h"
 #include "teapot.h"
 #include "program.h"
@@ -28,9 +28,9 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/dummy.vs.glsl");
-    attach(GL_TESS_EVALUATION_SHADER, "data/shader/teapot.te.glsl");
-    attach(GL_FRAGMENT_SHADER, {"#version 430 core"}, "data/shader/lightless.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/dummy.vs.glsl");
+    attach(GL_TESS_EVALUATION_SHADER, "shader4/teapot.te.glsl");
+    attach(GL_FRAGMENT_SHADER, {"#version 430 core"}, "shader4/lightless.fs.glsl");
   }
 
   void bind_uniform_locations()

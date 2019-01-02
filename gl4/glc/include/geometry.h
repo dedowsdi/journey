@@ -69,6 +69,7 @@ public:
 
   void bind_and_update_buffer();
   void bind_and_update_buffer(GLint index);
+  void rebind(GLint array_index, GLint attrib_index);
 
   primitive_set* get_primitive_set(GLuint index);
   GLuint get_num_primitive_set();

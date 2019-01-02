@@ -1,15 +1,19 @@
+#include <sstream>
+#include <memory>
+
 #include "glad/glad.h"
 #include "app.h"
 #include "freetype_text.h"
-#include <sstream>
 #include "quad.h"
 #include "texutil.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <fstream>
 #include <iomanip>
-#include "stringutil.h"
+#include "string_util.h"
 #include "program.h"
 #include "common_program.h"
+#include "stream_util.h"
+#include "glc_utf8.h"
 
 namespace zxd {
 
@@ -23,22 +27,17 @@ GLfloat wnd_aspect = 1;
 GLuint wnd_width = 512;
 GLuint wnd_height = 512 + 128;
 GLuint tex_size = 256;
-GLuint font_size = 15;  // height
-GLuint num_characters = 256;
+GLuint font_size = 12;  // height
 
 std::string text;
 std::string font;
-std::string output_name;
+std::string input_file;
 
-std::unique_ptr<zxd::freetype_text> ft0;
-std::unique_ptr<zxd::freetype_text> ft1;
+std::unique_ptr<zxd::freetype_text> ft_draw;
+std::unique_ptr<zxd::freetype_text> ft_info;
 std::unique_ptr<zxd::bitmap_text> bt;
 
-std::vector<zxd::bitmap_text::glyph> glyphs;
-
-quad quad0;
-
-quad_program quad_prg;
+std::map<uint32_t, zxd::bitmap_text::glyph> glyphs;
 
 class app0 : public app {
   void init_info() {
@@ -47,6 +46,7 @@ class app0 : public app {
     m_info.display_mode = GLUT_DOUBLE | GLUT_RGB;
     m_info.wnd_width = wnd_width;
     m_info.wnd_height = wnd_height;
+    m_info.samples = 16;
   }
 
   void display(void) {
@@ -61,17 +61,22 @@ class app0 : public app {
     glyphs.clear();
 
     GLuint x = 0;
-    GLuint y = tex_size - ft0->get_linespace();
+    GLuint y = tex_size - ft_draw->get_linespace();
 
-    for (int i = 0; i < num_characters; ++i) {
-      const zxd::freetype_text::Glyph& glyph = ft0->getGlyph(i);
+    auto beg = make_utf8_beg(text.begin(), text.end());
+    auto end = make_utf8_end(text.begin(), text.end());
+
+    while(beg != end)
+    {
+      auto character = *beg++;
+      const zxd::freetype_text::Glyph& glyph = ft_draw->getGlyph(character);
 
       if ((x + glyph.advance) > tex_size) {
         x = 0;
-        y -= ft0->get_linespace();
+        y -= ft_draw->get_linespace();
       }
 
-      ft0->print(glyph, x, y);
+      ft_draw->print(glyph, x, y);
 
       zxd::bitmap_text::glyph bmg;
       bmg.x_min = glyph.x_min;
@@ -83,7 +88,7 @@ class app0 : public app {
       bmg.t_min = y + glyph.y_min;
       bmg.t_max = y + glyph.y_max;
       bmg.advance = glyph.advance;
-      glyphs.push_back(bmg);
+      glyphs.insert(std::make_pair(character, bmg));
 
       x += glyph.advance;
     }
@@ -103,10 +108,7 @@ class app0 : public app {
     else
       glViewport(0, wnd_height - wnd_width, wnd_width, wnd_width);
 
-    quad_prg.use();
-    quad_prg.update_uniforms(0);
-    glBindTexture(GL_TEXTURE_2D, font_tex);
-    quad0.draw();
+    draw_quad(font_tex, 0);
 
     glViewport(0, 0, wnd_width, wnd_height);
 
@@ -114,11 +116,12 @@ class app0 : public app {
     sprintf(info,
       "qQ : texture size : %d \n"
       "wW : font size : %d \n"
-      "e : export to %s\n",
-      tex_size, font_size, output_name.c_str());
+      "e : export to %s\n"
+      "characters : %ld \n",
+      tex_size, font_size, output_name().c_str(), utf8::distance(text.begin(), text.end()));
 
     glEnable(GL_BLEND);
-    ft1->print(info, 10, wnd_height - wnd_width - 10);
+    ft_info->print(info, 10, wnd_height - wnd_width - 10);
 
     bt->print(
       "bitmap text : when will TWOW be released? \n"
@@ -132,36 +135,28 @@ class app0 : public app {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_FLAT);
 
-    bt = std::unique_ptr<zxd::bitmap_text>(new zxd::bitmap_text());
+    // characters
+    //text = stream_util::read_string(input_file);
+    text = stream_util::read_file(input_file);
+    text += u8" \x1"; // manually add space
+
+    bt = std::make_unique<zxd::bitmap_text>();
     bt->init();
 
     // free type  printer
-    ft0 = std::unique_ptr<zxd::freetype_text>(new zxd::freetype_text(font));
-    ft0->set_num_characters(num_characters);
-    ft0->set_height(font_size);
-    ft0->init();
+    ft_draw = std::make_unique<zxd::freetype_text>(font);
+    ft_draw->set_height(font_size);
+    ft_draw->init(text);
 
-    if (output_name.empty()) {
-      // use default name, it's face_max_advance_height
-      std::stringstream ss;
-      ss << zxd::string_util::basename(zxd::string_util::tail(font)) << "_"
-         << ft0->get_height() << "_" << ft0->get_max_advance();
-      output_name = ss.str();
-    }
-
-    ft1 = std::unique_ptr<zxd::freetype_text>(
-      new zxd::freetype_text("data/font/DejaVuSansMono.ttf"));
-    ft1->init();
-
-    // characters
-    text.reserve(num_characters);
-    for (int i = 0; i < num_characters; ++i) {
-      text.push_back(i);
-    }
+    ft_info = std::unique_ptr<zxd::freetype_text>(
+      new zxd::freetype_text("font/DejaVuSansMono.ttf"));
+    ft_info->init();
+    ft_info->reset_content_as_ascii();
 
     // rtt
     glGenTextures(1, &font_tex);
     glBindTexture(GL_TEXTURE_2D, font_tex);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -175,37 +170,43 @@ class app0 : public app {
       GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, font_tex, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       printf("incomplete frame buffer");
-
-    quad_prg.init();
-    quad0.build_mesh();
-    quad0.bind(quad_prg.al_vertex, -1, quad_prg.al_texcoord);
   }
 
   void reshape(int w, int h) {
     app::reshape(w, h);
 
-    ft1->reshape(m_info.wnd_width, m_info.wnd_height);
+    ft_info->reshape(m_info.wnd_width, m_info.wnd_height);
     bt->reshape(m_info.wnd_width, m_info.wnd_height);
+  }
+
+  std::string output_name()
+  {
+    // use default name, it's face_max_advance_height
+    std::stringstream ss;
+    ss << string_util::basename(string_util::tail(font)) << "_"
+    << ft_draw->get_height();
+    //<< ft_draw->get_height() << "_" << ft_draw->get_max_advance();
+    return ss.str();
   }
 
   void resize_texture() {
     glBindTexture(GL_TEXTURE_2D, font_tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, tex_size, tex_size, 0, GL_RED,
       GL_UNSIGNED_BYTE, 0);
-    ft0->reshape(tex_size, tex_size);
+    ft_draw->reshape(tex_size, tex_size);
   }
 
   void resize_font() {
-    ft0->set_height(font_size);
-    ft0->update_glyph_dict();
+    ft_draw->set_height(font_size);
+    ft_draw->reset_content(text);
   }
 
   void export_bitmap() {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, font_tex);
 
-    std::ofstream ofs(output_name + ".fmt");
-    std::string texture_name = output_name + ".png";
+    std::ofstream ofs(output_name() + ".fmt");
+    std::string texture_name = output_name() + ".png";
 
     ofs << std::left;
     ofs << std::setw(50) << "#texture";
@@ -213,7 +214,7 @@ class app0 : public app {
     ofs << std::endl;
 
     ofs << std::setw(50) << texture_name;
-    ofs << std::setw(50) << ft0->get_face();
+    ofs << std::setw(50) << string_util::tail(ft_draw->get_face());
     ofs << std::endl << std::endl;
 
     ofs << std::setw(10) << "#count";
@@ -223,14 +224,14 @@ class app0 : public app {
     ofs << std::setw(15) << "max_advance";
     ofs << std::endl;
 
-    ofs << std::setw(10) << num_characters;
+    ofs << std::setw(10) << utf8::distance(text.begin(), text.end());
     ofs << std::setw(10) << tex_size;
     ofs << std::setw(10) << font_size;
-    ofs << std::setw(12) << ft0->get_linespace();
-    ofs << std::setw(15) << ft0->get_max_advance();
+    ofs << std::setw(12) << ft_draw->get_linespace();
+    ofs << std::setw(15) << ft_draw->get_max_advance();
     ofs << std::endl << std::endl;
 
-    ofs << std::setw(10) << "#char";
+    ofs << std::setw(10) << "#code";
     ofs << std::setw(10) << "x_min";
     ofs << std::setw(10) << "x_max";
     ofs << std::setw(10) << "y_min";
@@ -247,10 +248,11 @@ class app0 : public app {
          "-------------------------------"
       << std::endl;
 
-    for (int i = 0; i < glyphs.size(); ++i) {
-      const zxd::bitmap_text::glyph& glyph = glyphs[i];
+    for (const auto& p : glyphs) {
+      const zxd::bitmap_text::glyph& glyph = p.second;
 
-      ofs << std::setw(10) << i;
+      ofs << std::setw(10) << std::hex << p.first;
+      ofs.unsetf(std::ios_base::hex);
       ofs << std::setw(10) << glyph.x_min;
       ofs << std::setw(10) << glyph.x_max;
       ofs << std::setw(10) << glyph.y_min;
@@ -309,19 +311,13 @@ class app0 : public app {
 int main(int argc, char** argv) {
   if (argc < 3) {
     std::cout << "illegal command, it should be " << argv[0]
-              << " font size [numCharacters] [output name] " << std::endl;
+              << " font input_file " << std::endl;
     return 0;
   }
 
   zxd::font = argv[1];
-  zxd::font_size = std::stoi(argv[2]);
+  zxd::input_file = argv[2];
 
-  if (argc >= 4) {
-    zxd::num_characters = std::stoi(argv[3]);
-  }
-  if (argc >= 5) {
-    zxd::output_name = std::stoi(argv[4]);
-  }
   zxd::app0 _app0;
   _app0.run(argc, argv);
   return 0;

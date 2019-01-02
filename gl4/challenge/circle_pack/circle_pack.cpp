@@ -1,6 +1,8 @@
-#include "app.h"
-#include "bitmaptext.h"
 #include <sstream>
+#include <algorithm>
+
+#include "app.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include "texutil.h"
 #include "quad.h"
@@ -60,19 +62,19 @@ public:
     m_radius += m_growing_step;
   }
 
-  bool collide(const vec2& min_ext, const vec2& max_ext)
+  bool collide(const vec2& min_ext, const vec2& max_ext) const
   {
     return (m_pos.x + m_radius) > max_ext.x || (m_pos.x - m_radius) < min_ext.x ||
        (m_pos.y + m_radius) > max_ext.y || (m_pos.y - m_radius) < min_ext.y;
   }
 
-  bool collide(const auto_grow_circle& c)
+  bool collide(const auto_grow_circle& c) const
   {
     GLfloat a = m_radius + c.radius();
     return glm::length2(m_pos - c.pos()) <= a*a;
   }
 
-  bool collide(const vec2& point)
+  bool collide(const vec2& point) const
   {
     return glm::length2(m_pos - point) <=  m_radius * m_radius;
   }
@@ -162,15 +164,11 @@ public:
       std::advance(iter, index);
       pos = *iter;
 
-      bool collide = false;
-      for (int i = 0; i < m_circles.size(); ++i) 
-      {
-        if(m_circles[i].collide(pos))
-        {
-          collide = true;
-          break;
-        }
-      }
+      bool collide = std::any_of(m_circles.begin(), m_circles.end(), 
+          [&pos](const auto& item)->bool
+          {
+            return item.collide(pos);
+          });
       
       black_pixels.erase(iter);
 
@@ -181,7 +179,6 @@ public:
     c.growing_step(grow_step);
     return c;
   }
-
   
   virtual void update() {
     if(m_circles.size() < max_circle)

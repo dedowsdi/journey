@@ -16,3 +16,4 @@ foreach(PROJECT ${PROJECTS})
         )
 endforeach()
 
+file(COPY bitmap_content DESTINATION ${CMAKE_BINARY_DIR})

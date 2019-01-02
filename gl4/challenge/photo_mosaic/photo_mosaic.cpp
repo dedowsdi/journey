@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "texutil.h"
 #include <algorithm>
@@ -138,8 +138,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/photo_mosaic.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/photo_mosaic.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/photo_mosaic.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/photo_mosaic.fs.glsl");
   }
 
   void bind_uniform_locations()

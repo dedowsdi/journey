@@ -38,8 +38,8 @@ public:
   GLint ul_color;
 
   virtual void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "shader/debugger.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/debugger.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/debugger.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/debugger.fs.glsl");
   };
 
   virtual void bind_uniform_locations(){

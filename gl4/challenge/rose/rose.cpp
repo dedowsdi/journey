@@ -1,6 +1,6 @@
 // https://en.wikipedia.org/wiki/Rose_(mathematics)
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include <sstream>
 #include <numeric>

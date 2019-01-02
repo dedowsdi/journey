@@ -5,6 +5,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <map>
+#include <sstream>
+#include "glc_utf8.h"
 
 namespace zxd {
 
@@ -33,7 +35,7 @@ struct Glyph {
   GLuint texture;
 };
 
-std::map<GLchar, Glyph> glyphDict;
+std::map<FT_ULong, Glyph> glyphDict;
 
 class app0 : public app {
   void init_info() {
@@ -45,7 +47,6 @@ class app0 : public app {
   }
 
   struct freetype_text_program : public zxd::program {
-    GLint attrib_vertex;
     GLint ul_text_color;
     GLint ul_font_map;
     freetype_text_program() {
@@ -57,11 +58,10 @@ class app0 : public app {
       glUniform4fv(ul_text_color, 1, value_ptr(text_color));
       glUniform1i(ul_font_map, 0);
     }
-    virtual void model(const glm::mat4& m_mat) {}
     virtual void attach_shaders() {
-      attach(GL_VERTEX_SHADER, "data/shader/freetype_text.vs.glsl");
+      attach(GL_VERTEX_SHADER, "shader2/freetype_text.vs.glsl");
       attach(
-        GL_FRAGMENT_SHADER, "data/shader/freetype_text.fs.glsl");
+        GL_FRAGMENT_SHADER, "shader2/freetype_text.fs.glsl");
     }
     virtual void bind_uniform_locations() {
       uniform_location(&ul_mvp_mat, "mvp_mat");
@@ -69,7 +69,7 @@ class app0 : public app {
       uniform_location(&ul_font_map, "font_map");
     }
     virtual void bind_attrib_locations() {
-      attrib_vertex = attrib_location("vertex");
+      bind_attrib_location(0, "vertex");
     }
   } prg;
 
@@ -77,37 +77,46 @@ class app0 : public app {
     GLuint nextY = y;
     GLuint nextX = x;
 
-    for (int i = 0; i < text.size(); ++i) {
-      char character = text[i];
-      Glyph& glyph = glyphDict[character];
+    auto beg = make_utf8_beg(text.begin(), text.end());
+    auto end = make_utf8_end(text.begin(), text.end());
 
+    while(beg != end)
+    {
+      auto character = *beg++;
       if (character == '\n') {
         nextX = x;
         nextY -= linespace * scale;
         continue;
-      } else if (character == ' ') {
+      }
+
+      auto iter = glyphDict.find(character);
+      if(iter == glyphDict.end())
+        std::cerr << "failed to find glyph for " << character << std::endl;
+
+      const Glyph& glyph = iter->second;
+
+      if (character == ' ') {
         nextX += glyph.advance * scale;
         continue;
       }
 
       // clang-format off
-    // freetype generate texture from left to right, top to bottom, which means
-    // we must flip y
-    GLfloat vertices[4][4] = {
-      {nextX + glyph.x_min * scale, nextY + glyph.y_min * scale, 0, 1},
-      {nextX + glyph.x_max * scale, nextY + glyph.y_min * scale, 1, 1},
-      {nextX + glyph.x_max * scale, nextY + glyph.y_max * scale, 1, 0},
-      {nextX + glyph.x_min * scale, nextY + glyph.y_max * scale, 0, 0}
-    };
+      // freetype generate texture from left to right, top to bottom, which means
+      // we must flip y
+      GLfloat vertices[4][4] = {
+        {nextX + glyph.x_min * scale, nextY + glyph.y_min * scale, 0, 1},
+        {nextX + glyph.x_max * scale, nextY + glyph.y_min * scale, 1, 1},
+        {nextX + glyph.x_max * scale, nextY + glyph.y_max * scale, 1, 0},
+        {nextX + glyph.x_min * scale, nextY + glyph.y_max * scale, 0, 0}
+      };
       // clang-format on
 
       glBindVertexArray(vao);
       glBindBuffer(GL_ARRAY_BUFFER, vbo);
       glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
-      glVertexAttribPointer(
-        prg.attrib_vertex, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-      glEnableVertexAttribArray(prg.attrib_vertex);
+      glVertexAttribPointer( 0, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+      glEnableVertexAttribArray(0);
 
       glEnable(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D, glyph.texture);
@@ -126,18 +135,51 @@ class app0 : public app {
 
     GLchar info[256];
     // clang-format off
-  sprintf(info, 
+    sprintf(info, 
       " q : text_color : %.2f %.2f %.2f %.2f \n"
-      " w : \n"
-      " w : \n"
-      " w : \n"
-      " w : \n",
-      text_color[0], text_color[1], text_color[2], text_color[3]);
+      " %s \n",
+      text_color[0], text_color[1], text_color[2], text_color[3], u8"冰与火之歌");
     // clang-format on
 
     printText2D(info, 20, 300, 1.0);
 
     glutSwapBuffers();
+  }
+
+  void load_character(const FT_Face& face, FT_Long c)
+  {
+    if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+      std::cout << "faield to load char " << c << std::endl;
+
+    FT_Bitmap& bitmap = face->glyph->bitmap;
+
+    Glyph glyph;
+    glyph.bearingX = face->glyph->bitmap_left;
+    glyph.bearingY = face->glyph->bitmap_top;
+    glyph.width = bitmap.width;
+    glyph.height = bitmap.rows;  // bitmap.rows
+    glyph.x_min = glyph.bearingX;
+    glyph.y_min = glyph.bearingY - glyph.height;
+    glyph.x_max = glyph.x_min + glyph.width;
+    glyph.y_max = glyph.bearingY;
+    // glyph.origin = face->glyph->origin;
+    glyph.advance = face->glyph->advance.x;
+    glyph.advance >>= 6;
+
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, glyph.width, glyph.height, 0,
+      GL_RED, GL_UNSIGNED_BYTE, bitmap.buffer);
+
+    glyph.texture = tex;
+    glyphDict.insert(std::make_pair(c, glyph));
+
   }
 
   void create_scene(void) {
@@ -157,7 +199,8 @@ class app0 : public app {
                 << std::endl;
 
     FT_Face face;
-    std::string font("data/font/DejaVuSansMono.ttf");
+    //std::string font("font/DejaVuSansMono.ttf");
+    std::string font("font/SentyGoldenBell.ttf");
     error = FT_New_Face(ft, font.c_str(), 0, &face);
     if (error == FT_Err_Unknown_File_Format)
       std::cout << "ERROR:FREETYEP: unsupported face";
@@ -180,40 +223,23 @@ class app0 : public app {
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+    std::stringstream ss;
+    for (int i = 32; i < 127; ++i) {
+      ss << i;
+    }
+    ss << u8"冰与火之歌";
+
     // load 128 ascii characters
     for (GLubyte c = 0; c < 128; c++) {
       // load glyph
-      if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-        std::cout << "faield to load char " << c << std::endl;
-
-      FT_Bitmap& bitmap = face->glyph->bitmap;
-
-      Glyph glyph;
-      glyph.bearingX = face->glyph->bitmap_left;
-      glyph.bearingY = face->glyph->bitmap_top;
-      glyph.width = bitmap.width;
-      glyph.height = bitmap.rows;  // bitmap.rows
-      glyph.x_min = glyph.bearingX;
-      glyph.y_min = glyph.bearingY - glyph.height;
-      glyph.x_max = glyph.x_min + glyph.width;
-      glyph.y_max = glyph.bearingY;
-      // glyph.origin = face->glyph->origin;
-      glyph.advance = face->glyph->advance.x;
-      glyph.advance >>= 6;
-
-      GLuint tex;
-      glGenTextures(1, &tex);
-      glBindTexture(GL_TEXTURE_2D, tex);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, glyph.width, glyph.height, 0,
-        GL_RED, GL_UNSIGNED_BYTE, bitmap.buffer);
-
-      glyph.texture = tex;
-      glyphDict.insert(std::make_pair(c, glyph));
+      load_character(face, c);
+    }
+    std::string s = ss.str();
+    auto beg = make_utf8_beg(s.begin(), s.end());
+    auto end = make_utf8_end(s.begin(), s.end());
+    while(beg != end)
+    {
+      load_character(face, *beg++);
     }
 
     // clear up

@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "quad.h"
 #include "program.h"
 #include "texutil.h"
@@ -30,7 +30,7 @@ struct fs_program : public program{
   fs_program() {}
 
   void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "shader/plot.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/plot.vs.glsl");
     attach(GL_FRAGMENT_SHADER, fragment_shader);
   }
 

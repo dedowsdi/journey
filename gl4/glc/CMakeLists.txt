@@ -1,5 +1,5 @@
 set(GLC_SRCS 
-    src/bitmaptext.cpp
+    src/bitmap_text.cpp
     src/common.cpp
     src/glenumstring.cpp
     src/glm.cpp
@@ -32,6 +32,7 @@ set(GLC_SRCS
     src/teardrop.cpp
     src/turtle.cpp
     src/capsule3d.cpp
+    src/freetype_text.cpp
     )
 
 add_library(glc 

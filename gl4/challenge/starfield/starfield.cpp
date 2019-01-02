@@ -3,7 +3,7 @@
  */
 #include "app.h"
 #include "texutil.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "glm.h"
 #include <sstream>
 
@@ -21,8 +21,8 @@ struct star_program : public zxd::program {
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/starfield.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/starfield.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/starfield.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/starfield.fs.glsl");
   }
 
   virtual void bind_uniform_locations()

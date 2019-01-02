@@ -5,7 +5,7 @@
  * only bloop with proper size and speed can survive.
  */
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common_program.h"
 #include "quad.h"

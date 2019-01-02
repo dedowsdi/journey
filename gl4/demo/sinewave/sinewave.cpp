@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "quad.h"
 #include "program.h"
 #include "texutil.h"
@@ -18,8 +18,8 @@ struct sine_wave_program : public program{
   sine_wave_program() {}
 
   void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/sinewave.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/sinewave.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0){

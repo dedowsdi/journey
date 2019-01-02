@@ -1,7 +1,7 @@
 #include <sstream>
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include "fractal_spiral.h"
 #include "debugger.h"
@@ -54,9 +54,9 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
     attach(GL_FRAGMENT_SHADER, {"#version 430 core\n #define NUM_EYEBALLS 2\n"},
-        "data/shader/eyeball.fs.glsl");
+        "shader4/eyeball.fs.glsl");
   }
 
   void bind_attrib_locations()

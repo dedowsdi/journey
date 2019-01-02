@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "geometry.h"
 #include "points.h"
 #include "texmap_anim.h"

@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 include(util)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 if( CMAKE_BUILD_TYPE STREQUAL ""  )
     set( CMAKE_BUILD_TYPE Debug CACHE STRING "One of: Debug Release
@@ -18,7 +18,7 @@ IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 ENDIF()
 
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool -std=c++11 -Wno-missing-braces -Wno-writable-strings -Wno-reorder")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool -std=c++14 -Wno-missing-braces -Wno-writable-strings -Wno-reorder")
     
 ENDIF()
 IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -37,6 +37,7 @@ set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it'
 FIND_PACKAGE(GLUT REQUIRED)
 FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(Freetype REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem)
 
 findLibraryRequird(FIP_LIBS freeimageplus)
 findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)
@@ -47,8 +48,10 @@ include_directories(
     ${FREETYPE_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIR_ft2build}
     ${FIP_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
     common/include
     ../gl4/glc/include
+    ../gl4/glc/utfcpp/source
     gl21/include
     )
 
@@ -56,7 +59,7 @@ IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")
 ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-file(COPY data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+#file(COPY data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 #generate cfg file
 

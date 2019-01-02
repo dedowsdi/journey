@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "quad.h"
 #include "common_program.h"
 #include "pingpong.h"
@@ -77,8 +77,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/reaction_diffusion.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/reaction_diffusion.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/reaction_diffusion.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/reaction_diffusion.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -109,8 +109,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/reaction_diffusion_draw.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/reaction_diffusion_draw.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/reaction_diffusion_draw.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/reaction_diffusion_draw.fs.glsl");
   }
 
   void bind_uniform_locations()

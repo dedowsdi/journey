@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "quad.h"
 #include "program.h"
 #include "texutil.h"
@@ -19,8 +19,8 @@ struct plot_program : public program
   plot_program() {}
 
   void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "shader/plot.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/plot.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/plot.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/plot.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0){

@@ -140,10 +140,17 @@ void app::debug_message_control() {
 //--------------------------------------------------------------------
 void app::init_wnd(int argc, char **argv) {
   glutInit(&argc, argv);
+  if(m_info.samples > 1)
+  {
+    glutSetOption(GLUT_MULTISAMPLE, m_info.samples);
+    m_info.display_mode |= GLUT_MULTISAMPLE;
+  }
+
   glutInitDisplayMode(m_info.display_mode);
   glutInitWindowSize(m_info.wnd_width, m_info.wnd_height);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(m_info.title.c_str());
+
 }
 
 //--------------------------------------------------------------------

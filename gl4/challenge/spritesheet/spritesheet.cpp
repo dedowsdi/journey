@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "spritesheet.h"
 #include "common_program.h"
 #include "texutil.h"
@@ -41,8 +41,8 @@ public:
 
   void attach_shaders() override
   {
-    attach(GL_VERTEX_SHADER, "shader/ripple.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/ripple.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/ripple.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/ripple.fs.glsl");
   }
 
   void bind_uniform_locations() override

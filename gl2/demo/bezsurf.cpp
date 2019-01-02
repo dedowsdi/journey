@@ -6,7 +6,7 @@
  *  like sum from row to col or from col to row, it's like switch u, v dir,
  *  q(u,v) = p(v,u)
  *
- *  but the generated normal will rotate 180!!!, be very careful.
+ *  but the generated normal will if_rotate 180!!!, be very careful.
  *
  */
 #include "app.h"
@@ -18,7 +18,7 @@ GLuint vstride = 12;
 GLuint uorder = 4;
 GLuint vorder = 5;
 GLboolean uonly = GL_FALSE;  // only render u dir line
-GLboolean rotate = GL_TRUE;
+GLboolean if_rotate = GL_TRUE;
 
 // it's an even grid if you look from positive z
 // clang-format off
@@ -45,7 +45,7 @@ class app0 : public app {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(1.0, 1.0, 1.0);
     glPushMatrix();
-    if (rotate) glRotatef(85.0, 1.0, 1.0, 1.0);
+    if (if_rotate) glRotatef(85.0, 1.0, 1.0, 1.0);
     // can be replaced by glEvalMesh2
     for (j = 0; j <= 8; j++) {  // 8 curves along both directions
       glBegin(GL_LINE_STRIP);
@@ -67,7 +67,7 @@ class app0 : public app {
     const GLubyte info[] =
       "qQ : switch u v stride \n"
       "wW : toggle render u dir line only \n"
-      "eE : toggle rotate \n";
+      "eE : toggle if_rotate \n";
     glutBitmapString(GLUT_BITMAP_9_BY_15, info);
 
     glFlush();
@@ -121,7 +121,7 @@ class app0 : public app {
         break;
       case 'e':
       case 'E':
-        rotate = !rotate;
+        if_rotate = !if_rotate;
       default:
         break;
     }

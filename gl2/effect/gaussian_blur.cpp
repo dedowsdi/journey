@@ -44,9 +44,6 @@ struct gaussian_blur_program : public program {
   GLint ul_quad_map;
   GLuint radius;
 
-  GLint al_vertex;
-  GLint al_texcoord;
-
   gaussian_blur_program() : radius(4) {}
 
   virtual void bind_uniform_locations() {
@@ -58,19 +55,19 @@ struct gaussian_blur_program : public program {
   }
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader2/quad.vs.glsl");
 
     std::stringstream ss;
     ss << "#version 120\n#define radius " << radius << "\n";
     string_vector sv;
     sv.push_back(ss.str());
     attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/gaussian_blur.fs.glsl");
+      GL_FRAGMENT_SHADER, sv, "shader2/gaussian_blur.fs.glsl");
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   };
 
   void update_uniforms(GLint texunit = 0) {
@@ -157,6 +154,7 @@ class app0 : public app {
     quad_prg.init();
     gb_prg.init();
 
+    quad0.include_texcoord(GL_TRUE);
     quad0.build_mesh();
   }
 
@@ -169,14 +167,12 @@ class app0 : public app {
     glBindTexture(GL_TEXTURE_2D, checker_tex);
     quad_prg.use();
     quad_prg.update_uniforms(0);
-    quad0.bind(quad_prg.al_vertex, -1, quad_prg.al_texcoord);
     quad0.draw();
 
     // blur
 
     gb_prg.use();
     gb_prg.update_uniforms(0);
-    quad0.bind(gb_prg.al_vertex, -1, gb_prg.al_texcoord);
 
     for (int i = 0; i < times * 2; ++i) {
       GLint index = i & 1;
@@ -193,7 +189,6 @@ class app0 : public app {
     quad_prg.use();
 
     glBindTexture(GL_TEXTURE_2D, pingpong_tex[1]);
-    quad0.bind(quad_prg.al_vertex, -1, quad_prg.al_texcoord);
     quad0.draw();
 
     glDisable(GL_TEXTURE_2D);

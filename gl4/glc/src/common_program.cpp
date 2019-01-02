@@ -26,12 +26,13 @@ void blinn_program::update_model(const glm::mat4& _m_mat) {
 //--------------------------------------------------------------------
 void blinn_program::attach_shaders() {
   string_vector sv;
+  std::string shader_dir = legacy ? "shader2/" : "shader4/";
 #ifdef GL_VERSION_3_3
   sv.push_back("#version 330 core\n");
 #endif
   if (with_texcoord) sv.push_back("#define WITH_TEX\n");
   if (instance) sv.push_back("#define INSTANCE\n");
-  attach(GL_VERTEX_SHADER, sv, "shader/blinn.vs.glsl");
+  attach(GL_VERTEX_SHADER, sv, shader_dir + "blinn.vs.glsl");
 
   sv.clear();
 
@@ -40,8 +41,8 @@ void blinn_program::attach_shaders() {
 #endif
   if (with_texcoord) sv.push_back("#define WITH_TEX\n");
   sv.push_back("#define LIGHT_COUNT " + std::to_string(light_count) + "\n");
-  sv.push_back(stream_util::read_resource("shader/blinn.frag"));
-  attach(GL_FRAGMENT_SHADER, sv, "shader/blinn.fs.glsl");
+  sv.push_back(stream_util::read_resource(shader_dir + "blinn.frag"));
+  attach(GL_FRAGMENT_SHADER, sv, shader_dir + "blinn.fs.glsl");
 }
 
 //--------------------------------------------------------------------
@@ -98,8 +99,8 @@ void blinn_program::bind_attrib_locations() {
 
 //--------------------------------------------------------------------
 void quad_program::attach_shaders() {
-  attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, "shader/quad.fs.glsl");
+  attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, "shader4/quad.fs.glsl");
 }
 
 //--------------------------------------------------------------------
@@ -120,7 +121,7 @@ void quad_program::bind_attrib_locations() {
 
 //--------------------------------------------------------------------
 void quad_base::attach_shaders() {
-  attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
+  attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
   do_attach_shaders();
 }
 
@@ -145,8 +146,8 @@ void quad_base::bind_attrib_locations() {
 
 //--------------------------------------------------------------------
 void point_program::attach_shaders() {
-  attach(GL_VERTEX_SHADER, "shader/simple.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, "shader/color.fs.glsl");
+  attach(GL_VERTEX_SHADER, "shader4/simple.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, "shader4/color.fs.glsl");
 }
 
 //--------------------------------------------------------------------
@@ -185,13 +186,13 @@ void normal_viewer_program::attach_shaders() {
   if (smooth_normal)
     sv.push_back("#define SMOOTH_NORMAL\n");
 
-  attach(GL_VERTEX_SHADER, "shader/normal_viewer.vs.glsl");
+  attach(GL_VERTEX_SHADER, "shader4/normal_viewer.vs.glsl");
 #ifdef GL_VERSION_3_3
-  attach(GL_GEOMETRY_SHADER, sv, "shader/normal_viewer.gs.glsl");
+  attach(GL_GEOMETRY_SHADER, sv, "shader4/normal_viewer.gs.glsl");
 #else
-  attach(GL_GEOMETRY_SHADER_ARB, sv, "shader/normal_viewer.gs.glsl");
+  attach(GL_GEOMETRY_SHADER_ARB, sv, "shader4/normal_viewer.gs.glsl");
 #endif
-  attach(GL_FRAGMENT_SHADER, "shader/color.fs.glsl");
+  attach(GL_FRAGMENT_SHADER, "shader4/color.fs.glsl");
 }
 
 //--------------------------------------------------------------------
@@ -212,8 +213,8 @@ void normal_viewer_program::bind_attrib_locations() {
 
 //--------------------------------------------------------------------
 void vertex_color_program::attach_shaders() {
-  attach(GL_VERTEX_SHADER, "shader/vertex_color.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, "shader/vertex_color.fs.glsl");
+  attach(GL_VERTEX_SHADER, "shader4/vertex_color.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, "shader4/vertex_color.fs.glsl");
 }
 
 //--------------------------------------------------------------------
@@ -235,8 +236,8 @@ void vertex_color_program::update_uniforms(const mat4& _mvp_mat) {
 //--------------------------------------------------------------------
 void texture_animation_program::attach_shaders()
 {
-  attach(GL_VERTEX_SHADER, "shader/texture_animation.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, "shader/texture_animation.fs.glsl");
+  attach(GL_VERTEX_SHADER, "shader4/texture_animation.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, "shader4/texture_animation.fs.glsl");
 }
 
 //--------------------------------------------------------------------
@@ -275,8 +276,8 @@ void lightless_program::attach_shaders()
     sv.push_back("#define WITH_COLOR\n");
   }
 
-  attach(GL_VERTEX_SHADER, sv, "shader/lightless.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, sv, "shader/lightless.fs.glsl");
+  attach(GL_VERTEX_SHADER, sv, "shader4/lightless.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, sv, "shader4/lightless.fs.glsl");
 }
 
 //--------------------------------------------------------------------
@@ -319,8 +320,8 @@ void billboard_program::attach_shaders()
   if(tex_offset)
     sv.push_back("#define TEX_OFFSET\n");
 
-  attach(GL_VERTEX_SHADER, sv, "shader/billboard.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, sv, "shader/billboard.fs.glsl");
+  attach(GL_VERTEX_SHADER, sv, "shader4/billboard.vs.glsl");
+  attach(GL_FRAGMENT_SHADER, sv, "shader4/billboard.fs.glsl");
 }
 
 //--------------------------------------------------------------------

@@ -2,7 +2,7 @@
  * https://www.myphysicslab.com/pendulum/double-pendulum-en.html
  */
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common_program.h"
 #include "circle.h"

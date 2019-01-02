@@ -1,0 +1,6 @@
+[submodule "gl4/glc/include/utfcpp"]
+	path = gl4/glc/include/utfcpp
+	url = https://github.com/nemtrif/utfcpp
+[submodule "gl4/glc/utfcpp"]
+	path = gl4/glc/utfcpp
+	url = https://github.com/nemtrif/utfcpp

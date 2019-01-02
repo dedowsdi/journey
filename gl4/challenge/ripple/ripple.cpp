@@ -1,6 +1,6 @@
 // https://web.archive.org/web/20160116150939/http://freespace.virgin.net/hugo.elias/graphics/x_water.htm
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common_program.h"
 #include "quad.h"
@@ -46,8 +46,8 @@ public:
 
   void attach_shaders() override
   {
-    attach(GL_VERTEX_SHADER, "shader/ripple.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/ripple.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/ripple.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/ripple.fs.glsl");
   }
 
   void bind_uniform_locations() override

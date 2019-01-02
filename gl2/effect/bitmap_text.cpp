@@ -22,10 +22,10 @@ class app0 : public app {
     m_info.display_mode = GLUT_DOUBLE | GLUT_RGBA;
     m_info.wnd_width = WINDOWS_WIDTH;
     m_info.wnd_height = WINDOWS_HEIGHT;
+    m_info.samples = 16;
   }
 
   struct bitmap_text_program : public zxd::program {
-    GLint attrib_vertex;
     GLint ul_text_color;
     GLint ul_font_map;
     bitmap_text_program() {
@@ -39,8 +39,8 @@ class app0 : public app {
     }
     virtual void model(const glm::mat4& m_mat) {}
     virtual void attach_shaders() {
-      attach(GL_VERTEX_SHADER, "data/shader/bitmap_text.vs.glsl");
-      attach(GL_FRAGMENT_SHADER, "data/shader/bitmap_text.fs.glsl");
+      attach(GL_VERTEX_SHADER, "shader2/bitmap_text.vs.glsl");
+      attach(GL_FRAGMENT_SHADER, "shader2/bitmap_text.fs.glsl");
     }
     virtual void bind_uniform_locations() {
       uniform_location(&ul_mvp_mat, "mvp_mat");
@@ -48,7 +48,7 @@ class app0 : public app {
       uniform_location(&ul_font_map, "font_map");
     }
     virtual void bind_attrib_locations() {
-      attrib_vertex = attrib_location("vertex");
+      bind_attrib_location(0, "vertex");
     }
   } prg;
 
@@ -93,9 +93,8 @@ class app0 : public app {
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices),
       value_ptr(vertices[0]), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(prg.attrib_vertex, 4, GL_FLOAT, GL_FALSE,
-      sizeof(glm::vec4), BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(prg.attrib_vertex);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(0);
 
     glBindTexture(GL_TEXTURE_2D, bitmap_tex);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -121,7 +120,7 @@ class app0 : public app {
 
     prg.init();
 
-    fipImage fip = zxd::fipLoadImage("data/font/Holstein.png");
+    fipImage fip = zxd::fipLoadImage("font/Holstein.png");
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glGenTextures(1, &bitmap_tex);

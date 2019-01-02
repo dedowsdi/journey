@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "quad.h"
 #include "program.h"
 #include "common_program.h"

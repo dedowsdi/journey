@@ -39,7 +39,7 @@ struct filter_brightess_program : public quad_base {
 
   virtual void do_attach_shaders() {
     attach(
-      GL_FRAGMENT_SHADER, "data/shader/filter_brightness.fs.glsl");
+      GL_FRAGMENT_SHADER, "shader2/filter_brightness.fs.glsl");
   }
 
   virtual void do_update_uniforms() { glUniform1f(ul_threshold, threshold); }
@@ -55,7 +55,7 @@ struct gaussion_blur_program : public quad_base {
 
   virtual void do_attach_shaders() {
     attach(
-      GL_FRAGMENT_SHADER, "data/shader/gaussian_blur_0_1_0.5_4.fs.glsl");
+      GL_FRAGMENT_SHADER, "shader2/gaussian_blur_0_1_0.5_4.fs.glsl");
   }
 
   virtual void do_update_uniforms() { glUniform1i(ul_horizontal, horizontal); }
@@ -71,8 +71,8 @@ struct bloom_program : public program {
   GLint ul_brightness_map;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/bloom.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader2/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader2/bloom.fs.glsl");
   }
 
   virtual void update_uniforms(GLuint hdr_map_ti, GLuint brightness_map_ti) {

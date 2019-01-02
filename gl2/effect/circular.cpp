@@ -14,7 +14,6 @@ vec2 origin;
 quad quad0;
 
 struct circular_program : public program {
-  GLint al_vertex;
 
   GLint ul_time;
   GLint ul_time_scale;
@@ -24,8 +23,8 @@ struct circular_program : public program {
   GLint ul_use_origin;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/circular.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/circular.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader2/circular.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader2/circular.fs.glsl");
   };
   virtual void bind_uniform_locations() {
     uniform_location(&ul_time, "time");
@@ -36,7 +35,7 @@ struct circular_program : public program {
     uniform_location(&ul_use_origin, "use_origin");
   };
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
+    bind_attrib_location(0, "vertex");
   };
 
 } prg0;
@@ -57,7 +56,6 @@ class app0 : public app {
     prg0.init();
 
     quad0.build_mesh();
-    quad0.bind(prg0.al_vertex, -1, -1);
   }
 
   void display(void) {

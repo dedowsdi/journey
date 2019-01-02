@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "quad.h"
 #include "program.h"
 #include "texutil.h"
@@ -14,8 +14,8 @@ struct threshold_program : public program{
   threshold_program() {}
 
   void attach_shaders(){
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/threshold.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/threshold.fs.glsl");
   }
 
   void update_uniforms(GLuint tex_index = 0){

@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "quad.h"
 #include "pingpong.h"
@@ -50,8 +50,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/sandpiles_topple.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/sandpiles_topple.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -81,8 +81,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/sandpiles_render.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/sandpiles_render.fs.glsl");
   }
 
   void bind_uniform_locations()

@@ -21,8 +21,8 @@ public:
 protected:
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/filter_color_brightness.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/filter_color_brightness.fs.glsl");
   }
   void bind_uniform_locations()
   {
@@ -45,11 +45,11 @@ public:
   float weights[32];
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
     string_vector sv;
     sv.push_back("#version 430 core\n");
     sv.push_back("#define RADIUS " + string_util::to(radius) + "\n");
-    attach(GL_FRAGMENT_SHADER, sv, "shader/gaussian_blur.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, sv, "shader4/gaussian_blur.fs.glsl");
   }
 
   virtual void bind_uniform_locations() {
@@ -84,8 +84,8 @@ struct bloom_program : public program {
   GLint ul_brightness_map;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/bloom.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/bloom.fs.glsl");
   }
 
   virtual void bind_uniform_locations() {

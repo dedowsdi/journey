@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include "bug.h"
 

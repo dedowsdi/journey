@@ -2,7 +2,7 @@
  * create a bunch of billboards, all in random position
  */
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common.h"
 
@@ -19,8 +19,8 @@ struct program0 : public zxd::program {
   GLint ul_diffuse_map;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/billboard_align.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/tex2d.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/billboard_align.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/tex2d.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_v_mat, "v_mat");
@@ -39,8 +39,8 @@ struct program1 : public zxd::program {
   GLint ul_camera_pos;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/billboard_z.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/tex2d.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/billboard_z.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/tex2d.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_vp_mat, "vp_mat");
@@ -60,8 +60,8 @@ struct program2 : public zxd::program {
   GLint ul_camera_up;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/billboard_eye.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/tex2d.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/billboard_eye.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/tex2d.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_vp_mat, "vp_mat");

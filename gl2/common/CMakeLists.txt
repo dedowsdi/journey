@@ -1,5 +1,4 @@
 set(COMMON_SRCS 
-    src/freetype_text.cpp
     src/app.cpp
     )
 

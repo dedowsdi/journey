@@ -1,7 +1,7 @@
 #include <sstream>
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include "dict_script.h"
 #include "super_shape_3d.h"

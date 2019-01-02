@@ -6,7 +6,7 @@
 #include "app.h"
 #include "program.h"
 #include "common.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 
 #define RAIN_COLOR (vec3(138, 43, 226)/255.0f)
@@ -134,8 +134,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/purple_rain.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/purple_rain.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/purple_rain.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/purple_rain.fs.glsl");
   }
 
   void bind_uniform_locations()

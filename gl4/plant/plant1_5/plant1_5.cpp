@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "turtle.h"
 #include "common_program.h"
 #include "lsystem.h"

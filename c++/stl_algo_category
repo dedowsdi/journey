@@ -32,9 +32,9 @@ search: 14
         equal range                     <lower_bound, upper_bound>
                                         you can use equal range, compare 1st and
                                         2nd to check if item found.
-                                        you can also use lower_bound, compare
-                                        end and search value to check if item
-                                        found.
+                                        you can also use lower_bound:
+                                            auto iter = lower_bound(..)
+                                            if(iter != end() && !(value < iter)
 
 transform   you can transform yourself if you want
 
@@ -85,6 +85,9 @@ partition: 5
     boost::is_partitioned_until
 
 accumulate
+inner_product
+adjacent_difference
+partial_sum
 
 reorder: 7
     next_permutation            will cycle if meet end
@@ -111,3 +114,7 @@ remove:
 mismatch
 lexicographical_compare
 equal
+
+any_of
+all_of
+none_of

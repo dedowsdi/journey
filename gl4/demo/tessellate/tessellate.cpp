@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "geometry.h"
 #include "string_util.h"
 
@@ -37,9 +37,9 @@ kcip kci_point_mode;
 const char* primitive_types[] = {"quads", "triangles", "isolines"};
 const char* face_windings[] = {"ccw", "cw"};
 const char* spacings[] = {"equal_spacing", "fractional_even_spacing", "fractional_odd_spacing"};
-const char* te_shaders[] = {"data/shader/tessellate_quad.te.glsl",
-  "data/shader/tessellate_triangle.te.glsl",
-  "data/shader/tessellate_isoline.te.glsl"};
+const char* te_shaders[] = {"shader4/tessellate_quad.te.glsl",
+  "shader4/tessellate_triangle.te.glsl",
+  "shader4/tessellate_isoline.te.glsl"};
 
 int primitive_type;
 int face_winding;
@@ -58,10 +58,10 @@ protected:
   void attach_shaders()
   {
     std::string full_layout = "#define LAYOUT " + layout + "\n";
-    attach(GL_VERTEX_SHADER, "data/shader/dummy.vs.glsl");
-    //attach(GL_TESS_CONTROL_SHADER, "data/shader/tessellate_quad.tc.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/dummy.vs.glsl");
+    //attach(GL_TESS_CONTROL_SHADER, "shader4/tessellate_quad.tc.glsl");
     attach(GL_TESS_EVALUATION_SHADER, {"#version 430 core\n", full_layout}, te_shaders[primitive_type]);
-    attach(GL_FRAGMENT_SHADER, {"#version 430 core\n"}, "data/shader/lightless.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, {"#version 430 core\n"}, "shader4/lightless.fs.glsl");
   }
 
   void bind_uniform_locations()

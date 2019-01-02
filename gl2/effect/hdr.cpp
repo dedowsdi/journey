@@ -54,12 +54,9 @@ struct hdr_program : public zxd::program {
   GLint ul_exposure;
   GLint ul_diffuse_map;
 
-  GLint al_vertex;
-  GLint al_texcoord;
-
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "data/shader/hdr.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader2/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader2/hdr.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     // uniform_location(&ul_eye, "eye");
@@ -69,8 +66,8 @@ struct hdr_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   }
 } hdr_prg;
 
@@ -156,17 +153,22 @@ class app0 : public app {
     glGenFramebuffers(1, &fbo);
 
     blinn_prg.with_texcoord = GL_TRUE;
+    blinn_prg.light_count = 2;
+    blinn_prg.legacy = GL_TRUE;
     blinn_prg.init();
     blinn_prg.bind_lighting_uniform_locations(lights, lm, mtl);
     blinn_prg.v_mat = mat4(1.0);
     blinn_prg.p_mat = mat4(1.0);
 
+    disk0.include_normal(true);
+    disk0.include_texcoord(true);
     disk0.build_mesh();
-    disk0.bind(blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
+    //disk0.bind(blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     hdr_prg.init();
+    quad0.include_texcoord(true);
     quad0.build_mesh();
-    quad0.bind(hdr_prg.al_vertex, -1, hdr_prg.al_texcoord);
+    //quad0.bind(hdr_prg.al_vertex, -1, hdr_prg.al_texcoord);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_SMOOTH);

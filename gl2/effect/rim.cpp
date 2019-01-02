@@ -1,9 +1,11 @@
+#include <sstream>
+
 #include "glad/glad.h"
 #include "app.h"
 #include "program.h"
 #include "light.h"
-#include <sstream>
 #include "sphere.h"
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -23,8 +25,6 @@ sphere sphere0(1, 32, 32);
 struct rim_program : public zxd::program {
   GLint ul_rim_color;
   GLint ul_rim_power;
-  GLint al_vertex;
-  GLint al_normal;
 
   virtual void update_frame() {
     v_mat_it = glm::inverse(glm::transpose(v_mat));
@@ -50,12 +50,12 @@ struct rim_program : public zxd::program {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "data/shader/blinn.vs.glsl");
+    attach(GL_VERTEX_SHADER, "shader2/blinn.vs.glsl");
     string_vector sv;
-    sv.push_back("#define LIGHT_COUNT 8\n");
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back("#define LIGHT_COUNT 1\n");
+    sv.push_back(stream_util::read_resource("shader2/blinn.frag"));
     attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/rim.fs.glsl");
+      GL_FRAGMENT_SHADER, sv, "shader2/rim.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     lm.bind_uniform_locations(object, "lm");
@@ -75,8 +75,8 @@ struct rim_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
   }
 } prg0;
 
@@ -152,8 +152,8 @@ class app0 : public app {
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 30.0f);
     prg0.v_mat = glm::lookAt(vec3(0, 0, 3), vec3(0, 0, 0), vec3(0, 1, 0));
 
+    sphere0.include_normal(true);
     sphere0.build_mesh();
-    sphere0.bind(prg0.al_vertex, prg0.al_normal, -1);
   }
 
   void reshape(int w, int h) {

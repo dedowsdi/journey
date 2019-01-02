@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common.h"
 #include <iomanip>
@@ -157,8 +157,8 @@ struct rgb_program : public zxd::program {
   }
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/rgb.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/rgb.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/rgb.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/rgb.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");

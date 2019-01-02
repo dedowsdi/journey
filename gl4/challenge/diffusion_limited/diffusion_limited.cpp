@@ -1,6 +1,6 @@
 // http://paulbourke.net/fractals/dla/
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include "debugger.h"
 #include <sstream>

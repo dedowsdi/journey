@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include <set>
 #include "geometry.h"
@@ -84,8 +84,8 @@ public:
 protected:
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/filter_color_brightness.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/filter_color_brightness.fs.glsl");
   }
   void bind_uniform_locations()
   {
@@ -101,8 +101,8 @@ public:
   GLint horizontal;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/gaussian_blur_0_1_0.5_4.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/gaussian_blur_0_1_0.5_4.fs.glsl");
   }
 
   virtual void bind_uniform_locations() {
@@ -117,8 +117,8 @@ struct bloom_program : public program {
   GLint ul_brightness_map;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/bloom.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/bloom.fs.glsl");
   }
 
   virtual void bind_uniform_locations() {

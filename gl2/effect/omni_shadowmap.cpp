@@ -15,12 +15,14 @@
  *
  */
 
+#include <sstream>
+
 #include "app.h"
 #include "program.h"
 #include "light.h"
 #include "sphere.h"
 #include "xyplane.h"
-#include <sstream>
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -53,7 +55,6 @@ light_model lm;
 vec3 camera_pos = vec3(0, -15, 15);
 
 struct render_program : public zxd::program {
-  GLint al_vertex;
 
   GLint ul_near_plane;
   GLint ul_far_plane;
@@ -72,9 +73,9 @@ struct render_program : public zxd::program {
   void attach_shaders() {
     // render shadow program
     attach(
-      GL_VERTEX_SHADER, "data/shader/render_omni_shadowmap.vs.glsl");
+      GL_VERTEX_SHADER, "shader2/render_omni_shadowmap.vs.glsl");
     attach(
-      GL_FRAGMENT_SHADER, "data/shader/render_omni_shadowmap.fs.glsl");
+      GL_FRAGMENT_SHADER, "shader2/render_omni_shadowmap.fs.glsl");
 
     name("render_prg");
   }
@@ -113,13 +114,11 @@ struct render_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
+    bind_attrib_location(0, "vertex");
   }
 } render_prg;
 
 struct use_program : public zxd::program {
-  GLint al_vertex;
-  GLint al_normal;
 
   GLint ul_w_light_pos;
   GLint ul_depth_cube_map;
@@ -162,14 +161,14 @@ struct use_program : public zxd::program {
   virtual void attach_shaders() {
     // use_program
     attach(
-      GL_VERTEX_SHADER, "data/shader/use_omni_shadowmap.vs.glsl");
+      GL_VERTEX_SHADER, "shader2/use_omni_shadowmap.vs.glsl");
 
     string_vector sv;
     sv.push_back("#version 120\n");
     sv.push_back("#define LIGHT_COUNT 9\n");
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back(stream_util::read_resource("shader2/blinn.frag"));
     attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/use_omni_shadowmap.fs.glsl");
+      GL_FRAGMENT_SHADER, sv, "shader2/use_omni_shadowmap.fs.glsl");
 
     name("use_prg");
   }
@@ -196,8 +195,8 @@ struct use_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
   }
 } use_prg;
 
@@ -345,15 +344,11 @@ class app0 : public app {
 
     use_prg.init();
 
+    sphere0.include_normal(true);
     sphere0.build_mesh();
     plane0.slice(10);
+    plane0.include_normal(true);
     plane0.build_mesh();
-
-    sphere0.bind(render_prg.al_vertex, -1, -1);
-    plane0.bind(render_prg.al_vertex, -1, -1);
-
-    sphere0.bind(use_prg.al_vertex, use_prg.al_normal, -1);
-    plane0.bind(use_prg.al_vertex, use_prg.al_normal, -1);
   }
 
   void reshape(int w, int h) {

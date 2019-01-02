@@ -72,7 +72,7 @@ class app0 : public app {
 };
 }
 int main(int argc, char** argv) {
-  zxd::pixels = read_image("data/leeds.bin", &zxd::width, &zxd::height);
+  zxd::pixels = read_image("leeds.bin", &zxd::width, &zxd::height);
   zxd::app0 _app0;
   _app0.run(argc, argv);
   return 0;

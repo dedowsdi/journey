@@ -53,12 +53,14 @@
  *
  */
 
+#include <sstream>
+
 #include "app.h"
 #include "program.h"
 #include "light.h"
 #include "sphere.h"
 #include "xyplane.h"
-#include <sstream>
+#include "stream_util.h"
 
 namespace zxd {
 using namespace glm;
@@ -96,7 +98,6 @@ material mtl;
 GLboolean camera_at_light = GL_FALSE;
 
 struct render_program : public zxd::program {
-  GLint al_vertex;
   virtual void update_model(const glm::mat4& _m_mat) {
     m_mat = _m_mat;
     mvp_mat = p_mat * v_mat * m_mat;
@@ -121,16 +122,16 @@ struct render_program : public zxd::program {
   virtual void attach_shaders() {
     // render shadow program
     attach(
-      GL_VERTEX_SHADER, "data/shader/render_directional_shadowmap.vs.glsl");
+      GL_VERTEX_SHADER, "shader2/render_directional_shadowmap.vs.glsl");
     attach(
-      GL_FRAGMENT_SHADER, "data/shader/render_directional_shadowmap.fs.glsl");
+      GL_FRAGMENT_SHADER, "shader2/render_directional_shadowmap.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
+    bind_attrib_location(0, "vertex");
   }
 
 } render_prg;
@@ -141,9 +142,6 @@ struct use_program : public zxd::program {
   GLint ul_use_sampler2_d_shadow;
   GLint ul_depth_map;
   GLint ul_shadow_map;
-
-  GLint al_vertex;
-  GLint al_normal;
 
   virtual void update_frame() {
     glActiveTexture(GL_TEXTURE0);
@@ -190,14 +188,14 @@ struct use_program : public zxd::program {
   virtual void attach_shaders() {
     // use_program
     attach(
-      GL_VERTEX_SHADER, "data/shader/use_directional_shadowmap.vs.glsl");
+      GL_VERTEX_SHADER, "shader2/use_directional_shadowmap.vs.glsl");
 
     string_vector sv;
     sv.push_back("#version 120\n");
     sv.push_back("#define LIGHT_COUNT 8\n");
-    sv.push_back(read_file("data/shader/blinn.frag"));
+    sv.push_back(stream_util::read_resource("shader2/blinn.frag"));
     attach(
-      GL_FRAGMENT_SHADER, sv, "data/shader/use_directional_shadowmap.fs.glsl");
+      GL_FRAGMENT_SHADER, sv, "shader2/use_directional_shadowmap.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_light_mat, "light_mat");
@@ -219,8 +217,8 @@ struct use_program : public zxd::program {
   }
 
   virtual void bind_attrib_locations() {
-    al_vertex = attrib_location("vertex");
-    al_normal = attrib_location("normal");
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "normal");
   }
 
 } use_prg;
@@ -229,7 +227,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "directional_shadowmap";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
     m_info.wnd_width = WINDOWS_WIDTH;
     m_info.wnd_height = WINDOWS_HEIGHT;
   }
@@ -386,17 +384,12 @@ class app0 : public app {
     render_prg.init();
     use_prg.init();
 
+    sphere0.include_normal(true);
     sphere0.build_mesh();
+    plane0.include_normal(true);
     plane0.build_mesh();
+    plane1.include_normal(true);
     plane1.build_mesh();
-
-    sphere0.bind(render_prg.al_vertex, -1, -1);
-    plane0.bind(render_prg.al_vertex, -1, -1);
-    plane1.bind(render_prg.al_vertex, -1, -1);
-
-    sphere0.bind(use_prg.al_vertex, use_prg.al_normal, -1);
-    plane0.bind(use_prg.al_vertex, use_prg.al_normal, -1);
-    plane1.bind(use_prg.al_vertex, use_prg.al_normal, -1);
   }
 
   void reshape(int w, int h) {

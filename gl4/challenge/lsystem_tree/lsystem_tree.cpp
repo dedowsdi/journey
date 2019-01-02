@@ -25,7 +25,7 @@
  */
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include "lsystem.h"
 

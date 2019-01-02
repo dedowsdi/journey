@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "teardrop.h"
 #include "common_program.h"
 #include "stream_util.h"
@@ -62,8 +62,8 @@ public:
 
   void attach_shaders() override
   {
-    attach(GL_VERTEX_SHADER, "shader/teardrop_geometry.vs.glsl");
-    //attach(GL_GEOMETRY_SHADER, "shader/teardrop_geometry.gs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/teardrop_geometry.vs.glsl");
+    //attach(GL_GEOMETRY_SHADER, "shader4/teardrop_geometry.gs.glsl");
   }
 
 } gprg;
@@ -78,8 +78,8 @@ public:
 
   void attach_shaders() override
   {
-    attach(GL_VERTEX_SHADER, "shader/teardrop_particle.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, {"#version 430 core\n"}, "shader/lightless.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/teardrop_particle.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, {"#version 430 core\n"}, "shader4/lightless.fs.glsl");
   }
 
   void bind_uniform_locations() override

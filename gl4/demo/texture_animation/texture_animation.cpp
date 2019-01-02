@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "quad.h"
 #include "texutil.h"
 #include "common.h"
@@ -26,8 +26,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/texture_animation.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/texture_animation.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/texture_animation.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/texture_animation.fs.glsl");
   }
 
   void bind_uniform_locations()

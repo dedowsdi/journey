@@ -25,7 +25,7 @@
 #include <sstream>
 #include <algorithm>
 
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "circle.h"
 #include "common_program.h"
 #include "debugger.h"

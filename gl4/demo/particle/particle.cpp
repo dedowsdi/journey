@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common.h"
 #include <list>
@@ -19,8 +19,8 @@ struct particle_program : public zxd::program {
   vec3 camera_up;
 
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/particle.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/particle.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/particle.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/particle.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_vp_mat, "vp_mat");

@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "common_program.h"
 #include <sstream>
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
@@ -58,8 +58,8 @@ struct dot_program : public program
   GLint ul_color;
   void attach_shaders() override
   {
-    attach(GL_VERTEX_SHADER, "shader/dot.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/dot.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/dot.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/dot.fs.glsl");
   }
 
   void bind_attrib_locations() override

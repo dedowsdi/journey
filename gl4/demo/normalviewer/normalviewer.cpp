@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common.h"
 #include "torus.h"
@@ -27,9 +27,9 @@ struct normal_viewer_program : public zxd::program {
     glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
   }
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/normal_viewer.vs.glsl");
-    attach(GL_GEOMETRY_SHADER, "shader/normal_viewer.gs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/color.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/normal_viewer.vs.glsl");
+    attach(GL_GEOMETRY_SHADER, "shader4/normal_viewer.gs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/color.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_p_mat, "p_mat");
@@ -56,8 +56,8 @@ struct wire_program : public zxd::program {
       ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader/simple.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/color.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/simple.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/color.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");

@@ -32,3 +32,6 @@
 
 11. std::vector<bool>::operator[] return std::vector<bool>::reference, nou
     bool&, be very careful if you want to use auto on a temporary bool vector.
+
+12. std::multi_set::find finds an element with specific key, it need not be the
+    same as std::lower_bound

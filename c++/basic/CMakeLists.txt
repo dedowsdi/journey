@@ -33,6 +33,7 @@ set (PROJECTS
     variable_template
     template_type_deduction
     dependent_name
+    unicode
     )
 
 foreach(PROJECT ${PROJECTS})

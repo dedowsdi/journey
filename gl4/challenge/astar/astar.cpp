@@ -7,7 +7,7 @@
  * used, then h must also be monotonic (or consistent) for A* to be optimal.
  */
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <sstream>
 #include "common_program.h"
 #include <set>

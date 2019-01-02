@@ -133,6 +133,8 @@ class app0 : public app {
     mtl.shininess = 80;
     mtl.specular = vec4(1.0, 1.0, 1.0, 1.0);
 
+    prg0.legacy = 1;
+    prg0.light_count = 3;
     prg0.init();
     prg0.bind_lighting_uniform_locations(lights, lm, mtl);
     prg0.p_mat =
@@ -140,8 +142,8 @@ class app0 : public app {
     prg0.v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
     this->set_v_mat(&prg0.v_mat);
 
+    sphere0.include_normal(true);
     sphere0.build_mesh();
-    sphere0.bind(prg0.al_vertex, prg0.al_normal, -1);
   }
 
   void reshape(int w, int h) {

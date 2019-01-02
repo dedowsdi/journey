@@ -122,9 +122,9 @@ struct lightining_billboard_program : public program
 {
   virtual void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/dummy.vs.glsl");
-    attach(GL_GEOMETRY_SHADER, "shader/lightning_billboard.gs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/lightning.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/dummy.vs.glsl");
+    attach(GL_GEOMETRY_SHADER, "shader4/lightning_billboard.gs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/lightning.fs.glsl");
   };
 }billboard_prg;
 
@@ -132,8 +132,8 @@ struct lightining_lsystem_program : public program
 {
   virtual void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/dummy.vs.glsl");
-    attach(GL_GEOMETRY_SHADER, "shader/lightning_lsystem.gs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/dummy.vs.glsl");
+    attach(GL_GEOMETRY_SHADER, "shader4/lightning_lsystem.gs.glsl");
   };
 }lsystem_prg;
 
@@ -141,8 +141,8 @@ struct lightining_cpu_program : public program
 {
   virtual void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/lightning.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/lightning.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/lightning.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/lightning.fs.glsl");
   };
 }render_billboard_prg;
 

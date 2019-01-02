@@ -90,15 +90,39 @@ std::string read_file(const std::string &filepath)
   }
 
   // approximate size
-  ifs.seekg(std::ios::end);
+  ifs.seekg(0, std::ios::end);
   GLuint size = ifs.tellg();
-  ifs.seekg(std::ios::beg);
+  ifs.seekg(0, std::ios::beg);
 
   std::string s;
   s.reserve(size);
 
   std::copy(std::istreambuf_iterator<char>(ifs),
     std::istreambuf_iterator<char>(), std::back_inserter(s));
+
+  return s;
+}
+
+//--------------------------------------------------------------------
+std::string read_string(const std::string &filepath)
+{
+  std::ifstream ifs(filepath);
+  if (!ifs) {
+    std::stringstream ss;
+    ss << "failed to open file " << filepath << std::endl;
+    throw std::runtime_error(ss.str());
+  }
+
+  // approximate size
+  ifs.seekg(0, std::ios::end);
+  GLuint size = ifs.tellg();
+  ifs.seekg(0, std::ios::beg);
+
+  std::string s;
+  s.reserve(size);
+
+  std::copy(std::istream_iterator<char>(ifs),
+    std::istream_iterator<char>(), std::back_inserter(s));
 
   return s;
 }

@@ -3,7 +3,7 @@
  * will not sclae with camera distance.
  */
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include <list>
 #include <sstream>
 #include "debugger.h"
@@ -233,8 +233,8 @@ protected:
 
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/firework.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/firework.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/firework.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/firework.fs.glsl");
   }
 
   void bind_uniform_locations()
@@ -256,8 +256,8 @@ class trail_program : public program
 protected:
   void attach_shaders()
   {
-    attach(GL_VERTEX_SHADER, "shader/filter.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader/filter_blank.fs.glsl");
+    attach(GL_VERTEX_SHADER, "shader4/filter.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader4/filter_blank.fs.glsl");
   }
 } filter_prg;
 

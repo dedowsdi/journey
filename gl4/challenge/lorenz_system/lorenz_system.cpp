@@ -1,5 +1,5 @@
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 #include "dict_script.h"
 #include "stream_util.h"
 #include "common_program.h"
