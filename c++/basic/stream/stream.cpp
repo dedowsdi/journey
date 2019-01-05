@@ -31,6 +31,7 @@ void restoreIos(){
   unsigned precision = std::cout.precision(); 
   std::cout << 0.123456f << std::endl;
   std::cout << std::setprecision(2) << 0.123456f << std::endl;
+  std::cout << 0.234567f << std::endl;
   std::cout.flags(flags);
   std::cout.precision(precision);
   std::cout << 0.123456f << std::endl;

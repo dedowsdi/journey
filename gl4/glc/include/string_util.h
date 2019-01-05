@@ -46,6 +46,7 @@ namespace string_util
   glm::vec3 stovec3(const std::string& s);
   glm::vec4 stovec4(const std::string& s);
   glm::mat4 stomat4(const std::string& s);
+  std::string uint32_to_utf8(uint32_t i);
 
 // \033 escape
 // [    fixed

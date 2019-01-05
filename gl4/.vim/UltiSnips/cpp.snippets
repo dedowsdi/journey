@@ -2,7 +2,7 @@ snippet gl4Main
 #include <sstream>
 
 #include "app.h"
-#include "bitmaptext.h"
+#include "bitmap_text.h"
 
 namespace zxd {
 
@@ -52,8 +52,8 @@ public:
 void $1::init_info() {
 	app::init_info();
 	m_info.title = "$1";
-	m_info.wnd_width = WIDTH;
-	m_info.wnd_height = HEIGHT;
+	m_info.wnd_width = width;
+	m_info.wnd_height = height;
 }
 
 void $1::create_scene() {

@@ -1,18 +1,22 @@
-#ifndef TEXT_H
-#define TEXT_H
+#ifndef GLC_FREETYPE_TEXT_H
+#define GLC_FREETYPE_TEXT_H
 
-#include "glad/glad.h"
-#include <string>
-#include "glm.h"
-#include "program.h"
 #include <memory>
 #include <map>
+#include <string>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include "gl.h"
+#include "program.h"
+#include "bitmap_text.h"
 
 namespace zxd {
 
 struct freetype_text_program : public zxd::program {
   GLint ul_text_color;
   GLint ul_font_map;
+  bool legacy = false;
   freetype_text_program() {
   }
   void reshape(GLuint wnd_width, GLuint wnd_height) {
@@ -26,8 +30,9 @@ struct freetype_text_program : public zxd::program {
     glUniform1i(ul_font_map, 0);
   }
   virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader4/freetype_text.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader4/freetype_text.fs.glsl");
+    std::string shader_dir = legacy ? "shader2/" : "shader4/";
+    attach(GL_VERTEX_SHADER, shader_dir + "freetype_text.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, shader_dir + "freetype_text.fs.glsl");
   }
   virtual void bind_uniform_locations() {
     uniform_location(&ul_mvp_mat, "mvp_mat");
@@ -37,6 +42,20 @@ struct freetype_text_program : public zxd::program {
   virtual void bind_attrib_locations() {
     bind_attrib_location(0, "vertex");
   }
+};
+
+class raii_ft_library
+{
+public:
+  raii_ft_library(const std::string& font_name);
+  ~raii_ft_library();
+
+  FT_Library ft() const { return m_ft; }
+  FT_Face face() const { return m_face; }
+
+private:
+  FT_Library m_ft;
+  FT_Face m_face;
 };
 
 // only works with grayscale bitmap
@@ -66,14 +85,15 @@ protected:
 
   std::string m_face;
   std::shared_ptr<freetype_text_program> m_program;
-  std::map<uint32_t, Glyph> m_glyph_dict;
+  std::map<uint32_t, Glyph> m_glyph_dict; // codepoint, glpyph
 
 public:
   freetype_text(const std::string& font);
   ~freetype_text();
-  void init(const std::string& text = "");
+  void init(const std::string& text = "", bool legacy = false);
   void reset_content(const std::string& text);
   void reset_content_as_ascii();
+  void reset_content_to_all();
   void clear();
 
   // must be called at least once
@@ -83,13 +103,13 @@ public:
 
   // linespace = height of 'I' + 2 if it's 0
   void print(const std::string& text, GLuint x, GLuint y,
-    const glm::vec4& color = vec4(1.0f), GLfloat scale = 1.0);
+    const glm::vec4& color = vec4(1.0f), GLfloat scale = 1.0) const;
 
   void print(uint32_t c, GLuint x, GLuint y, const glm::vec4& color = vec4(1.0f),
-    GLfloat scale = 1.0);
+    GLfloat scale = 1.0) const;
 
   void print(const Glyph& glyph, GLuint x, GLuint y,
-    const glm::vec4& color = vec4(1.0f), GLfloat scale = 1.0);
+    const glm::vec4& color = vec4(1.0f), GLfloat scale = 1.0) const;
 
   GLuint get_height() const { return m_height; }
   void set_height(GLuint v) { m_height = v; }
@@ -105,7 +125,13 @@ public:
 
   const std::map<uint32_t, Glyph>& get_glyph_dict() const { return m_glyph_dict; }
   const Glyph& getGlyph(uint32_t c) const;
+
+  GLuint size(){return m_glyph_dict.size();}
+  std::vector<uint32_t> codepoints();
+
+  std::unique_ptr<bitmap_text> create_bitmap_text(GLuint width, GLuint height);
+  std::pair<GLuint, bitmap_text::glyphs> render_to_texture_2d(GLuint width, GLuint height);
 };
 }
 
-#endif /* TEXT_H */
+#endif /* GLC_FREETYPE_TEXT_H */

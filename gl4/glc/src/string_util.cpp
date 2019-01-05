@@ -116,4 +116,16 @@ glm::mat4 stomat4(const std::string& s)
   return stream_util::read_mat(ss);
 }
 
+//--------------------------------------------------------------------
+std::string uint32_to_utf8(uint32_t value)
+{
+  std::string s;
+  for (int i = 0; i < 4; ++i) {
+    char c = (value >> (i*8)) & 0xff;
+    //if(c != 0)
+      s.push_back(c);
+  }
+  return s;
+}
+
 }

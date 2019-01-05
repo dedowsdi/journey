@@ -14,7 +14,8 @@
  *
  *   UCS-2            UTF-8
  *   0x0000-0x007f    0b0*******
- *   0x0080-0x07ff    0b110***** 10******
+ *   0x0080-0x07ff    0b110***** 10******  // 1st 2 bits of 1st character + 6
+ *                                         // bits of second
  *   0x08ff-0xffff    0b1110**** 10****** 10******
  *
  * example:
@@ -37,6 +38,9 @@
  */
 #include <iostream>
 #include <string>
+#include <bitset>
+#include <algorithm>
+#include <iomanip>
 
 // the number of characters in a multibyte string is the sum of mblen()'s
 // note: the simpler approach is std::mbstowcs(NULL, s.c_str(), s.size())
@@ -57,15 +61,46 @@ std::size_t strlen_mb(const std::string& s)
   return result;
 }
 
+void print_binary_string(const std::string& s)
+{
+  std::cout << s << " : 0x";
+  std::for_each(s.begin(), s.end(),
+      [](char c)->void
+      {
+        std::cout << std::setw(2) << std::setfill('0') << std::hex << (unsigned int)(unsigned char)c;
+      });
+  std::cout << " : ";
+
+  std::for_each(s.begin(), s.end(),
+      [](char c)->void
+      {
+        std::bitset<8> bits(c);
+        std::cout << bits << " ";
+      });
+  std::cout << std::endl;
+}
+
 int main(int argc, char *argv[])
 {
-  //std::string s = u8"z\u00df\u6c34\U0001f34c";
   std::string s = u8"你好啊";
   std::cout << s << std::endl; // crap in windows
+
+  print_binary_string("\u0081");
+  print_binary_string("\x4e\x07");
+  print_binary_string("\u4e07");
+  print_binary_string(u8"\u4e07"); // the same as above under ubuntu
 
   std::setlocale(LC_ALL, "en_US.utf8");
   std::cout << strlen_mb(s) << std::endl;
   std::cout << std::mbstowcs(nullptr, s.data(), s.size()) << std::endl;
+
+  std::string s1 = u8"\u4e07"; // unicode of 万
+  std::cout << s1 << " size :" << s1.size() << std::endl;
+
+  std::u16string s2 = u"\u4e07";
+  std::cout << s2.size() << std::endl;
+
+  std::cout << std::hex << std::endl;
   
   return 0;
 }

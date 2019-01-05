@@ -64,6 +64,7 @@ set (PROJECTS
     secret_garden
     eyeball
     teardrop
+    matrix_rain
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

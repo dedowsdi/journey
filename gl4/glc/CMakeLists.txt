@@ -33,6 +33,7 @@ set(GLC_SRCS
     src/turtle.cpp
     src/capsule3d.cpp
     src/freetype_text.cpp
+    src/guard.cpp
     )
 
 add_library(glc 

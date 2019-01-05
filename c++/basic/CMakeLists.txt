@@ -34,6 +34,7 @@ set (PROJECTS
     template_type_deduction
     dependent_name
     unicode
+    int_convert
     )
 
 foreach(PROJECT ${PROJECTS})
