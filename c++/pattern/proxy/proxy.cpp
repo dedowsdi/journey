@@ -7,6 +7,8 @@
  *
  * Proxy will be used to forward request to the real object, some times it also
  * manage life time of the real object.
+ *
+ * Most of time, proxy object should be transparent to user.
  */
 
 #include <iostream>

@@ -3,6 +3,9 @@
 #include <set>
 #include <numeric>
 #include <limits>
+#include <map>
+#include <algorithm>
+#include <cassert>
 
 #include "geometry.h"
 #include "triangle_functor.h"
@@ -127,7 +130,7 @@ void smooth(zxd::geometry_base& geometry, unsigned normal_attrib_index)
   normals->bind(normal_attrib_index);
   normals->update_buffer();
 
-  std::cout << "finish smooth" << std::endl;
+  //std::cout << "finish smooth" << std::endl;
 }
 
 //--------------------------------------------------------------------
@@ -252,6 +255,18 @@ vec3_vector vec2_vector_to_vec3_vector(const vec2_vector& vertices)
 }
 
 //--------------------------------------------------------------------
+vec4_vector vec3_vector_to_vec4_vector(const vec3_vector& vertices, GLfloat w)
+{
+  vec4_vector res;
+  res.reserve(vertices.size());
+  for(auto& item : vertices)
+  {
+    res.push_back(vec4(item, w));
+  }
+  return res;
+}
+
+//--------------------------------------------------------------------
 std::pair<vec3, vec3> bounding_box(vv3_cit beg, vv3_cit end)
 {
   auto min_value = vec3(std::numeric_limits<GLfloat>::max());
@@ -303,6 +318,55 @@ std::pair<vec2, vec2> bounding_box(vv2_cit beg, vv2_cit end)
   }
 
   return std::make_pair(min_value, max_value);
+}
+
+inline void add_triangle_indices(uint_vector& indices, GLuint i0, GLuint i1, GLuint i2)
+{
+  indices.push_back(i0);
+  indices.push_back(i1);
+  indices.push_back(i2);
+}
+
+//--------------------------------------------------------------------
+void subdivide(uint_vector& triangle_indices, vec3_vector& vertices, vec2_vector* texcoords)
+{
+  vertices.reserve(vertices.size() * 2);
+  if(texcoords)
+    texcoords->reserve(vertices.capacity());
+  uint_vector res_indices;
+  res_indices.reserve(triangle_indices.size() * 4);
+
+  std::map<std::pair<GLuint, GLuint>, GLuint> lookup; // mid lookup
+
+  for (int i = 0; i < triangle_indices.size(); i+= 3) 
+  {
+    std::array<GLuint, 3> mid;
+    // get middle points
+    for (int j=0; j<3; ++j)
+    {
+      GLuint idx0 = triangle_indices[i + j];
+      GLuint idx1 = triangle_indices[i + (j+1)%3];
+      auto p = std::minmax(idx0, idx1);
+      auto iter = lookup.find(p);
+      if(iter == lookup.end())
+      {
+        auto ir = lookup.insert(std::make_pair(p, vertices.size()));
+        iter = ir.first;
+        vertices.push_back(0.5f * (vertices[idx0] + vertices[idx1]));
+        if(texcoords)
+          texcoords->push_back(0.5f * ((*texcoords)[idx0] + (*texcoords)[idx1]));
+      }
+      mid[j] = iter->second;
+    }
+ 
+    // create indices for 4 inner triangles
+    add_triangle_indices(res_indices, triangle_indices[i+0], mid[0], mid[2]);
+    add_triangle_indices(res_indices, triangle_indices[i+1], mid[1], mid[0]);
+    add_triangle_indices(res_indices, triangle_indices[i+2], mid[2], mid[1]);
+    add_triangle_indices(res_indices, mid[0], mid[1], mid[2]);
+  }
+
+  triangle_indices.swap(res_indices);
 }
 
 }

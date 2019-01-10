@@ -65,6 +65,7 @@ set (PROJECTS
     eyeball
     teardrop
     matrix_rain
+    blobby3d
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files

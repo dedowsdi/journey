@@ -8,13 +8,13 @@ public:
   }
 
   void talk() { std::cout << "Who is my mother?" << std::endl; }
+  //~JonSnow() {}  //you can un comment this if your single is in stack
+  JonSnow(const JonSnow& snow) = delete;
+  JonSnow& operator=(const JonSnow& snow) = delete;
 
 private:
   // private ctor, dtor
   JonSnow() {}
-  //~JonSnow() {}  //you can un comment this if your single is in stack
-  JonSnow(const JonSnow& snow); // no need to create body
-  JonSnow& operator=(const JonSnow& snow); // no need to create body
 };
 
 int main(int argc, char* argv[]) {

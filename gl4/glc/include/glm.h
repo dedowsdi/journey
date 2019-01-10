@@ -62,34 +62,35 @@ const glm::vec4 hnza(0, 0, -1, 1);
 const glm::vec3 zp(0, 0, 0);
 const glm::vec4 hzp(0, 0, 0, 1);
 
-typedef std::vector<mat2> mat2_vector;
-typedef std::vector<mat3> mat3_vector;
-typedef std::vector<mat4> mat4_vector;
-typedef std::vector<GLint> int_vector;
-typedef std::vector<GLuint> uint_vector;
-typedef std::vector<GLshort> short_vector;
-typedef std::vector<GLushort> ushort_vector;
-typedef std::vector<GLfloat> float_vector;
-typedef std::vector<vec2> vec2_vector;
-typedef std::vector<vec3> vec3_vector;
-typedef std::vector<vec4> vec4_vector;
-typedef std::list<vec2> vec2_list;
-typedef std::list<vec3> vec3_list;
-typedef std::list<vec4> vec4_list;
+using mat2_vector = std::vector<mat2>;
+using mat3_vector = std::vector<mat3>;
+using mat4_vector = std::vector<mat4>;
+using int_vector = std::vector<GLint>;
+using uint_vector = std::vector<GLuint>;
+using short_vector = std::vector<GLshort>;
+using ushort_vector = std::vector<GLushort>;
+using float_vector = std::vector<GLfloat>;
+using vec2_vector = std::vector<vec2>;
+using vec3_vector = std::vector<vec3>;
+using vec4_vector = std::vector<vec4>;
+using vec2_list = std::list<vec2>;
+using vec3_list = std::list<vec3>;
+using vec4_list = std::list<vec4>;
+using uvec3_vector = std::vector<uvec3>;
 
-typedef std::vector<std::vector<GLfloat> > float_vector2;
-typedef std::vector<std::vector<vec2> > vec2_vector2;
-typedef std::vector<std::vector<vec3> > vec3_vector2;
-typedef std::vector<std::vector<vec4> > vec4_vector2;
+using float_vector2 = std::vector<std::vector<GLfloat> >;
+using vec2_vector2 = std::vector<std::vector<vec2> >;
+using vec3_vector2 = std::vector<std::vector<vec3> >;
+using vec4_vector2 = std::vector<std::vector<vec4> >;
 
-typedef float_vector::iterator fv_i;
-typedef vec2_vector::iterator v2v_i;
-typedef vec3_vector::iterator v3v_i;
-typedef vec4_vector::iterator v4v_i;
-typedef float_vector::const_iterator fv_ci;
-typedef vec2_vector::const_iterator v2v_ci;
-typedef vec3_vector::const_iterator v3v_ci;
-typedef vec4_vector::const_iterator v4v_ci;
+using fv_i = float_vector::iterator;
+using v2v_i = vec2_vector::iterator;
+using v3v_i = vec3_vector::iterator;
+using v4v_i = vec4_vector::iterator;
+using fv_ci = float_vector::const_iterator;
+using v2v_ci = vec2_vector::const_iterator;
+using v3v_ci = vec3_vector::const_iterator;
+using v4v_ci = vec4_vector::const_iterator;
 
 // create a cube in 1st quadrant, stick it's 3 laterials to frame axes, look at
 // origin from the longest vertex, the angle between any two projected axes

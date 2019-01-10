@@ -65,7 +65,7 @@ void draw_elements::draw()
 //--------------------------------------------------------------------
 void draw_elements::accept(primitive_functor& functor) const
 {
-	//@TODO implement
-	throw new std::runtime_error("unimplemented zxd::draw_elements::accept(primitive_functor & functor) const:const,virtual called");
+  functor.drawElements(m_mode, m_count, m_indices);
 }
+
 }

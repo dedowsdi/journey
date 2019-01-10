@@ -50,6 +50,7 @@ public:
   };
 
 protected:
+  GLboolean m_display_help;
   GLboolean m_pause; // pause update
   GLint m_update_count; // update count during pause
   GLboolean m_reading;

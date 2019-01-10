@@ -17,11 +17,8 @@ public:
 
   virtual ~primitive_functor() {}
 
-  virtual void drawArrays(GLenum mode,GLint first,GLsizei count) = 0;
-
-  //virtual void drawElements(GLenum mode,GLsizei count,const GLubyte* indices) = 0;
-  //virtual void drawElements(GLenum mode,GLsizei count,const GLushort* indices) = 0;
-  //virtual void drawElements(GLenum mode,GLsizei count,const GLuint* indices) = 0;
+  virtual void drawElements(GLenum mode,GLsizei count,const GLuint* indices){};
+  virtual void drawArrays(GLenum mode,GLint first,GLsizei count){};
 
   //void useVertexCacheAsVertexArray()
   //{
@@ -30,6 +27,27 @@ public:
 
   //std::vector<glm::vec3>   m_vertex_cache;
   bool m_treat_vertex_data_as_temporary;
+};
+
+class primitive_index_functor
+{
+public:
+    virtual ~primitive_index_functor() {}
+
+    virtual void setVertexArray(unsigned int count,const vec3* vertices) = 0;
+
+    virtual void drawElements(GLenum mode,GLsizei count,const GLuint* indices) = 0;
+
+    virtual void begin(GLenum mode) = 0;
+    virtual void vertex(unsigned int pos) = 0;
+    virtual void end() = 0;
+
+    //void useVertexCacheAsVertexArray()
+    //{
+        //setVertexArray(_vertexCache.size(),&_vertexCache.front());
+    //}
+    //std::vector<Vec3>   _vertexCache;
+    bool                _treatVertexDataAsTemporary;
 };
 
 
@@ -51,7 +69,8 @@ public:
   GLsizei num_instance() const { return m_num_instance; }
   void num_instance(GLsizei v){ m_num_instance = v; }
 
-  virtual void accept(primitive_functor& functor) const = 0;
+  virtual void accept(primitive_functor& functor) const{};
+  virtual void accept(primitive_index_functor& functor) const{};
 };
 
 typedef std::vector<std::shared_ptr<primitive_set>>  primitive_set_vector;
@@ -81,6 +100,7 @@ protected:
   GLint m_offset;
   GLenum m_type;
   GLsizei m_count;
+  GLuint* m_indices;
 
 public:
   draw_elements(GLenum mode, GLint count, GLenum type, GLint offset, GLuint num_instance = 0);
@@ -94,6 +114,9 @@ public:
 
   GLint offset() const { return m_offset; }
   void offset(GLint v){ m_offset = v; }
+
+  GLuint* indices() const { return m_indices; }
+  void indices(GLuint* v){ m_indices = v; }
 
   virtual void accept(primitive_functor& functor) const;
 };

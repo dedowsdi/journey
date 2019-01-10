@@ -1037,27 +1037,6 @@ math:
     A_i_t * A_t = I
     A_t_i = A_i_t
 
-c++:
-  Special Members:
-                          compiler implicitly declare
-  | user dec  | def ctor  | dtor     | copy ctor | copy =   | move ctor | move =   |
-  ----------------------------------------------------------------------------------
-  | nothing   | defaulted | defauted | defauted  | defauted | defauted  | defauted |
-  | any ctor  | not dec   | defauted | defauted  | defauted | defauted  | defauted |
-  | def ctor  | user dec  | defauted | defauted  | defauted | defauted  | defauted |
-  | dtor      | defaulted | user dec | defauted  | defauted | not dec   | not dec  |
-  | copy ctor | not dec   | defauted | user dec  | defauted | not dec   | not dec  |
-  | copy =    | defaulted | defauted | defauted  | user dec | not dec   | not dec  |
-  | move ctor | not dec   | defauted | deleted   | deleted  | user dec  | not dec  |
-  | move =    | defaulted | defauted | deleted   | deleted  | not dec   | user dec |
-
-  in short, if you declare one of dtor, copt ctor, copy = , move ctor, move =,
-  compiler will stop generating copy ctor, =, move ctor, move =
-
-  Unnamed namespace is superior to static keyword, primarily because the keyword
-  static applies only to the variables declarations and functions, not to the
-  user-defined types.
-
 -----------
 2018.02.23:
 
@@ -2311,5 +2290,3 @@ linux:
   stop x server:
     sudo service lightdm stop
     sudo init 3
-
-

@@ -32,6 +32,7 @@ set(GLC_SRCS
     src/teardrop.cpp
     src/turtle.cpp
     src/capsule3d.cpp
+    src/icosahedron.cpp
     src/freetype_text.cpp
     src/guard.cpp
     )

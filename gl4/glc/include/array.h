@@ -36,12 +36,15 @@ public:
   virtual void update_buffer() {}
   virtual void bind(GLint location) {}
   virtual GLuint num_elements() const = 0;
+  virtual void read_buffer() = 0;
 
   GLenum target() const { return m_target; }
   void target(GLenum v){ m_target = v; }
 
   GLenum usage() const { return m_usage; }
   void usage(GLenum v){ m_usage = v; }
+
+  GLuint buffer() const { return m_buffer; }
 };
 
 template <typename T>
@@ -52,6 +55,7 @@ public:
   void bind(GLint location);
   void update_buffer();
   virtual GLuint num_elements() const { return this->size(); }
+  virtual void read_buffer();
 };
 
 typedef template_array<float> float_array;
@@ -144,6 +148,16 @@ void template_array<T>::update_buffer() {
   bind_buffer();
   glBufferData(m_target, this->size() * sizeof(decltype(this->front())),
     &this->front(), m_usage);
+}
+
+//--------------------------------------------------------------------
+template<typename T>
+void template_array<T>::read_buffer()
+{
+  bind_buffer();
+  GLint buffer_size;
+  glGetBufferParameteriv(m_target, GL_BUFFER_SIZE, &buffer_size);
+  glGetBufferSubData(m_target, 0, buffer_size, &this->get_vector().front());
 }
 }
 

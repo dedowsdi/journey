@@ -25,6 +25,7 @@ void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
 app::app()
   : 
     m_pause(false),
+    m_display_help(true),
     m_update_count(0),
     m_camera_mode(CM_PITCH_YAW),
     m_v_mat(0),
@@ -109,10 +110,21 @@ void app::debug_message_control() {
   // GL_DEBUG_SEVERITY_NOTIFICATION : GL_DEBUG_SOURCE_API : GL_DEBUG_TYPE_OTHER : 131185 : Buffer detailed info:
   // Buffer object 1 (bound to GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB (0), and GL_ARRAY_BUFFER_ARB, usage hint
   // is GL_STREAM_DRAW) will use VIDEO memory as the source for buffer object operations.
+  
   GLuint ids[] = {131185};
 
   glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE,
     sizeof(ids) / sizeof(GLuint), ids, GL_FALSE);
+
+  // GL_DEBUG_SEVERITY_MEDIUM : GL_DEBUG_SOURCE_API : GL_DEBUG_TYPE_PERFORMANCE :
+  // 131186 : Buffer performance warning: Buffer object 2 (bound to
+  // GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB (0), GL_ARRAY_BUFFER_ARB,
+  // GL_SHADER_STORAGE_ BUFFER, and GL_SHADER_STORAGE_BUFFER (1), usage hint is
+  // GL_STATIC_DRAW) is being copied/moved from VIDEO memory to HOST memory.
+
+  GLuint ids1[] = {131186};
+  glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE,
+    sizeof(ids1) / sizeof(GLuint), ids1, GL_FALSE);
 }
 
 //--------------------------------------------------------------------
@@ -494,6 +506,9 @@ void app::glfw_key(
       case GLFW_KEY_RIGHT_BRACKET:
         m_control.index(m_control.index() + 1);
         break;
+      case GLFW_KEY_H:
+        m_display_help ^= 1;
+        return;
 
       default:
         break;

@@ -96,6 +96,73 @@ public:
     }
   }
 
+  virtual void drawElements(GLenum mode,GLsizei count,const GLuint* indices)
+  {
+    if (indices==0 || count==0) return;
+
+    typedef const GLuint* IndexPointer;
+
+    switch(mode)
+    {
+      case(GL_TRIANGLES):
+        {
+          IndexPointer ilast = &indices[count];
+          for(IndexPointer  iptr=indices;iptr<ilast;iptr+=3)
+            this->operator()(m_vertex_array_ptr[*iptr],m_vertex_array_ptr[*(iptr+1)],m_vertex_array_ptr[*(iptr+2)],m_treat_vertex_data_as_temporary);
+          break;
+        }
+      case(GL_TRIANGLE_STRIP):
+        {
+          IndexPointer iptr = indices;
+          for(GLsizei i=2;i<count;++i,++iptr)
+          {
+            if ((i%2)) this->operator()(m_vertex_array_ptr[*(iptr)],m_vertex_array_ptr[*(iptr+2)],m_vertex_array_ptr[*(iptr+1)],m_treat_vertex_data_as_temporary);
+            else       this->operator()(m_vertex_array_ptr[*(iptr)],m_vertex_array_ptr[*(iptr+1)],m_vertex_array_ptr[*(iptr+2)],m_treat_vertex_data_as_temporary);
+          }
+          break;
+        }
+      //case(GL_QUADS):
+        //{
+          //IndexPointer iptr = indices;
+          //for(GLsizei i=3;i<count;i+=4,iptr+=4)
+          //{
+            //this->operator()(m_vertex_array_ptr[*(iptr)],m_vertex_array_ptr[*(iptr+1)],m_vertex_array_ptr[*(iptr+2)],m_treat_vertex_data_as_temporary);
+            //this->operator()(m_vertex_array_ptr[*(iptr)],m_vertex_array_ptr[*(iptr+2)],m_vertex_array_ptr[*(iptr+3)],m_treat_vertex_data_as_temporary);
+          //}
+          //break;
+        //}
+      //case(GL_QUAD_STRIP):
+        //{
+          //IndexPointer iptr = indices;
+          //for(GLsizei i=3;i<count;i+=2,iptr+=2)
+          //{
+            //this->operator()(m_vertex_array_ptr[*(iptr)],m_vertex_array_ptr[*(iptr+1)],m_vertex_array_ptr[*(iptr+2)],m_treat_vertex_data_as_temporary);
+            //this->operator()(m_vertex_array_ptr[*(iptr+1)],m_vertex_array_ptr[*(iptr+3)],m_vertex_array_ptr[*(iptr+2)],m_treat_vertex_data_as_temporary);
+          //}
+          //break;
+        //}
+      //case(GL_POLYGON): // treat polygons as GL_TRIANGLE_FAN
+      case(GL_TRIANGLE_FAN):
+        {
+          IndexPointer iptr = indices;
+          const vec3& vfirst = m_vertex_array_ptr[*iptr];
+          ++iptr;
+          for(GLsizei i=2;i<count;++i,++iptr)
+          {
+            this->operator()(vfirst,m_vertex_array_ptr[*(iptr)],m_vertex_array_ptr[*(iptr+1)],m_treat_vertex_data_as_temporary);
+          }
+          break;
+        }
+      case(GL_POINTS):
+      case(GL_LINES):
+      case(GL_LINE_STRIP):
+      case(GL_LINE_LOOP):
+      default:
+        // can't be converted into to triangles.
+        break;
+    }
+  }
+
 protected:
 
   unsigned int        m_vertex_array_size;

@@ -20,6 +20,7 @@
 #include "axes.h"
 #include "teardrop.h"
 #include "capsule3d.h"
+#include "icosahedron.h"
 
 namespace zxd {
 
@@ -79,6 +80,7 @@ protected:
   axes m_axes;
   teardrop m_teardrop;
   capsule3d m_capsule;
+  icosahedron m_icosahedron;
 
 public:
   geometry_app() : m_camera_pos(0, -8, 8), m_render_normal(GL_FALSE) {}
@@ -184,6 +186,13 @@ public:
     m_capsule.include_normal(true);
     m_capsule.include_texcoord(true);
     m_capsule.build_mesh();
+
+    m_icosahedron.include_normal(true);
+    m_icosahedron.include_texcoord(true);
+    m_icosahedron.subdivisions(3);
+    m_icosahedron.radius(1.5f);
+    m_icosahedron.set_mesh_type(icosahedron::mesh_type::PAPER_UNWRAPPER);
+    m_icosahedron.build_mesh();
 
     {
       vec3_vector2 vv;
@@ -318,6 +327,7 @@ public:
     render_blinn(m_disk0, vec3(2, -2, -1));
     render_blinn(m_disk1, vec3(4, -2, -1));
     render_blinn(m_sphere, vec3(1.0f));
+    render_blinn(m_icosahedron, vec3(1, 1, 5));
     render_blinn(m_cuboid, vec3(2, 0, 0));
     render_blinn(m_cone, vec3(-2, 0, 0));
     render_blinn(m_cylinder, vec3(0, 2, 0));

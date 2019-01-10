@@ -10,9 +10,10 @@
 #include "common_program.h"
 #include "pingpong.h"
 #include "quad.h"
+#include "filter.h"
 
-#define WIDTH 1280
-#define HEIGHT 720
+#define WIDTH 640
+#define HEIGHT 360
 
 namespace zxd {
 
@@ -22,7 +23,7 @@ lightless_program prg;
 GLuint draw_count = 0;
 GLuint slices = 1024;
 GLuint draw_step = slices/16;
-GLuint line_width = 4;
+GLfloat line_width = 2.5;
 GLint blur_times = 7;
 GLuint numbers = 300;
 GLfloat last_max_number = 2;
@@ -33,6 +34,9 @@ GLfloat birghtness_threshold = 0.01;
 GLfloat bloom_exposure = 2.5;
 int_vector sequence;
 geometry_base mesh;
+
+brightness_color_filter bc_filter;
+gaussian_blur_filter gb_filter(3, 0, 1);
 
 GLuint diffuse_map;
 GLuint color_map;
@@ -77,63 +81,6 @@ int_vector recaman_sequence(GLuint count)
   return res;
 }
 
-class filter_program : public quad_program
-{
-public:
-  GLint ul_threshold;
-protected:
-  void attach_shaders()
-  {
-    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader4/filter_color_brightness.fs.glsl");
-  }
-  void bind_uniform_locations()
-  {
-    quad_program::bind_uniform_locations();
-    uniform_location(&ul_threshold, "threshold");
-  }
-} filter_prg;
-
-class blur_program : public quad_program
-{
-public:
-  GLint ul_horizontal;
-  GLint horizontal;
-
-  virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader4/gaussian_blur_0_1_0.5_4.fs.glsl");
-  }
-
-  virtual void bind_uniform_locations() {
-    quad_program::bind_uniform_locations();
-    uniform_location(&ul_horizontal, "horizontal");
-  }
-} blur_prg;
-
-struct bloom_program : public program {
-  GLint ul_exposure;
-  GLint ul_hdr_map;
-  GLint ul_brightness_map;
-
-  virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader4/bloom.fs.glsl");
-  }
-
-  virtual void bind_uniform_locations() {
-    uniform_location(&ul_exposure, "exposure");
-    uniform_location(&ul_hdr_map, "hdr_map");
-    uniform_location(&ul_brightness_map, "brightness_map");
-  }
-
-  virtual void bind_attrib_locations() {
-    bind_attrib_location(0, "vertex");
-    bind_attrib_location(1, "texcoord");
-  }
-} bloom_prg;
-
-
 GLuint create_texture(GLvoid* data = 0)
 {
   GLuint tex;
@@ -169,6 +116,8 @@ public:
     m_info.wnd_height = HEIGHT;
     m_info.samples = 16;
     m_info.decorated = false;
+    m_info.wm.x = 100;
+    m_info.wm.y = 100;
   }
   virtual void create_scene() {
     glfwSetWindowPos(m_wnd, 100, 100);
@@ -232,10 +181,6 @@ public:
     prg.init();
     prg.v_mat = mat4(1);
 
-    filter_prg.init();
-    blur_prg.init();
-    bloom_prg.init();
-
     glGenFramebuffers(1, &fbo);
     color_map = create_texture();
     brightness_map = create_texture();
@@ -286,8 +231,7 @@ public:
   }
 
   virtual void display() {
-    GLenum draw_buffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-
+    //GLenum draw_buffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
     // draw scene to diffuse_map
     //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     //glDrawBuffers(1, draw_buffers);
@@ -312,53 +256,12 @@ public:
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, WIDTH, HEIGHT, 0);
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    // extract color and brightness
-    glDrawBuffers(2, draw_buffers);
-    glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_map, 0);
-    glFramebufferTexture2D(
-      GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, brightness_map, 0);
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      printf("incomplete frame buffer\n");
-
-    filter_prg.use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuse_map);
-    glUniform1i(filter_prg.ul_quad_map, 0);
-    glUniform1f(filter_prg.ul_threshold, birghtness_threshold);
-    q.draw();
-
-    // blur brightness texture
-    glDrawBuffers(1, draw_buffers);
-    blur_prg.use();
-    for (int i = 0; i < blur_times*2; ++i) {
-      blur_tex.swap();
-
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_tex.pong(), 0);
-      glBindTexture(GL_TEXTURE_2D, i == 0 ? brightness_map : blur_tex.ping());
-      bool horizontal = i&1;
-      glUniform1i(blur_prg.ul_quad_map, 0);
-      glUniform1i(blur_prg.ul_horizontal, horizontal);
-      q.draw();
-    }
+    bc_filter.filter(diffuse_map, color_map, brightness_map);
+    gb_filter.filter(brightness_map, blur_tex, blur_times);
 
     // draw final result
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //draw_quad(diffuse_map, 0);
-    bloom_prg.use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, color_map);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, blur_tex.pong());
-
-    glUniform1i(bloom_prg.ul_hdr_map, 0);
-    glUniform1i(bloom_prg.ul_brightness_map, 1);
-    glUniform1f(bloom_prg.ul_exposure, bloom_exposure);
-    q.draw();
-
-    //glClear(GL_COLOR_BUFFER_BIT);
-    //prg.use();
-    //mesh.draw();
+    bloom(color_map, blur_tex.pong(), bloom_exposure);
     
     if(!display_help)
       return;
@@ -388,6 +291,9 @@ public:
           break;
         case GLFW_KEY_H:
           display_help ^= 1;
+          break;
+        case GLFW_KEY_Q:
+          draw_count = 0;
           break;
         default:
           break;
