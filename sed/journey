@@ -1,0 +1,33 @@
+ vim: tw=80 sw=2 ts=2 et
+
+-----------
+2018.01.10:
+
+sed:
+  by default, sed output all the processed text, use -n to suppress it
+  sed took script from --expression or --file or the first non option argument
+  if there has no -e or -f. 
+  you can specify multiple input to sed, they will be combined together as a single giant input, you
+  can also use -s to tell sed to treat them seperately.
+  Commands within a script or script-file can be separated by semicolons (;) or newlines (ASCII 10).
+  Multiple scripts can be specified with -e or -f options.
+
+  all sed command follow this syntax:
+    [addr]X[options]
+
+-----------
+2018.01.12:
+
+sed:
+  sed address is very much alike vim range, except:
+    blank range indicate whole file
+    post ! after range is used to negate the sense of match
+
+  sed use BRE by default, -e will switch to ERE
+
+-----------
+2018.01.15:
+
+sed:
+  you can specify number flag to replace only nth match.
+  s/.../.../number

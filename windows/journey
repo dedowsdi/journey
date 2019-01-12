@@ -1,0 +1,9 @@
+ vim: tw=80 sw=2 ts=2 et
+-----------
+2018.02.21:
+
+windows:
+  powershell:
+     create a new “Current user, Windows PowerShell ISE” profile:
+       if (!(Test-Path -Path $PROFILE ))
+       { New-Item -Type File -Path $PROFILE -Force }

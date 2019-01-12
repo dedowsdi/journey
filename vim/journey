@@ -1,0 +1,330 @@
+ vim: tw=80 sw=2 ts=2 et
+
+-----------
+2018.01.06:
+
+vim:
+  winnr('$') get number of windows
+  bufwinnr(winbufnr(winid)) convert winid to winnr
+  use getwinvar() to retrieve window variable and option
+  use getwininfo() to retreive window info
+
+-----------
+2018.01.07:
+
+vim:
+  You can not set break point at anomymous function(numbered funcition). You should use normal
+  function with dict postfix.
+  use :function /pattern to search function(loaded only)
+
+-----------
+2018.01.08:
+
+vim:
+  gp paste below cursor, place cursor at end of newly pasted context
+  in order to search literal string with line break, use
+     substitute(escape(string, '\/?'), "\n", '\\n', 'g')
+  replace string musbe be '\\n', '\n' won't work. It works like manually type /Ctrl-r=string
+  when searching, \n is newline, \r is CR (carriage return = Ctrl-M = ^M) 
+  when replacing, \r is newline, \n is a null byte (0x00).
+
+-----------
+2018.01.09:
+
+vim:
+  shellescape(str) escape str to be used for shell command arg,
+  ' => '\''
+  \n and ! will be escaped once or twice
+  %#will be escaped zero or once
+
+  If you want to use str as literial match, leave \n and ! alone, but escape %#
+  and | (if your ex command has -bar option) if you will use it'll be used in a
+  ex command.
+
+  check myvim#literalize
+
+-----------
+2018.01.10:
+
+vim:
+  special line number in range:
+    /{pattern}[/]  [/] is needed to seperate pattern from anything that follows
+    ?{pattern}[?]  
+    \/             use previous search pattern
+    \?
+    \&             use previous substitute pattern
+    /pat1//pat2/   find line contain "pat2" after line containing "pat1", without moving the cursor
+
+  range can be seperated with , or ;
+    5;/pat2/       find line contain "pat2" after line 5, pat2 search will start after line 5
+
+-----------
+2018.01.15:
+
+vim:
+  bufexists works on full path name, tild path name, and relative path name
+  There is no number flag in substitute, you can only do it with following regex:
+  s/\v%((pattern).{-}){n-1th}\zspattern/replace pattern/
+
+-----------
+2018.01.17:
+
+vim:
+  undo branches:
+    normal undo(u) redo(ctrl-r) goes back and forward along current branch. When you undo something
+    and make a change, vim will create a new undo branch for you.
+    Every change you made is numbered, you can travel along it with g- and g+, or :earlier, :later,
+    g- is the same as earlier 1, g+ is the same as g+. You can also goto specific change directly
+    with :undo N (:undo N is totally different from :undo), if N is in current branch, current
+    branch didn't change, otherwise, current branch is changed to branch that contains N (If
+    multiple branches contain N, use the one with largest change number).
+    :earlier {N}{[s|m|h|d]} works with time
+    :earlier {N}f goto older text state {N} file writes before.
+    :undolist will list head chagne of every branch.
+
+  there is no way to paste literal linebreak directly, you must use = register
+  to do this
+
+-----------
+2018.01.18:
+
+vim:
+  if command has -bar option, you must escape | if you want to use it as
+  argument.
+  ex command will expand % to current file, # to alternate file
+  grep will use !shellcmd ? which means if you want to match literal linebrak,
+  you must escape it.
+
+  file search:
+    downward search:
+      ** matches only directory in file search, 
+      **5 means maximum number of levels matched is 5
+
+    upward search:
+      usually used to search for a file
+      /a/b/c/d;/a/b will search in:
+        /a/b/c/d
+        /a/b/c
+        /a/b
+      /a/b is called stop directory, it should be appended to previous path with
+      a ';'. if you omit it, vim will search until root.
+      e;/a/b  will search in (assume current dir is /a/b/c/d):
+        /a/b/c/d/e
+        /a/b/c/e
+        /a/b/e
+
+    combined search:
+      **;/a/b wil search in(assume current dir is /a/b/c/d):
+      /a/b/c/d/**
+      /a/b/c/**
+      /a/b/**
+
+  'tags' : by default &tags = ./tags;,tags
+    if cpoption doesn't include 'd' ./ will expand to path of current file.
+
+-----------
+2018.01.20:
+
+vim:
+  :set change both global and local option
+  :setglobal set global option
+  :setlocal set local option
+  setlocal option< set local value to it's global value
+  set option<  remove local value, so global value will be used
+
+  fileencodings : 
+    when you edit an existing file in vim, vim will try fileencoding in
+    'fileencodings' in sequence, utf-8 will be used if all failed, fileencoding
+    will be set to an empty string, so you should put special encoding (such as
+    ucs-bom)in the front part, and common encoding(such as latin1) in the back.
+    fileencodings is ignored if ++enc option exists
+    if fileencodings is empty, vim will use global fileencoding
+
+  fileencoding :
+    when you edit a new file, global fileencoding will be used. If fileencoding
+    is empty, utf-8 will be used.  if fileencoding is not utf-8, conversion will
+    be done when writting the file(via internal iconv).
+  
+  encoding:
+    vim internal encoding, it's always utf-8
+
+  ga : print ascii value
+  g8 : print hex value
+  8g8 : find illegal utf-8 byte sequence
+
+vim:
+  ctrl-\_e replace whole cmdline with expressiion, you might need getcmdtype(),
+  getcmdline(), getcmdpos(), setcmdpos() to help you with it.
+
+  help topic:
+    prefix   example    context
+    :        :h :let    excmd
+    none     :h r       normal mode
+    v_       :h v_*     visualmode
+    i_       :h i_*     insert mode
+    c_       :h c_*     ex command line
+    /        :h /*      search pattern
+    '        :h '*'     option
+    -        :h -*      vim argument
+
+   you can use ctrl-v to insert the special key want to search help for that key
+
+vim:
+  search-offset:
+    /pattern/[+-bse][num]   apply lines or characters offset
+    /pattern0/;/patten1/  use /patten1/ as offset, search start after match of pattern0
+
+-----------
+2018.01.23:
+
+vim:
+  You can get all special character code in :digraph, or search digraph-table
+
+-----------
+2018.01.26:
+
+vim:
+  vim use b:current_syntax to guard syntax file loading.
+  If want to just add or change some syntax to current syntax file, place you
+  syntax file under runtimepath/after/syntax/, and don't set b:currentsyntax
+
+-----------
+2018.01.30:
+
+vim:
+  If there exists multiple entries of the same line in quickfix list, and you
+  want to make change to every quickfix entry, you need to revert the quickfix
+  list first, otherwise only entry of the same line will will be changed
+  correctly.
+
+  v:register  |  the register in effect.
+  v:char      |  character that was typed to trigger the abbreviation
+
+  <expr> can be used in map or abbreviation ?
+    :inoremap <expr> key expression  " evaluate expression as rhs
+    :ab[breviate] [<expr>] [<buffer>] {lhs} {rhs}
+
+linux:
+  there are two kinds of clipboard:
+    CLIPBOARD SELECTION works as traditional clipboard. according to + in vim
+    PRMARY SELECTION works on last heightlight, pasted with middle mouse.
+    according to * in vim.
+    SECONDARY SELECTION was never used by me.
+  You need some tool such xsel to connect tty and xwindow selection. :
+    echo balabala  | xsel -i   # set primary selection to balabala
+  If you are using neovim, you should install one of of this kind of tool.
+
+  there has no clipboard in tty, but you can do it via x window xlipboard. 
+    echo whatever | DISPLAY=:0 xsel -i
+    DISPLAY=:0 xsel -o
+
+-----------
+2018.02.04:
+
+vim:
+  aw includes trailing  or leading(if it has not trailing ) white space. Be
+  careful with this, it might cause problem.
+  c-w_c-o close all windows except current one. just like :only
+
+-----------
+2018.02.07:
+
+vim:
+  :25   goto line 25
+  :/pattern/ goto line match pattern, different from :normal! /pattern
+  ycm search .ycm_extra_conf vim dir of current file untile root, be careful
+  about this.
+
+-----------
+2018.02.20:
+
+vim:
+  you can not execute ex command in normal!:
+    :normal! vi}:d     " won't work
+  
+  you can do it like this:
+    :normal! vi}
+    :'<,'>d
+
+-----------
+2018.02.27:
+
+vim:
+  visual-block replace will replace every screen char with the same char.
+  use \%V to match inside the gv area. 
+    assume you visual area is "foo bar"
+      /\%Vfoo.*bar  will match "foo bar"
+      /\%Vfoo.*bar\%V will match "foo ba", no "r"
+      /\%Vfoo.*ba\%Vr will match "foo bar"
+
+-----------
+2018.03.07:
+
+vim:
+  syntax region is valid even end match does't exist
+  syn region name start=/a/ skip=/c/ end=/b/ 
+
+  you can manage contains in cluster which can be updated by other users
+  check help syn-cluster
+    syn cluster clusterName contains=...
+    syn match xgroup ..... contains=@clusterName " fetch contains from cluster
+    syn keyword new_item ...  " create new group
+    syn cluster xgroup add=new_item contained  " newly create group can be contained in xgroup
+
+----------
+2018.03.12
+
+vim:
+  count item:
+    :%s/item//gn
+
+----------
+2018.03.14
+
+vim:
+  shift m lines 5 times
+  :>>>>>m
+
+----------
+2018.03.15
+
+vim:
+  a and i is the same on blank line.
+
+----------
+2018.04.26
+
+vim:
+  viml string doesn't support negative index.
+
+----------
+2018.05.05
+
+vim:
+  autoload function only exists when it's called, which means you can't test if
+  an autoload functions exits like this:  exists(*plug#func)
+
+----------
+2018.05.13
+
+vim:
+  unamed regiser always point to the last used register.
+    gv"sy              " chagne the last used register to s
+    let @s='whatever'  " @" is equal to whatever, not something you copied into
+                       " s register in the 1st line.
+
+----------
+2018.07.03
+
+vim:
+  ctrl-e can be replaced with 1ctrl-d, 1ctrl-d will set 'scroll' to 1 untile you
+  call another #ctrl-d or reenter the buffer.
+
+  g@  will set `[ and `] to motion selection start and end. '@' register will be
+      motion text
+
+--------------
+2018.11.26
+
+vim:
+  don't input space between event in autocmd

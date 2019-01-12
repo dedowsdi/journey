@@ -1,0 +1,425 @@
+ vim: tw=80 sw=2 ts=2 et
+
+-----------
+2018.01.08:
+
+linebreak:
+  unix    LF   0A   \n
+  windows CRLF 0D0A \r\n
+  mac     CR   0D   \r
+  Make sure you don't mix fileformat, some search patterns rely on it.
+  you can use &filemormat option in vim to check fileformat.
+  sometimes if your echo behaved weird, it might because your are handling a dos
+  file and the "\r" cause echo to do weird stuff.
+
+-----------
+2018.01.18:
+
+linux:
+  check cpu :
+    lscpu
+    cat /proc/cpuinfo 
+  check disk and partition :
+    lsblk
+    fdisk -l
+  check disk filesystem:
+    df -T
+  check slot on mother board:
+    lspci
+  check cpu bit :
+    getconf LONG_BIT 
+  check memory :
+    free
+    cat /proc/meminfo  
+  check memory hardware :
+    dmidecode -t memory
+  check bios :
+    dmidecode -t bios
+  check all DMI(desktop management interface) info
+    dmidecode -q
+  check mother board
+    dmidecode | grep -A20 'System Information'
+  check system info :
+    uname -a
+  check usb:
+    lsusb
+  check hardware:
+    lshw
+
+  iconv can be used to change character encoding
+
+-----------
+2018.01.20:
+
+linux:
+  nl   add line number to output
+
+-----------
+2018.01.25:
+
+linux:
+  xargs took as much augument as possible per command line, unless you specify -n
+  if you want to use xargs with itmes contain space:   
+    print item lines | xargs -d "\n" -n1 cmd
+
+  \ in double quotes escapes only $, `, ", \, or newline, otherwise it's removed.
+
+-----------
+2018.01.28:
+
+ssh:
+  there are mainly two ways to use ssh:
+    1: username,password, commonly used on unix system.
+    2: public key authorization(commonly used in android system):
+      use ssh-genkey to generate private and public key
+      keep private key to your self, copy public key to server .ssh/authorized_keys
+
+      ssh-keygen -t rsa -b 2048
+      ssh-copy-id -i id_rsa.pub username@ip_address // no username for android
+
+android:
+  you can install termux in your android to use it like linux:
+    sshd
+    passwd   // ???
+
+  termux use 8022 as default port for ssh.
+
+linux:
+  check dir or file space usage : du -hs /etc
+  You can use deja-dup to bakup, restore.
+  You can restore a single file or directory : as deja-dup --restore
+
+  You can use grep -A to print more lines after match.
+
+-----------
+2018.01.29:
+
+linux:
+  daemon:
+    A daemon is a computer program that runs as a background process in
+    multitasking computer operating system. Traditionally the process names of a
+    daemon end with the letter d.
+    Daemon is not attached to a tty, which means you can list deamon process as:
+      ps -eo tty,pid,comm | grep ^?
+
+    You can use initctrl to control init deamon?. 
+      initctrl list
+      initctrl status ssh-agent
+
+  orphan process: parent dead, but still executing, adopted by init(pid 1).
+
+  zombie(defunct) process : a process that has completed execution (via the exit
+    system call) but still has an entry in the process table: it is a process in
+    the "Terminated state". This occurs for child processes, where the entry is
+    still needed to allow the parent process to read its child's exit status:
+    once the exit status is read via the wait system call, the zombie's entry is
+    removed from the process table and it is said to be "reaped". A child
+    process always first becomes a zombie before being removed from the resource
+    table. In most cases, under normal system operation zombies are immediately
+    waited on by their parent and then reaped by the system – processes that
+    stay zombies for a long time are generally an error and cause a resource
+    leak. The kill command has no effect on zombie process.
+
+  An orphan zombie process will be reaped automatically.
+
+  terminal = tty = text input/output enviroment
+  console = pyshical terminal
+
+  shell is the outer most layer around the operating system kernel.
+  There are two kinds of shell:
+    command line interface(CLI).
+    graphical user interface(GUI).
+    
+  there are two kinds of tty:
+    hardware tty : one end connected to hardware, one end connected to software
+    pesudo tty : both ends connected to software.
+
+-----------
+2018.02.01:
+
+linux:
+  swap works likes virtual memory on windows.
+
+  device:
+    a device file or special file is an interface for a device driver that
+    appears in a file system as if it were an ordinary file. They allow software
+    to interact with a device driver using standard input/output system calls,
+    which simplifies many tasks and unifies user-space I/O mechanisms.
+
+  There are two general kinds of device files in Unix-like operating systems:
+    character devices(not used in linux):
+      provide unbuffered, direct access to the hardware device.
+
+    block device:
+      provide buffered access to hardware devices, and provide some abstraction
+      from their specifics. Unlike character devices, block devices will always
+      allow the programmer to read or write a block of any size (including
+      single characters/bytes) and any alignment. 
+
+  Pseudo-devices: 
+    Device nodes on Unix-like systems do not necessarily have to correspond to
+    physical devices. Nodes that lack this correspondence form the group of
+    pseudo-devices.
+
+  Some of the most commonly used (character-based) pseudo-devices include:
+    /dev/null – accepts and discards all input; produces no output (always
+                returns an end-of-file indication on a read)
+    /dev/zero – accepts and discards all input; produces a continuous stream of
+                NUL (zero value) bytes
+    /dev/full – produces a continuous stream of NUL (zero value) bytes when
+                read, and returns a "disk full" message when written to
+
+    /dev/random and /dev/urandom – they produce a variable-length stream of
+                                   pseudo-random numbers.
+
+  In Unix-like operating systems, a loop device, vnd (vnode disk), or lofi (loop
+  file interface) is a pseudo-device that makes a file accessible as a block
+  device. such as:
+    mount -o loop /media/balabala /dsfsdf/sdf.iso
+
+  linux style file system:
+    inode:
+      inode is a data structure in a Unix-style file system that describes a
+      filesystem object such as a file or a directory. Each inode stores the
+      attributes and disk block location(s) of the object's data.Filesystem object
+      attributes may include metadata (times of last change, access,
+      modification), as well as owner and permission data.
+      Every file has one inode.
+
+    block:
+      real file content, a file may take multiple blocks.
+
+    directory:
+      directy block stores child inode and their name(just like hard link),
+      which means if you want to add/delete/rename a file in a directory, you
+      need w privilege.
+
+    link:
+      hard link:
+        simply add a new inode name pair in directory data block, no new inode
+        created. You can only create hard link in the same filesystem. You can
+        not create hard link for directory. 
+      symbolic link:
+        Add a new file, it's datablock is the target. It's a new file, it has
+        it's own inode an datablock.
+
+    number of hard links:
+      a file has 1 hard link when it's created, it's stored in it's parent
+      directory, it increases every time you create a hardlink for it. 
+
+      a directory has 2 hard link when it's created, one in it's parent
+      directory, one in special entry '.', whose inode is the directory it self.
+      it also increases everytime you create a child directory in it, as special
+      entry '..' of child directory will point to it's parent, 
+
+-----------
+2018.02.02:
+  linux:
+    top:
+      operation:
+        o COMMAND=lantern   # filter command
+        L                   # locate 
+        k                   # kill
+      top -n 1              # execute once and exit
+      top -o %MEM           # sort by %MEM
+    top detail is hard to remember, htop is much more user friendly.
+
+  schedule commands:
+    scheduled commands is done via cron deamon on linux.
+    you can use crontab -e to schedule your commands. Or you can add commands to
+    /etc/cron.daily/ to execute command in preset schedule.
+
+  find default port for service:
+    cat /etc/services
+
+-----------
+2018.02.03:
+linux:
+  you can use xinput to control touchboard:
+    xinput list
+    xinput --disable touchboardid
+
+-----------
+2018.02.06:
+
+linux:
+  use who to check logged users.
+
+linux:
+  change tty font:
+    sudo dpkg-reconfigure console-setup
+
+-----------
+2018.02.09:
+
+linux:
+  The splash screen is the picture that you can see while Linux is booting.
+
+  The framebuffer (fbdev) is a character device providing access to graphics
+  hardware. 
+
+  Although the Linux frame-buffer supports 256 (or more) colors, the Linux console
+  driver does not; therefore, console applications are still limited to 16 colors
+  on the Linux console, frame-buffer or not.
+
+  change tty resolution:
+    type vbeinfo or videoinfo in grub prompt to get supported resolution.(or use
+    hwinfo --framebuffer)
+    add following lines to /etc/default/grub
+      GRUB_GFXMODE=1920x1080x32
+      GRUB_GFXPAYLOAD_LINUX=keep
+
+  always use max tty resolution:
+      GRUB_GFXMODE=auto
+
+  change tty text color:
+    echo -en "\e]P0222222"
+    # e]p is the "set color escape", color format is XRRGGBB
+
+  get max color in current terminal:
+    tput colors   # only 8 for tty, 256 for gnome terminal
+
+-----------
+2018.02.18:
+
+linux:
+  install dict:
+    sudo add-apt-repository universe
+    sudo apt install dict     # cli client to dictd server
+    sudo apt install dictd    # server
+    sudo apt install dict-gcide dict-wn dict-devil dict-moby-thesaurus  # database
+    
+-----------
+2018.02.24:
+
+linux:
+  man hier  # filesystem hierarchy
+
+-----------
+2018.03.03:
+
+linux:
+  get number of cores:   getconf _NPROCESSORS_ONLN
+  make in multiple cores : make -j $(getconf _NPROCESSORS_ONLN)
+  
+-----------
+2018.03.04:
+
+rev : reverse lines characterwise
+
+----------
+2018.03.09
+
+linux:
+  xargs -I conflicits with -n ?
+    types='BOOK BODY'
+    # following command will not print BOOK BODY on seperate lines
+    echo $types | xargs -I {} -n 1 bash -cx 'echo {}' 
+
+  redirect each execution of xargs:
+    ... | xargs -I {} bash -c ' ... > ..'
+
+----------
+2018.03.10
+
+linux:
+  use wc to count lines words or bytes
+
+  use cmp compare files byte by byte
+
+  use comm to cmpare files line by line (must be sorted)
+    comm -23 file1 file2  # print uniq item in file1
+    comm -13 file1 file2  # print uniq item in file2
+    comm -12 file1 file2  # print common item in file1 and file2
+
+  uniq -cd sorted  # find duplicated lines in a file
+
+----------
+2018.03.11
+
+linux:
+  use xxd to dump hex or revert
+
+----------
+2018.03.12
+
+linux:
+  print hex
+    echo $((16#ff))
+    echo $((0xff))
+  print oct
+    echo $((8#77))
+    echo $((077))
+
+----------
+2018.03.17
+
+linux:
+  print available locales:
+    locale -a
+
+----------
+2018.04.03
+
+linux:
+  use im-confg to swtich fcitx or ibus.
+  sort -h can sort someting like house number nicely.
+
+----------
+2018.04.10
+
+linux:
+  you can use pushd, popd to use directory stack.
+  dirs will print everything in the directory stack.
+
+----------
+2018.04.13
+
+linux:
+  use byzanz-record to record gui animation.
+  use ttyrec to record tty screen animation, then use ttygif to convert
+  video record to gif.
+
+----------
+2018.05.05
+
+linux:
+  use ffempg to convert video format
+  ffempt -i input.avi output.mp4
+----------
+2018.05.09
+
+bash:
+  expand variable twice:
+    file=$(eval echo $file) # $file might be some variable
+
+----------
+2018.07.02
+
+linux:
+  showkey -a  // print key code
+
+----------
+2018.07.04
+
+linux:
+  chang gnome default application:
+    edit /etc/gnome/defaluts.list
+
+----------
+2018.07.06
+
+jq:
+  '.array[] | whatever '    # whatever will operator on every item in array
+
+-----------
+2018.11.5
+
+linux:
+  use simple screen recorder to record screen video.
+
+---------------
+linux:
+  stop x server:
+    sudo service lightdm stop
+    sudo init 3

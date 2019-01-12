@@ -35,3 +35,8 @@
 
 12. std::multi_set::find finds an element with specific key, it need not be the
     same as std::lower_bound
+
+13. be very careful with std::function:
+        std::function<const std::string&(const void*) > totally accepts
+        [](const void*)->std::string
+        this can cause local reference problem, total night mare.

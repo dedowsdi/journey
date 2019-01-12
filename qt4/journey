@@ -1,0 +1,130 @@
+ vim: tw=80 sw=2 ts=2 et
+
+----------
+2018.03.14
+
+qt:
+  you can connect signal to another signal
+
+  qt automatically removes all connections involving an object when the object
+  is deleted. although you can manually do it with disconnect
+
+  if a signal has more parameters than the slot it is connected to, the
+  additional parameters are simply ignored.
+
+  One of Qt's major achievements has been the extension of C++ with a mechanism
+  for creating independent software components that can be bound together
+  without any component knowing anything about the other components it is
+  connected to.  The mechanism is called the meta-object system, and it provides
+  two key services: signalsŔslots and introspection.
+
+  meta-object system:
+    The Q_OBJECT macro declares some introspection functions that must be
+    implemented in every QObject subclass: metaObject(), tr(), qt_metacall(),
+    and a few more.
+
+    Qt's moc tool generates implementations for the functions declared by
+    Q_OBJECT and for all the signals.
+
+    QObject member functions such as connect() and disconnect() use the
+    introspection functions to do their work.
+  
+----------
+2018.03.15
+
+qt:
+  After creating the user interface, setupUi() will automatically connect any
+  slots that follow the naming convention on_objectName_signalName() to the
+  corresponding objectName's signalName() signal
+
+  Qt's parentŔchild mechanism is implemented in QObject. When we create an
+  object (a widget, validator, or any other kind) with a parent, the parent adds
+  the object to the list of its children.  When the parent is deleted, it walks
+  through its list of children and deletes each child. The children themselves
+  then delete all of their children, and so on recursively until none remain.
+  The parent-child mechanism greatly simplifies memory management, reducing the
+  risk of memory leaks. The only objects we must call delete on are the objects
+  we create with new and that have no parent.  And if we delete a child object
+  before its parent, Qt will automatically remove that object from the parent's
+  list of children.  
+  
+  For widgets, the parent has an additional meaning: Child widgets are shown
+  within the parent's area. When we delete the parent widget, not only does the
+  child vanish from memory, it also vanishes from the screen.
+
+----------
+2018.03.16
+
+qt4:
+  The parent-child relationship doesn't mean the same thing for dialogs as for
+  other widgets. A dialog is always a window in its own right, but if it has a
+  parent, it is centered on top of the parent by default. A child dialog also
+  shares its parent's taskbar entry.
+
+  A modeless window is one that runs independently of any other windows in the
+  application.
+
+  A modal window is a window that pops up when invoked and blocks the
+  application, preventing any other processing or interactions from taking place
+  until the window is closed.
+
+  A dialog is modeless if it's invoked using show() (unless we call setModal()
+  beforehand to make it modal); it is modal if it's invoked using exec().
+
+----------
+2018.03.17
+
+qt4:
+  The top-left pixel of a Qt widget is located at position (0, 0), and the
+  bottom-right pixel is located at (width() - 1, height() - 1).
+
+----------
+2018.03.20
+
+qt4:
+  draw a pixel at x,y with antialiasing, the pixel center is at x+0.5, y+0.5
+  draw a pixel at x,y with antialiasing, following pixels will be colored grey:
+    (x-1, y-1)
+    (x-1, y)
+    (x, y-1)
+    (x, y)
+    this is 4 pixels surrounding x,y
+
+  there are two sets of coordinates in qt:
+    logical coordinate:
+      you specify your geometry in this coordinate
+    physical coordinate:
+      the real window coordinates
+
+  boundary of logical coordinates, works similar like ortho projection in opengl:
+    paint->window(x,y,width,height)
+  
+  viewport in qt works similar as viewport like opengl:
+    paint->setViewport(x,y,with,height)
+
+----------
+2018.04.26
+
+qt4:
+  editor widget created by item delegate in listwidget will be removed
+  immediately if lose focus.
+
+  setGeometry has no meaning in a layout.
+
+  backgound color and property like that can be changed via stylesheet.
+
+----------
+2018.04.26
+
+qt4:
+  A dialog is always a top-level widget, which means you must specify global
+  coordinates to position it. but if it has a parent, its default location is
+  centered on top of the parent's top-level widget (if it is not top-level
+  itself).
+
+----------
+2018.05.16
+
+qt4:
+  you can not edit a table item with invalid variant data.
+  

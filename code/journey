@@ -1,0 +1,67 @@
+ vim: tw=80 sw=2 ts=2 et
+
+-----------
+2018.01.12:
+
+regex:
+  backreference: \# reference previous # capturing group, \1 matches the exact
+  same text that was matched by the first capturing group. 
+
+-----------
+2018.01.14:
+
+  basic rgb colors:
+    Lime    #00FF00 (0,255,0)
+    Green   #008000 (0,128,0)
+    Yellow  #FFFF00 (255,255,0)
+    Cyan    #00FFFF (0,255,255)
+    Magenta #FF00FF (255,0,255)
+    Purple  #800080 (128,0,128)
+    Silver  #C0C0C0 (192,192,192)
+    Gray    #808080 (128,128,128)
+    Maroon  #800000 (128,0,0)
+    Olive   #808000 (128,128,0)
+    Teal    #008080 (0,128,128)
+    Navy    #000080 (0,0,128)
+
+-----------
+2018.02.02:
+
+Multiples of bytes:
+  Decimal    |           | Binary     |          |
+  Value      | Metric    | Value      | IEC      | JEDEC
+  1000^1	kB | kilobyte  | 1024^1	KiB | kibibyte | KB	kilobyte
+  1000^2	MB | megabyte  | 1024^2	MiB | mebibyte | MB	megabyte
+  1000^3	GB | gigabyte  | 1024^3	GiB | gibibyte | GB	gigabyte
+  1000^4	TB | terabyte  | 1024^4	TiB | tebibyte | –
+  1000^5	PB | petabyte  | 1024^5	PiB | pebibyte | –
+  1000^6	EB | exabyte   | 1024^6	EiB | exbibyte | –
+  1000^7	ZB | zettabyte | 1024^7	ZiB | zebibyte | –
+  1000^8	YB | yottabyte | 1024^8	YiB | yobibyte | –
+
+----------
+2018.08.18
+
+hsb(hsv) and hsl:
+  they are similar, but not the same.
+  hue part is exactly the same.
+       black    white
+  hsb  *,*,0    *,0,100
+  hsl  *,*,0    *,*,100
+
+-----------
+2018.03.06:
+
+google:
+  http://www.being.org.cn/tool/google.htm#8.3
+  multiple keyworkd :  a [+] b 
+  exclude b :  a -b
+  or :  a OR b
+  sentence : "this is a sentence"
+  search in specific site : a site:sina.com
+  search filetype : a filetype:pdf
+  search url with keyword : inurl:keyword_in_url a
+  search title with keyword : intitle:keyword_in_title a
+  search everything linked to specific web page : link:www.sina.com.cn
+
+  image search support + - OR site and filetype

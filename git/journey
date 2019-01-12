@@ -1,0 +1,27 @@
+-----------
+2018.01.30:
+
+git:
+  If you do something like :
+    git checkout sha1
+  You will be in 'detached head' state, git won't be able to handle you change
+  in this state. You should always use
+    git checkout -b newbranch sha1
+
+-----------
+2018.03.06:
+
+git:
+  sync fork:
+    git remote add upstream remote_address
+    git fetch remote
+    git checkout master
+    git merge upstream/master
+    git push
+
+----------
+2018.05.03
+
+git:
+  search deleted file:
+    git log --all --full-history -- **/filename

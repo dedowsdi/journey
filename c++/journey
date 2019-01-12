@@ -1,0 +1,243 @@
+ vim: tw=80 sw=2 ts=2 et
+-----------
+2018.01.23:
+
+c++:
+  when you insert something at iter to a vector, if the vector needs to be
+  reallocated, all iterators will be invalidated, otherwise only iteraters
+  starts from iter will be invalidated.
+
+-----------
+2018.02.10:
+
+c++:
+  Internal linkage refers to everything only in scope of a translation unit.
+
+  External linkage refers to things that exist beyond a particular translation
+  unit. In other words, accessible through the whole program, which is the
+  combination of all translation units.
+
+-----------
+2018.02.19:
+
+c++:
+  if your class is derived from template class, such as A<int>, and there is a
+  method called foo() in A<int>, you can not access foo directly in your derived
+  class, "foo" in derived class is a nondependent name, which mean compiler
+  won't search it in A<int>, there are 3 ways to access foo:
+    1. this->foo(). Since this is always implicitly dependent in a template,
+       this->foo is dependent and the lookup is therefore deferred until the
+       template is actually instantiated, at which point all base classes are
+       considered
+    2. A<int>::foo to access.
+    3. call using A<int>::foo prior to foo();
+
+----------
+2018.03.11
+
+c++:
+  change data alignment:
+    #pragma pack(push)
+    #pragma pack(1)
+
+    struct Data{
+      ...
+    }
+
+    #pragma pack(pop)
+
+----------
+2018.05.13
+
+c++:
+  be very careful with std::function:
+    std::function<const std::string&(const void*) > totally accepts
+    [](const void*)->std::string
+    this can cause local reference problem, total night mare.
+  
+----------
+2018.05.15
+
+c++:
+  don't put space between macro function name and (
+
+----------
+2018.05.23
+
+c++:
+  you can not specialize nested template class without specialize outer class.
+  But a partial specialization of a nested class is allowed.
+
+----------
+2018.07.07
+
+c++:
+  only lambda with blank catpure can be converted to c function
+
+----------
+2018.08.15
+
+c++:
+  you can define a macro in the same name as a global function. As the macro get
+  expanded, the global function will never be used.
+
+----------
+2018.10.04
+
+cpp:
+  if you place object directly into container such as vector, be very very
+  careful if you use pointer to such object, when vector space reallocated, all
+  poiner wile be invallidated.
+
+----------
+2018.10.26
+
+cpp:
+  You can use obj.*&Class::variableName to access obj.variableName.
+  eg:
+      template <class T, class S, class C>
+      const S& Container(const std::priority_queue<T, S, C>& q) {
+        struct HackedQueue : private std::priority_queue<T, S, C> {
+          static const S& Container(const std::priority_queue<T, S, C>& q) {
+            // q.c won't work, as it's protected
+            return q.*&HackedQueue::c;
+          }
+        };
+        return HackedQueue::Container(q);
+      }
+
+  named return value optimization (NRVO) (copy elision) is commonly implemented by
+  compiler(don't have to). It's preferable to return by value, even in c++11.
+
+-----------
+2018.11.2
+
+cpp:
+  
+  IB: Implementation-defined Behaviour. The standard leaves it up to the
+  particular compiler/platform to define the precise behaviour, but requires
+  that it be defined.
+
+  Using implementation-defined behaviour can be useful, but makes your code less portable.
+
+  UB: Undefined Behaviour. The standard does not specify how a program invoking
+  undefined behaviour should behave. Also known as "nasal demons" because
+  theoretically it could make demons fly out of your nose.
+
+  ADL: argument dependent lookup
+  You don’t have to qualify the namespace for functions if one or more argument
+  types are defined in the namespace of the function.
+
+-----------
+2018.11.5
+
+cpp:
+  you can not return raw array with fixed size, but you can return std::array.
+
+-------------
+2018.11.13
+cpp:
+  int a = 'a';
+  const char& b = a;
+  ++a;
+  std::cout << b;
+  // will output 'a', because there is a temporary char that is bound to b, it
+  // happens if and b are not exactly the same type
+  whose life time is expended to the life time of b.
+
+--------------
+2018.11.14
+cpp:
+  division is slowr than multiplication, but lots of compiler will optimize a
+  literal constant express, some even optimize for variables.
+
+  prefix sum operation is an algorithm that, given an array of input values,
+  computes a new array where each element of the output array is the sum of all of
+  the values of the input array up to (and optionally including) the current array
+  element. A prefix sum operation that includes the current element is known as an
+  inclusive prefix sum, and one that does not is known as an exclusive prefix sum.
+
+--------------
+2018.11.18
+
+cpp:
+  be careful about stuff defined directly in src file, if it doesn't have
+  internal linkage, you might get multiple difiniton error.
+
+--------------
+2018.11.27 
+cpp:
+  becareful about std::accumulate(..., init), init is a template parameter, use
+  specific type, otherwise the result might be rounded
+
+  ternary operator has very low precedence, it'd better to group them with
+  parenthesis.
+
+--------------
+2018.11.28
+
+cpp:
+  lifetime of temporary object will be extened by the first const reference
+  bound to it, it's destoryed after the life time of that const reference
+  expired, be very very careful about this, some function such as std::min or
+  std::max use const reference arg and return const renference , if you call
+  them with temporary object, the temporary object's life time will be extended
+  by the const reference arg, not the return one, it will be destoryed after
+  std::min finished, and it cause UB, it will be a nightmare.
+
+  std::min and std::max always return the 1st one if a and b are equivalence.
+  use std::minmax instead if that's not what you want
+
+--------------
+2018.12.03
+
+cpp:
+  captureless lambda types are always implicitly convertible to functoin
+  pointer. If you absolutely need the function-pointer convertion to happen, add
+  a unary + before []. (there is no unary+ operator for lambda type, but there
+  is unary+ operator for ponter type, this trick deosn't work on msvc, because
+  there have 4 different calling convensions)
+
+  to distinguish value category:
+    xvalue is expiring value, it must involves &&
+    xvalue + prvalue = rvalue
+    xvalue + lvalue = glvalue
+
+---------------
+2018.12.04
+
+cpp:
+  during vector memory reallocation, the contents are moved if their move
+  constructor is noexcept.
+
+  after c++11, it always takes constant time to compare size() and 0 for all stl
+  container, why?
+
+  reserve does nothing if new capacity is not greater then current
+  you can use shink_to_fit (might reallocate) or
+  vector(vec.begin(), vec.end()).swap(vec) to reduce capacity.
+
+  there is no guarantee that capacity is actually brought down exactly to size.
+  Capacity is really up to your STL implementation. But with these techniques,
+  it will be as small as it can get.
+
+  unamed object is created and destroyed immediately.
+
+  if you want you can define inline multiple times, as long as they are all the
+  same.
+
+  don't return const pointer type, ultimate function call will be an rvalue, and
+  rvalues of non-class type cannot be const, meaning that const will be ignored
+  anyway
+
+  names in template base classes are ignored in C++(because you might
+  specilize template base to exclude that name), you must use this->to include
+  them back
+
+---------------
+2018.12.06
+cpp:
+   assignment is right-associative
+
+   copy constructor will call parent copy constructor if you don't provider one,
+   copy assignment do nothing for parent part.

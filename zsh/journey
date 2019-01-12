@@ -1,0 +1,18 @@
+ vim: tw=80 sw=2 ts=2 et
+
+-----------
+1018.01.02
+zsh:
+  array:
+    zsh array index starts at 1, unless KSH_ARRAYS option is set
+    l=(a b c d e) ; echo ${#l[@]} ;  unset l[1] ; echo ${l[@]}
+
+    typeset -A m; m[a]=A ; m[b]=B ; m[c]=C ; unset "m[b]" ; echo ${#m[@]} ; echo ${!m[@]} ; echo ${m[@]}
+
+----------
+2018.04.07
+
+linux:
+  change login shell to zsh:
+    chsh -s $(which zsh)
+

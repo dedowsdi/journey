@@ -1,0 +1,148 @@
+ vim: tw=80 sw=2 ts=2 et
+
+-----------
+2018.01.02:
+    
+bash:
+  indirect expansion ${!var}. (${${var}} is illegal)
+    var=foo ; foo=hoo; echo ${!var}
+
+  ${parameter#word}, remove matching prefix as less as possible
+  ${parameter##word}, remove matching prefix as much as possible
+
+  ${parameter%word}, remove matching tail as less as possible
+  ${parameter%%word}, remove matching tail as much as possible
+
+  here string 
+    <<<str
+
+-----------
+2018.01.03:
+
+bash:
+  IFS sequence of characters used to split fields. default to <space><tab><newline>
+
+  "$*" = "$1c$2c$3..."
+  "$@" = "$1"c"$2"c"$3"...
+
+  array:
+    indexed array works like vector
+    declare -a l ; l=(a b c d e) ; echo ${#l[@]} ;  unset l[0] ; echo ${l[@]}
+
+    associatived array works like map
+    declare -A m; m[a]=A ; m[b]=B ; m[c]=C ; unset m[b] ; echo ${#m[@]} ; echo ${!m[@]} ; echo ${m[@]}
+
+-----------
+2018.01.08:
+
+bash:
+  grep -L ...  get files without match
+  you can nest "" if the inner "" is used to quote sub command result
+  !!:0  repeat last command, discard everything except 1st word(the command)
+
+-----------
+2018.01.09:
+
+bash:
+  grep -F and ag -F are totally different,  grep -F interpret pattern as a list
+  of new line seperated strings, each string will be used as a search pattern,
+  any of which is to be matched seperately.  ag -F match pattern as whole
+  string, including "newline".
+  you can not grep "\n", use ag or pcregrep -M instead
+
+-----------
+2018.02.02:
+
+  bash arithmetic works on integer only. you need bc to work on float:
+    echo "scale=3; 1/100"|bc
+
+----------
+2018.03.10
+
+  read from file line by line:
+    while IFS= read -r variable ; do
+      ...
+    done;<file
+  
+  proces substitution:
+    comm -23 <(sort file0|uniq) <(sort file1|uniq)
+
+----------
+2018.05.09
+
+bash:
+  expand variable twice(use indirect expansion instead?):
+    file=$(eval echo $file) # $file might be some variable
+
+----------
+2018.05.10
+
+bash:
+  Words of the form $'string' are treated specially. The word expands to
+  "string", with backslash-escaped characters replaced as specified by the ANSI
+  C standard. It is a ksh93 syntax also supported by bash, zsh, mksh and FreeBSD
+  sh.
+
+  always use array to store command line options with special characters.
+    optoins="--id 'seyda neen'"
+    et $options # this will generate error, 'seyda neen' will be split into 'seyda and neen'
+
+----------
+2018.05.11
+bash:
+  compgen -W wordlist -- word 
+
+  worldlists:
+    worldlist will be treated as current typing words. single quote needs to be
+    escaped, because worldlist treated it as starting quote around string:
+      "a b'c d" will be split into "a"  "bc d" because bash think you might be typing "b'c d'"
+
+    splited words will be expanded(just like echo splitedWord, no extra quote):
+      x=y
+      y=z
+      compgen -W "\$$x"  # will generate z
+
+    in bash "abc" can be typed in following ways(" works just like '):
+      abc
+      a''bc
+      a'b'c
+      a'bc'
+      ab'c'
+
+    which means following compgen will generate the same result
+      compgen -W "abc" "a"
+      compgen -W "abc" "a'"
+      compgen -W "abc" "a'b"
+      compgen -W "abc" "ab"
+      compgen -W "abc" "ab'"
+
+    if you have escaped ' in your splited word:
+      compgen -W "a\'bc" "a'b" # generate nothing, impossible to continue 
+                               # from a'b to generate a'bc (keep in mind, it
+                               # needs to be expanded again)
+      compgen -W "a\'bc" "a'"  # good to go, a''\'bc
+
+    if you really want to complete "a'bcdef" from "a'b":
+      compgen -W "a\'bcdef" "a\'b" # you must escape ' in both wordlist and
+                                   # word!! in your script
+
+    the same rule apply to \:
+      assume you want to generate "a\\bcd" from "a\\b",
+        a\b    -----> ab
+        a\\b   -----> a\b
+        a\\\\b -----> a\\b
+
+      so you must replace \ with \\\\ in both wordlist and word. Again, keep in
+      mind, splited wordlist and word need to be expand again, use the rule of
+      echo word, no extra quotes.
+
+    remember this: compgen complete possible typing !!! 
+
+bash:
+  word split:
+    word splitting only happens when something expaned
+    explicit null
+      x='' # $x will be treated as empty string
+    implicit null
+      x=   # $x will be nothing 
+

@@ -99,6 +99,18 @@ public:
   void push_back(const value_type& value) { _impl.push_back(value); }
   void pop_back() { _impl.pop_back(); }
 
+  template <class... Args>
+  void emplace_back(Args&&... args)
+  {
+    _impl.emplace_back(std::forward<Args>...);
+  }
+
+  template <class... Args>
+  iterator emplace(const_iterator pos, Args&&...)
+  {
+    return _impl.emplace(pos, std::forward<Args>...);
+  }
+
   iterator erase(iterator where) { return _impl.erase(where); }
   iterator erase(iterator first, iterator last) {
     return _impl.erase(first, last);

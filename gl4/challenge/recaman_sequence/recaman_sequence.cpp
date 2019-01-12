@@ -49,10 +49,12 @@ kcip kci_bloom_exposure;
 
 quad q;
 
+//  a(0) = 0; for n > 0, a(n) = a(n-1) - n if positive and not already in the
+//  sequence, otherwise a(n) = a(n-1) + n.
 int_vector recaman_sequence(GLuint count)
 {
-  // the same number migght appear twise as you jump forward multiples than jump
-  // back.
+  // the same number might appear twise as you jump forward multiples times,
+  // then jump back.
   int_vector res;
   res.reserve(count);
 
@@ -60,17 +62,17 @@ int_vector recaman_sequence(GLuint count)
 
   res.push_back(0);
   used_numbers.insert(0);
-  GLint next_step = 1;
+  GLint n = 1;
 
   while(--count)
   {
-    GLint n = res.back() - next_step;
-    if(n < 0 || used_numbers.find(n) != used_numbers.end())
-      n = res.back() + next_step;
+    GLint an = res.back() - n;
+    if(an < 0 || used_numbers.find(an) != used_numbers.end())
+      an = res.back() + n;
 
-    res.push_back(n);
-    used_numbers.insert(n);
-    ++next_step;
+    res.push_back(an);
+    used_numbers.insert(an);
+    ++n;
   }
 
   //for(auto n : res)
