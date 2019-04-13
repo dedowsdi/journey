@@ -1,0 +1,8 @@
+join files
+    pase f0 f1
+
+join lines with ,
+    paste -sd ',' file
+
+joine every 3 lines with ,
+    pase -d ',' - - -

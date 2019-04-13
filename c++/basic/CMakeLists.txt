@@ -35,6 +35,7 @@ set (PROJECTS
     dependent_name
     unicode
     int_convert
+    random
     )
 
 foreach(PROJECT ${PROJECTS})

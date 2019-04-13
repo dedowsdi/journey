@@ -328,3 +328,30 @@ vim:
 
 vim:
   don't input space between event in autocmd
+
+--------------
+2019.03.26
+
+you can use multiline in :command, you can only use | in autocmd
+
+--------------
+2019.04.07
+
+to get where filetyype was last modified
+  verbose set filetype?
+
+--------------
+2019.04.07
+
+vim store <C-right> as <80><fd>V
+i guess <80> is some kind of special mark, it must be followed by another <..> style
+keycode, otherwise, you macro won't work, if you set register a to <80>xV, @a[0]
+will becomes <c2>, i guess it's some kind of error mark.
+
+you can use OptionSet event to do something when option set happens.
+
+--------------
+2019.04.09
+
+get numbered function:
+  :function {#}

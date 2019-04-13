@@ -1,0 +1,34 @@
+ARGC
+    implies the number of arguments provided at the ommand line
+    awk 'BEGIN{print "Arguments =", ARGC}' 1 2 3 4
+
+ARGV
+    awk 'BEGIN{
+            for(i = 0; i < ARGC; ++i){
+                printf "ARGV[%d] = %s\n", i, ARGV[i]
+            }
+        }' 1  2 3 4
+
+    program text and cmdline options are ignored, 0 is awk.
+
+CONVFMT
+    convertion format for numbers, default to %.6g
+
+ENVIRON
+    associative array of enviroment variiables
+    awk 'BEGIN { print ENVIRON["USER"] }'
+
+FILENAME
+    current filename
+
+FS
+    input field seperator, default to space. can be chaned with -F cmd line
+    option
+
+NF 
+    number of fields in the current record
+    awk '{print $0, NF}'
+
+NR 
+    number of records seen so far
+    awk '{print $0, NR}'

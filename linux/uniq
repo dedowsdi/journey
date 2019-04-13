@@ -1,0 +1,8 @@
+get number of duplications
+    uniq -c
+
+print uniq lines only
+    uniq -u
+
+print duplicated lines only
+    uniq -d

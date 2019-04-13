@@ -444,16 +444,6 @@ if Ax = b has 0 or more than 1 solutions, det(A) = 0
 math:
   det(λA) = λ^n*det(A)
   det(AB) = det(A) * det(B)
-    det( | A  0 | ) = det(A) * det(B)  // assume A B are both nxn squre matrix
-         | -I B |
-                    = det( | A  AB | ) // c1 + c1 * B
-                           | -I 0  |
-                    = (-1) ^n * det ( | -I 0   | ) // swap rows n times
-                                      | A  AB  |
-                    = (-1)^n * det(-I) * det(AB)
-                    = (-1)^n * (-1)^n * det(AB)
-                    = det(AB)
-  det(AB) = det(BA) = det(A)* det(B)
 
   let A be nxn square matrix, it's adjugate matrix is:
     A_a = | c_0,0   c_1,0   ...   C_n-1,0   |
@@ -727,3 +717,9 @@ math:
     (x-32)/1.8
   to change from C to F
     x*1.8 + 32
+
+----------
+2019.01.22
+
+cartesian product:
+  a * b_t

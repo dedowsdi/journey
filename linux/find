@@ -1,0 +1,88 @@
+ vim: tw=120 sw=4 ts=4 et
+
+find [-H] [-L] [-P] [-D debugopts] [-Olevel] [starting-point...] [expression]
+    -P never follow
+    -L always follow, unless broken, cause -lname and -iname to fail
+    -H don't follow, unless it's one of the starting-point
+
+    operator precedence:
+        ()
+        !
+        and
+        or
+        ,
+
+    expression includes:
+        tests
+        action    action is also expression, should it always be the tail?
+        global options
+        positional options
+        operators
+
+    find use Emacs Regular Expressions by default, it can be change by -regextype
+
+find regular files with specific name
+    find ~/journey/linux -type f -name 'journey'
+
+find directory with specific name
+    find ~/ -type d -name 'journey'
+
+ignore perssion warning
+    find ~/ -type d -name 'journey' 2>/dev/null
+
+find all .txt files, don't follow symbolic link
+    find -P ~/journey/osg -name '*.txt'
+    -P is default behavior
+
+find all .txt files, don't follow symbolic link, case insensitive
+    find -P ~/journey/osg -iname '*.txt'
+
+find all .txt files, don't follow symbolic link, ignore build dir
+    find -P ~/journey/osg ! -path '*/build/*' -a -name '*.txt'
+    -a is default behavior
+    -name match with trailing filename
+    -path match with full path
+
+find all .txt and .png files, don't follow symbolic link, ignore build dir
+    find -P ~/journey/osg ! -path '*/build/*' -a \( -name "*.png" -o  -name "*.txt" \)
+
+find all .txt files,  follow symbolic link, ignore build dir
+    find -L ~/journey/osg ! -path '*/build/*' -name '*.txt'
+
+find all .txt files with regex, don't follow symbolic link, ignore build dir
+    find ~/journey/osg  ! -path '*/build/*' -regex '.*\.txt'
+    regex must match whole path name
+
+find all files that's executable by current user
+    find ~/journey/gl4 -type f -perm -u=x
+    find ~/journey/gl4 -type f -perm -100
+
+find files that's greater then 8 megabytes and executable
+    find ~/journey/gl4 -type f -size +8M -executable
+
+find all files of which is modified after a certain files was last modified
+    find ~/journey/gl4 -type f -name '*.txt' -newer ~/journey/gl4/CMakeLists.txt
+    find ~/journey/gl4 -type f -name '*.txt' -newermm ~/journey/gl4/CMakeLists.txt
+
+find files that's greater then 8 megabytes and modified after certain time
+    find ~/journey/gl4 -type f -size +8M -newermt '2018-01-01 00:00:00'
+
+find files that's last modified at certain day
+    find ~/journey/gl4 -type f -newermt '2018-09-13' ! -newermt '2018-09-14' -exec ls -al '{}' \;
+
+find and print with ls -al
+    find ~/journey/linux -type f -name 'journey' -exec ls '{}' \;
+
+seperate items by null character
+    find ~/journey/gl4 -type f -size +8M -executable -print0
+
+find at certain depth d
+    find . -mindepth d -maxdepth d
+
+find in dps
+    find . -depth
+
+exclude .git and .hg, don't descend into it
+    find . \( -name ".hg" -o -name ".git" \) -prune -o -type f
+    -prune prevent further descendent if current file is a directory, it always return true, which will skip another
+    branch of -o if current condition satisfied.

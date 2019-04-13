@@ -1,0 +1,23 @@
+grep with context
+    grep -C 2 include ~/journey/gl4/CMakeLists.txt
+    use -A or -B if you only want to see after or before
+
+grep literal
+    grep -F 'include(util)' ~/journey/gl4/CMakeLists.txt
+
+grep count, supress normal output
+    grep -c include ~/journey/gl4/CMakeLists.txt
+
+grep recursive into subdir, don't follow symbolic link
+    grep -r include ~/journey/gl4/challenge/bloop/
+    use -R if you want to follow symbolic link
+
+grep only matched parts
+    grep -ro include ~/journey/gl4/challenge/bloop/
+
+grep multiple pattern
+    grep -r -e include -e gl ~/journey/gl4/challenge/bloop/
+
+grep reverse pattern, print total blank lines
+    grep -Ev '.+$' ~/journey/gl4/CMakeLists.txt
+

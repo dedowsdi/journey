@@ -2,6 +2,13 @@
  * Defines a family of algorithms, encapsulates each one, and make them
  * interchangeable. Strategy lets the algorithm vary independently from clients
  * who use it.
+ *
+ * The Strategy pattern is a dynamic pattern (HOW DO YOU WANT TO RUN A BEHAVIOUR
+ * IN SOFTWARE?).
+ *
+ *  you have more ways for doing an operation; with strategy, you can choose the
+ *  algorithm at run-time and you can modify a single Strategy without a lot of
+ *  side-effects at compile-time
  */
 
 #include <iostream>

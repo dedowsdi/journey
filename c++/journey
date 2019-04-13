@@ -241,3 +241,18 @@ cpp:
 
    copy constructor will call parent copy constructor if you don't provider one,
    copy assignment do nothing for parent part.
+
+---------------
+2019.01.17
+
+lambda is inlined, just like inlined operator() in functor.
+
+---------------
+2019.01.20
+
+you can not compare string in preprocessor
+
+---------------
+2019.01.21
+
+if you need to link to static boost, check cmake::findBoost

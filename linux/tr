@@ -1,0 +1,10 @@
+replace () with []
+    echo '()' | tr '()' '[]'
+
+delete a-z
+    echo abcdefg | tr -d 'a-z'
+
+squeeze a and b
+    echo aaaabbbb | tr -s 'ab'
+    
+

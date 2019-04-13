@@ -1,0 +1,39 @@
+in POSIX, BRE requires () and {} be designated \(\), \{\}, where as ERE does
+not, BRE has no ?+| metacharacter.
+
+ERE:
+
+^
+.
+[]
+[^]
+$
+()
+\n match subexpression, n belongs to 1-9
+*
+{m,n}
+?
++
+|
+
+POSIX supports only [:..:] style character class:
+
+[:alnum:]
+[:word:]
+[:alpha:]
+[:blank:]
+[:cntrl:]
+[:digit:]
+[:graph:]
+[:lower:]
+[:print:]
+[:punct:]
+[:space:]
+[:upper:]
+[:xdigit:]
+
+PCRE:
+(?=..) look ahead
+(?!..)
+(?<=..) look behind
+(?<!..)

@@ -1,0 +1,199 @@
+read commands from frile
+    awk -f cmdfile
+
+variable
+    awk -v name=Jerry 'BEGIN{printf "Name = %s\n", name}'
+
+--dump-variables[=awkvars.out]
+    awk --dump-variables ''
+    prints a sorted list of global variables and their final values to file
+
+--lint[=fatal]
+    awk --lint '' /bin/ls
+    enables checking of non-portable or dubious constructs. when an argument
+    fatal is provided, it treats warning messages as errors
+
+--posix
+    turns on strict posix compatibility, disable gawk-specific extensions
+
+--traditional
+    disables all gawk-specific extensions
+
+--profile[=awkprof.out]
+    awk --profile 'BEGIN{printf"---|Header|--\n"} {print}
+    generates a prettry-printed versoin of program.
+
+rule : pattern {action}
+
+each line in awk is a seperate statement or seperate rule
+
+new line after following symbols and keywords are ignored
+    , { ? : || && do else
+
+awk supports \ continuation
+some awk implemention doesn't allow you to split string into multilines.
+
+action must begin in the same line as pattern, unless it's \ connected.
+
+If a particular option with a value is given more than once, it is the last
+value that counts.
+
+As long as program text has been supplied, any other options are flagged as
+invalid with a warning message but are otherwise ignored?
+
+In compatibility mode, as a special case, if the value of fs supplied to the -F
+option is ‘t’, then FS is set to the TAB character ("\t"). This is true only for
+--traditional and not for --posix
+
+Because it is clumsy using the standard awk mechanisms to mix source file and
+command line awk programs, gawk provides the -e option. This does not require
+you to preempt the standard input for your source code; it allows you to easily
+mix command-line and library source code
+
+If the environment variable POSIXLY_CORRECT exists, then gawk behaves in strict
+POSIX mode, exactly as if you had supplied --posix.
+
+BEGIN run before awk begins scanning the argument list, which means it can not
+use variables specified in cmdline without -v.
+
+variables defined without -v can only be used by files specified after it.
+
+The variable values given on the command line are processed for escape
+sequences.
+
+during ~ or !~, if you use string constant as re pattern, it will be scaned
+twice(the first time when awk reads your program, and the second time when it
+goes to match the string on the lefthand side of the operator with the pattern
+on the right), which means escape happens twice, you should use re constant
+instead.
+
+NF in END use last record value, $0 in END use last record value in most awk
+implemention.
+
+awk allows multiple BEGIN, END, BEGINFILE, ENDFILE
+
+Normally, when an error occurs when reading input in the normal input-processing
+loop, the error is fatal. However, if an ENDFILE rule is present, the error
+becomes non-fatal, and instead ERRNO is set. This makes it possible to catch and
+process I/O errors at the level of the awk program.
+
+statements in action are seperated by semicolon or newline
+
+you can only set multiple variables in the 1st part of for like this:
+    x=y=1
+the same is true for increment part
+
+The empty string "" (a string without any characters) has a special meaning as
+the value of RS. It means that records are separated by one or more blank lines
+and nothing else
+
+If you change the value of RS in the middle of an awk run, the new value is used
+to delimit subsequent records, but the record currently being processed, as well
+as records already processed, are not affected.
+
+in awk, the ‘^’ and ‘$’ anchor metacharacters match the beginning and end of a
+string, and not the beginning and end of a line
+
+Whitespace in awk means any string of one or more spaces, TABs, or newlines;
+other characters that are considered whitespace by other languages (such as
+formfeed, vertical tab, etc.) are not considered whitespace by awk
+
+f you try to reference a field beyond the last one, you get the empty string.
+
+it's an ub if you use negative field number
+
+It is possible to assign contents to fields that are out of range, $0 will
+include the new field, with approriate number of field separators.
+
+No matter how you change content of a existing field, NF won't change.
+
+Decrementing NF throws away the values of the fields after the new value of NF
+and recomputes $0 (it's IB).
+
+Any assignment to $0 causes the record to be reparsed into fields using the
+current value of FS. This also applies to any built-in function that updates $0,
+such as sub() and gsub()
+
+It is important to remember that $0 is the full record, exactly as it was read
+from the input. This includes any leading or trailing whitespace, and the exact
+whitespace (or other characters) that separates the fields.
+
+after change FS and OFS, it's necessary to use $1=$1 to force the record to
+rebuild itself if you want to print modified record?.
+
+FS defaults to " ", it's special, represent space tab new line sequence.
+
+If FS is any other single character or re, such as ",", then each occurrence of
+that character separates two fields. Two consecutive occurrences delimit an
+empty field. If the character or re occurs at the beginning or the end of the
+line, that too delimits an empty field. The space character is the only single
+character that does not follow these rules
+
+becareful if you use ^ in FS, bwk and gawk take it as start of record.
+
+-Ft will use tab as FS, -v FS=t or -v FS=[t] use t as FS
+
+According to the POSIX standard, awk is supposed to behave as if each record is
+split into fields at the time it is read. In particular, this means that if you
+change the value of FS after a record is read, the values of the fields (i.e.,
+how they were split) should reflect the old value of FS, not the new one.
+
+IGNORECASE affects field separating only when FS is re
+
+juxtaposing two string expressions in awk means to concatenate them.
+
+no white space after function name and parenthesis
+
+When a function is called, expressions that create the function’s actual parameters are
+evaluated completely before the call is performed. sqrt(i++) is same as sqrt(++i)
+
+The order of evaluation of the expressions used for the function’s parameters is
+undefined.
+
+gawk does all string manipulation on characters, not bytes
+
+awk index starts from 1
+
+To restore normal field splitting after using FIELDWIDTHS and/or FPAT, simply assign a
+value to FS. You can use ‘FS = FS’ to do this, without having to know the current value of
+FS.
+
+if i is uninitiallized, it's "" as string, 0 as numeric value
+
+use key in array to check if key exists
+
+don't add or delete element in arrays while looping
+
+you can change PROCINFO["sorted_in"] to change loop order of array
+
+floats will be converted to string as array key internally, it will be affected
+by CONVFMT. integer values always convert to strings as integers. Octal and
+hexadecimal constants are converted internally into numbers.
+
+It is not an error to delete an element that does not exist
+
+to clear an array:
+    delete arr
+    split("", arr)
+    deleting all the elements from an array does not change its type
+
+multidimensional array:
+    arr[1,2] or arr[1 SUBSEP 2]
+
+to scan multidimensional array:
+    for (combined in array) {
+        split(combined, separate, SUBSEP)
+        ...
+    }
+
+function local variable convension
+    function bar(    i)
+
+awk pass array by reference, everything else by value.
+
+Some awk implementations generate a runtime error if you use either the next
+statement or the nextfile statement
+
+in practice return is the same as return ""
+
+you can force numeric value to be numeric by adding 0

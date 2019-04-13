@@ -23,6 +23,7 @@ set (PROJECTS
     state
     strategy
     crtp
+    recursive_descent_parser
     )
 
 foreach(PROJECT ${PROJECTS})

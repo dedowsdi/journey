@@ -1,0 +1,42 @@
+AWK has associative arrays and one of the best thing about it is – the indexes
+need not to be continuous set of number; you can use either string or number as
+an array index. Also, there is no need to declare the size of an array in
+advance – arrays can expand/shrink at runtime.
+
+create array
+    awk 'BEGIN {
+        fruits["mango"] = "yellow"; fruits["orange"] = "orange"
+            print fruits["orange"] "\n" fruits["mango"]
+    }'
+
+    note no ; after "orange"
+
+delete array elements
+    awk 'BEGIN {
+       fruits["mango"] = "yellow"; fruits["orange"] = "orange";
+       delete fruits["orange"];
+       print fruits["orange"]
+    }'
+
+Multi-Dimensional arrays
+    AWK only supports one-dimensional arrays. But you can easily simulate a
+    multi-dimensional array using the one-dimensional array itself.
+
+    awk 'BEGIN {
+        array["0,0"] = 100;
+        array["0,1"] = 200;
+        array["0,2"] = 300;
+        array["1,0"] = 400;
+        array["1,1"] = 500;
+        array["1,2"] = 600;
+
+# print array elements
+        print "array[0,0] = " array["0,0"];
+        print "array[0,1] = " array["0,1"];
+        print "array[0,2] = " array["0,2"];
+        print "array[1,0] = " array["1,0"];
+        print "array[1,1] = " array["1,1"];
+        print "array[1,2] = " array["1,2"];
+    }'
+
+

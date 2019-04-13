@@ -1,0 +1,3 @@
+cut always use last field if run out of fields
+
+-s supress lines without delimiter

@@ -1,0 +1,17 @@
+awk support almost all c related flow control
+
+inaddition to continue break, you can use next, nextfile, or exit to break loop.
+
+exit
+    It is used to stop the execution of the script. It accepts an integer as an
+    argument which is the exit status code for AWK process. If no argument is
+    supplied, exit returns status zero. 
+
+    awk 'BEGIN {
+        sum = 0; for (i = 0; i < 20; ++i) {
+            sum += i; if (sum > 50) exit(10); else print "Sum =", sum 
+        } 
+    }'
+
+gawk support switch
+

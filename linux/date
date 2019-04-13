@@ -1,0 +1,13 @@
+print current date
+    date +%Y-%m-%d-%H:%M:%S
+
+utc
+    date -u
+
+relative date
+    date '-5second' +%Y-%m-%d-%H:%M:%S
+    support: year month day hour minute second fortnight week today
+
+specific date
+    date -d '2016-05-04x15:35:08' +%Y-%m-%d-%H:%M:%S
+    x can be any single character

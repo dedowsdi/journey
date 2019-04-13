@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.0)
 
 project (c++)
 
@@ -7,7 +7,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 include(util)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
 
 if( CMAKE_BUILD_TYPE STREQUAL ""  )
     set( CMAKE_BUILD_TYPE Debug CACHE STRING "One of: Debug Release
@@ -15,20 +14,21 @@ if( CMAKE_BUILD_TYPE STREQUAL ""  )
 endif()
 
 #flag
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread -Wall -Wno-unused-local-typedef -Wno-overloaded-virtual -Wno-inconsistent-missing-override -Wno-switch-bool -Wno-int-to-void-pointer-cast -Wno-unused-function")
-#SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
+message("CMAKE_C_COMPILER ${CMAKE_C_COMPILER_ID}")
+message("CMAKE_CXX_COMPILER ${CMAKE_CXX_COMPILER_ID}")
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstandalone-debug")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug -D_COMPILER_CLANG")
 ENDIF()
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # use drawf debug format for gdb, use -g3 to include macro
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gdwarf -g3")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf -g3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf -g3 -D_COMPILER_GCC")
+    set(CXX_COMPILER "GCC")
 ENDIF()
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread -Wall -DDEBUG -D_DEBUG")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -39,9 +39,12 @@ set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it'
 
 FIND_PACKAGE(PkgConfig REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS program_options filesystem)
+find_package(Boost REQUIRED COMPONENTS program_options filesystem unit_test_framework)
+findPathRequird(cpp_include iostream c++/5)
+message(${Boost_LIBRARIES})
 
 include_directories(
+    ${cpp_include}
     ${CMAKE_SOURCE_DIR}/common/include
     ${Boost_INCLUDE_DIRS}
     )
@@ -60,7 +63,6 @@ add_subdirectory(util)
 add_subdirectory(pattern)
 add_subdirectory(trick)
 add_subdirectory(macro)
-add_subdirectory(tmp)
 add_subdirectory(boost)
 add_subdirectory(quiz)
 add_subdirectory(idiom)

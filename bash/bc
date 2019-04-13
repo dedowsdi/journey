@@ -1,0 +1,2 @@
+float arithmetic
+    echo 'scale=2; 1.15+2.25' | bc

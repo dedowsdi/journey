@@ -1,0 +1,276 @@
+    vim: filetype=awk
+echo until end of file(c-d)
+    awk '{print}'
+
+print quote
+    awk 'BEGIN{print "\47 is a single quote!, \42 is a double quote"}'
+    awk -v sq="'" -v dq='"' 'BEGIN{print sq, "is a single quote!,", dq, "is a double quote"}'
+
+don't put single quote anywhere in your awk program
+
+Print every line that is longer than 10 characters
+    awk 'length($0) > 20' mail-list
+
+Print the length of the longest input line:
+    awk '{if(length($0) > max)  max = length($0) } END{print max}' mail-list
+    expand mail-list | awk '{ if (x < length($0)) x = length($0) } END { print "maximum line length is " x }'
+
+Print line that has least one field
+    awk 'NF > 0' mail-list
+
+Print 7 random numbers from 0 to 100 inclusive
+    awk 'BEGIN{ for(i = 0; i < 7; ++i) print int(101 * rand())}'
+
+Print total number of bytes used by file, in kilobyte
+    ls -l mail-list inventory-shipped | awk '{x+=$5} END{print "total K-bytes:", x/1024}'
+    awk use float division as number by default?
+
+Print a sorted list of the login names of all users
+    awk -F: '{print $1}' /etc/passwd | sort
+
+Count the lines in a file
+    awk 'END{print NR}' /etc/passwd
+
+Print the even-numbered lines in data file:
+    awk 'NR%2 ==0 {print}' <(seq 1 9)
+
+multiple rule
+    awk '/12/ {print} /21/ {print}' mail-list inventory-shipped
+    a record might be printed multiple times.
+
+Print total bytes used by files last modified in march
+    ls -l | awk '$6=="3月" {sum += $5} END{print sum}'
+    don't forget "" around string
+
+case insensitive match
+    awk 'tolower($0) ~ /x/' -
+    awk -v IGNORECASE=1 '$0 ~ /x/' -
+
+Print records in mail-list that contain edu and li
+    awk '/edu/ && /li/' mail-list
+
+Print records in mail-list that doesn't contain li
+    awk '!/li/' mail-list
+
+Print records between start and end. there might be multiple start end blocks.
+    awk '$0 ~ /^\s*start\s*$/, $0 ~ /^\s*end\s*$/' -
+
+Print records outside of % and %
+    awk '/^%$/, /^%$/ {next} {print}' -
+    above program won't work, it tries to ignore  from % line to % line, but the
+    same record will turn on and off range pattern.
+    use flag if something like this happens:
+        awk '/^%$/ {skip = !skip; next} {if(!skip) print}' -
+
+skip current file if something wrong happend
+    awk 'BEGINFILE{if(ERRORNO != "") nextfile}' mail-list inventory-shipped
+
+read shell variable
+    awk -v path="$PATH" 'BEGIN{print path}'
+    don't try to expand $ between "" program text, it's a messy
+
+use : as : record seperator
+    awk -v RS=":" '{print}' /etc/passwd
+
+use re as record speerator
+    echo record 1 AAAA record 2 BBBB record 3 CCCC |
+        awk 'BEGIN{RS="\n|\\s*[[:upper:]]+\\s*"}
+                {printf "Record = \"%s\", RT=\"%s\"\n", $0, RT}'
+    you can not // style re constant?
+
+print last field
+    awk '{print $NF}' mail-list
+
+nonconst field number
+    awk '{print $(2*2)}' mail-list
+
+change content of a field
+    awk '{nboxes=$3 ; $3 -= 10 ; print nboxes, $3}' inventory-shipped
+    note that $0 is also changed
+
+use single space as FS
+    awk -v FS="[ ]" ''
+
+rebuild $0
+    echo "  a   b  c d       e  " | awk '{print ; $1=$1; print}'
+    leading, trailing and redundent FS will be removed if you rebuild $0
+
+make each character a separate field
+    echo "ab cd" | awk -v FS='' '{for(i=1;i<=NF;++i) print "field", i, "is", $i}'
+
+make the full line a sepatate field
+    echo -e "a\nb\nc\nd" | awk -F'\n' {print}
+
+print result of 2>1
+    awk 'BEGIN{print (2>1)}'
+    you need to enclose items with () if you use > relational operator in print
+    or printf item
+
+print mail list, separate fields by ":", records by "\n\n"
+    awk -v OFS=':' -v ORS="\n\n" '{$1=$1; print $0}' mail-list
+
+change numeric style in print
+    awk -v OFMT='%.2f' 'BEGIN{print 1.23123, 3.23123}'
+
+use positional specifier in printf
+    awk 'BEGIN{printf "%2$s  %1$s\n", "world", "hello"}'
+
+use dynamic width and precision in printf
+    awk 'BEGIN{printf "%*.*f %*.*f\n", 1, 1, 1.11111, 2, 2, 2.22222}'
+
+redir awk output to files
+    awk '{print $1 > "names"}
+         {print $2 > "phones"}' mail-list
+    phones will be erased after open. no matter how many times you redirect
+    output to the same file, it's opend just once.
+    use >> if you want to append from the beginning.
+
+pipe awk output to another process
+    awk 'BEGIN{command = "sort -r > names.sorted"}
+         {print $1 | command}' mail-list
+
+pipe into sh
+    awk '{ printf("mv %s %s\n", $0, tolower($0)) | "sh" }'
+
+redir to standard error
+    awk '{print | "cat 1>&2"} ' mail-list
+    awk '{print | stderr } ' mail-list
+    common file descriptor:
+        /dev/stdin
+        /dev/stdout
+        /dev/stderr
+        /dev/fd/N
+
+print idle of logined users, in miniutes
+    w | awk 'BEGIN{FIELDWIDTHS = "9 9 17 5 9 7 7 5 30" }
+        NR>2 {
+            idle=$5
+            sub(/^ +/, "", idle) # strip leading space
+            if(idle == "")
+                idle = 0
+            if(idle ~ /:/ ){ # hh:mm
+                split(idle, t, ":")
+                idle = t[1]*60 + t[2]
+            }if(idle ~ /days/)
+                idle *= 24*60
+
+            print $1, $2, idle
+        }
+    '
+
+remove text between /* and */
+awk '{
+    if ((i = index($0, "/*")) != 0) {
+        out = substr($0, 1, i - 1)  # leading part of the string
+        rest = substr($0, i + 2)    # ... */ ...
+        j = index(rest, "*/")       # is */ in trailing part? 
+
+        if (j > 0) {
+            rest = substr(rest, j + 2) # remove comment
+        } else {
+            while (j == 0) {
+                # get more text
+                if (getline <= 0) { # this kind of getline change $0 NF NR FNR RT all fields
+                    print("unexpected EOF or error:", ERRNO) > "/dev/stderr"
+                    exit
+                }
+                # build up the line using string concatenation
+                rest = rest $0
+                j = index(rest, "*/")
+                # is */ in trailing part?
+                if (j != 0) {
+                    rest = substr(rest, j + 2)
+                    break
+                }
+            }
+        }
+        # build up the output line using string concatenation
+        $0 = out rest
+    }
+    print $0
+}'
+
+getline into variable
+    awk '{
+            if((getline var) > 0){ # this kind of getline change NR FNR RT
+                print var
+                print $0
+            }
+            else
+                print $0
+        }' mail-list
+
+getline from another file
+    seq 1 8 | awk '
+    {
+        if(NR == 3)
+        {
+            getline < "mail-list" #this kind of getline change $0 NF RT fields
+            print
+        }
+        else
+            print
+    }
+    '
+
+getline from another file into variable
+    seq 1 8 | awk '
+    {
+        if(NR == 3)
+        {
+            if(getline var < "mail-list") #this kind of getline changes nothing
+                print var
+        }
+        else
+            print
+    }
+    '
+getline from a pipe
+    seq 1 8 | awk -v cmd='echo some text' '
+    {
+        if(NR == 3)
+        {
+            if((cmd | getline) > 0) " change $0 NF fields RT
+                print
+            close(cmd)
+        }
+        else
+            print
+    }
+    '
+
+getline from a pipe into variable
+    seq 1 8 | awk -v cmd='echo some text' '
+    {
+        if(NR == 3)
+        {
+            if((cmd | getline var) > 0) # change RT
+                print var
+            close(cmd)
+        }
+        else
+            print
+    }
+    '
+
+hexadecimal to decimal
+echo 0xff | awk '{print strtonum($0)}'
+
+split csv
+echo 'Robbins,Arnold,"1234 A Pretty Street, NE",MyTown,MyState,12345-6789,USA' |
+awk 'BEGIN{FPAT="[^,]*|\"[^\"]+\""}
+     {print("NF = ", NF)
+     for(i=1; i <=NF ; ++i)
+        if(substr($i, 1, 1) == "\"")
+        {
+            print substr($i, 2, length($i) - 2)
+        }
+        else
+            printf "$%d = %s\n", i, $i
+     }'
+
+only print record if column 3 appears for the first time
+awk '{!seen[$3]++}'
+
+the famous unseen
+    echo Amelia | cat ~/journey/awk/mail-list - | awk '!unseen[$1]++'

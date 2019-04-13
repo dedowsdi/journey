@@ -1,0 +1,12 @@
+xargs is used to read as many input as possible as command arguments, execute as
+less commands as possible.
+
+common use:
+    seq 1 8 | xargs echo
+
+execute command per record
+    seq 1 8 | xargs -L 1
+
+handle filename with whitespace
+    find ~/journey/gl4 -type f -newermt '2018-09-13' ! -newermt '2018-09-14' -print0 | xargs -0 echo
+    -print0 and -0 use null character as delimiter

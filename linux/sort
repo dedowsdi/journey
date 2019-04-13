@@ -1,0 +1,5 @@
+sort by numeric descending value
+    sort -n
+
+sort by second column in numeric descending order, use tab as field seperator
+    sort -nr -t $'\n' -k2

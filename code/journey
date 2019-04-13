@@ -65,3 +65,7 @@ google:
   search everything linked to specific web page : link:www.sina.com.cn
 
   image search support + - OR site and filetype
+
+-----------
+2019.04.04:
+  xor  :  n*2 a xor b = b, the sequence doesn't matter

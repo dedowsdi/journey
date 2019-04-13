@@ -1,0 +1,3 @@
+awk support posix compatible regex?
+
+awk '/.*/' marks.txt

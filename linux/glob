@@ -1,0 +1,36 @@
+glob all files and directories
+    echo *
+
+glob all files and directories recursively
+    (shopt -s globstar && echo as3/**)
+
+glob all directories recursively
+    (shopt -s globstar && echo as3/**/)
+
+glob all files and directories that's 5 letters long
+    echo ?????
+
+glob all files and directories that starts with a-f
+    echo [a-f]*
+
+glob all files and directories that starts with uppercase
+    echo ~/[[:upper:]]*
+
+extglob:
+    glob abc or ac from ac abc abbc
+    mkdir ac abc abbc && echo a?(b)c && rm -d ac abc abbc
+    you can combine multiple pattern with |
+
+    glob ac abc abbc from ac abc abbc
+    mkdir ac abc abbc && echo a*(b)c && rm -d ac abc abbc
+
+    glob abc abbc from ac abc abbc
+    mkdir ac abc abbc && echo a+(b)c && rm -d ac abc abbc
+
+    glob abc from ac abc abbc
+    mkdir ac abc abbc && echo a@(b)c && rm -d ac abc abbc
+    what's the point? it's the same as ac
+
+    glob ac abbc from ac abc abbc
+    mkdir ac abc abbc && echo a!(b)c && rm -d ac abc abbc
+

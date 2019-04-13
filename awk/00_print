@@ -1,0 +1,13 @@
+awk keyword is always in upper case.
+BEGIN block executes at program start up.
+END block executes at the end of program.
+
+awk 'BEGIN{printf "Hello\tAwk\n\n"} {print} END{"Goodbye\tAwk\n"}'
+
+1)  Amit    Physics  80
+2)  Rahul   Maths    90
+3)  Shyam   Biology  87
+4)  Kedar   English  85
+5)  Hari    History  89
+
+if you fiter it in vim, END content will be ignored

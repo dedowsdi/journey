@@ -418,8 +418,63 @@ jq:
 linux:
   use simple screen recorder to record screen video.
 
----------------
-linux:
-  stop x server:
-    sudo service lightdm stop
-    sudo init 3
+stop x server:
+  sudo service lightdm stop
+  sudo init 3
+
+-----------
+2019.01.20
+
+use update-alternatives to manange symbolic links for default command
+
+you can get date at certain time by date -d
+  date -d '+20min' // time after 20 mins
+
+most linux support 3 kins of time:
+  atime  last access time
+  mtime  last content modified time
+  ctime  last change time(state, inode)
+btime(birth time) support is very limited?
+
+find support time related find:
+  find -newerxy reference
+  find -[acm](min|time) interger
+
+-----------
+2019.03.26
+
+paste:
+  " combine line by line of different files
+  paste <(seq 4) <(seq 5 8) <(seq 8 12)
+  seq 8 | paste - - - -
+
+-----------
+2019.03.28
+Null strings are removed when they occur as part of a non-null command-line
+argument, while explicit null objects are kept.
+  awk -F "" ’program’ files # correct
+  Don’t use this:
+  awk -F"" ’program’ files # wrong!
+
+expand
+  convert \t to space
+
+-----------
+2019.04.01
+
+print shell options
+  shopt
+
+-----------
+2019.04.03
+shuffle
+  seq 1 8 | shuf
+
+-----------
+2019.04.04
+reverse print
+  tac
+
+-----------
+2019.04.05
+use column to format table

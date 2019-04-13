@@ -1,0 +1,6 @@
+#! /usr/bin/awk -f
+# don't put more than one option after awk, the operating system treats
+# everything after awk as a single argument and pass it to awk
+
+
+BEGIN {print "it\47s executable"}

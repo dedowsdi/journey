@@ -1,7 +1,7 @@
 /*
  * Given a language, define a representation for its grammar along with an
  * interpreter that uses the representation to interpret sentences in the
- * language.
+ * language. can this pattern be used to interpret complicated stuff?
  */
 
 #include <iostream>
@@ -12,6 +12,9 @@
 /*
  * an interpreter handles sentencies like
  *   "x y z + -" : (y+z) - x
+ *
+ * every symbol(or number) will be put into a stack, when meets a + or -,
+ * top and second top will be used as right and left operand
  */
 namespace wikibooks_design_patterns {
 
@@ -23,7 +26,7 @@ typedef std::map<String, Expression*> Map;
 typedef std::list<Expression*> Stack;
 
 struct Expression {
-  virtual int interpret(Map variables) = 0;
+  virtual int interpret(const Map& variables) = 0;
   virtual ~Expression() {}
 };
 
@@ -33,7 +36,7 @@ private:
 
 public:
   Number(int number) { this->number = number; }
-  int interpret(Map variables) { return number; }
+  int interpret(const Map& variables) { return number; }
 };
 
 class Plus : public Expression {
@@ -50,7 +53,7 @@ public:
     delete rightOperand;
   }
 
-  int interpret(Map variables) {
+  int interpret(const Map& variables) {
     return leftOperand->interpret(variables) +
            rightOperand->interpret(variables);
   }
@@ -70,7 +73,7 @@ public:
     delete rightOperand;
   }
 
-  int interpret(Map variables) {
+  int interpret(const Map& variables) {
     return leftOperand->interpret(variables) -
            rightOperand->interpret(variables);
   }
@@ -80,10 +83,10 @@ class Variable : public Expression {
   String name;
 
 public:
-  Variable(String name) { this->name = name; }
-  int interpret(Map variables) {
-    if (variables.end() == variables.find(name)) return 0;
-    return variables[name]->interpret(variables);
+  Variable(const String& name) { this->name = name; }
+  int interpret(const Map& variables) {
+    auto iter = variables.find(name);
+    return iter == variables.end() ? 0 : iter->second->interpret(variables);
   }
 };
 
@@ -94,7 +97,7 @@ class Evaluator : public Expression {
   Expression* syntaxTree;
 
 public:
-  Evaluator(String expression) {
+  Evaluator(const String& expression) {
     Stack expressionStack;
 
     size_t last = 0;
@@ -130,14 +133,14 @@ public:
 
   ~Evaluator() { delete syntaxTree; }
 
-  int interpret(Map context) { return syntaxTree->interpret(context); }
+  int interpret(const Map& context) { return syntaxTree->interpret(context); }
 };
 }
 
 int main(int argc, char* argv[]) {
   using namespace wikibooks_design_patterns;
 
-  Evaluator sentence("w x z - +");
+  Evaluator sentence("w x z - +"); // x - z + w
 
   static const int sequences[][3] = {
     {5, 10, 42}, {1, 3, 2}, {7, 9, -5},

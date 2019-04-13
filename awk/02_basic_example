@@ -1,0 +1,28 @@
+1) Amit     Physics   80
+2) Rahul    Maths     90
+3) Shyam    Biology   87
+4) Kedar    English   85
+5) Hari     History     89
+
+print column or field, starts from 1, specific field can appear multiple times
+in any place
+    awk '{print $3 "\t" $4}'
+
+print all
+    awk '{print $0}'
+
+print lines that match pattern
+    awk '/a/ {print $0}'
+
+print columns that match pattern
+    awk '/a/ {print $4 "\t" $3}'
+
+count matching lines
+    awk '/a/ {++cnt} END{print "Count = ", cnt}'
+    noate that there is no need to declare a variable before using it.
+    it's print not printf in END block, "," can be used to seperate print items
+    by space
+
+print lines with more than 24 characters
+    awk 'length($0) > 24'
+    print is default program?

@@ -1,0 +1,2 @@
+output 20 characters
+    cat find | head -n 2 -c 20

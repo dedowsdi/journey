@@ -1,0 +1,12 @@
+sort
+    echo $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM | sort
+
+sort in reverse order
+    echo $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM | sort -r
+
+sort in specific column
+    paste <(seq 1 8) <(seq 25 -1 18) | sort -k 2,2
+
+sort and print only unique result
+    echo -e "1\n2\n2" | sort -u
+

@@ -1,0 +1,24 @@
+awk support most c style operator
+
+exponential
+    awk 'BEGIN { cnt = 2; cnt ^= 4; print "Counter =", cnt }'
+    awk 'BEGIN { cnt = 2; cnt **= 4; print "Counter =", cnt }' # not posix
+
+Unary Plus
+    multiplies a single operand by +1
+    awk 'BEGIN { cnt = 2; cnt ^= 4; print "Counter =", cnt }'
+
+Unary Minus
+    It multiplies a single operand by -1.
+    awk 'BEGIN { a = -10; a = -a; print "a =", a }'
+
+strign concatenation
+    awk 'BEGIN { str1 = "Hello, "; str2 = "World"; str3 = str1 str2; print str3 }'
+
+in
+    awk 'BEGIN { arr[0] = 1; arr[1] = 2; arr[2] = 3; for (i in arr) printf "arr[%d] = %d\n", i, arr[i] }'
+
+Match
+    the same as =~# or !~#
+    awk '$0 ~ 9' marks.txt
+    awk '$0 !~ 9' marks.txt

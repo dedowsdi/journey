@@ -146,3 +146,36 @@ bash:
     implicit null
       x=   # $x will be nothing 
 
+----------
+2019.01.17
+
+C-a home
+C-e end
+C-k kill till end to kill buffer
+M-d delete till word end
+C-u kill till start
+C-y yank top kill buffer
+M-. yank last tail argument
+
+----------
+2019.01.18
+
+expansion doesn't happen when you use it as rhs to init a variable
+  x=na*  // x is na*,  * will not be expanded
+
+----------
+2019.03.29
+
+don't surround re with ' or ", always store re in variable to avoid quote escaping problem.
+
+----------
+2019.04.04
+
+printf will continue until all arguments consumed
+
+print = 100 times
+  printf '=%.0s' {1..100}
+  precision after . will cause implicit 0 width
+you can use local var=.. to define function local variable, function local
+variable will shadow global ones, nested calls will use caller's local
+instead of global one.

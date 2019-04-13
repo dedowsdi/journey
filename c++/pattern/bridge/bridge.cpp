@@ -2,6 +2,12 @@
  * The Bridge Pattern is used to separate out the interface from its
  * implementation. Doing this gives the flexibility so that both can vary
  * independently.
+ *
+ * The Bridge pattern is a structural pattern (HOW DO YOU BUILD A SOFTWARE
+ * COMPONENT?).
+ *
+ * you can split the hierarchy of interface and class, join it with an abstract
+ * reference
  */
 
 #include <iostream>
