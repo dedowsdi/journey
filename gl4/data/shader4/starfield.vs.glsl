@@ -4,7 +4,6 @@ in vec4 vertex;
 
 void main(void)
 {
-  gl_Position = vec4(vertex.xy * vertex.z, 0, 1);
-  gl_PointSize = vertex.z * 3000.0;
-  //gl_PointSize = 30;
+  gl_Position = vec4(vertex.xy / vertex.z, 1 - vertex.z, 1);
+  gl_PointSize = 5.0f * 1.0f / vertex.z;
 }

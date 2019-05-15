@@ -40,7 +40,7 @@ FIND_PACKAGE(PkgConfig REQUIRED)
 FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(Freetype REQUIRED)
 PKG_CHECK_MODULES(GLFW3 REQUIRED glfw3)
-find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(Boost 1.58 REQUIRED COMPONENTS filesystem)
 
 findLibraryRequird(FIP_LIBS freeimageplus)
 findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)

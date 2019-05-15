@@ -144,9 +144,6 @@ juxtaposing two string expressions in awk means to concatenate them.
 
 no white space after function name and parenthesis
 
-When a function is called, expressions that create the function’s actual parameters are
-evaluated completely before the call is performed. sqrt(i++) is same as sqrt(++i)
-
 The order of evaluation of the expressions used for the function’s parameters is
 undefined.
 

@@ -47,8 +47,6 @@ void matrix_rain_app::init_info() {
   m_info.title = "matrix_rain_app";
   m_info.wnd_width = width;
   m_info.wnd_height = height;
-  m_info.wm.x = 100;
-  m_info.wm.y = 100;
 }
 
 void matrix_rain_app::create_scene() {
@@ -62,7 +60,6 @@ void matrix_rain_app::create_scene() {
 
   m_text.init();
   m_text.reshape(wnd_width(), wnd_height());
-  // load all characters
   glfw_resize(0, width, height);
 }
 

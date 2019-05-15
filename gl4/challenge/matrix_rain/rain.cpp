@@ -58,7 +58,7 @@ cell::cell(uint32_t c, const vec4 color):
 //--------------------------------------------------------------------
 void cell::character(uint32_t v)
 {
-  m_character = v; 
+  m_character = v;
   m_reverse_horizontal = glm::linearRand(0.0f, 1.0f) < 0.5f;
   m_reverse_vertical = glm::linearRand(0.0f, 1.0f) < 0.5f;
 }
@@ -180,18 +180,18 @@ int vertical_spacing/* = 0*/):
   auto num_rains = wnd_width / w;
   m_rains.reserve(num_rains);
   GLfloat left = (wnd_width - num_rains * m_printer->max_advance() - (num_rains - 1) * vertical_spacing) * 0.5f;
-  //num_rains = 1;
   for (int i = 0; i < num_rains; ++i) {
     m_rains.push_back(rain(this, left + i * w));
   }
 
   glGenVertexArrays(1, &m_vao);
+
   glGenBuffers(1, &m_vbo);
-  
+
   glBindVertexArray(m_vao);
   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(rain_vertex) * 10000 * 6, 0, GL_DYNAMIC_DRAW);
-  
+
   auto offset = 0;
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(rain_vertex), BUFFER_OFFSET(offset));
   glEnableVertexAttribArray(0);
@@ -226,7 +226,7 @@ void matrix_rain::draw()
   glBindTexture(GL_TEXTURE_2D, m_printer->texture());
   prg.use();
   prg.update_uniforms(0);
-  
+
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glBindVertexArray(m_vao);

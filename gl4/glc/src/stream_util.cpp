@@ -137,14 +137,15 @@ std::string get_resource(const std::string& name)
   if(resource_list != NULL)
   {
     std::vector<std::string> extra = string_util::split(resource_list, ";");
-    resources.insert(resources.end(), 
+    resources.insert(resources.end(),
         std::make_move_iterator(extra.begin()), std::make_move_iterator(extra.end()));
   }
 
   for(auto& dir : resources)
   {
     bfs::path p(dir);
-    p.normalize();
+    //p.normalize();
+    p.lexically_normal();
     p /= name;
     if(bfs::exists(p))
       return p.string();

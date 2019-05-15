@@ -118,10 +118,8 @@ void freetype_text::reset_content(const std::string& text) {
   if (error)
     throw std::runtime_error("failed to set pixel size to " + std::to_string(m_height));
 
-  m_linespace = face->size->metrics.height;
-  m_linespace = m_linespace >> 6;
-  m_max_advance = face->size->metrics.max_advance;
-  m_max_advance = m_max_advance >> 6;
+  m_linespace = face->size->metrics.height >> 6;
+  m_max_advance = face->size->metrics.max_advance >> 6;
 
   // create 8 bit gray scale bitmap image
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -147,8 +145,7 @@ void freetype_text::reset_content(const std::string& text) {
     glyph.x_max = glyph.x_min + glyph.width;
     glyph.y_max = glyph.bearingY;
     // glyph.origin = face->glyph->origin;
-    glyph.advance = face->glyph->advance.x;
-    glyph.advance >>= 6;
+    glyph.advance = face->glyph->advance.x >> 6;
 
     GLuint tex;
     glGenTextures(1, &tex);

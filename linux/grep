@@ -21,3 +21,9 @@ grep multiple pattern
 grep reverse pattern, print total blank lines
     grep -Ev '.+$' ~/journey/gl4/CMakeLists.txt
 
+--exclude invalidates preceding --include
+--include invalidates preceding --exclude
+
+grep carriage return
+    grep -IUr $'\r' file
+        -U stop grep from stripping CR characters

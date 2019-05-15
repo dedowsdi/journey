@@ -91,6 +91,7 @@ public:
   freetype_text(const std::string& font);
   ~freetype_text();
   void init(const std::string& text = "", bool legacy = false);
+  // should i use uint32 vector instead of utf8 string?
   void reset_content(const std::string& text);
   void reset_content_as_ascii();
   void reset_content_to_all();

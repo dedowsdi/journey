@@ -27,7 +27,7 @@ find regular files with specific name
 find directory with specific name
     find ~/ -type d -name 'journey'
 
-ignore perssion warning
+ignore permission warning
     find ~/ -type d -name 'journey' 2>/dev/null
 
 find all .txt files, don't follow symbolic link

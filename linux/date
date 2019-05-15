@@ -11,3 +11,16 @@ relative date
 specific date
     date -d '2016-05-04x15:35:08' +%Y-%m-%d-%H:%M:%S
     x can be any single character
+
+
+
+now : 'now'
+      'today'
+
+last midnight : '2019-05-01'
+           '00:00:00'
+           '0'
+
+last second midnight : '0 -1day'
+
+

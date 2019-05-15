@@ -60,7 +60,7 @@ void app::init_info() {
   m_info.title = "app";
   m_info.wnd_width = 512;
   m_info.wnd_height = 512;
-  m_info.wm = uvec4(100, 100, 0, 0);
+  m_info.wm = uvec4(100, 100, m_info.wnd_width, m_info.wnd_height);
   m_info.major_version = 4;
   m_info.minor_version = 3;
   m_info.samples = 4;

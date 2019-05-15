@@ -1,7 +1,7 @@
-"build dir, such as ./build/Debug, ./build/RelWithDebInfo
-call myvim#switchRtp('./.vim')
+call misc#ui#loadProjSetting('c')
 let g:mycppBuildDir = "./build/gcc/Debug"
 let g:mycppDebugGui = 0
+let &makeprg = 'cd ' . g:mycppBuildDir . ' && make'
 "executable make target and path
 "let g:mycppMakes = {}
 "class name prefix

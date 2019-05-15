@@ -7,6 +7,7 @@ set (PROJECTS
     singleton
     double_dispatch
     virtual_function_table
+    hack_access_container
     )
 
 foreach(PROJECT ${PROJECTS})

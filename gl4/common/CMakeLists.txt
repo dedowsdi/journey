@@ -1,9 +1,9 @@
-set(COMMON_SRCS 
+set(COMMON_SRCS
     src/app.cpp
     src/kci.cpp
     )
 
-add_library(common 
+add_library(common
     ${COMMON_SRCS}
     )
 

@@ -14,8 +14,7 @@
  *
  *   UCS-2            UTF-8
  *   0x0000-0x007f    0b0*******
- *   0x0080-0x07ff    0b110***** 10******  // 1st 2 bits of 1st character + 6
- *                                         // bits of second
+ *   0x0080-0x07ff    0b110***** 10******
  *   0x08ff-0xffff    0b1110**** 10****** 10******
  *
  * example:

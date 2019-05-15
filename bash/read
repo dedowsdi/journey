@@ -1,0 +1,2 @@
+read content line by line, include last line even if it the file doesn't end
+with new line

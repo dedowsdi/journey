@@ -9,7 +9,7 @@
 
 #define WIDTH 800
 #define HEIGHT 800
-#define NUM_STARS 50000
+#define NUM_STARS 10000
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
@@ -40,8 +40,7 @@ struct star_program : public zxd::program {
 class Star
 {
 public:
-  GLfloat x, y;
-  GLfloat z; // z will be used to move the star
+  vec3 m_pos;
   GLfloat m_speed;
   Star()
   {
@@ -50,32 +49,27 @@ public:
 
   void update(GLfloat dt)
   {
-    z -= 1 * dt * m_speed;
-    if(z < 1)
+    m_pos.z -= dt * m_speed;
+    if(m_pos.z <= 0)
     {
       reset();
     }
   }
 
+  const vec3& pos() const { return m_pos; }
+  void pos(const vec3& v){ m_pos = v; }
+
   void reset()
   {
-    x = glm::linearRand(-WIDTH, WIDTH);
-    y = glm::linearRand(-HEIGHT, HEIGHT);
-    z = glm::max(WIDTH, HEIGHT);
-    m_speed = linearRand(0.01, 1.0) * 2000;
-  }
-
-  vec3 normalize()
-  {
-    //GLfloat nx = x / z;
-    //GLfloat ny = y / z;
-    //return vec2(nx, ny);
-    return vec3(x, y, 1/z);
+    m_pos.x = glm::linearRand(-1.0, 1.0);
+    m_pos.y = glm::linearRand(-1.0, 1.0);
+    m_pos.z = 1;
+    m_speed = linearRand(0.01f, 2.00f);
   }
 
 };
 
-typedef std::vector<Star> Stars;
+using Stars = std::vector<Star>;
 
 class Starfield : public app
 {
@@ -151,8 +145,8 @@ public:
     // update vertex buffer
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    for (int i = 0; i < m_stars.size(); ++i) 
-      m_vertices[i] = m_stars[i].normalize();
+    for (int i = 0; i < m_stars.size(); ++i)
+      m_vertices[i] = m_stars[i].pos();
 
     glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(glm::vec3),
       value_ptr(m_vertices[0]), GL_STREAM_DRAW);
@@ -167,6 +161,7 @@ public:
     ss << m_fps;
     m_text.print(ss.str(), 10, 780);
     glDisable(GL_BLEND);
+
   }
 
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
@@ -195,6 +190,5 @@ int main(int argc, char *argv[])
 {
   zxd::Starfield app;
   app.run();
-  
   return 0;
 }

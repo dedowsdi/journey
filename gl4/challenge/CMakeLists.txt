@@ -66,13 +66,14 @@ set (PROJECTS
     teardrop
     matrix_rain
     blobby3d
+    text_starfield
     )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
 # Instruct CMake to run moc automatically when needed
-set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
-set(CMAKE_AUTOUIC ON)
+#set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /opt/Qt5.7.0/5.7/gcc_64)
 
@@ -89,7 +90,6 @@ foreach(PROJECT ${PROJECTS})
         target_link_libraries(${PROJECT}
             common
             m
-            ${Boost_LIBRARIES}
             )
     ENDIF()
 

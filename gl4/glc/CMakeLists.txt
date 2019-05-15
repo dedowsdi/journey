@@ -1,4 +1,4 @@
-set(GLC_SRCS 
+set(GLC_SRCS
     src/bitmap_text.cpp
     src/common.cpp
     src/glenumstring.cpp
@@ -37,7 +37,7 @@ set(GLC_SRCS
     src/guard.cpp
     )
 
-add_library(glc 
+add_library(glc STATIC
     ${GLC_SRCS}
     )
 

@@ -1,7 +1,6 @@
-"debugger, lldb or gdb
-"build dir, such as ./build/Debug, ./build/RelWithDebInfo
+call misc#ui#loadProjSetting('c')
 let g:mycppBuildDir = './build/gcc/Debug'
-set rtp +=./.vim,./.vim/after
+let g:cdefProjName = 'GL2'
 "executable make target and path
 "let g:mycppMakes = {}
 "class name prefix

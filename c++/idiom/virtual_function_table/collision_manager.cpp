@@ -6,7 +6,7 @@
 void CollisionManager::addEntry(const std::type_index& type0, const std::type_index& type1, hit_func func)
 {
   m_entries.insert(std::make_pair(std::make_pair(type0, type1), func));
-  m_entries.insert(std::make_pair(std::make_pair(type1, type0), 
+  m_entries.insert(std::make_pair(std::make_pair(type1, type0),
         std::bind(func, std::placeholders::_2, std::placeholders::_1)
         ));
 }

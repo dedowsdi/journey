@@ -40,6 +40,6 @@ int main(int argc, char *argv[])
   obj0.collide(obj1);
   obj1.collide(obj0);
   obj1.collide(obj1);
-  
+
   return 0;
 }

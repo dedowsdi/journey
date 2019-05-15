@@ -274,3 +274,6 @@ awk '{!seen[$3]++}'
 
 the famous unseen
     echo Amelia | cat ~/journey/awk/mail-list - | awk '!unseen[$1]++'
+
+use awk as seed to replace multiline pattern
+    awk -vrep=balabala '{sub(/patt\nern/, rep)}1' text

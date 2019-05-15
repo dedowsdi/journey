@@ -81,10 +81,6 @@ vim:
     :earlier {N}{[s|m|h|d]} works with time
     :earlier {N}f goto older text state {N} file writes before.
     :undolist will list head chagne of every branch.
-
-  there is no way to paste literal linebreak directly, you must use = register
-  to do this
-
 -----------
 2018.01.18:
 
@@ -210,13 +206,13 @@ linux:
     PRMARY SELECTION works on last heightlight, pasted with middle mouse.
     according to * in vim.
     SECONDARY SELECTION was never used by me.
-  You need some tool such xsel to connect tty and xwindow selection. :
-    echo balabala  | xsel -i   # set primary selection to balabala
+  You need some tool such xclip to connect tty and xwindow selection. :
+    echo balabala  | xclip -i   # set primary selection to balabala
   If you are using neovim, you should install one of of this kind of tool.
 
   there has no clipboard in tty, but you can do it via x window xlipboard. 
-    echo whatever | DISPLAY=:0 xsel -i
-    DISPLAY=:0 xsel -o
+    echo whatever | DISPLAY=:0 xclip -i
+    DISPLAY=:0 xclip -o
 
 -----------
 2018.02.04:
@@ -355,3 +351,24 @@ you can use OptionSet event to do something when option set happens.
 
 get numbered function:
   :function {#}
+
+--------------
+2019.04.16
+VIMRUNTIME/syntax/hitest.vim display all highlight groups
+
+--------------
+2019.05.04
+ex place cursor at last line by default
+be very careful if you want to pass variable with linebreak to ex, if you use it
+ in a direct statement, it works fine:
+  +"let var=\"$SHELL_VAR\""
+if you use it as a verb of global or =, it won't work
+  +"g/pattern/ norm\"=\"$SHELL_VAR\""
+norm\"=\"$SHELL_VAR\" will be truncated at linebreak. The work around is to pass
+it to a register or varialbe first. (maybe escape would work too)
+
+--------------
+2019.05.15
+life time of mark is the same as it's line. It's pos will be updated if line
+number of current line changed. It won't be changed if you delete all characters
+but leave the linebreak in the mark line.

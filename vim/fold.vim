@@ -1,15 +1,15 @@
-" vim:set foldmethod=marker :
+" vim:set foldmethod=expr noexpandtab:
 
-" mark fold1 {{{1
-"   balabala
-"
-" fmark fold2 {{{2
-"   balabalabala
-"
-"
-"
-" another mark fold1 {{{1
-" balabala
+function! FoldingFunction(lnum)
+  return getline(v:lnum)[0]==#"\t"
+endfunction
+let Func = function('FoldingFunction') "FoldingFunction is name of function
+setlocal foldexpr=Func(v:lnum)
 
+finish
 
-
+	fold
+	fold
+	fold
+	fold
+	fold

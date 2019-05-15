@@ -66,6 +66,7 @@ protected:
   GLdouble m_current_time;
   GLdouble m_delta_time;
   GLdouble m_camera_move_speed;
+  unsigned int x;
 
   std::string m_input;
   camera_mode m_camera_mode;
