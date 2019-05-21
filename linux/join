@@ -1,5 +1,8 @@
+join 2 files field 1, also print unpaired items in first file
+    join -a 1 f1 f2
+
 join by field 2 of 1st file, field 3 of 2nd file, output
-    join -1 2 -23 f1 f2
+    join -1 2 -2 3 f1 f2
 
 join, output first 2 items in 1st file, next 3 items in 2nd file
     join -o '1.1 1.2 2.3 2.4 2.5' f1 f2

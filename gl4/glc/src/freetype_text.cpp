@@ -350,7 +350,7 @@ std::pair<GLuint, bitmap_text::glyphs> freetype_text::render_to_texture_2d(GLuin
     x += glyph.advance;
   }
   glDisable(GL_BLEND);
-  
+
   glDeleteFramebuffers(1, &fbo);
   return res;
 }

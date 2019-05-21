@@ -11,7 +11,7 @@ namespace zxd {
 
 const GLint width = 800;
 const GLint height = 800;
-const GLint num_stars = 1000;
+const GLint num_stars = 2000;
 
 freetype_text ft("font/DejaVuSansMono.ttf");
 std::shared_ptr<bitmap_text> bt;
@@ -20,6 +20,7 @@ class text_starfield_program : public program
 {
 public:
   GLint ul_diffuse_map;
+  GLint ul_color;
 
 protected:
 
@@ -34,6 +35,7 @@ protected:
     uniform_location(&ul_vp_mat, "vp_mat");
     uniform_location(&ul_m_mat, "m_mat");
     uniform_location(&ul_diffuse_map, "diffuse_map");
+    uniform_location(&ul_color, "color");
   }
 
   void bind_attrib_locations()
@@ -61,6 +63,8 @@ class Star
 public:
   uint32_t m_codepoint;
   GLfloat m_speed;
+  vec3 m_rotate_speed;
+  vec4 m_color;
   mat4 m_transform;
   GLuint m_vao, m_vbo;
   Star()
@@ -83,6 +87,8 @@ public:
 
   void update(GLfloat dt)
   {
+    m_transform *= glm::rotate(m_rotate_speed.x*dt, pxa) *
+      glm::rotate(m_rotate_speed.y*dt, pya) * glm::rotate(m_rotate_speed.z*dt, pza);
     m_transform[3][2] += dt * m_speed;
     if(m_transform[3][2] > 0)
     {
@@ -95,12 +101,11 @@ public:
 
   void reset()
   {
-    m_transform = glm::translate(vec3(glm::linearRand(vec2(-100), vec2(100)), -100));
-    m_speed = glm::linearRand(1.0f, 50.00f);
-    //m_transform.x = glm::linearRand(-1.0, 1.0);
-    //m_transform.y = glm::linearRand(-1.0, 1.0);
-    //m_transform.z = 1;
-    //m_transform = mat4(1.0f);
+    m_transform = glm::translate(vec3(glm::linearRand(vec3(-100, -100, -20), vec3(100,100, -500))));
+    m_transform = m_transform * glm::rotate(glm::linearRand(0.0f, f2pi), glm::sphericalRand(1.0f));
+    m_speed = glm::linearRand(15.0f, 200.00f);
+    m_rotate_speed = glm::linearRand(vec3(-5.0), vec3(5.0));
+    m_color = vec4(zxd::hsb2rgb(vec3(glm::linearRand(vec2(0), vec2(1)), 1)), 1);
     auto& glyph = bt->get_glyph(randomCharacter());
     bool reverse_horizontal = glm::linearRand(0.0f, 1.0f) < 0.5f;
     bool reverse_vertical = glm::linearRand(0.0f, 1.0f) < 0.5f;
@@ -110,10 +115,11 @@ public:
     auto t_max = reverse_vertical ? glyph.t_min : glyph.t_max;
 
     star_vertex vertices[4];
-    vertices[0] = {vec4(-1, -1, 0, 1), vec2(s_min, t_min)};
-    vertices[1] = {vec4( 1, -1, 0, 1), vec2(s_max, t_min)};
-    vertices[2] = {vec4( 1,  1, 0, 1), vec2(s_max, t_max)};
-    vertices[3] = {vec4(-1,  1, 0, 1), vec2(s_min, t_max)};
+    GLfloat size = 1.5;
+    vertices[0] = {vec4(-size, -size, 0, 1), vec2(s_min, t_min)};
+    vertices[1] = {vec4( size, -size, 0, 1), vec2(s_max, t_min)};
+    vertices[2] = {vec4( size,  size, 0, 1), vec2(s_max, t_max)};
+    vertices[3] = {vec4(-size,  size, 0, 1), vec2(s_min, t_max)};
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), glm::value_ptr(vertices[0].vertex));
@@ -122,6 +128,7 @@ public:
   void draw()
   {
     glUniformMatrix4fv(prg.ul_m_mat, 1, 0, glm::value_ptr(m_transform));
+    glUniform4fv(prg.ul_color, 1, glm::value_ptr(m_color));
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
   }
@@ -161,14 +168,15 @@ void text_starfield::create_scene() {
   glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
   ft.init();
-  ft.set_height(18);
+  ft.set_height(36);
   ft.reset_content_to_all();
 
-  bt = ft.create_bitmap_text(2048, 2048);
+  bt = ft.create_bitmap_text(4096, 4096);
   m_font_aspect_ratio = static_cast<GLfloat>(bt->height()) / bt->max_advance();
   codepoints = bt->code_points();
 
   m_text.init();
+  m_text.reshape(wnd_width(), wnd_height());
 
   prg.p_mat = glm::perspective<GLfloat>(45, wnd_aspect(), 1.0, 1000);
   prg.v_mat = translate(vec3(0, 0, -1));
@@ -206,8 +214,8 @@ void text_starfield::display() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   std::stringstream ss;
-  ss << "";
-  m_text.print(ss.str(), 10, m_info.wnd_height - 20);
+  ss << "fps : " << m_fps << std::endl;
+  m_text.print(ss.str(), 10, m_info.wnd_height - 20, vec4(1,1,1,1));
   glDisable(GL_BLEND);
 }
 

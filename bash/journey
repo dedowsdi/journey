@@ -179,3 +179,39 @@ print = 100 times
 you can use local var=.. to define function local variable, function local
 variable will shadow global ones, nested calls will use caller's local
 instead of global one.
+
+----------
+2019.05.16
+
+test -e symbolicLink  will fail if symbolicLink is broken
+
+----------
+2019.05.17
+
+command substitution ignore outside doube quotes during executing.
+
+----------
+2019.05.18
+
+each command in a pipeline is executed in it's own subshell:
+  printf 'a\nb\nc' | mapfile -t arr
+  above command won't work, as arr is assigned in a subshell, right format is :
+  mapfile -t arr < <(printf 'a\nb\nc')
+
+----------
+2019.05.19
+
+if file name contains space: such as "a b.png", a*png will expand to "a png", no
+word split happens after file name expansion.
+
+----------
+2019.05.20
+
+command substitution strip trailing new lines
+echo "$(echo -ne "a\n\n")"
+
+here string add trailing new line:
+  cat <<<"abc"
+
+to avoid it:
+  printf "abc" | cat

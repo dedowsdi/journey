@@ -15,8 +15,8 @@ void main(void)
 {
   mat4 m = m_mat;
   float z = m_mat[3][2];
-  m[3][0] /= -z/100;
-  m[3][1] /= -z/100;
+  m[3][0] /= pow(-z/100, 1.5);
+  m[3][1] /= pow(-z/100, 1.5);
   gl_Position = vp_mat * m * vertex;
   // translate in window space, note this also cause distortion
   vo.texcoord = texcoord;

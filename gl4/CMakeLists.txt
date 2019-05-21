@@ -21,7 +21,7 @@ ENDIF()
 
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool -Wno-missing-braces -Wno-writable-strings -Wno-reorder")
-    
+
 ENDIF()
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

@@ -45,7 +45,7 @@ class fbo_guard
 public:
   fbo_guard(GLenum target, GLuint fbo);
   ~fbo_guard();
-  
+
   // no copy
   fbo_guard(const fbo_guard& rhs) = delete;
   fbo_guard& operator=(fbo_guard rhs) = delete;

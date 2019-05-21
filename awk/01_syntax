@@ -186,6 +186,8 @@ to scan multidimensional array:
 function local variable convension
     function bar(    i)
 
+only function args have local scope, other variables are all global.
+
 awk pass array by reference, everything else by value.
 
 Some awk implementations generate a runtime error if you use either the next

@@ -2,6 +2,7 @@ nmap <silent> <F4> :set opfunc=CountSpaces<CR>g@
 vmap <silent> <F4> :<C-U>call CountSpaces(visualmode(), 1)<CR>
 
 function! CountSpaces(type, ...)
+  echomsg getpos("'[") getpos("']")
   let sel_save = &selection
   let &selection = "inclusive"
   let reg_save = @@
@@ -20,6 +21,7 @@ function! CountSpaces(type, ...)
   let @@ = reg_save
 endfunction
 
-nnoremap <F5> :set opfunc=myvim#literalCopyVim<CR>g@
-vnoremap <F5> :<c-u>call myvim#literalCopyVim(visualmode(), 1)<CR>
+finish
+
+" abc
 
