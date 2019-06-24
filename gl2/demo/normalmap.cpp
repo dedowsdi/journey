@@ -25,6 +25,8 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
 using namespace glm;
 
 #define IMAGE_WIDTH 256
@@ -76,9 +78,6 @@ vec2 texcoords[4] = {
 
 struct render_normalmap_program : public zxd::program {
 
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-  }
   virtual void attach_shaders() {
     attach(
       GL_VERTEX_SHADER, "shader2/render_normalmap.vs.glsl");
@@ -94,13 +93,16 @@ struct render_normalmap_program : public zxd::program {
 } render_prg;
 
 struct use_normal_map_view_program : public zxd::program {
-  GLint ul_normal_map;
 
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-    mv_mat = v_mat * m_mat;
-    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
-    mvp_mat = p_mat * mv_mat;
+  GLint ul_normal_map;
+  GLint ul_mv_mat_it;
+  GLint ul_mv_mat;
+  GLint ul_mvp_mat;
+
+  virtual void update_uniforms(const mat4 &m_mat, const mat4 &v_mat, const mat4 &p_mat) {
+    mat4 mv_mat = v_mat * m_mat;
+    mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mat4 mvp_mat = p_mat * mv_mat;
 
     glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
     glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
@@ -136,13 +138,13 @@ struct use_normal_map_view_program : public zxd::program {
 struct use_normal_map_tangent_program : public program {
   GLint ul_normal_map;
   GLint ul_m_camera;
+  GLint ul_mvp_mat;
 
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-    mv_mat = v_mat * m_mat;
-    mv_mat_i = glm::inverse(mv_mat);
-    m_mat_i = glm::inverse(m_mat);
-    mvp_mat = p_mat * mv_mat;
+  virtual void update_uniforms(const mat4 &m_mat, const mat4& v_mat, const mat4& p_mat) {
+    mat4 mv_mat = v_mat * m_mat;
+    // mat4 mv_mat_i = glm::inverse(mv_mat);
+    // mat4 m_mat_i = glm::inverse(m_mat);
+    mat4 mvp_mat = p_mat * mv_mat;
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   };
   virtual void attach_shaders() {
@@ -219,13 +221,11 @@ class app0 : public app {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     render_prg.init();
     prg0.init();
-    prg0.p_mat = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
-    prg0.v_mat = glm::lookAt(vec3(5, -5, 5), vec3(0.0f), vec3(0, 1, 0));
+    p_mat = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
+    v_mat = glm::lookAt(vec3(5, -5, 5), vec3(0.0f), vec3(0, 1, 0));
     prg1.init();
-    prg1.p_mat = prg0.p_mat;
-    prg1.v_mat = prg0.v_mat;
 
-    set_v_mat(&prg0.v_mat);
+    set_v_mat(&v_mat);
     // create mesh data
     zxd::generate_face_normals(
       pyramid0.vertices, pyramid0.vertices + 12, pyramid0.normals);
@@ -336,23 +336,26 @@ class app0 : public app {
     // draw low quality mesh with normal map
     if (light_space == 0) {
       glUseProgram(prg0);
-      prg0.update_model(mat4(1.0));
+      prg0.update_uniforms(mat4(1.0), v_mat, p_mat);
       glUniform1i(prg0.ul_normal_map, 0);
 
       for (int i = 0; i < lights.size(); ++i) {
-        lights[i].update_uniforms(prg0.v_mat);
+        lights[i].update_uniforms(v_mat);
       }
     } else {
       glUseProgram(prg1);
-      prg1.update_model(mat4(1.0));
+      mat4 m_mat = mat4(1.0);
+      prg1.update_uniforms(m_mat, v_mat, p_mat);
       glUniform1i(prg1.ul_normal_map, 0);
 
+      mat4 mv_mat_i = glm::inverse(v_mat * m_mat);
+      mat4 m_mat_i = glm::inverse(m_mat);
       // get camera model position
-      vec3 camera = glm::column(prg1.mv_mat_i, 3).xyz();
+      vec3 camera = glm::column(mv_mat_i, 3).xyz();
       glUniform3fv(prg1.ul_m_camera, 1, glm::value_ptr(camera));
 
       for (int i = 0; i < lights.size(); ++i) {
-        lights[i].update_uniforms(prg1.m_mat_i);
+        lights[i].update_uniforms(m_mat_i);
       }
     }
     lm.update_uniforms();

@@ -29,7 +29,6 @@
 #include "common_program.h"
 #include "lsystem.h"
 
-
 #include <algorithm>
 #include <mat_stack.h>
 #include <sstream>
@@ -45,6 +44,9 @@ namespace zxd {
 lightless_program prg;
 GLint iteration_count = 4;
 GLfloat angle = 25.0f;
+
+glm::mat4 v_mat;
+glm::mat4 p_mat;
 
 class lsystem_tree
 {
@@ -151,9 +153,9 @@ public:
 
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
-    
+
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     update_tree();
   }
@@ -166,8 +168,8 @@ public:
     prg.use();
 
     mat4 m_mat = glm::translate(vec3(WIDTH*0.5, 0, 0));
-    prg.mvp_mat = prg.p_mat * prg.v_mat * m_mat;
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
+    mat4 mvp_mat = p_mat * v_mat * m_mat;
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
     m_tree.draw();
 

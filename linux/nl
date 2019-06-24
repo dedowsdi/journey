@@ -1,0 +1,6 @@
+vim:set filetype=sh et sw=4 ts=8:
+
+# start from 98, use 2 as increment,  group 2 blank lines as 1, add space after line number,
+# set number width to 4, right justified with leading zeros
+printf 'a%.0s\n' {1..20} | nl -v98  -i2  -l2   -s' ' -w4 -nrz
+

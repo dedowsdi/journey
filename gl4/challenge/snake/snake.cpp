@@ -19,6 +19,9 @@
 namespace  zxd
 {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg;
 
 // geometry
@@ -188,8 +191,8 @@ public:
     {
       const cell& c = m_body[i];
       vec2 translation = (vec2(c.gpos) + vec2(0.5)) * vec2(CELL_SIZE);
-      mat4 m_mat = glm::translate(vec3(translation, 0.0));
-      mat4 mvp_mat = prg.vp_mat * m_mat;
+      mat4 m_mat = p_mat * glm::translate(vec3(translation, 0.0));
+      mat4 mvp_mat = m_mat;
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
 
       geometry.draw();
@@ -197,8 +200,8 @@ public:
 
     // draw discrete cell
     vec2 translation = (vec2(m_cell.gpos) + vec2(0.5)) * vec2(CELL_SIZE);
-    mat4 m_mat = glm::translate(vec3(translation, 0.0));
-    mat4 mvp_mat = prg.vp_mat * m_mat;
+    mat4 m_mat = p_mat * glm::translate(vec3(translation, 0.0));
+    mat4 mvp_mat = m_mat;
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     geometry.draw();
   }
@@ -280,7 +283,7 @@ protected:
     geometry.build_mesh();
     prg.init();
 
-    prg.vp_mat = glm::ortho(0.0f, WIDTH, 0.0f, HEIGHT, -1.0f, 1.0f);
+    p_mat = glm::ortho(0.0f, WIDTH, 0.0f, HEIGHT, -1.0f, 1.0f);
 
     m_snake.reset();
   }

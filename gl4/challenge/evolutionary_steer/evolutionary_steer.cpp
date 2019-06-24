@@ -32,6 +32,9 @@ GLfloat ship_health_step = 0.002;
 GLfloat ship_mutate_rate = 0.1;
 GLfloat boundary = 100;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 sphere sphere0;
 cone cone0;
 
@@ -116,7 +119,7 @@ public:
       * zxd::rotate_to_any(pza, m_vel) ;
     m_mtl.diffuse = glm::mix(food_color, poison_color, m_health);
 
-    prg.update_model(m);
+    prg.update_uniforms(m, v_mat, p_mat);
     m_mtl.update_uniforms();
 
     cone0.draw();
@@ -127,12 +130,12 @@ public:
   {
     if(m_target_food)
     {
-      debugger::draw_line(m_pos, m_target_food->pos, prg.p_mat * prg.v_mat, 1, food_color);
+      debugger::draw_line(m_pos, m_target_food->pos, p_mat * v_mat, 1, food_color);
     }
 
     if(m_target_poison)
     {
-      debugger::draw_line(m_pos, m_target_poison->pos, prg.p_mat * prg.v_mat, 1, poison_color);
+      debugger::draw_line(m_pos, m_target_poison->pos, p_mat * v_mat, 1, poison_color);
     }
   }
 
@@ -158,22 +161,22 @@ public:
       inner_material = &poison_bubble_mtl;
     }
     mat4 m = glm::scale(glm::translate(m_pos), vec3(inner_radius));
-    prg.update_model(m);
+    prg.update_uniforms(m, v_mat, p_mat);
     inner_material->update_uniforms();
     sphere0.draw();
 
     m = glm::scale(glm::translate(m_pos), vec3(outer_radius));
-    prg.update_model(m);
+    prg.update_uniforms(m, v_mat, p_mat);
     outer_material->update_uniforms();
     sphere0.draw();
 
     //mat4 m = glm::scale(glm::translate(m_pos), vec3(inner_radius));
-    //glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.p_mat * prg.v_mat * m));
+    //glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat * m));
     //glUniform4fv(ll_prg.ul_color, 1, glm::value_ptr(inner_material->diffuse));
     //sphere0.draw();
 
     //m = glm::scale(glm::translate(m_pos), vec3(outer_radius));
-    //glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.p_mat * prg.v_mat * m));
+    //glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat * m));
     //glUniform4fv(ll_prg.ul_color, 1, glm::value_ptr(outer_material->diffuse));
     //sphere0.draw();
   }
@@ -332,9 +335,9 @@ public:
     lm.local_viewer = true;
 
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-    prg.v_mat = zxd::isometric_projection(boundary * 2);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = zxd::isometric_projection(boundary * 2);
+    set_v_mat(&v_mat);
     ll_prg.init();
 
     prg.bind_lighting_uniform_locations(lights, lm, food_mtl);
@@ -399,14 +402,14 @@ public:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     prg.use();
-    prg.update_model(mat4(1));
-    prg.update_lighting_uniforms(lights, lm, food_mtl);
+    prg.update_uniforms(mat4(1), v_mat, p_mat);
+    prg.update_lighting_uniforms(lights, lm, food_mtl, v_mat);
     // render food
     for(auto& food : foods)
     {
       if(food.nutrition > 0)
       {
-        prg.update_model(food.m_mat());
+        prg.update_uniforms(food.m_mat(), v_mat, p_mat);
         sphere0.draw();
       }
     }
@@ -417,7 +420,7 @@ public:
     {
       if(food.nutrition < 0)
       {
-        prg.update_model(food.m_mat());
+        prg.update_uniforms(food.m_mat(), v_mat, p_mat);
         sphere0.draw();
       }
     }

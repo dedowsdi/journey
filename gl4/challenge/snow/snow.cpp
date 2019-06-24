@@ -21,9 +21,12 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 billboard_program prg;
 billboard_quad quad;
-GLint num_flakes = 20000;
+GLint num_flakes = 1000;
 
 GLuint vbo; // buffer obj for translation, size, angle
 
@@ -45,7 +48,7 @@ struct snow
     size(size_),
     pos(pos_)
   {
-    
+
   }
 
   void update()
@@ -91,7 +94,7 @@ public:
       delete item;
     }
     m_snows.clear();
-    
+
   }
   virtual void init_info() {
     app::init_info();
@@ -110,9 +113,9 @@ public:
     prg.tex_offset = true;
     prg.use_camera_up = false;
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 5000.0f);
-    prg.v_mat = zxd::isometric_projection(500);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 5000.0f);
+    v_mat = zxd::isometric_projection(500);
+    set_v_mat(&v_mat);
 
     GLuint tex;
     glGenTextures(1, &tex);
@@ -123,7 +126,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     fipImage image = fipLoadResource32("texture/f32.png");
-    
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(),
         0, GL_RGBA, GL_UNSIGNED_BYTE, image.accessPixels());
 
@@ -178,7 +181,6 @@ public:
   }
 
   virtual void update() {
-    const mat4& v_mat = prg.v_mat;
     vec3 camera_pos = -v_mat[3].xyz();
     camera_pos = vec3(glm::dot(v_mat[0].xyz(), camera_pos),
                       glm::dot(v_mat[1].xyz(), camera_pos),
@@ -191,7 +193,7 @@ public:
       item->update();
       item->depth = glm::dot(camera_nza, item->pos);
     }
-    
+
     //timer timer0;
     // sort by depth
     std::sort(m_snows.begin(), m_snows.end(),
@@ -234,7 +236,7 @@ public:
     glEnable(GL_DEPTH_TEST);
 
     prg.use();
-    prg.update_uniforms();
+    prg.update_uniforms(v_mat, p_mat);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -27,3 +27,5 @@ grep reverse pattern, print total blank lines
 grep carriage return
     grep -IUr $'\r' file
         -U stop grep from stripping CR characters
+
+grep -v works on the final result of -e or lines of -f.

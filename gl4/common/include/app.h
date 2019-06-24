@@ -96,7 +96,7 @@ public:
   GLfloat wnd_width() {return m_info.wnd_width;}
   GLfloat wnd_height() {return m_info.wnd_height;}
 
-  mat4 *v_mat() const { return m_v_mat; }
+  mat4* get_v_mat() const { return m_v_mat; }
   void set_v_mat(mat4 *v) { m_v_mat = v; }
   void set_p_mat(mat4 *v) { m_p_mat = v; }
 

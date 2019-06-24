@@ -33,6 +33,9 @@ vec2 target_pos;
 vec2 bug_pos;
 circle bug;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 vec2_vector vertices;
 
 struct eyeball
@@ -114,9 +117,8 @@ void eyeball_app::create_scene() {
   m_text.reshape(wnd_width(), wnd_height());
 
   prg.init();
-  prg.p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
+  p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
   ll_prg.init();
-  ll_prg.p_mat = prg.p_mat;
 
   bug.radius(3);
   bug.build_mesh();
@@ -152,12 +154,12 @@ void eyeball_app::create_scene() {
 
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
-  
+
   glBindVertexArray(vao);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2),
     value_ptr(vertices[0]), GL_STATIC_DRAW);
-  
+
   glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
   glEnableVertexAttribArray(0);
 
@@ -208,7 +210,7 @@ void eyeball_app::display() {
 
     glBindVertexArray(vao);
     for (const auto& eyeball : eyeballs) {
-      glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(ll_prg.p_mat * eyeball.m_mat));
+      glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * eyeball.m_mat));
       glUniform4f(ll_prg.ul_color, 0, 1, 1, 1);
       glDrawArrays(GL_LINE_STRIP, start, count);
     }
@@ -217,7 +219,7 @@ void eyeball_app::display() {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
     glBlitFramebuffer(0, 0, wnd_width(), wnd_height(), 0, 0, m_info.wnd_width, m_info.wnd_height,
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -244,7 +246,7 @@ void eyeball_app::display() {
 
   ll_prg.use();
 
-  glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(glm::translate(ll_prg.p_mat, vec3(bug_pos, 0))));
+  glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(glm::translate(p_mat, vec3(bug_pos, 0))));
   glUniform4f(ll_prg.ul_color, 0, 0, 1, 1);
   bug.draw();
 
@@ -260,7 +262,7 @@ void eyeball_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 
-  ll_prg.p_mat = prg.p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
+  p_mat = p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
   resize_eyeball();
 }
 
@@ -290,13 +292,13 @@ void eyeball_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y){
 }
 
 vec2 eyeball_app::world_to_wnd(const vec2& v) {
-  mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * prg.p_mat;
+  mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * p_mat;
   return (m * vec4(v, 0, 1)).xy();
 }
 
 GLfloat eyeball_app::world_to_wnd(GLfloat radius){
-  //mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * prg.p_mat;
-  GLfloat double_right_inverse = 0.5f * prg.p_mat[0][0];
+  //mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * p_mat;
+  GLfloat double_right_inverse = 0.5f * p_mat[0][0];
   return radius * wnd_width() * double_right_inverse ;
 }
 

@@ -21,6 +21,9 @@ namespace zxd {
 bool verbose = false;
 bool use_cpu = false;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 GLuint ms_map;
 GLuint diffuse_map;
 GLuint color_map;
@@ -127,9 +130,9 @@ void lightining_app::create_scene() {
 
   blinn_prg.init();
   blinn_prg.bind_lighting_uniform_locations(lights, lm, mtl);
-  blinn_prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-  blinn_prg.v_mat = zxd::isometric_projection(150.0f);
-  set_v_mat(&blinn_prg.v_mat);
+  p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+  v_mat = zxd::isometric_projection(150.0f);
+  set_v_mat(&v_mat);
 
   color_map = create_texture();
   brightness_map = create_texture();
@@ -241,7 +244,7 @@ void lightining_app::update()
     lightnings.back().set_use_cpu(use_cpu);
   }
 
-  vec3 camera_pos = zxd::eye_pos(blinn_prg.v_mat * m_mat);
+  vec3 camera_pos = zxd::eye_pos(v_mat * m_mat);
   for(auto& seed : lightnings)
     seed.update_buffer(camera_pos);
 
@@ -255,8 +258,8 @@ void lightining_app::display() {
   glEnable(GL_DEPTH_TEST);
 
   blinn_prg.use();
-  blinn_prg.update_model(m_mat);
-  blinn_prg.update_lighting_uniforms(lights, lm, mtl);
+  blinn_prg.update_uniforms(m_mat, v_mat, p_mat);
+  blinn_prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
 
   sphere0.draw();
   //debugger::draw_line(GL_LINES, sphere_lines, blinn_prg.mvp_mat);
@@ -270,8 +273,9 @@ void lightining_app::display() {
   glClearColor(0, 0, 0, 0);
   glClear(GL_COLOR_BUFFER_BIT); // leave depth
 
+  mat4 mvp_mat = p_mat * v_mat * m_mat;
   for(auto& seed : lightnings)
-    seed.draw(blinn_prg.mvp_mat);
+    seed.draw(mvp_mat);
 
   glDisable(GL_BLEND);
 
@@ -328,7 +332,7 @@ void lightining_app::glfw_key(
         break;
       case GLFW_KEY_P:
         for(auto& item : lightnings)
-          item.debug_print_billboards(zxd::eye_pos(blinn_prg.v_mat * m_mat));
+          item.debug_print_billboards(zxd::eye_pos(v_mat * m_mat));
 
         break;
       case GLFW_KEY_U:

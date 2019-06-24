@@ -11,6 +11,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 cuboid geometry;
 light_vector lights;
 light_model lm;
@@ -91,9 +94,9 @@ public:
     mtl1.emission = vec4(1, 0, 0, 1);
 
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-    prg.v_mat = zxd::isometric_projection(300);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = zxd::isometric_projection(300);
+    set_v_mat(&v_mat);
     prg.bind_lighting_uniform_locations(lights, lm, mtl0);
     mtl1.bind_uniform_locations(prg);
 
@@ -176,15 +179,15 @@ public:
     glEnable(GL_CULL_FACE);
 
     if(draw_tree)
-      m_tree->debug_draw(prg.p_mat * prg.v_mat);
+      m_tree->debug_draw(p_mat * v_mat);
 
     prg.use();
 
-    prg.update_lighting_uniforms(lights, lm, mtl0);
+    prg.update_lighting_uniforms(lights, lm, mtl0, v_mat);
     if(draw_cube)
     {
       for (int i = 0; i < entities.size(); ++i) {
-        prg.update_model(entities[i].m_mat());
+        prg.update_uniforms(entities[i].m_mat(), v_mat, p_mat);
         geometry.draw();
       }
     }
@@ -192,7 +195,7 @@ public:
     mtl1.update_uniforms();
     for (int i = 0; i < selected.size(); ++i) {
       entity* ety = static_cast<entity*>(selected[i]);
-      prg.update_model(ety->m_mat() * glm::scale(vec3(1.01)));
+      prg.update_uniforms(ety->m_mat() * glm::scale(vec3(1.01)), v_mat, p_mat);
       geometry.draw();
     }
 
@@ -200,7 +203,7 @@ public:
     vec3_vector lines;
     lines.reserve(24);
     select_box.collect_debug_geometry(lines);
-    debugger::draw_line(GL_LINES, lines, prg.p_mat * prg.v_mat, 1, vec4(1, 0, 1, 1));
+    debugger::draw_line(GL_LINES, lines, p_mat * v_mat, 1, vec4(1, 0, 1, 1));
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -1,3 +1,4 @@
+let &viminfofile = getcwd() . '/.viminfo'
 call misc#ui#loadProjSetting('c')
 let g:mycppBuildDir = './build/gcc/Debug'
 let g:cdefProjName = 'GL2'

@@ -12,6 +12,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg;
 //point_program dot_prg;
 geometry_base rocket_geometry;
@@ -152,7 +155,7 @@ public:
   {
     prg.use();
     mat4 mvp_mat =  
-      glm::rotate(glm::translate(prg.vp_mat, vec3(m_pos, 0)), glm::atan(m_vel.y, m_vel.x), vec3(0, 0, 1));
+      glm::rotate(glm::translate(p_mat, vec3(m_pos, 0)), glm::atan(m_vel.y, m_vel.x), vec3(0, 0, 1));
     glUniform4f(prg.ul_color, 1,1,1,1);
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     rocket_geometry.draw();
@@ -301,10 +304,10 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     //dot_prg.init();
-    //dot_prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     vec3_array* vertices = new vec3_array;
     vertices->push_back(vec3(-10, 5, 0));
@@ -326,7 +329,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glUniform4f(prg.ul_color, 1,1,1,1);
     obstacle.draw();
 
@@ -337,7 +340,7 @@ public:
     //glUniformMatrix4fv(dot_prg.ul_mvp_mat, 1, 0, glm::value_ptr(dot_prg.vp_mat));
     //glUniform4f(prg.ul_color, 1,1,1,1);
 
-    debugger::draw_point(vec3(target, 0), prg.vp_mat, 20, vec4(1,1,1,1));
+    debugger::draw_point(vec3(target, 0), p_mat, 20, vec4(1,1,1,1));
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

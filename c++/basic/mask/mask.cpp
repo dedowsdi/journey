@@ -47,7 +47,9 @@ int main(int argc, char *argv[]) {
             << std::endl;
 
   std::cout << "use number ^= (-x ^ number) & (1 << n) to change nth bit to x"
-            << std::endl;
+            << std::endl
+            << "if x is 0, let number ^= self_nth_bit" << std::endl
+            << "if x is 1, let number ^= ~self_nth_bit" << std::endl;
   std::cout << std::bitset<8>(number) << " ^ ((" << std::bitset<8>(0) << " ^ "
             << std::bitset<8>(number) << ") & " << std::bitset<8>(1 << 2)
             << ") = " << std::bitset<8>(number ^ ((0 ^ number) & (1 << 2)))

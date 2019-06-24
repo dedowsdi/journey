@@ -24,6 +24,9 @@ GLfloat xoff_start;
 GLfloat yoff_start;
 GLfloat zoff_start;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 kcip xoff_step;
 kcip yoff_step;
 kcip zoff_step;
@@ -158,7 +161,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     //flow_fields.reserve(FF_ROW * FF_COL);
     flow_fields.resize(FF_ROW * FF_COL);
@@ -228,14 +231,14 @@ public:
           lines.push_back(translate + vec3(v, 0) * field_width);
         }
       }
-      debugger::draw_line(GL_LINES, lines, prg.vp_mat);
+      debugger::draw_line(GL_LINES, lines, p_mat);
 
       vec3_vector points;
       for (int i = 0; i < particles.size(); ++i) {
         points.push_back(vec3(particles[i].pos(), 0));
         //std::cout << points.back() << std::endl;
       }
-      debugger::draw_point(points, prg.vp_mat, 4);
+      debugger::draw_point(points, p_mat, 4);
     }
     else
     {
@@ -245,7 +248,7 @@ public:
       // no glClear
       prg.use();
       glBindVertexArray(ink.vao);
-      glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+      glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
       glUniform4f(prg.ul_color, 0, 0, 0, 1);
       glLineWidth(1.5);
       glDrawArrays(GL_LINES, 0, ink.vertices.size());

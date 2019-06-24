@@ -10,6 +10,9 @@ using namespace glm;
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 GLuint bitmap_tex;
 vec4 text_color(1.0f);
 GLuint vao;
@@ -28,6 +31,10 @@ class app0 : public app {
   struct bitmap_text_program : public zxd::program {
     GLint ul_text_color;
     GLint ul_font_map;
+    GLint ul_mvp_mat;
+
+    mat4 mvp_mat;
+
     bitmap_text_program() {
       mvp_mat = glm::ortho(0.0f, (GLfloat)WINDOWS_WIDTH, 0.0f,
         (GLfloat)WINDOWS_HEIGHT, -1.0f, 1.0f);
@@ -120,7 +127,7 @@ class app0 : public app {
 
     prg.init();
 
-    fipImage fip = zxd::fipLoadImage("font/Holstein.png");
+    fipImage fip = zxd::fipLoadResource("font/Holstein.png");
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glGenTextures(1, &bitmap_tex);

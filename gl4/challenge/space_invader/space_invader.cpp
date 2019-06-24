@@ -23,6 +23,9 @@ namespace zxd {
 
 lightless_program prg;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class ship_geometry : public geometry_base
 {
 protected:
@@ -184,7 +187,7 @@ public:
   {
     m_geometry->bind_vao();
 
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat * m_mat()));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * m_mat()));
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(m_color));
 
     m_geometry->draw();
@@ -399,7 +402,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     prg1.init();
 
@@ -588,7 +591,7 @@ public:
 
     glBindTexture(GL_TEXTURE_2D, m_explotion_texture);
     for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ++iter){
-      (*iter)->m_texmap_anim.draw(prg.vp_mat * (*iter)->m_mat(), 0);
+      (*iter)->m_texmap_anim.draw(p_mat * (*iter)->m_mat(), 0);
     }
 
     glDisable(GL_BLEND);

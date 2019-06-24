@@ -12,6 +12,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 blinn_program light_prg;
 lightless_program ll_prg;
 
@@ -166,13 +169,13 @@ public:
     lm.local_viewer = true;
 
     light_prg.init();
-    light_prg.v_mat = glm::lookAt(vec3(0, -1500, 1500), vec3(0), pza);
-    light_prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 10000.0f);
+    v_mat = glm::lookAt(vec3(0, -1500, 1500), vec3(0), pza);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 10000.0f);
     light_prg.bind_lighting_uniform_locations(lights, lm, mtl);
 
     ll_prg.init();
 
-    set_v_mat(&light_prg.v_mat);
+    set_v_mat(&v_mat);
 
     sphere_geometry.include_normal(true);
     sphere_geometry.build_mesh();
@@ -235,15 +238,15 @@ public:
 
     //prg.use();
     light_prg.use();
-    light_prg.update_lighting_uniforms(lights, lm, mtl);
+    light_prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
     for (int i = 0; i < attractors.size(); ++i) {
-      light_prg.update_model(attractors[i].m_mat());
+      light_prg.update_uniforms(attractors[i].m_mat(), v_mat, p_mat);
       sphere_geometry.draw();
     }
 
     glPointSize(2);
     ll_prg.use();
-    mat4 mvp_mat = light_prg.p_mat * light_prg.v_mat;
+    mat4 mvp_mat = p_mat * v_mat;
     glUniform4f(ll_prg.ul_color, 1,1,1,1);
     glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
 

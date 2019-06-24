@@ -14,6 +14,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 struct geometry
 {
   GLuint vao;
@@ -228,6 +231,8 @@ typedef std::list<firework> firework_list;
 
 class firework_program : public program
 {
+public:
+  GLint ul_mvp_mat;
 
 protected:
 
@@ -278,9 +283,9 @@ public:
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 3000.0f);
-    prg.v_mat = glm::lookAt(vec3(0, -800, 0), vec3(0), pza);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 3000.0f);
+    v_mat = glm::lookAt(vec3(0, -800, 0), vec3(0), pza);
+    set_v_mat(&v_mat);
 
     filter_prg.init();
 
@@ -326,12 +331,12 @@ public:
     q.draw();
 
     prg.use();
-    mat4 mvp_mat = prg.p_mat * prg.v_mat;
+    mat4 mvp_mat = p_mat * v_mat;
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
 
     //for(auto& item : m_fireworks)
     //{ 
-      //item.debug_draw(prg.p_mat * prg.v_mat);
+      //item.debug_draw(p_mat * v_mat);
     //}
     m_geometry.draw();
 

@@ -19,8 +19,14 @@ GLuint vao;
 GLuint vbo;
 vec3_vector vertices;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 class program_name : public program
 {
+public:
+  GLint ul_mvp_mat;
 
 protected:
 
@@ -87,10 +93,10 @@ public:
     //glEnableVertexAttribArray(location);
 
     prg.init();
-    prg.v_mat = glm::lookAt(vec3(0, -100, 100), vec3(0), pza);
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-    prg.vp_mat = prg.p_mat * prg.v_mat;
-    set_v_mat(&prg.v_mat);
+    v_mat = glm::lookAt(vec3(0, -100, 100), vec3(0), pza);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    vp_mat = p_mat * v_mat;
+    set_v_mat(&v_mat);
   }
 
   void update_buffer(vec2 noise_offset)
@@ -145,9 +151,7 @@ public:
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(0);
 
-    prg.mvp_mat = prg.p_mat * prg.v_mat;
-
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(vp_mat));
 
     GLint next = 0;
     GLint count = (NUM_COLS + 1) * 2;

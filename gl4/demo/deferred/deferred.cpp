@@ -25,13 +25,18 @@
 
 namespace zxd {
 
-struct render_gbuffer_program : public zxd::program {
+glm::mat4 v_mat;
+glm::mat4 p_mat;
 
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-    mv_mat = v_mat * m_mat;
-    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
-    mvp_mat = p_mat * mv_mat;
+struct render_gbuffer_program : public zxd::program {
+  GLint ul_mv_mat_it;
+  GLint ul_mv_mat;
+  GLint ul_mvp_mat;
+
+  virtual void update_uniforms(const mat4 &m_mat) {
+    mat4 mv_mat = v_mat * m_mat;
+    mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mat4 mvp_mat = p_mat * mv_mat;
 
     glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
     glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
@@ -157,7 +162,7 @@ protected:
     }
 
     for (int i = 0; i < m_numspheres; ++i) {
-      m_render_gbuffer_program.update_model(m_sphere_m_mates[i]);
+      m_render_gbuffer_program.update_uniforms(m_sphere_m_mates[i]);
       m_sphere_materials[i].update_uniforms();
       m_sphere.draw();
     }
@@ -180,7 +185,7 @@ protected:
 
     // update lights
     for (int i = 0; i < m_lights.size(); ++i) {
-      m_lights[i].update_uniforms(m_render_gbuffer_program.v_mat);
+      m_lights[i].update_uniforms(v_mat);
     }
     m_light_model.update_uniforms();
 
@@ -316,12 +321,10 @@ public:
       printf("incomplete frame buffer");
 
     m_render_gbuffer_program.init();
-    m_render_gbuffer_program.p_mat =
-      glm::perspective(glm::radians(45.0f), wnd_aspect(), 10.0f, 50.0f);
-    m_render_gbuffer_program.v_mat =
-      glm::lookAt(vec3(0, -25, 25), vec3(0, 0, 0), vec3(0, 0, 1));
+    p_mat = glm::perspective(glm::radians(45.0f), wnd_aspect(), 10.0f, 50.0f);
+    v_mat = glm::lookAt(vec3(0, -25, 25), vec3(0, 0, 0), vec3(0, 0, 1));
 
-    set_v_mat(&m_render_gbuffer_program.v_mat);
+    set_v_mat(&v_mat);
 
     // sphere and lights
     m_sphere.include_normal(true);

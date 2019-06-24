@@ -9,6 +9,11 @@
 
 namespace zxd {
 
+glm::mat4 m_mat;
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 GLuint num_points = 10000000;
 lightless_program prg;
 vec2_vector points;
@@ -34,9 +39,9 @@ public:
 
     prg.init();
     //−2.1820 < x < 2.6558 and 0 ≤ y < 9.9983.
-    prg.p_mat = glm::ortho(-2.7, 2.7, 0.0, 10.5);
-    prg.v_mat = mat4(1);
-    prg.vp_mat = prg.p_mat * prg.v_mat;
+    p_mat = glm::ortho(-2.7, 2.7, 0.0, 10.5);
+    v_mat = mat4(1);
+    vp_mat = p_mat * v_mat;
 
     reset_fern();
   }
@@ -93,7 +98,7 @@ public:
       glEnable(GL_BLEND);
       glBlendFunc(GL_ONE, GL_ONE);
       debugger::draw_point(points.begin() + draw_start, points.begin() + draw_start + draw_count,
-          prg.vp_mat, 1, vec4(0, 0.01, 0, 1)); // weird, can't use any number samller than 0.003
+          vp_mat, 1, vec4(0, 0.01, 0, 1)); // weird, can't use any number samller than 0.003
       draw_start += draw_count;
     }
 

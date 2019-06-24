@@ -9,13 +9,13 @@
 " vim can map only keycode or terminal sequence starts with <Esc>. Both of
 " them must be a full match, eg:
 "     <f3>k
-" map ORk :echo "<f3>k"<cr>
+ map ORk :echo "<f3>k"<cr>
 " if you press f3, terminal send key OR to vim, it doesn't match ORk, it
-" will be break down to ^[, O and R.
+" will be break down to ^[, O and R (a new line starts with R will be created) .
 " if map O exists, OR will be break down to O and R
 "
-" one weird thing about function key is set <f3> is different from
-" <ctrl-v><f3> .
+" one weird thing about function key is set <f3> is totally different from
+" <ctrl-v><f3>. Don't know how vim know <f3> is pressed.
 "
 " all the same
 inoremap <down> 
@@ -31,5 +31,5 @@ function! ReturnEsc()
 endfunction
 
 nnoremap <expr> A 1 ? '' : 'I'
-finish
 
+finish

@@ -11,10 +11,14 @@ using namespace glm;
 
 namespace zxd {
 
+  glm::mat4 v_mat;
+  glm::mat4 p_mat;
+
 struct particle_program : public zxd::program {
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
   GLint ul_camera_up;
+  GLint ul_vp_mat;
   vec3 camera_pos;
   vec3 camera_up;
 
@@ -79,6 +83,7 @@ particle_vector particles;
 particle_list alive_particles;
 particle_list dead_particles;
 
+
 GLuint tex;
 
 particle_program prg;
@@ -127,9 +132,9 @@ protected:
 
     // init program
     prg.init();
-    prg.v_mat = glm::lookAt(vec3(0, -15, 15), vec3(0), vec3(0, 0, 1));
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-    set_v_mat(&prg.v_mat);
+    v_mat = glm::lookAt(vec3(0, -15, 15), vec3(0), vec3(0, 0, 1));
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    set_v_mat(&v_mat);
 
     // create buffer
     glGenVertexArrays(1, &vao);
@@ -168,9 +173,7 @@ protected:
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    prg.vp_mat = prg.p_mat * prg.v_mat;
-    const glm::mat4 &vp_mat = prg.vp_mat;
-    // const glm::mat4 &v_mat = prg.v_mat;
+    mat4 vp_mat = p_mat * v_mat;
 
     glUseProgram(prg);
 
@@ -205,8 +208,8 @@ protected:
     GLfloat emit_period = 1.0f / emits_per_second;
     t += dt;
 
-    prg.camera_pos = glm::inverse(prg.v_mat)[3].xyz();
-    prg.camera_up = glm::row(prg.v_mat, 1).xyz();
+    prg.camera_pos = glm::inverse(v_mat)[3].xyz();
+    prg.camera_up = glm::row(v_mat, 1).xyz();
 
     GLint num_new_particles = t / emit_period;
     t -= num_new_particles * emit_period;

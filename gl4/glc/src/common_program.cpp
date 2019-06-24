@@ -8,12 +8,12 @@
 namespace zxd {
 
 //--------------------------------------------------------------------
-void blinn_program::update_model(const glm::mat4& _m_mat) {
-  // m_mat_i = glm::inverse(m_mat);
-  m_mat = _m_mat;
-  mv_mat = v_mat * m_mat;
-  mv_mat_it = glm::inverse(glm::transpose(mv_mat));
-  mvp_mat = p_mat * mv_mat;
+void blinn_program::update_uniforms(const glm::mat4& m_mat,
+    const glm::mat4& v_mat, const glm::mat4& p_mat) {
+
+  mat4 mv_mat = v_mat * m_mat;
+  mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+  mat4 mvp_mat = p_mat * mv_mat;
 
   glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
   glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
@@ -72,8 +72,9 @@ void blinn_program::bind_lighting_uniform_locations(
 }
 
 //--------------------------------------------------------------------
-void blinn_program::update_lighting_uniforms(
-  light_vector& lights, light_model& lm, material& mtl) {
+void blinn_program::update_lighting_uniforms( light_vector& lights,
+    light_model& lm, material& mtl, const glm::mat4& v_mat)
+{
   mtl.update_uniforms();
   lm.update_uniforms();
   for (int i = 0; i < lights.size(); ++i) {
@@ -166,14 +167,14 @@ void point_program::udpate_uniforms(const mat4& _mvp_mat) {
 }
 
 //--------------------------------------------------------------------
-void normal_viewer_program::update_uniforms(const mat4& _m_mat, const mat4& _v_mat, const mat4& _p_mat)
+void normal_viewer_program::update_uniforms(const mat4& m_mat, const mat4& v_mat, const mat4& p_mat)
 {
-  mv_mat = _v_mat * _m_mat;
-  mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+  mat4 mv_mat = v_mat * m_mat;
+  mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
 
   glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
   glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
-  glUniformMatrix4fv(ul_p_mat, 1, 0, value_ptr(_p_mat));
+  glUniformMatrix4fv(ul_p_mat, 1, 0, value_ptr(p_mat));
 }
 
 //--------------------------------------------------------------------
@@ -346,11 +347,8 @@ void billboard_program::bind_attrib_locations()
 }
 
 //--------------------------------------------------------------------
-void billboard_program::update_uniforms()
+void billboard_program::update_uniforms(const mat4& v_mat, const mat4& p_mat)
 {
-  vp_mat = p_mat * v_mat;
-  glUniformMatrix4fv(ul_vp_mat, 1, 0, glm::value_ptr(vp_mat));
-
   vec3 camera_pos = -v_mat[3].xyz();
   camera_pos = vec3(glm::dot(v_mat[0].xyz(), camera_pos),
       glm::dot(v_mat[1].xyz(), camera_pos),
@@ -358,9 +356,9 @@ void billboard_program::update_uniforms()
   glUniform3fv(ul_camera_pos, 1,  glm::value_ptr(camera_pos));
 
   if(use_camera_up)
-  {
     glUniform3fv(ul_camera_up, 1,  glm::value_ptr(glm::row(v_mat, 1).xyz()));
-  }
+
+  glUniformMatrix4fv(ul_vp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
 }
 
 }

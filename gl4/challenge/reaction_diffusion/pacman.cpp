@@ -33,11 +33,11 @@ void pacman::update()
 }
 
 //--------------------------------------------------------------------
-void pacman::draw(const mat4& m_mat)
+void pacman::draw(const mat4& m_mat, const mat4& v_mat, const mat4& p_mat)
 {
   m_program->use();
-  mat4 mvp_mat = m_program->p_mat * m_program->v_mat * m_mat;
-  
+  mat4 mvp_mat = p_mat * v_mat * m_mat;
+
   glUniformMatrix4fv(m_program->ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   glUniform4fv(m_program->ul_color, 1, glm::value_ptr(m_body_color));
   m_body.draw();
@@ -46,7 +46,7 @@ void pacman::draw(const mat4& m_mat)
   glEnable(GL_LINE_SMOOTH);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  
+
   glUniformMatrix4fv(m_program->ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   glUniform4fv(m_program->ul_color, 1, glm::value_ptr(m_outline_color));
   m_outline.draw();

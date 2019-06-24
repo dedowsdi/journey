@@ -24,6 +24,10 @@ GLuint draw_count = 2;
 GLuint draw_step = 3; // increment per frame
 GLboolean dirty = GL_FALSE;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 struct setting
 {
   vec3 start = vec3(0.01, 0, 0);
@@ -143,9 +147,9 @@ public:
 
     prg.with_color = true;
     prg.init();
-    prg.v_mat = glm::lookAt(vec3(0, -100, 100), vec3(0), pza);
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 10000.0f);
-    set_v_mat(&prg.v_mat);
+    v_mat = glm::lookAt(vec3(0, -100, 100), vec3(0), pza);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 10000.0f);
+    set_v_mat(&v_mat);
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(2, vbo);
@@ -153,7 +157,7 @@ public:
     vertices.resize(count);
     colors.resize(count);
 
-    m_dict_script = new dict_script(stream_util::get_resource("challenge/lorenz_system/lorenz_system.txt"));
+    m_dict_script = new dict_script(stream_util::get_resource("../challenge/lorenz_system/lorenz_system.txt"));
     m_dict_script->track(0.1);
 
     reset_buffer();
@@ -178,8 +182,8 @@ public:
     prg.use();
 
     glBindVertexArray(vao);
-    prg.mvp_mat = prg.p_mat * prg.v_mat;
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
+    vp_mat = p_mat * v_mat;
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(vp_mat));
 
     glDrawArrays(GL_LINE_STRIP, 0, draw_count);
 

@@ -38,7 +38,7 @@ class app0 : public app {
         lights[i].update_uniforms(v_mat);
       }
     }
-    virtual void update_model(const glm::mat4& _m_mat) {
+    virtual void update_uniforms(const glm::mat4& _m_mat) {
       // m_mat_i = glm::inverse(m_mat);
       m_mat = _m_mat;
       mv_mat = v_mat * m_mat;
@@ -77,7 +77,7 @@ class app0 : public app {
   void render(zxd::program& program) {
     mat4 model = mat4(1.0f);
     my_program.update_frame();
-    my_program.update_model(model);
+    my_program.update_uniforms(model);
     glutSolidSphere(1, 64, 64);
   }
 

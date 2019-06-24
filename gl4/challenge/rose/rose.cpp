@@ -11,6 +11,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg;
 kcip kci_n;
 kcip kci_d;
@@ -41,8 +44,8 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(-1, 1, -1, 1);
-    set_p_mat(&prg.p_mat);
+    p_mat = glm::ortho<GLfloat>(-1, 1, -1, 1);
+    set_p_mat(&p_mat);
     set_camera_mode(CM_ORTHO);
 
     auto callback = std::bind(std::mem_fn(&app_name::update_rose), this, std::placeholders::_1);
@@ -92,7 +95,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.p_mat * prg.v_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
     glUniform4f(prg.ul_color, 1,1,1,1);
     m_rose.draw();
 

@@ -17,6 +17,11 @@
 
 namespace zxd {
 
+glm::mat4 m_mat;
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 mvp_mat;
+
 bool display_help = false;
 lightless_program prg;
 //GLint draw_start;
@@ -181,7 +186,7 @@ public:
 
     prg.with_color = true;
     prg.init();
-    prg.v_mat = mat4(1);
+    v_mat = mat4(1);
 
     glGenFramebuffers(1, &fbo);
     color_map = create_texture();
@@ -228,8 +233,8 @@ public:
 
     GLfloat hw = last_max_number * 0.5f * 1.02;
     GLfloat hh = hw / wnd_aspect();
-    prg.p_mat = glm::ortho(0.0f, hw*2, -hh, hh, -1.0f, 1.0f);
-    prg.mvp_mat = prg.p_mat * prg.v_mat;
+    p_mat = glm::ortho(0.0f, hw*2, -hh, hh, -1.0f, 1.0f);
+    mvp_mat = p_mat * v_mat;
   }
 
   virtual void display() {
@@ -246,7 +251,7 @@ public:
     // image instead.
     glClear(GL_COLOR_BUFFER_BIT);
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glLineWidth(line_width);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -16,6 +16,9 @@ vec4 corner_color = vec4(1,1,1,1);
 vec4 x_color = vec4(1,0,0,1);
 vec4 inner_color = vec4(0,0,1,1);
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 kcip kci_theta;
 kcip kci_delta;
 kcip kci_sides;
@@ -218,7 +221,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     m_polygon.radius(POLYGON_WIDTH / glm::sqrt(2));
     m_polygon.corner_color(corner_color);
@@ -259,7 +262,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     if(m_polygon.sides() == 4)
     {
@@ -268,7 +271,7 @@ public:
       {
         for (int x = 0; x < 4; ++x) 
         {
-          mat4 mvp_mat = prg.vp_mat * glm::translate(vec3(POLYGON_WIDTH * x, POLYGON_WIDTH * y, 0) + vec3(0.5f * POLYGON_WIDTH, 0.5f * POLYGON_WIDTH, 0));
+          mat4 mvp_mat = p_mat * glm::translate(vec3(POLYGON_WIDTH * x, POLYGON_WIDTH * y, 0) + vec3(0.5f * POLYGON_WIDTH, 0.5f * POLYGON_WIDTH, 0));
           glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
           m_polygon.draw();
         }
@@ -284,7 +287,7 @@ public:
         for (int x = 0; x < 7; ++x) 
         {
           vec3 translation = vec3(r * 1.5 * x, h * y + (x&1 ? h * 0.5 : 0) , 0) + start ;
-          mat4 mvp_mat = prg.vp_mat * glm::translate(translation);
+          mat4 mvp_mat = p_mat * glm::translate(translation);
           glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
           m_polygon.draw();
         }

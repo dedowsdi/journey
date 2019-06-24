@@ -1,0 +1,1 @@
+echo -e "aaa\tbbb\tccc" | expand | wc -c

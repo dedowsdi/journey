@@ -18,11 +18,12 @@ void array_init(T (&param)[N]) {
 
 int main(int argc, char *argv[]) {
   const int i = 1;
-  int j = 2;
   foo<0>();
   foo<i>();
+
+  // int j = 2;
   // foo<j>(); // j is not constant
-  
+
   int ia[10];
   array_init(ia); //instantiate array_init(int(&)[42])
 

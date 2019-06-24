@@ -1,5 +1,6 @@
 " direct complete approach
-inoremap <F5> <C-R>=CompleteMonths()<CR>
+inoremap <F6> <C-R>=CompleteMonths()<CR>
+"inoremap <expr> <leader>m CompleteMonths()
 
 function! GetTypingWordBase()
   let curCol = col('.')
@@ -42,8 +43,8 @@ func! CompleteMonthsFunc(findstart, base)
       " cancel and leave completion mode
       return -3
     endif
-    
-    " becareful here, it's byte index, not column?
+
+    " becareful here, it's byte index
     return col('.') - len(wb) - 1
   endif
 

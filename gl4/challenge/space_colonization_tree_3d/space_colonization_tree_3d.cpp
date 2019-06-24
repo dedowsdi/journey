@@ -43,6 +43,10 @@ light_vector lights;
 light_model lm;
 material mtl;
 
+glm::mat4 m_mat;
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg1;
 
 struct leaf
@@ -402,9 +406,9 @@ public:
     prg1.init();
 
     prg.init();
-    prg.v_mat = glm::lookAt(vec3(0, -500, 500), vec3(0), vec3(0,0,1));
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 2000.0f);
-    set_v_mat(&prg.v_mat);
+    v_mat = glm::lookAt(vec3(0, -500, 500), vec3(0), vec3(0,0,1));
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 2000.0f);
+    set_v_mat(&v_mat);
 
     // setup light
     light_source l0;
@@ -412,7 +416,7 @@ public:
     l0.position = vec4(0, 0, 1, 0);
     l0.specular = vec4(1);
     lights.push_back(l0);
-    
+
     mtl.diffuse = vec4(0.8);
     mtl.specular = vec4(0.2);
     mtl.shininess = 50;
@@ -449,7 +453,7 @@ public:
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    mat4 mvp_mat = prg.p_mat * prg.v_mat;
+    mat4 mvp_mat = p_mat * v_mat;
     prg1.use();
     glUniform4f(prg1.ul_color, 0.5,0,0,1);
     glUniformMatrix4fv(prg1.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
@@ -458,8 +462,8 @@ public:
     //m_points.draw();
 
     prg.use();
-    prg.update_model(glm::translate(vec3(0, 0, -100)));
-    prg.update_lighting_uniforms(lights, lm, mtl);
+    prg.update_uniforms(glm::translate(vec3(0, 0, -100)), v_mat, p_mat);
+    prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
     m_tree.draw_branches(m_draw_branch_count);
 
     glEnable(GL_BLEND);

@@ -24,6 +24,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 quad food_geometry;
 lightless_program prg;
 circle bloop_geometry;
@@ -91,7 +94,7 @@ public:
     GLfloat alpha =  glm::min(1.0f, static_cast<GLfloat>(m_life) / FULL_ALPHA_LIFE);
     glBlendColor(0,0,0,alpha);
 
-    mat4 mvp_mat = glm::scale(glm::translate(prg.vp_mat, vec3(m_pos, 0)), vec3(m_size, m_size, 1));
+    mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(m_pos, 0)), vec3(m_size, m_size, 1));
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4f(prg.ul_color, 0,0,0,0);
     bloop_geometry.draw();
@@ -131,12 +134,12 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, WIDTH, 0, HEIGHT);
 
     food_geometry.setup(vec3(-FOOD_SIZE*0.5,-FOOD_SIZE*0.5,0), vec3(FOOD_SIZE,0,0), vec3(0, FOOD_SIZE, 0));
     food_geometry.build_mesh();
 
-    for (int i = 0; i < 10; ++i) 
+    for (int i = 0; i < 10; ++i)
       foods.push_back(glm::linearRand(vec2(0), vec2(WIDTH, HEIGHT)));
 
     for (int i = 0; i < 50; ++i)
@@ -189,7 +192,7 @@ public:
 
     for(auto iter = foods.begin(); iter != foods.end(); ++iter)
     {
-      mat4 mvp_mat =  glm::translate(prg.vp_mat, vec3(*iter, 0));
+      mat4 mvp_mat =  glm::translate(p_mat, vec3(*iter, 0));
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
       glUniform4f(prg.ul_color, 0, 1, 0, 1);
       food_geometry.draw();

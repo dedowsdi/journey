@@ -36,6 +36,6 @@ int main(int argc, char *argv[])
 
   std::set<A> as;
   //as.find(5); // don't work, my gcc is too old
-  
+
   return 0;
 }

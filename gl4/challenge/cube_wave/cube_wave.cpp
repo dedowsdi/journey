@@ -17,6 +17,9 @@ light_model lm;
 material mtl;
 cuboid cube;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class cube_wave_app : public app {
 protected:
   bitmap_text m_text;
@@ -39,9 +42,9 @@ public:
     cube.build_mesh();
 
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 5000.0f);
-    prg.v_mat = zxd::isometric_projection(1000);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 5000.0f);
+    v_mat = zxd::isometric_projection(1000);
+    set_v_mat(&v_mat);
 
     light_source l0;
     l0.position = vec4(-1, 1, 1, 0);
@@ -68,8 +71,8 @@ public:
     glEnable(GL_CULL_FACE);
 
     prg.use();
-    prg.update_lighting_uniforms(lights, lm, mtl);
-    prg.update_model(glm::scale(vec3(100)));
+    prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
+    prg.update_uniforms(glm::scale(vec3(100)), v_mat, p_mat);
 
     static GLfloat sin_offset = 0;
 
@@ -86,7 +89,7 @@ public:
         float h = glm::mix(1.0, 15.0, (sin(sin_offset + cube_sin_offset) + 1.0) * 0.5f);
         vec3 translation = corner + vec3(x * CUBE_SIZE, y * CUBE_SIZE, 0);
         mat4 m = glm::scale(glm::translate(translation), vec3(1, 1, h));
-        prg.update_model(m);
+        prg.update_uniforms(m, v_mat, p_mat);
         cube.draw();
       }
     }

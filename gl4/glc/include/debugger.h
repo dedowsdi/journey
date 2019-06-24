@@ -36,6 +36,7 @@ class debugger_program : public zxd::program
 {
 public:
   GLint ul_color;
+  GLint ul_mvp_mat;
 
   virtual void attach_shaders(){
     attach(GL_VERTEX_SHADER, "shader4/debugger.vs.glsl");

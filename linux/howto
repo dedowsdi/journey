@@ -1,0 +1,17 @@
+read cpu temperature and fan speed
+    sudo apt install lm-sensors
+    sudo sensors-detect
+    sudo service kmod start
+    watch sensors
+
+change login shell
+    sudo -s
+    ch -s /bin/zsh root
+    ch -s /bin/zsh pntandcnt
+    note that you must log out and log in to make it work.
+
+kill all processes by name
+    killall name
+
+print signature
+    figlet hello

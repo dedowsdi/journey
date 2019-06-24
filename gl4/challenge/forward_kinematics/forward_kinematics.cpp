@@ -9,6 +9,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg;
 
 struct tentacle
@@ -91,7 +94,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     m_root_tenacle = new tentacle;
     m_root_tenacle->start = vec2(WIDTH*0.5f, 0);
@@ -129,7 +132,7 @@ public:
     tentacle* current = m_root_tenacle;
     while(current)
     {
-      debugger::draw_line(current->start, current->end, prg.vp_mat);
+      debugger::draw_line(current->start, current->end, p_mat);
       current = current->child;
     }
 

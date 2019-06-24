@@ -53,9 +53,12 @@ find all .txt files with regex, don't follow symbolic link, ignore build dir
     find ~/journey/osg  ! -path '*/build/*' -regex '.*\.txt'
     regex must match whole path name
 
-find all files that's executable by current user
+find all files that's executable by current user without regard other bits
     find ~/journey/gl4 -type f -perm -u=x
     find ~/journey/gl4 -type f -perm -100
+
+find all files of which has exactly permission bits
+    find ~/journey/gl4 -type f -perm 755
 
 find files that's greater then 8 megabytes and executable
     find ~/journey/gl4 -type f -size +8M -executable
@@ -89,3 +92,53 @@ exclude .git and .hg, don't descend into it
 
 find files in current directory, don't descend into subdirectory
     (shopt -s nullglob && find * -prune -type f)
+
+find symbolic link points to a regular file
+    find -P . -type l -xtype f
+    find -L . -type f -xtype l
+
+find symbolic link points to a regular file under provided dir(might be a symbolic link)
+    find -H dir -type l -xtype f
+
+    (a,b,aac)
+
+You can interpret -daystart -ctime=x as last modified x midnight ago.
+I think -daystart measure time from next midnight instead of now
+
+-mtime=0 or -mmin=-1440 :
+
+24hours ago------------------------midnight-------------------------------now--------------------------next midnight
+                                   ---------------with daystart----------------------------------------------------
+--------------------without daystart----------------------------------------
+
+this also means if -mmin=-x, x < (nextmidnight - now) is meaning less, it's future time.
+
+
+find file or directory that's modified in 24 hours
+    find . -mtime 0 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file or directory that's modified before 24 hours
+    find . -mtime +0 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file or directory that's modified in 48 hours
+    find . -mtime -2 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file or directory that's modified in 24-48 hours
+    find . -mtime 1 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file or directory that's modified today
+    find . -daystart -mtime 0 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file or directory that's modified before today
+    find . -daystart -mtime +0 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file or directory that's modified in today or yesterday
+    find . -daystart -mtime -2 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file or directory that's modified yesterday
+    find . -daystart -mtime 1 -printf '%TY-%Tm-%Td %TH:%TM:%TS    %f\n' 
+
+find file that's empty
+    find . type -f -size 0M
+    find . type -f -size -1m
+    unlike time, size is always round up, be very very careful

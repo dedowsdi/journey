@@ -8,7 +8,7 @@
  *      failbit
  *      eofbit
  *
- *  fmtflats and precision are sticky, width is one shot only.
+ *  fmtflags and precision are sticky, width is one shot only.
  *
  *  basic_ios:
  *    good() = iostate == 0

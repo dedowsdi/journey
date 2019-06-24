@@ -15,6 +15,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 kcip kci_pattern;
 kcip kci_n;
 kcip kci_degree;
@@ -87,9 +90,9 @@ void turtle_app::create_scene() {
   m_text.reshape(wnd_width(), wnd_height());
 
   llprg.init();
-  llprg.p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
+  p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
   set_camera_mode(CM_ORTHO);
-  set_p_mat(&llprg.p_mat);
+  set_p_mat(&p_mat);
   
   {
     auto vertices = std::make_shared<vec3_array>();
@@ -269,7 +272,7 @@ void turtle_app::display() {
   if(!display_help)
   {
     llprg.use();
-    glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(llprg.p_mat * llprg.v_mat));
+    glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
     glUniform4f(llprg.ul_color, 1, 1, 1, 1);
 
     glEnable(GL_BLEND);
@@ -280,38 +283,38 @@ void turtle_app::display() {
 
   // draw unstepped
   llprg.use();
-  glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(llprg.p_mat * llprg.v_mat));
+  glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
   glUniform4f(llprg.ul_color, 1, 1, 1, 1);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   debugger::draw_line(GL_LINES, m_vertices.begin() + m_step_vertices, m_vertices.end(),
-      llprg.p_mat * llprg.v_mat, 1, vec4(1, 1, 1, 1));
+      p_mat * v_mat, 1, vec4(1, 1, 1, 1));
 
   // step
   debugger::draw_line(GL_LINES, m_vertices.begin(), m_vertices.begin() + m_step_vertices,
-      llprg.p_mat * llprg.v_mat, 1, vec4(1, 1, 0, 0.5));
+      p_mat * v_mat, 1, vec4(1, 1, 0, 0.5));
 
   // debug
   debugger::draw_line(GL_LINES, m_vertices.begin(), m_vertices.begin() + kci_debug_count->get_int(),
-      llprg.p_mat * llprg.v_mat, 1, vec4(1, 0, 0, 0.5));
+      p_mat * v_mat, 1, vec4(1, 0, 0, 0.5));
 
   if(m_last_step_vertices > 0)
   {
     // last step
     debugger::draw_line(GL_LINES, m_vertices.begin() + m_step_vertices - m_last_step_vertices,
-        m_vertices.begin() + m_step_vertices, llprg.p_mat * llprg.v_mat, 1, vec4(0, 1, 0, 0.5));
+        m_vertices.begin() + m_step_vertices, p_mat * v_mat, 1, vec4(0, 1, 0, 0.5));
   }
 
   // next step line (for edge rewritting)
   auto next = min<GLint>(m_vertices.size(), m_step_vertices + 2);
   debugger::draw_line(GL_LINES, m_vertices.begin() + m_step_vertices, m_vertices.begin() + next,
-      llprg.p_mat * llprg.v_mat, 1, vec4(0, 0, 1, 0.5));
+      p_mat * v_mat, 1, vec4(0, 0, 1, 0.5));
 
   // draw turtle
   mat4 m = glm::scale(m_step_transform, vec3(m_step.y * 0.5f));
   llprg.use();
-  glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(llprg.p_mat * llprg.v_mat * m));
+  glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat * m));
   glUniform4f(llprg.ul_color, 0, 1, 1, 0.5);
   m_turtle_geometry.draw();
 
@@ -450,8 +453,8 @@ void turtle_app::update_bound(const vec3_vector& vertices)
   if(h == 0)
     h = w;
   auto center = (corners.first + corners.second) * 0.5f;
-  llprg.p_mat = zxd::rect_ortho(w*0.51f, h*0.51f, wnd_aspect());
-  llprg.v_mat = glm::translate(-center);
+  p_mat = zxd::rect_ortho(w*0.51f, h*0.51f, wnd_aspect());
+  v_mat = glm::translate(-center);
 }
 
 }

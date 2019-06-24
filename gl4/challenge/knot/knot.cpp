@@ -21,6 +21,9 @@ kcip kci_slices;
 kcip kci_extrude_radius;
 kcip kci_num_faces;
 
+glm::mat4 m_mat;
+glm::mat4 v_mat;
+glm::mat4 p_mat;
 
 GLuint slices;
 GLfloat extrude_radius;
@@ -50,9 +53,9 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.p_mat = glm::perspective(fpi2, wnd_aspect(), 0.1f, 1000.0f);
-    prg.v_mat = zxd::isometric_projection(200);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi2, wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = zxd::isometric_projection(200);
+    set_v_mat(&v_mat);
 
     light_source l0;
     l0.position = vec4(-1, 1, 1, 0);
@@ -167,8 +170,8 @@ public:
     //glEnable(GL_CULL_FACE);
 
     prg.use();
-    prg.update_lighting_uniforms(lights, lm, mtl);
-    prg.update_model(mat4(1));
+    prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
+    prg.update_uniforms(mat4(1), v_mat, p_mat);
 
     knot.draw();
 

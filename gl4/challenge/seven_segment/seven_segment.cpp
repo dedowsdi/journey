@@ -14,6 +14,9 @@ lightless_program prg;
 vec4 enable_color = vec4(1, 0, 0, 1);
 vec4 disable_color = vec4(0.5, 0.5, 0.5, 1);
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 //std::vector<GLubyte> masks = {0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x70, 0x7f, 0x7b};
 std::vector<GLubyte> masks = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f};
 GLint mask_index = 0;
@@ -62,7 +65,7 @@ public:
     for (int i = 0; i < 7; ++i) {
       vec4& color =  mask & (1<<i) ? enable_color : disable_color;
       glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
-      glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat * m_transforms[i]));
+      glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * m_transforms[i]));
       capsule.draw();
     }
   }
@@ -89,7 +92,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.vp_mat = zxd::rect_ortho(5, 5, wnd_aspect());
+    p_mat = zxd::rect_ortho(5, 5, wnd_aspect());
 
     capsule.type(capsule2d::CT_POINT);
     capsule.width(1);

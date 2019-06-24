@@ -6,5 +6,10 @@ delete a-z
 
 squeeze a and b
     echo aaaabbbb | tr -s 'ab'
-    
+
+squeeze and replace
+    echo "aaaabbbb" | tr -s "ab" "cd"
+
+put all alphabet characters in unique line
+    echo "ab111bd333dfs443aaa" | tr -cs '[^[:alpha:]]' '\012'
 

@@ -1,0 +1,2 @@
+get block size
+    sudo blockdev --getbsz /dev/sda1

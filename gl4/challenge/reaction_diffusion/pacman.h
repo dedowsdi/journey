@@ -11,7 +11,7 @@ class pacman
 public:
   void init(std::shared_ptr<lightless_program> prg);
   void update();
-  void draw(const mat4& m_mat);
+  void draw(const mat4& m_mat, const mat4& v_mat, const mat4& p_mat);
 
   float radius() const { return m_radius; }
   void radius(float v){ m_radius = v; }

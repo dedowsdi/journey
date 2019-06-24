@@ -1,0 +1,16 @@
+-R
+--language-force=c++
+--sort=foldcase
+--links=no
+--fields=KsSi
+--excmd=number
+--c++-kinds=+p
+--c-kinds=+p
+--exclude=.vim
+--exclude=data
+--exclude=build
+--exclude=cmake
+--exclude=CMake
+--exclude=CMakeLists.txt
+--exclude=*.sh
+--exclude=*/bin/*

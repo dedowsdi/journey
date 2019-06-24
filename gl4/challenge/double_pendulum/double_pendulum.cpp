@@ -36,6 +36,10 @@ vec2 pos1;
 vec2 pos2;
 vec2 last_pos;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 class double_pendulum_app : public app {
 protected:
   bitmap_text m_text;
@@ -60,9 +64,9 @@ public:
     ball.build_mesh();
 
     prg.init();
-    prg.p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
-    prg.v_mat = glm::mat4(1);
-    prg.vp_mat = prg.p_mat * prg.v_mat;
+    p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
+    v_mat = glm::mat4(1);
+    vp_mat = p_mat * v_mat;
 
     glGenTextures(1, &m_tex);
     glBindTexture(GL_TEXTURE_2D, m_tex);
@@ -70,7 +74,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wnd_width(), wnd_height(),
         0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
@@ -108,26 +112,25 @@ public:
   virtual void display() {
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-    debugger::draw_line(last_pos, pos2, prg.vp_mat, 1, vec4(0));
+    debugger::draw_line(last_pos, pos2, vp_mat, 1, vec4(0));
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-    draw_quad(0);
+    draw_quad(m_tex);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(vp_mat));
     glUniform4f(prg.ul_color, 0,0,0,1);
 
-    debugger::draw_line(origin, pos1, prg.vp_mat, 1, vec4(0));
-    debugger::draw_line(pos1, pos2, prg.vp_mat, 1, vec4(0));
+    debugger::draw_line(origin, pos1, vp_mat, 1, vec4(0));
+    debugger::draw_line(pos1, pos2, vp_mat, 1, vec4(0));
 
-    mat4 mvp_mat = glm::translate(prg.vp_mat, vec3(pos1, 0));
+    mat4 mvp_mat = glm::translate(vp_mat, vec3(pos1, 0));
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     ball.draw();
 
-    mvp_mat = glm::translate(prg.vp_mat, vec3(pos2, 0));
+    mvp_mat = glm::translate(vp_mat, vec3(pos2, 0));
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     ball.draw();
 

@@ -13,6 +13,9 @@ namespace zxd {
 lightless_program prg;
 kcip color;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class butterfly
 {
 protected:
@@ -115,7 +118,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, WIDTH, 0, HEIGHT);
 
     m_butterfly.radius(300);
     m_butterfly.slice(1024);
@@ -135,7 +138,7 @@ public:
 
     prg.use();
     //mat4 mvp_mat = prg.vp_mat * glm::translate(vec3(WIDTH * 0.5f, HEIGHT * 0.5f, 0));
-    mat4 mvp_mat = prg.vp_mat * glm::translate(vec3(WIDTH * 0.5f, HEIGHT * 0.5f, 0)) * m_mat
+    mat4 mvp_mat = p_mat * v_mat * glm::translate(vec3(WIDTH * 0.5f, HEIGHT * 0.5f, 0)) * m_mat
     * glm::rotate(-fpi4, pza);
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(color->get<vec4>()));

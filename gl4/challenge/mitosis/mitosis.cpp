@@ -25,6 +25,9 @@ light_vector lights;
 light_model lm;
 material material0;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class cell
 {
 protected:
@@ -150,9 +153,9 @@ public:
     geometry.build_mesh();
 
     prg.init();
-    prg.v_mat = glm::lookAt(vec3(RADIUS*1.5, -RADIUS*1.5, RADIUS*1.5), vec3(0), vec3(0, 0, 1));
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 5000.0f);
-    set_v_mat(&prg.v_mat);
+    v_mat = glm::lookAt(vec3(RADIUS*1.5, -RADIUS*1.5, RADIUS*1.5), vec3(0), vec3(0, 0, 1));
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 5000.0f);
+    set_v_mat(&v_mat);
 
     prg.bind_lighting_uniform_locations(lights, lm, material0);
 
@@ -171,11 +174,11 @@ public:
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     prg.use();
-    prg.update_lighting_uniforms(lights, lm, material0);
+    prg.update_lighting_uniforms(lights, lm, material0, v_mat);
 
 
     std::for_each(m_cells.begin(), m_cells.end(),[&](decltype(*m_cells.begin()) v) {
-      prg.update_model(v.m_m_mat());
+      prg.update_uniforms(v.m_m_mat(), v_mat, p_mat);
       v.draw();
     });
 
@@ -212,8 +215,8 @@ public:
     if(button != GLFW_MOUSE_BUTTON_LEFT || action != GLFW_PRESS)
       return;
 
-    vec3 click_pos = this->unproject(vec3(current_mouse_position(), 0), prg.p_mat * prg.v_mat);
-    vec3 camera_pos = glm::column(glm::inverse(prg.v_mat), 3).xyz();
+    vec3 click_pos = this->unproject(vec3(current_mouse_position(), 0), p_mat * v_mat);
+    vec3 camera_pos = glm::column(glm::inverse(v_mat), 3).xyz();
     vec3 ray_dir = glm::normalize(click_pos - camera_pos);
     GLfloat d2 = 100000000;
     cell_vector::iterator it = m_cells.end();

@@ -10,6 +10,9 @@ namespace zxd {
 
 using namespace glm;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
 GLfloat wnd_aspect = 1;
@@ -28,23 +31,23 @@ void render() {
   mat4 model = mat4(1.0f);
   if (use_program) {
     glUseProgram(prg0.object);
-    prg0.update_model(model);
-    prg0.update_lighting_uniforms(lights, lm, mtl);
+    prg0.update_uniforms(model, v_mat, p_mat);
+    prg0.update_lighting_uniforms(lights, lm, mtl, v_mat);
     sphere0.draw();
   } else {
     // setup matrix
     glUseProgram(0);
     glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(value_ptr(prg0.p_mat));
+    glLoadMatrixf(value_ptr(p_mat));
 
-    mat4 mv_mat = model * prg0.v_mat;
+    mat4 mv_mat = model * v_mat;
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(value_ptr(mv_mat));
 
     // set up light and mtl
     lm.pipeline();
     for (int i = 0; i < lights.size(); ++i) {
-      lights[i].pipeline(i, prg0.v_mat);
+      lights[i].pipeline(i, v_mat);
     }
     mtl.pipeline();
     glutSolidSphere(1, 64, 64);
@@ -137,10 +140,10 @@ class app0 : public app {
     prg0.light_count = 3;
     prg0.init();
     prg0.bind_lighting_uniform_locations(lights, lm, mtl);
-    prg0.p_mat =
+    p_mat =
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 30.0f);
-    prg0.v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
-    this->set_v_mat(&prg0.v_mat);
+    v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
+    this->set_v_mat(&v_mat);
 
     sphere0.include_normal(true);
     sphere0.build_mesh();

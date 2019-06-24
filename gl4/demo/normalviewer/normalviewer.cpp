@@ -3,6 +3,7 @@
 #include <sstream>
 #include "common.h"
 #include "torus.h"
+#include "common_program.h"
 
 namespace zxd {
 
@@ -11,47 +12,14 @@ GLfloat normal_length = 0.1f;
 vec4 normal_color(1.0);
 vec4 wire_color(0.0, 0.0, 0.0, 1.0);
 
-struct normal_viewer_program : public zxd::program {
-
-  GLint ul_normal_length;
-  GLint ul_color;
-
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-    mv_mat = v_mat * m_mat;
-    mv_mat_it =
-      glm::inverse(glm::transpose(mv_mat));
-
-    glUniformMatrix4fv(ul_mv_mat_it, 1, 0,
-      value_ptr(mv_mat_it));
-    glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
-  }
-  virtual void attach_shaders() {
-    attach(GL_VERTEX_SHADER, "shader4/normal_viewer.vs.glsl");
-    attach(GL_GEOMETRY_SHADER, "shader4/normal_viewer.gs.glsl");
-    attach(GL_FRAGMENT_SHADER, "shader4/color.fs.glsl");
-  }
-  virtual void bind_uniform_locations() {
-    uniform_location(&ul_p_mat, "p_mat");
-    uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location( &ul_mv_mat_it, "mv_mat_it");
-    uniform_location(&ul_normal_length, "normal_length");
-    uniform_location(&ul_color, "color");
-  }
-
-  virtual void bind_attrib_locations() {
-    bind_attrib_location(0, "vertex");
-    bind_attrib_location(1, "normal");
-  };
-};
+glm::mat4 v_mat;
+glm::mat4 p_mat;
 
 struct wire_program : public zxd::program {
   GLint ul_color;
+  GLint ul_mvp_mat;
 
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-    mvp_mat = p_mat * v_mat * m_mat;
-
+  virtual void update_uniforms(const mat4& mvp_mat) {
     glUniformMatrix4fv(
       ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
@@ -91,13 +59,12 @@ protected:
     glEnable(GL_CULL_FACE);
 
     program.init();
-    program.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 50.0f);
-    program.v_mat = glm::lookAt(vec3(0, 5, 5), vec3(0), vec3(0, 0, 1));
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 50.0f);
+    v_mat = glm::lookAt(vec3(0, 5, 5), vec3(0), vec3(0, 0, 1));
 
     wire_program.init();
-    wire_program.p_mat = program.p_mat;
 
-    set_v_mat(&program.v_mat);
+    set_v_mat(&v_mat);
 
     torus.include_normal(true);
     torus.build_mesh();
@@ -112,17 +79,15 @@ protected:
     glUseProgram(program);
 
     mat4 model(1.0);
-    program.update_model(model);
-    glUniformMatrix4fv(
-      program.ul_p_mat, 1, 0, value_ptr(program.p_mat));
+    program.update_uniforms(model, v_mat, p_mat);
+    glUniformMatrix4fv( program.ul_p_mat, 1, 0, value_ptr(p_mat));
     glUniform1f(program.ul_normal_length, normal_length);
     glUniform4fv(program.ul_color, 1, value_ptr(normal_color));
     torus.draw();
 
     glUseProgram(wire_program);
 
-    wire_program.v_mat = program.v_mat;
-    wire_program.update_model(model);
+    wire_program.update_uniforms(p_mat * v_mat * model);
     glUniform4fv(wire_program.ul_color, 1, value_ptr(wire_color));
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     torus.draw();

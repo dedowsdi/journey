@@ -21,6 +21,9 @@ namespace zxd {
 GLuint width = 720;
 GLuint height = 720;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 kcip kci_pattern;
 kcip kci_n;
 kcip kci_degree;
@@ -88,7 +91,7 @@ private:
   void reset_pattern();
   void step();
   void update_bound(const vec3_vector& vertices);
-  void update_models();
+  void update_uniforms();
 };
 
 void plant1_5_app::init_info() {
@@ -112,9 +115,9 @@ void plant1_5_app::create_scene() {
 
   prg.instance = GL_TRUE;
   prg.init();
-  prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-  prg.v_mat = zxd::isometric_projection(100.0f);
-  set_v_mat(&prg.v_mat);
+  p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+  v_mat = zxd::isometric_projection(100.0f);
+  set_v_mat(&v_mat);
 
   llprg.init();
 
@@ -201,15 +204,15 @@ void plant1_5_app::update()
   if(rotating)
   {
     rotate_mat *= rotate(0.01f, pza);
-    mat = prg.v_mat * translate(m_world_center) * rotate_mat * translate(-m_world_center);
+    mat = v_mat * translate(m_world_center) * rotate_mat * translate(-m_world_center);
   }
   
   for (int i = 0; i < m_mats.size(); ++i) {
     if(rotating)
       mv_mats[i] = mat * m_mats[i];
     else
-      mv_mats[i] = prg.v_mat * m_mats[i];
-    mvp_mats[i] = prg.p_mat * mv_mats[i];
+      mv_mats[i] = v_mat * m_mats[i];
+    mvp_mats[i] = p_mat * mv_mats[i];
     mv_mat_its[i] = transpose(inverse(mv_mats[i]));
   }
   glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MV_MAT]);
@@ -230,7 +233,7 @@ void plant1_5_app::display() {
   {
     glDisable(GL_DEPTH_TEST);
     llprg.use();
-    glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.p_mat * prg.v_mat));
+    glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
     glUniform4f(llprg.ul_color, 1, 1, 1, 1);
 
     glEnable(GL_BLEND);
@@ -242,9 +245,9 @@ void plant1_5_app::display() {
   {
     glEnable(GL_DEPTH_TEST);
     prg.use();
-    prg.update_lighting_uniforms(lights, lm, mtl);
+    prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
     //for (int i = 0; i < m_mats.size(); ++i) {
-      //prg.update_model(m_mats[i]);
+      //prg.update_uniforms(m_mats[i]);
       //capsule.draw();
     //}
     capsule.draw();
@@ -259,23 +262,23 @@ void plant1_5_app::display() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // step
     debugger::draw_line(GL_LINES, m_vertices.begin(), m_vertices.begin() + m_step_vertices,
-        prg.p_mat * prg.v_mat, 1, vec4(1, 1, 0, 1));
+        p_mat * v_mat, 1, vec4(1, 1, 0, 1));
 
     // debug
     debugger::draw_line(GL_LINES, m_vertices.begin(), m_vertices.begin() + kci_debug_count->get_int(),
-        prg.p_mat * prg.v_mat, 1, vec4(1, 0, 0, 1));
+        p_mat * v_mat, 1, vec4(1, 0, 0, 1));
 
     if(m_last_step_vertices > 0)
     {
       // last step
       debugger::draw_line(GL_LINES, m_vertices.begin() + m_step_vertices - m_last_step_vertices,
-          m_vertices.begin() + m_step_vertices, prg.p_mat * prg.v_mat, 1, vec4(0, 1, 0, 1));
+          m_vertices.begin() + m_step_vertices, p_mat * v_mat, 1, vec4(0, 1, 0, 1));
     }
 
     // next step line
     auto next = min<GLint>(m_vertices.size(), m_step_vertices + 2);
     debugger::draw_line(GL_LINES, m_vertices.begin() + m_step_vertices, m_vertices.begin() + next,
-        prg.p_mat * prg.v_mat, 1, vec4(0, 0, 1, 1));
+        p_mat * v_mat, 1, vec4(0, 0, 1, 1));
     glDisable(GL_BLEND);
   }
 
@@ -383,7 +386,7 @@ void plant1_5_app::reset_pattern()
   m_step_vertices = 0;
   m_last_step_vertices = 0;
 
-  update_models();
+  update_uniforms();
   update_bound(m_vertices);
 }
 
@@ -420,7 +423,7 @@ void plant1_5_app::step()
     update_bound(vertices);
   }
 
-  update_models();
+  update_uniforms();
 }
 
 void plant1_5_app::update_bound(const vec3_vector& vertices)
@@ -430,14 +433,14 @@ void plant1_5_app::update_bound(const vec3_vector& vertices)
   auto center = (corners.first + corners.second) * 0.5f;
   auto r = glm::length(corners.second - corners.first) * 0.5f;
   GLfloat d = r / sin(fpi8) * (wnd_aspect() > 1.0f ? 1.0f : 1.0f/wnd_aspect()) ;
-  prg.v_mat = zxd::isometric_projection(d*1.05f / sqrt(3.0f), center);
+  v_mat = zxd::isometric_projection(d*1.05f / sqrt(3.0f), center);
   world_center(center);
 
   // clamp near far
-  //prg.p_mat = glm::perspective(fpi4, wnd_aspect(), d - r - 0.001f, d+r + 0.001f);
+  //p_mat = glm::perspective(fpi4, wnd_aspect(), d - r - 0.001f, d+r + 0.001f);
 }
 
-void plant1_5_app::update_models()
+void plant1_5_app::update_uniforms()
 {
   m_mats.resize(m_vertices.size() / 2);
   mv_mats.resize(m_mats.size());

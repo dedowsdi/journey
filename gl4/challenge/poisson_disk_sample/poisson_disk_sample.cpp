@@ -10,6 +10,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 struct points
 {
   GLuint vao;
@@ -56,6 +59,8 @@ struct points
 struct dot_program : public program
 {
   GLint ul_color;
+  GLint ul_mvp_mat;
+
   void attach_shaders() override
   {
     attach(GL_VERTEX_SHADER, "shader4/dot.vs.glsl");
@@ -208,7 +213,7 @@ public:
 
     geometry.init();
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     reset_samples();
   }
@@ -225,7 +230,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
     glPointSize(RADIUS); // point radius is RADIUS/2
     geometry.draw();

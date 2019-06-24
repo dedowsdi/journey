@@ -34,6 +34,6 @@ int main(int argc, char *argv[])
 
   using std::swap;
   swap(b0, b1);
-  
+
   return 0;
 }

@@ -28,6 +28,10 @@ namespace zxd {
 
 using namespace glm;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 light_p_mat;
+
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
 
@@ -58,6 +62,7 @@ struct render_program : public zxd::program {
 
   GLint ul_near_plane;
   GLint ul_far_plane;
+  GLint ul_mvp_mat;
 
   mat4 light_v_mats[6];
   GLint index;  // current rendering index of cubemap
@@ -104,9 +109,8 @@ struct render_program : public zxd::program {
       light_position, light_position + vec3(0, 0, -1), vec3(0, -1, 0));
   }
 
-  virtual void update_frame() {}
-  virtual void update_model(const glm::mat4& m_mat) {
-    mvp_mat = p_mat * light_v_mats[index] * m_mat;
+  virtual void update_uniforms(const glm::mat4& m_mat) {
+    mat4 mvp_mat = light_p_mat * light_v_mats[index] * m_mat;
 
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, &mvp_mat[0][0]);
     glUniform1f(ul_near_plane, light_near);
@@ -125,6 +129,10 @@ struct use_program : public zxd::program {
   GLint ul_bias;
   GLint ul_near_plane;
   GLint ul_far_plane;
+  GLint ul_m_mat;
+  GLint ul_mv_mat;
+  GLint ul_mvp_mat;
+  GLint ul_mv_mat_it;
 
   virtual void update_frame() {
     p_mat = glm::perspective<GLfloat>(45.0, wnd_aspect, 0.1, 100);
@@ -139,10 +147,10 @@ struct use_program : public zxd::program {
     glUniform1f(ul_bias, bias);
     glUniform1i(ul_depth_cube_map, 0);
   }
-  virtual void update_model(const glm::mat4& m_mat) {
-    mv_mat = v_mat * m_mat;
-    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
-    mvp_mat = p_mat * mv_mat;
+  virtual void update_uniforms(const glm::mat4& m_mat) {
+    mat4 mv_mat = v_mat * m_mat;
+    mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mat4 mvp_mat = p_mat * mv_mat;
     // mat4 m_mat_i = glm::inverse(m_mat);
 
     glUniformMatrix4fv(ul_m_mat, 1, 0, &m_mat[0][0]);
@@ -209,9 +217,10 @@ class app0 : public app {
     m_info.wnd_height = WINDOWS_HEIGHT;
   }
 
-  void render(zxd::program& program) {
+  template<typename T>
+  void render(T& program) {
     glm::mat4 model = glm::translate(vec3(0, 0, 2));
-    program.update_model(model);
+    program.update_uniforms(model);
     sphere0.draw();
 
     GLuint num_sphere = 8;
@@ -220,12 +229,12 @@ class app0 : public app {
       vec4 pos = glm::rotate(step_rotate * i, vec3(0, 0, 1)) * vec4(5, 0, 2, 1);
       model = glm::translate(pos.xyz());
 
-      program.update_model(model);
+      program.update_uniforms(model);
       sphere0.draw();
     }
 
     model = glm::mat4(1.0);
-    program.update_model(model);
+    program.update_uniforms(model);
     plane0.draw();
   }
 
@@ -235,7 +244,6 @@ class app0 : public app {
 
     glCullFace(GL_FRONT);
     glUseProgram(render_prg.object);
-    render_prg.update_frame();
 
     // render 6 faces of cube map
     for (int i = 0; i < 6; ++i) {
@@ -338,7 +346,7 @@ class app0 : public app {
     glReadBuffer(GL_NONE);
 
     render_prg.init();
-    render_prg.p_mat = glm::perspective(
+    light_p_mat = glm::perspective(
       glm::radians(90.0f), wnd_aspect(), light_near, light_far);
     render_prg.reset_light_position();
 

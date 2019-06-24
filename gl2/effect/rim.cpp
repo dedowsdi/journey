@@ -11,6 +11,9 @@ namespace zxd {
 
 using namespace glm;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
 
@@ -25,6 +28,11 @@ sphere sphere0(1, 32, 32);
 struct rim_program : public zxd::program {
   GLint ul_rim_color;
   GLint ul_rim_power;
+  GLint ul_mv_mat_it;
+  GLint ul_mv_mat;
+  GLint ul_mvp_mat;
+
+  mat4 v_mat_it;
 
   virtual void update_frame() {
     v_mat_it = glm::inverse(glm::transpose(v_mat));
@@ -38,12 +46,11 @@ struct rim_program : public zxd::program {
     glUniform3fv(ul_rim_color, 1, value_ptr(rim_color));
     glUniform1f(ul_rim_power, rim_power);
   }
-  virtual void update_model(const glm::mat4& _m_mat) {
+  virtual void update_uniforms(const glm::mat4& m_mat, const glm::mat4& v_mat, const glm::mat4& p_mat) {
     // m_mat_i = glm::inverse(m_mat);
-    m_mat = _m_mat;
-    mv_mat = v_mat * m_mat;
-    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
-    mvp_mat = p_mat * mv_mat;
+    mat4 mv_mat = v_mat * m_mat;
+    mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mat4 mvp_mat = p_mat * mv_mat;
 
     glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
     glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
@@ -93,7 +100,7 @@ class app0 : public app {
     mat4 model = mat4(1.0f);
     glUseProgram(prg0);
     prg0.update_frame();
-    prg0.update_model(model);
+    prg0.update_uniforms(model, v_mat, p_mat);
     sphere0.draw();
   }
 
@@ -148,9 +155,9 @@ class app0 : public app {
     mtl.ambient = vec4(0);
 
     prg0.init();
-    prg0.p_mat =
+    p_mat =
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 30.0f);
-    prg0.v_mat = glm::lookAt(vec3(0, 0, 3), vec3(0, 0, 0), vec3(0, 1, 0));
+    v_mat = glm::lookAt(vec3(0, 0, 3), vec3(0, 0, 0), vec3(0, 1, 0));
 
     sphere0.include_normal(true);
     sphere0.build_mesh();

@@ -10,6 +10,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg;
 
 kcip trunk_len;
@@ -193,7 +196,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     auto update_callback = std::bind(std::mem_fn(&fractal_tree_app::update_tree), this, std::placeholders::_1);
     trunk_len = m_control.add_control<GLfloat>(GLFW_KEY_Q, 200, 10, 400, 10, update_callback);
@@ -224,8 +227,8 @@ public:
 
     prg.use();
 
-    prg.mvp_mat = prg.p_mat * prg.v_mat * m_tree.transform();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
+    mat4 mvp_mat = p_mat * v_mat * m_tree.transform();
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
 
     m_tree.draw();

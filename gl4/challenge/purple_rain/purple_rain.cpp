@@ -25,6 +25,10 @@ GLuint mvp_vbo;
 vec4_vector posz;
 GLuint posz_vbo;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 // unit rain_drop drop geometry in x z
 struct rain_drop_geometry
 {
@@ -39,7 +43,7 @@ struct rain_drop_geometry
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
-    
+
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(decltype(vertices)::value_type),
@@ -55,7 +59,7 @@ struct rain_drop_geometry
     glVertexAttribDivisor(1, 1);
     glEnableVertexAttribArray(1);
 
-    
+
     //glVertexAttribPointer(
       //location, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
     //glEnableVertexAttribArray(location);
@@ -129,6 +133,7 @@ class purple_rain_program : public program
 
 public:
   GLint ul_color;
+  GLint ul_vp_mat;
 
 protected:
 
@@ -176,10 +181,10 @@ protected:
     m_geometry.build_mesh();
 
     prg.init();
-    prg.p_mat = glm::perspectiveRH(fpi * 0.25f, wnd_aspect(), 0.1f, 50000.0f);
-    prg.v_mat = glm::lookAt(vec3(RADIUS*1.8, -RADIUS*1.8, RADIUS*1.8), vec3(0, 0, RADIUS * 0.5), vec3(0, 0, 1));
-    prg.vp_mat = prg.p_mat * prg.v_mat;
-    app::set_v_mat(&prg.v_mat);
+    p_mat = glm::perspectiveRH(fpi * 0.25f, wnd_aspect(), 0.1f, 50000.0f);
+    v_mat = glm::lookAt(vec3(RADIUS*1.8, -RADIUS*1.8, RADIUS*1.8), vec3(0, 0, RADIUS * 0.5), vec3(0, 0, 1));
+    vp_mat = p_mat * v_mat;
+    app::set_v_mat(&v_mat);
 
     m_rains.resize(NUM_DROPS);
     mvp_mats.resize(NUM_DROPS);
@@ -206,16 +211,16 @@ protected:
     }
 
     // update instance attribute buffer
-    
+
     if(m_dirty_view)
-      prg.vp_mat = prg.p_mat * prg.v_mat;
+      vp_mat = p_mat * v_mat;
 
     //for (size_t i = 0; i < mvp_mats.size(); ++i) {
       //mvp_mats[i] = prg.vp_mat * m_rains[i].m_mat();
     //}
     //glBindBuffer(GL_ARRAY_BUFFER, mvp_vbo);
     //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(mat4) * mvp_mats.size(), glm::value_ptr(mvp_mats[0]));
-    
+
     for (size_t i = 0; i < posz.size(); ++i) {
       posz[i] = m_rains[i].posz();
     }
@@ -227,10 +232,10 @@ protected:
   void display()
   {
     glClear(GL_COLOR_BUFFER_BIT);
-    
+
     prg.use();
     glUniform3fv(prg.ul_color, 1, glm::value_ptr(RAIN_COLOR));
-    glUniformMatrix4fv(prg.ul_vp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_vp_mat, 1, 0, glm::value_ptr(vp_mat));
 
 
     m_geometry.draw(m_rains.size());

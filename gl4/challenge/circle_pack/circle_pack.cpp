@@ -22,6 +22,9 @@ mat4_vector m_mats;
 GLuint vbo;
 circle geometry;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg0; // picture prg
 lightless_program prg1; // circle prg
 
@@ -107,11 +110,11 @@ public:
 
     prg0.with_texcoord = true;
     prg0.init();
-    prg0.fix2d_camera(0, wnd_width(), 0, wnd_height());
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     prg1.instance = true;
     prg1.init();
-    prg1.fix2d_camera(0, wnd_width(), 0, wnd_height());
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
@@ -241,7 +244,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg0.use();
-    glUniformMatrix4fv(prg0.ul_mvp_mat, 1, 0, glm::value_ptr(prg0.vp_mat));
+    glUniformMatrix4fv(prg0.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glUniform1i(prg0.ul_diffuse_map, 0);
     glBindTexture(GL_TEXTURE_2D, tex);
     //q.draw();
@@ -254,7 +257,7 @@ public:
       //geometry.draw();
     //}
 
-    glUniformMatrix4fv(prg1.ul_mvp_mat, 1, 0, glm::value_ptr(prg1.vp_mat));
+    glUniformMatrix4fv(prg1.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glUniform4fv(prg1.ul_color, 1,  glm::value_ptr(vec4(1)));
     geometry.draw();
 

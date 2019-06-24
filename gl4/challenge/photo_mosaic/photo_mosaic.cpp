@@ -15,6 +15,9 @@ kcip kci_rows;
 kcip kci_cols;
 fipImage img; // photo
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 // a single tile in image pack
 struct tile 
 {
@@ -133,6 +136,7 @@ class photo_mosaic_protroam : public program
 {
 public:
   GLint ul_diffuse_map;
+  GLint ul_mvp_mat;
 
 protected:
 
@@ -279,7 +283,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, img.getWidth(), 0, img.getHeight());
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     pack.rows(32);
     pack.cols(16);
@@ -300,7 +304,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glUniform1i(prg.ul_diffuse_map, 0);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     geometry.draw();

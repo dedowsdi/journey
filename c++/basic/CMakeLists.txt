@@ -15,7 +15,6 @@ set (PROJECTS
     float
     cast
     value
-    functional
     printf
     static
     array

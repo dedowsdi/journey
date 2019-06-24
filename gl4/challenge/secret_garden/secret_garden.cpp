@@ -15,6 +15,8 @@ namespace zxd {
 
 lightless_program prg;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
 
 class secret_garden_app : public app {
 private:
@@ -50,7 +52,7 @@ void secret_garden_app::create_scene() {
 
   prg.with_color = true;
   prg.init();
-  prg.p_mat = zxd::rect_ortho(30, 30, wnd_aspect());
+  p_mat = zxd::rect_ortho(30, 30, wnd_aspect());
 }
 
 void secret_garden_app::update() {
@@ -62,7 +64,7 @@ void secret_garden_app::display() {
 
   prg.use();
 
-  glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.p_mat));
+  glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
   m_bug.draw();
 
   glEnable(GL_BLEND);

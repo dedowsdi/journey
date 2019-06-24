@@ -13,6 +13,6 @@ int main(int argc, char *argv[])
   // engine with fixed seed, sometimes you need this to recreate random sequence
   std::mt19937 engine1(100);
   std::cout << r0(engine1) << std::endl;
-  
+
   return 0;
 }

@@ -11,6 +11,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 geometry_base rect;
 geometry_base triangle;
 geometry_base isoline;
@@ -51,6 +54,8 @@ class tessellate_program : public program
 
 public:
   GLint ul_color;
+  GLint ul_mvp_mat;
+
   std::string layout;
 
 protected:
@@ -130,9 +135,9 @@ void tessellate_app::create_scene() {
   m_text.init();
   m_text.reshape(wnd_width(), wnd_height());
 
-  prg.v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0), pza);
-  prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-  set_v_mat(&prg.v_mat);
+  v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0), pza);
+  p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+  set_v_mat(&v_mat);
 
   {
     auto vertices = std::make_shared<vec2_array>();
@@ -204,7 +209,7 @@ void tessellate_app::display() {
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   prg.use();
-  mat4 mvp_mat = prg.p_mat * prg.v_mat;
+  mat4 mvp_mat = p_mat * v_mat;
   glUniform4f(prg.ul_color, 1, 1, 1, 1);
   glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
 

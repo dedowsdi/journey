@@ -17,6 +17,9 @@ geometry_base teapot;
 vec4 tess_level_out = vec4(16);
 vec2 tess_level_inner = vec2(16);
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class program_name : public program
 {
 public:
@@ -89,9 +92,9 @@ void teapot_app::create_scene() {
   teapot.bind_and_update_buffer();
 
   prg.init();
-  prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-  prg.v_mat = glm::lookAt(vec3(0, -20, 0), vec3(0), pza);
-  set_v_mat(&prg.v_mat);
+  p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+  v_mat = glm::lookAt(vec3(0, -20, 0), vec3(0), pza);
+  set_v_mat(&v_mat);
 }
 
 void teapot_app::update() {}
@@ -105,7 +108,7 @@ void teapot_app::display() {
   glPatchParameterfv(GL_PATCH_DEFAULT_OUTER_LEVEL, glm::value_ptr(tess_level_out));
   glPatchParameterfv(GL_PATCH_DEFAULT_INNER_LEVEL, glm::value_ptr(tess_level_inner));
 
-  mat4 mvp_mat = prg.p_mat * prg.v_mat * glm::rotate(fpi2, pxa);
+  mat4 mvp_mat = p_mat * v_mat * glm::rotate(fpi2, pxa);
   glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   glUniform4f(prg.ul_color, 1, 1, 1, 1);
 

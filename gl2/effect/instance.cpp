@@ -13,6 +13,9 @@ using namespace glm;
 #define WINDOWS_WIDTH 512
 #define WINDOWS_HEIGHT 512
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 vec3 camera_pos = vec3(0, -30, 30);
 
 std::vector<zxd::light_source> lights;
@@ -36,7 +39,7 @@ class app0 : public app {
     // GLint ul_eye;
 
     virtual void update_frame() {
-      v_mat_it = glm::inverse(glm::transpose(v_mat));
+      // v_mat_it = glm::inverse(glm::transpose(v_mat));
 
       material.update_uniforms();
       light_model.update_uniforms();
@@ -79,8 +82,6 @@ class app0 : public app {
     prg.use();
     prg.update_frame();
 
-    mat4 model = mat4(1.0f);
-    prg.update_model(model);
     sphere0.draw();
   }
 
@@ -96,8 +97,8 @@ class app0 : public app {
     for (int i = 0; i < num_instance; ++i) {
       mat4 m_mat = glm::translate(
         glm::linearRand(vec3(-10.0, -10.0, -10.0), vec3(10.0, 10.0, 10.0)));
-      mat4 mv_mat = prg.v_mat * m_mat;
-      mat4 mvp_mat = prg.p_mat * mv_mat;
+      mat4 mv_mat = v_mat * m_mat;
+      mat4 mvp_mat = p_mat * mv_mat;
       mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
 
       mv_mats.push_back(mv_mat);
@@ -201,9 +202,9 @@ class app0 : public app {
     material.specular = vec4(1.0, 1.0, 1.0, 1.0);
 
     prg.init();
-    prg.p_mat =
+    p_mat =
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 50.0f);
-    prg.v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
+    v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
 
     sphere0.include_normal(true);
     sphere0.build_mesh();

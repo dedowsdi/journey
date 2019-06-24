@@ -7,6 +7,7 @@
 #include <map>
 #include <sstream>
 #include "glc_utf8.h"
+#include "stream_util.h"
 
 namespace zxd {
 
@@ -49,6 +50,10 @@ class app0 : public app {
   struct freetype_text_program : public zxd::program {
     GLint ul_text_color;
     GLint ul_font_map;
+    GLint ul_mvp_mat;
+
+    mat4 mvp_mat;
+
     freetype_text_program() {
       mvp_mat = glm::ortho(0.0f, (GLfloat)WINDOWS_WIDTH, 0.0f,
         (GLfloat)WINDOWS_HEIGHT, -1.0f, 1.0f);
@@ -199,8 +204,7 @@ class app0 : public app {
                 << std::endl;
 
     FT_Face face;
-    //std::string font("font/DejaVuSansMono.ttf");
-    std::string font("font/SentyGoldenBell.ttf");
+    std::string font = stream_util::get_resource("font/SourceHanSerifSC-Regular.otf");
     error = FT_New_Face(ft, font.c_str(), 0, &face);
     if (error == FT_Err_Unknown_File_Format)
       std::cout << "ERROR:FREETYEP: unsupported face";

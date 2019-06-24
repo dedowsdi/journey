@@ -27,6 +27,10 @@ namespace zxd {
 GLuint diffuse_map;
 GLuint diffuse_map1d;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 mvp_mat;
+
 blinn_program blinn_prg;
 normal_viewer_program nv_prg;
 vertex_color_program vc_prg;
@@ -35,11 +39,9 @@ struct texline_program : public zxd::program {
   // GLint ul_eye;
 
   GLint ul_diffuse_map;
+  GLint ul_mvp_mat;
 
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-    mvp_mat = p_mat * v_mat * m_mat;
-
+  virtual void update_uniforms(const mat4& mvp_mat) {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
   virtual void attach_shaders() {
@@ -114,19 +116,17 @@ public:
     // program
     blinn_prg.with_texcoord = 1;
     blinn_prg.init();
-    blinn_prg.p_mat =
+    p_mat =
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 30.0f);
-    blinn_prg.v_mat = glm::lookAt(m_camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
-    set_v_mat(&blinn_prg.v_mat);
+    v_mat = glm::lookAt(m_camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
+    set_v_mat(&v_mat);
 
     blinn_prg.bind_lighting_uniform_locations(
       m_lights, m_light_model, m_material);
 
     nv_prg.init();
-    nv_prg.p_mat = blinn_prg.p_mat;
 
     texline_prg.init();
-    texline_prg.p_mat = blinn_prg.p_mat;
 
     vc_prg.init();
 
@@ -288,13 +288,13 @@ public:
     blinn_prg.use();
 
     mat4 m_mat = glm::translate(translation);
-    blinn_prg.update_model(m_mat);
+    blinn_prg.update_uniforms(m_mat, v_mat, p_mat);
     gm.draw();
 
     // bad performance
     if (m_render_normal) {
       nv_prg.use();
-      nv_prg.update_uniforms(m_mat, blinn_prg.v_mat, blinn_prg.p_mat);
+      nv_prg.update_uniforms(m_mat, v_mat, p_mat);
       gm.draw();
     }
   }
@@ -304,7 +304,7 @@ public:
 
     glUniform1i(texline_prg.ul_diffuse_map, 0);
     mat4 m_mat = glm::translate(translation);
-    texline_prg.update_model(m_mat);
+    texline_prg.update_uniforms(m_mat);
     gm.draw();
   }
 
@@ -317,10 +317,10 @@ public:
   virtual void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(blinn_prg);
-    blinn_prg.update_lighting_uniforms(m_lights, m_light_model, m_material);
-    nv_prg.v_mat = blinn_prg.v_mat;
-    texline_prg.v_mat = blinn_prg.v_mat;
+    blinn_prg.use();
+    blinn_prg.update_lighting_uniforms(m_lights, m_light_model, m_material, v_mat);
+
+    mat4 vp_mat = p_mat * v_mat;
 
     glBindTexture(GL_TEXTURE_2D, diffuse_map);
     render_blinn(m_xyplane, vec3(0, 0, -2));
@@ -332,32 +332,34 @@ public:
     render_blinn(m_cone, vec3(-2, 0, 0));
     render_blinn(m_cylinder, vec3(0, 2, 0));
     render_blinn(m_torus, vec3(0, -2.5, 0));
-    render_blinn(m_bezier_surface, vec3(-3, -3, 0));
     render_blinn(m_teardrop, vec3(-3, -5, 0));
     render_blinn(m_capsule, vec3(-1, -5, 0));
+
+    render_blinn(m_bezier_surface, vec3(-3, -3, 0));
     {
       glPointSize(3);
-      draw_points(m_bezier_surface.ctrl_points(), blinn_prg.mvp_mat);
-      glPointSize(1);
-    }
-    render_blinn(m_nurb_surface, vec3(3, -3, 0));
-    {
-      glPointSize(3);
-      draw_points(m_nurb_surface.ctrl_points(), blinn_prg.mvp_mat);
+      draw_points(m_bezier_surface.ctrl_points(), vp_mat * glm::translate(vec3(-3, -3, 0)));
       glPointSize(1);
     }
 
-    render_vertex_color(m_axes, blinn_prg.p_mat * blinn_prg.v_mat);
+    render_blinn(m_nurb_surface, vec3(3, -3, 0));
+    {
+      glPointSize(3);
+      draw_points(m_nurb_surface.ctrl_points(), vp_mat * glm::translate(vec3(3, -3, 0)));
+      glPointSize(1);
+    }
+
+    render_vertex_color(m_axes, vp_mat);
 
     glBindTexture(GL_TEXTURE_1D, diffuse_map1d);
 
     render_texline(m_bezier, glm::vec3(0, -2.5, 0));
     glPointSize(3);
-    draw_points(m_bezier.ctrl_points(), texline_prg.mvp_mat);
+    draw_points(m_bezier.ctrl_points(), vp_mat * glm::translate(glm::vec3(0, -2.5, 0)));
     glPointSize(1);
     render_texline(m_nurb, glm::vec3(2, -2, -1));
     glPointSize(3);
-    draw_points(m_nurb.ctrl_points(), texline_prg.mvp_mat);
+    draw_points(m_nurb.ctrl_points(), vp_mat * glm::translate(glm::vec3(2, -2, -1)));
     glPointSize(1);
 
     GLint cull_face;

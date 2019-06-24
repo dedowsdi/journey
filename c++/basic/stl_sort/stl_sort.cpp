@@ -61,13 +61,14 @@ int main(int argc, char *argv[])
   std::cout << "sort object directly finished in " << timer.miliseconds() << "ms" << std::endl;
 
   std::vector<A*> vp;
-  for (int i = 0; i < numData; ++i) {
-    vp.push_back(new A());
-  }
-
+  vp.resize(numData);
+  std::generate_n(vp.end(), numData,
+      []()->A* {
+        return new A();
+      });
 
   timer.reset();
-  std::sort(vp.begin(), vp.end(), 
+  std::sort(vp.begin(), vp.end(),
       [](const A* a0, const A* a1)->bool
       {
         return a0->x < a1->x;
@@ -78,6 +79,6 @@ int main(int argc, char *argv[])
   for (int i = 0; i < numData; ++i) {
     delete vp[i];
   }
-  
+
   return 0;
 }

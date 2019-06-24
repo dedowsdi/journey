@@ -6,17 +6,24 @@
 #include <sstream>
 #include "common.h"
 
-GLuint num_billboards = 1000;
-GLuint method = 0;  // 0 : billboard_align, 1 : billboard_z, 2 : billboard_eye
-std::string methods[] = {"align to camera rotation",
-  "rotate z to center_to_camera",
-  "look at camera, use camera up"};
-GLuint tex;
 
 namespace zxd {
 
+GLuint num_billboards = 1000;
+GLuint method = 0;  // 0 : billboard_align, 1 : billboard_z, 2 : billboard_eye
+GLuint tex;
+std::string methods[] = {
+  "align to camera rotation",
+  "rotate z to center_to_camera",
+  "look at camera, use camera up"};
+
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 struct program0 : public zxd::program {
   GLint ul_diffuse_map;
+  GLint ul_v_mat;
+  GLint ul_vp_mat;
 
   virtual void attach_shaders() {
     attach(GL_VERTEX_SHADER, "shader4/billboard_align.vs.glsl");
@@ -37,6 +44,7 @@ struct program0 : public zxd::program {
 struct program1 : public zxd::program {
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
+  GLint ul_vp_mat;
 
   virtual void attach_shaders() {
     attach(GL_VERTEX_SHADER, "shader4/billboard_z.vs.glsl");
@@ -58,6 +66,7 @@ struct program2 : public zxd::program {
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
   GLint ul_camera_up;
+  GLint ul_vp_mat;
 
   virtual void attach_shaders() {
     attach(GL_VERTEX_SHADER, "shader4/billboard_eye.vs.glsl");
@@ -115,11 +124,10 @@ protected:
     program1.init();
     program2.init();
 
-    program0.v_mat =
-      glm::lookAt(vec3(0, -100, 100), vec3(0), vec3(0, 0, 1));
-    program0.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = glm::lookAt(vec3(0, -100, 100), vec3(0), vec3(0, 0, 1));
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
 
-    set_v_mat(&program0.v_mat);
+    set_v_mat(&v_mat);
 
     // texture
     glGenTextures(1, &tex);
@@ -179,10 +187,7 @@ protected:
     glBindVertexArray(vao);
     glBindTexture(GL_TEXTURE_2D, tex);
 
-    program0.vp_mat = program0.p_mat * program0.v_mat;
-    const glm::mat4 &vp_mat = program0.vp_mat;
-    //const glm::mat4 &p_mat = program0.p_mat;
-    const glm::mat4 &v_mat = program0.v_mat;
+    glm::mat4 vp_mat = p_mat * v_mat;;
 
     if (method == 0) {
       glUseProgram(program0);

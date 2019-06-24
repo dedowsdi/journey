@@ -32,6 +32,9 @@ kcip kci_ripple_start;
 kcip kci_ripple_frame;
 quad q;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class ripple_program : public program
 {
 public:
@@ -94,7 +97,7 @@ public:
 
   void draw()
   {
-    mat4 mvp_mat = glm::translate(lprg.vp_mat, vec3(m_pos, 0));
+    mat4 mvp_mat = glm::translate(p_mat, vec3(m_pos, 0));
     glUniformMatrix4fv(lprg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, sheet.tex());
@@ -142,7 +145,7 @@ public:
 
     lprg.with_texcoord = true;
     lprg.init();
-    lprg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, WIDTH, 0, HEIGHT, -1, 1);
 
     rprg.init();
 
@@ -154,7 +157,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getWidth(), img.getHeight(), 0,
         GL_BGRA, GL_UNSIGNED_BYTE, img.accessPixels());
 

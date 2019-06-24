@@ -13,6 +13,4 @@ ctags \
 --exclude=CMakeLists \
 --language-force=c++ \
 practice \
-common \
-dependencies/osg/include \
-dependencies/osg/src \
+common

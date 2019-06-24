@@ -13,6 +13,9 @@ const GLint width = 800;
 const GLint height = 800;
 const GLint num_stars = 2000;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 freetype_text ft("font/DejaVuSansMono.ttf");
 std::shared_ptr<bitmap_text> bt;
 
@@ -21,6 +24,8 @@ class text_starfield_program : public program
 public:
   GLint ul_diffuse_map;
   GLint ul_color;
+  GLint ul_vp_mat;
+  GLint ul_m_mat;
 
 protected:
 
@@ -178,8 +183,8 @@ void text_starfield::create_scene() {
   m_text.init();
   m_text.reshape(wnd_width(), wnd_height());
 
-  prg.p_mat = glm::perspective<GLfloat>(45, wnd_aspect(), 1.0, 1000);
-  prg.v_mat = translate(vec3(0, 0, -1));
+  p_mat = glm::perspective<GLfloat>(45, wnd_aspect(), 1.0, 1000);
+  v_mat = translate(vec3(0, 0, -1));
 
   prg.init();
   m_stars.resize(num_stars);
@@ -198,7 +203,7 @@ void text_starfield::display() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   prg.use();
   glBindTexture(GL_TEXTURE_2D, bt->texture());
-  glUniformMatrix4fv(prg.ul_vp_mat, 1, 0, glm::value_ptr(prg.p_mat * prg.v_mat));
+  glUniformMatrix4fv(prg.ul_vp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
   glUniform1i(prg.ul_diffuse_map, 0);
 
   for(auto& item : m_stars)

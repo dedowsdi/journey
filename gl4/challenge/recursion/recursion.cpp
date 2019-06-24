@@ -12,6 +12,9 @@ namespace zxd {
 lightless_program prg;
 circle geometry;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class recursion_app : public app {
 protected:
   bitmap_text m_text;
@@ -30,7 +33,7 @@ public:
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
 
-    prg.init(); prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     geometry.type(circle::LINE);
     geometry.slice(64);
@@ -45,7 +48,7 @@ public:
       return;
 
     mat4 m = glm::scale(glm::translate(vec3(pos, 0)), vec3(size,size, 1));
-    mat4 mvp_mat = prg.vp_mat * m;
+    mat4 mvp_mat = p_mat * m;
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     geometry.draw();
 

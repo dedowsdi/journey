@@ -6,12 +6,12 @@
 
 template <typename T0, typename T1>
 void foo() {
-  std::cout << "<T0, T1>foo called" << std::endl;
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 template <typename T0>
 void foo() {
-  std::cout << "<T>foo called" << std::endl;
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 int main(int argc, char *argv[]) {

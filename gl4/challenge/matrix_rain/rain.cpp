@@ -10,11 +10,17 @@
 namespace zxd
 {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 namespace
 {
 class matrix_rain_program : public program
 {
 public:
+  GLint ul_mvp_mat;
+  mat4 mvp_mat;
+
   void update_uniforms(GLuint tui_font) {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform1i(ul_font_map, tui_font);

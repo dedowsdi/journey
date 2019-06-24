@@ -7,6 +7,10 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 lightless_program prg;
 fipImage img;
 quad q;
@@ -38,7 +42,6 @@ public:
 
     prg.with_texcoord = true;
     prg.init();
-    prg.mvp_mat = mat4(1);
 
     q.include_texcoord(true);
     q.build_mesh();
@@ -114,7 +117,7 @@ public:
     prg.use();
     glBindTexture(GL_TEXTURE_2D, m_tex0);
     glUniform1i(prg.ul_diffuse_map, 0);
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mat4(1)));
     q.draw();
 
     glViewport(img.getWidth(), 0, img.getWidth(), img.getHeight());
@@ -125,9 +128,8 @@ public:
     prg.use();
     glBindTexture(GL_TEXTURE_2D, m_tex1);
     glUniform1i(prg.ul_diffuse_map, 0);
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.mvp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mat4(1)));
     q.draw();
-
 
     glDisable(GL_SCISSOR_TEST);
     glEnable(GL_BLEND);

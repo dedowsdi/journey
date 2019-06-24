@@ -1,0 +1,2 @@
+print number of blocks and block size
+stat -c '%b %B' file

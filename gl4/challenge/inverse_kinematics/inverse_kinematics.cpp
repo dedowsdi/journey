@@ -9,6 +9,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg;
 
 struct segment
@@ -193,7 +196,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     dvec2 mouse;
     glfwGetCursorPos(m_wnd, &mouse.x, &mouse.y);
@@ -214,9 +217,9 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     //prg.use();
-    tentacle0.draw(prg.vp_mat);
-    tentacle1.draw(prg.vp_mat);
-    tentacle2.draw(prg.vp_mat);
+    tentacle0.draw(p_mat);
+    tentacle1.draw(p_mat);
+    tentacle2.draw(p_mat);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

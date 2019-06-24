@@ -1,5 +1,5 @@
 /*
- * first of first, 
+ * first of first
  * T t = ... is totally the same as T t(...)
  *
  * if you define list initialization, {} will always pick list initialization
@@ -107,14 +107,14 @@ int main(int argc, char *argv[])
 
   auto b = Beast<int>();
   // auto c = Beast<int>(b); // copy ctor is inplicitly deleted
-  
+
   Crazy c;
   //auto c1 = Crazy(); // this is weird, if you delete copy ctor, you can not use copy initialization
-  
+
   Uncopyable u0, u1;
   //Uncopyable u2 = u0;
   //u1 = u0;
-  
-  
+
+
   return 0;
 }

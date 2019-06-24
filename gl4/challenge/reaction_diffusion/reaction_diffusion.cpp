@@ -18,6 +18,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 // ping pong
 pingpong tex;
 pingpong fbo;
@@ -51,7 +54,7 @@ void create_circle_seeds(const vec2& pos, float size, bool clear = true)
     glClear(GL_COLOR_BUFFER_BIT);
 
   ll_prg->use();
-  mat4 mvp_mat = glm::scale(glm::translate(ll_prg->p_mat, vec3(pos, 0)), vec3(size, size, 1));
+  mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(size, size, 1));
   glUniformMatrix4fv(ll_prg->ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   glUniform4f(ll_prg->ul_color, 1, 1, 0, 0);
 
@@ -170,7 +173,7 @@ void reaction_diffusion_app::create_scene() {
 
   ll_prg = std::make_shared<lightless_program>();
   ll_prg->init();
-  ll_prg->p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
+  p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
 
   m_pacman.radius(15);
   m_pacman.init(ll_prg);
@@ -246,7 +249,7 @@ void reaction_diffusion_app::update() {
 
   glBindFramebuffer(GL_FRAMEBUFFER, fbo.pong());
 
-  m_pacman.draw(pacman_m_mat * glm::scale(vec3(0.85, 0.85, 1)));
+  m_pacman.draw(pacman_m_mat * glm::scale(vec3(0.85, 0.85, 1)), v_mat, p_mat);
 
   fbo.swap();
   tex.swap();
@@ -302,7 +305,7 @@ void reaction_diffusion_app::display() {
     //glEnable(GL_BLEND);
     //glBlendColor(0, 0, 0, 0.5);
     //glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-    m_pacman.draw(pacman_m_mat);
+    m_pacman.draw(pacman_m_mat, v_mat, p_mat);
     //glDisable(GL_BLEND);
   }
 

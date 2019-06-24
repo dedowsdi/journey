@@ -10,6 +10,10 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 lightless_program prg;
 GLuint rows = 10;
 GLuint cols = 10;
@@ -62,7 +66,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.vp_mat = zxd::rect_ortho((cols+1)*radius, (rows+1)*radius, wnd_aspect());
+    p_mat = zxd::rect_ortho((cols+1)*radius, (rows+1)*radius, wnd_aspect());
 
     auto callback = std::bind(std::mem_fn(&lissajous_app::reset_pattern), this, std::placeholders::_1);
     kci_lissa_type = m_control.add_control<GLint>(GLFW_KEY_Q, lissa_type, 0, 1, 1, callback);
@@ -120,7 +124,7 @@ public:
     vec2 lt = vec2(-radius * (cols+1), radius * (rows+1)) + vec2(radius, -radius);
     for (int i = 0; i <= cols; ++i) {
       vec2 pos = lt + vec2(i, 0) * radius * 2.0f;
-      mat4 mvp_mat = glm::scale(glm::translate(prg.vp_mat, vec3(pos, 0)), vec3(scale,scale,1));
+      mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
       lisas[0].draw();
 
@@ -135,7 +139,7 @@ public:
 
     for (int i = 0; i <= rows; ++i) {
       vec2 pos = lt + vec2(0, -i) * radius * 2.0f;
-      mat4 mvp_mat = glm::scale(glm::translate(prg.vp_mat, vec3(pos, 0)), vec3(scale,scale,1));
+      mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
       lisas[0].draw();
 
@@ -156,7 +160,7 @@ public:
       for (int x = 0; x < cols; ++x) 
       {
         vec2 pos = lt + vec2(x, - y) * radius * 2.0f;
-        mat4 mvp_mat = glm::scale(glm::translate(prg.vp_mat, vec3(pos, 0)), vec3(scale,scale,1));
+        mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
         glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
       
         lissajous& lisa = lisas[y * cols + x];
@@ -168,8 +172,8 @@ public:
     glEnable(GL_BLEND);
     glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     glBlendColor(1,1,1,0.6);
-    debugger::draw_point(dots, prg.vp_mat, 5, dot_color);
-    debugger::draw_line(GL_LINES, lines, prg.vp_mat, 1, line_color);
+    debugger::draw_point(dots, p_mat, 5, dot_color);
+    debugger::draw_line(GL_LINES, lines, p_mat, 1, line_color);
     glDisable(GL_BLEND);
 
     if(!display_help)

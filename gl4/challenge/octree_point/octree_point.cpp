@@ -8,6 +8,11 @@
 #define HEIGHT 800
 
 namespace zxd {
+
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 lightless_program prg;
 
 bool draw_tree = false;
@@ -339,15 +344,15 @@ public:
     }
 
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-    prg.v_mat = zxd::isometric_projection(200);
-    prg.vp_mat = prg.p_mat * prg.v_mat;
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = zxd::isometric_projection(200);
+    vp_mat = p_mat * v_mat;
+    set_v_mat(&v_mat);
 
   }
 
   virtual void update() {
-    prg.vp_mat = prg.p_mat * prg.v_mat;
+    vp_mat = p_mat * v_mat;
     m_cube.update();
 
     m_cube_points.clear();
@@ -360,12 +365,12 @@ public:
     prg.use();
 
     if(draw_point)
-      debugger::draw_point(points, prg.vp_mat, 2, vec4(0));
+      debugger::draw_point(points, vp_mat, 2, vec4(0));
     if(draw_tree)
-      m_tree->debug_draw(prg.vp_mat);
+      m_tree->debug_draw(vp_mat);
 
-    m_cube.draw(prg.vp_mat);
-    debugger::draw_point(m_cube_points, prg.vp_mat, 4, vec4(0, 0, 1, 1));
+    m_cube.draw(vp_mat);
+    debugger::draw_point(m_cube_points, vp_mat, 4, vec4(0, 0, 1, 1));
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

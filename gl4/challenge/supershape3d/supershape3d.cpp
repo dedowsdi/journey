@@ -16,6 +16,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 normal_viewer_program nv_prg;
 blinn_program prg;
 light_vector lights;
@@ -24,7 +27,7 @@ material mtl;
 GLuint diffuse_map;
 
 super_shape_3d shape;
-std::string script_file = "challenge/supershape3d/supershape3d.txt";
+std::string script_file = "../challenge/supershape3d/supershape3d.txt";
 dict_script dict;
 GLenum polygon_mode = GL_LINE;
 bool show_normal = true;
@@ -52,9 +55,9 @@ public:
 
     prg.with_texcoord = GL_TRUE;
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
-    prg.v_mat = glm::lookAt(glm::vec3(5, -5, 5), vec3(0), pza);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = glm::lookAt(glm::vec3(5, -5, 5), vec3(0), pza);
+    set_v_mat(&v_mat);
 
     glGenTextures(1, &diffuse_map);
     glBindTexture(GL_TEXTURE_2D, diffuse_map);
@@ -134,15 +137,15 @@ public:
     prg.use();
 
     glBindTexture(GL_TEXTURE_2D, diffuse_map);
-    prg.update_model(mat4(1));
-    prg.update_lighting_uniforms(lights, lm, mtl);
+    prg.update_uniforms(mat4(1), v_mat, p_mat);
+    prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
     shape.draw();
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     if(show_normal)
     {
       nv_prg.use();
-      nv_prg.update_uniforms(mat4(1), prg.v_mat, prg.p_mat);
+      nv_prg.update_uniforms(mat4(1), v_mat, p_mat);
       shape.draw();
     }
 

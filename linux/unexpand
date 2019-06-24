@@ -1,0 +1,2 @@
+unexpand convert leading tab only by default
+echo -e "a          b" | unexpand -a | wc -c

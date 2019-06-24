@@ -27,9 +27,12 @@ namespace zxd {
 
 lightless_program prg;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 quad quad0;
-line line_h(GL_LINES);
-line line_v(GL_LINES);
+line line_h;
+line line_v;
 
 class cell;
 cell* current_cell;
@@ -53,7 +56,7 @@ public:
 
   void draw()
   {
-    mat4 m = prg.vp_mat * m_mat();
+    mat4 m = p_mat * m_mat();
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(m));
     const vec4 color = this == current_cell ? HEAD_COLOR : (visited ? PATH_COLOR : CELL_COLOR);
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
@@ -133,7 +136,7 @@ public:
 
     glGenVertexArrays(2, vaos);
     glGenBuffers(2, vbos);
-    
+
     glBindVertexArray(vaos[QUAD_INDEX]);
     glBindBuffer(GL_ARRAY_BUFFER, vbos[QUAD_INDEX]);
     glBufferData(GL_ARRAY_BUFFER, m_quad_vertices.size() * sizeof(vec2) , 0, GL_DYNAMIC_DRAW);
@@ -209,7 +212,7 @@ public:
   void draw()
   {
     // draw quads
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glBindVertexArray(vaos[QUAD_INDEX]);
 
     GLuint next = 0;
@@ -229,7 +232,7 @@ public:
       std::cout << "error, illegal draw " << next << ":" << m_quad_vertices.size() << std::endl;
 
     // draw lines
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glBindVertexArray(vaos[LINE_INDEX]);
 
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(LINE_COLOR));
@@ -377,11 +380,13 @@ public:
     quad0.setup(0, 0, CELL_WIDTH, CELL_HEIGHT);
     quad0.build_mesh();
 
-    line_h.build_mesh(vec2(-HALF_CELL_WIDTH, 0), vec2(HALF_CELL_WIDTH, 0));
-    line_v.build_mesh(vec2(0, -HALF_CELL_HEIGHT), vec2(0, HALF_CELL_HEIGHT));
+    vec2_vector vertices_h{vec2(-HALF_CELL_WIDTH, 0), vec2(HALF_CELL_WIDTH, 0)};
+    line_h.build_line(GL_LINES, vertices_h.begin(), vertices_h.end());
+    vec2_vector vertices_v{vec2(-HALF_CELL_WIDTH, 0), vec2(HALF_CELL_WIDTH, 0)};
+    line_v.build_line(GL_LINES, vertices_v.begin(), vertices_v.end());
 
     prg.init();
-    prg.fix2d_camera(0,  WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     m_maze = new maze(NUM_ROWS, NUM_COLS);
 

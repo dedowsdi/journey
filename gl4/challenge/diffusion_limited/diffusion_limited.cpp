@@ -18,6 +18,9 @@ namespace zxd {
 
 lightless_program prg;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 struct node
 {
   bool leaf;
@@ -366,7 +369,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     m_tree.min_ext(vec2(0));
     m_tree.max_ext(vec2(WIDTH, HEIGHT));
@@ -387,13 +390,13 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glUniform4f(prg.ul_color, 0,0,0,0);
 
-    //debugger::draw_point(m_tree.vertices(), prg.vp_mat, m_tree.radius(), vec4(1,0,0,1));
-    debugger::draw_point(m_tree.walkers(), prg.vp_mat, m_tree.radius(), vec4(0,0,0,1));
-    debugger::draw_line(GL_LINES, m_tree.lines(), prg.vp_mat);
-    //m_tree.get_quad_tree()->debug_draw(prg.vp_mat);
+    //debugger::draw_point(m_tree.vertices(), p_mat, m_tree.radius(), vec4(1,0,0,1));
+    debugger::draw_point(m_tree.walkers(), p_mat, m_tree.radius(), vec4(0,0,0,1));
+    debugger::draw_line(GL_LINES, m_tree.lines(), p_mat);
+    //m_tree.get_quad_tree()->debug_draw(p_mat);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

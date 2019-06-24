@@ -22,7 +22,7 @@ struct my_program : public zxd::program {
 
   }
 
-  virtual void update_model(const glm::mat4& _m_mat) {
+  virtual void update_uniforms(const glm::mat4& _m_mat) {
     m_mat = _m_mat;
 
   }
@@ -44,7 +44,7 @@ void render(zxd::program& program) {
   my_program.update_frame();
 
   mat4 model;
-  my_program.update_model(model);
+  my_program.update_uniforms(model);
 }
 
 void display(void) {

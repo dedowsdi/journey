@@ -13,6 +13,9 @@ namespace zxd {
 lightless_program prg;
 super_shape_2d shape;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 kcip n1;
 kcip n2;
 kcip n3;
@@ -40,7 +43,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, wnd_width(), 0, wnd_height());
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     auto callback = std::bind(std::mem_fn(&supershape_app::update_shape), this, std::placeholders::_1);
     n1 = m_control.add_control<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1, callback);
@@ -75,7 +78,7 @@ public:
     prg.use();
 
     mat4 m_mat = glm::translate(vec3(WIDTH * 0.5, HEIGHT * 0.5, 0));
-    mat4 mvp_mat = prg.vp_mat * m_mat;
+    mat4 mvp_mat = p_mat * m_mat;
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
     shape.draw();

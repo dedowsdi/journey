@@ -11,6 +11,9 @@ namespace zxd {
 const GLint width = 640;
 const GLint height = 640;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class program_name : public program
 {
 public:
@@ -89,9 +92,9 @@ void blobby3d_app::create_scene() {
 
   prg.init();
   bprg.init();
-  bprg.v_mat = zxd::isometric_projection(2);
-  bprg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 100.0f);
-  set_v_mat(&bprg.v_mat);
+  v_mat = zxd::isometric_projection(2);
+  p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 100.0f);
+  set_v_mat(&v_mat);
   bprg.bind_lighting_uniform_locations(lights, lm, mtl);
 
   m_sphere.include_normal(true);
@@ -124,8 +127,8 @@ void blobby3d_app::display() {
 
   //prg.use();
   bprg.use();
-  bprg.update_model(mat4(1));
-  bprg.update_lighting_uniforms(lights, lm, mtl);
+  bprg.update_uniforms(mat4(1), v_mat, p_mat);
+  bprg.update_lighting_uniforms(lights, lm, mtl, v_mat);
   m_sphere.draw();
 
   if(!m_display_help)

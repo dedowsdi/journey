@@ -14,9 +14,13 @@
 namespace zxd {
 
 struct freetype_text_program : public zxd::program {
+  bool legacy = false;
+
   GLint ul_text_color;
   GLint ul_font_map;
-  bool legacy = false;
+  GLint ul_mvp_mat;
+
+  mat4 mvp_mat;
   freetype_text_program() {
   }
   void reshape(GLuint wnd_width, GLuint wnd_height) {

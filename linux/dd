@@ -1,0 +1,2 @@
+# truncate 1st 4 bytes. Note you can't use skipt if if is stdin
+echo abcdefg | dd  ibs=1 count=4

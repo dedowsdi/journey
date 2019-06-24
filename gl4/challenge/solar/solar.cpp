@@ -18,6 +18,9 @@ material orbit_mtl;
 material sun_mtl;
 sphere geometry;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 GLuint textures[6];
 std::string texture_files[6] = {"sunmap.jpg", "mercurymap.jpg", "venusmap.jpg", "earthmap.jpg", "marsmap.jpg", "jupitermap.jpg"};
 
@@ -74,8 +77,8 @@ public:
     glBindTexture(GL_TEXTURE_2D, m_texture);
     prg.tex_unit = 0;
     mat4 m = parent_m_mat * m_mat();
-    prg.update_model(m);
-    prg.update_lighting_uniforms(lights, lm, mtl);
+    prg.update_uniforms(m, v_mat, p_mat);
+    prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
 
     geometry.draw();
     for(auto iter = m_orbits.begin(); iter != m_orbits.end(); ++iter){
@@ -145,11 +148,11 @@ public:
 
     prg.with_texcoord = GL_TRUE;
     prg.init();
-    prg.v_mat = glm::lookAt(vec3(0, -10, 10), vec3(0), pza);
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = glm::lookAt(vec3(0, -10, 10), vec3(0), pza);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
     prg.bind_lighting_uniform_locations(lights, lm, orbit_mtl);
     sun_mtl.bind_uniform_locations(prg, "mtl");
-    set_v_mat(&prg.v_mat);
+    set_v_mat(&v_mat);
 
     geometry.slice(32);
     geometry.stack(32);

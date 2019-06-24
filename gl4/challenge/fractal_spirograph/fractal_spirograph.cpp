@@ -13,6 +13,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 lightless_program prg;
 
 GLuint fbo;
@@ -176,7 +179,7 @@ public:
     m_graph->reset();
 
     auto hh = m_graph->approximate_height(180) * 1.05f;
-    prg.p_mat = zxd::rect_ortho(hh, hh, wnd_aspect());
+    p_mat = zxd::rect_ortho(hh, hh, wnd_aspect());
   }
 
   void reset_graph()
@@ -231,7 +234,7 @@ public:
       m_graph->update(kci_resolution->get_int());
       lines.push_back(pen->pos());
     }
-    debugger::draw_line(GL_LINE_STRIP, lines, prg.p_mat, pen_width, vec4(1,0,1,1));
+    debugger::draw_line(GL_LINE_STRIP, lines, p_mat, pen_width, vec4(1,0,1,1));
     glDisable(GL_BLEND);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glBlitFramebuffer(0, 0, wnd_width(), wnd_height(), 0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
@@ -251,7 +254,7 @@ public:
       while(graph)
       {
         //std::cout << graph->pos() << std::endl;
-        mat4 mvp_mat = glm::rotate(glm::translate(prg.p_mat, vec3(graph->pos(), 0)),
+        mat4 mvp_mat = glm::rotate(glm::translate(p_mat, vec3(graph->pos(), 0)),
             graph->rotate_angle(), pza);
         glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
         const vec4& color = i++ == circle_index ? current_circle_color : circle_color;
@@ -260,7 +263,7 @@ public:
         if(graph->parent())
         {
           debugger::draw_point(graph->parent()->lisa().get_at_angle(graph->angle()),
-              prg.p_mat, 10, vec4(0,1,0,1));
+              p_mat, 10, vec4(0,1,0,1));
         }
         graph = graph->child();
       }

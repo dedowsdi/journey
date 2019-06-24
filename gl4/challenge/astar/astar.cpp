@@ -25,6 +25,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 template <class T, class S, class C>
 const S& Container(const std::priority_queue<T, S, C>& q) {
   struct HackedQueue : private std::priority_queue<T, S, C> {
@@ -81,7 +84,7 @@ struct cell
     if(wall)
       return;
 
-    mat4 m = prg.vp_mat * glm::translate(vec3(pos * size, 0));
+    mat4 m = p_mat * glm::translate(vec3(pos * size, 0));
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(m));
     geometry.draw();
   }
@@ -248,8 +251,7 @@ public:
     m_grid.build_cells();
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
-    prg.vp_mat = prg.vp_mat;
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     vec2 cell_size = m_grid.cell_size();
     geometry.setup(pza + vec3(cell_size*0.05f, 0), pxa * cell_size.x * 0.9f, pya * cell_size.y * 0.9f);

@@ -10,3 +10,7 @@ execute command per record
 handle filename with whitespace
     find ~/journey/gl4 -type f -newermt '2018-09-13' ! -newermt '2018-09-14' -print0 | xargs -0 echo
     -print0 and -0 use null character as delimiter
+
+rename .sh file
+    ls * | xargs -I{} bash -c 'mv {} ${0#.sh}' {}
+    be very careful that {} is literal string, not variable, don't use it with parameter expansion

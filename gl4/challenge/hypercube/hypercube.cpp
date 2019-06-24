@@ -20,6 +20,9 @@ namespace zxd {
 
 lightless_program prg;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 struct hypercube
 {
   GLuint vao;
@@ -153,7 +156,7 @@ struct hypercube
   {
     glBindVertexArray(vao);
     prg.use();
-    mat4 mvp_mat = prg.p_mat * prg.v_mat;
+    mat4 mvp_mat = p_mat * v_mat;
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
 
@@ -182,9 +185,9 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 100.0f);
-    prg.v_mat = zxd::isometric_projection(5);
-    set_v_mat(&prg.v_mat);
+    p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 100.0f);
+    v_mat = zxd::isometric_projection(5);
+    set_v_mat(&v_mat);
 
     m_hcube.init();
   }

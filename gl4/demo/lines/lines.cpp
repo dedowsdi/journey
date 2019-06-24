@@ -6,17 +6,19 @@
 namespace zxd {
 
 class lines : public app {
+
+  glm::mat4 v_mat;
+  glm::mat4 p_mat;
+
   struct line_stipple_program : public zxd::program {
-    using program::update_model;
     GLint ul_color;
     GLint ul_viewport;
     GLint ul_pattern;
     GLint ul_factor;
+    GLint ul_mvp_mat;
 
-    void update_model(
-      const mat4 &m, const vec4 &color, GLuint pattern, GLint factor) {
-      m_mat = m;
-      mvp_mat = p_mat * v_mat * m_mat;
+    void update_uniforms(
+      const mat4 &mvp_mat, const vec4 &color, GLuint pattern, GLint factor) {
 
       glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
       glUniform4fv(ul_color, 1, value_ptr(color));
@@ -28,8 +30,6 @@ class lines : public app {
       attach(GL_GEOMETRY_SHADER, "shader4/stipple.gs.glsl");
       attach(GL_FRAGMENT_SHADER, "shader4/stipple.fs.glsl");
 
-      p_mat = glm::ortho(0.0f, 400.0f, 0.0f, 150.0f);
-      v_mat = mat4(1.0);
     }
     virtual void bind_uniform_locations() {
       uniform_location(&ul_mvp_mat, "mvp_mat");
@@ -55,7 +55,7 @@ public:
 
   void draw_lines(GLenum mode, const vec2_vector &vertices, glm::vec4 color,
     GLuint pattern, GLint factor) {
-    m_program.update_model(mat4(1.0), color, pattern, factor);
+    m_program.update_uniforms(p_mat * v_mat , color, pattern, factor);
 
     GLuint vao;
     GLuint vbo;
@@ -93,6 +93,8 @@ public:
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
 
+    p_mat = glm::ortho(0.0f, 400.0f, 0.0f, 150.0f);
+    v_mat = mat4(1.0);
     m_program.init();
 
     // clang-format off

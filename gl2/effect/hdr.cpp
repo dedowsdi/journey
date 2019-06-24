@@ -24,6 +24,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 GLuint fbo;
 GLuint color_tex;
 GLuint program;
@@ -157,8 +160,8 @@ class app0 : public app {
     blinn_prg.legacy = GL_TRUE;
     blinn_prg.init();
     blinn_prg.bind_lighting_uniform_locations(lights, lm, mtl);
-    blinn_prg.v_mat = mat4(1.0);
-    blinn_prg.p_mat = mat4(1.0);
+    v_mat = mat4(1.0);
+    p_mat = mat4(1.0);
 
     disk0.include_normal(true);
     disk0.include_texcoord(true);
@@ -180,8 +183,8 @@ class app0 : public app {
     glBindTexture(GL_TEXTURE_2D, checker_tex);
 
     blinn_prg.tex_unit = 0;
-    blinn_prg.update_lighting_uniforms(lights, lm, mtl);
-    blinn_prg.update_model(glm::translate(vec3(0)));
+    blinn_prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
+    blinn_prg.update_uniforms(glm::translate(vec3(0)), v_mat, p_mat);
 
     disk0.draw();
   }

@@ -30,6 +30,8 @@ namespace zxd {
 
 lightless_program prg;
 
+glm::mat4 p_mat;
+
 struct leaf
 {
   vec2 pos;
@@ -294,7 +296,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
+    p_mat = glm::ortho<GLfloat>(0, WIDTH, 0, HEIGHT);
 
     m_tree.min_attract(MIN_ATTRACT);
     m_tree.max_attract(MAX_ATTRACT);
@@ -325,7 +327,7 @@ public:
 
     prg.use();
     glUniform4f(prg.ul_color, 0.5,0,0,1);
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
 
     glPointSize(5);
     m_points.draw();

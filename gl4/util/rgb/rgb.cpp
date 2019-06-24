@@ -10,6 +10,9 @@ using namespace glm;
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 // clang-format off
 // predefined color
 vec3_vector start_colors = vec3_vector( {
@@ -150,8 +153,9 @@ typedef std::vector<color_pane> color_pane_vector;
 
 struct rgb_program : public zxd::program {
   GLint ul_gamma;
+  GLint ul_mvp_mat;
 
-  void update_uniforms(GLboolean gamma = 0) {
+  void update_uniforms(const mat4& mvp_mat, GLboolean gamma = 0) {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform1i(ul_gamma, gamma);
   }
@@ -239,7 +243,7 @@ protected:
     m_text.reshape(wnd_width(), wnd_height());
 
     rgb_program.init();
-    rgb_program.p_mat = ortho(0.0f, 1.0f, 0.0f, 1.0f);
+    p_mat = ortho(0.0f, 1.0f, 0.0f, 1.0f);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
@@ -290,17 +294,15 @@ protected:
 
     // render pane
     glBindVertexArray(m_pane_vao);
-    rgb_program.mvp_mat = rgb_program.p_mat;
-    rgb_program.update_uniforms(m_gamma);
+    rgb_program.update_uniforms(p_mat, m_gamma);
     glDrawArrays(GL_TRIANGLES, 0, m_pane_vertices.size());
 
     // render border on current selected color pane
     glLineWidth(m_border_width);
     glBindVertexArray(m_border_vao);
     const color_pane &pane = current_pane();
-    rgb_program.mvp_mat =
-      rgb_program.p_mat * translate(vec3(pane.x(), pane.y(), 0));
-    rgb_program.update_uniforms(m_gamma);
+    rgb_program.update_uniforms(
+        p_mat * translate(vec3(pane.x(), pane.y(), 0)), m_gamma);
     glDrawArrays(GL_LINE_LOOP, 0, 4);
     glLineWidth(1);
 

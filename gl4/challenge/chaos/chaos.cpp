@@ -35,6 +35,9 @@
 
 namespace zxd {
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 GLint edges = 3;
 GLint draw_per_frame = 20000;
 GLint pick = 0;
@@ -161,7 +164,7 @@ void chaos_app::reset_polygon(const kci* kci)
   GLfloat scale = 1.08f;
 
   if(draw_method == 0)
-    prg.p_mat = zxd::rect_ortho(scale, scale, wnd_aspect());
+    p_mat = zxd::rect_ortho(scale, scale, wnd_aspect());
   else
   {
     vec2 bak_point = point;
@@ -172,12 +175,12 @@ void chaos_app::reset_polygon(const kci* kci)
       max_point = max(max_point, glm::abs(get_draw_point(point)));
     }
     GLfloat l = max(max_point.x, max_point.y) * scale;
-    prg.p_mat = zxd::rect_ortho(l, l, wnd_aspect());
+    p_mat = zxd::rect_ortho(l, l, wnd_aspect());
     point = bak_point;
     std::iota(selections.begin(), selections.end(), 0);
   }
 
-  mat4 mvp_mat = prg.p_mat * mat4(1);
+  mat4 mvp_mat = p_mat * mat4(1);
   prg.use();
   glUniform4f(prg.ul_color, 1, 1, 1, 1);
   glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
@@ -252,7 +255,7 @@ void chaos_app::update() {
 void chaos_app::display() {
   //glClear(GL_COLOR_BUFFER_BIT);
 
-  mat4 mvp_mat = prg.p_mat * mat4(1);
+  mat4 mvp_mat = p_mat * mat4(1);
   prg.use();
   glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
 

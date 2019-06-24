@@ -4,12 +4,16 @@
 #include "cuboid.h"
 #include "common_program.h"
 #include "light.h"
+#include "common.h"
 
 #define SPONGE_SIZE 100.0f
 #define USE_INSTANCE
 
 namespace zxd
 {
+
+glm::mat4 v_mat;
+glm::mat4 p_mat;
 
 blinn_program prg;
 
@@ -114,10 +118,10 @@ protected:
     prg.init();
 
     // setup camera
-    prg.v_mat = glm::lookAt(vec3(1.0) * SPONGE_SIZE * 3.0f, vec3(0), vec3(0, 0, 1));
-    prg.p_mat = glm::perspective(fpi4, this->wnd_aspect(), 0.1f, 1000.0f);
+    v_mat = glm::lookAt(vec3(1.0) * SPONGE_SIZE * 3.0f, vec3(0), vec3(0, 0, 1));
+    p_mat = glm::perspective(fpi4, this->wnd_aspect(), 0.1f, 1000.0f);
 
-    set_v_mat(&prg.v_mat);
+    set_v_mat(&v_mat);
 
     geometry.include_normal(true);
     geometry.build_mesh();
@@ -156,13 +160,13 @@ protected:
     prg.use();
 
     prg.bind_lighting_uniform_locations(m_lights, m_light_model, m_material);
-    prg.update_lighting_uniforms(m_lights, m_light_model, m_material);
+    prg.update_lighting_uniforms(m_lights, m_light_model, m_material, v_mat);
 
     if(!prg.instance)
     {
       for (size_t i = 0; i < m_sponge.size(); ++i) {
         //std::cout << prg.mvp_mat << std::endl;
-        prg.update_model(m_sponge[i].m_model_matrix);
+        prg.update_uniforms(m_sponge[i].m_model_matrix, v_mat, p_mat);
         geometry.draw();
       }
     }
@@ -223,8 +227,6 @@ protected:
     mv_mats.clear();
     mvp_mats.clear();
     mv_mats_it.clear();
-    const mat4& v_mat = prg.v_mat;
-    const mat4& p_mat = prg.p_mat;
     
     for (size_t i = 0; i < m_sponge.size(); ++i) 
     {

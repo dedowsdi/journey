@@ -110,6 +110,8 @@ No matter how you change content of a existing field, NF won't change.
 Decrementing NF throws away the values of the fields after the new value of NF
 and recomputes $0 (it's IB).
 
+change filed of NF will cause record rebuild.
+
 Any assignment to $0 causes the record to be reparsed into fields using the
 current value of FS. This also applies to any built-in function that updates $0,
 such as sub() and gsub()
@@ -118,8 +120,8 @@ It is important to remember that $0 is the full record, exactly as it was read
 from the input. This includes any leading or trailing whitespace, and the exact
 whitespace (or other characters) that separates the fields.
 
-after change FS and OFS, it's necessary to use $1=$1 to force the record to
-rebuild itself if you want to print modified record?.
+after change FS and OFS, it's necessary to to force the record to rebuild
+itself if you want to print modified record.
 
 FS defaults to " ", it's special, represent space tab new line sequence.
 

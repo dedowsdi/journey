@@ -13,6 +13,10 @@ namespace zxd {
 
 quad q;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 // need to access 2 buffers and right to the other one
 npingpong tex;
 GLuint fbo;
@@ -87,8 +91,7 @@ public:
     q.build_mesh();
 
     prg.init();
-    prg.v_mat = prg.p_mat = prg.vp_mat = mat4(1);
-
+    v_mat = p_mat = vp_mat = mat4(1);
 
     tex.add_resource(createTexture());
     tex.add_resource(createTexture());

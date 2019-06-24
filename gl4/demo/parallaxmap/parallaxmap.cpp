@@ -26,21 +26,25 @@
 
 namespace zxd {
 
+glm::mat4 m_mat;
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 struct parallax_program : public program {
   GLint ul_normal_map;
   GLint ul_diffuse_map;
   GLint ul_depth_map;
   GLint ul_m_camera;
   GLint ul_height_scale;
+  GLint ul_mvp_mat;
 
   GLuint parallax_method{0};
 
-  virtual void update_model(const mat4 &_m_mat) {
-    m_mat = _m_mat;
-    mv_mat = v_mat * m_mat;
-    mv_mat_i = glm::inverse(mv_mat);
-    m_mat_i = glm::inverse(m_mat);
-    mvp_mat = p_mat * mv_mat;
+  virtual void update_uniforms(const mat4 &m_mat) {
+    mat4 mv_mat = v_mat * m_mat;
+    // mat4 mv_mat_i = glm::inverse(mv_mat);
+    // mat4 m_mat_i = glm::inverse(m_mat);
+    mat4 mvp_mat = p_mat * mv_mat;
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   };
   virtual void attach_shaders() {
@@ -101,8 +105,8 @@ public:
 
     prg.parallax_method = 3;
     prg.init();
-    prg.p_mat = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
-    prg.v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
+    p_mat = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 20.0f);
+    v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
 
     // init quad
     q.include_normal(true);
@@ -166,7 +170,7 @@ public:
     material.specular = vec4(0.8);
     material.shininess = 50;
 
-    set_v_mat(&prg.v_mat);
+    set_v_mat(&v_mat);
     bind_uniform_locations(prg);
 
     m_text.init();
@@ -178,18 +182,21 @@ public:
 
     // draw low quality mesh with normal map
     glUseProgram(prg);
-    prg.update_model(mat4(1.0));
+    prg.update_uniforms(m_mat);
     glUniform1i(prg.ul_diffuse_map, 0);
     glUniform1i(prg.ul_normal_map, 1);
     glUniform1i(prg.ul_depth_map, 2);
     glUniform1f(prg.ul_height_scale, height_scale);
 
+    mat4 mv_mat_i = glm::inverse(v_mat * m_mat);
+    mat4 m_mat_i = glm::inverse(m_mat);
+
     // get camera model position
-    vec3 camera = glm::column(prg.mv_mat_i, 3).xyz();
+    vec3 camera = glm::column(mv_mat_i, 3).xyz();
     glUniform3fv(prg.ul_m_camera, 1, glm::value_ptr(camera));
 
     for (int i = 0; i < lights.size(); ++i) {
-      lights[i].update_uniforms(prg.m_mat_i);
+      lights[i].update_uniforms(m_mat_i);
     }
     light_model.update_uniforms();
     material.update_uniforms();

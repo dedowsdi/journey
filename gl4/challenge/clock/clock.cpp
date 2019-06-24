@@ -15,6 +15,10 @@ lightless_program prg;
 capsule2d arm_geometry;
 circle circle_geometry;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 vp_mat;
+
 class clock
 {
   GLfloat m_size = 1;
@@ -95,7 +99,7 @@ protected:
 
   void draw_arm(capsule2d& arm, GLfloat angle, const vec4& color)
   {
-    mat4 mvp_mat = prg.vp_mat * glm::rotate(angle, pza) 
+    mat4 mvp_mat = vp_mat * glm::rotate(angle, pza) 
       * glm::translate(vec3(arm.width() * 0.4, 0,0));
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
@@ -104,7 +108,7 @@ protected:
 
   void draw_circle()
   {
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(vp_mat));
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(m_circle_color));
     glLineWidth(5);
     m_circle.draw();
@@ -112,7 +116,7 @@ protected:
 
   void draw_diamond(GLfloat angle)
   {
-    mat4 mvp_mat = prg.vp_mat * glm::rotate(angle, pza) 
+    mat4 mvp_mat = vp_mat * glm::rotate(angle, pza)
       * glm::translate(vec3(m_size * 0.45, 0,0));
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(m_diamond_color));
@@ -164,8 +168,8 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(0, WIDTH, 0, HEIGHT);
-    prg.vp_mat = glm::translate(prg.vp_mat, vec3(WIDTH*0.5, HEIGHT*0.5, 0));
+    p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
+    vp_mat = glm::translate(p_mat, vec3(WIDTH*0.5, HEIGHT*0.5, 0));
 
     //arm_geometry.radius(50);
     //arm_geometry.width(300);

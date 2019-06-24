@@ -7,15 +7,20 @@
 namespace zxd {
 
 struct blinn_program : public zxd::program {
-  // GLint ul_eye;
 
-  GLint ul_map;
-  GLint ul_normal_scale;
-  GLint tex_unit;
-  GLint light_count = 1;
   GLboolean with_texcoord;
   GLboolean instance;
   GLboolean legacy = GL_FALSE;
+
+  GLint ul_map;
+  GLint ul_normal_scale;
+  GLint ul_mv_mat;
+  GLint ul_mvp_mat;
+  GLint ul_mv_mat_it;
+
+  GLint tex_unit;
+  GLint light_count = 1;
+
   std::string map_name;
 
   blinn_program()
@@ -24,7 +29,8 @@ struct blinn_program : public zxd::program {
         map_name("diffuse_map"),
         tex_unit(0) {}
 
-  virtual void update_model(const glm::mat4& _m_mat);
+  void update_uniforms(const glm::mat4& m_mat,
+    const glm::mat4& v_mat, const glm::mat4& p_mat);
   virtual void attach_shaders();
   virtual void bind_uniform_locations();
 
@@ -32,8 +38,8 @@ struct blinn_program : public zxd::program {
   virtual void bind_lighting_uniform_locations(
     light_vector& lights, light_model& lm, material& mtl);
 
-  virtual void update_lighting_uniforms(
-    light_vector& lights, light_model& lm, material& mtl);
+  virtual void update_lighting_uniforms(light_vector& lights,
+      light_model& lm, material& mtl, const glm::mat4& v_mat);
 
   virtual void bind_attrib_locations();
 };
@@ -76,6 +82,8 @@ struct quad_base : public zxd::program {
 
 struct point_program : public zxd::program {
 
+  GLint ul_mvp_mat;
+
   void attach_shaders();
 
   virtual void bind_uniform_locations();
@@ -88,10 +96,14 @@ struct point_program : public zxd::program {
 struct normal_viewer_program : public zxd::program {
 
   GLboolean smooth_normal = GL_FALSE;
+
   GLint ul_normal_length;
   GLint ul_color;
+  GLint ul_mv_mat_it;
+  GLint ul_mv_mat;
+  GLint ul_p_mat;
 
-  virtual void update_uniforms(const mat4& _m_mat, const mat4& _v_mat, const mat4& _p_mat);
+  virtual void update_uniforms(const mat4& m_mat, const mat4& v_mat, const mat4& p_mat);
   virtual void attach_shaders();
   virtual void bind_uniform_locations();
 
@@ -99,6 +111,8 @@ struct normal_viewer_program : public zxd::program {
 };
 
 struct vertex_color_program : public zxd::program {
+
+  GLint ul_mvp_mat;
 
   void attach_shaders();
   virtual void bind_uniform_locations();
@@ -114,6 +128,7 @@ public:
   GLint al_texcoord;
   GLint ul_diffuse_map;
   GLint ul_tex_mat;
+  GLint ul_mvp_mat;
 
 protected:
 
@@ -128,6 +143,8 @@ class lightless_program: public program
 public:
   GLint ul_color;
   GLint ul_diffuse_map;
+  GLint ul_mvp_mat;
+
   bool with_texcoord = false;
   bool with_color = false;
   bool instance = false;
@@ -143,6 +160,7 @@ class billboard_program: public program
 public:
   GLint ul_camera_pos;
   GLint ul_camera_up;
+  GLint ul_vp_mat;
 
   bool tex_offset = false;
   bool use_camera_up = true;
@@ -150,7 +168,7 @@ public:
   bool rotate = false;
 
 public:
-  void update_uniforms();
+  void update_uniforms(const mat4& v_mat, const mat4& p_mat);
 
 protected:
   void attach_shaders();

@@ -372,3 +372,9 @@ it to a register or varialbe first. (maybe escape would work too)
 life time of mark is the same as it's line. It's pos will be updated if line
 number of current line changed. It won't be changed if you delete all characters
 but leave the linebreak in the mark line.
+
+--------------
+2019.06.13
+
+<esc> works like <cr> in the end of <c-r>= in imap, very weird.
+inoremap <c-j>  <c-r>='123'<esc>

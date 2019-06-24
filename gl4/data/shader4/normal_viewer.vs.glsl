@@ -6,9 +6,9 @@ in vec3 normal;
 uniform mat4 mv_mat;
 uniform mat4 mv_mat_it;
 
-out vs_out 
-{ 
-  vec3 normal; 
+out vs_out
+{
+  vec3 normal;
 }
 vo;
 

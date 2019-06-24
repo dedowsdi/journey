@@ -70,6 +70,11 @@ using namespace glm;
 GLuint shadow_width = WINDOWS_WIDTH;
 GLuint shadow_height = WINDOWS_HEIGHT;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+glm::mat4 light_v_mat;
+glm::mat4 light_p_mat;
+
 sphere sphere0(1, 16, 16);
 xyplane plane0(-10, -10, 10, 10);
 xyplane plane1(-6, -10, 0, 10);
@@ -98,9 +103,10 @@ material mtl;
 GLboolean camera_at_light = GL_FALSE;
 
 struct render_program : public zxd::program {
-  virtual void update_model(const glm::mat4& _m_mat) {
-    m_mat = _m_mat;
-    mvp_mat = p_mat * v_mat * m_mat;
+  GLint ul_mvp_mat;
+
+  virtual void update_uniforms(const glm::mat4& m_mat) {
+    mat4 mvp_mat = light_p_mat * light_v_mat * m_mat;
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, &mvp_mat[0][0]);
   }
   virtual void update_frame() {
@@ -112,12 +118,11 @@ struct render_program : public zxd::program {
     GLdouble right = light_top * wnd_aspect;
     GLdouble left = -right;
 
-    p_mat =
-      glm::ortho(left, right, -light_top, light_top, light_near, light_far);
-    v_mat = glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+    light_p_mat = glm::ortho(left, right, -light_top, light_top, light_near, light_far);
+    light_v_mat = glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
 
     light_bsvp_mat = glm::translate(vec3(0.5, 0.5, 0.5)) *
-                     glm::scale(vec3(0.5, 0.5, 0.5)) * p_mat * v_mat;
+                     glm::scale(vec3(0.5, 0.5, 0.5)) * light_p_mat * light_v_mat;
   }
   virtual void attach_shaders() {
     // render shadow program
@@ -142,6 +147,9 @@ struct use_program : public zxd::program {
   GLint ul_use_sampler2_d_shadow;
   GLint ul_depth_map;
   GLint ul_shadow_map;
+  GLint ul_mv_mat;
+  GLint ul_mvp_mat;
+  GLint ul_mv_mat_it;
 
   virtual void update_frame() {
     glActiveTexture(GL_TEXTURE0);
@@ -153,8 +161,7 @@ struct use_program : public zxd::program {
     glBindTexture(GL_TEXTURE_2D, shadow_map);
 
     if (camera_at_light)
-      v_mat =
-        glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+      v_mat = glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
     else
       v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
 
@@ -172,11 +179,10 @@ struct use_program : public zxd::program {
     glUniform1i(ul_shadow_map, 1);
   }
 
-  void update_model(const glm::mat4& _m_mat) {
-    m_mat = _m_mat;
-    mv_mat = v_mat * m_mat;
-    mv_mat_it = glm::inverse(glm::transpose(mv_mat));
-    mvp_mat = p_mat * mv_mat;
+  void update_uniforms(const glm::mat4& m_mat) {
+    mat4 mv_mat = v_mat * m_mat;
+    mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
+    mat4 mvp_mat = p_mat * mv_mat;
     // mat4 m_mat_i = glm::inverse(m_mat);
     mat4 light_mat = light_bsvp_mat * m_mat;
 
@@ -232,23 +238,24 @@ class app0 : public app {
     m_info.wnd_height = WINDOWS_HEIGHT;
   }
 
-  void render(zxd::program& prg) {
-    glUseProgram(prg.object);
+  template<typename T>
+  void render(T& prg) {
+    glUseProgram(prg);
     prg.update_frame();
     mat4 m_mat(1);
 
     m_mat = glm::translate(vec3(0, 0, 3));
-    prg.update_model(m_mat);
+    prg.update_uniforms(m_mat);
     sphere0.draw();
 
     m_mat = mat4(1);
-    prg.update_model(m_mat);
+    prg.update_uniforms(m_mat);
     glNormal3f(0, 0, 1);
     plane0.draw();
 
     // create a wall
     m_mat = glm::translate(vec3(-10, 0, 0)) * glm::rotate(90.f, vec3(0, 1, 0));
-    prg.update_model(m_mat);
+    prg.update_uniforms(m_mat);
     glNormal3f(0, 0, 1);
     plane1.draw();
 

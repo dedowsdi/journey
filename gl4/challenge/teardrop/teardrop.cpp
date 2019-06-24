@@ -23,6 +23,9 @@ vec3_vector geometry_vertices;
 vec3_vector geometry_normals;
 bool draw_cpu = false;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class particle
 {
 public:
@@ -75,6 +78,7 @@ public:
   GLint ul_geometry_tbo;
   GLint ul_triangle_count;
   GLint ul_color;
+  GLint ul_vp_mat;
 
   void attach_shaders() override
   {
@@ -171,7 +175,7 @@ struct particle_vao
         &geometry_vertices.front());
 
     llprg.use();
-    glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, value_ptr(lprg.mvp_mat));
+    glUniformMatrix4fv(llprg.ul_mvp_mat, 1, 0, value_ptr(p_mat * v_mat));
     glUniform4f(llprg.ul_color, 1, 1, 0, 1);
 
     glBindVertexArray(vao);
@@ -185,7 +189,7 @@ struct particle_vao
     glBindTexture(GL_TEXTURE_BUFFER, geometry_tex);
 
     glUniform1i(pprg.ul_geometry_tbo, 0);
-    glUniformMatrix4fv(pprg.ul_vp_mat, 1, 0, value_ptr(lprg.p_mat * lprg.v_mat));
+    glUniformMatrix4fv(pprg.ul_vp_mat, 1, 0, value_ptr(p_mat * v_mat));
     glUniform1i(pprg.ul_triangle_count, triangle_count);
     glUniform4f(pprg.ul_color, 1, 1, 0, 0.9);
 
@@ -334,9 +338,9 @@ void teardrop_app::create_scene() {
   lprg.init();
   lprg.bind_lighting_uniform_locations(lights, lm, back_mtl);
   front_mtl.bind_uniform_locations(lprg);
-  lprg.p_mat = perspective<GLfloat>(fpi4, wnd_aspect(), 0.1, 1000);
-  lprg.v_mat = zxd::isometric_projection(1.5);
-  set_v_mat(&lprg.v_mat);
+  p_mat = perspective<GLfloat>(fpi4, wnd_aspect(), 0.1, 1000);
+  v_mat = zxd::isometric_projection(1.5);
+  set_v_mat(&v_mat);
 
   triangle_count = m_drop.slice() * m_drop.stack() * 2;
   glGenBuffers(1, geometry_fbo);
@@ -408,8 +412,8 @@ void teardrop_app::display() {
   // draw back face of tear drop
   lprg.use();
 
-  lprg.update_model(mat4(1));
-  lprg.update_lighting_uniforms(lights, lm, back_mtl);
+  lprg.update_uniforms(mat4(1), v_mat, p_mat);
+  lprg.update_lighting_uniforms(lights, lm, back_mtl, v_mat);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

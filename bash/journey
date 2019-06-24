@@ -215,3 +215,16 @@ here string add trailing new line:
 
 to avoid it:
   printf "abc" | cat
+
+----------
+2019.05.21
+
+bash -c 'echo $@' bash a b c d
+everything after command will be passed to command as positional parameter,
+starting from $0 (not $1), replace bash with "sh" if you want to use "sh -c"
+
+----------
+2019.05.24
+
+It appears that subshell inherits boll SHELLOPTS and BASHOPTS even if though
+thery are not in the environment.

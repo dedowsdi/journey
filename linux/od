@@ -1,0 +1,3 @@
+vim:set filetype=sh et sw=4 ts=8 sts=4:
+dump hex sequence for 1st 4 bytes, 2bypes per time, also appends a display of single byte character repensetation, use hex address
+echo -e "abc\ndef" | od -Ax -t x2z -N4

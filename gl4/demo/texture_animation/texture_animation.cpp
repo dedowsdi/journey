@@ -13,6 +13,9 @@ namespace zxd {
 
 quad quad0;
 
+glm::mat4 v_mat;
+glm::mat4 p_mat;
+
 class texture_animation_program : public program
 {
 
@@ -21,6 +24,7 @@ public:
   GLint al_texcoord;
   GLint ul_diffuse_map;
   GLint ul_tex_mat;
+  GLint ul_mvp_mat;
 
 protected:
 
@@ -66,7 +70,7 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
-    prg.fix2d_camera(-WIDTH*.5, WIDTH*.5, -HEIGHT*.5, HEIGHT*.5);
+    p_mat = glm::ortho<GLfloat>(-WIDTH*.5, WIDTH*.5, -HEIGHT*.5, HEIGHT*.5, -1, 1);
 
     quad0.include_texcoord(GL_TRUE);
     quad0.build_mesh();
@@ -109,7 +113,7 @@ public:
 
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(prg.vp_mat * glm::scale(vec3(100.0))));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * glm::scale(vec3(100.0))));
     glUniformMatrix4fv(prg.ul_tex_mat, 1, 0, glm::value_ptr(m_tex_mat));
     glUniform1i(prg.ul_diffuse_map, 0);
 
