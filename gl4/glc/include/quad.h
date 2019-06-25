@@ -6,7 +6,8 @@
 #include "common.h"
 #include "geometry.h"
 
-namespace zxd {
+namespace zxd
+{
 
 class quad;
 // draw single fullscreen 2d quad
@@ -16,7 +17,8 @@ void draw_quad(GLuint tex, GLuint tui = 0);
 void draw_quad();
 quad& get_nd_quad();
 
-class quad : public geometry_base {
+class quad : public geometry_base
+  {
 protected:
   // cc order, starts from lb
   vec3 m_v0;

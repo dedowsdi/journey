@@ -5,8 +5,10 @@
 #include <GL/glu.h>
 
 //--------------------------------------------------------------------
-const char* gl_tex_wrap_to_string(GLenum e) {
-  switch (e) {
+const char* gl_tex_wrap_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_CLAMP_TO_BORDER:
       return "GL_CLAMP_TO_BORDER";
     case GL_CLAMP_TO_EDGE:
@@ -21,7 +23,8 @@ const char* gl_tex_wrap_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum g_tex_wrapl_from_string(const char* s) {
+GLenum g_tex_wrapl_from_string(const char* s)
+{
   if (strcmp(s, "GL_CLAMP_TO_BORDER") == 0) return GL_CLAMP_TO_BORDER;
   if (strcmp(s, "GL_CLAMP_TO_EDGE") == 0) return GL_CLAMP_TO_EDGE;
   if (strcmp(s, "GL_MIRRORED_REPEAT") == 0) return GL_MIRRORED_REPEAT;
@@ -30,8 +33,10 @@ GLenum g_tex_wrapl_from_string(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* gl_tex_filter_to_string(GLenum e) {
-  switch (e) {
+const char* gl_tex_filter_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_NEAREST:
       return "GL_NEAREST";
     case GL_LINEAR:
@@ -50,7 +55,8 @@ const char* gl_tex_filter_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_tex_filter_from_string(const char* s) {
+GLenum gl_tex_filter_from_string(const char* s)
+{
   if (strcmp(s, "GL_NEAREST") == 0) return GL_NEAREST;
   if (strcmp(s, "GL_LINEAR") == 0) return GL_LINEAR;
   if (strcmp(s, "GL_NEAREST_MIPMAP_NEAREST") == 0)
@@ -64,8 +70,10 @@ GLenum gl_tex_filter_from_string(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* gl_shader_type_to_string(GLenum e) {
-  switch (e) {
+const char* gl_shader_type_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_FRAGMENT_SHADER:
       return "GL_FRAGMENT_SHADER";
     case GL_VERTEX_SHADER:
@@ -76,15 +84,18 @@ const char* gl_shader_type_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_shader_type_from_string(const char* s) {
+GLenum gl_shader_type_from_string(const char* s)
+{
   if (strcmp(s, "GL_FRAGMENT_SHADER") == 0) return GL_FRAGMENT_SHADER;
   if (strcmp(s, "GL_VERTEX_SHADER") == 0) return GL_VERTEX_SHADER;
   return 0;
 }
 
 //--------------------------------------------------------------------
-const char* gl_debug_source_to_string(GLenum e) {
-  switch (e) {
+const char* gl_debug_source_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_DEBUG_SOURCE_API:
       return "GL_DEBUG_SOURCE_API";
     case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
@@ -103,7 +114,8 @@ const char* gl_debug_source_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_debug_source_from_string(const char* s) {
+GLenum gl_debug_source_from_string(const char* s)
+{
   if (strcmp(s, "GL_DEBUG_SOURCE_API") == 0) return GL_DEBUG_SOURCE_API;
   if (strcmp(s, "GL_DEBUG_SOURCE_WINDOW_SYSTEM") == 0)
     return GL_DEBUG_SOURCE_WINDOW_SYSTEM;
@@ -118,8 +130,10 @@ GLenum gl_debug_source_from_string(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* gl_debug_type_to_string(GLenum e) {
-  switch (e) {
+const char* gl_debug_type_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_DEBUG_TYPE_ERROR:
       return "GL_DEBUG_TYPE_ERROR";
     case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
@@ -144,7 +158,8 @@ const char* gl_debug_type_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_debug_type_from_string(const char* s) {
+GLenum gl_debug_type_from_string(const char* s)
+{
   if (strcmp(s, "GL_DEBUG_TYPE_ERROR") == 0) return GL_DEBUG_TYPE_ERROR;
   if (strcmp(s, "GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR") == 0)
     return GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR;
@@ -163,8 +178,10 @@ GLenum gl_debug_type_from_string(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* gl_debug_severity_to_string(GLenum e) {
-  switch (e) {
+const char* gl_debug_severity_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_DEBUG_SEVERITY_HIGH:
       return "GL_DEBUG_SEVERITY_HIGH";
     case GL_DEBUG_SEVERITY_MEDIUM:
@@ -179,7 +196,8 @@ const char* gl_debug_severity_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_debug_severity_from_string(const char* s) {
+GLenum gl_debug_severity_from_string(const char* s)
+{
   if (strcmp(s, "GL_DEBUG_SEVERITY_HIGH") == 0) return GL_DEBUG_SEVERITY_HIGH;
   if (strcmp(s, "GL_DEBUG_SEVERITY_MEDIUM") == 0)
     return GL_DEBUG_SEVERITY_MEDIUM;
@@ -190,8 +208,10 @@ GLenum gl_debug_severity_from_string(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* gl_polygon_mode_to_string(GLenum e) {
-  switch (e) {
+const char* gl_polygon_mode_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_POINT:
       return "GL_POINT";
     case GL_LINE:
@@ -204,7 +224,8 @@ const char* gl_polygon_mode_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_polygon_mode_from_string(const char* s) {
+GLenum gl_polygon_mode_from_string(const char* s)
+{
   if (strcmp(s, "GL_POINT") == 0) return GL_POINT;
   if (strcmp(s, "GL_LINE") == 0) return GL_LINE;
   if (strcmp(s, "GL_FILL") == 0) return GL_FILL;
@@ -212,8 +233,10 @@ GLenum gl_polygon_mode_from_string(const char* s) {
 }
 
 //--------------------------------------------------------------------
-const char* gl_cull_face_mode_to_string(GLenum e) {
-  switch (e) {
+const char* gl_cull_face_mode_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_FRONT:
       return "GL_FRONT";
     case GL_BACK:
@@ -226,7 +249,8 @@ const char* gl_cull_face_mode_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_cull_face_mode_from_string(const char* s) {
+GLenum gl_cull_face_mode_from_string(const char* s)
+{
   if (strcmp(s, "GL_FRONT") == 0) return GL_FRONT;
   if (strcmp(s, "GL_BACK") == 0) return GL_BACK;
   if (strcmp(s, "GL_FRONT_AND_BACK") == 0) return GL_FRONT_AND_BACK;
@@ -236,8 +260,10 @@ GLenum gl_cull_face_mode_from_string(const char* s) {
 #ifndef GL_VERSION_3_0
 
 //--------------------------------------------------------------------
-const char* gl_tex_env_mode_to_string(GLenum e) {
-  switch (e) {
+const char* gl_tex_env_mode_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GL_REPLACE:
       return "GL_REPLACE";
     case GL_MODULATE:
@@ -256,7 +282,8 @@ const char* gl_tex_env_mode_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum gl_tex_env_mode_from_string(const char* s) {
+GLenum gl_tex_env_mode_from_string(const char* s)
+{
   if (strcmp(s, "GL_REPLACE") == 0) return GL_REPLACE;
   if (strcmp(s, "GL_MODULATE") == 0) return GL_MODULATE;
   if (strcmp(s, "GL_DECAL") == 0) return GL_DECAL;
@@ -266,8 +293,10 @@ GLenum gl_tex_env_mode_from_string(const char* s) {
   return 0;
 }
 //--------------------------------------------------------------------
-const char* glu_nurb_sample_method_to_string(GLenum e) {
-  switch (e) {
+const char* glu_nurb_sample_method_to_string(GLenum e)
+{
+  switch (e)
+  {
     case GLU_OBJECT_PARAMETRIC_ERROR:
       return "GLU_OBJECT_PARAMETRIC_ERROR";
     case GLU_OBJECT_PATH_LENGTH:
@@ -284,7 +313,8 @@ const char* glu_nurb_sample_method_to_string(GLenum e) {
 }
 
 //--------------------------------------------------------------------
-GLenum glu_nurb_sample_methodl_from_string(const char* s) {
+GLenum glu_nurb_sample_methodl_from_string(const char* s)
+{
   if (strcmp(s, "GLU_OBJECT_PARAMETRIC_ERROR") == 0)
     return GLU_OBJECT_PARAMETRIC_ERROR;
   if (strcmp(s, "GLU_OBJECT_PATH_LENGTH") == 0) return GLU_OBJECT_PATH_LENGTH;

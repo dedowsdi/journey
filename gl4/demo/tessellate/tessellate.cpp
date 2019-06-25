@@ -9,7 +9,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -103,7 +104,8 @@ void reload_program(const kci* = 0)
 }
 
 
-class tessellate_app : public app {
+class tessellate_app : public app
+{
 protected:
   bitmap_text m_text;
 
@@ -121,7 +123,8 @@ public:
     GLFWwindow *wnd, int key, int scancode, int action, int mods);
 };
 
-void tessellate_app::init_info() {
+void tessellate_app::init_info()
+{
   app::init_info();
   m_info.title = "tessellate_app";
   m_info.wnd_width = WIDTH;
@@ -129,7 +132,8 @@ void tessellate_app::init_info() {
   m_info.samples = 4;
 }
 
-void tessellate_app::create_scene() {
+void tessellate_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   m_text.init();
@@ -196,7 +200,8 @@ void tessellate_app::create_scene() {
 }
 
 
-void tessellate_app::update() {
+void tessellate_app::update()
+{
   tess_level_outer = vec4(kci_outer0->get_float(), kci_outer1->get_float(), kci_outer2->get_float(), kci_outer3->get_float());
   tess_level_inner = vec2(kci_inner0->get_float(), kci_inner1->get_float());
 
@@ -204,7 +209,8 @@ void tessellate_app::update() {
   glPatchParameterfv(GL_PATCH_DEFAULT_INNER_LEVEL, glm::value_ptr(tess_level_inner));
 }
 
-void tessellate_app::display() {
+void tessellate_app::display()
+{
   glClear(GL_COLOR_BUFFER_BIT);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -228,15 +234,19 @@ void tessellate_app::display() {
   glDisable(GL_BLEND);
 }
 
-void tessellate_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void tessellate_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 }
 
 void tessellate_app::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -249,7 +259,8 @@ void tessellate_app::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::tessellate_app app;
   app.run();
 }

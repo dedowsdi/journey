@@ -2,8 +2,10 @@
 #define GL_GLC_BEZIERSURFACE_H
 #include "geometry.h"
 
-namespace zxd {
-class bezier_surface : public geometry_base {
+namespace zxd
+{
+class bezier_surface : public geometry_base
+  {
 protected:
   GLfloat m_ubegin;
   GLfloat m_uend;

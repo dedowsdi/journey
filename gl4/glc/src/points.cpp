@@ -1,6 +1,7 @@
 #include "points.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
 void origin2::build_vertex()

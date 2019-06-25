@@ -24,13 +24,15 @@
 #include "program.h"
 #include "stream_util.h"
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 m_mat;
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
-struct parallax_program : public program {
+struct parallax_program : public program
+  {
   GLint ul_normal_map;
   GLint ul_diffuse_map;
   GLint ul_depth_map;
@@ -40,14 +42,16 @@ struct parallax_program : public program {
 
   GLuint parallax_method{0};
 
-  virtual void update_uniforms(const mat4 &m_mat) {
+  virtual void update_uniforms(const mat4 &m_mat)
+  {
     mat4 mv_mat = v_mat * m_mat;
     // mat4 mv_mat_i = glm::inverse(mv_mat);
     // mat4 m_mat_i = glm::inverse(m_mat);
     mat4 mvp_mat = p_mat * mv_mat;
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
   };
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
     attach(GL_VERTEX_SHADER, sv, "shader4/parallaxmap.vs.glsl");
@@ -60,7 +64,8 @@ struct parallax_program : public program {
     name("parallaxmap");
   }
 
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     // uniform_location(&ul_eye, "eye");
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_normal_map, "normal_map");
@@ -69,7 +74,8 @@ struct parallax_program : public program {
     uniform_location(&ul_m_camera, "m_camera");
     uniform_location(&ul_height_scale, "height_scale");
   }
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "normal");
     bind_attrib_location(2, "texcoord");
@@ -86,20 +92,23 @@ GLfloat height_scale = 0.05f;
 std::string parallax_methods[] = {"parallax_occlusion_map", "parallaxSteepMap",
   "parallax_map_with_offset", "parallaxMapWithoutOffset"};
 
-class normal_map_app : public app {
+class normal_map_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
   normal_map_app() {}
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "hello world";
     m_info.wnd_width = 512;
     m_info.wnd_height = 512;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -177,7 +186,8 @@ public:
     m_text.reshape(wnd_width(), wnd_height());
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw low quality mesh with normal map
@@ -195,7 +205,8 @@ public:
     vec3 camera = glm::column(mv_mat_i, 3).xyz();
     glUniform3fv(prg.ul_m_camera, 1, glm::value_ptr(camera));
 
-    for (int i = 0; i < lights.size(); ++i) {
+    for (int i = 0; i < lights.size(); ++i)
+    {
       lights[i].update_uniforms(m_mat_i);
     }
     light_model.update_uniforms();
@@ -224,14 +235,17 @@ public:
 
   virtual void update() {}
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(w, h);
   }
 
-  virtual void bind_uniform_locations(zxd::program &prg) {
+  virtual void bind_uniform_locations(zxd::program &prg)
+  {
     light_model.bind_uniform_locations(prg.object, "lm");
-    for (int i = 0; i < lights.size(); ++i) {
+    for (int i = 0; i < lights.size(); ++i)
+    {
       std::stringstream ss;
       ss << "lights[" << i << "]";
       lights[i].bind_uniform_locations(prg.object, ss.str());
@@ -240,13 +254,17 @@ public:
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
-        case GLFW_KEY_Q: {
+        case GLFW_KEY_Q:
+          {
           prg.parallax_method = (prg.parallax_method + 1) % 4;
           prg.clear();
           prg.init();
@@ -258,13 +276,17 @@ public:
       }
     }
 
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      switch (key) {
+    if (action == GLFW_PRESS || action == GLFW_REPEAT)
+    {
+      switch (key)
+      {
         case GLFW_KEY_W:
-          if (mods & GLFW_MOD_SHIFT) {
+          if (mods & GLFW_MOD_SHIFT)
+          {
             height_scale -= 0.002;
             height_scale = glm::max(height_scale, 0.0f);
-          } else {
+          } else
+          {
             height_scale += 0.002;
           }
 
@@ -277,22 +299,26 @@ public:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods) {
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+  {
     app::glfw_mouse_move(wnd, x, y);
   }
 
   virtual void glfw_mouse_wheel(
-    GLFWwindow *wnd, double xoffset, double yoffset) {
+    GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::normal_map_app app;
   app.run();
 }

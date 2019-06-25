@@ -5,11 +5,13 @@
 #include "common.h"
 #include "stream_util.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
 void blinn_program::update_uniforms(const glm::mat4& m_mat,
-    const glm::mat4& v_mat, const glm::mat4& p_mat) {
+    const glm::mat4& v_mat, const glm::mat4& p_mat)
+{
 
   mat4 mv_mat = v_mat * m_mat;
   mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
@@ -18,13 +20,15 @@ void blinn_program::update_uniforms(const glm::mat4& m_mat,
   glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
   glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
   glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
-  if (with_texcoord) {
+  if (with_texcoord)
+  {
     glUniform1i(ul_map, tex_unit);
   }
 }
 
 //--------------------------------------------------------------------
-void blinn_program::attach_shaders() {
+void blinn_program::attach_shaders()
+{
   string_vector sv;
   std::string shader_dir = legacy ? "shader2/" : "shader4/";
 #ifdef GL_VERSION_3_3
@@ -46,14 +50,16 @@ void blinn_program::attach_shaders() {
 }
 
 //--------------------------------------------------------------------
-void blinn_program::bind_uniform_locations() {
+void blinn_program::bind_uniform_locations()
+{
   if(!this->instance)
   {
     uniform_location(&ul_mv_mat, "mv_mat");
     uniform_location(&ul_mv_mat_it, "mv_mat_it");
     uniform_location(&ul_mvp_mat, "mvp_mat");
   }
-  if (with_texcoord) {
+  if (with_texcoord)
+  {
     uniform_location(&ul_map, map_name);
   }
   uniform_location(&ul_normal_scale, "normal_scale");
@@ -61,9 +67,11 @@ void blinn_program::bind_uniform_locations() {
 
 //--------------------------------------------------------------------
 void blinn_program::bind_lighting_uniform_locations(
-  light_vector& lights, light_model& lm, material& mtl) {
+  light_vector& lights, light_model& lm, material& mtl)
+{
   lm.bind_uniform_locations(object, "lm");
-  for (int i = 0; i < lights.size(); ++i) {
+  for (int i = 0; i < lights.size(); ++i)
+  {
     std::stringstream ss;
     ss << "lights[" << i << "]";
     lights[i].bind_uniform_locations(object, ss.str());
@@ -77,16 +85,19 @@ void blinn_program::update_lighting_uniforms( light_vector& lights,
 {
   mtl.update_uniforms();
   lm.update_uniforms();
-  for (int i = 0; i < lights.size(); ++i) {
+  for (int i = 0; i < lights.size(); ++i)
+  {
     lights[i].update_uniforms(v_mat);
   }
 }
 
 //--------------------------------------------------------------------
-void blinn_program::bind_attrib_locations() {
+void blinn_program::bind_attrib_locations()
+{
   bind_attrib_location(0, "vertex");
   bind_attrib_location(1, "normal");
-  if (with_texcoord) {
+  if (with_texcoord)
+  {
     bind_attrib_location(2, "texcoord");
   }
 
@@ -99,70 +110,82 @@ void blinn_program::bind_attrib_locations() {
 }
 
 //--------------------------------------------------------------------
-void quad_program::attach_shaders() {
+void quad_program::attach_shaders()
+{
   attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
   attach(GL_FRAGMENT_SHADER, "shader4/quad.fs.glsl");
 }
 
 //--------------------------------------------------------------------
-void quad_program::update_uniforms(GLuint tex_index /* = 0*/) {
+void quad_program::update_uniforms(GLuint tex_index /* = 0*/)
+{
   glUniform1i(ul_quad_map, tex_index);
 }
 
 //--------------------------------------------------------------------
-void quad_program::bind_uniform_locations() {
+void quad_program::bind_uniform_locations()
+{
   uniform_location(&ul_quad_map, quad_map_name);
 }
 
 //--------------------------------------------------------------------
-void quad_program::bind_attrib_locations() {
+void quad_program::bind_attrib_locations()
+{
   bind_attrib_location(0, "vertex");
   bind_attrib_location(1, "texcoord");
 }
 
 //--------------------------------------------------------------------
-void quad_base::attach_shaders() {
+void quad_base::attach_shaders()
+{
   attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
   do_attach_shaders();
 }
 
 //--------------------------------------------------------------------
-void quad_base::update_uniforms(GLuint tex_index /* = 0*/) {
+void quad_base::update_uniforms(GLuint tex_index /* = 0*/)
+{
   glUniform1i(ul_quad_map, tex_index);
   do_update_uniforms();
 }
 
 //--------------------------------------------------------------------
-void quad_base::bind_uniform_locations() {
+void quad_base::bind_uniform_locations()
+{
   uniform_location(&ul_quad_map, quad_map_name);
   do_bind_uniform_locations();
 }
 
 //--------------------------------------------------------------------
-void quad_base::bind_attrib_locations() {
+void quad_base::bind_attrib_locations()
+{
   bind_attrib_location(0, "vertex");
   bind_attrib_location(1, "texcoord");
   do_bind_attrib_locations();
 }
 
 //--------------------------------------------------------------------
-void point_program::attach_shaders() {
+void point_program::attach_shaders()
+{
   attach(GL_VERTEX_SHADER, "shader4/simple.vs.glsl");
   attach(GL_FRAGMENT_SHADER, "shader4/color.fs.glsl");
 }
 
 //--------------------------------------------------------------------
-void point_program::bind_uniform_locations() {
+void point_program::bind_uniform_locations()
+{
   uniform_location(&ul_mvp_mat, "mvp_mat");
 }
 
 //--------------------------------------------------------------------
-void point_program::bind_attrib_locations() {
+void point_program::bind_attrib_locations()
+{
   bind_attrib_location(0, "vertex");
 }
 
 //--------------------------------------------------------------------
-void point_program::udpate_uniforms(const mat4& _mvp_mat) {
+void point_program::udpate_uniforms(const mat4& _mvp_mat)
+{
   glUniformMatrix4fv(ul_mvp_mat, 1, GL_FALSE, value_ptr(_mvp_mat));
 }
 
@@ -178,7 +201,8 @@ void normal_viewer_program::update_uniforms(const mat4& m_mat, const mat4& v_mat
 }
 
 //--------------------------------------------------------------------
-void normal_viewer_program::attach_shaders() {
+void normal_viewer_program::attach_shaders()
+{
   string_vector sv;
 #ifdef GL_VERSION_3_3
   sv.push_back("#version 330 core\n");
@@ -197,7 +221,8 @@ void normal_viewer_program::attach_shaders() {
 }
 
 //--------------------------------------------------------------------
-void normal_viewer_program::bind_uniform_locations() {
+void normal_viewer_program::bind_uniform_locations()
+{
   uniform_location(&ul_p_mat, "p_mat");
   uniform_location(&ul_mv_mat, "mv_mat");
   uniform_location(&ul_mv_mat_it, "mv_mat_it");
@@ -207,30 +232,35 @@ void normal_viewer_program::bind_uniform_locations() {
 }
 
 //--------------------------------------------------------------------
-void normal_viewer_program::bind_attrib_locations() {
+void normal_viewer_program::bind_attrib_locations()
+{
   bind_attrib_location(0, "vertex");
   bind_attrib_location(1, "normal");
 }
 
 //--------------------------------------------------------------------
-void vertex_color_program::attach_shaders() {
+void vertex_color_program::attach_shaders()
+{
   attach(GL_VERTEX_SHADER, "shader4/vertex_color.vs.glsl");
   attach(GL_FRAGMENT_SHADER, "shader4/vertex_color.fs.glsl");
 }
 
 //--------------------------------------------------------------------
-void vertex_color_program::bind_uniform_locations() {
+void vertex_color_program::bind_uniform_locations()
+{
   uniform_location(&ul_mvp_mat, "mvp_mat");
 }
 
 //--------------------------------------------------------------------
-void vertex_color_program::bind_attrib_locations() {
+void vertex_color_program::bind_attrib_locations()
+{
   bind_attrib_location(0, "vertex");
   bind_attrib_location(1, "color");
 }
 
 //--------------------------------------------------------------------
-void vertex_color_program::update_uniforms(const mat4& _mvp_mat) {
+void vertex_color_program::update_uniforms(const mat4& _mvp_mat)
+{
   glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(_mvp_mat));
 }
 

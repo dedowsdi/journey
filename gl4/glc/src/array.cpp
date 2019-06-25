@@ -1,5 +1,6 @@
 #include "array.h"
 
-namespace zxd {
+namespace zxd
+{
 
 }

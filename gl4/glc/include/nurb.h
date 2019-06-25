@@ -4,10 +4,12 @@
 #include <algorithm>
 #include "geometry.h"
 
-namespace zxd {
+namespace zxd
+{
 using namespace glm;
 // clamped b-spline
-class nurb : public geometry_base {
+class nurb : public geometry_base
+  {
 protected:
   vec4_vector m_ctrl_points;
   float_vector m_knots;
@@ -48,7 +50,8 @@ public:
   GLfloat max_knot() { return m_knots.back(); }
 
   GLfloat weight(GLint i) { return m_ctrl_points[i].w; }
-  void weight(GLint i, GLfloat w) {
+  void weight(GLint i, GLfloat w)
+  {
     // what if current w is 0?
     m_ctrl_points[i] *= w / m_ctrl_points[i].w;
   }

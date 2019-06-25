@@ -1,9 +1,11 @@
 #include "axes.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
-void axes::build_vertex() {
+void axes::build_vertex()
+{
   vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve(6);
@@ -20,7 +22,8 @@ void axes::build_vertex() {
 }
 
 //--------------------------------------------------------------------
-void axes::build_color() {
+void axes::build_color()
+{
   vec3_array& colors = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&colors));
   colors.reserve(6);

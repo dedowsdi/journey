@@ -53,7 +53,8 @@ std::string lsystem::step(const std::string& axiom, int count)
     return axiom;
 
   std::stringstream ss;
-  for (int i = 0; i < axiom.size(); ++i) {
+  for (int i = 0; i < axiom.size(); ++i)
+  {
     char c = axiom[i];
     auto iter = m_rules.find(c);
     if(iter == m_rules.end() || i >= count)

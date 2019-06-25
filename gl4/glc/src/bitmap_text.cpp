@@ -12,7 +12,8 @@
 #include "stream_util.h"
 #include "glc_utf8.h"
 
-namespace zxd {
+namespace zxd
+{
 //--------------------------------------------------------------------
 bitmap_text::bitmap_text(
   const std::string& fmtfile /* = "DejaVuSansMono_15_9.fmt"*/)
@@ -22,7 +23,8 @@ bitmap_text::bitmap_text(
 bitmap_text::~bitmap_text() {}
 
 //--------------------------------------------------------------------
-void bitmap_text::init(bool legacy) {
+void bitmap_text::init(bool legacy)
+{
   m_program->legacy = legacy;
   m_program->init();
   glGenVertexArrays(1, &m_vao);
@@ -40,7 +42,8 @@ void bitmap_text::init(bool legacy) {
   std::string fmtfile = m_fmt_file;
   std::ifstream is(stream_util::get_resource(fmtfile));
 
-  if (!is) {
+  if (!is)
+  {
     std::stringstream ss;
     ss << "faield to load file " << fmtfile << std::endl;
     throw std::runtime_error(ss.str());
@@ -60,22 +63,27 @@ void bitmap_text::load_format(std::istream& is)
   int stage = 0;
 
   std::string texfile;
-  while (getline(is, line)) {
-    if (line.empty() || line[0] == '#' || line[0] == '-') {
+  while (getline(is, line))
+  {
+    if (line.empty() || line[0] == '#' || line[0] == '-')
+    {
       continue;
     }
 
     std::stringstream ss(line);
 
-    if (stage == 0) {
+    if (stage == 0)
+    {
       ss >> texfile >> m_face;
       texfile = "font/" + texfile;
       ++stage;
-    } else if (stage == 1) {
+    } else if (stage == 1)
+    {
       ss >> m_num_characters >> m_texture_width >> m_texture_height >> m_height >> m_linespace >>
         m_max_advance;
       ++stage;
-    } else if (stage == 2) {
+    } else if (stage == 2)
+    {
       glyph glyph;
       uint32_t c;
       ss << std::hex;
@@ -85,7 +93,8 @@ void bitmap_text::load_format(std::istream& is)
       ss >> glyph.s_min >> glyph.s_max >> glyph.t_min >> glyph.t_max;
       ss >> glyph.advance;
 
-      if (ss.fail()) {
+      if (ss.fail())
+      {
         std::cout << "find illegal data : " << line << std::endl;
       }
 
@@ -98,7 +107,8 @@ void bitmap_text::load_format(std::istream& is)
     }
   }
 
-  if (m_glyph_dict.size() != m_num_characters) {
+  if (m_glyph_dict.size() != m_num_characters)
+  {
     std::cout << "load only " << m_glyph_dict.size()
        << " character info, there should be " << m_num_characters << std::endl;
   }
@@ -122,7 +132,8 @@ void bitmap_text::load_format(std::istream& is)
 
 //--------------------------------------------------------------------
 void bitmap_text::print(const std::string& text, GLuint x, GLuint y,
-  const glm::vec4& color /*= vec4(1.0f)*/, GLfloat scale /*= 1.0f*/) {
+  const glm::vec4& color /*= vec4(1.0f)*/, GLfloat scale /*= 1.0f*/)
+{
   zxd::vec4_vector vertices;  // {x, y, s, t}
 
   GLuint nexty = y;
@@ -135,14 +146,16 @@ void bitmap_text::print(const std::string& text, GLuint x, GLuint y,
   {
     auto character = *beg++;
 
-    if (character == '\n') {
+    if (character == '\n')
+    {
       nextx = x;
       nexty -= m_linespace * scale;
       continue;
     }
 
     auto iter = m_glyph_dict.find(character);
-    if (iter == m_glyph_dict.end()) {
+    if (iter == m_glyph_dict.end())
+    {
       std::cout << "unknown character " << std::hex << character << std::endl;
       std::cout.unsetf(std::ios_base::hex);
 
@@ -203,7 +216,8 @@ std::vector<uint32_t> bitmap_text::code_points() const
 {
   std::vector<uint32_t> res;
   res.reserve(m_glyph_dict.size());
-  for (const auto& p : m_glyph_dict) {
+  for (const auto& p : m_glyph_dict)
+  {
     res.push_back(p.first);
   }
   return res;

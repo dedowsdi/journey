@@ -49,7 +49,8 @@
 #define ZCGE ZXD_CHECK_GL_ERROR
 #define ZCGEA ZXD_CHECK_GL_ERROR_AFTER
 
-namespace zxd {
+namespace zxd
+{
 
 void uniform_location(GLint *loc, GLint program, const std::string &name);
 
@@ -58,20 +59,23 @@ void matrix_attrib_pointer(
 
 // handle difference between float and vec
 template <typename T>
-struct glm_vecn {
+struct glm_vecn
+{
   static const GLuint components = T::components;
   typedef typename T::value_type value_type;
 };
 
 template <>
-struct glm_vecn<GLfloat> {
+struct glm_vecn<GLfloat>
+{
   static const GLuint components = 1;
   typedef GLfloat value_type;
 };
 
 
 template <>
-struct glm_vecn<GLuint> {
+struct glm_vecn<GLuint>
+{
   static const GLuint components = 1;
   typedef GLuint value_type;
 };

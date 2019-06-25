@@ -1,10 +1,12 @@
 #include "torus.h"
 #include "common.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
-void torus::build_vertex() {
+void torus::build_vertex()
+{
   GLuint ring_size = (m_sides + 1) * 2;
   GLfloat pi2 = glm::pi<GLfloat>() * 2;
   GLfloat phi_step = pi2 / m_sides;
@@ -17,7 +19,8 @@ void torus::build_vertex() {
   // build torus tube ring by tube ring(triangle strip, ), use phi along +z to
   // rotate ring, use theta along -y to rotate vertex in ring.  see image in
   // http://paulbourke.net/geometry/torus/
-  for (int i = 0; i < m_rings; ++i) {
+  for (int i = 0; i < m_rings; ++i)
+  {
     GLfloat phi0 = phi_step * i;
     GLfloat phi1 = phi0 + phi_step;
     GLfloat cos_phi0 = glm::cos(phi0);
@@ -25,7 +28,8 @@ void torus::build_vertex() {
     GLfloat sin_phi0 = glm::sin(phi0);
     GLfloat sin_phi1 = glm::sin(phi1);
 
-    for (int j = 0; j <= m_sides; ++j) {
+    for (int j = 0; j <= m_sides; ++j)
+    {
       GLfloat theta = theta_step * j;
 
       // the first circle resides on xz plane, projection of vertex of this
@@ -41,13 +45,15 @@ void torus::build_vertex() {
   }
 
   m_primitive_sets.clear();
-  for (int i = 0; i < m_rings; ++i) {
+  for (int i = 0; i < m_rings; ++i)
+  {
     add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, ring_size * i, ring_size));
   }
 }
 
 //--------------------------------------------------------------------
-void torus::build_normal() {
+void torus::build_normal()
+{
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
@@ -56,7 +62,8 @@ void torus::build_normal() {
   GLfloat phi_step = pi2 / m_sides;
   GLfloat theta_step = pi2 / m_rings;
 
-  for (int i = 0; i < m_rings; ++i) {
+  for (int i = 0; i < m_rings; ++i)
+  {
     GLfloat phi0 = phi_step * i;
     GLfloat phi1 = phi0 + phi_step;
     GLfloat cos_phi0 = glm::cos(phi0);
@@ -64,7 +71,8 @@ void torus::build_normal() {
     GLfloat sin_phi0 = glm::sin(phi0);
     GLfloat sin_phi1 = glm::sin(phi1);
 
-    for (int j = 0; j <= m_sides; ++j) {
+    for (int j = 0; j <= m_sides; ++j)
+    {
       GLfloat theta = theta_step * j;
 
       GLfloat r = m_outer_radius + m_inner_radius * glm::cos(theta);
@@ -86,7 +94,8 @@ void torus::build_normal() {
 }
 
 //--------------------------------------------------------------------
-void torus::build_texcoord() {
+void torus::build_texcoord()
+{
   GLfloat pi2 = glm::pi<GLfloat>() * 2;
   GLfloat phi_step = pi2 / m_sides;
   GLfloat theta_step = pi2 / m_rings;
@@ -98,11 +107,13 @@ void torus::build_texcoord() {
   // build torus ring by ring(triangle strip), use phi along +z to rotate
   // ring, use theta along -y to rotate vertex in ring.
   // see image in http://paulbourke.net/geometry/torus/
-  for (int i = 0; i < m_rings; ++i) {
+  for (int i = 0; i < m_rings; ++i)
+  {
     GLfloat phi0 = phi_step * i;
     GLfloat phi1 = phi0 + phi_step;
 
-    for (int j = 0; j <= m_sides; ++j) {
+    for (int j = 0; j <= m_sides; ++j)
+    {
       GLfloat theta = theta_step * j;
 
       vec2 t0(phi0 / pi2, theta / pi2);

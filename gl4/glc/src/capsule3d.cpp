@@ -31,14 +31,16 @@ void capsule3d::build_vertex()
   GLuint equator = m_sphere_stack/2;
   
   // sphere in both ends
-  for (int i = 0; i < m_sphere_stack; ++i) {
+  for (int i = 0; i < m_sphere_stack; ++i)
+  {
     GLint stack_start = stack_size * i;
     GLuint next_stack_start = stack_start + stack_size;
 
     GLfloat sign = i >= equator ? -1 : 1;
     vec3 real_offset = offset * sign;
 
-    for (int j = 0; j <= m_sphere_slice; j++) {
+    for (int j = 0; j <= m_sphere_slice; j++)
+    {
       // loop last stack in reverse order
       vertices->push_back(real_offset + sphere_points[stack_start + j]);
       vertices->push_back(real_offset + sphere_points[next_stack_start + j]);
@@ -51,7 +53,8 @@ void capsule3d::build_vertex()
   bottom.reserve(m_sphere_slice + 1);
   up.reserve(m_sphere_slice + 1);
 
-  for (int i = 0; i <= m_sphere_slice; ++i) {
+  for (int i = 0; i <= m_sphere_slice; ++i)
+  {
     const vec3& v = sphere_points[equator * stack_size + i];
     up.push_back(v + offset);
     bottom.push_back(v - offset);
@@ -61,7 +64,8 @@ void capsule3d::build_vertex()
   GLfloat step = 1.0f / m_cylinder_stack;
   for (int i = 0; i < m_cylinder_stack; ++i) 
   {
-    for (int j = 0; j <= m_sphere_slice; j++) {
+    for (int j = 0; j <= m_sphere_slice; j++)
+    {
       vertices->push_back(mix(up[j], bottom[j], step * i));
       vertices->push_back(mix(up[j], bottom[j], step * (i+1)));
     }
@@ -93,7 +97,8 @@ void capsule3d::build_texcoord()
   // texcoords for sphere, the one with max z has t = 1
   GLuint equator = m_sphere_stack/2;
   GLfloat step = 1.0f / equator;
-  for (int i = 0; i < m_sphere_stack ; ++i) {
+  for (int i = 0; i < m_sphere_stack ; ++i)
+  {
 
     GLfloat t0, t1;
 
@@ -108,7 +113,8 @@ void capsule3d::build_texcoord()
       t1 = mix(cylinder_end_t, 0.0f, (i+1 - equator) * step);
     }
 
-    for (int j = 0; j <= m_sphere_slice; j++) {
+    for (int j = 0; j <= m_sphere_slice; j++)
+    {
       GLfloat s = static_cast<GLfloat>(j) / m_sphere_slice;
 
       texcoords.push_back(glm::vec2(s, t0));
@@ -118,11 +124,13 @@ void capsule3d::build_texcoord()
 
   // texcoords for cylinder
   step = 1.0f / m_cylinder_stack;
-  for (int i = 0; i < m_cylinder_stack ; ++i) {
+  for (int i = 0; i < m_cylinder_stack ; ++i)
+  {
     GLfloat t0 = mix(cylinder_start_t, cylinder_end_t, i * step);
     GLfloat t1 = mix(cylinder_start_t, cylinder_end_t, (i+1) * step);
 
-    for (int j = 0; j <= m_sphere_slice; j++) {
+    for (int j = 0; j <= m_sphere_slice; j++)
+    {
       GLfloat s = static_cast<GLfloat>(j) / m_sphere_slice;
 
       texcoords.push_back(glm::vec2(s, t0));

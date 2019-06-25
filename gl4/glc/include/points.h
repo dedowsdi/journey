@@ -3,10 +3,12 @@
 #include "geometry.h"
 #include "common_program.h"
 
-namespace zxd {
+namespace zxd
+{
 
 template <typename tvec>
-class points : public geometry_base {
+class points : public geometry_base
+{
 public:
 
   GLuint build_mesh(const std::vector<tvec>& points)
@@ -22,7 +24,8 @@ public:
 
 };
 
-class origin2 : public geometry_base{
+class origin2 : public geometry_base
+{
 protected:
   void build_vertex();
 
@@ -32,7 +35,8 @@ public:
 // draw points, it cretes buffer every time you called it, don't use it if
 // performance is an issue.
 template <typename tvec>
-void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat) {
+void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat)
+{
   static point_program prg;
   if (!prg.is_inited()) prg.init();
 
@@ -58,8 +62,10 @@ void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat) {
 
 template <typename tvec>
 void draw_points(
-  const std::vector<std::vector<tvec>>& points, const mat4& mvp_mat) {
-  for (auto iter = points.begin(); iter != points.end(); ++iter) {
+  const std::vector<std::vector<tvec>>& points, const mat4& mvp_mat)
+{
+  for (auto iter = points.begin(); iter != points.end(); ++iter)
+  {
     draw_points(*iter, mvp_mat);
   }
 }

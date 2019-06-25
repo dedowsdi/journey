@@ -38,17 +38,20 @@ public:
   GLint ul_color;
   GLint ul_mvp_mat;
 
-  virtual void attach_shaders(){
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/debugger.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/debugger.fs.glsl");
   };
 
-  virtual void bind_uniform_locations(){
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_color, "color");
   };
 
-  virtual void bind_attrib_locations(){
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
   };
 };

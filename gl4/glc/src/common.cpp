@@ -8,19 +8,23 @@
 
 using namespace glm;
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
-void uniform_location(GLint *loc, GLint program, const std::string &name) {
+void uniform_location(GLint *loc, GLint program, const std::string &name)
+{
   *loc = glGetUniformLocation(program, name.c_str());
-  if (*loc == -1) {
+  if (*loc == -1)
+  {
     printf("failed to get uniform location : %s\n", name.c_str());
   }
 }
 
 //--------------------------------------------------------------------
 void matrix_attrib_pointer(
-  GLint index, GLuint divisor /* = 1*/, GLboolean normalize /* = GL_FALSE*/) {
+  GLint index, GLuint divisor /* = 1*/, GLboolean normalize /* = GL_FALSE*/)
+{
   glVertexAttribPointer(
     index + 0, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), BUFFER_OFFSET(0));
   glVertexAttribPointer(
@@ -52,18 +56,23 @@ void matrix_attrib_pointer(
 std::vector<GLubyte> create_chess_image(GLuint width, GLuint height,
   GLuint grid_width, GLuint grid_height,
   const glm::vec4 &black /* = glm::vec4(0, 0, 0, 1)*/,
-  const glm::vec4 &white /* = glm::vec4(1)*/) {
+  const glm::vec4 &white /* = glm::vec4(1)*/)
+{
   std::vector<GLubyte> image;
   image.reserve(width * height * 4);
 
-  for (int i = 0; i < height; ++i) {
-    for (int j = 0; j < width; ++j) {
-      if ((i & grid_height) ^ (j & grid_width)) {
+  for (int i = 0; i < height; ++i)
+  {
+    for (int j = 0; j < width; ++j)
+    {
+      if ((i & grid_height) ^ (j & grid_width))
+      {
         image.push_back(black.r * 255);
         image.push_back(black.g * 255);
         image.push_back(black.b * 255);
         image.push_back(black.a * 255);
-      } else {
+      } else
+      {
         image.push_back(white.r * 255);
         image.push_back(white.g * 255);
         image.push_back(white.b * 255);
@@ -75,14 +84,17 @@ std::vector<GLubyte> create_chess_image(GLuint width, GLuint height,
   return image;
 }
 //--------------------------------------------------------------------
-void loadgl() {
+void loadgl()
+{
 #ifndef CLANG_COMPLETE_ONLY
-  if (!gladLoadGL()) {
+  if (!gladLoadGL())
+  {
     printf("glad failed to load gl");
     return;
   }
 
-  if (GLVersion.major < 2) {
+  if (GLVersion.major < 2)
+  {
     printf("your system doesn't support OpenGL >= 2!\n");
   }
 #endif
@@ -92,7 +104,8 @@ void loadgl() {
 }
 
 //--------------------------------------------------------------------
-void init_debug_output() {
+void init_debug_output()
+{
   glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
@@ -104,7 +117,8 @@ void init_debug_output() {
 
 //--------------------------------------------------------------------
 void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
-  GLsizei length, const GLchar *message, const void *user_param) {
+  GLsizei length, const GLchar *message, const void *user_param)
+{
   const char *debug_source = gl_debug_source_to_string(source);
   const char *debug_type = gl_debug_type_to_string(type);
   const char *debug_severity = gl_debug_severity_to_string(severity);
@@ -113,7 +127,8 @@ void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
     id, length, message);
 }
 
-void print_gl_version() {
+void print_gl_version()
+{
   printf(
     "GL_VERSION : %s\n"
     "GL_SHADING_LANGUAGE_VERSION : %s\n"

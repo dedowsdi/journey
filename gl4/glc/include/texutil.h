@@ -4,7 +4,8 @@
 #include <string>
 #include <FreeImagePlus.h>
 
-namespace zxd {
+namespace zxd
+{
 fipImage fipLoadImage(const std::string& file);
 fipImage fipLoadImage32(const std::string& file);
 fipImage fipLoadResource(const std::string& file);

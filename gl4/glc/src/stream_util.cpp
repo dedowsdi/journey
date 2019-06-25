@@ -83,7 +83,8 @@ std::string read_resource(const std::string &filepath)
 std::string read_file(const std::string &filepath)
 {
   std::ifstream ifs(filepath);
-  if (!ifs) {
+  if (!ifs)
+  {
     std::stringstream ss;
     ss << "failed to open file " << filepath << std::endl;
     throw std::runtime_error(ss.str());
@@ -107,7 +108,8 @@ std::string read_file(const std::string &filepath)
 std::string read_string(const std::string &filepath)
 {
   std::ifstream ifs(filepath);
-  if (!ifs) {
+  if (!ifs)
+  {
     std::stringstream ss;
     ss << "failed to open file " << filepath << std::endl;
     throw std::runtime_error(ss.str());
@@ -131,7 +133,12 @@ std::string read_string(const std::string &filepath)
 std::string get_resource(const std::string& name)
 {
   namespace bfs = boost::filesystem;
-  // from osg
+
+  // simply return self if it's absolute path
+  auto p = bfs::path(name);
+  if (p.is_absolute())
+    return name;
+
   std::vector<std::string> resources = {"."};
   char* resource_list = std::getenv("GL_FILE_PATH");
   if(resource_list != NULL)

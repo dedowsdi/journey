@@ -4,12 +4,14 @@
 #include "geometry.h"
 #include "glm.h"
 
-namespace zxd {
+namespace zxd
+{
 
 /*
  * build sphere with two triangle fans and a bunch of triangle strips
  */
-class sphere : public geometry_base {
+class sphere : public geometry_base
+  {
 protected:
   GLfloat m_radius;
   GLuint m_slice;  // longitiude

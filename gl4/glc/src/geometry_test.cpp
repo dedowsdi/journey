@@ -95,7 +95,8 @@ line_relation intersect_line_line(const vec3& p0, const vec3& d0, const vec3& p1
   line_relation res;
 
   // check parallel
-  if (is_aboutf(c01, vec3(0))) {
+  if (is_aboutf(c01, vec3(0)))
+  {
     res.type = 0;
     return res;
   }

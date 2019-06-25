@@ -4,11 +4,13 @@
 #include "gl.h"
 #include "glm.h"
 
-namespace zxd {
+namespace zxd
+{
 struct light_source;
 typedef std::vector<light_source> light_vector;
 
-struct light_source {
+struct light_source
+{
   glm::vec4 ambient;
   glm::vec4 diffuse;
   glm::vec4 specular;
@@ -46,7 +48,8 @@ struct light_source {
 #endif
 };
 
-struct light_model {
+struct light_model
+{
   glm::vec4 ambient;
   GLboolean local_viewer;
 
@@ -62,7 +65,8 @@ struct light_model {
 #endif
 };
 
-struct material {
+struct material
+{
   vec4 emission;
   vec4 ambient;
   vec4 diffuse;

@@ -72,7 +72,8 @@ mat4 get_transform(GLuint start, GLuint count)
       throw std::runtime_error("start+count overflow");
 
   mat4 m;
-  for(auto iter = mats.begin() + start; iter != mats.end() && count > 0; ++iter, --count){
+  for(auto iter = mats.begin() + start; iter != mats.end() && count > 0; ++iter, --count)
+  {
     m = m * *iter ;
   }
 
@@ -102,8 +103,10 @@ struct print_matrix
     std::cout << get_mat_name(start, count) << std::endl << std::endl;
 
     std::string::size_type w = 1;
-    for (int i = 0; i < 4; ++i) {
-      for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < 4; ++i)
+    {
+      for (int j = 0; j < 4; j++)
+      {
         w = glm::max(w, string_util::to(m[i][j]).length());
       }
     }
@@ -112,8 +115,10 @@ struct print_matrix
 
     mat4 identity(1);
     // print column major row by row
-    for (int i = 0; i < 4; ++i) {
-      for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < 4; ++i)
+    {
+      for (int j = 0; j < 4; j++)
+      {
         if(m[j][i] != identity[j][i])
           std::cout << string_util::bash_inverse << std::setw(w) << m[j][i] << string_util::bash_reset;
         else
@@ -139,7 +144,8 @@ struct print_vector
     bool warning = false;
     if(v[3] != 0)
     {
-      for (int i = 0; i < 3; ++i) {
+      for (int i = 0; i < 3; ++i)
+      {
         if(glm::abs(v[i] / v[3]) > 1)
         {
           warning = true;
@@ -150,7 +156,8 @@ struct print_vector
 
     std::cout << get_mat_name(start, count) << ""
       << "*(" << v[0] << "  "<< v[1] << "  "<< v[2] << "  "<< v[3] << ") = (";
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i)
+    {
       bool warning = v[3] != 0 && i != 3 && glm::abs(v1[i] / v1[3]) > 1;
       if(warning)
         std::cout << string_util::bash_warning;
@@ -432,11 +439,13 @@ int main(int argc, char *argv[])
 
   std::cout << "finish reading, start printing" << std::endl;
 
-  std::for_each(pms.begin(), pms.end(),[&](decltype(*pms.begin()) v) {
+  std::for_each(pms.begin(), pms.end(),[&](decltype(*pms.begin()) v)
+      {
     v.print();
   });
 
-  std::for_each(pvs.begin(), pvs.end(),[&](decltype(*pvs.begin()) v) {
+  std::for_each(pvs.begin(), pvs.end(),[&](decltype(*pvs.begin()) v)
+      {
     v.print();
   });
 

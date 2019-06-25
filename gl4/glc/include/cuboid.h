@@ -4,9 +4,11 @@
 #include "geometry.h"
 #include "glm.h"
 
-namespace zxd {
+namespace zxd
+{
 
-class cuboid : public geometry_base {
+class cuboid : public geometry_base
+  {
 protected:
   glm::vec3 m_half_diag;
 

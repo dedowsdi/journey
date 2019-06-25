@@ -3,12 +3,14 @@
 
 #include "geometry.h"
 
-namespace zxd {
+namespace zxd
+{
 
 /*
  * just like glu disk
  */
-class disk : public geometry_base {
+class disk : public geometry_base
+  {
 protected:
   GLfloat m_inner;
   GLfloat m_outer;

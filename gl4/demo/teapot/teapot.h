@@ -10,7 +10,8 @@ const int NumTeapotPatches = 32;
 const int NumTeapotVerticesPerPatch = 16;  // 4x4 Bezier patches
 const int NumTeapotIndices = NumTeapotVerticesPerPatch * NumTeapotPatches;
 
-static const float TeapotVertices[NumTeapotVertices][3] = {
+static const float TeapotVertices[NumTeapotVertices][3] =
+{
     { 1.4, 2.4, 0.0 },
     { 1.4, 2.4, 0.784 },
     { 0.784, 2.4, 1.4 },
@@ -326,7 +327,8 @@ static const float TeapotVertices[NumTeapotVertices][3] = {
 //      Utah teapot.
 //
 
-static const GLint TeapotIndices[NumTeapotPatches][4][4] = {
+static const GLint TeapotIndices[NumTeapotPatches][4][4] =
+{
     {
 	{0, 1, 2, 3},
 	{4, 5, 6, 7},

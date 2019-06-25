@@ -1,9 +1,11 @@
 #include "xyplane.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
-void xyplane::build_vertex() {
+void xyplane::build_vertex()
+{
   vec2_array& vertices = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve((m_slice + 1) * (m_slice + 1));
@@ -33,18 +35,21 @@ void xyplane::build_vertex() {
   m_primitive_sets.clear();
   GLuint row_size = (m_slice + 1) * 2;
   GLuint next = 0;
-  for (int i = 0; i < m_slice; ++i, next += row_size) {
+  for (int i = 0; i < m_slice; ++i, next += row_size)
+  {
     add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, row_size));
   }
 }
 
 //--------------------------------------------------------------------
-void xyplane::build_normal() {
+void xyplane::build_normal()
+{
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(num_vertices());
 
-  for (int i = 0; i < num_vertices(); ++i) {
+  for (int i = 0; i < num_vertices(); ++i)
+  {
     normals.push_back(vec3(0, 0, 1));
   }
 
@@ -52,7 +57,8 @@ void xyplane::build_normal() {
 }
 
 //--------------------------------------------------------------------
-void xyplane::build_texcoord() {
+void xyplane::build_texcoord()
+{
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());

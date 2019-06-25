@@ -3,14 +3,17 @@
 #include <sstream>
 #include "common.h"
 
-namespace zxd {
+namespace zxd
+{
 
-class lines : public app {
+class lines : public app
+  {
 
   glm::mat4 v_mat;
   glm::mat4 p_mat;
 
-  struct line_stipple_program : public zxd::program {
+  struct line_stipple_program : public zxd::program
+    {
     GLint ul_color;
     GLint ul_viewport;
     GLint ul_pattern;
@@ -18,20 +21,23 @@ class lines : public app {
     GLint ul_mvp_mat;
 
     void update_uniforms(
-      const mat4 &mvp_mat, const vec4 &color, GLuint pattern, GLint factor) {
+      const mat4 &mvp_mat, const vec4 &color, GLuint pattern, GLint factor)
+    {
 
       glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
       glUniform4fv(ul_color, 1, value_ptr(color));
       glUniform1ui(ul_pattern, pattern);
       glUniform1i(ul_factor, factor);
     }
-    virtual void attach_shaders() {
+    virtual void attach_shaders()
+    {
       attach(GL_VERTEX_SHADER, "shader4/stipple.vs.glsl");
       attach(GL_GEOMETRY_SHADER, "shader4/stipple.gs.glsl");
       attach(GL_FRAGMENT_SHADER, "shader4/stipple.fs.glsl");
 
     }
-    virtual void bind_uniform_locations() {
+    virtual void bind_uniform_locations()
+    {
       uniform_location(&ul_mvp_mat, "mvp_mat");
       uniform_location(&ul_color, "color");
       uniform_location(&ul_viewport, "viewport");
@@ -39,7 +45,8 @@ class lines : public app {
       uniform_location(&ul_factor, "factor");
     }
 
-    virtual void bind_attrib_locations() {
+    virtual void bind_attrib_locations()
+    {
       bind_attrib_location(0, "vertex");
     };
   };
@@ -54,7 +61,8 @@ public:
   lines() {}
 
   void draw_lines(GLenum mode, const vec2_vector &vertices, glm::vec4 color,
-    GLuint pattern, GLint factor) {
+    GLuint pattern, GLint factor)
+  {
     m_program.update_uniforms(p_mat * v_mat , color, pattern, factor);
 
     GLuint vao;
@@ -74,7 +82,8 @@ public:
   }
 
   void draw_line(const glm::vec2 &p0, const glm::vec2 &p1, glm::vec4 color,
-    GLuint pattern, GLint factor) {
+    GLuint pattern, GLint factor)
+  {
     vec2_vector vertices;
     vertices.push_back(p0);
     vertices.push_back(p1);
@@ -82,13 +91,15 @@ public:
     draw_lines(GL_LINES, vertices, color, pattern, factor);
   }
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "hello world";
     m_info.wnd_width = 400;
     m_info.wnd_height = 150;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -98,7 +109,8 @@ public:
     m_program.init();
 
     // clang-format off
-    //GLfloat vertices[][2] = {
+    //GLfloat vertices[][2] =
+    //{
       //{ 50.0,  125.0}, {150.0, 125.0},
       //{ 150.0, 125.0}, {250.0, 125.0},
       //{ 250.0, 125.0}, {350.0, 125.0},
@@ -121,7 +133,8 @@ public:
     // glEnableVertexAttribArray(m_program.al_vertex);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(m_program);
@@ -159,7 +172,8 @@ public:
     }
 
     /* in 4th row, 6 independent lines with same stipple  */
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++)
+    {
       draw_line(glm::vec2(50.0 + ((GLfloat)i * 50.0), 50.0),
         glm::vec2(50.0 + ((GLfloat)(i + 1) * 50.0), 50.0), vec4(1.0), 0x1C47,
         1);
@@ -180,15 +194,19 @@ public:
 
   virtual void update() {}
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(w, h);
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -200,22 +218,26 @@ public:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods) {
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+  {
     app::glfw_mouse_move(wnd, x, y);
   }
 
   virtual void glfw_mouse_wheel(
-    GLFWwindow *wnd, double xoffset, double yoffset) {
+    GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::lines app;
   app.run();
 }

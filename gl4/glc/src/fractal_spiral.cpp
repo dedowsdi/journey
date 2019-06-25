@@ -11,7 +11,8 @@ GLfloat spiral_seed::approximate_height(GLuint times)
 
   GLfloat step_angle = f2pi / times;
   GLfloat l2 = 0;
-  for (int i = 0; i < times; ++i) {
+  for (int i = 0; i < times; ++i)
+  {
     reset(step_angle * i);
     GLfloat l = glm::length2(pen->pos());
     if(l > l2)

@@ -8,14 +8,16 @@
 #include <stdexcept>
 using namespace glm;
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
 // clang-format off
 // predefined color
-vec3_vector start_colors = vec3_vector( {
+vec3_vector start_colors = vec3_vector(
+    {
   {0.0  , 0.0  , 0.0  },
   {1.0  , 1.0  , 1.0  },
   {1.0  , 0.0  , 0.0  },
@@ -38,7 +40,8 @@ vec3_vector start_colors = vec3_vector( {
 
 std::string input_modes[] = {"float", "byte", "hex", "normal"};
 
-vec3 str_to_color(const std::string &s, GLint mode) {
+vec3 str_to_color(const std::string &s, GLint mode)
+{
   vec3 color(1);
 
   if (mode == 2) {  // read hex color
@@ -47,30 +50,39 @@ vec3 str_to_color(const std::string &s, GLint mode) {
     std::stringstream ss(str);
 
     GLint value;
-    if (ss >> std::hex >> value) {
+    if (ss >> std::hex >> value)
+    {
       // get the least significant 3 bytes as b g r
       GLint i = 2;
-      do {
+      do
+      {
         color[i--] = (value & 0xff) / 255.0f;
         value >>= 8;
       } while (i >= 0);
-    } else {
+    } else
+    {
       std::cerr << "failed to read " << input_modes[mode] << ss.str()
                 << std::endl;
     }
   } else {  // others
     std::stringstream ss(s);
-    if (ss >> color[0] && ss >> color[1] && ss >> color[2]) {
-      if (mode == 0) {
-      } else if (mode == 1) {
+    if (ss >> color[0] && ss >> color[1] && ss >> color[2])
+    {
+      if (mode == 0)
+      {
+      } else if (mode == 1)
+      {
         color /= 255.0f;
-      } else if (mode == 2) {
+      } else if (mode == 2)
+      {
         color /= 255.0f;
-      } else if (mode == 3) {
+      } else if (mode == 3)
+      {
         color = glm::normalize(color);
         color = color * 0.5f + 0.5f;
       }
-    } else {
+    } else
+    {
       std::cerr << "failed to read " << ss.str() << std::endl;
     }
   }
@@ -78,12 +90,14 @@ vec3 str_to_color(const std::string &s, GLint mode) {
   return color;
 };
 
-void read_start_colors(const std::string &filename) {
+void read_start_colors(const std::string &filename)
+{
   // read data from file
   start_colors.clear();
 
   std::ifstream ifs(filename);
-  if (!ifs) {
+  if (!ifs)
+  {
     std::stringstream ss;
     ss << "failed to open file " << filename << std::endl;
     throw std::runtime_error(ss.str());
@@ -92,16 +106,21 @@ void read_start_colors(const std::string &filename) {
   GLint stage = 0;
   std::string line;
   GLint input_mode = 0;
-  while (std::getline(ifs, line)) {
-    if (line.empty() || line[0] == '#') {
+  while (std::getline(ifs, line))
+  {
+    if (line.empty() || line[0] == '#')
+    {
       continue;
     }
 
-    if (stage == 0) {
+    if (stage == 0)
+    {
       // read data mode
-      try {
+      try
+      {
         input_mode = std::stoi(line);
-      } catch (const std::invalid_argument &e) {
+      } catch (const std::invalid_argument &e)
+      {
         std::cout << e.what() << std::endl;
         std::cout << "failed to get input mode(0 or 1 or 2 or 3)" << std::endl;
         break;
@@ -118,16 +137,19 @@ void read_start_colors(const std::string &filename) {
             << " colors from " << filename << std::endl;
 }
 
-class color_pane {
+class color_pane
+{
 public:
   color_pane() : m_color(1, 1, 1){};
   color_pane(GLfloat r, GLfloat g, GLfloat b) : m_color(r, g, b){};
   color_pane(vec3 v) : m_color(v){};
   void add_red(GLfloat f) { m_color.r = glm::clamp(m_color.r + f, 0.0f, 1.0f); }
-  void add_green(GLfloat f) {
+  void add_green(GLfloat f)
+  {
     m_color.g = glm::clamp(m_color.g + f, 0.0f, 1.0f);
   }
-  void add_blue(GLfloat f) {
+  void add_blue(GLfloat f)
+  {
     m_color.b = glm::clamp(m_color.b + f, 0.0f, 1.0f);
   }
   GLfloat red() { return m_color.r; }
@@ -151,31 +173,37 @@ protected:
 
 typedef std::vector<color_pane> color_pane_vector;
 
-struct rgb_program : public zxd::program {
+struct rgb_program : public zxd::program
+{
   GLint ul_gamma;
   GLint ul_mvp_mat;
 
-  void update_uniforms(const mat4& mvp_mat, GLboolean gamma = 0) {
+  void update_uniforms(const mat4& mvp_mat, GLboolean gamma = 0)
+  {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform1i(ul_gamma, gamma);
   }
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/rgb.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/rgb.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_gamma, "gamma");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "color");
   };
 } rgb_program;
 
-class rgb_app : public app {
+class rgb_app : public app
+{
 protected:
   bitmap_text m_text;
   GLuint m_max_pane_per_line;
@@ -206,7 +234,8 @@ public:
   rgb_app() {}
 
 protected:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "hello world";
     m_info.wnd_width = 1024;
@@ -214,22 +243,26 @@ protected:
     m_info.samples = 4;
   }
 
-  GLuint num_rows() {
+  GLuint num_rows()
+  {
     return glm::ceil(
       m_panes.size() / static_cast<GLfloat>(m_max_pane_per_line));
   }
-  GLuint num_cols() {
+  GLuint num_cols()
+  {
     return m_panes.size() >= m_max_pane_per_line ? m_max_pane_per_line
                                                  : m_panes.size();
   }
   GLuint current_row() { return m_current_pane_index / m_max_pane_per_line; }
-  GLuint current_col() {
+  GLuint current_col()
+  {
     return m_panes.size() >= m_max_pane_per_line
              ? m_current_pane_index % m_max_pane_per_line
              : m_current_pane_index;
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     m_max_pane_per_line = 8;
     m_border_width = 20.0f;
     m_gamma = GL_FALSE;
@@ -250,11 +283,13 @@ protected:
     glGenVertexArrays(1, &m_pane_vao);
     glGenVertexArrays(1, &m_border_vao);
 
-    for (GLuint i = 0; i < start_colors.size(); ++i) {
+    for (GLuint i = 0; i < start_colors.size(); ++i)
+    {
       color_pane pane(start_colors[i]);
       m_panes.push_back(pane);
 
-      for (int j = 0; j < 6; ++j) {
+      for (int j = 0; j < 6; ++j)
+      {
         m_pane_colors.push_back(start_colors[i]);
       }
     }
@@ -285,7 +320,8 @@ protected:
 
   color_pane &current_pane() { return m_panes[m_current_pane_index]; }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(rgb_program);
@@ -308,7 +344,8 @@ protected:
 
     glViewport(0, 0, wnd_width(), wnd_height());
     // render text
-    // for (int i = 0; i < m_panes.size(); ++i) {
+    // for (int i = 0; i < m_panes.size(); ++i)
+    // {
     // color_pane &pane = m_panes[i];
     // const vec3 &color = pane.color();
     // std::stringstream ss;
@@ -324,9 +361,11 @@ protected:
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     std::stringstream ss;
-    if (m_reading) {
+    if (m_reading)
+    {
       ss << "input " << input_modes[m_input_mode] << " color : " << m_input;
-    } else {
+    } else
+    {
       // clang-format off
       const vec3 &color = pane.color();
       ss.precision(3);
@@ -347,7 +386,8 @@ protected:
     }
     m_text.print(ss.str(), 5, 10, vec4(1));
 
-    if (m_help) {
+    if (m_help)
+    {
       std::stringstream ss;
       ss << " h : toggle help" << std::endl;
       ss << " esc : exit" << std::endl;
@@ -368,12 +408,14 @@ protected:
 
   virtual void update() {}
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(w, h);
   }
 
-  GLfloat quantity(int mods) {
+  GLfloat quantity(int mods)
+  {
     GLfloat quantity = 0.01;
     if (mods & GLFW_MOD_CONTROL) quantity = 0.001;
     // if (mods & GLFW_MOD_ALT) quantity = 0.001;
@@ -381,7 +423,8 @@ protected:
     return quantity;
   }
 
-  void finishe_reading() {
+  void finishe_reading()
+  {
     app::finishe_reading();
     std::stringstream ss(m_input);
 
@@ -393,14 +436,19 @@ protected:
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ENTER:
         case GLFW_KEY_KP_ENTER:
-          if (m_reading) {
+          if (m_reading)
+          {
             finishe_reading();
-          } else {
+          } else
+          {
             start_reading();
           }
           break;
@@ -409,9 +457,12 @@ protected:
       }
     }
 
-    if (!m_reading) {
-      if (action == GLFW_PRESS) {
-        switch (key) {
+    if (!m_reading)
+    {
+      if (action == GLFW_PRESS)
+      {
+        switch (key)
+        {
           case GLFW_KEY_UP:
             up();
             break;
@@ -446,8 +497,10 @@ protected:
         }
       }
 
-      if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        switch (key) {
+      if (action == GLFW_PRESS || action == GLFW_REPEAT)
+      {
+        switch (key)
+        {
           case GLFW_KEY_Q:
             current_pane().add_red(quantity(mods));
             update_pane_color_buffer();
@@ -469,44 +522,54 @@ protected:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods) {
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+  {
     app::glfw_mouse_move(wnd, x, y);
   }
 
   virtual void glfw_mouse_wheel(
-    GLFWwindow *wnd, double xoffset, double yoffset) {
+    GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 
   // select panes
-  void left() {
+  void left()
+  {
     if (m_current_pane_index % num_cols() != 0) --m_current_pane_index;
   }
-  void right() {
+  void right()
+  {
     if (m_current_pane_index % num_cols() != num_cols() - 1 &&
         m_current_pane_index < m_panes.size() - 1)
       ++m_current_pane_index;
   }
-  void down() {
+  void down()
+  {
     if (m_current_pane_index >= num_cols()) m_current_pane_index -= num_cols();
   }
-  void up() {
+  void up()
+  {
     if (m_current_pane_index + num_cols() < m_panes.size())
       m_current_pane_index += num_cols();
   }
   // void select_pane(GLuint index);
-  void add_pane() {
+  void add_pane()
+  {
     GLuint row = num_rows() - 1;
     GLuint col = m_panes.size() % num_cols();
     GLboolean need_resize_pane = 0;
 
-    if (m_max_pane_per_line > num_cols()) {
+    if (m_max_pane_per_line > num_cols())
+    {
       need_resize_pane = 1;
-    } else if (col == 0) {
+    } else if (col == 0)
+    {
       ++row;
       need_resize_pane = 1;
     }
@@ -523,10 +586,12 @@ protected:
     pane.y(y);
     m_panes.push_back(pane);
 
-    if (need_resize_pane) {
+    if (need_resize_pane)
+    {
       resize_pane();
       update_border_vertex_buffer();
-    } else {
+    } else
+    {
       m_pane_vertices.push_back(vec2(x, y));
       m_pane_vertices.push_back(vec2(x + m_pane_width, y));
       m_pane_vertices.push_back(vec2(x + m_pane_width, y + m_pane_height));
@@ -539,7 +604,8 @@ protected:
 
     m_current_pane_index = m_panes.size() - 1;
   }
-  void delete_current_pane() {
+  void delete_current_pane()
+  {
     if (m_panes.size() == 1) return;
 
     m_panes.erase(m_panes.begin() + m_current_pane_index);
@@ -553,20 +619,24 @@ protected:
     update_border_vertex_buffer();
     reset_pane_vertex_buffer();
     reset_pane_color_buffer();
-    if (m_current_pane_index == m_panes.size()) {
+    if (m_current_pane_index == m_panes.size())
+    {
       m_current_pane_index = m_panes.size() - 1;
     }
   }
 
-  void resize_pane() {
+  void resize_pane()
+  {
     GLuint col = 0;
     GLuint row = 0;
 
     m_pane_width = 1.0f / num_cols();
     m_pane_height = 1.0f / num_rows();
 
-    for (GLuint i = 0; i < m_panes.size(); ++i) {
-      if (col == m_max_pane_per_line) {
+    for (GLuint i = 0; i < m_panes.size(); ++i)
+    {
+      if (col == m_max_pane_per_line)
+      {
         col = 0;
         ++row;
       }
@@ -579,7 +649,8 @@ protected:
 
     m_pane_vertices.clear();
     // build pane mesh
-    for (int i = 0; i < m_panes.size(); ++i) {
+    for (int i = 0; i < m_panes.size(); ++i)
+    {
       color_pane &pane = m_panes[i];
       GLfloat x = pane.x();
       GLfloat y = pane.y();
@@ -600,7 +671,8 @@ protected:
     m_border_vertices.push_back(vec2(0, 0 + m_pane_height));
   }
 
-  void reset_pane_vertex_buffer() {
+  void reset_pane_vertex_buffer()
+  {
     glBindVertexArray(m_pane_vao);
 
     if (glIsBuffer(m_pane_vertex_buffer))
@@ -615,7 +687,8 @@ protected:
     glEnableVertexAttribArray(0);
   }
 
-  void reset_pane_color_buffer() {
+  void reset_pane_color_buffer()
+  {
     glBindVertexArray(m_pane_vao);
 
     if (glIsBuffer(m_pane_color_buffer))
@@ -628,15 +701,18 @@ protected:
     glEnableVertexAttribArray(1);
   }
 
-  void update_border_vertex_buffer() {
+  void update_border_vertex_buffer()
+  {
     glBindBuffer(GL_ARRAY_BUFFER, m_border_vertex_buffer);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vec2) * m_border_vertices.size(),
       value_ptr(m_border_vertices.front()));
   }
 
-  void update_pane_color_buffer() {
+  void update_pane_color_buffer()
+  {
     color_pane &pane = current_pane();
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 6; ++i)
+    {
       m_pane_colors[m_current_pane_index * 6 + i] = pane.color();
     }
     glBindBuffer(GL_ARRAY_BUFFER, m_pane_color_buffer);
@@ -646,8 +722,10 @@ protected:
 };
 }
 
-int main(int argc, char *argv[]) {
-  if (argc >= 2) {
+int main(int argc, char *argv[])
+{
+  if (argc >= 2)
+  {
     zxd::read_start_colors(argv[1]);
   }
 

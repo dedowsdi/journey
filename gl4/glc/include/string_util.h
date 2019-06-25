@@ -20,10 +20,12 @@ namespace string_util
   {
     std::stringstream ss;
     bool fail = false;
-    try {
+    try
+    {
       ss << t;
       fail = ss.fail();
-    }catch(const std::exception& e) {
+    }catch(const std::exception& e)
+    {
       fail = true;
       std::cout << e.what() << std::endl;
     }

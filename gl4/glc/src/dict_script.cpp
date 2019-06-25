@@ -35,7 +35,8 @@ void file_observer::operator()()
   while(true)
   {
     std::this_thread::sleep_for(interval);
-    try {
+    try
+    {
       // throws if file is being written?
       auto t = bfs::last_write_time(m_file_path);
       if(t != m_last_w_time)
@@ -45,7 +46,8 @@ void file_observer::operator()()
         //std::cout << "read " << m_file_path << " at " <<  std::ctime(&m_last_w_time) << std::endl;
         m_atomic_changed->store(true);
       }
-    }catch(std::exception& e) {
+    }catch(std::exception& e)
+    {
       std::cout << e.what() << std::endl;
     }
   }

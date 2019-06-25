@@ -10,7 +10,8 @@
 #include "guard.h"
 #include "bitmap_text.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
 raii_ft_library::raii_ft_library(const std::string& font_name):
@@ -51,7 +52,8 @@ freetype_text::freetype_text(const std::string& font)
 freetype_text::~freetype_text() {}
 
 //--------------------------------------------------------------------
-void freetype_text::init(const std::string& text, bool legacy) {
+void freetype_text::init(const std::string& text, bool legacy)
+{
   m_program->legacy = legacy;
   m_program->init();
 
@@ -73,7 +75,8 @@ void freetype_text::init(const std::string& text, bool legacy) {
 void freetype_text::reset_content_as_ascii()
 {
   std::stringstream ss;
-  for (int i = 0; i < 128; ++i) {
+  for (int i = 0; i < 128; ++i)
+  {
     ss << static_cast<unsigned char>(i);
   }
   reset_content(ss.str());
@@ -101,7 +104,8 @@ void freetype_text::reset_content_to_all()
 }
 
 //--------------------------------------------------------------------
-void freetype_text::reset_content(const std::string& text) {
+void freetype_text::reset_content(const std::string& text)
+{
 
   m_glyph_dict.clear();
   // always add default glyph and space
@@ -128,7 +132,8 @@ void freetype_text::reset_content(const std::string& text) {
   utf8::utf8to32(content.begin(), content.end(), std::back_inserter(content32));
   auto beg = make_utf8_beg(content.begin(), content.end());
 
-  for (auto charcode : content32) {
+  for (auto charcode : content32)
+  {
     // load glyph
     if (FT_Load_Char(face, charcode, FT_LOAD_RENDER))
       std::cout << "faield to load char " << charcode << std::endl;
@@ -171,7 +176,8 @@ void freetype_text::clear()
 
 //--------------------------------------------------------------------
 void freetype_text::print(const std::string& text, GLuint x, GLuint y,
-    const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /*= 1.0*/) const {
+    const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /*= 1.0*/) const
+{
   GLuint nextY = y;
   GLuint nextX = x;
 
@@ -180,7 +186,8 @@ void freetype_text::print(const std::string& text, GLuint x, GLuint y,
   while(beg != end)
   {
     auto character = *beg++;
-    if (character == '\n') {
+    if (character == '\n')
+    {
       nextX = x;
       nextY -= m_linespace * scale;
       continue;
@@ -195,7 +202,8 @@ void freetype_text::print(const std::string& text, GLuint x, GLuint y,
 
     const Glyph& glyph = iter->second;
 
-    if (character == ' ') {
+    if (character == ' ')
+    {
       nextX += glyph.advance * scale;
       continue;
     }
@@ -208,7 +216,8 @@ void freetype_text::print(const std::string& text, GLuint x, GLuint y,
 
 //--------------------------------------------------------------------
 void freetype_text::print(uint32_t c, GLuint x, GLuint y,
-    const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /* = 1.0*/) const {
+    const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /* = 1.0*/) const
+{
   auto iter = m_glyph_dict.find(c);
   if(iter == m_glyph_dict.end())
   {
@@ -224,13 +233,15 @@ void freetype_text::print(uint32_t c, GLuint x, GLuint y,
 
 //--------------------------------------------------------------------
 void freetype_text::print(const Glyph& glyph, GLuint x, GLuint y,
-    const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /* = 1.0*/) const {
+    const glm::vec4& color /* = vec4(1.0f)*/, GLfloat scale /* = 1.0*/) const
+{
   glUseProgram(*m_program);
   m_program->update_uniforms(color);
 
   // freetype generate texture from left to right, top to bottom, which means
   // we must flip y
-  GLfloat vertices[4][4] = {
+  GLfloat vertices[4][4] =
+  {
     {x + glyph.x_min * scale, y + glyph.y_min * scale, 0, 1},
     {x + glyph.x_max * scale, y + glyph.y_min * scale, 1, 1},
     {x + glyph.x_max * scale, y + glyph.y_max * scale, 1, 0},
@@ -267,7 +278,8 @@ std::vector<uint32_t> freetype_text::codepoints()
 {
   std::vector<uint32_t> res;
   res.reserve(m_glyph_dict.size());
-  for (const auto& p : m_glyph_dict) {
+  for (const auto& p : m_glyph_dict)
+  {
     res.push_back(p.first);
   }
   return res;
@@ -319,11 +331,13 @@ std::pair<GLuint, bitmap_text::glyphs> freetype_text::render_to_texture_2d(GLuin
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  for (const auto& p : m_glyph_dict) {
+  for (const auto& p : m_glyph_dict)
+  {
     auto character = p.first;
     const zxd::freetype_text::Glyph& glyph = getGlyph(character);
 
-    if ((x + glyph.advance) > width) {
+    if ((x + glyph.advance) > width)
+    {
       x = 0;
       y -= get_linespace();
       if(y < 0)

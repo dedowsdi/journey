@@ -1,10 +1,13 @@
 #include "nurb.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
-void nurb::build_vertex() {
-  if (!valid()) {
+void nurb::build_vertex()
+{
+  if (!valid())
+  {
     std::cout << "invalid b spline. n : " << n() << ", p : " << m_degree
               << ", m : " << m() << std::endl;
   }
@@ -14,7 +17,8 @@ void nurb::build_vertex() {
   vertices.reserve(m_partitions + 1);
 
   float dt = (m_end - m_begin) / m_partitions;
-  for (uint i = 0; i <= m_partitions; ++i) {
+  for (uint i = 0; i <= m_partitions; ++i)
+  {
     vertices.push_back(get(m_begin + dt * i));
   }
 
@@ -23,18 +27,21 @@ void nurb::build_vertex() {
 }
 
 //--------------------------------------------------------------------
-void nurb::build_texcoord() {
+void nurb::build_texcoord()
+{
   float_array& texcoords = *(new float_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
-  for (int i = 0; i < num_vertices(); ++i) {
+  for (int i = 0; i < num_vertices(); ++i)
+  {
     texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
   }
 }
 
 
 //--------------------------------------------------------------------
-vec4 nurb::get(GLfloat u) {
+vec4 nurb::get(GLfloat u)
+{
   u = std::max(std::min(u, m_knots.back()), m_knots.front());
   // early check
   if (u == m_knots.front())
@@ -49,10 +56,12 @@ vec4 nurb::get(GLfloat u) {
   GLuint kMinusS = k - s;
   GLuint kMinusP = k - p;
 
-  if (s >= p) {
+  if (s >= p)
+  {
     // when s>=p it's just  P_k,  P_k-1 P_k-2......P_k-p+1, P_k-p,   P_k-p
     return m_ctrl_points[k - p];
-  } else {
+  } else
+  {
     // use de Boor's algoritm to create a knot of multiplicity p to get point
 
     // init columns 0
@@ -60,9 +69,11 @@ vec4 nurb::get(GLfloat u) {
       m_ctrl_points.begin() + kMinusP, m_ctrl_points.begin() + (kMinusS + 1));
     GLuint h = points.size() - 1;  // p-s, number of insertions
     // iterate p-s times. leave only 1 element at last column
-    for (unsigned int r = 1; r <= h; ++r) {
+    for (unsigned int r = 1; r <= h; ++r)
+    {
       // col size is (k-s) - (k-p + r) + 1 = p - s - r + 1 = h - r + 1
-      for (unsigned int i = 0; i < h - r + 1; ++i) {
+      for (unsigned int i = 0; i < h - r + 1; ++i)
+      {
         GLfloat a = knot_ratio(u, kMinusP + i + r, r);
         points[i] = points[i] * (1 - a) + points[i + 1] * a;
       }
@@ -72,18 +83,21 @@ vec4 nurb::get(GLfloat u) {
 }
 
 //--------------------------------------------------------------------
-vec3 nurb::tangent(GLfloat u) {
+vec3 nurb::tangent(GLfloat u)
+{
   nurb nurb_d = derivative();
   return normalize(nurb_d.get(u).xyz());
 
   // failed to use de Boos's algorithm to caucluate tangent.
   u = std::max(std::min(u, m_knots.back()), m_knots.front());
   // early check
-  if (u == m_knots.front()) {
+  if (u == m_knots.front())
+  {
     const vec4& p0 = m_ctrl_points[0];
     const vec4& p1 = m_ctrl_points[1];
     return normalize(p1.xyz() / p1.w - p0.xyz() / p0.w);
-  } else if (u == m_knots.back()) {
+  } else if (u == m_knots.back())
+  {
     const vec4& p0 = m_ctrl_points[m_ctrl_points.size() - 2];
     const vec4& p1 = m_ctrl_points.back();
     return normalize(p1.xyz() / p1.w - p0.xyz() / p0.w);
@@ -102,8 +116,10 @@ vec3 nurb::tangent(GLfloat u) {
   GLuint h = points.size() - 2;  // p - s - 1
 
   // iterate p-s-1 times. leave only 2 element at last column
-  for (unsigned int r = 1; r <= h; ++r) {
-    for (unsigned int i = 0; i < h - r + 1; ++i) {
+  for (unsigned int r = 1; r <= h; ++r)
+  {
+    for (unsigned int i = 0; i < h - r + 1; ++i)
+    {
       GLfloat a = knot_ratio(u, kMinusP + i + r, r);
       points[i] = points[i] * (1 - a) + points[i + 1] * a;
     }
@@ -114,13 +130,15 @@ vec3 nurb::tangent(GLfloat u) {
 }
 
 //--------------------------------------------------------------------
-nurb nurb::derivative() {
+nurb nurb::derivative()
+{
   nurb curve;
   curve.knots(m_knots.begin() + 1, m_knots.end() - 1);
 
   vec4_vector q;
   q.reserve(n());
-  for (int i = 0; i < n(); ++i) {
+  for (int i = 0; i < n(); ++i)
+  {
     q.push_back(p() / (m_knots[i + p() + 1] - m_knots[i + 1]) *
                 (m_ctrl_points[i + 1] - m_ctrl_points[i]));
   }
@@ -131,17 +149,20 @@ nurb nurb::derivative() {
 }
 
 //--------------------------------------------------------------------
-vec4 nurb::get_by_coefs(GLfloat u) {
+vec4 nurb::get_by_coefs(GLfloat u)
+{
   float_vector coefs = coefficients(u);
   vec4 p;
-  for (unsigned int i = 0; i < m_ctrl_points.size(); ++i) {
+  for (unsigned int i = 0; i < m_ctrl_points.size(); ++i)
+  {
     p += m_ctrl_points[i] * coefs[i];
   }
   return p;
 }
 
 //--------------------------------------------------------------------
-void nurb::insert_knot(GLfloat u, GLuint times /* = 1*/) {
+void nurb::insert_knot(GLfloat u, GLuint times /* = 1*/)
+{
   vec4_vector points;
 
   GLuint k = knot_span(u);                                // knot span
@@ -151,11 +172,13 @@ void nurb::insert_knot(GLfloat u, GLuint times /* = 1*/) {
   // GLuint pMinusS = p - s;
   GLuint kMinusS = k - s;
 
-  if (s >= p) {
+  if (s >= p)
+  {
     // most simple case, just repeat P_k_p multiple times
     vec4_vector::iterator iter = points.begin() + kMinusP;
     points.insert(iter, times, *iter);
-  } else {
+  } else
+  {
     // seperate insert to two partes if s + times is greater than p
     GLuint h = s + times >= p ? p - s : times;
     GLuint beg = k - p;
@@ -185,7 +208,8 @@ void nurb::insert_knot(GLfloat u, GLuint times /* = 1*/) {
       points.end(), m_ctrl_points.begin() + kMinusS, m_ctrl_points.end());
 
     // second part of this condition
-    if (s + times >= p) {
+    if (s + times >= p)
+    {
       vec4_vector::iterator iter = points.begin() + kMinusP;
       points.insert(iter, times - (p - s), *iter);
     }
@@ -197,21 +221,24 @@ void nurb::insert_knot(GLfloat u, GLuint times /* = 1*/) {
 }
 
 //--------------------------------------------------------------------
-GLuint nurb::knot_span(GLfloat u) {
+GLuint nurb::knot_span(GLfloat u)
+{
   // special case. Is it right to put um at the last valid span [u_m-p-1, u_m)
   // ????
   if (u == m_knots.back()) return m_knots.size() - m_degree - 2;
 
   float_vector::iterator iter =
     std::upper_bound(m_knots.begin(), m_knots.end(), u);
-  if (iter == m_knots.end()) {
+  if (iter == m_knots.end())
+  {
     std::cerr << "illigal u" << std::endl;
   }
   return iter == m_knots.end() ? -1 : (iter - m_knots.begin()) - 1;
 }
 
 //--------------------------------------------------------------------
-GLuint nurb::knot_multiplicity(GLuint i) {
+GLuint nurb::knot_multiplicity(GLuint i)
+{
   GLuint s = 1;
   int i2 = i;
   GLfloat u = m_knots[i];
@@ -224,7 +251,8 @@ GLuint nurb::knot_multiplicity(GLuint i) {
 }
 
 //--------------------------------------------------------------------
-void nurb::subdivide(GLfloat u, nurb& lc, nurb& rc) {
+void nurb::subdivide(GLfloat u, nurb& lc, nurb& rc)
+{
   GLuint k = knot_span(u);                                // knot span
   GLuint s = u == m_knots[k] ? knot_multiplicity(k) : 0;  // multiplicity
   GLuint p = m_degree;
@@ -233,7 +261,8 @@ void nurb::subdivide(GLfloat u, nurb& lc, nurb& rc) {
   GLuint kMinusS = k - s;
 
   std::vector<vec4_vector> vec = iterate(kMinusP, kMinusS + 1, u, p - s);
-  if (vec.back().size() != 1) {
+  if (vec.back().size() != 1)
+  {
     std::cout << "error, not enough iterations!" << std::endl;
     return;
   }
@@ -271,7 +300,8 @@ void nurb::subdivide(GLfloat u, nurb& lc, nurb& rc) {
 
 //--------------------------------------------------------------------
 std::vector<vec4_vector> nurb::iterate(
-  GLuint beg, GLuint end, GLfloat u, GLuint times) {
+  GLuint beg, GLuint end, GLfloat u, GLuint times)
+{
   std::vector<vec4_vector> vv;
 
   // init columns 0
@@ -280,11 +310,13 @@ std::vector<vec4_vector> nurb::iterate(
 
   GLuint size = end - beg;
 
-  for (GLuint r = 1; r <= times; ++r) {
+  for (GLuint r = 1; r <= times; ++r)
+  {
     // init current column
     vv.push_back(vec4_vector());
 
-    for (unsigned int i = 0; i < size - r; ++i) {
+    for (unsigned int i = 0; i < size - r; ++i)
+    {
       GLfloat a = knot_ratio(u, beg + i + r, r);
       vec4 p = vv[r - 1][i] * (1 - a) + vv[r - 1][i + 1] * a;
       vv[r].push_back(p);
@@ -294,7 +326,8 @@ std::vector<vec4_vector> nurb::iterate(
 }
 
 //--------------------------------------------------------------------
-void nurb::uniform_knots() {
+void nurb::uniform_knots()
+{
   GLuint m = n() + p() + 1;
 
   m_knots.reserve(m + 1);
@@ -308,27 +341,32 @@ void nurb::uniform_knots() {
 }
 
 //--------------------------------------------------------------------
-GLfloat nurb::coefficient(GLint i, GLint p, GLfloat u) {
+GLfloat nurb::coefficient(GLint i, GLint p, GLfloat u)
+{
   return coefficient(m_knots.begin(), m_knots.end(), i, p, u);
 }
 
 //--------------------------------------------------------------------
 vec4 nurb::get(
-  v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u) {
+  v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u)
+{
   nurb curve(cbeg, cend, kbeg, kend, degree);
   return curve.get(u);
 }
 
 //--------------------------------------------------------------------
 vec3 nurb::tangent(
-  v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u) {
+  v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u)
+{
   nurb curve(cbeg, cend, kbeg, kend, degree);
   return curve.tangent(u);
 }
 
 //--------------------------------------------------------------------
-float nurb::coefficient(fv_ci kbeg, fv_ci kend, GLuint i, GLuint p, GLfloat u) {
-  if (i + p + 1 >= std::distance(kbeg, kend)) {
+float nurb::coefficient(fv_ci kbeg, fv_ci kend, GLuint i, GLuint p, GLfloat u)
+{
+  if (i + p + 1 >= std::distance(kbeg, kend))
+  {
     std::cerr << "knot index " << i << " overflow" << std::endl;
     return 0;
   }
@@ -343,7 +381,8 @@ float nurb::coefficient(fv_ci kbeg, fv_ci kend, GLuint i, GLuint p, GLfloat u) {
 }
 
 //--------------------------------------------------------------------
-float_vector nurb::coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u) {
+float_vector nurb::coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u)
+{
   GLuint m = std::distance(kbeg, kend) - 1;
   GLuint n = m - p - 1;
   GLfloat u0 = *kbeg;
@@ -356,10 +395,12 @@ float_vector nurb::coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u) {
   // only at most p+1 non zero basis function exists in this span, our job is
   // to find them, only them, others are just 0;
   // rule out special case when k belong to [0,p] or [m-p, m]
-  if (u == u0) {
+  if (u == u0)
+  {
     coefs.front() = 1;
     return coefs;
-  } else if (u == um) {
+  } else if (u == um)
+  {
     coefs.back() = 1;
     return coefs;
   }
@@ -374,13 +415,15 @@ float_vector nurb::coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u) {
   GLfloat uminusuk = u - uk;
 
   // loop from degree 1 to degree p
-  for (unsigned int d = 1; d <= p; ++d) {
+  for (unsigned int d = 1; d <= p; ++d)
+  {
     // right (south-west corner) term only
     coefs[k - d] =
       ukplus1_minusu * coefs[k - d + 1] / (ukplus1 - *(kbeg + k - d + 1));
 
     // both terms
-    for (unsigned int i = k - d + 1; i < k - 1; ++i) {
+    for (unsigned int i = k - d + 1; i < k - 1; ++i)
+    {
       GLfloat ui = *(kbeg + i);
       GLfloat uiplusd = *(kbeg + i + d);
       GLfloat uiplus1 = *(kbeg + i + 1);
@@ -396,7 +439,8 @@ float_vector nurb::coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u) {
   // according to partion of unity
   // GLfloat c = 0;
   // std::for_each(coefs.begin() + (k - p), coefs.begin() + k,
-  //[&](decltype(*coefs.begin()) v) {
+  //[&](decltype(*coefs.begin()) v)
+  //{
   // c+= v;
   //});
   // coefs[k] = 1 - c;
@@ -404,26 +448,30 @@ float_vector nurb::coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u) {
 }
 
 //--------------------------------------------------------------------
-GLuint nurb::knot_span(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u) {
+GLuint nurb::knot_span(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u)
+{
   GLuint m = std::distance(kbeg, kend) - 1;
   // special case. Is it right to put um at the last valid span [u_m-p-1, u_m)
   // ????
   if (u == *(kend - 1)) return m - p - 1;
 
   fv_ci iter = std::upper_bound(kbeg, kend, u);
-  if (iter == kend) {
+  if (iter == kend)
+  {
     std::cerr << "illigal u" << std::endl;
   }
   return iter == kend ? -1 : (iter - kbeg) - 1;
 }
 
 //--------------------------------------------------------------------
-float_vector nurb::coefficients(GLfloat u) {
+float_vector nurb::coefficients(GLfloat u)
+{
   return coefficients(m_knots.begin(), m_knots.end(), p(), u);
 }
 
 //--------------------------------------------------------------------
-GLfloat nurb::knot_ratio(GLfloat t, GLuint i, GLuint r /* = 1*/) {
+GLfloat nurb::knot_ratio(GLfloat t, GLuint i, GLuint r /* = 1*/)
+{
   return (t - m_knots[i]) / (m_knots[i + m_degree - r + 1] - m_knots[i]);
 }
 }

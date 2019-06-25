@@ -9,13 +9,15 @@ namespace string_util
 {
 
 //--------------------------------------------------------------------
-std::string tail(const std::string& path) {
+std::string tail(const std::string& path)
+{
   std::string::size_type pos = path.find_last_of("/\\");
   return pos == std::string::npos ? path : path.substr(pos + 1);
 }
 
 //--------------------------------------------------------------------
-std::string basename(const std::string& filename) {
+std::string basename(const std::string& filename)
+{
   std::string::size_type pos = filename.find_last_of(".");
   return pos == std::string::npos ? filename : filename.substr(0, pos);
 }
@@ -120,7 +122,8 @@ glm::mat4 stomat4(const std::string& s)
 std::string uint32_to_utf8(uint32_t value)
 {
   std::string s;
-  for (int i = 0; i < 4; ++i) {
+  for (int i = 0; i < 4; ++i)
+  {
     char c = (value >> (i*8)) & 0xff;
     //if(c != 0)
       s.push_back(c);

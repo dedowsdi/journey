@@ -9,11 +9,13 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
-namespace zxd {
+namespace zxd
+{
 
 using namespace glm;
 
-class array {
+class array
+{
 protected:
   GLuint m_buffer;
   GLenum m_target;
@@ -25,8 +27,10 @@ protected:
   {}
   
   virtual ~array() {}
-  void bind_buffer() {
-    if (m_buffer == -1) {
+  void bind_buffer()
+  {
+    if (m_buffer == -1)
+    {
       glGenBuffers(1, &m_buffer);
     }
     glBindBuffer(m_target, m_buffer);
@@ -48,7 +52,8 @@ public:
 };
 
 template <typename T>
-class template_array : public array, public mixin_vector<T> {
+class template_array : public array, public mixin_vector<T>
+{
 
 public:
   template_array(GLenum target = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW);
@@ -135,7 +140,8 @@ template_array<T>::template_array(GLenum target/* = GL_ARRAY_BUFFER*/, GLenum us
 
 //--------------------------------------------------------------------
 template <typename T>
-void template_array<T>::bind(GLint location) {
+void template_array<T>::bind(GLint location)
+{
   bind_buffer();
   glVertexAttribPointer(location, glm_type_components<T>::value, gl_type_enum<T>::value,
       GL_FALSE, 0, BUFFER_OFFSET(0));
@@ -144,7 +150,8 @@ void template_array<T>::bind(GLint location) {
 
 //--------------------------------------------------------------------
 template <typename T>
-void template_array<T>::update_buffer() {
+void template_array<T>::update_buffer()
+{
   bind_buffer();
   glBufferData(m_target, this->size() * sizeof(decltype(this->front())),
     &this->front(), m_usage);

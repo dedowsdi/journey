@@ -4,17 +4,21 @@
 
 #include "stream_util.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
-fipImage fipLoadImage(const std::string& file) {
+fipImage fipLoadImage(const std::string& file)
+{
   fipImage fip;
   FREE_IMAGE_FORMAT fif = fipImage::identifyFIF(file.c_str());
-  if (fif == FIF_UNKNOWN) {
+  if (fif == FIF_UNKNOWN)
+  {
     std::cerr << "unknown file " << file << std::endl;
   }
 
-  if (!fip.load(file.c_str())) {
+  if (!fip.load(file.c_str()))
+  {
     std::cerr << "error : failed to load " << file << std::endl;
   }
 
@@ -52,7 +56,8 @@ fipImage fipLoadResource32(const std::string& file)
 
 //--------------------------------------------------------------------
 void save_texture(const std::string& filename, GLenum target, GLuint level,
-  GLenum format, GLenum type, GLuint size) {
+  GLenum format, GLenum type, GLuint size)
+{
   GLint width, height;
 
   glGetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH, &width);

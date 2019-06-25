@@ -22,9 +22,11 @@ draw_arrays::draw_arrays(GLenum mode, GLint first, GLsizei count, GLuint num_ins
 //--------------------------------------------------------------------
 void draw_arrays::draw()
 {
-  if (m_num_instance == 0) {
+  if (m_num_instance == 0)
+  {
     glDrawArrays(m_mode, m_first, m_count);
-  } else {
+  } else
+  {
 #ifdef GL_VERSION_3_0
     glDrawArraysInstanced(m_mode, m_first, m_count, m_num_instance);
 #else
@@ -51,9 +53,11 @@ draw_elements::draw_elements(GLenum mode, GLint count, GLenum type, GLint offset
 //--------------------------------------------------------------------
 void draw_elements::draw()
 {
-  if (m_num_instance == 0) {
+  if (m_num_instance == 0)
+  {
     glDrawElements(m_mode, m_count, m_type, BUFFER_OFFSET(m_offset));
-  } else {
+  } else
+  {
 #ifdef GL_VERSION_3_0
     glDrawElementsInstanced(m_mode, m_count, m_type, BUFFER_OFFSET(m_offset), m_num_instance);
 #else

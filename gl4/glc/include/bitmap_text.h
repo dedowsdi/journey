@@ -8,9 +8,11 @@
 #include <memory>
 #include <map>
 
-namespace zxd {
+namespace zxd
+{
 
-struct bitmap_text_program : public zxd::program {
+struct bitmap_text_program : public zxd::program
+  {
   bool legacy = false;
   GLint ul_text_color;
   GLint ul_font_map;
@@ -19,36 +21,43 @@ struct bitmap_text_program : public zxd::program {
 
   bitmap_text_program() {}
 
-  void reshape(GLuint wnd_width, GLuint wnd_height) {
+  void reshape(GLuint wnd_width, GLuint wnd_height)
+  {
     mvp_mat = glm::ortho(
       0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
   }
 
-  void update_uniforms(const glm::vec4& text_color) {
+  void update_uniforms(const glm::vec4& text_color)
+  {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform4fv(ul_text_color, 1, value_ptr(text_color));
     glUniform1i(ul_font_map, 0);
   }
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     std::string shader_dir = legacy ? "shader2/" : "shader4/";
     attach(GL_VERTEX_SHADER, shader_dir + "bitmap_text.vs.glsl");
     attach(GL_FRAGMENT_SHADER, shader_dir + "bitmap_text.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_text_color, "text_color");
     uniform_location(&ul_font_map, "font_map");
   }
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
   }
 };
 
 // only works with grayscale bitmap
-class bitmap_text {
+class bitmap_text
+{
 public:
-  struct glyph {
+  struct glyph
+  {
     GLfloat x_min;  // the same as bearying X in freetype glyph
     GLfloat y_min;  // bearyingY - height
     GLfloat x_max;  // x_min + width
@@ -86,7 +95,8 @@ public:
   void init(bool legacy = false);
   void load_format(std::istream& is);
   // must be called at least once
-  void reshape(GLuint wnd_width, GLuint wnd_height) {
+  void reshape(GLuint wnd_width, GLuint wnd_height)
+  {
     m_program->reshape(wnd_width, wnd_height);
   }
 

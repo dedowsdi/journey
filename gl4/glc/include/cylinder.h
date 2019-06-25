@@ -4,12 +4,14 @@
 #include "geometry.h"
 #include "glm.h"
 
-namespace zxd {
+namespace zxd
+{
 
 /*
  * build cylinder with two triangle fans and a bunch of triangle strips
  */
-class cylinder : public geometry_base {
+class cylinder : public geometry_base
+  {
 protected:
   GLfloat m_base;
   GLfloat m_top;

@@ -28,7 +28,8 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
 
-namespace zxd {
+namespace zxd
+{
 using namespace glm;
 
 // no static, const variable in namespace has internal linkage
@@ -171,13 +172,16 @@ GLfloat max_abs_component(const vec3& v);
 
 //--------------------------------------------------------------------
 template <typename _It, typename _OutIt>
-void generate_face_normals(_It beg, _It end, _OutIt out) {
+void generate_face_normals(_It beg, _It end, _OutIt out)
+{
   typedef decltype(*beg) value_type;
   unsigned size = end - beg;
-  if (size % 3 != 0) {
+  if (size % 3 != 0)
+  {
     throw std::runtime_error("number of vertices should be multiple of 3");
   }
-  for (_It iter = beg; iter != end;) {
+  for (_It iter = beg; iter != end;)
+  {
     value_type& v0 = *iter++;
     value_type& v1 = *iter++;
     value_type& v2 = *iter++;

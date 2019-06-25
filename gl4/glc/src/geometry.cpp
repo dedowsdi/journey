@@ -1,41 +1,50 @@
 #include "geometry.h"
 #include "string_util.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
-void geometry_base::attrib_array(GLuint index, array_ptr _array) {
-  if (index >= m_attributes.size()) {
+void geometry_base::attrib_array(GLuint index, array_ptr _array)
+{
+  if (index >= m_attributes.size())
+  {
     m_attributes.resize(index + 1);
   }
   m_attributes[index] = _array;
 }
 
 //--------------------------------------------------------------------
-array_ptr geometry_base::attrib_array(GLuint index)  const{
-  if (index >= m_attributes.size()) {
+array_ptr geometry_base::attrib_array(GLuint index)  const
+{
+  if (index >= m_attributes.size())
+  {
     std::cerr << " attribute index overflow : " << index << std::endl;
   }
   return m_attributes[index];
 }
 
 //--------------------------------------------------------------------
-float_array_ptr geometry_base::attrib_float_array(GLuint index) const {
+float_array_ptr geometry_base::attrib_float_array(GLuint index) const
+{
   return std::static_pointer_cast<float_array>(attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec2_array_ptr geometry_base::attrib_vec2_array(GLuint index)  const{
+vec2_array_ptr geometry_base::attrib_vec2_array(GLuint index)  const
+{
   return std::static_pointer_cast<vec2_array>(attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec3_array_ptr geometry_base::attrib_vec3_array(GLuint index)  const{
+vec3_array_ptr geometry_base::attrib_vec3_array(GLuint index)  const
+{
   return std::static_pointer_cast<vec3_array>(attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec4_array_ptr geometry_base::attrib_vec4_array(GLuint index)  const{
+vec4_array_ptr geometry_base::attrib_vec4_array(GLuint index)  const
+{
   return std::static_pointer_cast<vec4_array>(attrib_array(index));
 }
 
@@ -46,13 +55,15 @@ GLuint geometry_base::num_vertices() { return attrib_array(0)->num_elements(); }
 void geometry_base::draw()
 {
   bind_vao();
-  for (int i = 0; i < m_primitive_sets.size(); ++i) {
+  for (int i = 0; i < m_primitive_sets.size(); ++i)
+  {
     m_primitive_sets[i]->draw();
   }
 }
 
 //--------------------------------------------------------------------
-void geometry_base::build_mesh() {
+void geometry_base::build_mesh()
+{
   m_primitive_sets.clear();
   build_vertex();
 
@@ -83,7 +94,8 @@ void geometry_base::build_mesh() {
 void geometry_base::bind_and_update_buffer()
 {
   bind_vao();
-  for (int i = 0; i < m_attributes.size(); ++i) {
+  for (int i = 0; i < m_attributes.size(); ++i)
+  {
     if(m_attributes[i]->num_elements() == 0)
     {
       std::cout << "found empty array attribute : " << i << std::endl;
@@ -153,7 +165,8 @@ void geometry_base::remove_primitive_sets(GLuint index, GLuint count)
 //--------------------------------------------------------------------
 void geometry_base::set_num_instance(GLuint count)
 {
-  for (int i = 0; i < m_primitive_sets.size(); ++i) {
+  for (int i = 0; i < m_primitive_sets.size(); ++i)
+  {
     m_primitive_sets[i]->num_instance(count);
   }
 }
@@ -171,8 +184,10 @@ void geometry_base::accept(primitive_functor& pf) const
 }
 
 //--------------------------------------------------------------------
-void geometry_base::bind_vao() {
-  if (m_vao == -1) {
+void geometry_base::bind_vao()
+{
+  if (m_vao == -1)
+  {
     glGenVertexArrays(1, &m_vao);
   }
   glBindVertexArray(m_vao);

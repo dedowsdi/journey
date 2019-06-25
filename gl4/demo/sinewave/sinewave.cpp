@@ -5,9 +5,11 @@
 #include "texutil.h"
 #include <sstream>
 
-namespace zxd {
+namespace zxd
+{
 
-struct sine_wave_program : public program{
+struct sine_wave_program : public program
+  {
   GLint ul_quad_map;
   GLint ul_time;
   GLint ul_amplitude;
@@ -17,17 +19,20 @@ struct sine_wave_program : public program{
 
   sine_wave_program() {}
 
-  void attach_shaders(){
+  void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/sinewave.fs.glsl");
   }
 
-  void update_uniforms(GLuint tex_index = 0){
+  void update_uniforms(GLuint tex_index = 0)
+  {
     glUniform1i(ul_quad_map, tex_index);
   }
 
 
-  virtual void bind_uniform_locations(){
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_quad_map, "quad_map");
     uniform_location(&ul_time, "time");
     uniform_location(&ul_amplitude,  "amplitude");
@@ -36,14 +41,16 @@ struct sine_wave_program : public program{
     uniform_location(&ul_mode    ,  "mode");
   }
 
-  virtual void bind_attrib_locations(){
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "texcoord");
   }
 } prg;
 
 
-class sine_wave : public app {
+class sine_wave : public app
+{
 protected:
   bitmap_text m_text;
   quad m_quad;
@@ -56,11 +63,13 @@ protected:
   GLboolean m_pause;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "sine wave";
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -90,12 +99,14 @@ public:
     m_pause = GL_FALSE;
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     if(!m_pause)
       m_time += m_delta_time;
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     prg.use();
@@ -121,15 +132,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -162,7 +177,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::sine_wave app;
   app.run();
 }

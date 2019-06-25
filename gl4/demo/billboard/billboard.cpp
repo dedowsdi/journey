@@ -7,12 +7,14 @@
 #include "common.h"
 
 
-namespace zxd {
+namespace zxd
+{
 
 GLuint num_billboards = 1000;
 GLuint method = 0;  // 0 : billboard_align, 1 : billboard_z, 2 : billboard_eye
 GLuint tex;
-std::string methods[] = {
+std::string methods[] =
+{
   "align to camera rotation",
   "rotate z to center_to_camera",
   "look at camera, use camera up"};
@@ -20,66 +22,78 @@ std::string methods[] = {
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
-struct program0 : public zxd::program {
+struct program0 : public zxd::program
+{
   GLint ul_diffuse_map;
   GLint ul_v_mat;
   GLint ul_vp_mat;
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/billboard_align.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/tex2d.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_v_mat, "v_mat");
     uniform_location(&ul_vp_mat, "vp_mat");
     uniform_location(&ul_diffuse_map, "diffuse_map");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "translation");
   };
 };
 
-struct program1 : public zxd::program {
+struct program1 : public zxd::program
+{
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
   GLint ul_vp_mat;
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/billboard_z.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/tex2d.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_vp_mat, "vp_mat");
     uniform_location(&ul_diffuse_map, "diffuse_map");
     uniform_location(&ul_camera_pos, "camera_pos");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "translation");
   };
 };
 
-struct program2 : public zxd::program {
+struct program2 : public zxd::program
+{
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
   GLint ul_camera_up;
   GLint ul_vp_mat;
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/billboard_eye.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/tex2d.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_vp_mat, "vp_mat");
     uniform_location(&ul_diffuse_map, "diffuse_map");
     uniform_location(&ul_camera_pos, "camera_pos");
     uniform_location(&ul_camera_up, "camera_up");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "translation");
   };
@@ -90,7 +104,8 @@ program1 program1;
 program2 program2;
 
 // clang-format off
-glm::vec4 vertices[] = { 
+glm::vec4 vertices[] =
+{ 
   vec4(-0.5, 0.5, 0, 1), // x y s t
   vec4(-0.5, -0.5, 0, 0),
   vec4(0.5, 0.5, 1, 1),
@@ -102,7 +117,8 @@ GLuint vao;
 GLuint vbo;
 vec3_vector translations;
 
-class billboard_app : public app {
+class billboard_app : public app
+{
 protected:
   bitmap_text m_text;
 
@@ -110,11 +126,13 @@ public:
   billboard_app() {}
 
 protected:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "billboard";
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -168,10 +186,12 @@ protected:
     reset_billboards();
   }
 
-  void reset_billboards() {
+  void reset_billboards()
+  {
     translations.clear();
     translations.reserve(num_billboards);
-    for (int i = 0; i < num_billboards; ++i) {
+    for (int i = 0; i < num_billboards; ++i)
+    {
       translations.push_back(
         glm::linearRand(glm::vec3(-30.0f), glm::vec3(30.0f)));
     }
@@ -181,7 +201,8 @@ protected:
       value_ptr(translations[0]), GL_STATIC_DRAW);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(vao);
@@ -189,7 +210,8 @@ protected:
 
     glm::mat4 vp_mat = p_mat * v_mat;;
 
-    if (method == 0) {
+    if (method == 0)
+    {
       glUseProgram(program0);
 
       glUniformMatrix4fv(
@@ -197,7 +219,8 @@ protected:
       glUniformMatrix4fv(program0.ul_v_mat, 1, 0, value_ptr(v_mat));
       glUniform1i(program0.ul_diffuse_map, 0);
 
-    } else if (method == 1) {
+    } else if (method == 1)
+    {
       glUseProgram(program1);
 
       vec3 camera_pos = glm::inverse(v_mat)[3].xyz();
@@ -207,7 +230,8 @@ protected:
       glUniform1i(program1.ul_diffuse_map, 0);
       glUniform3fv(program1.ul_camera_pos, 1, value_ptr(camera_pos));
 
-    } else {
+    } else
+    {
       glUseProgram(program2);
 
       vec3 camera_pos = glm::inverse(v_mat)[3].xyz();
@@ -234,15 +258,19 @@ protected:
 
   virtual void update() {}
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(w, h);
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS || action == GLFW_REPEAT)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -251,10 +279,12 @@ protected:
           break;
 
         case GLFW_KEY_W:
-          if (GLFW_MOD_SHIFT & mods) {
+          if (GLFW_MOD_SHIFT & mods)
+          {
             num_billboards -= 100;
             reset_billboards();
-          } else {
+          } else
+          {
             num_billboards += 100;
             reset_billboards();
           }
@@ -269,27 +299,33 @@ protected:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods) {
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+  {
     app::glfw_mouse_move(wnd, x, y);
   }
 
-  virtual void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+  virtual void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
-  virtual void glfw_char(GLFWwindow *wnd, unsigned int codepoint) {
+  virtual void glfw_char(GLFWwindow *wnd, unsigned int codepoint)
+  {
     app::glfw_char(wnd, codepoint);
   }
-  virtual void glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {
+  virtual void glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods)
+  {
     app::glfw_charmod(wnd, codepoint, mods);
   }
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::billboard_app app;
   app.run();
 }

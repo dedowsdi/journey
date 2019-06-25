@@ -3,7 +3,8 @@
 
 #include <memory>
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
 teardrop::teardrop() 
@@ -14,7 +15,8 @@ teardrop::teardrop(GLfloat radius, GLuint slice, GLuint stack, GLfloat xy_scale/
 : m_radius(radius), m_slice(slice), m_stack(stack), m_xy_scale(xy_scale) {}
 
 //--------------------------------------------------------------------
-void teardrop::build_vertex() {
+void teardrop::build_vertex()
+{
 
   GLuint circle_size = m_slice + 1;
   GLuint strip_size = circle_size * 2;
@@ -30,11 +32,13 @@ void teardrop::build_vertex() {
   //    0 2
   //    1 3
   // pole strip will not be created as triangle fan, as it mess up texture
-  for (int i = 0; i < m_stack; ++i) {
+  for (int i = 0; i < m_stack; ++i)
+  {
     GLint stack_start = stack_size * i;
     GLuint next_stack_start = stack_start + stack_size;
 
-    for (int j = 0; j <= m_slice; j++) {
+    for (int j = 0; j <= m_slice; j++)
+    {
       // loop last stack in reverse order
       vertices.push_back(sphere_points[stack_start + j]);
       vertices.push_back(sphere_points[next_stack_start + j]);
@@ -47,21 +51,24 @@ void teardrop::build_vertex() {
 }
 
 //--------------------------------------------------------------------
-void teardrop::build_normal() {
+void teardrop::build_normal()
+{
   //vec3_array& normals = *(new vec3_array());
   //attrib_array(num_arrays(), array_ptr(&normals));
   //const vec3_array& vertices = *attrib_vec3_array(0);
 
   //normals.reserve(num_vertices());
 
-  //for (int i = 0; i < num_vertices(); ++i) {
+  //for (int i = 0; i < num_vertices(); ++i)
+  //{
   //normals.push_back(glm::normalize(vertices[i]));
   //}
   geometry_util::smooth(*this, 1);
 }
 
 //--------------------------------------------------------------------
-void teardrop::build_texcoord() {
+void teardrop::build_texcoord()
+{
   // t ranges from 0.0 at z = - radius to 1.0 at z = radius (t increases
   // linearly along longitudinal lines), and s ranges from 0.0 at the +y axis,
   // to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x axis,
@@ -71,11 +78,13 @@ void teardrop::build_texcoord() {
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(num_vertices());
 
-  for (int i = 0; i < m_stack; ++i) {
+  for (int i = 0; i < m_stack; ++i)
+  {
     GLfloat t0 = 1 - static_cast<GLfloat>(i) / m_stack;
     GLfloat t1 = 1 - static_cast<GLfloat>(i + 1) / m_stack;
 
-    for (int j = 0; j <= m_slice; j++) {
+    for (int j = 0; j <= m_slice; j++)
+    {
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
 
       texcoords.push_back(glm::vec2(s, t0));
@@ -93,7 +102,8 @@ vec3_vector teardrop::get_points(GLfloat radius, GLuint slices, GLuint stacks, G
   points.reserve((stacks + 1) * (slices + 1));
   GLfloat phi_step = glm::pi<GLfloat>() / stacks;
   GLfloat theta_step = f2pi / slices;
-  for (int i = 0; i <= stacks; ++i) {
+  for (int i = 0; i <= stacks; ++i)
+  {
     GLfloat phi = i * phi_step;
 
     GLfloat sin_phi = std::sin(phi);
@@ -102,7 +112,8 @@ vec3_vector teardrop::get_points(GLfloat radius, GLuint slices, GLuint stacks, G
 
     GLfloat sf = xy_scale * (1 - cos_phi) * sin_phi * radius;
 
-    for (int j = 0; j <= slices; j++) {
+    for (int j = 0; j <= slices; j++)
+    {
       // loop last stack in reverse order
       GLfloat theta = theta_step * j;
       if(j == slices) theta = 0; // avoid precision problem

@@ -20,14 +20,16 @@ using plane = vec4; // x,y,z as normal, w as d. dot(n, p) + d = 0
 const GLfloat fepsilon = 0.00001f;
 const GLfloat fnepsilon = -0.00001f;
 
-inline bool is_aboutf( GLfloat t0, GLfloat t1) {
+inline bool is_aboutf( GLfloat t0, GLfloat t1)
+{
   GLfloat f = t0 - t1;
   return f < fepsilon && f > fnepsilon;
 }
 
 bool is_aboutf(const vec3& t0, const vec3& t1) ;
 
-inline bool is_aboutd( GLdouble t0, GLdouble t1, double epsilon = 0.000001) {
+inline bool is_aboutd( GLdouble t0, GLdouble t1, double epsilon = 0.000001)
+{
   GLfloat d = t0 - t1;
   return d < fepsilon && d > fnepsilon;
 }
@@ -46,7 +48,8 @@ bool is_point_in_triangle(const vec3& p, const vec3& c0, const vec3& c1, const v
 // result.first is true if there are one and only one intersection
 bool_vec3_pair intersect_line_plane(const vec3& lp, const vec3& ld, const vec4& plane);
 
-struct line_relation {
+struct line_relation
+{
   GLint type;  // 0 parallel, 1 intersect, 2 skew
   GLfloat t0;  // v0 + dir0 * t0 = sk0
   GLfloat t1;  // v1 + dir1 * t1 = sk1

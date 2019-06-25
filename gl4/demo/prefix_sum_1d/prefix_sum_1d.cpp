@@ -8,7 +8,8 @@
 #define HEIGHT 800
 
 
-namespace zxd {
+namespace zxd
+{
 
 std::vector<GLfloat> input_data;
 GLint num_data = 1024*1024;
@@ -37,18 +38,21 @@ protected:
 
 } prg;
 
-class prefix_sum_app : public app {
+class prefix_sum_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "prefix_sum_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -56,7 +60,8 @@ public:
 
 
     input_data.reserve(num_data);
-    for (int i = 0; i < num_data; ++i) {
+    for (int i = 0; i < num_data; ++i)
+    {
       //input_data.push_back(glm::linearRand(0.0f, 100.0f));
       input_data.push_back(i);
     }
@@ -107,7 +112,8 @@ public:
 
   virtual void update() {}
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
 
@@ -119,15 +125,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -140,7 +150,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::prefix_sum_app app;
   app.run();
 }

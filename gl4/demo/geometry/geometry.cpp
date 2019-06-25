@@ -22,7 +22,8 @@
 #include "capsule3d.h"
 #include "icosahedron.h"
 
-namespace zxd {
+namespace zxd
+{
 
 GLuint diffuse_map;
 GLuint diffuse_map1d;
@@ -35,31 +36,37 @@ blinn_program blinn_prg;
 normal_viewer_program nv_prg;
 vertex_color_program vc_prg;
 
-struct texline_program : public zxd::program {
+struct texline_program : public zxd::program
+  {
   // GLint ul_eye;
 
   GLint ul_diffuse_map;
   GLint ul_mvp_mat;
 
-  virtual void update_uniforms(const mat4& mvp_mat) {
+  virtual void update_uniforms(const mat4& mvp_mat)
+  {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/texline.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/texline.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_diffuse_map, "diffuse_map");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "texcoord");
   };
 } texline_prg;
 
-class geometry_app : public app {
+class geometry_app : public app
+{
 protected:
   GLboolean m_render_normal;
   bitmap_text m_text;
@@ -87,12 +94,14 @@ protected:
 public:
   geometry_app() : m_camera_pos(0, -8, 8), m_render_normal(GL_FALSE) {}
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "geometry";
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     glEnable(GL_CULL_FACE);
 
@@ -196,9 +205,11 @@ public:
 
     {
       vec3_vector2 vv;
-      for (int i = 0; i < 5; ++i) {
+      for (int i = 0; i < 5; ++i)
+      {
         vec3_vector v;
-        for (int j = 0; j < 5; ++j) {
+        for (int j = 0; j < 5; ++j)
+        {
           v.push_back(
             vec3(-1 + i * 0.5f, -1 + j * 0.5f, glm::linearRand(0.0f, 1.0f)));
         }
@@ -213,9 +224,11 @@ public:
 
     {
       vec4_vector2 vv;
-      for (int i = 0; i < 5; ++i) {
+      for (int i = 0; i < 5; ++i)
+      {
         vec4_vector v;
-        for (int j = 0; j < 5; ++j) {
+        for (int j = 0; j < 5; ++j)
+        {
           v.push_back(
             vec4(-1 + i * 0.5f, -1 + j * 0.5f, glm::linearRand(0.0f, 1.0f), 1));
         }
@@ -284,7 +297,8 @@ public:
 
   virtual void update() {}
 
-  void render_blinn(geometry_base &gm, const vec3 &translation) {
+  void render_blinn(geometry_base &gm, const vec3 &translation)
+  {
     blinn_prg.use();
 
     mat4 m_mat = glm::translate(translation);
@@ -292,14 +306,16 @@ public:
     gm.draw();
 
     // bad performance
-    if (m_render_normal) {
+    if (m_render_normal)
+    {
       nv_prg.use();
       nv_prg.update_uniforms(m_mat, v_mat, p_mat);
       gm.draw();
     }
   }
 
-  void render_texline(geometry_base &gm, const vec3 &translation) {
+  void render_texline(geometry_base &gm, const vec3 &translation)
+  {
     texline_prg.use();
 
     glUniform1i(texline_prg.ul_diffuse_map, 0);
@@ -308,13 +324,15 @@ public:
     gm.draw();
   }
 
-  void render_vertex_color(geometry_base &gm, const mat4 &mvp_mat) {
+  void render_vertex_color(geometry_base &gm, const mat4 &mvp_mat)
+  {
     vc_prg.use();
     vc_prg.update_uniforms(mvp_mat);
     gm.draw();
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     blinn_prg.use();
@@ -385,47 +403,62 @@ public:
     }
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     (void)wnd;
     m_info.wnd_width = w;
     m_info.wnd_width = h;
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
-        case GLFW_KEY_Q: {
+        case GLFW_KEY_Q:
+          {
           GLint polygon_mode;
           glGetIntegerv(GL_POLYGON_MODE, &polygon_mode);
           glPolygonMode(
             GL_FRONT_AND_BACK, GL_POINT + (polygon_mode - GL_POINT + 1) % 3);
         } break;
-        case GLFW_KEY_W: {
-          if (glIsEnabled(GL_CULL_FACE)) {
+        case GLFW_KEY_W:
+          {
+          if (glIsEnabled(GL_CULL_FACE))
+          {
             glDisable(GL_CULL_FACE);
-          } else {
+          } else
+          {
             glEnable(GL_CULL_FACE);
           }
         } break;
-        case GLFW_KEY_E: {
-          if (glIsEnabled(GL_DEPTH_TEST)) {
+        case GLFW_KEY_E:
+          {
+          if (glIsEnabled(GL_DEPTH_TEST))
+          {
             glDisable(GL_DEPTH_TEST);
-          } else {
+          } else
+          {
             glEnable(GL_DEPTH_TEST);
           }
         } break;
-        case GLFW_KEY_R: {
+        case GLFW_KEY_R:
+          {
           GLint cull_face;
           glGetIntegerv(GL_CULL_FACE_MODE, &cull_face);
-          if (cull_face == GL_FRONT) {
+          if (cull_face == GL_FRONT)
+          {
             glCullFace(GL_BACK);
-          } else if (cull_face == GL_BACK) {
+          } else if (cull_face == GL_BACK)
+          {
             glCullFace(GL_FRONT_AND_BACK);
-          } else {
+          } else
+          {
             glCullFace(GL_FRONT);
           }
         } break;
@@ -442,22 +475,26 @@ public:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods) {
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+  {
     app::glfw_mouse_move(wnd, x, y);
   }
 
   virtual void glfw_mouse_wheel(
-    GLFWwindow *wnd, double xoffset, double yoffset) {
+    GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::geometry_app app;
   app.run();
 }

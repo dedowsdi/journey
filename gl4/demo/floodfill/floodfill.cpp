@@ -8,7 +8,8 @@
 #include <queue>
 #include <algorithm>
 
-namespace zxd {
+namespace zxd
+{
 
 quad_program prg;
 
@@ -60,7 +61,8 @@ void rand_rgb_flood_fill(glm::u8vec3* pixels, const ivec2& size, const ivec2& cu
 
 }
 
-class flood_fill : public app {
+class flood_fill : public app
+{
 protected:
   bitmap_text m_text;
   quad m_quad;
@@ -68,14 +70,16 @@ protected:
   fipImage m_image;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "sine wave";
     m_image = fipLoadResource("texture/z.png");
     m_info.wnd_width = m_image.getWidth();
     m_info.wnd_height = m_image.getHeight();
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -97,10 +101,12 @@ public:
         0, GL_RGB, GL_UNSIGNED_BYTE, m_image.accessPixels());
   }
 
-  virtual void update() {
+  virtual void update()
+  {
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     prg.use();
@@ -115,15 +121,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -135,7 +145,8 @@ public:
   }
   
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods){
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
 
     app::glfw_mouse_button(wnd, button, action, mods);
     if(button != GLFW_MOUSE_BUTTON_LEFT)
@@ -159,7 +170,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::flood_fill app;
   app.run();
 }

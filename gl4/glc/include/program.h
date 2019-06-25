@@ -9,9 +9,11 @@
 typedef std::vector<std::string> string_vector;
 typedef std::vector<const char*> cstring_vector;
 
-namespace zxd {
+namespace zxd
+{
 
-class program {
+class program
+{
 public:
   GLuint object;
   // some popular matrix
@@ -26,7 +28,8 @@ public:
   // to use this directly in gl procedure
   operator GLuint() { return object; }
 
-  virtual void init() {
+  virtual void init()
+  {
     create_program();
     attach_shaders();
     bind_attrib_locations(); // bind must be called before link, different from get
@@ -34,7 +37,8 @@ public:
     bind_uniform_locations();
   }
 
-  virtual void reload(){
+  virtual void reload()
+  {
     clear();
     init();
   }
@@ -83,7 +87,8 @@ public:
     const std::string& name, GLint v0, GLint v1, GLint v2, GLint v3);
 
 private:
-  void create_program(){
+  void create_program()
+  {
     object = glCreateProgram();
   }
 

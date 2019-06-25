@@ -2,7 +2,8 @@
 
 #include <iomanip>
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
 mat4 isometric_projection(GLfloat d, const vec3& center, const vec3& up/* = pza*/)
@@ -11,13 +12,15 @@ mat4 isometric_projection(GLfloat d, const vec3& center, const vec3& up/* = pza*
 }
 
 //--------------------------------------------------------------------
-vec3 make_floor(const vec3& lhs, const vec3& rhs) {
+vec3 make_floor(const vec3& lhs, const vec3& rhs)
+{
   return vec3(
     std::min(lhs.x, rhs.x), std::min(lhs.y, rhs.y), std::min(lhs.z, rhs.z));
 }
 
 //--------------------------------------------------------------------
-vec3 make_ceil(const vec3& lhs, const vec3& rhs) {
+vec3 make_ceil(const vec3& lhs, const vec3& rhs)
+{
   return vec3(
     std::max(lhs.x, rhs.x), std::max(lhs.y, rhs.y), std::max(lhs.z, rhs.z));
 }
@@ -26,13 +29,15 @@ vec3 make_ceil(const vec3& lhs, const vec3& rhs) {
 vec3 axis(const mat4& m, GLuint i) { return vec3(column(m, i)); }
 
 //--------------------------------------------------------------------
-mat4 create_mat4(const vec3& xa, const vec3& ya, const vec3& za) {
+mat4 create_mat4(const vec3& xa, const vec3& ya, const vec3& za)
+{
   return mat4(
     vec4(xa, 0), vec4(ya, 0), vec4(za, 0), vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 //--------------------------------------------------------------------
-GLfloat angle_any(const vec3& lhs, const vec3& rhs) {
+GLfloat angle_any(const vec3& lhs, const vec3& rhs)
+{
   return angle(normalize(lhs), normalize(rhs));
 }
 
@@ -43,7 +48,8 @@ GLfloat random()
 }
 
 //--------------------------------------------------------------------
-vec3 face_normal(const vec3& v0, const vec3& v1, const vec3& v2) {
+vec3 face_normal(const vec3& v0, const vec3& v1, const vec3& v2)
+{
   vec3 v01 = v1 - v0;
   vec3 v02 = v2 - v0;
   vec3 normal = cross(v01, v02);
@@ -53,7 +59,8 @@ vec3 face_normal(const vec3& v0, const vec3& v1, const vec3& v2) {
 //--------------------------------------------------------------------
 mat4 get_tangetn_basis(const vec3& v0, const vec3& v1, const vec3& v2,
   const vec2& texcoord0, const vec2& texcoord1, const vec2& texcoord2,
-  const vec3* normal /* = 0*/) {
+  const vec3* normal /* = 0*/)
+{
   vec3 dt_pos01 = v1 - v0;
   vec3 dt_pos02 = v2 - v0;
   vec2 dt_tex01 = texcoord1 - texcoord0;
@@ -69,7 +76,8 @@ mat4 get_tangetn_basis(const vec3& v0, const vec3& v1, const vec3& v2,
 }
 
 //--------------------------------------------------------------------
-vec3 transform_position(const mat4& m, const vec3& v) {
+vec3 transform_position(const mat4& m, const vec3& v)
+{
   vec3 r;
 
   GLfloat inv_w =
@@ -82,7 +90,8 @@ vec3 transform_position(const mat4& m, const vec3& v) {
 }
 
 //--------------------------------------------------------------------
-vec3 transform_vector(const mat4& m, const vec3& v) {
+vec3 transform_vector(const mat4& m, const vec3& v)
+{
   vec3 r;
 
   r.x = (m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z);
@@ -241,18 +250,21 @@ GLfloat color_difference_256_2(const vec3& c0, const vec3& c1)
 }
 
 //------------------------------------------------------------------------------
-bool operator<(const vec3& lhs, const vec3& rhs) {
+bool operator<(const vec3& lhs, const vec3& rhs)
+{
   return lhs.x < rhs.x && lhs.y < rhs.y && lhs.z < rhs.z;
 }
 
 //--------------------------------------------------------------------
-bool operator>(const vec3& lhs, const vec3& rhs) {
+bool operator>(const vec3& lhs, const vec3& rhs)
+{
   return lhs != rhs && !operator<(lhs, rhs);
 }
 
 
 //--------------------------------------------------------------------
-GLfloat max_abs_component(const vec3& v) {
+GLfloat max_abs_component(const vec3& v)
+{
   GLfloat x = glm::abs(v[0]);
   GLfloat y = glm::abs(v[1]);
   GLfloat z = glm::abs(v[2]);
@@ -309,7 +321,8 @@ GLfloat cubic_in_out(GLfloat x)
 
 //--------------------------------------------------------------------
 glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
-  const glm::mat4& w_mat_i, GLfloat radius /* = 0.8*/) {
+  const glm::mat4& w_mat_i, GLfloat radius /* = 0.8*/)
+{
   glm::vec4 n0 = w_mat_i * glm::vec4(p0, 0, 1);
   glm::vec4 n1 = w_mat_i * glm::vec4(p1, 0, 1);
   glm::vec3 sp0 = ndc_tosphere(n0.xy(), radius);
@@ -326,18 +339,22 @@ glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
 }
 
 //--------------------------------------------------------------------
-glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/) {
+glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/)
+{
   GLfloat l2 = glm::length2(p);
-  if (l2 >= radius * radius) {
+  if (l2 >= radius * radius)
+  {
     return glm::vec3(p * radius / glm::sqrt(l2), 0);
-  } else {
+  } else
+  {
     return glm::vec3(p, glm::sqrt(radius * radius - l2));
   }
 }
 
 //--------------------------------------------------------------------
 glm::mat4 compute_window_mat(
-  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f) {
+  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f)
+{
   glm::mat4 m;
 
   //m = glm::translate(vec3(1)) * glm::scale(vec3(width*0.5, height*0.5, 0.5f))
@@ -355,7 +372,8 @@ glm::mat4 compute_window_mat(
 
 //--------------------------------------------------------------------
 glm::mat4 compute_window_mat_i(
-  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f) {
+  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f)
+{
   glm::mat4 m;
   m[0][0] = 2.0 / width;
   m[1][1] = 2.0 / height;
@@ -368,7 +386,8 @@ glm::mat4 compute_window_mat_i(
 }
 
 //--------------------------------------------------------------------
-void set_row(mat4& m, GLushort index, const vec4& v) {
+void set_row(mat4& m, GLushort index, const vec4& v)
+{
   m[0][index] = v[0];
   m[1][index] = v[1];
   m[2][index] = v[2];
@@ -376,27 +395,31 @@ void set_row(mat4& m, GLushort index, const vec4& v) {
 }
 
 //--------------------------------------------------------------------
-void set_row(mat4& m, GLushort index, const vec3& v) {
+void set_row(mat4& m, GLushort index, const vec3& v)
+{
   m[0][index] = v[0];
   m[1][index] = v[1];
   m[2][index] = v[2];
 }
 
 //--------------------------------------------------------------------
-void set_col(mat4& m, GLushort index, const vec3& v) {
+void set_col(mat4& m, GLushort index, const vec3& v)
+{
   m[index][0] = v[0];
   m[index][1] = v[1];
   m[index][2] = v[2];
 }
 
 //--------------------------------------------------------------------
-mat4 erase_translation(const glm::mat4& m) {
+mat4 erase_translation(const glm::mat4& m)
+{
   return mat4(m[0], m[1], m[2], hzp);
 }
 
 //--------------------------------------------------------------------
 mat4 make_mat4_row(
-  const vec4& r0, const vec4& r1, const vec4& r2, const vec4& r3) {
+  const vec4& r0, const vec4& r1, const vec4& r2, const vec4& r3)
+{
   // clang-format off
   return mat4(
       r0[0], r1[0], r2[0], r3[0], 
@@ -422,7 +445,8 @@ const vec3& r0, const vec3& r1, const vec3& r2)
 }
 
 //--------------------------------------------------------------------
-mat3 make_mat3_row(const vec3& r0, const vec3& r1, const vec3& r2) {
+mat3 make_mat3_row(const vec3& r0, const vec3& r1, const vec3& r2)
+{
   // clang-format off
   return mat3(
       r0[0], r1[0], r2[0],
@@ -447,7 +471,8 @@ GLfloat triangle_area(const vec3& p0, const vec3& p1, const vec3& p2)
 }
 
 //--------------------------------------------------------------------
-vec3 eye_pos(const mat4& v_mat) {
+vec3 eye_pos(const mat4& v_mat)
+{
   return (-v_mat[3] * erase_translation(v_mat)).xyz();
 }
 
@@ -457,7 +482,8 @@ namespace std
 {
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const vec2& v) {
+ostream& operator<<(ostream& os, const vec2& v)
+{
   static GLuint w = 12;
   static GLuint p = 6;
   os << left << fixed;
@@ -468,7 +494,8 @@ ostream& operator<<(ostream& os, const vec2& v) {
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const vec3& v) {
+ostream& operator<<(ostream& os, const vec3& v)
+{
   static GLuint w = 12;
   static GLuint p = 6;
   os << left << fixed;
@@ -480,7 +507,8 @@ ostream& operator<<(ostream& os, const vec3& v) {
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const vec4& v) {
+ostream& operator<<(ostream& os, const vec4& v)
+{
   static GLuint w = 12;
   static GLuint p = 6;
   os << left << fixed;
@@ -492,33 +520,41 @@ ostream& operator<<(ostream& os, const vec4& v) {
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const mat2& m) {
-  for (int i = 0; i < 2; ++i) {
+ostream& operator<<(ostream& os, const mat2& m)
+{
+  for (int i = 0; i < 2; ++i)
+  {
     os <<  row(m,i) << endl;
   }
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const mat3& m) {
-  for (int i = 0; i < 3; ++i) {
+ostream& operator<<(ostream& os, const mat3& m)
+{
+  for (int i = 0; i < 3; ++i)
+  {
     os <<  row(m,i) << endl;
   }
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const mat4& m) {
-  for (int i = 0; i < 4; ++i) {
+ostream& operator<<(ostream& os, const mat4& m)
+{
+  for (int i = 0; i < 4; ++i)
+  {
     os <<  row(m,i) << endl;
   }
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const zxd::vec3_vector& v) {
+ostream& operator<<(ostream& os, const zxd::vec3_vector& v)
+{
   auto size = v.size();
-  for (size_t i = 0; i < size; ++i) {
+  for (size_t i = 0; i < size; ++i)
+  {
     os <<  v[i] << endl;
   }
   return os;

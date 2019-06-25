@@ -4,9 +4,11 @@
 #include "program.h"
 #include "light.h"
 
-namespace zxd {
+namespace zxd
+{
 
-struct blinn_program : public zxd::program {
+struct blinn_program : public zxd::program
+  {
 
   GLboolean with_texcoord;
   GLboolean instance;
@@ -44,7 +46,8 @@ struct blinn_program : public zxd::program {
   virtual void bind_attrib_locations();
 };
 
-struct quad_program : public zxd::program {
+struct quad_program : public zxd::program
+{
   GLint ul_quad_map;
   std::string quad_map_name;
 
@@ -59,7 +62,8 @@ struct quad_program : public zxd::program {
   virtual void bind_attrib_locations();
 };
 
-struct quad_base : public zxd::program {
+struct quad_base : public zxd::program
+{
   GLint ul_quad_map;
   std::string quad_map_name;
 
@@ -80,7 +84,8 @@ struct quad_base : public zxd::program {
   virtual void do_bind_attrib_locations() {}
 };
 
-struct point_program : public zxd::program {
+struct point_program : public zxd::program
+{
 
   GLint ul_mvp_mat;
 
@@ -93,7 +98,8 @@ struct point_program : public zxd::program {
   virtual void udpate_uniforms(const mat4& _mvp_mat);
 };
 
-struct normal_viewer_program : public zxd::program {
+struct normal_viewer_program : public zxd::program
+{
 
   GLboolean smooth_normal = GL_FALSE;
 
@@ -110,7 +116,8 @@ struct normal_viewer_program : public zxd::program {
   virtual void bind_attrib_locations();
 };
 
-struct vertex_color_program : public zxd::program {
+struct vertex_color_program : public zxd::program
+{
 
   GLint ul_mvp_mat;
 

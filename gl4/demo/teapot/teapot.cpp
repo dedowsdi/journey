@@ -10,7 +10,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 geometry_base teapot;
 
@@ -47,7 +48,8 @@ protected:
   }
 } prg;
 
-class teapot_app : public app {
+class teapot_app : public app
+{
 protected:
   bitmap_text m_text;
 
@@ -65,14 +67,16 @@ public:
     GLFWwindow *wnd, int key, int scancode, int action, int mods);
 };
 
-void teapot_app::init_info() {
+void teapot_app::init_info()
+{
   app::init_info();
   m_info.title = "teapot_app";
   m_info.wnd_width = WIDTH;
   m_info.wnd_height = HEIGHT;
 }
 
-void teapot_app::create_scene() {
+void teapot_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   m_text.init();
@@ -99,7 +103,8 @@ void teapot_app::create_scene() {
 
 void teapot_app::update() {}
 
-void teapot_app::display() {
+void teapot_app::display()
+{
   glClear(GL_COLOR_BUFFER_BIT);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -123,15 +128,19 @@ void teapot_app::display() {
   glDisable(GL_BLEND);
 }
 
-void teapot_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void teapot_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 }
 
 void teapot_app::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -144,7 +153,8 @@ void teapot_app::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::teapot_app app;
   app.run();
 }

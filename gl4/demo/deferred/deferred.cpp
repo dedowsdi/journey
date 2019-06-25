@@ -23,17 +23,20 @@
 #include "light.h"
 #include "stream_util.h"
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
-struct render_gbuffer_program : public zxd::program {
+struct render_gbuffer_program : public zxd::program
+  {
   GLint ul_mv_mat_it;
   GLint ul_mv_mat;
   GLint ul_mvp_mat;
 
-  virtual void update_uniforms(const mat4 &m_mat) {
+  virtual void update_uniforms(const mat4 &m_mat)
+  {
     mat4 mv_mat = v_mat * m_mat;
     mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
     mat4 mvp_mat = p_mat * mv_mat;
@@ -42,25 +45,29 @@ struct render_gbuffer_program : public zxd::program {
     glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
   }
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/render_gbuffer.vs.glsl");
     attach(
       GL_FRAGMENT_SHADER, "shader4/render_gbuffer.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     // uniform_location(&ul_eye, "eye");
     uniform_location(&ul_mv_mat, "mv_mat");
     uniform_location(&ul_mv_mat_it, "mv_mat_it");
     uniform_location(&ul_mvp_mat, "mvp_mat");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "normal");
   };
 };
 
-struct glinn_program : public zxd::program {
+struct glinn_program : public zxd::program
+{
   GLint ul_g_vertex;
   GLint ul_g_normal;
   GLint ul_g_depth;
@@ -72,7 +79,8 @@ struct glinn_program : public zxd::program {
 
   glinn_program() {}
 
-  void update_uniforms() {
+  void update_uniforms()
+  {
     glUniform1i(ul_g_vertex, 0);
     glUniform1i(ul_g_normal, 1);
     glUniform1i(ul_g_emission, 2);
@@ -83,8 +91,10 @@ struct glinn_program : public zxd::program {
     glUniform1i(ul_g_depth, 7);
   }
 
-  virtual void reset(GLuint light_count) {
-    if (object != -1) {
+  virtual void reset(GLuint light_count)
+  {
+    if (object != -1)
+    {
       glDeleteProgram(object);
     }
 
@@ -104,7 +114,8 @@ struct glinn_program : public zxd::program {
     bind_attrib_locations();
   }
 
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_g_vertex, "g_vertex");
     uniform_location(&ul_g_normal, "g_normal");
     uniform_location(&ul_g_emission, "g_emission");
@@ -118,7 +129,8 @@ struct glinn_program : public zxd::program {
   virtual void bind_attrib_locations(){};
 };
 
-class defered : public app {
+class defered : public app
+{
 protected:
   bitmap_text m_text;
   GLint m_numspheres;
@@ -149,26 +161,30 @@ protected:
   render_gbuffer_program m_render_gbuffer_program;
 
 protected:
-  void render_gbuffer() {
+  void render_gbuffer()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(m_render_gbuffer_program.object);
 
     GLuint gbuffres[] = {mg_vertex, mg_normal, mg_emission, mg_ambient,
       mg_diffuse, mg_specular, mg_shininess, mg_depth};
 
-    for (int i = 0; i < sizeof(gbuffres) / sizeof(GLuint); ++i) {
+    for (int i = 0; i < sizeof(gbuffres) / sizeof(GLuint); ++i)
+    {
       glActiveTexture(GL_TEXTURE0 + i);
       glBindTexture(GL_TEXTURE_2D, gbuffres[i]);
     }
 
-    for (int i = 0; i < m_numspheres; ++i) {
+    for (int i = 0; i < m_numspheres; ++i)
+    {
       m_render_gbuffer_program.update_uniforms(m_sphere_m_mates[i]);
       m_sphere_materials[i].update_uniforms();
       m_sphere.draw();
     }
   }
 
-  void use_gbuffer() {
+  void use_gbuffer()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(m_glinn.object);
@@ -178,13 +194,15 @@ protected:
     GLuint gbuffres[] = {mg_vertex, mg_normal, mg_emission, mg_ambient,
       mg_diffuse, mg_specular, mg_shininess, mg_depth};
 
-    for (int i = 0; i < sizeof(gbuffres) / sizeof(GLuint); ++i) {
+    for (int i = 0; i < sizeof(gbuffres) / sizeof(GLuint); ++i)
+    {
       glActiveTexture(GL_TEXTURE0 + i);
       glBindTexture(GL_TEXTURE_2D, gbuffres[i]);
     }
 
     // update lights
-    for (int i = 0; i < m_lights.size(); ++i) {
+    for (int i = 0; i < m_lights.size(); ++i)
+    {
       m_lights[i].update_uniforms(v_mat);
     }
     m_light_model.update_uniforms();
@@ -193,11 +211,13 @@ protected:
   }
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "defered rendering";
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
@@ -296,7 +316,8 @@ public:
     GLuint gbuffres[] = {mg_vertex, mg_normal, mg_emission, mg_ambient,
       mg_diffuse, mg_specular, mg_shininess};
 
-    for (int i = 0; i < sizeof(gbuffres) / sizeof(GLuint); ++i) {
+    for (int i = 0; i < sizeof(gbuffres) / sizeof(GLuint); ++i)
+    {
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i,
         GL_TEXTURE_2D, gbuffres[i], 0);
     }
@@ -304,7 +325,8 @@ public:
       GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mg_depth, 0);
 
     // clang-format off
-    GLenum draw_buffers[] = {
+    GLenum draw_buffers[] =
+    {
       GL_COLOR_ATTACHMENT0,
       GL_COLOR_ATTACHMENT1,
       GL_COLOR_ATTACHMENT2,
@@ -336,11 +358,13 @@ public:
     m_light_model.bind_uniform_locations(m_glinn, "lm");
   }
 
-  void resetsphere() {
+  void resetsphere()
+  {
     m_sphere_m_mates.clear();
     m_sphere_materials.clear();
 
-    for (int i = 0; i < m_numspheres; ++i) {
+    for (int i = 0; i < m_numspheres; ++i)
+    {
       m_sphere_m_mates.push_back(
         glm::translate(glm::linearRand(vec3(-10, -10, -2), vec3(10, 10, 2))));
 
@@ -357,11 +381,13 @@ public:
     }
   }
 
-  void reset_light() {
+  void reset_light()
+  {
     m_glinn.reset(m_num_lights);
     m_lights.clear();
 
-    for (int i = 0; i < m_num_lights; ++i) {
+    for (int i = 0; i < m_num_lights; ++i)
+    {
       light_source light;
       light.position =
         glm::vec4(glm::linearRand(vec3(-10, -10, -2), vec3(10, 10, 2)), 1);
@@ -380,7 +406,8 @@ public:
     m_light_model.bind_uniform_locations(m_glinn.object, "lm");
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -405,19 +432,24 @@ public:
 
   virtual void update() {}
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(w, h);
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
     app::glfw_key(wnd, key, scancode, action, mods);
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_Q:
           m_numspheres += mods == GLFW_MOD_SHIFT ? -10 : 10;
-          if (m_numspheres < 0) {
+          if (m_numspheres < 0)
+          {
             m_numspheres = 0;
           }
           resetsphere();
@@ -425,7 +457,8 @@ public:
 
         case GLFW_KEY_W:
           m_num_lights += mods == GLFW_MOD_SHIFT ? -1 : 1;
-          if (m_num_lights < 0) {
+          if (m_num_lights < 0)
+          {
             m_num_lights = 0;
           }
           reset_light();
@@ -436,22 +469,26 @@ public:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods) {
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+  {
     app::glfw_mouse_move(wnd, x, y);
   }
 
   virtual void glfw_mouse_wheel(
-    GLFWwindow *wnd, double xoffset, double yoffset) {
+    GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::defered app;
   app.run();
 }

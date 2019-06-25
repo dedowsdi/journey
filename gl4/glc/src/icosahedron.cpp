@@ -96,7 +96,8 @@ void icosahedron::build_minimun_mesh()
   elements->reserve(60);
 
   // 5 triangles on top
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 5; ++i)
+  {
     auto i1 = up_index + i;
     auto i2 = i == 4 ? up_index : i1 + 1;
     elements->push_back(0);
@@ -105,7 +106,8 @@ void icosahedron::build_minimun_mesh()
   }
   
   // 10 triangles on center
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 5; ++i)
+  {
     {
       auto i0 = up_index + i;
       auto i2 = i == 4 ? up_index : i0 + 1;
@@ -125,7 +127,8 @@ void icosahedron::build_minimun_mesh()
   }
 
   // 5 triangles on bottom
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 5; ++i)
+  {
     auto i1 = down_index + i;
     auto i2 = i == 4 ? down_index : i1 + 1;
     elements->push_back(south_pole_index);
@@ -136,7 +139,8 @@ void icosahedron::build_minimun_mesh()
   for(auto& item : vertices)
     item *= m_radius;
   
-  for (int i = 0; i < m_subdivisions; ++i) {
+  for (int i = 0; i < m_subdivisions; ++i)
+  {
     auto old_size = vertices.size();
     geometry_util::subdivide(elements->get_vector(), vertices.get_vector());
     std::for_each(vertices.begin() + old_size, vertices.end(), 
@@ -171,7 +175,8 @@ void icosahedron::build_paper_unwrapper_mesh()
   GLuint south_pole_index = down_index + 6;
 
   // north, south, pole
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 5; ++i)
+  {
     vertices[i] = vec3(0, 0, 1);
     vertices[south_pole_index + i] = vec3(0, 0, -1);
   }
@@ -191,7 +196,8 @@ void icosahedron::build_paper_unwrapper_mesh()
   elements->reserve(60);
 
   // 5 triangles on top
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 5; ++i)
+  {
     auto i1 = up_index + i;
     auto i2 = i1 + 1;
     elements->push_back(i);
@@ -200,7 +206,8 @@ void icosahedron::build_paper_unwrapper_mesh()
   }
   
   // 10 triangles on center
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 5; ++i)
+  {
     {
       auto i0 = up_index + i;
       auto i2 = i0 + 1;
@@ -220,7 +227,8 @@ void icosahedron::build_paper_unwrapper_mesh()
   }
 
   // 5 triangles on bottom
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 5; ++i)
+  {
     auto i1 = down_index + i;
     auto i2 = i1 + 1;
     elements->push_back(south_pole_index + i);
@@ -250,7 +258,8 @@ void icosahedron::build_paper_unwrapper_mesh()
   for(auto& item : vertices)
     item *= m_radius;
 
-  for (int i = 0; i < m_subdivisions; ++i) {
+  for (int i = 0; i < m_subdivisions; ++i)
+  {
     GLuint old_size = vertices.num_elements();
     geometry_util::subdivide(elements->get_vector(), vertices.get_vector(),
         include_texcoord() ? &attrib_vec2_array(2)->get_vector() : nullptr);

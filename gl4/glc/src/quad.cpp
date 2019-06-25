@@ -3,7 +3,8 @@
 #include "common.h"
 #include "common_program.h"
 
-namespace zxd {
+namespace zxd
+{
 
 namespace
 {
@@ -27,12 +28,14 @@ void draw_quad(GLuint tex, GLuint tui/* = 0*/)
   glBindTexture(GL_TEXTURE_2D, tex);
   static quad q;
   static quad_program prg;
-  if (q.vao() == -1) {
+  if (q.vao() == -1)
+  {
     q.include_texcoord(true);
     q.build_mesh();
   }
 
-  if (prg.object == -1) {
+  if (prg.object == -1)
+  {
     prg.init();
   }
 
@@ -77,7 +80,8 @@ void quad::setup(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1)
 }
 
 //--------------------------------------------------------------------
-void quad::build_vertex() {
+void quad::build_vertex()
+{
   vec3_array& vertices = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&vertices));
   vertices.reserve(4);
@@ -92,7 +96,8 @@ void quad::build_vertex() {
 }
 
 //--------------------------------------------------------------------
-void quad::build_normal() {
+void quad::build_normal()
+{
   vec3_array& normals = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&normals));
   normals.reserve(4);
@@ -104,7 +109,8 @@ void quad::build_normal() {
 }
 
 //--------------------------------------------------------------------
-void quad::build_texcoord() {
+void quad::build_texcoord()
+{
   vec2_array& texcoords = *(new vec2_array());
   attrib_array(num_arrays(), array_ptr(&texcoords));
   texcoords.reserve(4);
@@ -116,7 +122,8 @@ void quad::build_texcoord() {
 }
 
 //--------------------------------------------------------------------
-void quad::build_tangent() {
+void quad::build_tangent()
+{
   vec3_array& tangents = *(new vec3_array());
   attrib_array(num_arrays(), array_ptr(&tangents));
   tangents.reserve(4);

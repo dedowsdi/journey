@@ -11,9 +11,11 @@
 #include "program.h"
 #include "bitmap_text.h"
 
-namespace zxd {
+namespace zxd
+{
 
-struct freetype_text_program : public zxd::program {
+struct freetype_text_program : public zxd::program
+  {
   bool legacy = false;
 
   GLint ul_text_color;
@@ -21,29 +23,35 @@ struct freetype_text_program : public zxd::program {
   GLint ul_mvp_mat;
 
   mat4 mvp_mat;
-  freetype_text_program() {
+  freetype_text_program()
+  {
   }
-  void reshape(GLuint wnd_width, GLuint wnd_height) {
+  void reshape(GLuint wnd_width, GLuint wnd_height)
+  {
     mvp_mat = glm::ortho(
       0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
   }
-  void update_uniforms(const glm::vec4& text_color) {
+  void update_uniforms(const glm::vec4& text_color)
+  {
     glUniformMatrix4fv(
       ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform4fv(ul_text_color, 1, value_ptr(text_color));
     glUniform1i(ul_font_map, 0);
   }
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     std::string shader_dir = legacy ? "shader2/" : "shader4/";
     attach(GL_VERTEX_SHADER, shader_dir + "freetype_text.vs.glsl");
     attach(GL_FRAGMENT_SHADER, shader_dir + "freetype_text.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_mvp_mat, "mvp_mat");
     uniform_location(&ul_text_color, "text_color");
     uniform_location(&ul_font_map, "font_map");
   }
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
   }
 };
@@ -63,9 +71,11 @@ private:
 };
 
 // only works with grayscale bitmap
-class freetype_text {
+class freetype_text
+{
 public:
-  struct Glyph {
+  struct Glyph
+  {
     GLfloat x_min;  // the same as bearying X
     GLfloat y_min;  // bearyingY - height
     GLfloat x_max;  // x_min + width
@@ -102,7 +112,8 @@ public:
   void clear();
 
   // must be called at least once
-  void reshape(GLuint wnd_width, GLuint wnd_height) {
+  void reshape(GLuint wnd_width, GLuint wnd_height)
+  {
     m_program->reshape(wnd_width, wnd_height);
   }
 

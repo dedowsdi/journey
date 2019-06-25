@@ -12,7 +12,8 @@ void lissajous::build_vertex()
   vertices->reserve(m_slices + 1);
 
   GLfloat step_angle = period() / m_slices;
-  for (int i = 0; i <= m_slices; ++i) {
+  for (int i = 0; i <= m_slices; ++i)
+  {
     vertices->push_back(get_at_angle(step_angle * i));
   }
 

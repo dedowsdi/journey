@@ -7,13 +7,15 @@
 #include "array.h"
 #include "primitive_set.h"
 
-namespace zxd {
+namespace zxd
+{
 
 class array;
 typedef std::shared_ptr<array> array_ptr;
 typedef std::vector<array_ptr> array_vector;
 
-class geometry_base {
+class geometry_base
+{
 protected:
   GLuint m_vao = -1;
   array_vector m_attributes;

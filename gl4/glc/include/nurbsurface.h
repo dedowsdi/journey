@@ -2,8 +2,10 @@
 #define GL_GLC_NURBSURFACE_H
 #include "geometry.h"
 
-namespace zxd {
-class nurb_surface : public geometry_base {
+namespace zxd
+{
+class nurb_surface : public geometry_base
+  {
 protected:
   GLfloat m_ubegin;
   GLfloat m_uend;
@@ -91,7 +93,8 @@ public:
 
   GLuint up() { return udegree(); }
   GLuint vp() { return vdegree(); }
-  GLuint uorder() {
+  GLuint uorder()
+  {
     return m_ctrl_points.empty() ? 0 : m_ctrl_points[0].size();
   }
   GLuint vorder() { return m_ctrl_points.size(); }

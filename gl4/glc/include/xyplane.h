@@ -4,9 +4,11 @@
 #include "geometry.h"
 #include "glm.h"
 
-namespace zxd {
+namespace zxd
+{
 
-class xyplane : public geometry_base {
+class xyplane : public geometry_base
+  {
 protected:
   GLuint m_slice;
   GLfloat m_width;

@@ -4,7 +4,8 @@
 
 #include <vector>
 
-namespace zxd {
+namespace zxd
+{
 
 /** mixin_vector is a base class that allows inheritance to be used to easily
  *  emulate derivation from std::vector but without introducing undefined
@@ -13,7 +14,8 @@ namespace zxd {
  *  @author Neil Groves
  */
 template <class ValueT>
-class mixin_vector {
+class mixin_vector
+{
   typedef typename std::vector<ValueT> vector_type;
 
 public:
@@ -43,12 +45,14 @@ public:
 
   mixin_vector(const mixin_vector& other) : _impl(other._impl) {}
 
-  mixin_vector& operator=(const vector_type& other) {
+  mixin_vector& operator=(const vector_type& other)
+  {
     _impl = other;
     return *this;
   }
 
-  mixin_vector& operator=(const mixin_vector& other) {
+  mixin_vector& operator=(const mixin_vector& other)
+  {
     _impl = other._impl;
     return *this;
   }
@@ -58,7 +62,8 @@ public:
   vector_type& get_vector(){return _impl;}
 
   void clear() { _impl.clear(); }
-  void resize(size_type new_size, const value_type& fill_value = value_type()) {
+  void resize(size_type new_size, const value_type& fill_value = value_type())
+  {
     _impl.resize(new_size, fill_value);
   }
   void reserve(size_type new_capacity) { _impl.reserve(new_capacity); }
@@ -88,11 +93,13 @@ public:
   const_reference at(size_type index) const { return _impl.at(index); }
   reference at(size_type index) { return _impl.at(index); }
 
-  void assign(size_type count, const value_type& value) {
+  void assign(size_type count, const value_type& value)
+  {
     _impl.assign(count, value);
   }
   template <class Iter>
-  void assign(Iter first, Iter last) {
+  void assign(Iter first, Iter last)
+  {
     _impl.assign(first, last);
   }
 
@@ -112,20 +119,24 @@ public:
   }
 
   iterator erase(iterator where) { return _impl.erase(where); }
-  iterator erase(iterator first, iterator last) {
+  iterator erase(iterator first, iterator last)
+  {
     return _impl.erase(first, last);
   }
 
-  iterator insert(iterator where, const value_type& value) {
+  iterator insert(iterator where, const value_type& value)
+  {
     return _impl.insert(where, value);
   }
 
   template <class InputIterator>
-  void insert(iterator where, InputIterator first, InputIterator last) {
+  void insert(iterator where, InputIterator first, InputIterator last)
+  {
     _impl.insert(where, first, last);
   }
 
-  void insert(iterator where, size_type count, const value_type& value) {
+  void insert(iterator where, size_type count, const value_type& value)
+  {
     _impl.insert(where, count, value);
   }
 
@@ -138,80 +149,98 @@ public:
   const vector_type& asVector() const { return _impl; }
 
   friend inline bool operator==(
-    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left._impl == right._impl;
   }
   friend inline bool operator==(
-    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right)
+  {
     return left._impl == right;
   }
   friend inline bool operator==(
-    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left == right._impl;
   }
 
   friend inline bool operator!=(
-    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left._impl != right._impl;
   }
   friend inline bool operator!=(
-    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right)
+  {
     return left._impl != right;
   }
   friend inline bool operator!=(
-    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left != right._impl;
   }
 
   friend inline bool operator<(
-    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left._impl < right._impl;
   }
   friend inline bool operator<(
-    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right)
+  {
     return left._impl < right;
   }
   friend inline bool operator<(
-    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left < right._impl;
   }
 
   friend inline bool operator>(
-    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left._impl > right._impl;
   }
   friend inline bool operator>(
-    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right)
+  {
     return left._impl > right;
   }
   friend inline bool operator>(
-    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left > right._impl;
   }
 
   friend inline bool operator<=(
-    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left._impl <= right._impl;
   }
   friend inline bool operator<=(
-    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right)
+  {
     return left._impl <= right;
   }
   friend inline bool operator<=(
-    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left <= right._impl;
   }
 
   friend inline bool operator>=(
-    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left._impl >= right._impl;
   }
   friend inline bool operator>=(
-    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right) {
+    const mixin_vector<ValueT>& left, const std::vector<ValueT>& right)
+  {
     return left._impl >= right;
   }
   friend inline bool operator>=(
-    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right) {
+    const std::vector<ValueT>& left, const mixin_vector<ValueT>& right)
+  {
     return left >= right._impl;
   }
 
@@ -220,17 +249,20 @@ private:
 };
 
 template <class ValueT>
-inline void swap(mixin_vector<ValueT>& left, mixin_vector<ValueT>& right) {
+inline void swap(mixin_vector<ValueT>& left, mixin_vector<ValueT>& right)
+{
   std::swap(left.asVector(), right.asVector());
 }
 
 template <class ValueT>
-inline void swap(mixin_vector<ValueT>& left, std::vector<ValueT>& right) {
+inline void swap(mixin_vector<ValueT>& left, std::vector<ValueT>& right)
+{
   std::swap(left.asVector(), right);
 }
 
 template <class ValueT>
-inline void swap(std::vector<ValueT>& left, mixin_vector<ValueT>& right) {
+inline void swap(std::vector<ValueT>& left, mixin_vector<ValueT>& right)
+{
   std::swap(left, right.asVector());
 }
 

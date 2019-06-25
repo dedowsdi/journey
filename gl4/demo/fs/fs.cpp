@@ -11,17 +11,13 @@
 
 namespace bfs = boost::filesystem;
 
-void thread_function()
+namespace zxd
 {
-  std::cout <<"test thread function" << std::endl;
-}
-
-
-namespace zxd {
 
 std::string fragment_shader;
 
-struct fs_program : public program{
+struct fs_program : public program
+  {
 
   GLint ul_resolution;
   GLint ul_time;
@@ -29,26 +25,23 @@ struct fs_program : public program{
 
   fs_program() {}
 
-  void attach_shaders(){
+  void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/plot.vs.glsl");
     attach(GL_FRAGMENT_SHADER, fragment_shader);
   }
 
-  void update_uniforms(GLuint tex_index = 0){
-  }
-
-
-  virtual void bind_uniform_locations(){
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_resolution, "resolution");
     uniform_location(&ul_time, "time");
     uniform_location(&ul_mouse, "mouse");
   }
 
-  virtual void bind_attrib_locations(){
-  }
 } prg;
 
-class fs : public app {
+class fs : public app
+{
 protected:
   bitmap_text m_text;
   GLfloat m_time;
@@ -60,12 +53,14 @@ protected:
 
 public:
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "fs";
     m_info.samples = 16;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -83,7 +78,8 @@ public:
     m_display_uniform = GL_TRUE;
   }
 
-  virtual void update() {
+  virtual void update()
+  {
 
     if(m_update_shader)
     {
@@ -97,7 +93,8 @@ public:
     m_time += m_delta_time;
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -124,7 +121,8 @@ public:
 
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
@@ -133,9 +131,12 @@ public:
   void update_shader(GLboolean v){ m_update_shader = v; }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -177,11 +178,12 @@ public:
 
   void operator() ()
   {
-    std::chrono::milliseconds interval(50);
+    std::chrono::milliseconds interval(20);
     while(true & !m_app->is_shutdown())
     {
       std::this_thread::sleep_for(interval);
-      try {
+      try
+      {
         // throws if file is being written?
         auto t = bfs::last_write_time(fragment_shader);
         if(t != m_last_w_time)
@@ -190,7 +192,8 @@ public:
           std::cout << "shader updated to " << std::ctime(&m_last_w_time) << std::endl;
           m_app->update_shader(GL_TRUE);
         }
-      }catch(std::exception& e) {
+      }catch(std::exception& e)
+      {
         std::cout << e.what() << std::endl;
       }
     }
@@ -200,7 +203,8 @@ public:
 }
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
   if(argc < 2)
   {

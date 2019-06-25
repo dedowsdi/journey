@@ -44,7 +44,8 @@ public:
   GLfloat step = 0.5f;
   float weights[32];
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
     string_vector sv;
     sv.push_back("#version 430 core\n");
@@ -52,7 +53,8 @@ public:
     attach(GL_FRAGMENT_SHADER, sv, "shader4/gaussian_blur.fs.glsl");
   }
 
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     quad_program::bind_uniform_locations();
     uniform_location(&ul_horizontal, "horizontal");
     uniform_location(&ul_weights, "weights");
@@ -64,11 +66,13 @@ public:
 
     // blend between 0 and 1 2 3 4 ... -1 -2 -3 -4 ....
     GLfloat total_weights = 0;
-    for (int i = 0; i < radius+1; ++i) {
+    for (int i = 0; i < radius+1; ++i)
+    {
       weights[i] = zxd::gaussian_weight(step * i, mean, deviation);
       total_weights += weights[i] * (i == 0 ? 1 : 2);
     }
-    for (int i = 0; i < radius+1; ++i) {
+    for (int i = 0; i < radius+1; ++i)
+    {
       weights[i] /= total_weights;
       //std::cout << weights[i] << std::endl;
     }
@@ -78,23 +82,27 @@ public:
   }
 };
 
-struct bloom_program : public program {
+struct bloom_program : public program
+{
   GLint ul_exposure;
   GLint ul_hdr_map;
   GLint ul_brightness_map;
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/bloom.fs.glsl");
   }
 
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_exposure, "exposure");
     uniform_location(&ul_hdr_map, "hdr_map");
     uniform_location(&ul_brightness_map, "brightness_map");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "texcoord");
   }
@@ -138,7 +146,8 @@ void gaussian_blur_filter::filter(GLuint input_map, pingpong& pp, GLint times)
 {
   gaussian_blur_program* prg = static_cast<gaussian_blur_program*>(get_program().get());
   prg->use();
-  for (int i = 0; i < times*2; ++i) {
+  for (int i = 0; i < times*2; ++i)
+  {
     pp.swap();
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pp.pong(), 0);

@@ -47,7 +47,8 @@ void super_shape_3d::build_sphere_vertex()
   // generate s along latitude line, t along longitude line
   GLfloat s_step = 1.0 / m_slice;
   GLfloat t_step = 1.0 / m_stack;
-  for (int i = 0; i <= m_stack; ++i) {
+  for (int i = 0; i <= m_stack; ++i)
+  {
     GLfloat phi = m_phi_start + phi_step * i; // latitude
     if(abs(phi - m_phi_start - f2pi) <= 0.00001)
       phi = m_phi_start;
@@ -59,7 +60,8 @@ void super_shape_3d::build_sphere_vertex()
     GLfloat r2 = supershape(phi);
     GLfloat z = m_radius * r2 * sin_phi;
 
-    for (int j = 0; j <= m_slice; ++j) {
+    for (int j = 0; j <= m_slice; ++j)
+    {
 
       if(m_include_texcoord)
       {
@@ -89,11 +91,13 @@ void super_shape_3d::build_sphere_vertex()
   m_primitive_sets.clear();
 
   // generate triangle strip phi by phi
-  for (int i = 0; i < m_stack; ++i) {
+  for (int i = 0; i < m_stack; ++i)
+  {
     int stack_start0 = i * circle_size;
     int stack_start1 = stack_start0 + circle_size;
 
-    for (int j = 0; j <= m_slice; ++j) {
+    for (int j = 0; j <= m_slice; ++j)
+    {
       vertices->push_back(points[stack_start1 + j]);
       vertices->push_back(points[stack_start0 + j]);
 
@@ -140,7 +144,8 @@ void super_shape_3d::build_torus_vertex()
   // http://paulbourke.net/geometry/supershape/#torus exchange phi and theta
   GLfloat s_step = 1.0 / side();
   GLfloat t_step = 1.0 / ring();
-  for (int i = 0; i <= ring(); ++i) {
+  for (int i = 0; i <= ring(); ++i)
+  {
     GLfloat phi = m_phi_start + phi_step * i;
     if(abs(phi - m_phi_start - f2pi) <= 0.00001)
       phi = m_phi_start;
@@ -150,7 +155,8 @@ void super_shape_3d::build_torus_vertex()
     GLfloat sin_phi = sin(phi);
     GLfloat r2 = supershape(phi);
 
-    for (int j = 0; j <= side(); ++j) {
+    for (int j = 0; j <= side(); ++j)
+    {
 
       if(m_include_texcoord)
       {
@@ -177,12 +183,14 @@ void super_shape_3d::build_torus_vertex()
   m_primitive_sets.clear();
 
   // generate triangle strip phi by phi
-  for (int i = 0; i < ring(); ++i) {
+  for (int i = 0; i < ring(); ++i)
+  {
     int ring_start0 = circle_size * i;
     int ring_start1 = ring_start0 + circle_size;
     std::cout << ring_start0 << " : " << ring_start1 << std::endl;
 
-    for (int j = 0; j <= side(); ++j) {
+    for (int j = 0; j <= side(); ++j)
+    {
       // theata is along -y, so order must be changed
       vertices->push_back(points[ring_start0 + j]);
       vertices->push_back(points[ring_start1 + j]);

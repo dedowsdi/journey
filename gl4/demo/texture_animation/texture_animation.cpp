@@ -9,7 +9,8 @@
 
 #define ANIM_COOLDOWN (1/24.0)
 
-namespace zxd {
+namespace zxd
+{
 
 quad quad0;
 
@@ -49,21 +50,24 @@ protected:
 
 } prg;
 
-class texture_animation_app : public app {
+class texture_animation_app : public app
+{
 protected:
   bitmap_text m_text;
   GLuint m_texture;
   mat4 m_tex_mat;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "texture_animation_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -88,7 +92,8 @@ public:
 
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     static GLfloat anim_cooldown = 0;
     static GLint tex_index = -1;
 
@@ -106,7 +111,8 @@ public:
 
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     glClear(GL_COLOR_BUFFER_BIT);
     prg.use();
@@ -127,15 +133,19 @@ public:
     m_text.print("", 10, HEIGHT - 20);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -148,7 +158,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::texture_animation_app app;
   app.run();
 }

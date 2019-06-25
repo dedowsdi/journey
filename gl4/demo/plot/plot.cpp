@@ -5,7 +5,8 @@
 #include "texutil.h"
 #include <sstream>
 
-namespace zxd {
+namespace zxd
+{
 
 struct plot_program : public program
 {
@@ -18,16 +19,19 @@ struct plot_program : public program
 
   plot_program() {}
 
-  void attach_shaders(){
+  void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/plot.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/plot.fs.glsl");
   }
 
-  void update_uniforms(GLuint tex_index = 0){
+  void update_uniforms(GLuint tex_index = 0)
+  {
   }
 
 
-  virtual void bind_uniform_locations(){
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_resolution, "resolution");
     uniform_location(&ul_mode, "mode");
     uniform_location(&ul_exponent, "exponent");
@@ -36,11 +40,13 @@ struct plot_program : public program
     uniform_location(&ul_stretch, "stretch");
   }
 
-  virtual void bind_attrib_locations(){
+  virtual void bind_attrib_locations()
+  {
   }
 } prg;
 
-class plot : public app {
+class plot : public app
+{
 protected:
   bitmap_text m_text;
   GLuint m_vao;
@@ -51,11 +57,13 @@ protected:
   vec2 m_stretch;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "sine wave";
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -71,7 +79,8 @@ public:
     m_stretch = vec2(1);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
   }
 
   std::string getModeString()
@@ -101,7 +110,8 @@ public:
     }
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
     prg.use();
     glUniform2f(prg.ul_resolution, wnd_width(), wnd_height());
@@ -128,15 +138,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -177,7 +191,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::plot app;
   app.run();
 }

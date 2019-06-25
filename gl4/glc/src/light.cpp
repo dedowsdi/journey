@@ -2,7 +2,8 @@
 
 #include "common.h"
 
-namespace zxd {
+namespace zxd
+{
 
 //--------------------------------------------------------------------
 light_source::light_source()
@@ -20,7 +21,8 @@ light_source::light_source()
 
 //--------------------------------------------------------------------
 void light_source::bind_uniform_locations(
-  GLuint program, const std::string& name) {
+  GLuint program, const std::string& name)
+{
   uniform_location(&ul_ambient, program, name + ".ambient");
   uniform_location(&ul_diffuse, program, name + ".diffuse");
   uniform_location(&ul_specular, program, name + ".specular");
@@ -38,7 +40,8 @@ void light_source::bind_uniform_locations(
 }
 
 //--------------------------------------------------------------------
-void light_source::update_uniforms(const glm::mat4& transform) {
+void light_source::update_uniforms(const glm::mat4& transform)
+{
   glm::vec4 position1 = transform * position; // works for both directional and point
   glm::vec3 spot_direction1 = glm::mat3(transform) * spot_direction;
 
@@ -61,11 +64,13 @@ void light_source::update_uniforms(const glm::mat4& transform) {
 }
 
 //--------------------------------------------------------------------
-GLfloat light_source::radius(GLfloat epsilon) {
+GLfloat light_source::radius(GLfloat epsilon)
+{
   if (position[3] == 0) return -1;
 
   if (constant_attenuation == 0 && linear_attenuation == 0 &&
-      quadratic_attenuation == 0) {
+      quadratic_attenuation == 0)
+  {
     return 0;
   }
 
@@ -80,7 +85,8 @@ GLfloat light_source::radius(GLfloat epsilon) {
 
 #ifndef GL_VERSION_3_0
 //--------------------------------------------------------------------
-void light_source::pipeline(GLuint index, const glm::mat4& v_mat) {
+void light_source::pipeline(GLuint index, const glm::mat4& v_mat)
+{
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadMatrixf(value_ptr(v_mat));
@@ -106,20 +112,23 @@ void light_source::pipeline(GLuint index, const glm::mat4& v_mat) {
 
 //--------------------------------------------------------------------
 void light_model::bind_uniform_locations(
-  GLint program, const std::string& name) {
+  GLint program, const std::string& name)
+{
   uniform_location(&ul_ambient, program, name + ".ambient");
   uniform_location(&ul_local_viewer, program, name + ".local_viewer");
 }
 
 //--------------------------------------------------------------------
-void light_model::update_uniforms() {
+void light_model::update_uniforms()
+{
   if (ul_ambient != -1) glUniform4fv(ul_ambient, 1, value_ptr(ambient));
   if (ul_local_viewer != -1) glUniform1i(ul_local_viewer, local_viewer);
 }
 
 #ifndef GL_VERSION_3_0
 //--------------------------------------------------------------------
-void light_model::pipeline() {
+void light_model::pipeline()
+{
   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, value_ptr(ambient));
   glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, local_viewer);
 }
@@ -134,7 +143,8 @@ material::material()
       shininess(0) {}
 
 //--------------------------------------------------------------------
-void material::bind_uniform_locations(GLuint program, const std::string& name) {
+void material::bind_uniform_locations(GLuint program, const std::string& name)
+{
   uniform_location(&ul_emission, program, name + ".emission");
   uniform_location(&ul_ambient, program, name + ".ambient");
   uniform_location(&ul_diffuse, program, name + ".diffuse");
@@ -143,7 +153,8 @@ void material::bind_uniform_locations(GLuint program, const std::string& name) {
 }
 
 //--------------------------------------------------------------------
-void material::update_uniforms() {
+void material::update_uniforms()
+{
   if (ul_emission != -1) glUniform4fv(ul_emission, 1, value_ptr(emission));
   if (ul_ambient != -1) glUniform4fv(ul_ambient, 1, value_ptr(ambient));
   if (ul_diffuse != -1) glUniform4fv(ul_diffuse, 1, value_ptr(diffuse));
@@ -153,7 +164,8 @@ void material::update_uniforms() {
 
 #ifndef GL_VERSION_3_0
 //--------------------------------------------------------------------
-void material::pipeline() {
+void material::pipeline()
+{
   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, value_ptr(emission));
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, value_ptr(ambient));
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, value_ptr(diffuse));

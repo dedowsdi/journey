@@ -9,12 +9,14 @@
 
 using namespace glm;
 
-namespace zxd {
+namespace zxd
+{
 
   glm::mat4 v_mat;
   glm::mat4 p_mat;
 
-struct particle_program : public zxd::program {
+struct particle_program : public zxd::program
+  {
   GLint ul_diffuse_map;
   GLint ul_camera_pos;
   GLint ul_camera_up;
@@ -22,18 +24,21 @@ struct particle_program : public zxd::program {
   vec3 camera_pos;
   vec3 camera_up;
 
-  virtual void attach_shaders() {
+  virtual void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/particle.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/particle.fs.glsl");
   }
-  virtual void bind_uniform_locations() {
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_vp_mat, "vp_mat");
     uniform_location(&ul_diffuse_map, "diffuse_map");
     uniform_location(&ul_camera_pos, "camera_pos");
     uniform_location(&ul_camera_up, "camera_up");
   }
 
-  virtual void bind_attrib_locations() {
+  virtual void bind_attrib_locations()
+  {
     bind_attrib_location(0, "vertex");
     bind_attrib_location(1, "xyzs");
     bind_attrib_location(2, "color");
@@ -55,7 +60,8 @@ GLuint vao;
 GLuint xyzs_buffer;
 GLuint color_buffer;
 
-struct particle {
+struct particle
+{
   vec3 pos;
   vec3 velocity;
   vec3 accleleration;
@@ -66,7 +72,8 @@ struct particle {
 };
 
 // clang-format off
-glm::vec4 vertices[] = { 
+glm::vec4 vertices[] =
+{ 
   vec4(-0.5, 0.5, 0, 1), // x y s t
   vec4(-0.5, -0.5, 0, 0),
   vec4(0.5, 0.5, 1, 1),
@@ -88,7 +95,8 @@ GLuint tex;
 
 particle_program prg;
 
-class particle_app : public app {
+class particle_app : public app
+{
 protected:
   bitmap_text m_text;
 
@@ -96,11 +104,13 @@ public:
   particle_app() {}
 
 protected:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "hello world";
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -119,10 +129,12 @@ protected:
       0, GL_BGR, GL_UNSIGNED_BYTE, image.accessPixels());
     // init particles
     particles.reserve(max_particles);
-    for (int i = 0; i < max_particles; ++i) {
+    for (int i = 0; i < max_particles; ++i)
+    {
       particles.push_back(particle());
     }
-    for (int i = 0; i < max_particles; ++i) {
+    for (int i = 0; i < max_particles; ++i)
+    {
       dead_particles.push_back(&particles[i]);
     }
 
@@ -170,7 +182,8 @@ protected:
     update();
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mat4 vp_mat = p_mat * v_mat;
@@ -199,7 +212,8 @@ protected:
     glDisable(GL_BLEND);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     static GLfloat t0 = glfwGetTime();
     static GLfloat t = 0;  // emitter timer
 
@@ -218,7 +232,8 @@ protected:
       static_cast<GLuint>(emits_per_second * 0.16));
 
     // generate new particles
-    for (int i = 0; i < num_new_particles; ++i) {
+    for (int i = 0; i < num_new_particles; ++i)
+    {
       if (dead_particles.empty()) break;
 
       particle &p = *dead_particles.front();
@@ -239,10 +254,12 @@ protected:
 
     // animating particles
     GLuint index = 0;
-    for (auto iter = alive_particles.begin(); iter != alive_particles.end();) {
+    for (auto iter = alive_particles.begin(); iter != alive_particles.end();)
+    {
       particle &p = **iter;
       p.life -= dt;
-      if (p.life < 0) {
+      if (p.life < 0)
+      {
         auto it = iter;
         ++it;
         alive_particles.erase(iter);
@@ -258,13 +275,15 @@ protected:
     }
 
     // particles are translucent, they need to be sorted by camera distance
-    alive_particles.sort([&](particle *p0, particle *p1) -> bool {
+    alive_particles.sort([&](particle *p0, particle *p1) -> bool
+        {
       return p0->camera_distance < p1->camera_distance;
     });
 
     index = 0;
     for (auto iter = alive_particles.begin(); iter != alive_particles.end();
-         ++iter) {
+         ++iter)
+    {
       particle &p = **iter;
       positions[index] = vec4(p.pos, p.size);
       colors[index] = p.color;
@@ -285,24 +304,31 @@ protected:
     t0 = t1;
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(w, h);
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
         case GLFW_KEY_Q:
-          if (mods & GLFW_KEY_Q) {
-            if (emits_per_second > 5) {
+          if (mods & GLFW_KEY_Q)
+          {
+            if (emits_per_second > 5)
+            {
               emits_per_second -= 5;
             }
-          } else {
+          } else
+          {
             emits_per_second += 5;
           }
 
@@ -315,27 +341,33 @@ protected:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods) {
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     app::glfw_mouse_button(wnd, button, action, mods);
   }
 
-  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
+  virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+  {
     app::glfw_mouse_move(wnd, x, y);
   }
 
-  virtual void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+  virtual void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
   }
-  virtual void glfw_char(GLFWwindow *wnd, unsigned int codepoint) {
+  virtual void glfw_char(GLFWwindow *wnd, unsigned int codepoint)
+  {
     app::glfw_char(wnd, codepoint);
   }
-  virtual void glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {
+  virtual void glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods)
+  {
     app::glfw_charmod(wnd, codepoint, mods);
   }
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::particle_app app;
   app.run();
 }
