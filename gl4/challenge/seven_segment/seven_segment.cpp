@@ -7,7 +7,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 capsule2d capsule;
 lightless_program prg;
@@ -62,7 +63,8 @@ public:
 
   void draw(GLubyte mask)
   {
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 7; ++i)
+    {
       vec4& color =  mask & (1<<i) ? enable_color : disable_color;
       glUniform4fv(prg.ul_color, 1, glm::value_ptr(color));
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * m_transforms[i]));
@@ -74,18 +76,21 @@ public:
 
 seven_segment classic;
 
-class seven_segment_app : public app {
+class seven_segment_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "seven_segment_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -102,12 +107,14 @@ public:
     classic.build_classic_display(capsule.width(), capsule.radius());
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     if(m_frame_number % 30 == 0)
       mask_index = ++mask_index % masks.size();
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -121,15 +128,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -142,7 +153,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::seven_segment_app app;
   app.run();
 }

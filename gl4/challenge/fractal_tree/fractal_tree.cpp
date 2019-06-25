@@ -8,7 +8,8 @@
 
 #define BUFFER_OFFSET(x) ((GLubyte*)NULL + (x))
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -176,20 +177,23 @@ public:
 };
 
 
-class fractal_tree_app : public app {
+class fractal_tree_app : public app
+{
 protected:
   bitmap_text m_text;
   fractal_tree m_tree;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "fractal_tree_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
     m_info.samples = 4;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -222,7 +226,8 @@ public:
 
   virtual void update() {}
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -246,15 +251,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -267,7 +276,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::fractal_tree_app app;
   app.run();
 }

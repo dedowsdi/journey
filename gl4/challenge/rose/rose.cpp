@@ -9,7 +9,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -23,13 +24,15 @@ kcip kci_end;
 kcip kci_line_width;
 kcip kci_offset;
 
-class app_name : public app {
+class app_name : public app
+{
 protected:
   bitmap_text m_text;
   rose m_rose;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
@@ -37,7 +40,8 @@ public:
     m_info.samples = 4;
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -76,7 +80,8 @@ public:
     //const auto& vertices = m_rose.vertices();
     //vec2 min_ext = vec2(-500);
     //vec2 max_ext = vec2(500);
-    //for (int i = 0; i < vertices.size(); ++i) {
+    //for (int i = 0; i < vertices.size(); ++i)
+    //{
       //const vec2& v = vertices[i];
       //if(min_ext.x > v.x) min_ext.x = v.x;
       //if(min_ext.y > v.y) min_ext.y = v.y;
@@ -91,7 +96,8 @@ public:
 
   virtual void update() {}
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -113,15 +119,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-      GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+      GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -134,7 +144,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::app_name app;
   app.run();
 }

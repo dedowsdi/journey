@@ -11,7 +11,8 @@
 #define MAX_WIDTH 1280
 #define MAX_HEIGHT 640
 
-namespace zxd {
+namespace zxd
+{
 
 std::string file_path;
 fipImage img;
@@ -26,12 +27,14 @@ quad_program prg;
 GLint sort_type = 0;
 std::string sort_type_str[] = {"r","g","b","hue","saturation","brightness"};
 
-class app_name : public app {
+class app_name : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     GLfloat img_aspect = static_cast<GLfloat>(img.getWidth()) / img.getHeight();
@@ -61,7 +64,8 @@ public:
       pixels[i] = rgb_pixels[indexes[i]];
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -148,7 +152,8 @@ public:
 
   virtual void update() {}
 
-  virtual void display() {
+  virtual void display()
+  {
 
     prg.use();
     glEnable(GL_SCISSOR_TEST);
@@ -177,15 +182,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-      GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+      GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -203,7 +212,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   if(argc < 2)
   {
     std::cout << "it should be " << argv[0] << " picture";

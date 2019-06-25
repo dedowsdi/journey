@@ -8,7 +8,8 @@
 #define HEIGHT 800
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
-namespace zxd {
+namespace zxd
+{
 
 std::string file_path;
 kcip kci_rows;
@@ -110,7 +111,8 @@ public:
   {
     GLfloat min_difference = 10000000;
     GLint tile_index = -1;
-    for (int i = 0; i < m_tiles.size(); ++i) {
+    for (int i = 0; i < m_tiles.size(); ++i)
+    {
       GLfloat diff = color_difference2(m_tiles[i].color, color);
       //GLfloat diff = color_difference_256_2(m_tiles[i].color, color);
       if(diff < min_difference)
@@ -261,18 +263,21 @@ struct photo
 
 }geometry;
 
-class photo_mosaic_app : public app {
+class photo_mosaic_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "photo_mosaic_app";
     m_info.wnd_width = img.getWidth();
     m_info.wnd_height = img.getHeight();
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     auto kci_callback = std::bind(std::mem_fn(&photo_mosaic_app::update_mosaic), this, std::placeholders::_1);
@@ -300,7 +305,8 @@ public:
 
   virtual void update() {}
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -319,15 +325,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -340,7 +350,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   if(argc < 2)
   {
     std::cout << "it should be " << argv[0] << " picture";

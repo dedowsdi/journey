@@ -20,13 +20,15 @@ void thread_function()
 }
 
 
-namespace zxd {
+namespace zxd
+{
 
 kcip a;
 kcip b;
 kcip n;
 
-struct fs_program : public program{
+struct fs_program : public program
+  {
 
   GLint ul_resolution;
   GLint ul_a;
@@ -35,27 +37,32 @@ struct fs_program : public program{
 
   fs_program() {}
 
-  void attach_shaders(){
+  void attach_shaders()
+  {
     attach(GL_VERTEX_SHADER, "shader4/plot.vs.glsl");
     attach(GL_FRAGMENT_SHADER, "shader4/superellipse.fs.glsl");
   }
 
-  void update_uniforms(GLuint tex_index = 0){
+  void update_uniforms(GLuint tex_index = 0)
+  {
 
   }
 
-  virtual void bind_uniform_locations(){
+  virtual void bind_uniform_locations()
+  {
     uniform_location(&ul_resolution, "resolution");
     uniform_location(&ul_a, "a");
     uniform_location(&ul_b, "b");
     uniform_location(&ul_n, "n");
   }
 
-  virtual void bind_attrib_locations(){
+  virtual void bind_attrib_locations()
+  {
   }
 } prg;
 
-class superellipse_app : public app {
+class superellipse_app : public app
+{
 protected:
   bitmap_text m_text;
   GLfloat m_time;
@@ -66,14 +73,16 @@ protected:
 
 public:
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "superellipse_app";
     m_info.wnd_width = 800;
     m_info.wnd_height = 800;
     m_info.samples = 4;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     m_text.init();
     m_text.reshape(wnd_width(), wnd_height());
@@ -93,7 +102,8 @@ public:
     n = m_control.add_control<GLfloat>(GLFW_KEY_E, 2, -10000, 10000, 0.1);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
 
     if(m_update_shader)
     {
@@ -107,7 +117,8 @@ public:
     m_time += m_delta_time;
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -130,7 +141,8 @@ public:
 
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
@@ -139,9 +151,12 @@ public:
   void update_shader(GLboolean v){ m_update_shader = v; }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -168,7 +183,8 @@ public:
 }
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::superellipse_app app;
   app.run();
   return 0;

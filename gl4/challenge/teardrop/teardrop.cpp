@@ -15,7 +15,8 @@
 #define WIDTH 720
 #define HEIGHT 720
 
-namespace zxd {
+namespace zxd
+{
 
 constexpr GLuint num_particles = 500;
 GLuint triangle_count;
@@ -135,7 +136,8 @@ struct particle_vao
       glGenVertexArrays(2, vaos.pointer());
       glGenBuffers(2, particle_buffer.pointer());
 
-      for (int i = 0; i < 2; ++i) {
+      for (int i = 0; i < 2; ++i)
+      {
         glBindVertexArray(vaos[i]);
 
         glBindBuffer(GL_ARRAY_BUFFER, particle_buffer[i]);
@@ -213,7 +215,8 @@ struct particle_vao
   }
 } particle_drawable;
 
-class teardrop_app : public app {
+class teardrop_app : public app
+{
 private:
   bitmap_text m_text;
   particles m_particles;
@@ -241,7 +244,8 @@ void particle::update()
 
   vec3 point;
 
-  for (int i = 0; i < triangle_count; ++i ) {
+  for (int i = 0; i < triangle_count; ++i )
+  {
     const vec3& v0 = geometry_vertices[i*3 + 0];
     const vec3& v1 = geometry_vertices[i*3 + 1];
     const vec3& v2 = geometry_vertices[i*3 + 2];
@@ -290,7 +294,8 @@ bool particle::intersect(const vec3& origin, const vec3& direction,
   return geometry_test::is_point_in_triangle(point, v0, v1, v2);
 }
 
-void teardrop_app::init_info() {
+void teardrop_app::init_info()
+{
   app::init_info();
   m_info.title = "teardrop_app";
   m_info.wnd_width = WIDTH;
@@ -300,7 +305,8 @@ void teardrop_app::init_info() {
   m_info.samples = 8;
 }
 
-void teardrop_app::create_scene() {
+void teardrop_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   //glEnable(GL_DEPTH_TEST);
 
@@ -386,13 +392,15 @@ void teardrop_app::update()
   if(m_frame_number < 2)
     return;
 
-  for (auto& p : m_particles) {
+  for (auto& p : m_particles)
+  {
     p.update();
   }
   particle_drawable.update(m_particles);
 }
 
-void teardrop_app::display() {
+void teardrop_app::display()
+{
   glClear(GL_COLOR_BUFFER_BIT);
 
   gprg.use();
@@ -440,15 +448,19 @@ void teardrop_app::display() {
   glDisable(GL_BLEND);
 }
 
-void teardrop_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void teardrop_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 }
 
 void teardrop_app::glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -461,7 +473,8 @@ void teardrop_app::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::teardrop_app app;
   app.run();
 }

@@ -7,7 +7,8 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
-namespace zxd {
+namespace zxd
+{
 
 const GLint width = 800;
 const GLint height = 800;
@@ -142,7 +143,8 @@ public:
 
 using Stars = std::vector<Star>;
 
-class text_starfield : public app {
+class text_starfield : public app
+{
 private:
   bitmap_text m_text;
   GLfloat m_font_aspect_ratio;
@@ -162,14 +164,16 @@ public:
     GLFWwindow *wnd, int key, int scancode, int action, int mods) override;
 };
 
-void text_starfield::init_info() {
+void text_starfield::init_info()
+{
   app::init_info();
   m_info.title = "text_starfield";
   m_info.wnd_width = width;
   m_info.wnd_height = height;
 }
 
-void text_starfield::create_scene() {
+void text_starfield::create_scene()
+{
   glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
   ft.init();
@@ -190,13 +194,16 @@ void text_starfield::create_scene() {
   m_stars.resize(num_stars);
 }
 
-void text_starfield::update() {
-  for(auto& item : m_stars) {
+void text_starfield::update()
+{
+  for(auto& item : m_stars)
+  {
     item.update(m_delta_time);
   }
 }
 
-void text_starfield::display() {
+void text_starfield::display()
+{
   glClear(GL_COLOR_BUFFER_BIT);
 
   glEnable(GL_BLEND);
@@ -224,15 +231,19 @@ void text_starfield::display() {
   glDisable(GL_BLEND);
 }
 
-void text_starfield::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void text_starfield::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 }
 
 void text_starfield::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -245,7 +256,8 @@ void text_starfield::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::text_starfield app;
   app.run();
 }

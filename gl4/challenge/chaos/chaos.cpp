@@ -33,7 +33,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -77,7 +78,8 @@ vec4_vector colors;
 vec2 point;
 vec2 draw_point;
 
-class chaos_app : public app {
+class chaos_app : public app
+{
 protected:
   bitmap_text m_text;
 
@@ -100,7 +102,8 @@ private:
   void pick_next();
 };
 
-void chaos_app::init_info() {
+void chaos_app::init_info()
+{
   app::init_info();
   m_info.title = "chaos_app";
   m_info.samples = 8;
@@ -110,7 +113,8 @@ void chaos_app::init_info() {
   m_info.fullscreen = true;
 }
 
-void chaos_app::create_scene() {
+void chaos_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glEnable(GL_LINE_SMOOTH);
   glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -157,7 +161,8 @@ void chaos_app::reset_polygon(const kci* kci)
   selections.resize(edges);
   std::iota(selections.begin(), selections.end(), 0);
   colors.resize(edges);
-  for (auto& color : colors) {
+  for (auto& color : colors)
+  {
     color = vec4(zxd::hsb2rgb(vec3(glm::linearRand(0.0f, 1.0f), 1, 1)), 1);
   }
 
@@ -170,7 +175,8 @@ void chaos_app::reset_polygon(const kci* kci)
     vec2 bak_point = point;
     vec2 max_point(0);
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 1000; ++i)
+    {
       update();
       max_point = max(max_point, glm::abs(get_draw_point(point)));
     }
@@ -207,7 +213,8 @@ void chaos_app::pick_next()
       break;
 
     case 1:
-      do {
+      do
+      {
         idx = glm::linearRand(0, edges-1);
       } while (idx == selections.front());
       break;
@@ -246,13 +253,15 @@ vec2 chaos_app::get_draw_point(const vec2& point)
 }
 
 
-void chaos_app::update() {
+void chaos_app::update()
+{
   pick_next();
   point = glm::mix(point, vertices->at(selections.front()), ratio);
   draw_point = get_draw_point(point);
 }
 
-void chaos_app::display() {
+void chaos_app::display()
+{
   //glClear(GL_COLOR_BUFFER_BIT);
 
   mat4 mvp_mat = p_mat * mat4(1);
@@ -265,7 +274,8 @@ void chaos_app::display() {
 
   if(!stop)
   {
-    for (int i = 0; i < draw_per_frame; ++i) {
+    for (int i = 0; i < draw_per_frame; ++i)
+    {
       //debugger::draw_point(point, mvp_mat);
       //glUniform4fv(prg.ul_color, 1, glm::value_ptr(colors[selections.front()]));
       debugger::draw_point(draw_point, mvp_mat, 1, colors[selections.front()]);
@@ -301,15 +311,19 @@ void chaos_app::display() {
   glDisable(GL_SCISSOR_TEST);
 }
 
-void chaos_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void chaos_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 }
 
 void chaos_app::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -335,7 +349,8 @@ void chaos_app::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::chaos_app app;
   app.run();
 }

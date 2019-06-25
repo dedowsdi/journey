@@ -9,7 +9,8 @@
 #define SPEED 1.2
 #define NUM_ORBITS 4
 
-namespace zxd {
+namespace zxd
+{
 
 blinn_program prg;
 light_vector lights;
@@ -57,7 +58,8 @@ public:
   void update(GLfloat dt)
   {
     m_angle += dt * m_speed;
-    for(auto iter = m_orbits.begin(); iter != m_orbits.end(); ++iter){
+    for(auto iter = m_orbits.begin(); iter != m_orbits.end(); ++iter)
+    {
       iter->update(dt);
     }
   }
@@ -81,7 +83,8 @@ public:
     prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
 
     geometry.draw();
-    for(auto iter = m_orbits.begin(); iter != m_orbits.end(); ++iter){
+    for(auto iter = m_orbits.begin(); iter != m_orbits.end(); ++iter)
+    {
       iter->draw(orbit_mtl, parent_m_mat * m_mat_no_scale());
     }
   }
@@ -111,20 +114,23 @@ public:
   }
 };
 
-class solar_app : public app {
+class solar_app : public app
+{
 protected:
   bitmap_text m_text;
   planet m_planet;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
     m_info.samples = 4;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
     m_text.init();
@@ -180,11 +186,13 @@ public:
 
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     m_planet.update(m_delta_time);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
@@ -200,15 +208,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -221,7 +233,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::solar_app app;
   app.run();
 }

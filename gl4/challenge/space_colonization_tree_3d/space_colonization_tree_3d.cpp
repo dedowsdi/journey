@@ -36,7 +36,8 @@
 #define TRUNK_RADIUS 2.5f
 #define BRANCH_RADIUS 0.35f
 
-namespace zxd {
+namespace zxd
+{
 
 blinn_program prg;
 light_vector lights;
@@ -185,7 +186,8 @@ public:
       {
         branch* ab = 0;
         GLfloat min_d2 = 0;
-        for (int i = start_index; i < m_branches.size(); ++i) {
+        for (int i = start_index; i < m_branches.size(); ++i)
+        {
 
           branch* b = m_branches[i];
           
@@ -232,7 +234,8 @@ public:
 
       // update branch grow start index. swap finished branch(no branch grown
       // from this one) with start branch.
-      for (int i = start_index; i < m_branches.size(); ++i) {
+      for (int i = start_index; i < m_branches.size(); ++i)
+      {
         if(new_branches.find(m_branches[i]) == new_branches.end())
         {
           if(i != start_index)
@@ -266,7 +269,8 @@ public:
       }
 
       // add new attracted branch
-      for(auto iter = new_branches.begin(); iter != new_branches.end(); ++iter){
+      for(auto iter = new_branches.begin(); iter != new_branches.end(); ++iter)
+      {
         vec3 dir = glm::normalize(iter->second);
         vec3 pos = iter->first->pos + m_branch_step * dir;
         m_branches.push_back(new branch(iter->first, pos, dir));
@@ -306,7 +310,8 @@ public:
     m = glm::translate(topCenter) * m * glm::scale(vec3(xyscale, xyscale, 1));
 
     std::for_each(unitCircle.begin(), unitCircle.end(), 
-        [&](const vec4& v)->void {
+        [&](const vec4& v)->void
+        {
           circle.push_back((m * v).xyz());
           //std::cout << circle.back() << std::endl;
         });
@@ -321,7 +326,8 @@ public:
     vertices->reserve(m_branches.size() * NUM_CYLINDER_FACE * 6);
 
     // there will be gaps between branch and branch
-    for (int i = 0; i < m_branches.size(); ++i) {
+    for (int i = 0; i < m_branches.size(); ++i)
+    {
       branch* b = m_branches[i];
       
       if(!b->parent)
@@ -335,7 +341,8 @@ public:
           //glm::smoothstep(0.0, 1.0, static_cast<GLdouble>(i)/m_branches.size()));
       //OSG_NOTICE << xyscale << std::endl;
 
-      for (int i = 0; i < bottom_circle.size() - 1; ++i) {
+      for (int i = 0; i < bottom_circle.size() - 1; ++i)
+      {
         vertices->push_back(bottom_circle[i]);
         vertices->push_back(bottom_circle[i+1]);
         vertices->push_back(top_circle[i+1]);
@@ -381,7 +388,8 @@ public:
   void trunk_radius(GLfloat v){ m_trunk_radius = v; }
 };
 
-class space_colonization_tree_app : public app {
+class space_colonization_tree_app : public app
+{
 protected:
   GLuint m_draw_branch_count = 0;
   GLfloat m_time = 0;
@@ -391,13 +399,15 @@ protected:
   points<vec3> m_points;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "space_colonization_tree_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -429,7 +439,8 @@ public:
     m_tree.branch_step(BRANCH_STEP);
 
     vec3_vector vertices;
-    for (GLuint i = 0; i < NUM_LEAVES; ++i) {
+    for (GLuint i = 0; i < NUM_LEAVES; ++i)
+    {
       vec4 pos = glm::scale(vec3(0.65, 0.65, 1)) *  vec4(glm::ballRand(200.0f), 1);
       pos.z = glm::abs(pos.z) + 100;
       vertices.push_back(pos.xyz());
@@ -442,13 +453,15 @@ public:
     m_points.build_mesh(vertices);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     m_time += m_delta_time;
     m_draw_branch_count = m_tree.num_branches() * m_time / ANIM_TIME;
     m_draw_branch_count = glm::min(m_tree.num_branches(), m_draw_branch_count);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -472,15 +485,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -496,7 +513,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::space_colonization_tree_app app;
   app.run();
 }

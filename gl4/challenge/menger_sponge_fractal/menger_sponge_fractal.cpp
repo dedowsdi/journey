@@ -48,9 +48,12 @@ public:
     // subdivide each cell face into 9 cells, exclude cell in face center and cube
     // center. there should be 27 - 6 - 1 = 20 cells
     GLfloat size = m_size/3;
-    for (int j = -1; j < 2; ++j) {
-      for (int k = -1; k < 2; ++k) {
-        for (int l = -1; l < 2; ++l) {
+    for (int j = -1; j < 2; ++j)
+    {
+      for (int k = -1; k < 2; ++k)
+      {
+        for (int l = -1; l < 2; ++l)
+        {
           if(j*k || j*l || k*l)
           {
             cv.push_back(cell(m_position + vec3(j*size, k*size, l*size), size));
@@ -164,7 +167,8 @@ protected:
 
     if(!prg.instance)
     {
-      for (size_t i = 0; i < m_sponge.size(); ++i) {
+      for (size_t i = 0; i < m_sponge.size(); ++i)
+      {
         //std::cout << prg.mvp_mat << std::endl;
         prg.update_uniforms(m_sponge[i].m_model_matrix, v_mat, p_mat);
         geometry.draw();
@@ -192,7 +196,8 @@ protected:
     m_sponge.clear();
     m_sponge.reserve(copy.size() * 20);
 
-    for (size_t i = 0; i < copy.size(); ++i) {
+    for (size_t i = 0; i < copy.size(); ++i)
+    {
       cell_vector cells = copy[i].subdivide();
       m_sponge.insert(m_sponge.end(), cells.begin(), cells.end());
     }
@@ -251,9 +256,12 @@ protected:
 
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_Q:
           subdivide();
           break;
@@ -273,7 +281,8 @@ protected:
       m_dirty_view = GL_TRUE;
   }
 
-  void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+  void glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset)
+  {
     app::glfw_mouse_wheel(wnd, xoffset, yoffset);
     m_dirty_view = GL_TRUE;
   }

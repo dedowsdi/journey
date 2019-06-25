@@ -191,7 +191,8 @@ protected:
     posz.resize(NUM_DROPS);
 
     // generate rain_drop positions and size
-    //for (int i = 0; i < NUM_DROPS; ++i) {
+    //for (int i = 0; i < NUM_DROPS; ++i)
+    //{
       //m_mats.push_back(glm::translate(vec3(glm::linearRand(-RADIUS, RADIUS), 0, glm::linearRand(RADIUS, RADIUS + 20))));
     //}
     //glBindVertexArray(m_geometry.vao);
@@ -206,7 +207,8 @@ protected:
   void update()
   {
 
-    for(auto iter = m_rains.begin(); iter != m_rains.end(); ++iter){
+    for(auto iter = m_rains.begin(); iter != m_rains.end(); ++iter)
+    {
       iter->update(m_delta_time);
     }
 
@@ -215,13 +217,15 @@ protected:
     if(m_dirty_view)
       vp_mat = p_mat * v_mat;
 
-    //for (size_t i = 0; i < mvp_mats.size(); ++i) {
+    //for (size_t i = 0; i < mvp_mats.size(); ++i)
+    //{
       //mvp_mats[i] = prg.vp_mat * m_rains[i].m_mat();
     //}
     //glBindBuffer(GL_ARRAY_BUFFER, mvp_vbo);
     //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(mat4) * mvp_mats.size(), glm::value_ptr(mvp_mats[0]));
 
-    for (size_t i = 0; i < posz.size(); ++i) {
+    for (size_t i = 0; i < posz.size(); ++i)
+    {
       posz[i] = m_rains[i].posz();
     }
     glBindBuffer(GL_ARRAY_BUFFER, posz_vbo);

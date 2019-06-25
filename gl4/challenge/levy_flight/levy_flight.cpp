@@ -8,25 +8,29 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 vec3 v0;
 vec3 v1;
 mat4 v_mat;
 mat4 p_mat;
 
-class app_name : public app {
+class app_name : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -40,7 +44,8 @@ public:
     set_v_mat(&zxd::v_mat);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     v0 = v1;
     v1 = glm::sphericalRand(1.0f);
     if(glm::linearRand(0.0f, 1.0f) < 0.02f)
@@ -48,7 +53,8 @@ public:
     v1 = v0 + v1;
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     //glClear(GL_COLOR_BUFFER_BIT);
 
     mat4 mvp_mat = p_mat * zxd::v_mat;
@@ -62,15 +68,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -83,7 +93,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::app_name app;
   app.run();
 }

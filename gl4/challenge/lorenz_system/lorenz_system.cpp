@@ -11,7 +11,8 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
-namespace zxd {
+namespace zxd
+{
 
 vec3_vector vertices;
 vec3_vector colors;
@@ -100,7 +101,8 @@ void reset_buffer()
   glBufferData(GL_ARRAY_BUFFER, count * sizeof(vec3), value_ptr(vertices[0]), GL_STATIC_DRAW);
 }
 
-class lorenz_system : public app {
+class lorenz_system : public app
+{
 
 protected:
   bitmap_text m_text;
@@ -113,7 +115,8 @@ public:
     delete m_dict_script;
   }
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "lorenz_system";
     m_info.wnd_width = WIDTH;
@@ -137,7 +140,8 @@ public:
     }
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
 
     glfwSetWindowPos(m_wnd, 1000, 10);
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
@@ -170,13 +174,15 @@ public:
     {
       read_setting();
     }
-    else{
+    else
+    {
       draw_count += draw_step;
       draw_count = glm::min(count, draw_count);
     }
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -198,15 +204,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -219,7 +229,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::lorenz_system app;
   app.run();
 }

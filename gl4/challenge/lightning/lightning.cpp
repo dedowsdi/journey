@@ -17,7 +17,8 @@ void create_billboards_along(std::vector<vertex>& billboards, const vec3_vector&
   GLfloat step_angle = f2pi / gap_slices;
   GLint half_slice = gap_slices * 0.5;
 
-  for (int i = 0; i < lines.size(); ) {
+  for (int i = 0; i < lines.size(); )
+  {
     const vec3& lv0 = lines[i++];
     const vec3& lv1 = lines[i++];
 
@@ -43,7 +44,8 @@ void create_billboards_along(std::vector<vertex>& billboards, const vec3_vector&
     // close gap with semicircle
     vec3 up = radius * v01;
     // bottom
-    for (int j = 1; j <= half_slice; ++j) {
+    for (int j = 1; j <= half_slice; ++j)
+    {
       GLfloat angle = step_angle * j;
       GLfloat c = cos(angle);
       GLfloat s = sin(angle);
@@ -56,7 +58,8 @@ void create_billboards_along(std::vector<vertex>& billboards, const vec3_vector&
     }
 
     // top
-    for (int j = 1; j <= half_slice; ++j) {
+    for (int j = 1; j <= half_slice; ++j)
+    {
       GLfloat angle = step_angle *  j;
       billboards.push_back({lv1, vec2(0.5)});
       GLfloat c = cos(angle);
@@ -191,7 +194,8 @@ void lightning::update_buffer(const vec3& camera_pos_)
   if(use_cpu)
   {
     billboards.clear();
-    for (int i = 0; i < vertices.size(); i+=2) {
+    for (int i = 0; i < vertices.size(); i+=2)
+    {
       vec3_vector lsystem_lines;
       lsystem_lines.reserve(pow(3, pattern.size()) * vertices.size());
       create_lightning(lsystem_lines, vertices[i], vertices[i+1], pattern, max_jitter, max_fork_angle);

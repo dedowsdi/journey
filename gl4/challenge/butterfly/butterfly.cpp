@@ -8,7 +8,8 @@
 
 #define BUFFER_OFFSET(x) ((GLubyte*)NULL + (x))
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program prg;
 kcip color;
@@ -97,21 +98,24 @@ void radius(GLfloat v){ m_radius = v; }
 
 };
 
-class butterfly_app : public app {
+class butterfly_app : public app
+{
 protected:
   bitmap_text m_text;
   butterfly m_butterfly;
   mat4 m_mat;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "butterfly_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -127,13 +131,15 @@ public:
     color = m_control.add_control(GLFW_KEY_Q, vec4(1), vec4(0), vec4(1), vec4(0.1));
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     m_butterfly.update_mesh();
     // fake slap
     m_mat = glm::scale(vec3(glm::cos(m_current_time), 1, 1));
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -154,15 +160,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -175,7 +185,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::butterfly_app app;
   app.run();
 }

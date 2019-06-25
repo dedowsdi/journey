@@ -26,7 +26,8 @@
 #define BRANCH_STEP 5
 #define ANIM_TIME 5
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program prg;
 
@@ -158,7 +159,8 @@ public:
       {
         branch* ab = 0;
         GLfloat min_d2 = 0;
-        for (int i = start_index; i < m_branches.size(); ++i) {
+        for (int i = start_index; i < m_branches.size(); ++i)
+        {
 
           branch* b = m_branches[i];
           
@@ -204,7 +206,8 @@ public:
       }
 
       // update branch grow start index. swap finished branch with start branch.
-      for (int i = start_index+1; i < m_branches.size(); ++i) {
+      for (int i = start_index+1; i < m_branches.size(); ++i)
+      {
         if(new_branches.find(m_branches[i]) == new_branches.end())
         {
           std::swap(m_branches[i], m_branches[start_index]);
@@ -219,7 +222,8 @@ public:
       }
 
       // add new attracted branch
-      for(auto iter = new_branches.begin(); iter != new_branches.end(); ++iter){
+      for(auto iter = new_branches.begin(); iter != new_branches.end(); ++iter)
+      {
         vec2 dir = glm::normalize(iter->second);
         vec2 pos = iter->first->pos + m_branch_step * dir;
         m_branches.push_back(new branch(iter->first, pos, dir));
@@ -273,7 +277,8 @@ public:
   void branch_step(GLfloat v){ m_branch_step = v; }
 };
 
-class space_colonization_tree_app : public app {
+class space_colonization_tree_app : public app
+{
 protected:
   GLuint m_draw_count = 0;
   GLfloat m_time = 0;
@@ -283,13 +288,15 @@ protected:
   points<vec2> m_points;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "space_colonization_tree_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -303,7 +310,8 @@ public:
     m_tree.branch_step(BRANCH_STEP);
 
     vec2_vector vertices;
-    for (GLuint i = 0; i < NUM_LEAVES; ++i) {
+    for (GLuint i = 0; i < NUM_LEAVES; ++i)
+    {
       vec2 pos = glm::linearRand(vec2(0, 300), vec2(WIDTH, HEIGHT));
       vertices.push_back(pos);
       m_leaves.emplace_back(pos);
@@ -315,14 +323,16 @@ public:
     m_points.build_mesh(vertices);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     m_time += m_delta_time;
     m_draw_count = m_tree.num_vertices() * m_time / ANIM_TIME;
     m_draw_count &= ~(1); // even
     m_draw_count = glm::min(m_tree.num_vertices(), m_draw_count);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -341,15 +351,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -365,7 +379,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::space_colonization_tree_app app;
   app.run();
 }

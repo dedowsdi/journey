@@ -16,7 +16,8 @@
 #define HEIGHT 800
 #define BUFFER_OFFSET(x) ((GLubyte*)NULL + (x))
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program prg;
 
@@ -70,7 +71,8 @@ struct hypercube
     // https://www.youtube.com/watch?v=iGO12Z5Lw8s
     // project along W to 3d (xyz), scale along W
     GLfloat lw = 2; // light or camera w position
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < 16; ++i)
+    {
       const vec4& hv = hvertices[i];
       glm::mat4x3 m(mat3(1/(lw - hv.w)));
       vec3 v;
@@ -166,19 +168,22 @@ struct hypercube
   }
 };
 
-class hypercube_app : public app {
+class hypercube_app : public app
+{
 protected:
   bitmap_text m_text;
   hypercube m_hcube;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "hypercube_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -192,11 +197,13 @@ public:
     m_hcube.init();
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     m_hcube.update();
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -210,15 +217,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -231,7 +242,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::hypercube_app app;
   app.run();
 }

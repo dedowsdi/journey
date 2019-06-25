@@ -12,7 +12,8 @@
 #define WIDTH 720
 #define HEIGHT 720
 
-namespace zxd {
+namespace zxd
+{
 
 const GLuint resolution = 256;
 const GLuint num_vertices = 60000;
@@ -70,7 +71,8 @@ protected:
 
 } prg;
 
-class eyeball_app : public app {
+class eyeball_app : public app
+{
 
 public:
   void init_info() override;
@@ -97,7 +99,8 @@ private:
 
 };
 
-void eyeball_app::init_info() {
+void eyeball_app::init_info()
+{
   app::init_info();
   m_info.title = "eyeball_app";
   m_info.wnd_width = WIDTH;
@@ -108,7 +111,8 @@ void eyeball_app::init_info() {
   m_info.wm.y = 100;
 }
 
-void eyeball_app::create_scene() {
+void eyeball_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glEnable(GL_LINE_SMOOTH);
@@ -147,7 +151,8 @@ void eyeball_app::create_scene() {
 
   vertices.reserve(num_vertices);
   auto pen = m_seed->get_pen();
-  for (int i = 0; i < num_vertices; ++i) {
+  for (int i = 0; i < num_vertices; ++i)
+  {
     m_seed->update(resolution);
     vertices.push_back(pen->pos());
   }
@@ -171,7 +176,8 @@ void eyeball_app::create_scene() {
   resize_eyeball();
 }
 
-void eyeball_app::update() {
+void eyeball_app::update()
+{
   vec2 trans = glm::diskRand(2.0f);
   if(glm::linearRand(0.0f, 1.0f) < 0.15f)
       trans *= 30;
@@ -184,17 +190,20 @@ void eyeball_app::update() {
 
   target_pos = world_to_wnd(bug_pos);
 
-  for (auto& eb : eyeballs) {
+  for (auto& eb : eyeballs)
+  {
     eb.pupil_pos = target_pos;
     vec2 offset = eb.pupil_pos - eb.pos;
     GLfloat max_offset_length = eb.r1 - eb.r0;
-    if (glm::length2(offset) > max_offset_length * max_offset_length) {
+    if (glm::length2(offset) > max_offset_length * max_offset_length)
+    {
       eb.pupil_pos = eb.pos + glm::normalize(offset) * max_offset_length;
     }
   }
 }
 
-void eyeball_app::display() {
+void eyeball_app::display()
+{
   if(draw_start < num_vertices)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, mfbo);
@@ -209,7 +218,8 @@ void eyeball_app::display() {
     GLuint count = start + draw_step > num_vertices ? num_vertices - start : draw_step;
 
     glBindVertexArray(vao);
-    for (const auto& eyeball : eyeballs) {
+    for (const auto& eyeball : eyeballs)
+    {
       glUniformMatrix4fv(ll_prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * eyeball.m_mat));
       glUniform4f(ll_prg.ul_color, 0, 1, 1, 1);
       glDrawArrays(GL_LINE_STRIP, start, count);
@@ -258,7 +268,8 @@ void eyeball_app::display() {
   glDisable(GL_BLEND);
 }
 
-void eyeball_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void eyeball_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 
@@ -267,9 +278,12 @@ void eyeball_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
 }
 
 void eyeball_app::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -286,23 +300,27 @@ void eyeball_app::glfw_key(
   app::glfw_key(wnd, key, scancode, action, mods);
 }
 
-void eyeball_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y){
+void eyeball_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+{
   app::glfw_mouse_move(wnd, x, y);
   target_pos = vec2(x, glfw_to_gl(y));
 }
 
-vec2 eyeball_app::world_to_wnd(const vec2& v) {
+vec2 eyeball_app::world_to_wnd(const vec2& v)
+{
   mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * p_mat;
   return (m * vec4(v, 0, 1)).xy();
 }
 
-GLfloat eyeball_app::world_to_wnd(GLfloat radius){
+GLfloat eyeball_app::world_to_wnd(GLfloat radius)
+{
   //mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * p_mat;
   GLfloat double_right_inverse = 0.5f * p_mat[0][0];
   return radius * wnd_width() * double_right_inverse ;
 }
 
-void eyeball_app::resize_eyeball(){
+void eyeball_app::resize_eyeball()
+{
 
   draw_start = 0;
 
@@ -347,7 +365,8 @@ void eyeball_app::resize_eyeball(){
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::eyeball_app app;
   app.run();
 }

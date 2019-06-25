@@ -9,7 +9,8 @@
 #define WIDTH 951
 #define HEIGHT 951
 
-namespace zxd {
+namespace zxd
+{
 
 pingpong tex;
 GLuint fbo;
@@ -103,18 +104,21 @@ protected:
 
 } rprg;
 
-class sandpiles_app : public app {
+class sandpiles_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "sandpiles_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -141,7 +145,8 @@ public:
     glViewport(0, 0, WIDTH, HEIGHT);
     glDisable(GL_DITHER);
 
-    //for (int i = 0; i < 100000; ++i) {
+    //for (int i = 0; i < 100000; ++i)
+    //{
       //tex.swap();
       //glFramebufferTexture2D(
         //GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex.pong(), 0);
@@ -179,7 +184,8 @@ public:
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glViewport(0, 0, WIDTH, HEIGHT);
     glDisable(GL_DITHER);
-    for (int i = 0; i < loops; ++i) {
+    for (int i = 0; i < loops; ++i)
+    {
       tex.swap();
       glFramebufferTexture2D(
         GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex.pong(), 0);
@@ -193,7 +199,8 @@ public:
     }
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, wnd_width(), wnd_height());
@@ -225,7 +232,8 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
@@ -253,7 +261,8 @@ public:
     if(!ifs)
       return;
 
-    try {
+    try
+    {
       std::string line;
 
       vec4_vector colors;
@@ -272,16 +281,20 @@ public:
       color2 = colors[2]/255.0f;
       color3 = colors[3]/255.0f;
       color4 = colors[4]/255.0f;
-    }catch(std::exception& e) {
+    }catch(std::exception& e)
+    {
       std::cout << e.what() << std::endl;
     }
 
   }
 
   virtual void glfw_key(
-      GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+      GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -301,7 +314,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::sandpiles_app app;
   app.run();
 }

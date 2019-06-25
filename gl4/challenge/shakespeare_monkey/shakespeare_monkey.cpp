@@ -90,7 +90,8 @@ public:
   void calc_fitness(const std::string& genes)
   {
     m_fitness = 0;
-    for (int i = 0; i < m_genes.size(); ++i) {
+    for (int i = 0; i < m_genes.size(); ++i)
+    {
       if(m_genes[i] == genes[i])
         ++m_fitness;
     }
@@ -111,7 +112,8 @@ public:
   void mutate(const std::string& desire, float rate)
   {
       // should i mutate the tood gene too?
-    for (int i = 0; i < m_genes.size(); ++i) {
+    for (int i = 0; i < m_genes.size(); ++i)
+    {
       if(m_genes[i] == desire[i])
         continue;
       if(unit_random() < rate)
@@ -153,7 +155,8 @@ public:
     m_mutation_rate(mutation)
   {
     // initialize
-    for (int i = 0; i < m_size; ++i) {
+    for (int i = 0; i < m_size; ++i)
+    {
       m_dnas.emplace_back(m_desire_genes.size());
     }
   }
@@ -202,7 +205,8 @@ protected:
 
     dna_vector dnas;
     dnas.reserve(m_size);
-    for (int i = 0; i < m_size; ++i) {
+    for (int i = 0; i < m_size; ++i)
+    {
       dna* parent0 = pick_by_fitness();
       dna* parent1 = pick_by_fitness();
       dnas.push_back(parent0->cross_over(*parent1));
@@ -225,7 +229,8 @@ protected:
     //dna_vector dnas;
     //dnas.reserve(m_size);
 
-    //for (int i = 0; i < m_size; ++i) {
+    //for (int i = 0; i < m_size; ++i)
+    //{
       //dna* parent0 = &m_dnas[random_by_weight(weights)];
       //dna* parent1 = &m_dnas[random_by_weight(weights)];
       //dnas.push_back(parent0->cross_over(*parent1));
@@ -237,9 +242,11 @@ protected:
     //another way to pick parent is to build a mate pool according to fitness
     //std::vector<dna*> pool;
     //pool.reserve(m_size);
-    //for (int i = 0; i < m_size; ++i) {
+    //for (int i = 0; i < m_size; ++i)
+    //{
       //int fitness = m_dnas[i].fitness() * m_size;
-      //for (int j = 0; j < fitness; ++j) {
+      //for (int j = 0; j < fitness; ++j)
+      //{
         //pool.push_back(&m_dnas[i]);
       //}
     //}
@@ -247,7 +254,8 @@ protected:
     //dna_vector dnas;
     //dnas.reserve(m_size);
 
-    //for (int i = 0; i < m_size; ++i) {
+    //for (int i = 0; i < m_size; ++i)
+    //{
       //dna* parent0 = pool[rand()%pool.size()];
       //dna* parent1 = pool[rand()%pool.size()];
       //dnas.push_back(parent0->cross_over(*parent1));

@@ -14,7 +14,8 @@
 #define STICKINESS 0.5
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program prg;
 
@@ -215,14 +216,16 @@ public:
       // make sure leaf size is greater than radius size
       m_quad_tree = new quad_tree(m_min_ext, m_max_ext, vec2(m_radius)*2.0f);
       m_quad_tree->build_leaves();
-      for (int i = 0; i < m_vertices.size(); ++i) {
+      for (int i = 0; i < m_vertices.size(); ++i)
+      {
         m_quad_tree->push(m_vertices[i]);
       }
     }
 
     m_vertices.reserve(width() * height() / (50 * m_radius)); // guess
 
-    for (int i = m_walkers.size(); i < num_walkers; ++i) {
+    for (int i = m_walkers.size(); i < num_walkers; ++i)
+    {
       m_walkers.push_back(glm::linearRand(m_min_ext, m_max_ext));
       //std::cout << "add new walker" << std::endl;
     }
@@ -234,7 +237,8 @@ public:
 
     while(!m_walkers.empty() && iterations--)
     {
-      for(auto iter = m_walkers.begin(); iter != m_walkers.end(); ){
+      for(auto iter = m_walkers.begin(); iter != m_walkers.end(); )
+      {
         vec2& walker = *iter;
 
         // approximation of brownian motion
@@ -254,10 +258,12 @@ public:
         if(leaves.size() > 4)
           std::cout << "illegal leveas, size " << leaves.size() << std::endl;
 
-        for (int i = 0; i < leaves.size() && !stuck; ++i) {
+        for (int i = 0; i < leaves.size() && !stuck; ++i)
+        {
 
           vec2_vector& leaf_vertices = leaves[i]->vertices;
-          for (int j = 0; j < leaf_vertices.size(); ++j) {
+          for (int j = 0; j < leaf_vertices.size(); ++j)
+          {
 
             if(glm::length2(leaf_vertices[j] - walker) <= radius2 && glm::linearRand(0.0f, 1.0f) < m_stickiness)
             {
@@ -267,7 +273,8 @@ public:
               m_lines.push_back(walker);
 
               bool add_to_leaf = false;
-              for (int k = 0; k < leaves.size(); ++k) {
+              for (int k = 0; k < leaves.size(); ++k)
+              {
                 if(leaves[k]->ext_contain(walker))
                 {
                   leaves[k]->vertices.push_back(walker);
@@ -350,19 +357,22 @@ public:
   quad_tree* get_quad_tree(){return m_quad_tree;}
 };
 
-class diffusion_limited_app : public app {
+class diffusion_limited_app : public app
+{
 protected:
   bitmap_text m_text;
   dl_tree m_tree;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "diffusion_limited_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -382,11 +392,13 @@ public:
     //m_tree.compile();
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     m_tree.walk(NUM_WALKERS, ITERATIONS);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -406,15 +418,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -427,7 +443,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::diffusion_limited_app app;
   app.run();
 }

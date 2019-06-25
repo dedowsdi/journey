@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
   std::string result;
   for (int i = 0; i < seed.size(); ++i) 
   {
-    for (int j = next_index; j < words.size(); ++j) {
+    for (int j = next_index; j < words.size(); ++j)
+    {
       const std::string& word = words[j];
       if(word.size() > i && word.at(i) == seed.at(i))
       {

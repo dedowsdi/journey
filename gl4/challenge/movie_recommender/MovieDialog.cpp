@@ -79,7 +79,8 @@ MovieDialog::MovieDialog(QWidget *parent/* = 0*/)
   mGridLayout = new QGridLayout;
   layout->addLayout(mGridLayout);
 
-  for (int i = 0; i < mMovies.size(); ++i) {
+  for (int i = 0; i < mMovies.size(); ++i)
+  {
     QLabel* lbl = new QLabel(mMovies[i]);
     QLineEdit* score = new QLineEdit;
     lbl->setBuddy(score);
@@ -108,7 +109,8 @@ void MovieDialog::recommend()
 {
   bool needRecommend = false;
   RateMap rateMap0;
-  for (int i = 0; i < mGridLayout->rowCount() - 1; ++i) {
+  for (int i = 0; i < mGridLayout->rowCount() - 1; ++i)
+  {
     QWidgetItem* item0 = static_cast<QWidgetItem*>(mGridLayout->itemAtPosition(i, 0));
     QLabel* lbl = static_cast<QLabel*>(item0->widget());
     QWidgetItem* item1 = static_cast<QWidgetItem*>(mGridLayout->itemAtPosition(i, 1));

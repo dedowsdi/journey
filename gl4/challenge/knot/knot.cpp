@@ -12,7 +12,8 @@
 #define HEIGHT 800
 
 
-namespace zxd {
+namespace zxd
+{
 
 GLuint num_knots = 2;
 GLuint knot_index = 0;
@@ -35,18 +36,21 @@ light_model lm;
 material mtl;
 geometry_base knot;
 
-class knot_app : public app {
+class knot_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "knot_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -115,7 +119,8 @@ public:
     
     vec3_vector line_strip;
     line_strip.reserve(slices + 1);
-    for (int i = 0; i < slices; ++i) {
+    for (int i = 0; i < slices; ++i)
+    {
       GLfloat beta = step_beta * i;
       vec3 rpt = rpt_func(beta, radius);
       line_strip.push_back(rpt_to_xyz(rpt.x, rpt.y, rpt.z));
@@ -155,7 +160,8 @@ public:
     knot.remove_primitive_sets(0, knot.get_num_primitive_set());
     
     GLuint strip_size = vertex_array->num_elements() / num_faces;;
-    for (int i = 0; i < num_faces; ++i) {
+    for (int i = 0; i < num_faces; ++i)
+    {
       knot.add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
     }
 
@@ -164,7 +170,8 @@ public:
 
   virtual void update() {}
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_CULL_FACE);
@@ -186,15 +193,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -210,7 +221,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::knot_app app;
   app.run();
 }

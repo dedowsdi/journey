@@ -19,7 +19,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -78,7 +79,8 @@ struct snow
   }
 };
 
-class snow_app : public app {
+class snow_app : public app
+{
 protected:
   bitmap_text m_text;
   std::vector<snow*> m_snows;
@@ -96,13 +98,15 @@ public:
     m_snows.clear();
 
   }
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "snow_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     m_text.init();
@@ -138,7 +142,8 @@ public:
     quad.build_mesh();
 
     m_snows.reserve(num_flakes);
-    for (int i = 0; i < num_flakes; ++i) {
+    for (int i = 0; i < num_flakes; ++i)
+    {
       vec3 pos = glm::linearRand(vec3(-500, -500, 10), vec3(500, 500, 500));
       float size = glm::linearRand(3.0, 6.0);
       float angle = glm::linearRand(0.0f, f2pi);
@@ -180,7 +185,8 @@ public:
 
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     vec3 camera_pos = -v_mat[3].xyz();
     camera_pos = vec3(glm::dot(v_mat[0].xyz(), camera_pos),
                       glm::dot(v_mat[1].xyz(), camera_pos),
@@ -231,7 +237,8 @@ public:
     glBufferSubData(GL_ARRAY_BUFFER, 0, buffer.size() * 4, &(buffer.front()));
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
@@ -251,15 +258,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -272,7 +283,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::snow_app app;
   app.run();
 }

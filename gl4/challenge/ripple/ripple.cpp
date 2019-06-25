@@ -9,7 +9,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 quad q;
 
@@ -69,19 +70,22 @@ public:
 
 }prg;
 
-class ripple_app : public app {
+class ripple_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "ripple_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
     m_info.samples = 4;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -109,7 +113,8 @@ public:
     kci_ripple_frame = m_control.add_control(GLFW_KEY_E, 2, 1, 60, 1);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     GLint f = kci_ripple_frame->get_int();
     if((m_frame_number % f) == 0)
       tex.shift();
@@ -124,7 +129,8 @@ public:
     glTexSubImage2D(GL_TEXTURE_2D, 0, pos.x, pos.y, 1, 1, GL_RGB, GL_FLOAT, glm::value_ptr(p));
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(
@@ -158,15 +164,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -185,7 +195,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::ripple_app app;
   app.run();
 }

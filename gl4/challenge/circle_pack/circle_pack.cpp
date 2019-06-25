@@ -8,7 +8,8 @@
 #include "quad.h"
 #include "circle.h"
 
-namespace zxd {
+namespace zxd
+{
 
 GLint spawn_per_frame = 5;
 GLuint max_circle = 5000;
@@ -89,20 +90,23 @@ public:
 };
 
 
-class circle_pack_app : public app {
+class circle_pack_app : public app
+{
 protected:
   bitmap_text m_text;
   circle_vector m_circles;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "circle_pack_app";
     m_info.wnd_width = img.getWidth();
     m_info.wnd_height = img.getHeight();
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -183,10 +187,12 @@ public:
     return c;
   }
   
-  virtual void update() {
+  virtual void update()
+  {
     if(m_circles.size() < max_circle)
     {
-      for (int i = 0; i < spawn_per_frame; ++i) {
+      for (int i = 0; i < spawn_per_frame; ++i)
+      {
         m_circles.push_back(create_circle());
       }
 
@@ -196,7 +202,8 @@ public:
 
 
     bool dirty = false;
-    for (int i = 0; i < m_circles.size(); ++i) {
+    for (int i = 0; i < m_circles.size(); ++i)
+    {
       auto_grow_circle& c0 = m_circles[i];
       if(!c0.growing())
         continue;
@@ -230,7 +237,8 @@ public:
   void update_instance_buffer()
   {
     m_mats.resize(m_circles.size());
-    for (int i = 0; i < m_circles.size(); ++i) {
+    for (int i = 0; i < m_circles.size(); ++i)
+    {
       m_mats[i] = m_circles[i].m_mat();
     }
 
@@ -240,7 +248,8 @@ public:
     geometry.get_primitive_set(0)->num_instance(m_circles.size());
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg0.use();
@@ -251,7 +260,8 @@ public:
 
     prg1.use();
     //glUniform4fv(prg1.ul_color, 1,  glm::value_ptr(vec4(1)));
-    //for (int i = 0; i < m_circles.size(); ++i) {
+    //for (int i = 0; i < m_circles.size(); ++i)
+    //{
       //mat4 mvp_mat = prg1.vp_mat * m_circles[i].m_mat();
       //glUniformMatrix4fv(prg1.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
       //geometry.draw();
@@ -271,15 +281,19 @@ public:
 
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -292,7 +306,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
   zxd::img = zxd::fipLoadResource32("texture/z.png");
 

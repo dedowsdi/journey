@@ -213,8 +213,10 @@ public:
 
     // gather empty area
     std::list<ivec2> pool;
-    for (size_t i = 0; i < CY_CELL; ++i) {
-      for (size_t j = 0; j < CX_CELL; ++j) {
+    for (size_t i = 0; i < CY_CELL; ++i)
+    {
+      for (size_t j = 0; j < CX_CELL; ++j)
+      {
         pool.push_back(ivec2(j, i)); // store (col, row) as (x, y)
       }
     }
@@ -228,7 +230,8 @@ public:
     }
     std::sort(garbage.begin(), garbage.end());
 
-    for(auto iter = garbage.rbegin(); iter != garbage.rend(); ++iter){
+    for(auto iter = garbage.rbegin(); iter != garbage.rend(); ++iter)
+    {
       auto i = pool.begin();
       std::advance(i, *iter);
       pool.erase(i);

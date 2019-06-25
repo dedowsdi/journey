@@ -19,7 +19,8 @@
 #define BULLET_SPEED 500
 #define BULLET_SIZE 15
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program prg;
 
@@ -29,7 +30,8 @@ glm::mat4 p_mat;
 class ship_geometry : public geometry_base
 {
 protected:
-  virtual void build_vertex() { 
+  virtual void build_vertex()
+  { 
 
     vec2_array& vertices = *(new vec2_array());
     attrib_array(num_arrays(), array_ptr(&vertices));
@@ -48,7 +50,8 @@ protected:
     vertices.push_back(vec2(-0.1, -0.15));
     
     // mirror right part
-    for (size_t i = 7; i > 0; --i) {
+    for (size_t i = 7; i > 0; --i)
+    {
       vertices.push_back(vertices[i] * vec2(-1, 1));
     }
 
@@ -62,7 +65,8 @@ protected:
 class invader_geomtry : public geometry_base
 {
 protected:
-  virtual void build_vertex() { 
+  virtual void build_vertex()
+  { 
 
     vec2_array& vertices = *(new vec2_array());
     attrib_array(num_arrays(), array_ptr(&vertices));
@@ -99,7 +103,8 @@ protected:
 class bullet_geomtry : public geometry_base
 {
 protected:
-  virtual void build_vertex() { 
+  virtual void build_vertex()
+  { 
 
     vec2_array& vertices = *(new vec2_array());
     attrib_array(num_arrays(), array_ptr(&vertices));
@@ -373,7 +378,8 @@ public:
 
 typedef std::list<explotion*> explotion_list;
 
-class space_invader_app : public app {
+class space_invader_app : public app
+{
 protected:
   bitmap_text m_text;
   ship m_ship;
@@ -384,14 +390,16 @@ protected:
   GLuint m_explotion_texture;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
     m_info.samples = 4;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     ship_geometry0.build_mesh();
@@ -441,7 +449,8 @@ public:
     std::list<invader>::iterator iter;
     int i;
 
-    for (i = 0, iter = m_invaders.begin(); i < m_invaders.size(); ++i, ++iter) {
+    for (i = 0, iter = m_invaders.begin(); i < m_invaders.size(); ++i, ++iter)
+    {
       GLint row = i/cx;
       GLint col = i%cx;
       GLfloat x= x0 + (SIZE + spacing) * col;
@@ -450,12 +459,14 @@ public:
       iter->reset();
     }
 
-    for(auto iter = m_bullets.begin(); iter != m_bullets.end(); ++iter){
+    for(auto iter = m_bullets.begin(); iter != m_bullets.end(); ++iter)
+    {
       delete *iter;
     }
     m_bullets.clear();
 
-    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ++iter){
+    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ++iter)
+    {
       delete (*iter);
     }
     m_explotions.clear();
@@ -471,7 +482,8 @@ public:
     }
 
     // remove dead bullets, invaders, explotions
-    for(auto iter = m_bullets.begin(); iter != m_bullets.end();){
+    for(auto iter = m_bullets.begin(); iter != m_bullets.end();)
+    {
       if((*iter)->dead())
       {
         m_score += 100;
@@ -482,14 +494,16 @@ public:
         ++iter;
     }
 
-    for(auto iter = m_invaders.begin(); iter != m_invaders.end(); ){
+    for(auto iter = m_invaders.begin(); iter != m_invaders.end(); )
+    {
       if(iter->dead())
         iter = m_invaders.erase(iter);
       else
         ++iter;
     }
 
-    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ){
+    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); )
+    {
       if((*iter)->finished())
       {
         delete *iter;
@@ -501,18 +515,21 @@ public:
 
     // animate
     m_ship.update(m_delta_time);
-    for(auto iter = m_bullets.begin(); iter != m_bullets.end();++iter){
+    for(auto iter = m_bullets.begin(); iter != m_bullets.end();++iter)
+    {
       (*iter)->update(m_delta_time);
     }
 
-    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ++iter){
+    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ++iter)
+    {
       (*iter)->update(m_delta_time);
     }
   
     // min max invader xy
     vec2 xy0 = vec2(WIDTH, HEIGHT);
     vec2 xy1 = vec2(0, 0);
-    for(auto iter = m_invaders.begin(); iter != m_invaders.end(); ++iter ){
+    for(auto iter = m_invaders.begin(); iter != m_invaders.end(); ++iter )
+    {
       iter->update(m_delta_time);
       xy0 = glm::min(xy0, iter->pos());
       xy1 = glm::max(xy1, iter->pos());
@@ -532,7 +549,8 @@ public:
     xy1 += vec2(SIZE * 0.5);
     // dead check
     GLfloat hz = BULLET_SIZE * 0.5;
-    for(auto iter = m_bullets.begin(); iter != m_bullets.end(); ++iter){
+    for(auto iter = m_bullets.begin(); iter != m_bullets.end(); ++iter)
+    {
       bullet& b = **iter;
       if(b.pos().x < 0 - 0.5*hz || b.pos().x > WIDTH + 0.5 * hz || b.pos().y > HEIGHT + 0.5 * hz)
       {
@@ -544,7 +562,8 @@ public:
       if(b.pos().x < xy0.x || b.pos().x > xy1.x || b.pos().y < xy0.y || b.pos().y > xy1.y)
         continue;
 
-      for(auto iter1 = m_invaders.begin(); iter1 != m_invaders.end(); ++iter1){
+      for(auto iter1 = m_invaders.begin(); iter1 != m_invaders.end(); ++iter1)
+      {
         if(b.hit(*iter1))
         {
           std::cout << "bullet at " << b.pos().x << ":" << b.pos().y << " hit invader at "
@@ -568,7 +587,8 @@ public:
 
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -590,7 +610,8 @@ public:
     glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
     glBindTexture(GL_TEXTURE_2D, m_explotion_texture);
-    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ++iter){
+    for(auto iter = m_explotions.begin(); iter != m_explotions.end(); ++iter)
+    {
       (*iter)->m_texmap_anim.draw(p_mat * (*iter)->m_mat(), 0);
     }
 
@@ -605,13 +626,15 @@ public:
 
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
 
     if(action == GLFW_REPEAT)
       return;
@@ -630,8 +653,10 @@ public:
         break;
     }
 
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -653,7 +678,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::space_invader_app app;
   app.run();
 }

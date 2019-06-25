@@ -11,14 +11,16 @@
 
 #define BUFFER_OFFSET(x) ((GLubyte*)NULL + (x))
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program prg;
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
-class secret_garden_app : public app {
+class secret_garden_app : public app
+{
 private:
   bitmap_text m_text;
   bug m_bug;
@@ -37,14 +39,16 @@ public:
     GLFWwindow *wnd, int key, int scancode, int action, int mods);
 };
 
-void secret_garden_app::init_info() {
+void secret_garden_app::init_info()
+{
   app::init_info();
   m_info.title = "secret_garden_app";
   m_info.wnd_width = WIDTH;
   m_info.wnd_height = HEIGHT;
 }
 
-void secret_garden_app::create_scene() {
+void secret_garden_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   m_text.init();
@@ -55,11 +59,13 @@ void secret_garden_app::create_scene() {
   p_mat = zxd::rect_ortho(30, 30, wnd_aspect());
 }
 
-void secret_garden_app::update() {
+void secret_garden_app::update()
+{
   m_bug.update();
 }
 
-void secret_garden_app::display() {
+void secret_garden_app::display()
+{
   glClear(GL_COLOR_BUFFER_BIT);
 
   prg.use();
@@ -75,15 +81,19 @@ void secret_garden_app::display() {
   glDisable(GL_BLEND);
 }
 
-void secret_garden_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void secret_garden_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 }
 
 void secret_garden_app::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -96,7 +106,8 @@ void secret_garden_app::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::secret_garden_app app;
   app.run();
 }

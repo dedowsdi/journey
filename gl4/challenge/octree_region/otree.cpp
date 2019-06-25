@@ -201,7 +201,8 @@ void onode::subdivide()
   assert(!divided() && dividable());
 
   auto boxes = bb.subdivide();
-  for (int i = 0; i < 8; ++i) {
+  for (int i = 0; i < 8; ++i)
+  {
     children[i] = new onode(boxes[i], tree);
   }
 

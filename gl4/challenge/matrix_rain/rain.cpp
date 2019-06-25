@@ -21,12 +21,14 @@ public:
   GLint ul_mvp_mat;
   mat4 mvp_mat;
 
-  void update_uniforms(GLuint tui_font) {
+  void update_uniforms(GLuint tui_font)
+  {
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
     glUniform1i(ul_font_map, tui_font);
   }
 
-  void reshape(GLuint wnd_width, GLuint wnd_height) {
+  void reshape(GLuint wnd_width, GLuint wnd_height)
+  {
     mvp_mat = glm::ortho(
       0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
   }
@@ -87,7 +89,8 @@ void rain::update()
     return;
   }
 
-  for (auto& cell : m_cells) {
+  for (auto& cell : m_cells)
+  {
     if(glm::linearRand(0.0f, 1.0f) < 0.04f)
     {
       cell.character(m_matrix_rain->random_character());
@@ -106,7 +109,8 @@ void rain::update()
 
   // fading
   GLfloat alpha_step = 0.2;
-  for (auto iter = m_cells.rbegin(); iter != m_cells.rend(); ++iter) {
+  for (auto iter = m_cells.rbegin(); iter != m_cells.rend(); ++iter)
+  {
     iter->add_alpha(-alpha_step);
     alpha_step *= 0.75;
   }
@@ -186,7 +190,8 @@ int vertical_spacing/* = 0*/):
   auto num_rains = wnd_width / w;
   m_rains.reserve(num_rains);
   GLfloat left = (wnd_width - num_rains * m_printer->max_advance() - (num_rains - 1) * vertical_spacing) * 0.5f;
-  for (int i = 0; i < num_rains; ++i) {
+  for (int i = 0; i < num_rains; ++i)
+  {
     m_rains.push_back(rain(this, left + i * w));
   }
 
@@ -213,7 +218,8 @@ int vertical_spacing/* = 0*/):
 //--------------------------------------------------------------------
 void matrix_rain::update()
 {
-  for (auto& item : m_rains) {
+  for (auto& item : m_rains)
+  {
     item.update();
   }
 }
@@ -223,7 +229,8 @@ void matrix_rain::draw()
 {
   rain_vertices vertices;
   vertices.reserve(10000*6);
-  for (auto& item : m_rains) {
+  for (auto& item : m_rains)
+  {
     item.collect_mesh(vertices);
   }
   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);

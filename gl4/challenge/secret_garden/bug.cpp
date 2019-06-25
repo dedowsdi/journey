@@ -25,14 +25,16 @@ void bug::update()
   vertices.reserve(m_wing_count * m_vertex_count);
   colors.reserve(vertices.size());
 
-  for (int wing_index = 0; wing_index < m_wing_count; ++wing_index) {
+  for (int wing_index = 0; wing_index < m_wing_count; ++wing_index)
+  {
     float wing_ratio = static_cast<GLfloat>(wing_index)/m_wing_count;
     vertices.push_back(vec3(0));
     colors.push_back(vec3(1, 0, 0));
 
     float sat = mix(0.0, 0.6, wing_ratio);
 
-    for (int vertex_index = 1; vertex_index < m_vertex_count; ++vertex_index) {
+    for (int vertex_index = 1; vertex_index < m_vertex_count; ++vertex_index)
+    {
       float x = 10 * glm::perlin(vec2(vertex_index * 0.06 + wing_index * 1.0 / m_wing_count));
       float y = 10 * glm::perlin(vec2(vertex_index * 0.05 + wing_index * 1.0 / m_wing_count));
       //int wing_shape = wing_index + vertex_index;
@@ -91,8 +93,10 @@ void bug::update_buffer(const vec3_vector& vertices, const vec3_vector& color)
     std::vector<GLuint> elements;
     elements.reserve(m_wing_count * (m_vertex_count + 1));
 
-    for (int i = 0; i < m_wing_count; ++i ) {
-      for (int j = 0; j < m_vertex_count; ++j) {
+    for (int i = 0; i < m_wing_count; ++i )
+    {
+      for (int j = 0; j < m_vertex_count; ++j)
+      {
         elements.push_back(j + i * m_vertex_count);
       }
       elements.push_back(-1);

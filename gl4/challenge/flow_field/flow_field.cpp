@@ -13,7 +13,8 @@
 #define FORCE_MAGNITUDE 0.35f
 #define ALPHA 0.05
 
-namespace zxd {
+namespace zxd
+{
 
 GLboolean draw_flow_field = GL_TRUE;
 lightless_program prg;
@@ -142,19 +143,22 @@ public:
 typedef std::vector<particle> particle_vector;
 particle_vector particles;
 
-class flow_field_app : public app {
+class flow_field_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "flow_field_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
     m_info.samples = 4;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -188,7 +192,8 @@ public:
     zoff += zoff_start;
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     zoff += zoff_step->get_float();
 
     for (int i = 0; i < particles.size(); ++i) 
@@ -201,7 +206,8 @@ public:
 
     if(!draw_flow_field)
     {
-      for (int i = 0; i < particles.size(); ++i) {
+      for (int i = 0; i < particles.size(); ++i)
+      {
         ink.vertices[i*2] = particles[i].last_pos();
         ink.vertices[i*2+1] = particles[i].pos();
       }
@@ -210,7 +216,8 @@ public:
     }
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     //debugger::draw_point(vec3(400, 400, 0), prg.vp_mat, 10);
     //debugger::draw_line(vec3(0), vec3(500, 500, 0), prg.vp_mat, 4);
@@ -221,10 +228,12 @@ public:
       glClear(GL_COLOR_BUFFER_BIT);
 
       vec3_vector lines;
-      for (GLshort i = 0; i < FF_ROW; ++i) {
+      for (GLshort i = 0; i < FF_ROW; ++i)
+      {
         vec3 translate = vec3(0, i*field_height, 0);
 
-        for (GLshort j = 0; j < FF_COL; ++j) {
+        for (GLshort j = 0; j < FF_COL; ++j)
+        {
           translate.x += field_width;
           const vec2& v = get_field_force(i, j, m_current_time) / FORCE_MAGNITUDE;
           lines.push_back(translate);
@@ -234,7 +243,8 @@ public:
       debugger::draw_line(GL_LINES, lines, p_mat);
 
       vec3_vector points;
-      for (int i = 0; i < particles.size(); ++i) {
+      for (int i = 0; i < particles.size(); ++i)
+      {
         points.push_back(vec3(particles[i].pos(), 0));
         //std::cout << points.back() << std::endl;
       }
@@ -269,15 +279,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -296,7 +310,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::flow_field_app app;
   app.run();
 }

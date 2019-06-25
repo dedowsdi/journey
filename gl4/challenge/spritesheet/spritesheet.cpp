@@ -10,7 +10,8 @@
 #define WIDTH 640
 #define HEIGHT 360
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program lprg;
 spritesheet sheet;
@@ -123,19 +124,22 @@ GLuint create_ripple_texture()
   return tex;
 }
 
-class spritesheet_app : public app {
+class spritesheet_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "spritesheet_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
     m_info.decorated = false;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     glfwSetWindowPos(m_wnd, 100, 100);
@@ -178,7 +182,8 @@ public:
     sprite_anim.push_back(sheet.get_sprite(1, 0));
 
     quads.reserve(sprite_anim.size());
-    for (int i = 0; i < sprite_anim.size(); ++i) {
+    for (int i = 0; i < sprite_anim.size(); ++i)
+    {
       quad q;
       q.setup(0, 0, horse_size, horse_size);
       q.tc0(sprite_anim[i]);
@@ -189,7 +194,8 @@ public:
     }
 
     horses.reserve(num_horses);
-    for (int i = 0; i < num_horses; ++i) {
+    for (int i = 0; i < num_horses; ++i)
+    {
       horse h;
       h.pos(glm::linearRand(vec2(0), vec2(WIDTH, HEIGHT) - vec2(horse_size)));
       h.random_speed();
@@ -230,7 +236,8 @@ public:
     }
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(
@@ -274,15 +281,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -298,7 +309,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::spritesheet_app app;
   app.run();
 }

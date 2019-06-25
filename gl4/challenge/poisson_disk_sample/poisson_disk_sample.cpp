@@ -8,7 +8,8 @@
 #define HEIGHT 800.0f
 #define RADIUS 20
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -126,7 +127,8 @@ std::vector<vec2> poisson_disk_sample2(const vec2& min_ext, const vec2& max_ext,
     GLuint active_index = glm::linearRand(0.0, 1.0) * actives.size();
     const vec2& sample = samples[actives[active_index]];
     bool new_sample_emitted = false;
-    for (GLubyte kill = k; kill > 0; --kill) {
+    for (GLubyte kill = k; kill > 0; --kill)
+    {
       vec2 new_sample = sample + glm::circularRand(1.0f) * glm::linearRand(radius, two_radius);
       while(new_sample.x < min_ext.x || new_sample.y < min_ext.y || new_sample.x > max_ext.x || new_sample.y > max_ext.y)
          new_sample = sample + glm::circularRand(1.0f) * glm::linearRand(radius, two_radius);
@@ -136,13 +138,15 @@ std::vector<vec2> poisson_disk_sample2(const vec2& min_ext, const vec2& max_ext,
       // check neighbour of new sample to make sure there has no sample in r
       // radius
       bool valid_new_sample = true;
-      for (int i = -neighbour_radius; i <= neighbour_radius && valid_new_sample; ++i) {
+      for (int i = -neighbour_radius; i <= neighbour_radius && valid_new_sample; ++i)
+      {
 
         GLint nb_row = row + i;
         if(nb_row < 0 || nb_row >= rows)
           continue;
 
-        for (int j = -neighbour_radius; j <= neighbour_radius; ++j) {
+        for (int j = -neighbour_radius; j <= neighbour_radius; ++j)
+        {
           GLint nb_col = col + j;
           if(nb_col < 0 || nb_col >= cols)
             continue;
@@ -160,7 +164,8 @@ std::vector<vec2> poisson_disk_sample2(const vec2& min_ext, const vec2& max_ext,
         continue;
 
       // debug check
-      //for (int i = 0; i < samples.size(); ++i) {
+      //for (int i = 0; i < samples.size(); ++i)
+      //{
         //if(glm::length2(new_sample - samples[i]) <= radius2)
         //{
           //GLint c0 = (new_sample.x - min_ext.x) / cell_size;
@@ -193,19 +198,22 @@ std::vector<vec2> poisson_disk_sample2(const vec2& min_ext, const vec2& max_ext,
   return samples;
 };
 
-class app_name : public app {
+class app_name : public app
+{
 protected:
   bitmap_text m_text;
   vec2_vector m_vertices;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -226,7 +234,8 @@ public:
 
   virtual void update() {}
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -243,15 +252,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -267,7 +280,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::app_name app;
   app.run();
 }

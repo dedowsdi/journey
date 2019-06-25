@@ -22,7 +22,8 @@ bool display_cool_map = false;
 bool warp = true;
 fipImage img;
 
-namespace zxd {
+namespace zxd
+{
 
 GLuint fireSourceRows = 5;
 GLfloat fireSourceChance = 0.5;
@@ -159,12 +160,14 @@ protected:
 
 } hprg;
 
-class fire_app : public app {
+class fire_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "fire_app";
     m_info.samples = 4;
@@ -181,7 +184,8 @@ public:
     m_info.wnd_height = height;
 #endif
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     glfwSetWindowPos(m_wnd, 100, 100);
@@ -213,7 +217,8 @@ public:
   {
     float_vector sources;
     sources.resize(width*height, 0);
-    for (int i = 0; i < cool_spot; ++i) {
+    for (int i = 0; i < cool_spot; ++i)
+    {
       GLint index = glm::linearRand(0, width*height - 1);
       sources[index] = 1;
     }
@@ -227,7 +232,8 @@ public:
     glUniform1i(cprg.ul_cool_map, 0);
 
     cool_current = 0;
-    for (int i = 0; i < cool_smooth_time; ++i) {
+    for (int i = 0; i < cool_smooth_time; ++i)
+    {
       GLuint tex = cool_current;
       cool_current = ++cool_current % 2;
 
@@ -241,7 +247,8 @@ public:
     }
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     feed_fire_source();
   }
 
@@ -278,12 +285,14 @@ public:
     //}
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glViewport(0, 0, width, height);
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i)
+    {
       feed_fire_source();
 
       glFramebufferTexture2D(
@@ -333,15 +342,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -360,7 +373,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   img = zxd::fipLoadResource32("texture/ren.jpg");
   zxd::fire_app app;
   app.run();

@@ -16,7 +16,8 @@
 #define TEX_WIDTH WIDTH*1
 #define TEX_HEIGHT HEIGHT*1
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -128,7 +129,8 @@ protected:
   }
 } prg1;
 
-class reaction_diffusion_app : public app {
+class reaction_diffusion_app : public app
+{
 protected:
   bitmap_text m_text;
   pacman m_pacman;
@@ -151,7 +153,8 @@ public:
   virtual void glfw_mouse_move(GLFWwindow *wnd, double x, double y);
 };
 
-void reaction_diffusion_app::init_info() {
+void reaction_diffusion_app::init_info()
+{
   app::init_info();
   m_info.title = "reaction diffusion";
   m_info.wnd_width = 0;
@@ -163,7 +166,8 @@ void reaction_diffusion_app::init_info() {
   m_info.samples = 16;
   //m_info.fullscreen = GL_TRUE;
 }
-void reaction_diffusion_app::create_scene() {
+void reaction_diffusion_app::create_scene()
+{
 
   m_text.init();
   m_text.reshape(wnd_width(), wnd_height());
@@ -201,7 +205,8 @@ void reaction_diffusion_app::create_scene() {
       printf("incomplete frame buffer%i\n", fbo[i]);
   }
 
-  auto update_value = [&](const kci* item){
+  auto update_value = [&](const kci* item)
+  {
     da         = kci_da->get_float();
     db         = kci_db->get_float();
     feed       = kci_feed->get_float();
@@ -225,7 +230,8 @@ void reaction_diffusion_app::create_scene() {
   replay();
 }
 
-void reaction_diffusion_app::update() {
+void reaction_diffusion_app::update()
+{
 
   if(!add_pacman)
     return;
@@ -266,7 +272,8 @@ void reaction_diffusion_app::replay()
   create_circle_seeds(vec2(0), 20);
 }
 
-void reaction_diffusion_app::display() {
+void reaction_diffusion_app::display()
+{
 
   for (int i = 0; i < speed; ++i) 
   {
@@ -329,15 +336,19 @@ void reaction_diffusion_app::display() {
   glDisable(GL_BLEND);
 }
 
-void reaction_diffusion_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void reaction_diffusion_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 }
 
 void reaction_diffusion_app::glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -369,7 +380,8 @@ void reaction_diffusion_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::reaction_diffusion_app app;
   app.run();
 }

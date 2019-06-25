@@ -7,7 +7,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -160,7 +161,8 @@ struct onode
 
 
   bool divided() {return children[0] != 0;}
-  bool dividable(){
+  bool dividable()
+  {
     vec3 ext = corner1 - corner0;
     return glm::all(glm::greaterThan(ext, vec3(min_size)));
   }
@@ -309,7 +311,8 @@ public:
   }
 };
 
-class octree_app : public app {
+class octree_app : public app
+{
 protected:
   bitmap_text m_text;
   octree* m_tree = 0;
@@ -323,13 +326,15 @@ public:
       delete m_tree;
   }
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "octree_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -338,7 +343,8 @@ public:
     m_tree = new octree(vec3(-100), vec3(100));
 
     points.reserve(num_points);
-    for (int i = 0; i < num_points; ++i) {
+    for (int i = 0; i < num_points; ++i)
+    {
       points.push_back(glm::linearRand(vec3(-100), vec3(100)));
       m_tree->insert(points.back());
     }
@@ -351,7 +357,8 @@ public:
 
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     vp_mat = p_mat * v_mat;
     m_cube.update();
 
@@ -359,7 +366,8 @@ public:
     m_tree->get(m_cube_points, m_cube.corner0(), m_cube.corner1());
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -382,15 +390,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -409,7 +421,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   assert(zxd::intersect(1, 10, 2, 8));
   assert(zxd::intersect(39, 20, 10, 22));
 

@@ -8,7 +8,8 @@
 #define WIDTH 720
 #define HEIGHT 720
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -41,13 +42,15 @@ vec2_vector lines;
 
 std::vector<lissajous> lisas;
 
-class lissajous_app : public app {
+class lissajous_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
 
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "lissajous_app";
     m_info.wnd_width = WIDTH;
@@ -56,7 +59,8 @@ public:
     m_info.decorated = false;
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_LINE_SMOOTH);
 
@@ -110,7 +114,8 @@ public:
 
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -122,7 +127,8 @@ public:
 
     // draw 1st col and row
     vec2 lt = vec2(-radius * (cols+1), radius * (rows+1)) + vec2(radius, -radius);
-    for (int i = 0; i <= cols; ++i) {
+    for (int i = 0; i <= cols; ++i)
+    {
       vec2 pos = lt + vec2(i, 0) * radius * 2.0f;
       mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
@@ -137,7 +143,8 @@ public:
       lines.push_back(dot + vec2(0, -2 * radius * (rows + 1)));
     }
 
-    for (int i = 0; i <= rows; ++i) {
+    for (int i = 0; i <= rows; ++i)
+    {
       vec2 pos = lt + vec2(0, -i) * radius * 2.0f;
       mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
       glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
@@ -192,15 +199,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -216,7 +227,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::lissajous_app app;
   app.run();
 }

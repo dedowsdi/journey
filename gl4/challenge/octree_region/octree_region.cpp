@@ -9,7 +9,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -59,19 +60,22 @@ std::vector<fruit*> selected;
 
 blinn_program prg;
 
-class octree_region_app : public app {
+class octree_region_app : public app
+{
 protected:
   bitmap_text m_text;
   octree* m_tree;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "octree_region_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -131,7 +135,8 @@ public:
     vel = glm::sphericalRand(0.5);
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     vec3 pos = select_box.pos();
     pos += vel;
     if(pos.x > boundary)
@@ -173,7 +178,8 @@ public:
     //std::cout <<"end get"<< std::endl;
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -186,14 +192,16 @@ public:
     prg.update_lighting_uniforms(lights, lm, mtl0, v_mat);
     if(draw_cube)
     {
-      for (int i = 0; i < entities.size(); ++i) {
+      for (int i = 0; i < entities.size(); ++i)
+      {
         prg.update_uniforms(entities[i].m_mat(), v_mat, p_mat);
         geometry.draw();
       }
     }
 
     mtl1.update_uniforms();
-    for (int i = 0; i < selected.size(); ++i) {
+    for (int i = 0; i < selected.size(); ++i)
+    {
       entity* ety = static_cast<entity*>(selected[i]);
       prg.update_uniforms(ety->m_mat() * glm::scale(vec3(1.01)), v_mat, p_mat);
       geometry.draw();
@@ -215,15 +223,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -242,7 +254,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::octree_region_app app;
   app.run();
 }

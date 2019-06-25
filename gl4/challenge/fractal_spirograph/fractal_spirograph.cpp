@@ -11,7 +11,8 @@
 #include "lissajous.h"
 #include "fractal_spiral.h"
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -50,14 +51,16 @@ GLfloat pen_width = 2;
 
 // translation only, no rotation
 
-class fractal_spirograph_app : public app {
+class fractal_spirograph_app : public app
+{
 protected:
   bitmap_text m_text;
   std::shared_ptr<spiral_seed> m_graph;
   spiral_seed* m_current_graph;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "fractal_spirograph_app";
     m_info.wnd_width = 720;
@@ -96,7 +99,8 @@ public:
       printf("incomplete frame buffer\n");
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_LINE_SMOOTH);
 
@@ -218,7 +222,8 @@ public:
     restart();
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     // draw trace in a different texture, no clear
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     auto pen = m_graph->get_pen();
@@ -230,7 +235,8 @@ public:
     vec2_vector lines;
     lines.reserve(resolution + 1);
     lines.push_back(pen->pos());
-    for (int i = 0; i < resolution; ++i) {
+    for (int i = 0; i < resolution; ++i)
+    {
       m_graph->update(kci_resolution->get_int());
       lines.push_back(pen->pos());
     }
@@ -240,7 +246,8 @@ public:
     glBlitFramebuffer(0, 0, wnd_width(), wnd_height(), 0, 0, m_info.wnd_width, m_info.wnd_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -296,16 +303,20 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     resize_buffer();
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-      GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+      GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -341,7 +352,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::fractal_spirograph_app app;
   app.run();
 }

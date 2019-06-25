@@ -23,7 +23,8 @@
 #define QUAD_INDEX 0
 #define LINE_INDEX 1
 
-namespace zxd {
+namespace zxd
+{
 
 lightless_program prg;
 
@@ -125,8 +126,10 @@ public:
     m_num_col(num_col)
   {
     m_cells.reserve(m_num_row * m_num_col);
-    for (int row = 0; row < m_num_row; ++row) {
-      for (int col = 0; col < m_num_col; ++col) {
+    for (int row = 0; row < m_num_row; ++row)
+    {
+      for (int col = 0; col < m_num_col; ++col)
+      {
         m_cells.push_back(cell(row, col));
       }
     }
@@ -338,11 +341,13 @@ public:
     glBufferSubData(GL_ARRAY_BUFFER, 0, 
         m_num_lines * 2 * sizeof(vec2), glm::value_ptr(m_line_vertices.front()));
 
-    //for (size_t i = 0; i < m_quad_vertices.size(); ++i) {
+    //for (size_t i = 0; i < m_quad_vertices.size(); ++i)
+    //{
       //std::cout << m_quad_vertices.at(i) << std::endl;
     //}
     //std::cout << "------------------------"<< std::endl;
-    //for (size_t i = 0; i < m_line_vertices.size(); ++i) {
+    //for (size_t i = 0; i < m_line_vertices.size(); ++i)
+    //{
       //std::cout << m_line_vertices.at(i) << std::endl;
     //}
     //std::cout << "------------------------"<< std::endl;
@@ -353,7 +358,8 @@ public:
 };
 
 
-class app_name : public app {
+class app_name : public app
+{
 protected:
   bitmap_text m_text;
   maze* m_maze = 0;
@@ -365,13 +371,15 @@ public:
     if(m_maze)
       delete m_maze;
   }
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -425,7 +433,8 @@ public:
     }
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -439,15 +448,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -460,7 +473,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::app_name app;
   app.run();
 }

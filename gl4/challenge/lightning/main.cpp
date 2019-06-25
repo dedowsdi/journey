@@ -16,7 +16,8 @@
 #define WIDTH 640
 #define HEIGHT 640
 
-namespace zxd {
+namespace zxd
+{
 
 bool verbose = false;
 bool use_cpu = false;
@@ -68,7 +69,8 @@ kcip kci_bloom_exposure;
 
 GLuint create_texture(GLvoid* data = 0);
 
-class lightining_app : public app {
+class lightining_app : public app
+{
 protected:
   bitmap_text m_text;
   lsystem m_lsystem;
@@ -87,7 +89,8 @@ public:
       GLFWwindow *wnd, int key, int scancode, int action, int mods);
 };
 
-void lightining_app::init_info() {
+void lightining_app::init_info()
+{
   app::init_info();
   m_info.title = "lightining_app";
   m_info.wnd_width = WIDTH;
@@ -96,7 +99,8 @@ void lightining_app::init_info() {
   m_info.samples = 8;
 }
 
-void lightining_app::create_scene() {
+void lightining_app::create_scene()
+{
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -250,7 +254,8 @@ void lightining_app::update()
 
 }
 
-void lightining_app::display() {
+void lightining_app::display()
+{
   // render scene
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -318,15 +323,19 @@ void lightining_app::display() {
   glDisable(GL_BLEND);
 }
 
-void lightining_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void lightining_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 }
 
 void lightining_app::glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -364,7 +373,8 @@ GLuint create_texture(GLvoid* data)
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::lightining_app app;
   app.run();
 }

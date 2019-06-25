@@ -6,7 +6,8 @@
 #include "common_program.h"
 #include "geometry_util.h"
 
-namespace zxd {
+namespace zxd
+{
 
 const GLint width = 640;
 const GLint height = 640;
@@ -38,7 +39,8 @@ light_model lm;
 material mtl;
 blinn_program bprg;
 
-class blobby3d_app : public app {
+class blobby3d_app : public app
+{
 private:
   bitmap_text m_text;
   icosahedron m_sphere;
@@ -58,7 +60,8 @@ public:
     GLFWwindow *wnd, int key, int scancode, int action, int mods) override;
 };
 
-void blobby3d_app::init_info() {
+void blobby3d_app::init_info()
+{
   app::init_info();
   m_info.title = "blobby3d_app";
   m_info.wnd_width = width;
@@ -68,7 +71,8 @@ void blobby3d_app::init_info() {
   m_info.wm.y = 100;
 }
 
-void blobby3d_app::create_scene() {
+void blobby3d_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
@@ -111,7 +115,8 @@ void blobby3d_app::create_scene() {
 
 void blobby3d_app::update() {}
 
-void blobby3d_app::display() {
+void blobby3d_app::display()
+{
 
   GLuint num_vertices = m_sphere.num_vertices();
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_mesh_buffer);
@@ -142,15 +147,19 @@ void blobby3d_app::display() {
   glDisable(GL_BLEND);
 }
 
-void blobby3d_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void blobby3d_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 }
 
 void blobby3d_app::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -163,7 +172,8 @@ void blobby3d_app::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::blobby3d_app app;
   app.run();
 }

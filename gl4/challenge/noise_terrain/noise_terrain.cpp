@@ -13,7 +13,8 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
-namespace zxd {
+namespace zxd
+{
 
 GLuint vao;
 GLuint vbo;
@@ -48,18 +49,21 @@ protected:
 
 } prg;
 
-class app_name : public app {
+class app_name : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -69,11 +73,13 @@ public:
     GLfloat col_step = TERRAIN_WIDTH / NUM_COLS;
 
     vec3 start_pos(-row_step * NUM_ROWS * 0.5, -col_step * NUM_COLS * 0.5, 0);
-    for (int i = 0; i < NUM_ROWS; ++i) {
+    for (int i = 0; i < NUM_ROWS; ++i)
+    {
       GLfloat y1 = i * row_step;
       GLfloat y0 = y1 + row_step;
 
-      for (int j = 0; j <= NUM_COLS; ++j) {
+      for (int j = 0; j <= NUM_COLS; ++j)
+      {
         GLfloat x = col_step * j;
         vertices.push_back(vec3(x, y0, 0) + start_pos);
         vertices.push_back(vec3(x, y1, 0) + start_pos);
@@ -140,7 +146,8 @@ public:
     update_buffer(vec2(m_current_time * 0.25, m_current_time * 0.25));
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -155,7 +162,8 @@ public:
 
     GLint next = 0;
     GLint count = (NUM_COLS + 1) * 2;
-    for (int i = 0; i < NUM_ROWS; ++i) {
+    for (int i = 0; i < NUM_ROWS; ++i)
+    {
       glDrawArrays(GL_TRIANGLE_STRIP, next, count);
       next += count;
     }
@@ -168,15 +176,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -189,7 +201,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::app_name app;
   app.run();
 }

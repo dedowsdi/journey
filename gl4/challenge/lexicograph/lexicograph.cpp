@@ -36,23 +36,27 @@
 #define WIDTH 800
 #define HEIGHT 200
 
-namespace zxd {
+namespace zxd
+{
 
 bool next_order = true;
 
-class app_name : public app {
+class app_name : public app
+{
 protected:
   bitmap_text m_text;
   std::vector<char> m_code;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "app_name";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -131,7 +135,8 @@ public:
     std::reverse(m_code.begin() + x + 1, m_code.end());
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     //static GLint count = 0;
     //if(++count % 60 != 0)
       //return;
@@ -144,7 +149,8 @@ public:
     
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glEnable(GL_BLEND);
@@ -158,15 +164,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -182,7 +192,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::app_name app;
   app.run();
 }

@@ -12,7 +12,8 @@
 #define HEIGHT 800
 #define GRAVITY vec3(0, 0, -0.1)
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -266,20 +267,23 @@ protected:
   }
 } filter_prg;
 
-class firework_app : public app {
+class firework_app : public app
+{
 protected:
   bitmap_text m_text;
   firework_list m_fireworks;
   geometry m_geometry;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "firework_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     prg.init();
@@ -308,7 +312,8 @@ public:
 
     float_vector vertices;
     vertices.reserve(m_fireworks.size() * 100 * 8);
-    for(auto iter = m_fireworks.begin(); iter != m_fireworks.end();){
+    for(auto iter = m_fireworks.begin(); iter != m_fireworks.end();)
+    {
       if(iter->done())
       {
         iter = m_fireworks.erase(iter);
@@ -323,7 +328,8 @@ public:
     m_geometry.update_buffer(vertices);
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     // in order to fake the trail effect, don't clear frame, instead use a
     // filter to fade last frame
     //glClear(GL_COLOR_BUFFER_BIT);
@@ -348,15 +354,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -369,7 +379,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::firework_app app;
   app.run();
 }

@@ -10,7 +10,8 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 v_mat;
 glm::mat4 p_mat;
@@ -40,7 +41,8 @@ public:
     m_fitness(0)
   {
     m_genes.reserve(life);
-    for (int i = 0; i < life; ++i) {
+    for (int i = 0; i < life; ++i)
+    {
       m_genes.push_back(glm::circularRand(1.0f));
     }
   }
@@ -75,7 +77,8 @@ public:
   void mutate(float rate)
   {
       // should i mutate the tood gene too?
-    for (int i = 0; i < m_genes.size(); ++i) {
+    for (int i = 0; i < m_genes.size(); ++i)
+    {
       if(unit_random() < rate)
         m_genes[i] = glm::circularRand(1.0f);
     }
@@ -179,7 +182,8 @@ public:
     m_size(size),
     m_mutation_rate(mutation_rate)
   {
-    for (int i = 0; i < m_size; ++i) {
+    for (int i = 0; i < m_size; ++i)
+    {
       m_rockets.push_back(rocket());
       m_rockets.back().pos(vec2(WIDTH*0.5, 0));
     }
@@ -199,7 +203,8 @@ public:
       m_life_count = 0;
     }
 
-    for (int i = 0; i < m_size; ++i) {
+    for (int i = 0; i < m_size; ++i)
+    {
       m_rockets[i].update(m_life_count, target);
     }
     ++m_life_count;
@@ -209,7 +214,8 @@ public:
   void evaluate()
   {
     float max_fitness = 0;
-    for (int i = 0; i < m_rockets.size(); ++i) {
+    for (int i = 0; i < m_rockets.size(); ++i)
+    {
       rocket& r = m_rockets[i];
       dna& d = r.get_dna();
       if(r.hit())
@@ -235,7 +241,8 @@ public:
       }
     }
 
-    //for (int i = 0; i < m_rockets.size(); ++i) {
+    //for (int i = 0; i < m_rockets.size(); ++i)
+    //{
       //rocket& r = m_rockets[i];
       //dna& d = r.get_dna();
       //d.fitness(d.fitness() / max_fitness);
@@ -261,7 +268,8 @@ public:
     dna_vector dnas;
     dnas.reserve(m_size);
 
-    for (int i = 0; i < m_size; ++i) {
+    for (int i = 0; i < m_size; ++i)
+    {
       dna* parent0 = pick_by_fitness();
       dna* parent1 = pick_by_fitness();
       dnas.push_back(parent0->cross_over(*parent1));
@@ -269,7 +277,8 @@ public:
     }
 
     m_rockets.clear();
-    for (int i = 0; i < m_size; ++i) {
+    for (int i = 0; i < m_size; ++i)
+    {
       m_rockets.emplace_back(dnas[i]);
     }
 
@@ -277,7 +286,8 @@ public:
 
   void draw()
   {
-    for (int i = 0; i < m_rockets.size(); ++i) {
+    for (int i = 0; i < m_rockets.size(); ++i)
+    {
       m_rockets[i].draw();
     }
   }
@@ -285,19 +295,22 @@ public:
 };
 
 
-class smart_rocket_app : public app {
+class smart_rocket_app : public app
+{
 protected:
   bitmap_text m_text;
   population m_population = population(100, 0.01);
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "smart_rocket_app";
     m_info.wnd_width = WIDTH;
     m_info.wnd_height = HEIGHT;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     m_text.init();
@@ -321,11 +334,13 @@ public:
     obstacle.build_mesh();
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     m_population.update();
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
@@ -350,15 +365,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-      GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+      GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -371,7 +390,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::smart_rocket_app app;
   app.run();
 }

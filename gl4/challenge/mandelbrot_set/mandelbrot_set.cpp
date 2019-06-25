@@ -9,7 +9,8 @@
 #include <algorithm>
 #include <iomanip>
 
-namespace zxd {
+namespace zxd
+{
 
 bool dirty = true;
 GLuint mtex;
@@ -43,7 +44,8 @@ bool zoom_out = false;
 double zoom_speed = 0.93;
 
 GLuint num_ctrl_colors = 6;
-vec3_vector ctrl_colors = {
+vec3_vector ctrl_colors =
+{
   vec3(0  , 7  , 100) / 255.0f,
   vec3(32 , 107, 203) / 255.0f,
   vec3(237, 255, 255) / 255.0f,
@@ -143,12 +145,14 @@ protected:
 
 } color_prg;
 
-class mandelbrot_set_app : public app {
+class mandelbrot_set_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "mandelbrot_set_app";
     m_info.wnd_width = 512;
@@ -200,7 +204,8 @@ public:
     pbo.clear();
     GLuint* buffers = new GLuint[num_pbo];
     glGenBuffers(num_pbo, buffers);
-    for (int i = 0; i < num_pbo; ++i) {
+    for (int i = 0; i < num_pbo; ++i)
+    {
       glBindBuffer(GL_PIXEL_PACK_BUFFER, buffers[i]);
       glBufferData(GL_PIXEL_PACK_BUFFER, wnd_width()*wnd_height()*sizeof(GLuint), 0, GL_DYNAMIC_DRAW);
       pbo.add_resource(buffers[i]);
@@ -209,7 +214,8 @@ public:
     delete[] buffers;
   }
 
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     //m_pause = true;
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
@@ -273,7 +279,8 @@ public:
     dirty = true;
     ctrl_colors.clear();
     ctrl_colors.push_back(glm::linearRand(vec3(0), vec3(1)));
-    for (int i = 0; i < num_ctrl_colors; ++i) {
+    for (int i = 0; i < num_ctrl_colors; ++i)
+    {
       //vec3 color = ctrl_colors.back() + glm::linearRand(vec3(0.05), vec3(0.15));
       //color -= glm::step(vec3(1), color);
       //ctrl_colors.push_back(color);
@@ -291,7 +298,8 @@ public:
     //float_vector ctrl_positions = {0, 0.16, 0.42, 0.6425, 0.8575, 1};
     float_vector ctrl_positions = {0, 0.16, 0.42, 0.6425, 0.8575};
     GLfloat weight_step = (1 - ctrl_positions[4]) / (num_ctrl_colors - 5);
-    for (int i = 5; i < num_ctrl_colors; ++i) {
+    for (int i = 5; i < num_ctrl_colors; ++i)
+    {
       ctrl_positions.push_back(ctrl_positions.back() + weight_step );
     }
     //float_vector ctrl_positions = {0, 0.16, 0.42, 0.83, 0.95, 1};
@@ -299,13 +307,15 @@ public:
     //ctrl_positions.push_back(0);
     //ctrl_positions.push_back(0.4);
     //ctrl_positions.push_back(0.8);
-    //for (int i = 0; i < num_colors; ++i) {
+    //for (int i = 0; i < num_colors; ++i)
+    //{
       //ctrl_positions.push_back( static_cast<GLfloat>(i) / num_ctrl_colors );
     //}
     //ctrl_positions.push_back(1.0);
 
     colors.push_back(vec4(ctrl_colors.front(), 1));
-    for (int i = 1; i < num_colors; ++i) {
+    for (int i = 1; i < num_colors; ++i)
+    {
       GLfloat idx = static_cast<GLfloat>(i) / (num_colors - 1);
       auto iter = std::lower_bound(ctrl_positions.begin(), ctrl_positions.end(), idx);
       GLint ci1 = std::distance(ctrl_positions.begin(), iter);
@@ -343,7 +353,8 @@ public:
     }
   }
 
-  virtual void update() {
+  virtual void update()
+  {
     if(use_pbo)
       pbo.shift();
     if(zoom_in)
@@ -386,7 +397,8 @@ public:
       glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo.last_ping());
       GLfloat* data = static_cast<GLfloat*>(glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY));
       //std::cout << "map buffer cost " << it.time_miliseconds() << "ms" << std::endl;
-      for (int i = 0; i < pixels.size(); ++i) {
+      for (int i = 0; i < pixels.size(); ++i)
+      {
         ++histogram[*data++];
       }
       //std::cout << "read buffer cost " << it.time_miliseconds() << "ms" << std::endl;
@@ -462,7 +474,8 @@ public:
     q.draw();
   }
 
-  virtual void display() {
+  virtual void display()
+  {
 
     if(!dirty)
       return;
@@ -502,7 +515,8 @@ public:
 
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
     resize_textrure();
@@ -512,9 +526,12 @@ public:
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -552,7 +569,8 @@ public:
   }
 
   virtual void glfw_mouse_button(
-    GLFWwindow *wnd, int button, int action, int mods){
+    GLFWwindow *wnd, int button, int action, int mods)
+  {
     if(action == GLFW_PRESS)
     {
       if(GLFW_MOUSE_BUTTON_LEFT == button)
@@ -591,7 +609,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::mandelbrot_set_app app;
   app.run();
 }

@@ -14,7 +14,8 @@
 #include "rain.h"
 #include "bitmap_text.h"
 
-namespace zxd {
+namespace zxd
+{
 
 const GLint width = 720;
 const GLint height = 720;
@@ -23,7 +24,8 @@ bool display_help = true;
 freetype_text ft("font/DejaVuSansMono.ttf");
 std::shared_ptr<bitmap_text> bt;
 
-class matrix_rain_app : public app {
+class matrix_rain_app : public app
+{
 private:
   bitmap_text m_text;
   std::unique_ptr<matrix_rain> m_matrix_rain;
@@ -42,14 +44,16 @@ public:
     GLFWwindow *wnd, int key, int scancode, int action, int mods) override;
 };
 
-void matrix_rain_app::init_info() {
+void matrix_rain_app::init_info()
+{
   app::init_info();
   m_info.title = "matrix_rain_app";
   m_info.wnd_width = width;
   m_info.wnd_height = height;
 }
 
-void matrix_rain_app::create_scene() {
+void matrix_rain_app::create_scene()
+{
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   ft.init();
@@ -63,7 +67,8 @@ void matrix_rain_app::create_scene() {
   glfw_resize(0, width, height);
 }
 
-void matrix_rain_app::update() {
+void matrix_rain_app::update()
+{
 
   if(m_frame_number % 4 != 0)
     return;
@@ -71,7 +76,8 @@ void matrix_rain_app::update() {
   m_matrix_rain->update();
 }
 
-void matrix_rain_app::display() {
+void matrix_rain_app::display()
+{
   glClear(GL_COLOR_BUFFER_BIT);
 
   m_matrix_rain->draw();
@@ -87,7 +93,8 @@ void matrix_rain_app::display() {
   glDisable(GL_BLEND);
 }
 
-void matrix_rain_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void matrix_rain_app::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
   app::glfw_resize(wnd, w, h);
   m_text.reshape(wnd_width(), wnd_height());
 
@@ -96,9 +103,12 @@ void matrix_rain_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
 }
 
 void matrix_rain_app::glfw_key(
-  GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-  if (action == GLFW_PRESS) {
-    switch (key) {
+  GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS)
+  {
+    switch (key)
+    {
       case GLFW_KEY_ESCAPE:
         glfwSetWindowShouldClose(m_wnd, GL_TRUE);
         break;
@@ -114,7 +124,8 @@ void matrix_rain_app::glfw_key(
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   zxd::matrix_rain_app app;
   app.run();
 }

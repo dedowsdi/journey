@@ -4,7 +4,7 @@
 namespace zxd
 {
 class hello_world : public app
-  {
+{
 protected:
   bitmap_text m_text;
 

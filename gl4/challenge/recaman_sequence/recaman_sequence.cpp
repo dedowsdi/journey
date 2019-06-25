@@ -15,7 +15,8 @@
 #define WIDTH 640
 #define HEIGHT 360
 
-namespace zxd {
+namespace zxd
+{
 
 glm::mat4 m_mat;
 glm::mat4 v_mat;
@@ -111,12 +112,14 @@ GLuint create_multi_sample_texture(GLvoid* data = 0)
   return tex;
 }
 
-class recaman_sequence_app : public app {
+class recaman_sequence_app : public app
+{
 protected:
   bitmap_text m_text;
 
 public:
-  virtual void init_info() {
+  virtual void init_info()
+  {
     app::init_info();
     m_info.title = "recaman_sequence_app";
     m_info.wnd_width = WIDTH;
@@ -126,7 +129,8 @@ public:
     m_info.wm.x = 100;
     m_info.wm.y = 100;
   }
-  virtual void create_scene() {
+  virtual void create_scene()
+  {
     glfwSetWindowPos(m_wnd, 100, 100);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -175,7 +179,8 @@ public:
       mat4 m = glm::scale(glm::translate(vec3(center, 0, 0)), scale);
 
       auto transformed_vertices = geometry_util::transform(unit_vertices, m);
-      for (int i = 0; i < transformed_vertices.size(); ++i) {
+      for (int i = 0; i < transformed_vertices.size(); ++i)
+      {
         vertices->push_back(transformed_vertices[i].xy());
         colors->push_back(glm::mix(color0, color1, static_cast<GLfloat>(i)/transformed_vertices.size()));
       }
@@ -237,7 +242,8 @@ public:
     mvp_mat = p_mat * v_mat;
   }
 
-  virtual void display() {
+  virtual void display()
+  {
     //GLenum draw_buffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
     // draw scene to diffuse_map
     //glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -284,15 +290,19 @@ public:
     glDisable(GL_BLEND);
   }
 
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h) {
+  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
+  {
     app::glfw_resize(wnd, w, h);
     m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(
-      GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-      switch (key) {
+      GLFWwindow *wnd, int key, int scancode, int action, int mods)
+  {
+    if (action == GLFW_PRESS)
+    {
+      switch (key)
+      {
         case GLFW_KEY_ESCAPE:
           glfwSetWindowShouldClose(m_wnd, GL_TRUE);
           break;
@@ -311,7 +321,8 @@ public:
 };
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   srand(time(0));
   zxd::recaman_sequence_app app;
   app.run();
