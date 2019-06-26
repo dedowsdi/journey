@@ -218,7 +218,6 @@ struct particle_vao
 class teardrop_app : public app
 {
 private:
-  bitmap_text m_text;
   particles m_particles;
   teardrop m_drop;
 
@@ -310,8 +309,6 @@ void teardrop_app::create_scene()
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   //glEnable(GL_DEPTH_TEST);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   m_drop.xy_scale(0.6);
   m_drop.slice(32);
@@ -451,7 +448,6 @@ void teardrop_app::display()
 void teardrop_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 }
 
 void teardrop_app::glfw_key(

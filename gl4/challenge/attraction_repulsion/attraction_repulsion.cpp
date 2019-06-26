@@ -143,7 +143,6 @@ attractor_vector attractors;
 class attractoin_repulsion_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info()
@@ -157,8 +156,6 @@ public:
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     light_source l0;
     l0.diffuse = vec4(1);
@@ -276,7 +273,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

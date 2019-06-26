@@ -54,7 +54,6 @@ GLfloat pen_width = 2;
 class fractal_spirograph_app : public app
 {
 protected:
-  bitmap_text m_text;
   std::shared_ptr<spiral_seed> m_graph;
   spiral_seed* m_current_graph;
 
@@ -104,8 +103,6 @@ public:
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_LINE_SMOOTH);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
 
@@ -307,7 +304,6 @@ public:
   {
     app::glfw_resize(wnd, w, h);
     resize_buffer();
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

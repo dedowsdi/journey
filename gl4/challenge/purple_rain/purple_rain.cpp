@@ -164,7 +164,6 @@ protected:
 
   rain_vector m_rains;
   rain_drop_geometry m_geometry;
-  bitmap_text m_text;
 
   void init_info()
   {
@@ -175,8 +174,6 @@ protected:
   void create_scene()
   {
     glClearColor(BG_COLOR.x, BG_COLOR.y, BG_COLOR.z, 1);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     m_geometry.build_mesh();
 

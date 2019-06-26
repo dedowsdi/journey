@@ -50,7 +50,6 @@ wire_program wire_program;
 class normal_viewer_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   normal_viewer_app() {}
@@ -78,8 +77,6 @@ protected:
     torus.include_normal(true);
     torus.build_mesh();
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void display()
@@ -116,7 +113,6 @@ protected:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   virtual void glfw_key(

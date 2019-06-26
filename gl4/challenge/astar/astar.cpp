@@ -233,7 +233,6 @@ public:
 class astar_app : public app
 {
 protected:
-  bitmap_text m_text;
   grid m_grid;
 
 public:
@@ -248,8 +247,6 @@ public:
   {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     m_grid.width(WIDTH);
     m_grid.height(HEIGHT);
@@ -374,7 +371,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

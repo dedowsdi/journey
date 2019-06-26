@@ -132,7 +132,6 @@ protected:
 class reaction_diffusion_app : public app
 {
 protected:
-  bitmap_text m_text;
   pacman m_pacman;
 
 public:
@@ -169,8 +168,6 @@ void reaction_diffusion_app::init_info()
 void reaction_diffusion_app::create_scene()
 {
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   prg.init();
   prg1.init();
@@ -339,7 +336,6 @@ void reaction_diffusion_app::display()
 void reaction_diffusion_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void reaction_diffusion_app::glfw_key(

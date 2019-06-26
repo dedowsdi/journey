@@ -51,7 +51,6 @@ protected:
 class teapot_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info();
@@ -79,8 +78,6 @@ void teapot_app::create_scene()
 {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   auto vertices = std::make_shared<vec3_array>();
   auto vertex_ptr = reinterpret_cast<vec3*>(const_cast<float(*)[3]>(TeapotVertices)) ;
@@ -131,7 +128,6 @@ void teapot_app::display()
 void teapot_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void teapot_app::glfw_key(

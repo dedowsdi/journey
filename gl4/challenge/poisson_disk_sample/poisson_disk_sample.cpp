@@ -201,7 +201,6 @@ std::vector<vec2> poisson_disk_sample2(const vec2& min_ext, const vec2& max_ext,
 class app_name : public app
 {
 protected:
-  bitmap_text m_text;
   vec2_vector m_vertices;
 
 public:
@@ -216,8 +215,6 @@ public:
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     geometry.init();
     prg.init();
@@ -255,7 +252,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

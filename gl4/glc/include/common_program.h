@@ -64,7 +64,6 @@ struct quad_program : public zxd::program
 
 struct point_program : public zxd::program
 {
-
   GLint ul_mvp_mat;
 
   void attach_shaders();
@@ -78,7 +77,6 @@ struct point_program : public zxd::program
 
 struct normal_viewer_program : public zxd::program
 {
-
   GLboolean smooth_normal = GL_FALSE;
 
   GLint ul_normal_length;
@@ -96,7 +94,6 @@ struct normal_viewer_program : public zxd::program
 
 struct vertex_color_program : public zxd::program
 {
-
   GLint ul_mvp_mat;
 
   void attach_shaders();

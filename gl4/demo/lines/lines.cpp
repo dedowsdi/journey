@@ -52,7 +52,6 @@ class lines : public app
   };
 
 protected:
-  bitmap_text m_text;
   line_stipple_program m_program;
   GLuint m_vao;
   GLuint m_vertex_buffer;
@@ -101,8 +100,6 @@ public:
   virtual void create_scene()
   {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     p_mat = glm::ortho(0.0f, 400.0f, 0.0f, 150.0f);
     v_mat = mat4(1.0);
@@ -197,7 +194,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   virtual void glfw_key(

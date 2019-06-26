@@ -94,7 +94,6 @@ private:
   GLfloat world_to_wnd(GLfloat radius);
   void resize_eyeball();
 
-  bitmap_text m_text;
   std::shared_ptr<spiral_seed> m_seed;
 
 };
@@ -117,8 +116,6 @@ void eyeball_app::create_scene()
   glClear(GL_COLOR_BUFFER_BIT);
   glEnable(GL_LINE_SMOOTH);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   prg.init();
   p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
@@ -271,7 +268,6 @@ void eyeball_app::display()
 void eyeball_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 
   p_mat = p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
   resize_eyeball();

@@ -314,7 +314,6 @@ public:
 class octree_app : public app
 {
 protected:
-  bitmap_text m_text;
   octree* m_tree = 0;
   cube m_cube = cube(vec3(20));
   vec3_vector m_cube_points;
@@ -337,8 +336,6 @@ public:
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     m_tree = new octree(vec3(-100), vec3(100));
 
@@ -393,7 +390,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

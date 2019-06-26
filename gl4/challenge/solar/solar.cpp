@@ -117,7 +117,6 @@ public:
 class solar_app : public app
 {
 protected:
-  bitmap_text m_text;
   planet m_planet;
 
 public:
@@ -133,8 +132,6 @@ public:
   {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     light_source light0;
     light0.position = vec4(0, 0, 0, 1);
@@ -211,7 +208,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

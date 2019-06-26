@@ -72,7 +72,6 @@ GLuint create_texture(GLvoid* data = 0);
 class lightining_app : public app
 {
 protected:
-  bitmap_text m_text;
   lsystem m_lsystem;
 
 public:
@@ -107,8 +106,6 @@ void lightining_app::create_scene()
 
   glfwSetWindowPos(m_wnd, 100, 100);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   // scene
   sphere0.include_normal(true);
@@ -326,7 +323,6 @@ void lightining_app::display()
 void lightining_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void lightining_app::glfw_key(

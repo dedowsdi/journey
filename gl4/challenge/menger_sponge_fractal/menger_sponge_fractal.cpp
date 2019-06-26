@@ -70,7 +70,6 @@ public:
 class menger_sponge_fractal : public app
 {
 protected:
-  bitmap_text m_text;
   cell_vector m_sponge;
   light_vector m_lights;
   light_model m_light_model;
@@ -96,8 +95,6 @@ protected:
 
     m_cooldown = 0;
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     m_sponge.push_back(cell(vec3(0), SPONGE_SIZE));
 

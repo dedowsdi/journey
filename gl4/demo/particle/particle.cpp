@@ -98,7 +98,6 @@ particle_program prg;
 class particle_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   particle_app() {}
@@ -112,8 +111,6 @@ protected:
   virtual void create_scene()
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     // load particle texture
     glGenTextures(1, &tex);
@@ -307,7 +304,6 @@ protected:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   virtual void glfw_key(

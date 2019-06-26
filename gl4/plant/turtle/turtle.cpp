@@ -42,7 +42,6 @@ std::vector<pattern> patterns;
 
 class turtle_app : public app {
 private:
-  bitmap_text m_text;
   turtle m_turtle;
   vec3_vector m_vertices;
   line m_geometry;
@@ -86,8 +85,6 @@ void turtle_app::create_scene() {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glEnable(GL_LINE_SMOOTH);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   llprg.init();
   p_mat = zxd::rect_ortho(100, 100, wnd_aspect());
@@ -346,7 +343,6 @@ void turtle_app::display() {
 
 void turtle_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   update_bound(m_vertices);
 }
 

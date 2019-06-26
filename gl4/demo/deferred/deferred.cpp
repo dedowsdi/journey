@@ -132,7 +132,6 @@ struct glinn_program : public zxd::program
 class defered : public app
 {
 protected:
-  bitmap_text m_text;
   GLint m_numspheres;
   GLint m_num_lights;
   glm::vec2 g_buffer_size;
@@ -227,8 +226,6 @@ public:
     m_num_lights = 20;
     g_buffer_size = vec2(wnd_width(), wnd_height());
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     // gbuffer textures
     glGenTextures(1, &mg_vertex);
@@ -435,7 +432,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   virtual void glfw_key(

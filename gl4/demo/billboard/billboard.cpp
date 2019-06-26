@@ -120,7 +120,6 @@ vec3_vector translations;
 class billboard_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   billboard_app() {}
@@ -134,8 +133,6 @@ protected:
   virtual void create_scene()
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     // init program
     program0.init();
@@ -261,7 +258,6 @@ protected:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   virtual void glfw_key(

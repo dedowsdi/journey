@@ -42,7 +42,6 @@ blinn_program bprg;
 class blobby3d_app : public app
 {
 private:
-  bitmap_text m_text;
   icosahedron m_sphere;
   GLuint m_mesh_buffer;
 
@@ -77,8 +76,6 @@ void blobby3d_app::create_scene()
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   light_source l;
   l.position = vec4(0, 0, 1, 0);
@@ -150,7 +147,6 @@ void blobby3d_app::display()
 void blobby3d_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 }
 
 void blobby3d_app::glfw_key(

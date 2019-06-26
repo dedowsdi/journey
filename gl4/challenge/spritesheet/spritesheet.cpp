@@ -127,7 +127,6 @@ GLuint create_ripple_texture()
 class spritesheet_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info()
@@ -144,8 +143,6 @@ public:
 
     glfwSetWindowPos(m_wnd, 100, 100);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     lprg.with_texcoord = true;
     lprg.init();
@@ -284,7 +281,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

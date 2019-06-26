@@ -82,7 +82,6 @@ struct snow
 class snow_app : public app
 {
 protected:
-  bitmap_text m_text;
   std::vector<snow*> m_snows;
   spritesheet* m_flakes = 0;
 
@@ -109,8 +108,6 @@ public:
   {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.scale = true;
     prg.rotate = true;
@@ -261,7 +258,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

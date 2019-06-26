@@ -205,7 +205,6 @@ struct rgb_program : public zxd::program
 class rgb_app : public app
 {
 protected:
-  bitmap_text m_text;
   GLuint m_max_pane_per_line;
   GLuint m_current_pane_index;
   GLfloat m_pane_width;
@@ -272,8 +271,6 @@ protected:
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_LINE_SMOOTH);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     rgb_program.init();
     p_mat = ortho(0.0f, 1.0f, 0.0f, 1.0f);
@@ -411,7 +408,6 @@ protected:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   GLfloat quantity(int mods)

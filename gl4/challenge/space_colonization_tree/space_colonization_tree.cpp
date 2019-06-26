@@ -282,7 +282,6 @@ class space_colonization_tree_app : public app
 protected:
   GLuint m_draw_count = 0;
   GLfloat m_time = 0;
-  bitmap_text m_text;
   space_colonization_tree m_tree;
   leaf_list m_leaves;
   points<vec2> m_points;
@@ -299,8 +298,6 @@ public:
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     p_mat = glm::ortho<GLfloat>(0, WIDTH, 0, HEIGHT);
@@ -354,7 +351,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

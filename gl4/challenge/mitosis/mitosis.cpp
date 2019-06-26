@@ -119,7 +119,6 @@ typedef std::vector<cell> cell_vector;
 class mitosis_app : public app
 {
 protected:
-  bitmap_text m_text;
   cell_vector m_cells;
 
 public:
@@ -136,8 +135,6 @@ public:
 
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     light_source light0;
     light0.diffuse = vec4(1);
@@ -199,7 +196,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

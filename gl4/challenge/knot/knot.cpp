@@ -39,7 +39,6 @@ geometry_base knot;
 class knot_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info()
@@ -53,8 +52,6 @@ public:
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     p_mat = glm::perspective(fpi2, wnd_aspect(), 0.1f, 1000.0f);
@@ -196,7 +193,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

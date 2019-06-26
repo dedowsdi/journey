@@ -148,7 +148,6 @@ protected:
 class mandelbrot_set_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info()
@@ -219,7 +218,6 @@ public:
     //m_pause = true;
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
 
     q.include_texcoord(true);
     q.build_mesh();
@@ -241,7 +239,6 @@ public:
 
     reset_colors();
 
-    m_text.reshape(wnd_width(), wnd_height());
     GLdouble aspect = radius.x / radius.y;
     radius.x *= wnd_aspect() / aspect;
   }
@@ -518,7 +515,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
     resize_textrure();
     GLdouble aspect = radius.x / radius.y;
     radius.x *= wnd_aspect() / aspect;

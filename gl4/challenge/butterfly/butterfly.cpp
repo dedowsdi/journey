@@ -101,7 +101,6 @@ void radius(GLfloat v){ m_radius = v; }
 class butterfly_app : public app
 {
 protected:
-  bitmap_text m_text;
   butterfly m_butterfly;
   mat4 m_mat;
 
@@ -118,8 +117,6 @@ public:
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     p_mat = glm::ortho<GLfloat>(0, WIDTH, 0, HEIGHT);
@@ -163,7 +160,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

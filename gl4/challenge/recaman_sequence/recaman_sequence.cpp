@@ -115,7 +115,6 @@ GLuint create_multi_sample_texture(GLvoid* data = 0)
 class recaman_sequence_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info()
@@ -137,8 +136,6 @@ public:
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     sequence = recaman_sequence(numbers);
 
@@ -293,7 +290,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

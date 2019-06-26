@@ -270,7 +270,6 @@ protected:
 class firework_app : public app
 {
 protected:
-  bitmap_text m_text;
   firework_list m_fireworks;
   geometry m_geometry;
 
@@ -293,8 +292,6 @@ public:
 
     filter_prg.init();
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     m_geometry.init();
     q.init();
@@ -357,7 +354,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

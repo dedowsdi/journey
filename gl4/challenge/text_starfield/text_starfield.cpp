@@ -146,7 +146,6 @@ using Stars = std::vector<Star>;
 class text_starfield : public app
 {
 private:
-  bitmap_text m_text;
   GLfloat m_font_aspect_ratio;
   Stars m_stars;
 
@@ -184,8 +183,6 @@ void text_starfield::create_scene()
   m_font_aspect_ratio = static_cast<GLfloat>(bt->height()) / bt->max_advance();
   codepoints = bt->code_points();
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   p_mat = glm::perspective<GLfloat>(45, wnd_aspect(), 1.0, 1000);
   v_mat = translate(vec3(0, 0, -1));
@@ -234,7 +231,6 @@ void text_starfield::display()
 void text_starfield::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 }
 
 void text_starfield::glfw_key(

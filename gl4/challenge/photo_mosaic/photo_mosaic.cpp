@@ -266,7 +266,6 @@ struct photo
 class photo_mosaic_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info()
@@ -284,8 +283,6 @@ public:
     kci_rows = m_control.add_control<GLint>(GLFW_KEY_Q, img.getHeight()/20, 1, 10000, 1, kci_callback);
     kci_cols = m_control.add_control<GLint>(GLFW_KEY_W, img.getWidth()/20, 1, 10000, 1, kci_callback);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
@@ -328,7 +325,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

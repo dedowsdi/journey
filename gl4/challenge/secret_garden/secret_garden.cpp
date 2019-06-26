@@ -22,7 +22,6 @@ glm::mat4 p_mat;
 class secret_garden_app : public app
 {
 private:
-  bitmap_text m_text;
   bug m_bug;
 
 public:
@@ -51,8 +50,6 @@ void secret_garden_app::create_scene()
 {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   prg.with_color = true;
   prg.init();
@@ -84,7 +81,6 @@ void secret_garden_app::display()
 void secret_garden_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void secret_garden_app::glfw_key(

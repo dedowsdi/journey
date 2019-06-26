@@ -45,7 +45,6 @@ std::vector<lissajous> lisas;
 class lissajous_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
 
@@ -66,8 +65,6 @@ public:
 
     glfwSetWindowPos(m_wnd, 100, 100);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
     p_mat = zxd::rect_ortho((cols+1)*radius, (rows+1)*radius, wnd_aspect());
@@ -202,7 +199,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

@@ -43,7 +43,6 @@ struct fs_program : public program
 class fs : public app
 {
 protected:
-  bitmap_text m_text;
   GLfloat m_time;
   GLboolean m_pause;
   GLboolean m_update_shader;
@@ -62,8 +61,6 @@ public:
   virtual void create_scene()
   {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     glGenVertexArrays(1, &m_vao);
 
@@ -124,7 +121,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   GLboolean update_shader() const { return m_update_shader; }

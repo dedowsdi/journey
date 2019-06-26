@@ -65,7 +65,6 @@ mat4 rotate_mat;
 
 class plant1_5_app : public app {
 private:
-  bitmap_text m_text;
   turtle m_turtle;
   vec3_vector m_vertices;
   line m_geometry;
@@ -110,8 +109,6 @@ void plant1_5_app::create_scene() {
   glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   prg.instance = GL_TRUE;
   prg.init();
@@ -314,7 +311,6 @@ void plant1_5_app::display() {
 
 void plant1_5_app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(m_info.wnd_width, m_info.wnd_height);
   update_bound(m_vertices);
 }
 

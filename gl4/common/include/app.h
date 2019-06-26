@@ -4,12 +4,14 @@
 #ifndef GL4_COMMON_APP_H
 #define GL4_COMMON_APP_H
 
+#include <string>
+
 #include "gl.h"
 #include <GLFW/glfw3.h>
-#include <string>
 #include "glm.h"
 #include "kci.h"
 #include "timer.h"
+#include "bitmap_text.h"
 
 namespace zxd {
 
@@ -76,13 +78,13 @@ protected:
   mat4 *m_v_mat;
   mat4 *m_p_mat; // only used for orthogonal projection zoom
 
-  dvec2
-    m_last_cursor_position;   // used to rotate camera when mid button pressed
+  dvec2 m_last_cursor_position;   // used to rotate camera when mid button pressed
   vec3 m_camera_translation;  // translation during CM_FREE mode
 
   key_control m_control;
 
   timer m_timer;
+  bitmap_text m_text;
 
 public:
   app();

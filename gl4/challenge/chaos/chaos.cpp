@@ -81,7 +81,6 @@ vec2 draw_point;
 class chaos_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info();
@@ -119,8 +118,6 @@ void chaos_app::create_scene()
   glEnable(GL_LINE_SMOOTH);
   glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   prg.init();
 
@@ -314,7 +311,6 @@ void chaos_app::display()
 void chaos_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void chaos_app::glfw_key(

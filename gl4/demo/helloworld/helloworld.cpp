@@ -5,8 +5,6 @@ namespace zxd
 {
 class hello_world : public app
 {
-protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info()
@@ -19,8 +17,6 @@ public:
   virtual void create_scene()
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void update() {}
@@ -36,7 +32,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

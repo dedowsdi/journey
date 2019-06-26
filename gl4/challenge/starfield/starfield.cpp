@@ -76,7 +76,6 @@ class Starfield : public app
 {
 protected:
 
-  bitmap_text m_text;
   GLuint m_diffuse_map;
   GLuint m_vao;
   GLuint m_vbo;
@@ -96,8 +95,6 @@ public:
 
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     glGenTextures(1, &m_diffuse_map);
     glBindTexture(GL_TEXTURE_2D, m_diffuse_map);
@@ -173,7 +170,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   virtual void glfw_key(

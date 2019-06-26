@@ -69,7 +69,6 @@ class geometry_app : public app
 {
 protected:
   GLboolean m_render_normal;
-  bitmap_text m_text;
   vec3 m_camera_pos;
   std::vector<zxd::light_source> m_lights;
   zxd::light_model m_light_model;
@@ -119,8 +118,6 @@ public:
     m_material.ambient = vec4(0.8);
 
     // text
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     // program
     blinn_prg.with_texcoord = 1;

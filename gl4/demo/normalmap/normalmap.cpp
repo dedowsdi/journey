@@ -110,7 +110,6 @@ GLint light_space = 0;  // 0 : view, 1 : tangent
 class normal_map_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   normal_map_app() {}
@@ -170,8 +169,6 @@ public:
 
     set_v_mat(&v_mat);
 
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void display()
@@ -234,7 +231,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(w, h);
   }
 
   virtual void bind_uniform_locations(zxd::program &program)

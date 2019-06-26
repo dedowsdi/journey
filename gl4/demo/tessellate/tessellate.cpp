@@ -107,7 +107,6 @@ void reload_program(const kci* = 0)
 class tessellate_app : public app
 {
 protected:
-  bitmap_text m_text;
 
 public:
   virtual void init_info();
@@ -136,8 +135,6 @@ void tessellate_app::create_scene()
 {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
 
   v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0), pza);
   p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
@@ -237,7 +234,6 @@ void tessellate_app::display()
 void tessellate_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 }
 
 void tessellate_app::glfw_key(

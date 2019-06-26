@@ -23,7 +23,7 @@ void gl_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity,
 
 //--------------------------------------------------------------------
 app::app()
-  : 
+  :
     m_pause(false),
     m_display_help(true),
     m_update_count(0),
@@ -53,6 +53,10 @@ void app::init() {
 
   init_wnd();
   init_gl();
+  m_text.init();
+
+  // manual resize
+  glfw_resize(m_wnd, wnd_width(), wnd_height());
 }
 
 //--------------------------------------------------------------------
@@ -438,6 +442,7 @@ void app::glfw_resize(GLFWwindow *wnd, int w, int h) {
   m_info.wnd_width = w;
   m_info.wnd_height = h;
   glViewport(0, 0, w, h);
+  m_text.reshape(wnd_width(), wnd_height());
 }
 
 //--------------------------------------------------------------------

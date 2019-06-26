@@ -64,7 +64,6 @@ void rand_rgb_flood_fill(glm::u8vec3* pixels, const ivec2& size, const ivec2& cu
 class flood_fill : public app
 {
 protected:
-  bitmap_text m_text;
   quad m_quad;
   GLuint m_texture;
   fipImage m_image;
@@ -81,8 +80,6 @@ public:
   virtual void create_scene()
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
-    m_text.init();
-    m_text.reshape(wnd_width(), wnd_height());
 
     prg.init();
 
@@ -124,7 +121,6 @@ public:
   virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
   {
     app::glfw_resize(wnd, w, h);
-    m_text.reshape(wnd_width(), wnd_height());
   }
 
   virtual void glfw_key(

@@ -14,6 +14,7 @@
 
 namespace zxd
 {
+
 //--------------------------------------------------------------------
 bitmap_text::bitmap_text(
   const std::string& fmtfile /* = "DejaVuSansMono_15_9.fmt"*/)
@@ -134,6 +135,11 @@ void bitmap_text::load_format(std::istream& is)
 void bitmap_text::print(const std::string& text, GLuint x, GLuint y,
   const glm::vec4& color /*= vec4(1.0f)*/, GLfloat scale /*= 1.0f*/)
 {
+  if (m_glyph_dict.empty())
+  {
+    throw "empty glyphs, you must forgot to init it";
+  }
+
   zxd::vec4_vector vertices;  // {x, y, s, t}
 
   GLuint nexty = y;

@@ -27,7 +27,6 @@ std::shared_ptr<bitmap_text> bt;
 class matrix_rain_app : public app
 {
 private:
-  bitmap_text m_text;
   std::unique_ptr<matrix_rain> m_matrix_rain;
 
 public:
@@ -62,8 +61,6 @@ void matrix_rain_app::create_scene()
 
   bt = ft.create_bitmap_text(2048, 2048);
 
-  m_text.init();
-  m_text.reshape(wnd_width(), wnd_height());
   glfw_resize(0, width, height);
 }
 
@@ -96,10 +93,12 @@ void matrix_rain_app::display()
 void matrix_rain_app::glfw_resize(GLFWwindow *wnd, int w, int h)
 {
   app::glfw_resize(wnd, w, h);
-  m_text.reshape(wnd_width(), wnd_height());
 
-  bt->reshape(wnd_width(), wnd_height());
-  m_matrix_rain = std::make_unique<matrix_rain>(bt, wnd_width(), wnd_height(), 5);
+  if(bt)
+  {
+    bt->reshape(wnd_width(), wnd_height());
+    m_matrix_rain = std::make_unique<matrix_rain>(bt, wnd_width(), wnd_height(), 5);
+  }
 }
 
 void matrix_rain_app::glfw_key(
