@@ -8,7 +8,7 @@ namespace zxd
 {
 
 struct blinn_program : public zxd::program
-  {
+{
 
   GLboolean with_texcoord;
   GLboolean instance;
@@ -60,28 +60,6 @@ struct quad_program : public zxd::program
   virtual void bind_uniform_locations();
 
   virtual void bind_attrib_locations();
-};
-
-struct quad_base : public zxd::program
-{
-  GLint ul_quad_map;
-  std::string quad_map_name;
-
-  quad_base() : quad_map_name("quad_map") {}
-
-  void attach_shaders();
-
-  virtual void do_attach_shaders() {}
-
-  void update_uniforms(GLuint tex_index = 0);
-
-  virtual void do_update_uniforms() {}
-
-  virtual void bind_uniform_locations();
-  virtual void do_bind_uniform_locations() {}
-
-  virtual void bind_attrib_locations();
-  virtual void do_bind_attrib_locations() {}
 };
 
 struct point_program : public zxd::program

@@ -136,35 +136,6 @@ void quad_program::bind_attrib_locations()
 }
 
 //--------------------------------------------------------------------
-void quad_base::attach_shaders()
-{
-  attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
-  do_attach_shaders();
-}
-
-//--------------------------------------------------------------------
-void quad_base::update_uniforms(GLuint tex_index /* = 0*/)
-{
-  glUniform1i(ul_quad_map, tex_index);
-  do_update_uniforms();
-}
-
-//--------------------------------------------------------------------
-void quad_base::bind_uniform_locations()
-{
-  uniform_location(&ul_quad_map, quad_map_name);
-  do_bind_uniform_locations();
-}
-
-//--------------------------------------------------------------------
-void quad_base::bind_attrib_locations()
-{
-  bind_attrib_location(0, "vertex");
-  bind_attrib_location(1, "texcoord");
-  do_bind_attrib_locations();
-}
-
-//--------------------------------------------------------------------
 void point_program::attach_shaders()
 {
   attach(GL_VERTEX_SHADER, "shader4/simple.vs.glsl");

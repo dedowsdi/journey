@@ -11,7 +11,7 @@ namespace zxd
  * build sphere with two triangle fans and a bunch of triangle strips
  */
 class torus : public geometry_base
-  {
+{
 protected:
   GLfloat m_inner_radius;
   GLfloat m_outer_radius;

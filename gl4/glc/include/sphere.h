@@ -11,7 +11,7 @@ namespace zxd
  * build sphere with two triangle fans and a bunch of triangle strips
  */
 class sphere : public geometry_base
-  {
+{
 protected:
   GLfloat m_radius;
   GLuint m_slice;  // longitiude

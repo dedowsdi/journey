@@ -11,7 +11,7 @@ class icosahedron : public geometry_base
 public:
 
   enum class mesh_type
-  {
+{
     MININUM,
     PAPER_UNWRAPPER
   };

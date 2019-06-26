@@ -12,7 +12,7 @@ namespace zxd
 // z in [-1, 1]
 // x,y in (-xy_scale*2, xy_scale*2)
 class teardrop : public geometry_base
-  {
+{
 protected:
   GLfloat m_radius;
   GLfloat m_xy_scale;

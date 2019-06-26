@@ -18,7 +18,7 @@ void draw_quad();
 quad& get_nd_quad();
 
 class quad : public geometry_base
-  {
+{
 protected:
   // cc order, starts from lb
   vec3 m_v0;

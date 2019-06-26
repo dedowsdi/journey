@@ -5,7 +5,7 @@
 namespace zxd
 {
 class bezier_surface : public geometry_base
-  {
+{
 protected:
   GLfloat m_ubegin;
   GLfloat m_uend;

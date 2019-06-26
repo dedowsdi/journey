@@ -9,7 +9,7 @@ namespace zxd
 using namespace glm;
 // clamped b-spline
 class nurb : public geometry_base
-  {
+{
 protected:
   vec4_vector m_ctrl_points;
   float_vector m_knots;

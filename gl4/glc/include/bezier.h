@@ -10,7 +10,7 @@ namespace zxd
  * generally bezier class, degree >=1
  */
 class bezier : public geometry_base
-  {
+{
 protected:
   GLuint m_partitions;  // number of partitions
   GLfloat m_begin;

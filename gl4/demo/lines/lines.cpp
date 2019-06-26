@@ -7,7 +7,7 @@ namespace zxd
 {
 
 class lines : public app
-  {
+{
 
   glm::mat4 v_mat;
   glm::mat4 p_mat;

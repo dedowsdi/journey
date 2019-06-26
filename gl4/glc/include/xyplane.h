@@ -8,7 +8,7 @@ namespace zxd
 {
 
 class xyplane : public geometry_base
-  {
+{
 protected:
   GLuint m_slice;
   GLfloat m_width;

@@ -24,8 +24,6 @@ quad& get_ndc_quad()
 //--------------------------------------------------------------------
 void draw_quad(GLuint tex, GLuint tui/* = 0*/)
 {
-  glActiveTexture(tui + GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, tex);
   static quad q;
   static quad_program prg;
   if (q.vao() == -1)
@@ -33,6 +31,9 @@ void draw_quad(GLuint tex, GLuint tui/* = 0*/)
     q.include_texcoord(true);
     q.build_mesh();
   }
+
+  glActiveTexture(tui + GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, tex);
 
   if (prg.object == -1)
   {
