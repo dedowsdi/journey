@@ -24,9 +24,6 @@ inline utf8::iterator<It> make_utf8_end(It beg, It end )
   return utf8::iterator<It>(end, beg, end);
 }
 
-
 }
-
-
 
 #endif /* GLC_GLC_UTF8_H */

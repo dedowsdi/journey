@@ -1,3 +1,5 @@
+the rare stuff
+
 read cpu temperature and fan speed
     sudo apt install lm-sensors
     sudo sensors-detect
@@ -15,3 +17,43 @@ kill all processes by name
 
 print signature
     figlet hello
+
+install font
+    copy font to ~/.fonts or /usr/share/fonts/, run `fc-cache`
+
+turn on true color for gnome terminal
+    ldd /usr/lib/gnome-terminal/gnome-terminal-server | grep libvte
+    libvte >= 0.36 means true color support
+
+    sudo add-apt-repository ppa:gnome3-team/gnome3-staging
+    sudo apt-get update
+    sudo apt-get install -y gnome-terminal
+    sudo add-apt-repository -r ppa:gnome3-team/gnome3-staging
+
+    You might want to use tweaktool to change theme after this.
+
+change gnome terminal colorscheme
+    from https://github.com/Mayccoll/Gogh:
+    sudo apt-get install dconf-cli uuid-runtime
+    bash -c  "$(wget -qO- https://git.io/vQgMr)"
+    select color scheme, right click terminal, select profile.
+
+print background colors
+    16 colors:
+        printf "\e[%dm " {40..47} 49
+    256 colors:
+        printf "\e[48;5;%dm " {1..256}
+    true colors:
+        printf "\e[48;2;%d;%d;%dm " $(eval echo 1\ 1\ {1..256})
+
+    change 4 to 3 if you want to print foreground colors
+
+gnome setting:
+    get profile list:
+        gsettings list-keys org.gnome.Terminal.ProfilesList
+
+    get default profile id:
+        gsettings get org.gnome.Terminal.ProfilesList default
+
+    get default profile terminal palette:
+        gsettings get org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b/ palette

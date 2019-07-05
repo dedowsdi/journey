@@ -137,7 +137,7 @@ void bitmap_text::print(const std::string& text, GLuint x, GLuint y,
 {
   if (m_glyph_dict.empty())
   {
-    throw "empty glyphs, you must forgot to init it";
+    throw std::runtime_error("empty glyphs, you must forgot to init it");
   }
 
   zxd::vec4_vector vertices;  // {x, y, s, t}

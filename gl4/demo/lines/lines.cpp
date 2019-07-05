@@ -13,7 +13,7 @@ class lines : public app
   glm::mat4 p_mat;
 
   struct line_stipple_program : public zxd::program
-    {
+  {
     GLint ul_color;
     GLint ul_viewport;
     GLint ul_pattern;
@@ -97,6 +97,7 @@ public:
     m_info.wnd_width = 400;
     m_info.wnd_height = 150;
   }
+
   virtual void create_scene()
   {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

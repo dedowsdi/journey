@@ -1,6 +1,6 @@
 /*
  * bloop eat food to extend it's life. The longer it's life, the bigger it's
- * alpha, the more change it gets to reproduce.
+ * alpha, the more chance it gets to reproduce.
  *
  * only bloop with proper size and speed can survive.
  */

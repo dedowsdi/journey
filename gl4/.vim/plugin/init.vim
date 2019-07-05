@@ -1,4 +1,5 @@
 set wildignore+=*/utfcpp/*,utfcpp
+set nospell
 let &viminfofile = getcwd() . '/.viminfo'
 call misc#ui#loadProjSetting('c')
 let g:mycppBuildDir = './build/gcc/Debug'

@@ -9,7 +9,7 @@ namespace zxd
 {
 
 struct threshold_program : public program
-  {
+{
   GLint ul_quad_map;
   GLint ul_threshold;
 
@@ -62,7 +62,6 @@ public:
 
     m_quad.include_texcoord(true);
     m_quad.build_mesh();
-    m_quad.bind_vao();
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

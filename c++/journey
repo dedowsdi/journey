@@ -256,3 +256,9 @@ you can not compare string in preprocessor
 2019.01.21
 
 if you need to link to static boost, check cmake::findBoost
+
+---------------
+2019.06.30
+
+. If an exception is thrown during construction of an object, any parts of the
+object that have already been fully constructed are automatically destroyed.

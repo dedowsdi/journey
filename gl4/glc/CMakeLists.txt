@@ -37,10 +37,59 @@ set(GLC_SRCS
     src/guard.cpp
     )
 
-add_library(glc STATIC
-    ${GLC_SRCS}
+set(GLC glc${GLC_GL_VERSION})
+add_library(${GLC} ${GLC_SRCS})
+
+find_package(Boost 1.58 REQUIRED COMPONENTS filesystem)
+
+target_link_libraries(${GLC}
+    PUBLIC
+        gl${GLC_GL_VERSION}
+        ${FREETYPE_LIBRARIES}
+        ${FIP_LIBS}
+        ${Boost_LIBRARIES}
     )
 
-target_link_libraries(glc
-    ${Boost_LIBRARIES}
+target_include_directories(${GLC}
+    PUBLIC
+        ${Boost_INCLUDE_DIRS}
+        ${FREETYPE_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIR_ft2build}
+        ${FIP_INCLUDE_DIR}
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utfcpp/source>
+        $<INSTALL_INTERFACE:include/${GLC}>
+        $<INSTALL_INTERFACE:include/${GLC}/utfcpp>
     )
+
+# create version file
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${GLC}ConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    )
+
+# export build interface
+export(TARGETS ${GLC} NAMESPACE zxd:: FILE ${GLC}Targets.cmake)
+configure_file(glcConfig.cmake.in ${GLC}Config.cmake @ONLY)
+
+# add to user package registry
+export(PACKAGE ${GLC})
+
+# install lib, export install tree target
+install(TARGETS ${GLC}
+    EXPORT ${GLC}Targets
+    # INCLUDES DESTINATION include/${GLC}b
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+
+install(DIRECTORY include/ DESTINATION include/${GLC})
+install(DIRECTORY utfcpp/source/ DESTINATION include/${GLC}/utfcpp)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${GLC}Config.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/${GLC}ConfigVersion.cmake
+        DESTINATION lib/${GLC}/cmake)
+
+# install install tree target
+install(EXPORT ${GLC}Targets NAMESPACE zxd:: DESTINATION lib/${GLC}/cmake)

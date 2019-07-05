@@ -158,6 +158,10 @@ std::string get_resource(const std::string& name)
       return p.string();
   }
 
-  throw std::runtime_error(name + " not found in all resources");
+  std::stringstream ss;
+  ss << name << " not found in all resources : \n\t";
+  std::copy(resources.begin(), resources.end(), std::ostream_iterator<std::string>(ss, "\n\t"));
+
+  throw std::runtime_error(ss.str());
 }
 }
