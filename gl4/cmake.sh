@@ -9,7 +9,7 @@ currentDir=$(pwd)
 
 sh -c "cd $buildDir && \
        cmake \
-         -DCMAKE_CXX_FLAGS:STRING= \
+         -DCMAKE_CXX_FLAGS:STRING='-isystem /usr/include/c++/5' \
          -DCMAKE_BUILD_TYPE:STRING=$buildType \
          -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOLEAN=ON \
          $currentDir"

@@ -347,6 +347,8 @@ void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
 void app::run() {
   srand(time(0));
   init();
+
+  glClearColor(0.156863f, 0.156863f, 0.156863f, 1.0f);
   create_scene();
   loop();
 }

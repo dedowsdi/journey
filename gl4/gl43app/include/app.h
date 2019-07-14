@@ -13,6 +13,8 @@
 #include "timer.h"
 #include "bitmap_text.h"
 
+#define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
+
 namespace zxd {
 
 void glfw_error_callback(int error, const char *description);

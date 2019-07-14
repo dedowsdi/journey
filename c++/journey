@@ -262,3 +262,5 @@ if you need to link to static boost, check cmake::findBoost
 
 . If an exception is thrown during construction of an object, any parts of the
 object that have already been fully constructed are automatically destroyed.
+
+function pointer size depends on compiler!

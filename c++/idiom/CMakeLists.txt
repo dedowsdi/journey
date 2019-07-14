@@ -8,6 +8,7 @@ set (PROJECTS
     double_dispatch
     virtual_function_table
     hack_access_container
+    ebo
     )
 
 foreach(PROJECT ${PROJECTS})

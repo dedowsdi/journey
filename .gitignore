@@ -1,6 +1,7 @@
+*.log
+*/.vim/project.json
+utfcpp
 build
 tmp.cpp
-*/.vim/project.json
 cquery_cached_index
 .vscode
-*.log
