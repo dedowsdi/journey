@@ -1,0 +1,35 @@
+CCD is short for Continuous Collision Detection, which is a workaround for a
+common problem in game physics:
+    a fast moving body might not collide with an obstacle if in one frame it is
+    "before" the obstacle, and in the next one it is already "behind" the obstacle.
+    At no frame the fast moving body overlaps with the obstacle, and thus no
+    response is created. This is what CCD is for. CCD checks for collisions in
+    between frames, and thus can prevent fast moving objects from passing through
+    thin obstacles.
+
+    We have to set up the swept sphere only on the fast moving dynamic bodies.
+    There is no need to do anything for the static or slow moving obstacles.  One
+    particular use for CCD is firing a bullet.
+
+hinge:
+    z axes of btTransForm as hinge axis in local space
+    btHingeConstraint::setLimit(Scaler lowLimit, Scaler HighLimit);
+
+twistcone:
+    x axes of btTransForm as twist axis in local space, just like forearm
+    btConeTwistConstraint::setLimit(Scaler zAxesRotAbsLimit, Scaler yAxesRotAbsLimit, Scaler xAxesRotAbsLimit)
+    xAxesRotAbsLimit: rotate angle absolute limit alonge x axes
+
+    btGeneric6DofConstraint(btRigidBody& rbB, const btTransform& frameInB, bool useLinearReferenceFrameB);
+    frameInB is in local space
+
+
+terrain image in bullet is upsize down with ogre,
+
+    need change
+
+    btHeightfieldTerrainShape::getVertex
+
+    btScalar height = getRawHeightFieldValue(x, y);
+    to
+    btScalar height = getRawHeightFieldValue(x, m_heightStickLength - y - 1);

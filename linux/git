@@ -1,0 +1,91 @@
+------------------------------------------------------------
+ignore:
+
+.git/exclude        local ignore
+------------------------------------------------------------
+diff 
+
+git diff           changed but not yet staged
+git diff--stage    staged but not commited 
+git difftool       view diffs in software
+------------------------------------------------------------
+rm
+
+git rm -f         // If you modified the file and added it to the index already, you must force the removal with the-f option
+git rm --cached   //keep the file in your working tree but remove it from your staging area.
+git rm log/\*.log //removes all files that have the .log extension in the log/ directory
+git rm \*~        //removes all files that end with ~
+------------------------------------------------------------
+log
+
+git log -p      // shows the difference introduced in each commit.
+git log -2      //limits the output to only the last two entries
+git log --stat  // see  abbreviated stats for each commit
+------------------------------------------------------------
+commit 
+
+git commit --amend   takes your staging area and uses it for the previous commit (change last commit)
+------------------------------------------------------------
+remote
+
+git remote       lists the shortnames of each remote handle you¡¯ve specified. 
+git remote -v     shows you the URLs that Git has stored for the shortname to be used 
+git remote add pb https://github.com/paulboone/ticgit  add a new remote Git
+                                                       repository as a shortname
+git remote rename pb paul   rename remote shortname
+git remote show origin                  //see more information about a particular remote, 
+git remote rm paul                      //remove a remote 
+git push origin--tags                   //push tags
+git checkout -b version2 tagname        //checkout tag  
+------------------------------------------------------------
+checkout
+
+git checkout .                  discard all changes
+git checkout singlefile         discard changes to singlefile
+------------------------------------------------------------
+push --force                    force push, even current head behind remote
+                                head, this swill delete commits, be careful
+------------------------------------------------------------
+branch
+
+git branch -d hotfix                            delete branch
+git push origin --delete serverfix              remove remote branch
+git branch -v                                   see the last commit on each branch
+git branch -vv                                  see the last commit on each branch and it's tracking remote branch
+git branch --merged                             see which branches are already merged into the branch your are on
+git branch --no-merged                          to see all the branches that contain work you haven¡¯t yet merged in
+git branch-d                                    remove branch
+git push origin:serverfix serverfix             push branch to remote
+git checkout -b serverfix origin/serverfix      create your own serverfix branch
+git checkout --track origin/serverfix           the same as above
+
+When you have a tracking branch set up, you can reference it with the
+@{upstream} or @{u} shorthand.  So if you¡¯re on the master branch and it's
+tracking origin/master, you can say something like git merge @{u} instead of git
+merge origin/master if you wish
+------------------------------------------------------------
+reset
+
+git reset HEAD ...                              cancel staged changes (before commiting)
+get reset --hard ...                            remove commits
+------------------------------------------------------------
+revert
+
+git revert HEAD                                 cancel last commit
+------------------------------------------------------------
+git clean
+git clean -fd                    remove unstaged files and directories
+git clean -fd -n                 print, don't remove
+------------------------------------------------------------
+dotfiles
+git clone url --bare .dotfiles
+git --git-dir=.dotfiles --work-dir=.
+git config --global alias.dotfiles = '!git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+git dotfiles config --local status.showUntrackedFiles no
+------------------------------------------------------------
+ssh
+add public ssh key to user/settigns/SSH and GPG keys
+git remote set-url origin git+ssh://git@github.com/...
+------------------------------------------------------------
+global ignore
+git config global core.excludefile ~/.gitignore

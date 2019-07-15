@@ -1,0 +1,116 @@
+LINK4098
+
+LINK : warning LNK4098: defaultlib "MSVCRT" conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib "LIBCMT" conflicts with use of other libs; use /NODEFAULTLIB:library
+
+You are trying to link with incompatible libraries.
+
+Important:  The run-time libraries now contain directives to prevent mixing
+different types. You’ll receive this warning if you try to use different
+types or debug and non-debug versions of the run-time library in the same
+program. For example, if you compiled one file to use one kind of run-time
+library and another file to use another kind (for example, single-threaded
+versus multithreaded) and tried to link them, you’ll get this warning. You
+should compile all source files to use the same run-time library. See the
+Use Run-Time Library (MD, /ML, /MT, /LD) compiler options for more
+information.
+
+You can use the linker’s /VERBOSE:LIB switch to determine which libraries
+the linker is searching. If you receive LNK4098 and want to create an
+executable file that uses, for example, the single-threaded, non-debug
+run-time libraries, use the /VERBOSE:LIB option to find out which libraries
+the linker is searching. The linker should print LIBC.LIB and not
+LIBCMT.LIB, MSVCRT.LIB, LIBCD.LIB, LIBCMTD.LIB, or MSVCRTD.LIB as the
+libraries searched. You can tell the linker to ignore the the incorrect
+run-time libraries by typing the incorrect libraries in the Ignore
+Libraries text box on the Link tab of the Settings dialog box in
+Developer’s Studio or by using the /NODEFAULTLIB:library option with LINK
+for each library you want to ignore. See the Ignore Libraries
+    (/NODEFAULTLIB) linker option for more information.
+
+The table below shows which libraries should be ignored depending on which run-time library you want to use.
+
+To use this run-time library Ignore these libraries
+Single-threaded (libc.lib) libcmt.lib, msvcrt.lib, libcd.lib, libcmtd.lib, msvcrtd.lib
+Multithreaded (libcmt.lib) libc.lib, msvcrt.lib, libcd.lib, libcmtd.lib, msvcrtd.lib
+Multithreaded using DLL (msvcrt.lib) libc.lib, libcmt.lib, libcd.lib, libcmtd.lib, msvcrtd.lib
+Debug Single-threaded (libcd.lib) libc.lib, libcmt.lib, msvcrt.lib, libcmtd.lib, msvcrtd.lib
+Debug Multithreaded (libcmtd.lib) libc.lib, libcmt.lib, msvcrt.lib, libcd.lib, msvcrtd.lib
+Debug Multithreaded using DLL (msvcrtd.lib) libc.lib, libcmt.lib, msvcrt.lib, libcd.lib, libcmtd.lib
+
+For example, if you received this warning and you want to create an executable file that uses the non-debug, single-threaded version of the run-time libraries, you could use the following options with the linker:
+
+/NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:msvcrt.lib /NODEFAULTLIB:libcd.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib
+
+/NODEFAULTLIB  ignore all default lib.
+
+------------------------------------------------------------
+1. create a head file that include all stable head files
+2. create souce file for this head file, limit it's content to
+    #include "name.h"
+3. turn on precompile in "project setting/c++/compilehead"
+    Precompile head file : name.h
+    Precompile head output file: $(IntDir)$(TargetName).pch
+4. choose name.cpp,   :
+    Precompile head : Use/Yc  (Yc means this cpp file is ued to create .pch file，other .cpp files use 'Yu', only 1 Yc exists for a project
+    Precompile head file : name.h
+    Precompile head output file: $(IntDir)$(TargetName).pch
+
+5.  ctrl+f7 on name.cpp to generate .pch file
+
+6. 1st line of all .cpp file must be "#include "name.h"
+
+------------------------------------------------------------
+
+remote debug:
+
+copy dll, pdb to remote machine.
+instal remote tool at remote matchine
+configure, then start
+
+in local machine, change debugging to remote debuging,
+change remote command , working dir, deployment dir
+set remote ser name as remote computer name
+set debugger type to native
+
+open cinfoguration manger, toggle on deploy on debug
+
+------------------------------------------------------------
+clipboard                                           ctrl + shift + v
+increment search                                    ctrl + i
+switch between .h and  .cpp file                    alt + O
+locate opend file                                   ctrl + alt + down arrow
+back to last edit place                             ctrl + - (ctrl + shift + -)
+captailze letter,                                   ctrl + shift + u (ctrl + u)
+class view                                          ctrl + shift + c
+solution view                                       ctrl + alt + l
+va outline                                          ctrl + alt + shift + o
+find in file                                        ctrl + shift + f
+collapse                                            ctrl + mm
+collapse all                                        ctrl + m, ctrl + a
+error view                                          ctrl+\,ctrl+e
+next error (need error view available)              ctrl + shift + f12
+full screen                                         alt + shift + enter
+previous scope                                      alt + up arrow
+next scope                                          alt + down arrow
+swap up and down                                    alt + shift + t
+swap word                                           ctrl + shift + t
+swap char                                           ctrl + t
+call stack                                          ctrl + alt + c
+delete all breakpoint                               ctrl + shift + f9
+move to last line of current page                   ctrl + pagedown
+move to first line of current page                  ctrl + pageup
+show book mark window                               ctrl + k, w
+clear all book mark                                 ctrl + shift + f2
+show member list                                    ctrl + alt + t
+open recent opened files                            alt + shift + o (VA)
+find reference                                      alt + shift + f
+window.dork                                         ctrl+p, ctrl+d
+window.hide                                         ctrl+p, ctrl+h
+context menu                                        shift + f10
+
+------------------------------------------------------------
+include order:
+    1.Directories containing the source file.
+    2.Directories specified with the /I option, in the order that CL encounters them. (C/C++ -> General -> Additional Include Directories)
+    3.Directories specified in the INCLUDE environment variable (VC++ Directories -> Include Directories).

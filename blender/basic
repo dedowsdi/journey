@@ -1,0 +1,382 @@
+grocery
+
+to sphere                   shift + alt + s(mesh/transform/to sphere)
+maxmize 3d view             shift + space
+scale interface             num +, -
+glsl view                   change shading to texture, press n, change shading to glsl
+duplicate interface         ctrl + alt + l
+dpulicate panel             shift + lmc on most left-bottom, and drag
+switch to 3d view           shift + f5
+switch to text editor       shift + f11
+change scene layout         ctrl+left, right arrow
+------------------------------------------------------------
+file
+ctrl+s                  save, this will create at most two hot backups
+F2, +|-                 increament saving
+------------------------------------------------------------
+#history
+
+repeat last                 shift + r
+repeat history              F3
+undo                        ctrl + z
+undo history                ctrl + alt + z
+redo                        shift + ctrl + z
+redo last                   F6
+
+------------------------------------------------------------
+navigation
+
+visibility contorl                  h , alt + h
+show|hide tool panel                t  
+show|hide properties panel          n    
+toggle manipular visibility         ctrl + space 
+perspective, orthorgnal switch      num5 
+rotate                              num2, 4, 6, 8, ctrl + mmd
+pan                                 shift + mmd, ctrl + num2,4,6,8, ctrl+mmw, shift+mmw
+front, right, top view              num1, 3, 7 , get opposite whiling holding ctrl
+zooming                             mmw, num-,+
+zoom to fit                         home
+zoom selected                       num.
+zoom border                         shift + b
+dolly thie view                     ctrl + shift + mmb
+center cursor and view all          shift + c
+center view to home                 alt + home
+local global view switch            num /
+quad view                           ctrl + alt + q  
+view clip board                     alt + b
+view navigation                     shift + f
+
+------------------------------------------------------------
+##render mode
+
+wireframe                           z
+shadered                            shift + z
+texture                             alt + z
+weight paint                        ctrl+z
+------------------------------------------------------------
+edit mode
+ctrl+tab            pose mode
+
+------------------------------------------------------------
+#camera view 
+camera view                                 0
+set camera view as current 3d view          ctrl + alt + 0                      
+track target                                select  camera first, then target, ctrl + t, choose track to constraing
+clear track                                 slect camera, ctrl + t
+fly mode                                    shift + f
+render border in camera view                ctrl + b
+clear render border                         ctrl + alt + b
+zoom                                        ctrl + mmb scroll
+set current camera as activate camera       ctrl + 0
+------------------------------------------------------------
+render
+render single frame                         F12
+save render img                             F3 after F12
+
+------------------------------------------------------------
+##layers
+
+select layer                1~0. holding alt to select 11~20
+`                           select all layer
+select mutiple layer        shift + #
+m                           slect layer for object
+
+------------------------------------------------------------
+#transform
+
+grab/move       g
+                constrint axis                  xx, yy, zz, twice press change to local space      or mmd(not easy to use)
+                complementary constraint        shift + xx , yy , zz
+                clears move                     alt + g
+                high Precision                  shift
+                snap to grid                    ctrl
+                axis accurate move              xx, yy, zz + decimal number
+                release constrain               c
+                move can also be done with 3d movmenet manipulator orproperties panel
+rotate          r       rr will activate trackball rotate, which rotate acording to view coordinate
+scale           s
+
+------------------------------------------------------------
+#object
+
+add select                      shift + mrb
+activate|deactivate select      shift + mrb
+cycle select(when overlap)      alt + mrb
+deslect all                     a
+border select                   b + mlb drag
+border deselect                 b + mmb drag or shift + b + mlb drag
+lasso select                    ctrl + mlb drag
+circle select                   c
+circle deselect                 c + mmb
+
+parent                          select child first, select parent, ctrl + p, choose object
+delete parent                   alt + p
+group select                    shift + g
+
+add object                      shift + a
+erase object                    x | d | del
+join objects                    ctrl +£ê
+
+obData:base data unit, like mesh
+object data: data unit, like transform
+
+duplicate object                shift + d , The object and some of it¡¯s child datablocks will really be duplicated, the other children are just linked
+duplicate link                  alt + d ,  makes a linked copy. All datablocks but the object one are linked
+
+set origin                      ctrl+shift+alt+c
+reset origin                    alt + o
+snap cursor or object           shift +s
+
+create group                    slect objects, ctrl + g, you can rename it in properties panel
+select group                    select object, shift + g, group
+
+snap during transform           shift + tab
+
+------------------------------------------------------------
+mesh
+
+Duplication Vertices or DupliVerts  duplication of a base object at the location of the vertices of a parent mesh, base object will not be rendered in blender.
+                                    we can make duplicate real by select parent mesh,  ctrl + shift + a (object/apply/make duplicate real)
+                                    the same rule for duplication faces, it's safe to apply rotation, scale, location of base object before this
+
+DupliFrames                         duplicate objects at frames distributed along a path(like bezier curve)
+                                    path animation frame number will control duplicate numbers
+                                    disable speed under frame, this will work somehow like duplicate vertices
+                                    enable speed , and select follow path when parenting, this will generaet animation
+insert vertex                       ctrl + lmb, new vertice will be connected with current selected vertex
+                                    the new vertex is placed at the depth of the 3D cursor, the same rule for edge and face
+connect vertex                      select vertices, f, 2 vertices generate edge, 3 or more generate face
+special menu                        w
+face menu                           ctrl + f
+edge menu                           ctrl + e
+vertex menu                         ctrl + v
+select more                         ctrl + num +
+select less                         ctrl + num -
+inverse select                      ctrl + i
+select similar                      shift + g
+link related                        ctrl + l
+edge loop                           alt + mrb, or ctrl + e 
+vertex loop                         alt + mrb on edge, will select all vertices on edge loop
+                                    ctrl + shift + mrb on edge, will select all vertices on face loop perpendicular to edge 
+face loop                           alt + mrb, face loop is perpendicular to edge                           
+edge ring                           ctrl + alt + mrb
+select loop inner region            select edge loop, ctrl + e, select loop inner region
+boundary loop                       logical opposite select as select loop  inner region, result in select edge roop
+clear origin                        alt + o
+o                                   enable proportional edit
+
+------------------------------------------------------------
+edit
+
+switch coordinate system        alt + space 
+switch vertex, edge, face       ctrl + tab
+delete element                  x 
+                                Only Edges & Faces          Limits the operation to only selected edges and adjacent faces.
+                                Edge Collapse               Collapses edges into single vertices. This can be used to remove a loop of faces.
+                                Edge Loop                   Deletes an edge loop.
+                                                            If the current selection is not an edge loop, this operation does nothing. connected faces wil not be removed
+convert triangles to quad       alt + j. This same action can be done on a selection of just 1 tris, by selecting them and using the shortcut F,
+convert quad to triangles       ctrl + t
+megre vertices                  alt + m   //you can select edge or face, merge in center or cursor
+auto merge                      mesh/auto merge
+remove double                   w, 4
+rip                             v.  Rip creates a ¡°hole¡± into a mesh by making a copy of selected vertices and edges, still linked to the neighbor non-selected vertices
+                                so that the new edges are borders of the faces on one side, and the old ones, borders of the faces of the other side of the rip.
+                                can available for vertex or edge
+rip fill                        alt + v.(not supported for blender 2.63)    the same as rip, but the hole will be filled                                    
+split                           y. It makes a sort of copy of the selection, removing the original face if it's in face mode
+seperate                        p. select from current mesh, generate a new mesh
+vertex connect                  j.   Vertex Connect takes two vertices that share a face, and creates an edge between the two, splitting the face into two new faces.
+vertex slide                    sihft + v, use mlb to select target edge, then move mouse and mlb to confirm.
+                                Snap to Midpoint whilst                 Shift
+                                Snap to Endpoint whilst                 Alt
+                                Snap and Merge to Endpoint  whilst      Control
+tosphere                        alt + shift + s, edit mode
+shear                           ctrl + shift  + alt + s, edit mode
+shrink                          alt + s
+                                This tool translates selected vertices/edges/faces along their own normal (perpendicular to the face), 
+                                which, on ¡°standard normal meshes¡±, will shrink/fatten them.
+smooth                          ctrl + v, this is quite useful
+slide                           ctrl+e,
+                                option:(2.63 ?) e: even mode, Forces the edge loop to match the shape of the adjacent edge loop. 
+                                You can flip to the opposite vertex using F. using alt + mmw to change control edge
+                                    f: When Even mode is active, this flips between the two adjacent edge loops the active edge loop will match
+rotate edg                      ctrl + e, Rotating an edge clockwise or counter-clockwise spins an edge between two faces around their vertices. 
+bridge edge loops               connects multiple edge loops with faces. 
+                                option  between edge loops with different numbers of vertices. 
+                                effect as:  http://wiki.blender.org/index.php/Doc:2.6/Manual/Modeling/Meshes/Editing/Edges  
+                                punch holes in face selections and connect them.
+                                detect multiple loops and loft them in one step.
+mirror  transform               ctrl + m, x, y ,z to select mirror axes edit mode
+
+triangle fill                   alt + f. support holes. http://wiki.blender.org/index.php/Doc:2.6/Manual/Modeling/Meshes/Editing/Faces
+Beauty Fill                     alt + shift + f Beautify Fill works only on selected existing faces. 
+                                It rearrange selected triangles to obtain more ¡°balanced¡± ones (i.e. less long thin triangles).                     
+grid fill                       Grid Fill uses a pair of connected edge-loops to fill in a grid that follows the surrounding geometry. 
+solidify                        This takes a selection of faces and solidifies them by extruding them uniformly to give volume to a non-manifold surface.               
+                                It's different from exturde, faces are extruded along their own normal ,but not seperately, then are still connected
+wrap                            shift + w , edit mode It works by warping the selected elements around the 3D cursor
+extrude                         e  (alt + e to extrude from individual face)k
+insert                          ctrl + f/insert face    
+edge loop                       ctrl+r, lmb, then move(or press 0 just place edge loop in center)
+edge ring                       ctrl+alt+r, rmb
+subsurface                      ctrl + 1 ~ 5
+subdivide                       w       
+change pivot to bounding center ,
+change pivot to cursor          .
+hide                            h
+reveal                          alt+h
+place cursor                    shift + s
+numeric place cursor            n, 3d cursor                                    
+x-axis mirror                   N/Mesh Options, this mirror only works for vertex gsr, no extrude and other staff
+propertional edit               [alt]o, use shift o to change falloff type
+
+------------------------------------------------------------
+modifier
+
+spin                        The point of view will determine around which axis the extrusion spins¡­
+                            The position of the 3D cursor will be the center of the rotation.
+
+                            toggle on duplicate , or remove double if you angle 360 degree
+
+                            recalculate face normal after finished , ctrl + n, validate  recalc normal outside 
+
+screw                       with height translated spin
+                            you need an open proflile, it will be used as guide profile for other closed profile
+
+                            view dependent
+                            cursor dependent
+
+                            Perfect Screw Spindles use a profile with the same height as its vector, 
+                            and the beginning and ending vertex of the profile are placed at a straight parallel line with the axis of extrusion.
+
+                            http://wiki.blender.org/index.php/Doc:2.6/Manual/Modeling/Meshes/Editing/Duplicating/Screw                              
+
+fill                            select vertices or edges, then f
+
+edge menu                               select a edge, then ctrl +e
+
+    edge slide               move edge along side
+    edge ring                select parallel sides
+    merge vertices                   alt + m
+
+modifiers                               on right panel, modifier is a  safe way of creating effects
+                             because of their nondestructive nature; only when the Apply button
+                            in the Modifiers panel is clicked do modifiers affect the real vertices of the final mesh.
+
+multiresolution             mostly used with sculpting purpose, subdivide will dived 1 plane into 4
+                            Preview is for the main 3D view, Sculpt is for when Sculpt mode is being used, and
+                            Render is for the amount of multiresolution that will show in the final rendered image.
+
+------------------------------------------------------------
+sculpt                      click image to slect brush
+change radius               f
+change stren                shift + f
+switch add or subtract      hold ctrl while draging
+
+set up key light            just change light name to key
+
+material
+multi material slot                 used to assign different materil for different part of mesh.
+                                    first need to create all necessary material slots in material, then choose part of mesh, assign selected material solt to it
+------------------------------------------------------------
+texture
+
+uvwrap                              export uv layout will export uv image
+                                    change coordinate to uv in mapping of texture
+
+paint texture in blend              after unwrap, switch to texture paint mode, you can also change texture imgae (might needed in edit mode,   
+                                    texture paint mode, texture properties), might need to adjust face normal, becareful
+
+graph editer                        
+    change curve                        choose curve, shift + e                                 
+
+------------------------------------------------------------
+armature
+
+envelop vertex bind                 chose envelop in armature modifier, change bone display to envelop
+scale envelop   infulence           ctrl + alt + s, not working in ubentu. also can be change in /bone/deform   
+scale envelop bone                  alt + s     
+weight vertex bind                  chose vertex group in armature modifier, select bone, switch to pose mode, shift+rmb select object, switch to paint mode
+flip select                         shift + f
+select parent/child                 []
+create ik                           first clear parent of target bone, chose original parent of target bone, add ik bone constraint(ctrl+i)
+                                    set target to target bone. Adjust chain length to affected bone numbers. remove ik by ctrl+shift+i
+                                    create a pole bone, so armatures bend in the right direction, set up pole bone in ik constraint.
+                                    you might need to change pole angle if your bone didn't point to th epole.
+auto ik                             you can turn on this in T in pose mode. an auto ik will be created whenever you pick a bone, the bone
+                                    you picked is your target, the ikchain extend until the connedt most parent bone
+                                    be careful, auto id conficts with ik constraint
+auto ik chain                       you can break auto ik chain by toggle off conenct in bone/Relations, this will keep parenting, but allow
+                                    child bone grab away from parent, so it will break ik chain here
+mirror x                            toggle x mirror in T, then shift+E to extrude
+remember to recalcate z after build all bone to eliminate barrel roll
+don't forget to turn on x-mirror when you do weight-paint
+subsurface modifier should below armature   
+weight paint                        turn off face, set weight and strength to 1, weight paint only paint on real geometry vertex
+reset reset pose                    ctrl+a, apply apply pose to reset pose in pose mode.
+                                    every change you did on edit mode will take effect on reset pose
+never scale armature after you set up animation, parent armature to mesh, scale mesh instead
+
+------------------------------------------------------------
+animation
+
+insert keyframe                 i
+next, previous frame            arrow right, left
+next, previous key frame        arrow up, down next, prevous 10 frames          shift + arrow up, down
+first, last frame               shift + left, right
+columnm on selected keys        k
+columns on selected frame       ctrl + k (select all keys where current frame locate)
+reset pose      to default      menu/pose/transform/clear transform
+delete action                   disable f, delete ,save and reopen blender
+copy pose                       ctrl+c
+paste pose                      ctrl+v
+paster pose flip-x              ctrl+shift+v
+Action editor                   edit animation unit
+NLA editor                      non linear animation editor
+                                this is used to create a sequence of animation
+                                be careful with the blend mode, don't break the matrix
+    shift+a                     add new action strip
+    tab                         edit action strip
+    N                           edit properties
+    click star                  sole action
+    click sound                 determin action contribute or not
+
+shaperkeys                      object mode, data/shapekeys, 1st key usually is basis, represent base
+shaperkey animation             dopesheet/ShaperKey editor
+audio                           add audio in video sequence editor
+                                change Sync mode to Frame Dropping in frame wnd
+                                toggle auto scrubing in playback
+------------------------------------------------------------
+
+¡ö Note As with polygon objects, if you are in edit mode when adding or duplicating items, they become part of
+the object you are editing. You should be in object mode when adding new items to ensure they really are
+separate objects.           
+
+blender is case sensitive in naming
+when signate vertex group, you can select face instead of vertex, it's much more easier         
+
+Note
+If you alter the Bone Envelope volume of a bone so that you can have it include/exclude certain vertices
+after you have already used Armature Deform With Envelope Weights, 
+by default the newly included/excluded vertices wont be effected by the change. 
+When using Armature Deform With Envelope Weights it only calculates which vertices will be affected by the Bone Envelope volume
+ at the time of parenting, at which point it creates the required named Vertex Groups and assigns vertices to them as required. 
+ If you want any vertices to take account of the new Bone Envelope volume size 
+ you will have carry out the Armature Deform With Envelope Weights parenting again; 
+ In fact all parenting used in the Set Parent To popup dialog which tries to automatically assign vertices to Vertex Groups works like this.                
+
+A datablock can become unlinked. For example a material datablock will be unlinked if the object it was linked to is deleted. If a datablock is unlinked, by default it will be deleted from the .blend file when Blender is closed. To keep an unlinked datablock in a .blend file, click the "F" button to the right of the object's name in the Objects and Links panel.
+
+collapse menu       a
+
+scene:
+
+delete linke:   u
+
+delete group: chose display mode to group, unlink
+
+link options:
+full copy:  shares nothing
+data link:  shares data only, you can rotate, scale, grab without affecting original one
+object link: shares everything

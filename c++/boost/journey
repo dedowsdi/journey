@@ -1,0 +1,20 @@
+compile in windows
+    open vs command prompt. cd to boost\tools\build\v2, Run: bootstrap.bat, this
+    will generate b2.exe
+    Run:  b2 install --prefix=PREFIX where PREFIX is the directory where you want
+    Boost.Build to be installed, add Boost.Build/bin to path
+    reopen vs command prompt, cd to boost, 
+    Run: b2 --build-dir=build-directory toolset=toolset-name --build-type=complete
+                    stage --with-libraryName
+
+    build-dir:  Boost.Build will place all intermediate files it generates while
+                            building into the build directory.  If your Boost root directory is
+                            writable, this step isn't strictly necessary. Boost.Build will
+                            create a bin.v2/ subdirectory
+    stage: generate dll, lib in stage/lib
+    toolset: compile tool
+    build-type=complete¡± causes Boost.Build to build all supported variants of the
+    libraries.  
+
+    ex:  b2 stage toolset=msvc-11.0 --build-type=complete  --with-date_time 
+    move the content of  stage/lib to boost/lib after compile

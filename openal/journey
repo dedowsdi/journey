@@ -1,0 +1,2 @@
+only mono sound volume can be changed in distance mode
+can not use destorysound, error happen if we create sound with the same file later

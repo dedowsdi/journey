@@ -1,0 +1,53 @@
+C: short for bpy.context
+D: short for bpy.data
+
+------------------------------------------------------------
+del x  #decreate reference count of x
+
+
+------------------------------------------------------------
+get current active object: C.active_object | C.object
+get selected objects: C.selected_objects
+
+change location: C.object.location.*** = *,*,* ,  C.object.location = *, *, *
+unlink object:  bpy.data.scenes['Scene'].objects.unlink(bpy.context.active_object)
+add cube: bpy.ops.mesh.primitive_cube_add
+degree to radian: math.radians(d)
+select vertice: 
+
+        import bpy,bmesh
+
+        ob = bpy.data.objects['Cube']
+        mesh=bmesh.from_edit_mesh(bpy.context.object.data)
+        for v in mesh.verts:
+           v.select = True
+
+        # trigger viewport update
+        bpy.context.scene.objects.active = bpy.context.scene.objects.active
+
+------------------------------------------------------------
+blender --python /home/me/my_script.py          #one way of load script
+
+
+To run as modules:
+
+The obvious way, import some_module command from the text window or interactive console.
+Open as a text block and tick ¡°Register¡± option, this will load with the blend file.
+copy into one of the directories scripts/startup, where they will be automatically imported on startup.
+define as an addon, enabling the addon will load it as a python module.
+
+------------------------------------------------------------
+
+The only difference between addons and built-in python modules 
+is that addons must contain a bl_info variable which blender uses to 
+read metadata such as name, author, category and URL.
+
+
+------------------------------------------------------------
+text file op:
+Saves unsaved text as a text file : ctrl + shift + alt + s
+Saves an already open file.                                                    Alt + S
+Loads a text, a File Browser window appears.                                   Alt + O
+Executes the text as a Python script.                                          Alt + P
+Reopen (reloads) the current buffer (all non-saved modifications are lost).    Alt + R 
+Converts the content of the text window into 3D text (max 100 chars).          Alt + M

@@ -1,0 +1,31 @@
+string
+    use memory window to watch d_quickbuff or d_buffer
+
+    d_buffer is only used when the reserve buffer for the string is > some
+    internal value, so basically if the pointer looks invalid look at
+    d_quickbuff instead. 
+
+rtt
+    1. create basic image
+    2. create render texture (according to render), set it to iamge
+    3. set render texture with specific texture
+    4. set image area
+    5. remember to invalidate window every time you change the underlying
+        texture
+    6. if your window is a child of framewindow, remember to turn off
+        autorenderingsurface other wise the window won't be updated.
+
+activate
+    when mlb click, cegui will recursively activate parent of target window,
+    from most ancestry to least.
+    parent window will to take away activity of it's child window, we can use
+    it to create block window
+    add window to block window, that window will be the only one that is activated
+
+tooltip
+    1. set up tooltip text in ceed
+    2. inject time to cegui
+        CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse( evt.timeSinceLastFrame);
+    3. set default tooltip type
+         CEGUI::System::getSingletonPtr()->getDefaultGUIContext().setDefaultTooltipType("TaharezLook/Tooltip");

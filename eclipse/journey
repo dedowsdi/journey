@@ -1,0 +1,18 @@
+content assist                      ctrl+space
+run                                 cltl+f11
+insert new line below               shift+enter
+toggle break point                  ctrl+shift+b
+go to declaration                   f3 | ctrl + mlb
+last edit location                  ctrl+q
+format code                         cltr+shift+f
+auto import                         ctrl+shift+o
+outline                             ctrl+o
+delete line                         ctrl+d
+copy line up or down                ctrl+alt+ up|down arrow
+quick fix                           ctrl+1
+maximize edit view                  ctrl+m
+go to line                          ctrl+l
+comment                             ctrl+7 ctrl+/ ctrl+shift+c
+navigate resource                   cltr+shift+r
+to upper case                       ctrl+shift+x
+to lower case                       ctrl+shift+y

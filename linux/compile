@@ -1,0 +1,36 @@
+gcc
+    gcc use options like -a[bbrevation], you can not combine multiple option
+    like -ab, you must use -a -b, they are totally different
+
+library:
+    libname.so.major.minor.rleasenumber         actural name
+    libname.so.major                            so name
+    libname.so                                  linker name
+
+    when a new version of a shared library is released in order to fix bugs in
+    a previous version, only the release number is incremented.
+
+    When new functions are added to a shared library but existing functions in
+    the library still provide the same interfaces, the minor version number is
+    incremented and the release number is reset.
+
+    When interfaces in functions in a shared library change in such a way that
+    existing applications cannot call those functions, the major number is
+    updated and the minor and release numbers are reset.
+
+library dependences:
+    ldd exe
+    ldd might need to execute part of program to find dependencies
+    use objdump if you don't trust the program
+
+    objdump -p /path/to/program | grep NEEDED    the same as above
+
+runtime library:
+    ldconfig -v
+
+static library:
+    ar rcs libname.a obj.o
+    ar -t name.a                        //get contents of static library
+
+symbol:
+    nm name.so                           //get symbols of shared library

@@ -78,3 +78,6 @@ check truetype font content:
 
 check linux console codes (escape sequence)
     man console_codes
+
+get uid ang gid by name
+    id name

@@ -1,0 +1,22 @@
+hg head                 current heads
+hg log -l #             pring # log
+hg summary              get summary
+hg incoming             precheck incoming pull
+hg outgoing             precheck push 
+hg parent               find out what revision the working directoy is at
+hg udpate -C            discard uncommited changes
+hg revert file          discard uncommited changes for specific file
+hg purge                discard unversioned files
+
+you can change default push pull by change ./hg/hgrc                    
+------------------------------------------------------------
+hgrc
+[paths]
+default = https://bitbucket.org/sinbad/ogre
+default-push = https://bitbucket.org/peanutandchestnut/ogre
+[ui]
+username = XianDong Zhang
+editor = /usr/bin/vim
+ignore = .myignore      //global ignore
+[extensions]
+purge =

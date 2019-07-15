@@ -1,0 +1,39 @@
+export
+    blender only use z up cyliner and capsule, it costs a lot of trouble to export
+
+    if your scene have no cylinder or capsule physics shape:
+
+        select all, pitch -90, apply rotation,  then export scene and physics,
+        select xyz export,  everything is fine.
+
+    if your scene has cylinder or capsule physics shape:
+
+        well, you can not apply rotation , it will destroy the physics. The
+        mesh exported will be z up
+
+    so,  for scene only geometry, i should just use z up coordinate system
+
+export bullet
+    script:
+        import bge
+        bge.constraints.exportBulletFile("test.bullet")
+
+    step1. edit python script
+    step2. add a "always" sensor and python controller, set up script
+    step3. run game engine("p")
+
+ 
+use height map:
+    make sure import-export: import image as plane is toggled
+    create a plane, sub dividie it n times
+    file/import/images as plane
+    add modifier/deform/displace, use tex, adjust strength
+
+create height map:
+    after prepare terrain
+    remove light, select camera, clear rotation, translation
+    change camera type to ortho, chage scale so camera can just cover entire terrain
+    add material, toggle shader less, choose smooth render
+    add a blender texture, change mapping to z z z
+    toggle color ramp, adjust alpha to 1
+    f12, f3, choose BW, save

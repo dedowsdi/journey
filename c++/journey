@@ -264,3 +264,69 @@ if you need to link to static boost, check cmake::findBoost
 object that have already been fully constructed are automatically destroyed.
 
 function pointer size depends on compiler!
+
+C++ guarantees it's always safe to delete the null pointer
+
+constructors and destructors of global and static variable  are called in a
+totally unpredictable order.  constructors of global and static variable started
+before main() is called A static variable that is declared within a function
+will not be constructed before main() is called, but rather on the first
+invocation of that function.
+
+------------------------------------------------------------
+static constant
+
+class GamePlayer {
+private:
+  static const int NumTurns = 5;      // constant declaration
+  int scores[NumTurns];               // use of constant
+  ...
+};
+
+What you see above is a declaration for NumTurns, not a definition. Usually,
+C++ requires that you provide a definition for anything you use, but
+class-specific constants that are static and of integral type (e.g., integers,
+chars, bools) are an exception. As long as you don't take their address, you
+can declare them and use them without providing a definition. If you do take
+the address of a class constant, or if your compiler incorrectly insists on a
+definition even if you don't take the address, you must provide a separate
+definition.
+
+------------------------------------------------------------
+enum
+
+it's legal to take the address of a const, but it's not legal to take the
+address of an enum, and it's typically not legal to take the address of a
+#define, either. If you don't want to let people get a pointer or reference to
+one of your integral constants, an enum is a good way to enforce that
+constraint.
+
+------------------------------------------------------------
+global constant
+
+(1)#define GLOBAL_CONST_VAR 0xFF
+(2)int GLOBAL_CONST_VAR = 0xFF;
+(3)Some function returning the value (e.g. int get_GLOBAL_CONST_VAR())
+(4)enum { GLOBAL_CONST_VAR = 0xFF; }
+(5)const int GLOBAL_CONST_VAR = 0xFF;
+(6)extern const int GLOBAL_CONST_VAR; and in one source file const int
+   GLOBAL_CONST_VAR = 0xFF;
+
+(5) is "better" than (6) because it defines GLOBAL_CONST_VAR as an Integral
+Constant Expression (ICE) in all translation units. For example, you will be
+able to use it as array size and as case label in all translation units. In
+case of (6) GLOBAL_CONST_VAR will be an ICE only in that translation unit where
+it is defined and only after the point of definition. In other translation
+units it won't work as ICE.
+
+However, keep in mind that (5) gives GLOBAL_CONST_VAR internal linkage, meaning
+that the "address identity" of GLOBAL_CONST_VAR will be different in each
+translation unit, i.e. the &GLOBAL_CONST_VAR will give you a different pointer
+value in each translation unit. In most usage cases this doesn't matter, but if
+you'll need a constant object that has consistent global "address identity",
+then you'd have to go with (6), sacrificing the ICE-ness of the constant in the
+process.
+
+Also, when the ICE-ness of the constant is not an issue (not an integral type)
+and the size of the type grows larger (not a scalar type), then (6) usually
+becomes a better approach than (5).

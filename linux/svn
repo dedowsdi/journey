@@ -1,0 +1,3 @@
+everything is directory, including trunk, branch, tag
+svn info    //get detail about this working copy
+svn switch  //switch to speicic branch or tag, just like hg update, git checkout
