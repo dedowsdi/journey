@@ -1,0 +1,13 @@
+by default, sed output all the processed text, use -n to suppress it
+
+all sed command follow this syntax:
+  [addr]X[options]
+
+sed address is very much alike vim range, except:
+    blank range indicate whole file
+    post ! after range is used to negate the sense of match
+
+sed use BRE by default, -e will switch to ERE
+
+you can specify number flag to replace only nth match.
+  s/.../.../number

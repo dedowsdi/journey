@@ -89,3 +89,13 @@ git remote set-url origin git+ssh://git@github.com/...
 ------------------------------------------------------------
 global ignore
 git config global core.excludefile ~/.gitignore
+------------------------------------------------------------
+sync fork
+git remote add upstream remote_address
+git fetch remote
+git checkout master
+git merge upstream/master
+git push
+------------------------------------------------------------
+search deleted file:
+git log --all --full-history -- **/filename

@@ -1,12 +1,8 @@
-#chr() {
-  #[ "$1" -lt 256 ] || return 1
-  #printf "\\$(printf %o "$1")"
-#}
 
 chr () {
   local val
   [ "$1" -lt 256 ] || return 1
-  printf -v val %o "$1"; printf "\\$val"
+  printf -v val %o "$1"; printf "%s" "\\$val"
   # That one requires bash 3.1 or above.
 }
 
@@ -25,7 +21,7 @@ hex() {
 }
 
 unhex() {
-   printf "\\x$1"
+   printf "%s" "\\x$1"
 }
 
 # examples:

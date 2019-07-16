@@ -1,8 +1,1 @@
- vim: tw=80 sw=2 ts=2 et
 
-----------
-2018.05.26
-
-lldb:
-  sometimes if you failed to set breakpoint on a function, it might because it's
-  never called in the entire application.

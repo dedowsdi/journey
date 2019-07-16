@@ -228,3 +228,28 @@ starting from $0 (not $1), replace bash with "sh" if you want to use "sh -c"
 
 It appears that subshell inherits boll SHELLOPTS and BASHOPTS even if though
 thery are not in the environment.
+
+
+read file into array
+    mapfile -t lines < filename
+    or
+    while IFS= read -r line ; do
+        lines+=("$line")
+    done ; < filename
+    or
+    IFS=$'\n' read -d '' -r -a lines < /etc/passwd
+
+------------------------------------------------------------
+array
+
+replace 1st Capital letter to x for all items
+    ${#arr[@]/[A-Z]/x}
+
+remove items containing a or A
+    ${#arr[@]/[aA]/}
+
+create associate array
+    declare -A dic=([key0]=val0 [key1]=val1)
+
+add item to associate array
+    dic+=([key2]=val2)

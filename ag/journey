@@ -1,5 +1,0 @@
------------
-2018.01.08:
-
-ag:
-  ag use pcre(3) with multiline enabled search pattern.
