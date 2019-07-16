@@ -1,0 +1,2 @@
+check directory total size
+    du -hs dir

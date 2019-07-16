@@ -1,0 +1,8 @@
+operation:
+    o COMMAND=lantern                     # filter command
+    L                                     # locate 
+    k                                     # kill
+
+top -n 1                        # execute once and exit
+top -o %MEM                     # sort by %MEM
+top detail is hard to remember, htop is much more user friendly.
