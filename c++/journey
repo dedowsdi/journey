@@ -29,7 +29,7 @@ c++:
        this->foo is dependent and the lookup is therefore deferred until the
        template is actually instantiated, at which point all base classes are
        considered
-    2. A<int>::foo to access.
+    2. A<int>::foo to access. (shutdown virtual binding!)
     3. call using A<int>::foo prior to foo();
 
 ----------
@@ -330,3 +330,8 @@ process.
 Also, when the ICE-ness of the constant is not an issue (not an integral type)
 and the size of the type grows larger (not a scalar type), then (6) usually
 becomes a better approach than (5).
+------------------------------------------------------------
+Member functions of class templates are implicitly instantiated only when used.
+
+implicit type conversion functions are never considered during template argument
+deduction

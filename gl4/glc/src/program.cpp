@@ -120,7 +120,7 @@ bool program::attach(GLenum type, const string_vector& source)
 
 //--------------------------------------------------------------------
 void program::attach(
-  GLenum type, const string_vector& source, const std::string& file)
+  GLenum type, const string_vector &source, const std::string &file)
 {
   string_vector combined_source(source);
   combined_source.push_back(stream_util::read_resource(file));
@@ -138,7 +138,7 @@ void program::clear()
 }
 
 //--------------------------------------------------------------------
-void program::uniform1f(const std::string& name, GLfloat v0)
+void program::uniform1f(const std::string &name, GLfloat v0)
 {
   GLint location;
   uniform_location(&location, name);

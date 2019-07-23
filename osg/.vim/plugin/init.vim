@@ -1,3 +1,4 @@
+call misc#proj#loadMap('c')
 let g:mycppBuildDir = "./build/gcc/Debug/"
 set tags+=dependences/osg/tags
 

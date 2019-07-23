@@ -1,0 +1,9 @@
+list all possible man pages:
+    man -w name
+
+list all possible man pages in section 1:
+    man -w -S1 --wildcard 'name*'
+    man -w -S1 --namesonly --regex 'name$'
+
+search man page of which name or description match pattern
+    man -k pattern

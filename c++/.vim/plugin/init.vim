@@ -1,4 +1,4 @@
-call misc#ui#loadProjSetting('c')
+call misc#proj#loadMap('c')
 let g:mycppBuildDir = "./build/gcc/Debug"
 let g:mycppDebugGui = 0
 let &makeprg = 'cd ' . g:mycppBuildDir . ' && make'

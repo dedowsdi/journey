@@ -1,0 +1,5 @@
+search man page in section 7, pattern match name or description.
+    apropos -s7 pattern0 pattern1 pattern2
+
+search man page in section 7, require all pattern matches
+    apropos -s7 -a pattern0 pattern1 pattern2

@@ -1,2 +1,5 @@
 check directory total size
     du -hs dir
+
+handle files separated by \0
+    find . -type f -print0 | du -hs --files0-from=-

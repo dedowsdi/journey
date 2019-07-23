@@ -1,5 +1,5 @@
 let &viminfofile = getcwd() . '/.viminfo'
-call misc#ui#loadProjSetting('c')
+call misc#proj#loadMap('c')
 let g:mycppBuildDir = './build/gcc/Debug'
 let g:cdefProjName = 'GL2'
 "executable make target and path

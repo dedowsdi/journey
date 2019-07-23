@@ -21,10 +21,12 @@ log
 git log -p      // shows the difference introduced in each commit.
 git log -2      //limits the output to only the last two entries
 git log --stat  // see  abbreviated stats for each commit
+git log --graph --oneline --all // or tig --all or gitk --all
 ------------------------------------------------------------
 commit 
 
-git commit --amend   takes your staging area and uses it for the previous commit (change last commit)
+git commit --amend   Takes your staging area and uses it for the previous commit (change last commit)
+                     If no new staging area, change message only.
 ------------------------------------------------------------
 remote
 
@@ -90,6 +92,13 @@ git remote set-url origin git+ssh://git@github.com/...
 global ignore
 git config global core.excludefile ~/.gitignore
 ------------------------------------------------------------
+merge
+git mergetool
+4 files will be opend : LOCAL, BASE, REMOTE, MERGED
+use `:diffget RE` to obtain change from remote
+git save original file as "*.orig" by default, if you don't want that:
+    git config --global mergetool.keepBackup false
+------------------------------------------------------------
 sync fork
 git remote add upstream remote_address
 git fetch remote
@@ -99,3 +108,45 @@ git push
 ------------------------------------------------------------
 search deleted file:
 git log --all --full-history -- **/filename
+------------------------------------------------------------
+submodule
+
+submodule is a pointer to a specific commit
+
+add submodule
+    git submodule add https://...       // this cmd change .gitmodule, clone submodule
+    git commit -am 'add submodule ...'
+
+clone repo with submodule
+    git clone ... && git submodule init && git submodule update
+    or
+    git clone --recurse-submodules ...
+
+remove a submodule
+    # Remove the submodule entry from .git/config
+    git submodule deinit -f path/to/submodule
+
+    # Remove the submodule directory from the superproject's .git/modules directory
+    rm -rf .git/modules/path/to/submodule
+
+    # Remove the entry in .gitmodules and remove the submodule directory located at path/to/submodule
+    git rm -f path/to/submodule
+
+update submodule to a new commit
+    go to submodule, pull changes
+    got parent, commit change ?????, add -A first ????? You also need to remind your friend to call git submodule update ????
+
+change a submodule
+    after you commit and push changes to submodule, you need to also commit a change for parent repo.
+
+To avoid submodule issue
+    run `git submodule update` after every `git pull`
+------------------------------------------------------------
+4 types of git objects:
+    commit : contains the directory tree object hash, parent commit hash, author, committer, date and message.
+    tree   : contains sub trees and blobs (file)
+    blob   : snap shot of file
+    tag    : contains the hash of the tagged object, the type of tagged object (usually a commit), the tag name, author, date and message:
+------------------------------------------------------------
+git cat-file -p sha     get contents of files associated with this sha
+git ls-tree tree_sha    get blob sha of this tree (the same as git cat-file -p tree_sha ?)

@@ -89,6 +89,13 @@ exclude .git and .hg, don't descend into it
     find . \( -name ".hg" -o -name ".git" \) -prune -o -type f
     -prune prevent further descendent if current file is a directory, it always return true, which will skip another
     branch of -o if current condition satisfied.
+    if you don't want to print the pruned directory, add `-print` after `-o -type f`
+
+    Man page about default action is wrong, the posix find is much more readable:
+        If no expression is present, -print shall be used as the expression. Otherwise, if the given expression does not
+        contain any of the primaries -exec, -ok, or -print, the given expression shall be effectively replaced by:
+
+            ( given_expression ) -print
 
 find files in current directory, don't descend into subdirectory
     (shopt -s nullglob && find * -prune -type f)

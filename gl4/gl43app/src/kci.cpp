@@ -14,10 +14,9 @@ kci::kci(GLint key, GLfloat ctrl_scale, GLfloat alt_scale):
 }
 
 //--------------------------------------------------------------------
-void kci::apply_step(GLfloat step_scale, GLuint index/* = 0*/)
-{
+void kci::apply_step(GLfloat step_scale, GLuint index/* = 0*/) {
   do_apply_step(step_scale, index);
-  
+
   if(m_callback)
     m_callback(this);
 }

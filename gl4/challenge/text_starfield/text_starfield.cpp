@@ -5,8 +5,6 @@
 #include "freetype_text.h"
 #include "bitmap_text.h"
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-
 namespace zxd
 {
 
@@ -175,15 +173,15 @@ void text_starfield::create_scene()
 {
   glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
-  ft.init();
   ft.set_height(36);
+  ft.init();
   ft.reset_content_to_all();
 
   bt = ft.create_bitmap_text(4096, 4096);
   m_font_aspect_ratio = static_cast<GLfloat>(bt->height()) / bt->max_advance();
   codepoints = bt->code_points();
 
-
+  
   p_mat = glm::perspective<GLfloat>(45, wnd_aspect(), 1.0, 1000);
   v_mat = translate(vec3(0, 0, -1));
 
