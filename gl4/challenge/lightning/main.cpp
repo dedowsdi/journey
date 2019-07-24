@@ -229,8 +229,8 @@ void lightining_app::update()
   perlin_seed += perlin_step;
   for (int i = 0; i < inner_lightning_count; ++i)
   {
-    GLfloat phi = glm::perlin(perlin_seed.xy() + inner_lightning_count * 1.0f * vec2(200)) * fpi;
-    GLfloat theta = glm::perlin(perlin_seed.zw() + inner_lightning_count * 1.0f * vec2(200)) * f2pi;
+    GLfloat phi = glm::perlin(vec2(perlin_seed) + inner_lightning_count * 1.0f * vec2(200)) * fpi;
+    GLfloat theta = glm::perlin(vec2(perlin_seed) + inner_lightning_count * 1.0f * vec2(200)) * f2pi;
     GLfloat cos_phi = cos(phi) ;
     GLfloat sin_phi = sin(phi) ;
     vec3 dir = vec3(sin_phi * cos(theta), sin_phi * sin(theta), cos_phi);

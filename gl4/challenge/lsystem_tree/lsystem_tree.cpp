@@ -91,8 +91,8 @@ public:
           {
             vec4 v0 = ms.top() * vec4(0,0,0,1);
             vec4 v1 = ms.top() * vec4(0,len,0,1);
-            m_vertices.push_back(v0.xy());
-            m_vertices.push_back(v1.xy());
+            m_vertices.push_back(vec2(v0));
+            m_vertices.push_back(vec2(v1));
             ms.translate(vec3(0, len, 0));
           }
           break;

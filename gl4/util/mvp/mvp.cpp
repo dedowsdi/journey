@@ -36,6 +36,7 @@
  *    matrix plain 16 float
  */
 
+#define GLM_FORCE_SWIZZLE
 #include "stream_util.h"
 #include <iostream>
 #include <string>
@@ -43,6 +44,9 @@
 #include <fstream>
 #include "string_util.h"
 #include "glm.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/vec_swizzle.hpp>
 #include <algorithm>
 #include <iomanip>
 

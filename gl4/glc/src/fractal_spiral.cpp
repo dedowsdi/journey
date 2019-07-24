@@ -1,5 +1,8 @@
 #include "fractal_spiral.h"
 
+#include <glm/gtx/norm.hpp>
+#include "glmath.h"
+
 namespace zxd
 {
 
@@ -112,10 +115,10 @@ void spiral_seed::update_pos()
 {
   m_rotate_angle = m_parent->rotate_angle() + m_angle / radius_scale();
   m_last_pos = m_pos;
-  vec2 touch_point = m_parent->m_lisa.get_at_angle(m_angle);
-  vec2 normal = m_parent->m_lisa.normal_at_angle(m_angle);
+  glm::vec2 touch_point = m_parent->m_lisa.get_at_angle(m_angle);
+  glm::vec2 normal = m_parent->m_lisa.normal_at_angle(m_angle);
   GLfloat r = m_origin_scale * radius();
-  vec2 origin = touch_point + r * normal;
+  glm::vec2 origin = touch_point + r * normal;
   // TODO, rotate angle broke in rose, need to get actural arc length of lissa rose
   origin = zxd::rotate(m_parent->rotate_angle(), origin);
   pos(m_parent->pos() + origin);

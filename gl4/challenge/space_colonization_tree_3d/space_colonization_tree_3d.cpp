@@ -312,7 +312,7 @@ public:
     std::for_each(unitCircle.begin(), unitCircle.end(), 
         [&](const vec4& v)->void
         {
-          circle.push_back((m * v).xyz());
+          circle.push_back(vec3((m * v)));
           //std::cout << circle.back() << std::endl;
         });
 
@@ -440,8 +440,8 @@ public:
     {
       vec4 pos = glm::scale(vec3(0.65, 0.65, 1)) *  vec4(glm::ballRand(200.0f), 1);
       pos.z = glm::abs(pos.z) + 100;
-      vertices.push_back(pos.xyz());
-      m_leaves.emplace_back(pos.xyz());
+      vertices.push_back(vec3(pos));
+      m_leaves.emplace_back(vec3(pos));
     }
 
     m_tree.accept_leaves(m_leaves);

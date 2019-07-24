@@ -1,4 +1,5 @@
 #include "texmap_anim.h"
+#include <glm/gtx/transform.hpp>
 
 namespace zxd
 {

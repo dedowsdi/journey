@@ -2,6 +2,7 @@
 
 #include <sstream>
 
+#include <glm/gtc/type_ptr.hpp>
 #include "bitmap_text.h"
 #include "geometry.h"
 #include "teapot.h"

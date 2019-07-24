@@ -6,9 +6,23 @@
 
 #include <string>
 
-#include "gl.h"
+#include "glmath.h"
 #include <GLFW/glfw3.h>
-#include "glm.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/norm.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/transform.hpp>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_access.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/random.hpp>
+#include <glm/gtc/noise.hpp>
+
 #include "kci.h"
 #include "timer.h"
 #include "bitmap_text.h"

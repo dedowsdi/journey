@@ -6,7 +6,6 @@
 #include <sstream>
 #include "common.h"
 
-
 namespace zxd
 {
 
@@ -220,7 +219,7 @@ protected:
     {
       glUseProgram(program1);
 
-      vec3 camera_pos = glm::inverse(v_mat)[3].xyz();
+      vec3 camera_pos = vec3(glm::inverse(v_mat)[3]);
 
       glUniformMatrix4fv(
         program1.ul_vp_mat, 1, 0, value_ptr(vp_mat));
@@ -231,8 +230,8 @@ protected:
     {
       glUseProgram(program2);
 
-      vec3 camera_pos = glm::inverse(v_mat)[3].xyz();
-      vec3 camera_up = glm::row(v_mat, 1).xyz();
+      vec3 camera_pos = vec3(glm::inverse(v_mat)[3]);
+      vec3 camera_up = vec3(glm::row(v_mat, 1));
 
       glUniformMatrix4fv(
         program2.ul_vp_mat, 1, 0, value_ptr(vp_mat));

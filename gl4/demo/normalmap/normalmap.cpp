@@ -1,6 +1,8 @@
 #include "app.h"
-#include "bitmap_text.h"
+
 #include <sstream>
+
+#include "bitmap_text.h"
 #include "common.h"
 #include "light.h"
 #include "quad.h"
@@ -196,7 +198,7 @@ public:
       mat4 mv_mat = v_mat * m_mat;
       mat4 mv_mat_i = glm::inverse(mv_mat);
       mat4 m_mat_i = glm::inverse(m_mat);
-      vec3 camera = glm::column(mv_mat_i, 3).xyz();
+      vec3 camera = vec3(glm::column(mv_mat_i, 3));
       glUniform3fv(prg1.ul_m_camera, 1, glm::value_ptr(camera));
 
       for (int i = 0; i < lights.size(); ++i)

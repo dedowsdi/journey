@@ -1,8 +1,8 @@
 #ifndef GL_GLC_BITMAP_TEXT_H
 #define GL_GLC_BITMAP_TEXT_H
 
-#include "gl.h"
 #include <string>
+
 #include "glm.h"
 #include "program.h"
 #include <memory>
@@ -17,25 +17,16 @@ struct bitmap_text_program : public zxd::program
   GLint ul_text_color;
   GLint ul_font_map;
   GLint ul_mvp_mat;
-  mat4 mvp_mat;
+  glm::mat4 mvp_mat;
 
   bitmap_text_program()
   {
 
   }
 
-  void reshape(GLuint wnd_width, GLuint wnd_height)
-  {
-    mvp_mat = glm::ortho(
-      0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
-  }
+  void reshape(GLuint wnd_width, GLuint wnd_height);
 
-  void update_uniforms(const glm::vec4& text_color)
-  {
-    glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
-    glUniform4fv(ul_text_color, 1, value_ptr(text_color));
-    glUniform1i(ul_font_map, 0);
-  }
+  void update_uniforms(const glm::vec4& text_color);
 
   virtual void attach_shaders()
   {
@@ -104,7 +95,7 @@ public:
   }
 
   void print(const std::string& text, GLuint x, GLuint y,
-    const glm::vec4& color = vec4(1.0f), GLfloat scale = 1.0);
+    const glm::vec4& color = glm::vec4(1.0f), GLfloat scale = 1.0);
 
   GLuint texture() const { return m_texture; }
   void texture(GLuint v){ m_texture = v; }

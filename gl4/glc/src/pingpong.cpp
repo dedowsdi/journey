@@ -1,5 +1,7 @@
 #include "pingpong.h"
 
+#include <stdexcept>
+
 namespace zxd
 {
 

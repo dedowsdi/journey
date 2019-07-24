@@ -1,9 +1,9 @@
 #ifndef GL_GLC_PRIMITIVE_SET_H
 #define GL_GLC_PRIMITIVE_SET_H
-#include "gl.h"
+#include "glm.h"
 #include <memory>
 #include <vector>
-#include "glm.h"
+
 
 namespace zxd
 {

@@ -1,5 +1,5 @@
 #include "geometry_test.h"
-#include <glm/glm.hpp>
+#include "glm.h"
 #include <glm/gtx/norm.hpp>
 
 namespace geometry_test
@@ -74,7 +74,7 @@ bool is_point_in_triangle(const vec3& p, const vec3& c0, const vec3& c1, const v
 //--------------------------------------------------------------------
 bool_vec3_pair intersect_line_plane(const vec3& lp, const vec3& ld, const vec4& plane)
 {
-  vec3 pn = plane.xyz();
+  vec3 pn = vec3(plane);
 
   GLfloat dot_pn_ld = dot(pn, ld);
   if (abs(dot_pn_ld) < 0.00001f) // parallel check

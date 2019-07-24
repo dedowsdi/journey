@@ -26,9 +26,9 @@ void nurb_surface::build_vertex()
     for (int j = 0; j <= m_vpartition; ++j)
     {
       GLfloat v = m_vbegin + vstep * j;
-      vec4 v0 = nurb::get(
+      glm::vec4 v0 = nurb::get(
         q0.begin(), q0.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
-      vec4 v1 = nurb::get(
+      glm::vec4 v1 = nurb::get(
         q1.begin(), q1.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
       vertices.push_back(v1);
       vertices.push_back(v0);
@@ -70,13 +70,13 @@ void nurb_surface::build_normal()
       GLfloat v = m_vbegin + vstep * j;
       const vec4_vector& vq = vq2[j];
 
-      vec3 right0 = nurb::tangent(
+      glm::vec3 right0 = nurb::tangent(
         uq0.begin(), uq0.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
-      vec3 right1 = nurb::tangent(
+      glm::vec3 right1 = nurb::tangent(
         uq1.begin(), uq1.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
-      vec3 front0 = nurb::tangent(
+      glm::vec3 front0 = nurb::tangent(
         vq.begin(), vq.end(), m_uknots.begin(), m_uknots.end(), m_udegree, u0);
-      vec3 front1 = nurb::tangent(
+      glm::vec3 front1 = nurb::tangent(
         vq.begin(), vq.end(), m_uknots.begin(), m_uknots.end(), m_udegree, u1);
 
       normals.push_back(normalize(cross(right1, front1)));
@@ -107,7 +107,7 @@ void nurb_surface::build_texcoord()
 }
 
 //--------------------------------------------------------------------
-vec4 nurb_surface::get(GLfloat u, GLfloat v)
+glm::vec4 nurb_surface::get(GLfloat u, GLfloat v)
 {
   vec4_vector q = u_interim(u);
   return nurb::get(

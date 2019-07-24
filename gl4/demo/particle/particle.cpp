@@ -219,8 +219,8 @@ protected:
     GLfloat emit_period = 1.0f / emits_per_second;
     t += dt;
 
-    prg.camera_pos = glm::inverse(v_mat)[3].xyz();
-    prg.camera_up = glm::row(v_mat, 1).xyz();
+    prg.camera_pos = vec3(glm::inverse(v_mat)[3]);
+    prg.camera_up = vec3(glm::row(v_mat, 1));
 
     GLint num_new_particles = t / emit_period;
     t -= num_new_particles * emit_period;

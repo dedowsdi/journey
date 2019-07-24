@@ -1,4 +1,5 @@
 #include "disk.h"
+#include "glmath.h"
 
 namespace zxd
 {
@@ -94,7 +95,7 @@ void disk::build_texcoord()
   for (int i = 0; i < num_vertices(); ++i)
   {
     const vec3& vertex = vertices[i];
-    texcoords.push_back(vertex.xy() * 0.5f / m_outer + 0.5f);
+    texcoords.push_back(vec2(vertex) * 0.5f / m_outer + 0.5f);
   }
 }
 

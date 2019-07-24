@@ -1,7 +1,7 @@
 #ifndef GL_GLC_DEBUGGER_H
 #define GL_GLC_DEBUGGER_H
-#include "gl.h"
 #include "glm.h"
+#include <glm/gtc/type_ptr.hpp>
 #include "common_program.h"
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
@@ -80,7 +80,7 @@ void draw_point(const T& point, const glm::mat4& mvp, GLfloat size/* = 1*/,  con
   if(!prg.is_inited())
     prg.init();
 
-  dd.init_vao(T::components);
+  dd.init_vao(T::length());
   dd.update_buffer(sizeof(T), glm::value_ptr(point));
 
   prg.use();
@@ -115,7 +115,7 @@ void draw_point(It beg, It end, const glm::mat4& mvp,
   if(!prg.is_inited())
     prg.init();
 
-  dd.init_vao(It::value_type::components);
+  dd.init_vao(It::value_type::length());
   GLuint vertex_count = std::distance(beg, end);
   dd.update_buffer(sizeof(typename It::value_type) * vertex_count , &*beg);
 
@@ -145,7 +145,7 @@ void draw_line(const T& p0, const T& p1, const glm::mat4& mvp,
   if(!prg.is_inited())
     prg.init();
 
-  dd.init_vao(T::components);
+  dd.init_vao(T::length());
   dd.update_buffer(sizeof(T)*2, glm::value_ptr(vertices.front()));
 
   prg.use();
@@ -170,7 +170,7 @@ GLfloat width/* = 1*/, const glm::vec4& color/* = glm::vec4(1)*/)
   if(!prg.is_inited())
     prg.init();
 
-  dd.init_vao(T::components);
+  dd.init_vao(T::length());
   dd.update_buffer(sizeof(T) * vertices.size(), glm::value_ptr(vertices.front()));
 
   prg.use();
@@ -200,7 +200,7 @@ GLfloat width/* = 1*/, const glm::vec4& color/* = glm::vec4(1)*/)
   auto count = std::distance(beg, end);
   using value_type = typename std::iterator_traits<It>::value_type ;
 
-  dd.init_vao(value_type::components);
+  dd.init_vao(value_type::length());
   dd.update_buffer(sizeof(value_type) * count, &*beg);
 
   prg.use();

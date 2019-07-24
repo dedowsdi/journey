@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 
+#include "glmath.h"
 #include "common_program.h"
 #include "quad.h"
 #include "pingpong.h"

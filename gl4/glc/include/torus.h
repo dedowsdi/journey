@@ -44,7 +44,7 @@ public:
   void rings(GLuint v) { m_rings = v; }
 
 protected:
-  vec3 sphere_vertex();
+  glm::vec3 sphere_vertex();
 
 };
 }

@@ -33,12 +33,12 @@ public:
   virtual void build_texcoord();
 
   // get point by De Boor's algorithm
-  vec4 get(GLfloat u);
-  vec3 tangent(GLfloat u);
+  glm::vec4 get(GLfloat u);
+  glm::vec3 tangent(GLfloat u);
   nurb derivative();
 
   // compute pointer directly by b-spline formula
-  vec4 get_by_coefs(GLfloat u);
+  glm::vec4 get_by_coefs(GLfloat u);
 
   void insert_knot(GLfloat u, GLuint times = 1);
 
@@ -87,9 +87,9 @@ public:
   void uniform_knots();
   GLfloat coefficient(GLint i, GLint p, GLfloat u);
 
-  static vec4 get(
+  static glm::vec4 get(
     v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u);
-  static vec3 tangent(
+  static glm::vec3 tangent(
     v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree, GLfloat u);
 
   static float coefficient(

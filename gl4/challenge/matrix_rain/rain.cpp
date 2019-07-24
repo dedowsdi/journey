@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/random.hpp>
 #include "bitmap_text.h"
 #include "program.h"
 

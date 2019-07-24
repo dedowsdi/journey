@@ -100,7 +100,7 @@ vec3_vector teardrop::get_points(GLfloat radius, GLuint slices, GLuint stacks, G
 {
   vec3_vector points;
   points.reserve((stacks + 1) * (slices + 1));
-  GLfloat phi_step = glm::pi<GLfloat>() / stacks;
+  GLfloat phi_step = fpi / stacks;
   GLfloat theta_step = f2pi / slices;
   for (int i = 0; i <= stacks; ++i)
   {

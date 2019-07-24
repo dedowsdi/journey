@@ -1,6 +1,8 @@
 #include "geometry.h"
 #include "string_util.h"
 
+#include <glm/vec3.hpp>
+
 namespace zxd
 {
 

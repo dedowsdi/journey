@@ -1,9 +1,9 @@
 #ifndef GL_GLC_MAT_STACK_H
 #define GL_GLC_MAT_STACK_H
 
-#include "gl.h"
 #include <stack>
-#include <glm/fwd.hpp>
+#include "gl.h"
+#include "glm.h"
 
 namespace zxd
 {

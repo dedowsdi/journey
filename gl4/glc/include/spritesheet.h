@@ -18,11 +18,11 @@ public:
   spritesheet(){}
   spritesheet(GLuint tex, GLuint rows, GLuint cols);
 
-  vec2 sprite_size();
-  vec2 get_sprite(GLuint row, GLuint col);
-  vec2 get_sprite(GLuint index);
+  glm::vec2 sprite_size();
+  glm::vec2 get_sprite(GLuint row, GLuint col);
+  glm::vec2 get_sprite(GLuint index);
 
-  vec2 get_random_sprite();
+  glm::vec2 get_random_sprite();
 
   GLuint rows() const { return m_rows; }
   void rows(GLuint v){ m_rows = v; }

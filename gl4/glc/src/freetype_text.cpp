@@ -14,6 +14,22 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
+void freetype_text_program::reshape(GLuint wnd_width, GLuint wnd_height)
+{
+  mvp_mat = glm::ortho(
+      0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
+}
+
+//--------------------------------------------------------------------
+void freetype_text_program::update_uniforms(const glm::vec4& text_color)
+{
+  glUniformMatrix4fv(
+      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+  glUniform4fv(ul_text_color, 1, value_ptr(text_color));
+  glUniform1i(ul_font_map, 0);
+}
+
+//--------------------------------------------------------------------
 raii_ft_library::raii_ft_library(const std::string& font_name):
   m_ft(nullptr)
 {

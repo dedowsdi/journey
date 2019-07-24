@@ -75,7 +75,7 @@ void update_mesh()
   for (int i = 0; i <= half_slice; ++i) 
   {
     const vec2& vertex = m_vertices[i];
-    m_vertices.push_back(-vertex.yx());
+    m_vertices.push_back(-vec2(vertex.y, vertex.x));
   }
   yoff += 0.001;
 

@@ -184,11 +184,11 @@ public:
 
   virtual void update()
   {
-    vec3 camera_pos = -v_mat[3].xyz();
-    camera_pos = vec3(glm::dot(v_mat[0].xyz(), camera_pos),
-                      glm::dot(v_mat[1].xyz(), camera_pos),
-                      glm::dot(v_mat[2].xyz(), camera_pos));
-    vec3 camera_nza = -glm::row(v_mat, 2).xyz();
+    vec3 camera_pos = vec3(-v_mat[3]);
+    camera_pos = vec3(glm::dot(vec3(v_mat[0]), camera_pos),
+                      glm::dot(vec3(v_mat[1]), camera_pos),
+                      glm::dot(vec3(v_mat[2]), camera_pos));
+    vec3 camera_nza = -vec3(glm::row(v_mat, 2));
 
     for(auto item : m_snows)
     {

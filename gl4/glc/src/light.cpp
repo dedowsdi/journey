@@ -1,6 +1,7 @@
 #include "light.h"
 
 #include "common.h"
+#include "glmath.h"
 
 namespace zxd
 {
@@ -74,7 +75,7 @@ GLfloat light_source::radius(GLfloat epsilon)
     return 0;
   }
 
-  GLfloat mdc = max_abs_component(diffuse.xyz());
+  GLfloat mdc = max_abs_component(vec3(diffuse));
 
   return -linear_attenuation +
          std::sqrt(

@@ -3,8 +3,7 @@
 #include <memory>
 #include <iostream>
 
-#include <glm/fwd.hpp>
-#include "gl.h"
+#include "glm.h"
 #include "mixinvector.h"
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))

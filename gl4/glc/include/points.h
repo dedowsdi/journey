@@ -50,7 +50,7 @@ void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat)
   glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(tvec),
     value_ptr(points[0]), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, tvec::components, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+  glVertexAttribPointer(0, tvec::length(), GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
   glEnableVertexAttribArray(0);
 
   prg.use();

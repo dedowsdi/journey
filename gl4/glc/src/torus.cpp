@@ -36,8 +36,8 @@ void torus::build_vertex()
       // circle on xy plane is (0, 0, r), rotate it along -y, and you get the
       // xy part of final vertex
       GLfloat r = m_outer_radius + m_inner_radius * glm::cos(theta);
-      vec3 v0(cos_phi0 * r, sin_phi0 * r, m_inner_radius * glm::sin(theta));
-      vec3 v1(cos_phi1 * r, sin_phi1 * r, m_inner_radius * glm::sin(theta));
+      glm::vec3 v0(cos_phi0 * r, sin_phi0 * r, m_inner_radius * glm::sin(theta));
+      glm::vec3 v1(cos_phi1 * r, sin_phi1 * r, m_inner_radius * glm::sin(theta));
 
       vertices.push_back(v0);
       vertices.push_back(v1);
@@ -76,13 +76,13 @@ void torus::build_normal()
       GLfloat theta = theta_step * j;
 
       GLfloat r = m_outer_radius + m_inner_radius * glm::cos(theta);
-      vec3 v0(cos_phi0 * r, sin_phi0 * r, m_inner_radius * glm::sin(theta));
-      vec3 v1(cos_phi1 * r, sin_phi1 * r, m_inner_radius * glm::sin(theta));
+      glm::vec3 v0(cos_phi0 * r, sin_phi0 * r, m_inner_radius * glm::sin(theta));
+      glm::vec3 v1(cos_phi1 * r, sin_phi1 * r, m_inner_radius * glm::sin(theta));
 
       // normal is the same as vertex - circle center
-      vec3 n0 =
+      glm::vec3 n0 =
         v0 - vec3(cos_phi0 * m_outer_radius, sin_phi0 * m_outer_radius, 0);
-      vec3 n1 =
+      glm::vec3 n1 =
         v1 - vec3(cos_phi1 * m_outer_radius, sin_phi1 * m_outer_radius, 0);
 
       normals.push_back(glm::normalize(n0));
@@ -116,8 +116,8 @@ void torus::build_texcoord()
     {
       GLfloat theta = theta_step * j;
 
-      vec2 t0(phi0 / pi2, theta / pi2);
-      vec2 t1(phi1 / pi2, theta / pi2);
+      glm::vec2 t0(phi0 / pi2, theta / pi2);
+      glm::vec2 t1(phi1 / pi2, theta / pi2);
 
       texcoords.push_back(t0);
       texcoords.push_back(t1);

@@ -1,5 +1,6 @@
 #include "pacman.h"
 #include "common_program.h"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace zxd
 {

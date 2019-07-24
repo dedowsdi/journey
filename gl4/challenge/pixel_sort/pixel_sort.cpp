@@ -1,3 +1,4 @@
+#include <color.h>
 #include "app.h"
 #include "bitmap_text.h"
 #include "texutil.h"

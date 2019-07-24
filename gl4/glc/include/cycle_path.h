@@ -11,8 +11,8 @@ class cycle_path
 public:
   cycle_path(GLfloat a0, GLfloat b0, GLfloat c0, GLfloat a1, GLfloat b1, GLfloat c1);
 
-  vec2 get(GLfloat angle);
-  vec2 tangent(GLfloat angle);
+  glm::vec2 get(GLfloat angle);
+  glm::vec2 tangent(GLfloat angle);
 
 private:
   GLfloat m_a0, m_b0, m_c0;

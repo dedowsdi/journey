@@ -199,7 +199,7 @@ public:
     mat4 m_mat_i = glm::inverse(m_mat);
 
     // get camera model position
-    vec3 camera = glm::column(mv_mat_i, 3).xyz();
+    vec3 camera = vec3(glm::column(mv_mat_i, 3));
     glUniform3fv(prg.ul_m_camera, 1, glm::value_ptr(camera));
 
     for (int i = 0; i < lights.size(); ++i)

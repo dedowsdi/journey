@@ -1,5 +1,8 @@
 #include "mat_stack.h"
-#include "glm.h"
+
+#include <stdexcept>
+
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace zxd
 {

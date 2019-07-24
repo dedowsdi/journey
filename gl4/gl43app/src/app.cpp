@@ -1,6 +1,9 @@
 #include "app.h"
+
 #include <stdexcept>
 #include <iostream>
+
+#include "glm.h"
 #include "glenumstring.h"
 
 namespace zxd {
@@ -283,7 +286,7 @@ void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
 
     // pitch camera, but reserve center
     if (dty != 0) {
-      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+      glm::vec3 translation = vec3(glm::column(*m_v_mat, 3));
 
       // clear translation
       set_col(*m_v_mat, 3, zp);
@@ -308,7 +311,7 @@ void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
         0, 0, wnd_width(), wnd_height(), 0, 1);
       mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
 
-      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+      glm::vec3 translation = vec3(glm::column(*m_v_mat, 3));
 
       set_col(*m_v_mat, 3, zp);
       *m_v_mat = glm::translate(translation) * m * *m_v_mat;
@@ -325,7 +328,7 @@ void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
                glm::rotate(static_cast<GLfloat>(dtx) * 0.002f, vec3(0, 1, 0)) *
                *m_v_mat;
 
-    vec3 forward = -glm::row(*m_v_mat, 2).xyz();
+    vec3 forward = vec3(-glm::row(*m_v_mat, 2));
     vec3 right = cross(forward, pza);
     if (glm::length(right) < 0.00001f) {
       return;
@@ -528,7 +531,7 @@ void app::glfw_key(
     switch (key) {
       case GLFW_KEY_KP_1: {
         if (m_v_mat) {
-          GLfloat distance = glm::length((*m_v_mat)[3].xyz());
+          GLfloat distance = glm::length(vec3((*m_v_mat)[3]));
           GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
           *m_v_mat = glm::lookAt(glm::vec3(0.0f, -distance * factor, 0.0f),
             glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -536,7 +539,7 @@ void app::glfw_key(
       } break;
       case GLFW_KEY_KP_3: {
         if (m_v_mat) {
-          GLfloat distance = glm::length((*m_v_mat)[3].xyz());
+          GLfloat distance = glm::length(vec3((*m_v_mat)[3]));
           GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
           *m_v_mat = glm::lookAt(glm::vec3(-distance * factor, 0.0f, 0.0f),
             glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -545,7 +548,7 @@ void app::glfw_key(
 
       case GLFW_KEY_KP_7: {
         if (m_v_mat) {
-          GLfloat distance = glm::length((*m_v_mat)[3].xyz());
+          GLfloat distance = glm::length(vec3((*m_v_mat)[3]));
           GLfloat factor = mods & GLFW_MOD_CONTROL ? -1.0f : 1.0f;
           *m_v_mat = glm::lookAt(glm::vec3(0.0f, 0.0f, -distance * factor),
             glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -554,8 +557,8 @@ void app::glfw_key(
       case GLFW_KEY_C:
         if (m_v_mat) {
           mat4 v_mat_i = glm::inverse(*m_v_mat);
-          vec3 eye = v_mat_i[3].xyz();
-          vec3 center = eye + 10.0f * -glm::row(*m_v_mat, 2).xyz();
+          vec3 eye = vec3(v_mat_i[3]);
+          vec3 center = eye + 10.0f * vec3(-glm::row(*m_v_mat, 2));
           *m_v_mat = glm::lookAt(eye, center, pza);
         }
         break;
@@ -671,7 +674,7 @@ vec3 app::unproject(vec3 p, const mat4& m)
   mat4 w_mat = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height());
   mat4 xw_mat = w_mat * m;
   vec4 res = glm::inverse(xw_mat) * sp;
-  return res.xyz() / res.w;
+  return vec3(res) / res.w;
 }
 
 //--------------------------------------------------------------------

@@ -22,22 +22,15 @@ struct freetype_text_program : public zxd::program
   GLint ul_font_map;
   GLint ul_mvp_mat;
 
-  mat4 mvp_mat;
+  glm::mat4 mvp_mat;
   freetype_text_program()
   {
   }
-  void reshape(GLuint wnd_width, GLuint wnd_height)
-  {
-    mvp_mat = glm::ortho(
-      0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
-  }
-  void update_uniforms(const glm::vec4& text_color)
-  {
-    glUniformMatrix4fv(
-      ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
-    glUniform4fv(ul_text_color, 1, value_ptr(text_color));
-    glUniform1i(ul_font_map, 0);
-  }
+
+  void reshape(GLuint wnd_width, GLuint wnd_height);
+
+  void update_uniforms(const glm::vec4& text_color);
+
   virtual void attach_shaders()
   {
     std::string shader_dir = legacy ? "shader2/" : "shader4/";

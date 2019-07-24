@@ -33,17 +33,17 @@ void bezier::build_texcoord()
 }
 
 //--------------------------------------------------------------------
-vec3 bezier::get(GLfloat t)
+glm::vec3 bezier::get(GLfloat t)
 {
   return get(m_ctrl_points.begin(), m_ctrl_points.end(), t);
 }
 
 //--------------------------------------------------------------------
-vec3 bezier::get(GLuint i, GLuint j, GLfloat t)
+glm::vec3 bezier::get(GLuint i, GLuint j, GLfloat t)
 {
   // iteration of points will be an equilateral
   GLuint n = this->n();
-  vec3 p(0);
+  glm::vec3 p(0);
 
   if (i > n)
   {
@@ -138,7 +138,7 @@ bezier bezier::derivative(GLuint level /* = 1*/)
 }
 
 //--------------------------------------------------------------------
-vec3 bezier::tangent(GLfloat t)
+glm::vec3 bezier::tangent(GLfloat t)
 {
   return tangent(m_ctrl_points.begin(), m_ctrl_points.end(), t);
 }
@@ -228,7 +228,7 @@ vec3_vector bezier::iterate(
 }
 
 //--------------------------------------------------------------------
-vec3 bezier::get(
+glm::vec3 bezier::get(
   vec3_vector::const_iterator beg, vec3_vector::const_iterator end, GLfloat t)
 {
   if (beg == end) return vec3(0);
@@ -260,19 +260,19 @@ vec3 bezier::get(
 }
 
 //--------------------------------------------------------------------
-vec3 bezier::tangent(
+glm::vec3 bezier::tangent(
   vec3_vector::const_iterator beg, vec3_vector::const_iterator end, GLfloat t)
 {
   vec3_vector2 vv = iterate_all(beg, end, t);
   GLuint s = vv.size();
 
-  vec3 v = vv[s - 2][1] - vv[s - 2][0];
+  glm::vec3 v = vv[s - 2][1] - vv[s - 2][0];
   return glm::normalize(v);
 }
 
 
 //--------------------------------------------------------------------
-vec3 bezier::d(GLuint i, GLuint k)
+glm::vec3 bezier::d(GLuint i, GLuint k)
 {
   if (k == 0)
     return m_ctrl_points[i + 1] - m_ctrl_points[i];

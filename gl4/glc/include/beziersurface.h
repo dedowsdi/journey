@@ -31,7 +31,7 @@ public:
 
   virtual void build_texcoord();
 
-  vec3 get(GLfloat u, GLfloat v);
+  glm::vec3 get(GLfloat u, GLfloat v);
 
   // get interim horizontal control points as specific u
   vec3_vector u_interim(GLfloat u);

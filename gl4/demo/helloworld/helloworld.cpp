@@ -3,9 +3,9 @@
 
 namespace zxd
 {
+
 class hello_world : public app
 {
-
 public:
   virtual void init_info()
   {

@@ -19,7 +19,7 @@ void capsule2d::build_vertex()
     vertices->reserve(m_slice + 4);
     vertices->push_back(vec2(0, 0));
     GLfloat step_angle = f2pi / m_slice;
-    vec2 center = vec2(half_rect_width, 0);
+    glm::vec2 center = vec2(half_rect_width, 0);
 
     for (int i = 0; i <= m_slice; ++i) 
     {

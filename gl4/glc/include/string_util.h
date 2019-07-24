@@ -8,7 +8,7 @@
 #include <vector>
 #include <glm/fwd.hpp>
 
-//#include "glm.h"
+#include "glm.h"
 
 namespace string_util 
 {

@@ -224,7 +224,7 @@ public:
       return;
 
     vec3 click_pos = this->unproject(vec3(current_mouse_position(), 0), p_mat * v_mat);
-    vec3 camera_pos = glm::column(glm::inverse(v_mat), 3).xyz();
+    vec3 camera_pos = vec3(glm::column(glm::inverse(v_mat), 3));
     vec3 ray_dir = glm::normalize(click_pos - camera_pos);
     GLfloat d2 = 100000000;
     cell_vector::iterator it = m_cells.end();

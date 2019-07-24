@@ -26,8 +26,8 @@ void bezier_surface::build_vertex()
     for (int j = 0; j <= m_vpartition; ++j)
     {
       GLfloat v = m_vbegin + vstep * j;
-      vec3 v0 = bezier::get(q0.begin(), q0.end(), v);
-      vec3 v1 = bezier::get(q1.begin(), q1.end(), v);
+      glm::vec3 v0 = bezier::get(q0.begin(), q0.end(), v);
+      glm::vec3 v1 = bezier::get(q1.begin(), q1.end(), v);
       vertices.push_back(v1);
       vertices.push_back(v0);
     }
@@ -68,10 +68,10 @@ void bezier_surface::build_normal()
       GLfloat v = m_vbegin + vstep * j;
       const vec3_vector& vq = vq2[j];
 
-      vec3 right0 = bezier::tangent(uq0.begin(), uq0.end(), v);
-      vec3 right1 = bezier::tangent(uq1.begin(), uq1.end(), v);
-      vec3 front0 = bezier::tangent(vq.begin(), vq.end(), u0);
-      vec3 front1 = bezier::tangent(vq.begin(), vq.end(), u1);
+      glm::vec3 right0 = bezier::tangent(uq0.begin(), uq0.end(), v);
+      glm::vec3 right1 = bezier::tangent(uq1.begin(), uq1.end(), v);
+      glm::vec3 front0 = bezier::tangent(vq.begin(), vq.end(), u0);
+      glm::vec3 front1 = bezier::tangent(vq.begin(), vq.end(), u1);
 
       normals.push_back(normalize(cross(right1, front1)));
       normals.push_back(normalize(cross(right0, front0)));
@@ -100,7 +100,7 @@ void bezier_surface::build_texcoord()
 }
 
 //--------------------------------------------------------------------
-vec3 bezier_surface::get(GLfloat u, GLfloat v)
+glm::vec3 bezier_surface::get(GLfloat u, GLfloat v)
 {
   vec3_vector q = u_interim(u);
   return bezier::get(q.begin(), q.end(), v);

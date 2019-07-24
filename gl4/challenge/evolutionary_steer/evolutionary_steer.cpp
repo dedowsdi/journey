@@ -1,3 +1,4 @@
+#define GLM_FORCE_SWIZZLE
 #include "app.h"
 #include "bitmap_text.h"
 #include "common_program.h"

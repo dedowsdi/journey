@@ -178,7 +178,7 @@ public:
       auto transformed_vertices = geometry_util::transform(unit_vertices, m);
       for (int i = 0; i < transformed_vertices.size(); ++i)
       {
-        vertices->push_back(transformed_vertices[i].xy());
+        vertices->push_back(vec2(transformed_vertices[i]));
         colors->push_back(glm::mix(color0, color1, static_cast<GLfloat>(i)/transformed_vertices.size()));
       }
     }

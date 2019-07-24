@@ -1,8 +1,8 @@
 #ifndef GL_GLC_LIGHT_H
 #define GL_GLC_LIGHT_H
 
-#include "gl.h"
 #include "glm.h"
+#include <string>
 
 namespace zxd
 {
@@ -67,10 +67,10 @@ struct light_model
 
 struct material
 {
-  vec4 emission;
-  vec4 ambient;
-  vec4 diffuse;
-  vec4 specular;
+  glm::vec4 emission;
+  glm::vec4 ambient;
+  glm::vec4 diffuse;
+  glm::vec4 specular;
   float shininess;
 
   GLint ul_emission;

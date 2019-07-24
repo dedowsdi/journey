@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cassert>
 
+#include <glm/gtx/transform.hpp>
+#include "glmath.h"
 #include "geometry.h"
 #include "triangle_functor.h"
 
@@ -242,7 +244,7 @@ vec3_vector transform(const vec3_vector& vertices, const mat4& m)
   for(auto& item : vertices)
   {
     vec4 v = m * vec4(item, 1);
-    result.push_back(v.xyz());
+    result.push_back(vec3(v));
   }
   return result;
 }

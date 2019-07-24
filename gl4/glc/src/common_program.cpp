@@ -1,6 +1,7 @@
 #include "common_program.h"
 
 #include <sstream>
+#include <glm/gtc/matrix_access.hpp>
 
 #include "common.h"
 #include "stream_util.h"
@@ -350,14 +351,14 @@ void billboard_program::bind_attrib_locations()
 //--------------------------------------------------------------------
 void billboard_program::update_uniforms(const mat4& v_mat, const mat4& p_mat)
 {
-  vec3 camera_pos = -v_mat[3].xyz();
-  camera_pos = vec3(glm::dot(v_mat[0].xyz(), camera_pos),
-      glm::dot(v_mat[1].xyz(), camera_pos),
-      glm::dot(v_mat[2].xyz(), camera_pos));
+  vec3 camera_pos = vec3(-v_mat[3]);
+  camera_pos = vec3(glm::dot(vec3(v_mat[0]), camera_pos),
+      glm::dot(vec3(v_mat[1]), camera_pos),
+      glm::dot(vec3(v_mat[2]), camera_pos));
   glUniform3fv(ul_camera_pos, 1,  glm::value_ptr(camera_pos));
 
   if(use_camera_up)
-    glUniform3fv(ul_camera_up, 1,  glm::value_ptr(glm::row(v_mat, 1).xyz()));
+    glUniform3fv(ul_camera_up, 1,  glm::value_ptr(vec3(glm::row(v_mat, 1))));
 
   glUniformMatrix4fv(ul_vp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
 }

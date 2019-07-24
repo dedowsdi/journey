@@ -1,5 +1,6 @@
 #include "program.h"
 
+#include <iostream>
 #include <algorithm>
 #include <functional>
 #include <sstream>

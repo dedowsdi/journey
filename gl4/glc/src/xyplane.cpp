@@ -25,8 +25,8 @@ void xyplane::build_vertex()
     for (int j = 0; j <= m_slice; ++j) {  // col
       GLfloat x = m_left + xstep * j;
 
-      vec2 v0(x, y0);
-      vec2 v1(x, y1);
+      glm::vec2 v0(x, y0);
+      glm::vec2 v1(x, y1);
       vertices.push_back(v0);
       vertices.push_back(v1);
     }
@@ -71,8 +71,8 @@ void xyplane::build_texcoord()
     for (int j = 0; j <= m_slice; ++j) {  // col
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
 
-      vec2 tex0(s, t0);
-      vec2 tex1(s, t1);
+      glm::vec2 tex0(s, t0);
+      glm::vec2 tex1(s, t1);
       texcoords.push_back(tex0);
       texcoords.push_back(tex1);
     }

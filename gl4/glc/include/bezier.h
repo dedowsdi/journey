@@ -28,10 +28,10 @@ public:
   unsigned int n() { return m_ctrl_points.size() - 1; }
 
   // get point at t
-  vec3 get(GLfloat t);
+  glm::vec3 get(GLfloat t);
 
   // get point at ith iteration, jth index
-  vec3 get(GLuint i, GLuint j, GLfloat t);
+  glm::vec3 get(GLuint i, GLuint j, GLfloat t);
 
   // degree evevate or drop
   void elevate(bool positive = true);
@@ -40,7 +40,7 @@ public:
   bezier derivative(GLuint level = 1);
 
   // get tanget at t
-  vec3 tangent(GLfloat t);
+  glm::vec3 tangent(GLfloat t);
 
   // subdivide according to current point
   void subdivide(GLfloat t, bezier& lc, bezier& rc);
@@ -66,15 +66,15 @@ public:
   static vec3_vector iterate(
     vec3_vector::const_iterator beg, vec3_vector::const_iterator end, float t);
 
-  static vec3 get(vec3_vector::const_iterator beg,
+  static glm::vec3 get(vec3_vector::const_iterator beg,
     vec3_vector::const_iterator end, GLfloat t);
 
-  static vec3 tangent(vec3_vector::const_iterator beg,
+  static glm::vec3 tangent(vec3_vector::const_iterator beg,
     vec3_vector::const_iterator end, GLfloat t);
 
 private:
   // special function used to derivative
-  vec3 d(GLuint i, GLuint k);
+  glm::vec3 d(GLuint i, GLuint k);
 };
 }
 

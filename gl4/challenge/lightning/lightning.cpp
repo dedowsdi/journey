@@ -1,5 +1,11 @@
 #include "lightning.h"
+
+#include <glm/gtc/random.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "program.h"
+#include "glmath.h"
+
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 

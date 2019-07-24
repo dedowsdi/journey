@@ -1,5 +1,11 @@
 #include "bug.h"
 
+#include <glm/gtc/random.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/noise.hpp>
+
+#include "color.h"
+
 #define BUFFER_OFFSET(x) ((GLubyte*)NULL + (x))
 
 namespace zxd

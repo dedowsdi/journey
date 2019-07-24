@@ -3,6 +3,8 @@ set(GLC_SRCS
     src/common.cpp
     src/glenumstring.cpp
     src/glm.cpp
+    src/glmath.cpp
+    src/color.cpp
     src/light.cpp
     src/program.cpp
     src/common_program.cpp

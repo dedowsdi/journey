@@ -85,12 +85,12 @@ protected:
       if(i & 1)
       {
         vec4 v = m * vec4(innder_radius, 0, 0, 1);
-        vertices.push_back(v.xy());
+        vertices.push_back(vec2(v));
       }
       else if(glm::linearRand(0.0f, 1.0f) > 0.65f)
       {
         vec4 v = m * vec4(outer_radius, 0, 0, 1);
-        vertices.push_back(v.xy());
+        vertices.push_back(vec2(v));
       }
     }
 
@@ -121,7 +121,7 @@ protected:
     {
       mat4 m = glm::rotate(step_angle * i, vec3(0, 0, 1));
       vec4 v = m * vec4(radius, 0, 0, 1);
-      vertices.push_back(v.xy());
+      vertices.push_back(vec2(v));
     }
 
     m_primitive_sets.clear();

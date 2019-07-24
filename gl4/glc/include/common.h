@@ -8,9 +8,7 @@
 #include <vector>
 #include <iterator>
 
-#define GLM_META_PROG_HELPERS
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/fwd.hpp>
+#include "glm.h"
 #include <glm/gtc/type_ptr.hpp>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))

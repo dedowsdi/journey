@@ -1,11 +1,13 @@
 #include "bitmap_text.h"
 
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <glm/gtc/matrix_transform.hpp>
 #include "utf8.h"
 #include "texutil.h"
 #include "common.h"
@@ -14,6 +16,20 @@
 
 namespace zxd
 {
+
+void bitmap_text_program::reshape(GLuint wnd_width, GLuint wnd_height)
+{
+  mvp_mat = glm::ortho(
+      0.0f, (GLfloat)wnd_width, 0.0f, (GLfloat)wnd_height, -1.0f, 1.0f);
+}
+
+void bitmap_text_program::update_uniforms(const glm::vec4& text_color)
+{
+  glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+  glUniform4fv(ul_text_color, 1, value_ptr(text_color));
+  glUniform1i(ul_font_map, 0);
+}
+
 
 //--------------------------------------------------------------------
 bitmap_text::bitmap_text(
@@ -171,17 +187,17 @@ void bitmap_text::print(const std::string& text, GLuint x, GLuint y,
     }
     const glyph& glyph = iter->second;
 
-    vec2 vertex0(nextx + glyph.x_min * scale, nexty + glyph.y_min * scale);
-    vec2 texcoord0(glyph.s_min, glyph.t_min);
+    glm::vec2 vertex0(nextx + glyph.x_min * scale, nexty + glyph.y_min * scale);
+    glm::vec2 texcoord0(glyph.s_min, glyph.t_min);
 
-    vec2 vertex1(nextx + glyph.x_max * scale, nexty + glyph.y_min * scale);
-    vec2 texcoord1(glyph.s_max, glyph.t_min);
+    glm::vec2 vertex1(nextx + glyph.x_max * scale, nexty + glyph.y_min * scale);
+    glm::vec2 texcoord1(glyph.s_max, glyph.t_min);
 
-    vec2 vertex2(nextx + glyph.x_max * scale, nexty + glyph.y_max * scale);
-    vec2 texcoord2(glyph.s_max, glyph.t_max);
+    glm::vec2 vertex2(nextx + glyph.x_max * scale, nexty + glyph.y_max * scale);
+    glm::vec2 texcoord2(glyph.s_max, glyph.t_max);
 
-    vec2 vertex3(nextx + glyph.x_min * scale, nexty + glyph.y_max * scale);
-    vec2 texcoord3(glyph.s_min, glyph.t_max);
+    glm::vec2 vertex3(nextx + glyph.x_min * scale, nexty + glyph.y_max * scale);
+    glm::vec2 texcoord3(glyph.s_min, glyph.t_max);
 
     vertices.push_back(vec4(vertex0, texcoord0));
     vertices.push_back(vec4(vertex1, texcoord1));

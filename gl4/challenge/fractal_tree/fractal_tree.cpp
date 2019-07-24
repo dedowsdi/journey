@@ -71,8 +71,8 @@ struct branch
     parent_transform = parent_transform * transform;
     vec4 v0 = parent_transform * vec4(0,0,0,1);
     vec4 v1 = parent_transform * vec4(0,len,0,1);
-    vertices.push_back(v0.xy());
-    vertices.push_back(v1.xy());
+    vertices.push_back(vec2(v0));
+    vertices.push_back(vec2(v1));
 
     if(left)
       left->compile(vertices, parent_transform);

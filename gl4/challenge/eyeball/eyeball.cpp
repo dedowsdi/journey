@@ -305,7 +305,7 @@ void eyeball_app::glfw_mouse_move(GLFWwindow *wnd, double x, double y)
 vec2 eyeball_app::world_to_wnd(const vec2& v)
 {
   mat4 m = zxd::compute_window_mat(0, 0, wnd_width(), wnd_height()) * p_mat;
-  return (m * vec4(v, 0, 1)).xy();
+  return vec2(m * vec4(v, 0, 1));
 }
 
 GLfloat eyeball_app::world_to_wnd(GLfloat radius)

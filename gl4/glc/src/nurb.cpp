@@ -86,7 +86,7 @@ vec4 nurb::get(GLfloat u)
 vec3 nurb::tangent(GLfloat u)
 {
   nurb nurb_d = derivative();
-  return normalize(nurb_d.get(u).xyz());
+  return normalize(vec3(nurb_d.get(u)));
 
   // failed to use de Boos's algorithm to caucluate tangent.
   u = std::max(std::min(u, m_knots.back()), m_knots.front());
@@ -95,12 +95,12 @@ vec3 nurb::tangent(GLfloat u)
   {
     const vec4& p0 = m_ctrl_points[0];
     const vec4& p1 = m_ctrl_points[1];
-    return normalize(p1.xyz() / p1.w - p0.xyz() / p0.w);
+    return normalize(vec3(p1) / p1.w - vec3(p0) / p0.w);
   } else if (u == m_knots.back())
   {
     const vec4& p0 = m_ctrl_points[m_ctrl_points.size() - 2];
     const vec4& p1 = m_ctrl_points.back();
-    return normalize(p1.xyz() / p1.w - p0.xyz() / p0.w);
+    return normalize(vec3(p1) / p1.w - vec3(p0) / p0.w);
   }
 
   GLuint k = knot_span(u);                                // knot span
@@ -126,7 +126,7 @@ vec3 nurb::tangent(GLfloat u)
   }
 
   return normalize(
-    points[1].xyz() / points[1].w - points[0].xyz() / points[0].w);
+    vec3(points[1]) / points[1].w - vec3(points[0]) / points[0].w);
 }
 
 //--------------------------------------------------------------------
