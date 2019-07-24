@@ -9,6 +9,7 @@
 #include <iterator>
 
 #define GLM_META_PROG_HELPERS
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/fwd.hpp>
 #include <glm/gtc/type_ptr.hpp>
 

@@ -1,7 +1,7 @@
 #ifndef GL4_GLC_TURTLE_H
 #define GL4_GLC_TURTLE_H
 
-#define GLM_SWIZZLE
+#define GLM_FORCE_SWIZZLE
 
 #include <vector>
 #include <string>
@@ -10,7 +10,7 @@
 
 #include "gl.h"
 #include "mat_stack.h"
-#include <glm/vec3.hpp>
+#include "glm.h"
 
 
 namespace zxd

@@ -1,6 +1,7 @@
 #ifndef GL_GLC_GLM_H
 #define GL_GLC_GLM_H
-#define GLM_SWIZZLE
+#define GLM_FORCE_SWIZZLE
+#define GLM_ENABLE_EXPERIMENTAL
 #define GLM_META_PROG_HELPERS
 
 #include <vector>

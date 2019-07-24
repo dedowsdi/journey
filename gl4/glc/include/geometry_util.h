@@ -4,8 +4,6 @@
 #include <vector>
 #include <iterator>
 
-#include <glm/fwd.hpp>
-#include <glm/vec3.hpp>
 #include <glm.h>
 #include "gl.h"
 

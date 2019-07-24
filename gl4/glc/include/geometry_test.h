@@ -4,9 +4,7 @@
 #include <utility>
 
 #include "gl.h"
-#define GLM_SWIZZLE
-#include <glm/vec3.hpp>
-#include <glm/fwd.hpp>
+#include "glm.h"
 
 namespace geometry_test
 {
