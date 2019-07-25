@@ -212,37 +212,6 @@ vec2 rotate(GLfloat angle, const vec2& v)
   return vec2(c * v.x - s * v.y, s * v.x  + c * v.y);
 }
 
-//--------------------------------------------------------------------
-float rgb2luminance(const vec3& c, const vec3& weight/* = vec3(0.3086, 0.6094, 0.0820)*/)
-{
-  return glm::dot(c, weight);
-}
-
-//--------------------------------------------------------------------
-GLfloat color_difference2(const vec3& c0, const vec3& c1)
-{
-  // https://en.wikipedia.org/wiki/Color_difference
-  GLfloat R = c1.r - c0.r;
-  GLfloat G = c1.g - c0.g;
-  GLfloat B = c1.b - c0.b;
-  return R*R*2 + G*G*4 + B*B*3;
-}
-
-//--------------------------------------------------------------------
-GLfloat color_difference_256_2(const vec3& c0, const vec3& c1)
-{
-  // something is wrong, it doesn't work.
-  u8vec3 color0 = u8vec3(c0.x * 255, c0.y * 255, c0.z * 255);
-  u8vec3 color1 = u8vec3(c1.x * 255, c1.y * 255, c1.z * 255);
-  GLfloat r = (color0.r + color1.r) * 0.5f;
-  GLfloat R = color0.r - color1.r;
-  GLfloat G = color0.g - color1.g;
-  GLfloat B = color0.b - color1.b;
-  GLfloat R2 = R*R;
-  GLfloat B2 = B*B;
-  return 2*R2 + 4*G*G + 3*B2 + r * (R2-B2)/256.0;
-  //return (2+r/256.0) * R2 + 4*G*G + (2+(255-r)/256)*B2;
-}
 
 //------------------------------------------------------------------------------
 bool operator<(const vec3& lhs, const vec3& rhs)
@@ -255,7 +224,6 @@ bool operator>(const vec3& lhs, const vec3& rhs)
 {
   return lhs != rhs && !operator<(lhs, rhs);
 }
-
 
 //--------------------------------------------------------------------
 GLfloat max_abs_component(const vec3& v)

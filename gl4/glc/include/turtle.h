@@ -1,8 +1,6 @@
 #ifndef GL4_GLC_TURTLE_H
 #define GL4_GLC_TURTLE_H
 
-#define GLM_FORCE_SWIZZLE
-
 #include <vector>
 #include <string>
 #include <map>

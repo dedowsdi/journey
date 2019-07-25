@@ -20,11 +20,11 @@
 //  pick : radius_2
 //  power : 3 1.6
 //
-#include "app.h"
-
 #include <sstream>
 #include <algorithm>
 
+#include "app.h"
+#include "color.h"
 #include "bitmap_text.h"
 #include "circle.h"
 #include "common_program.h"

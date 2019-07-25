@@ -1,4 +1,5 @@
 #include "app.h"
+#include "color.h"
 #include "bitmap_text.h"
 #include <sstream>
 #include "common_program.h"

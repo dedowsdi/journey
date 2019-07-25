@@ -1,10 +1,12 @@
-#include "app.h"
-#include "bitmap_text.h"
 #include <sstream>
 #include <set>
+#include <memory>
+
+#include "app.h"
+#include "color.h"
+#include "bitmap_text.h"
 #include "geometry.h"
 #include "geometry_util.h"
-#include <memory>
 #include "circle.h"
 #include "debugger.h"
 #include "common_program.h"

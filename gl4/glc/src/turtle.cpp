@@ -83,9 +83,9 @@ std::vector<vec3> turtle::generate(const std::string& pattern, const mat4& start
 //--------------------------------------------------------------------
 void turtle::translate(const vec3& v)
 {
-  vec3 p0 = column(m_transform.top(), 3).xyz();
+  vec3 p0 = vec3(column(m_transform.top(), 3));
   m_transform.translate(v);
-  vec3 p1 = column(m_transform.top(), 3).xyz();
+  vec3 p1 = vec3(column(m_transform.top(), 3));
   m_vertices.push_back(p0);
   m_vertices.push_back(p1);
 }

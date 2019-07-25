@@ -65,15 +65,6 @@ vec3 clamp_length(const vec3& v, GLfloat min_lenth,  GLfloat max_length);
 
 vec2 rotate(GLfloat angle, const vec2& v);
 
-//  Function from Iñigo Quiles
-//  https://www.shadertoy.com/view/MsS3Wc
-vec3 hsb2rgb(const vec3& c);
-
-float rgb2luminance(const vec3& c, const vec3& weight = vec3(0.3086, 0.6094, 0.0820));
-
-GLfloat color_difference2(const vec3& c0, const vec3& c1);
-GLfloat color_difference_256_2(const vec3& c0, const vec3& c1);
-
 // assume w is 1
 bool operator<(const vec3& lhs, const vec3& rhs);
 

@@ -1,8 +1,10 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include <sstream>
-#include "texutil.h"
 #include <algorithm>
+#include <sstream>
+
+#include "app.h"
+#include "color.h"
+#include "bitmap_text.h"
+#include "texutil.h"
 
 #define WIDTH 800
 #define HEIGHT 800
