@@ -10,6 +10,7 @@ buildDir="build/$compiler/$buildType"
 (
 cd "$buildDir" && \
        cmake \
+         -DBUILD_SHARED_LIBS:BOOLEAN=ON \
          -DCMAKE_CXX_FLAGS:STRING= \
          -DCMAKE_BUILD_TYPE:STRING="$buildType" \
          -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOLEAN=ON \

@@ -3,9 +3,7 @@ set(SRC
     src/kci.cpp
     )
 
-add_library(gl43app STATIC
-    ${SRC}
-    )
+add_library(gl43app ${SRC})
 
 find_package(X11 REQUIRED)
 
