@@ -6,7 +6,9 @@
 #include "glm.h"
 #include "mixinvector.h"
 
+#ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
+#endif
 
 namespace zxd
 {

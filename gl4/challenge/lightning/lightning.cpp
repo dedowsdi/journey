@@ -6,8 +6,7 @@
 #include "program.h"
 #include "glmath.h"
 
-
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
+#define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
 
 namespace zxd
 {

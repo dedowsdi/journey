@@ -11,7 +11,9 @@
 #include "glm.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
+#endif
 
 #define ENABLE_GL_CHECK 0
 

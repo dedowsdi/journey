@@ -11,8 +11,6 @@
 #define NOISE_STEP 0.1
 #define NOISE_HEIGHT 3.5
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-
 namespace zxd
 {
 

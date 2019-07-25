@@ -2,7 +2,6 @@
 #include "bitmap_text.h"
 #include "common_program.h"
 #include <sstream>
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
 #define WIDTH 800.0f
 #define HEIGHT 800.0f

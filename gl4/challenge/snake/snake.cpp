@@ -13,7 +13,6 @@
 #define CY_CELL HEIGHT/CELL_SIZE
 #define COOLDOWN 0.15
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 #define COLOR vec4(1)
 
 namespace  zxd

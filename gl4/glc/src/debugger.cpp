@@ -1,6 +1,8 @@
 #include "debugger.h"
 #include "program.h"
 
+#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
+
 namespace debugger
 {
 //--------------------------------------------------------------------

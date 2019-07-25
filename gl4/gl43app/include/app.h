@@ -27,7 +27,9 @@
 #include "timer.h"
 #include "bitmap_text.h"
 
+#ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
+#endif
 
 namespace zxd {
 

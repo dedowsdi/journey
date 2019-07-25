@@ -11,8 +11,6 @@
 #define HEIGHT 800
 #define NUM_STARS 10000
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-
 namespace zxd
 {
 

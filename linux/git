@@ -22,6 +22,8 @@ git log -p      // shows the difference introduced in each commit.
 git log -2      //limits the output to only the last two entries
 git log --stat  // see  abbreviated stats for each commit
 git log --graph --oneline --all // or tig --all or gitk --all
+git log master..branchname    // show changes of 'branchname' which is created from master
+git log master..              // .................current buranch .......................
 ------------------------------------------------------------
 commit 
 

@@ -12,7 +12,6 @@
 #define ITERATIONS 20
 #define WALK_SPEED 1
 #define STICKINESS 0.5
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
 namespace zxd
 {

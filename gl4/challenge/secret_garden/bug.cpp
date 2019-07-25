@@ -6,7 +6,7 @@
 
 #include "color.h"
 
-#define BUFFER_OFFSET(x) ((GLubyte*)NULL + (x))
+#define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
 
 namespace zxd
 {

@@ -14,8 +14,6 @@
 #define NUM_DROPS 300000
 #define RADIUS 2000.0f
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-
 namespace zxd
 {
 

@@ -9,8 +9,6 @@
 #define WIDTH 800
 #define HEIGHT 800
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-
 namespace zxd
 {
 

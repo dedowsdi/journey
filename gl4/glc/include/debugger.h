@@ -4,8 +4,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "common_program.h"
 
-#define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-
 namespace debugger
 {
   template<typename T>
