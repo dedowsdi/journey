@@ -227,7 +227,7 @@ class app0 : public app {
     GLfloat step_rotate = glm::pi<GLfloat>() * 2 / num_sphere;
     for (int i = 0; i < num_sphere; ++i) {
       vec4 pos = glm::rotate(step_rotate * i, vec3(0, 0, 1)) * vec4(5, 0, 2, 1);
-      model = glm::translate(pos.xyz());
+      model = glm::translate(vec3(pos));
 
       program.update_uniforms(model);
       sphere0.draw();

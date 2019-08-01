@@ -235,7 +235,7 @@ class app0 : public app {
       pyramid1.texcoords[1], pyramid1.texcoords[2], &pyramid1.normals[0]);
     mat4 tbn_i = inverse(tbn);
     vec3 tangent = vec3(glm::column(tbn, 0));
-    // vec3 tangent = glm::row(tbn, 0).xyz();
+    // vec3 tangent = vec3(glm::row(tbn, 0));
 
     for (int i = 0; i < 4; ++i) pyramid1.tangents[i] = tangent;
 
@@ -351,7 +351,7 @@ class app0 : public app {
       mat4 mv_mat_i = glm::inverse(v_mat * m_mat);
       mat4 m_mat_i = glm::inverse(m_mat);
       // get camera model position
-      vec3 camera = glm::column(mv_mat_i, 3).xyz();
+      vec3 camera = vec3(glm::column(mv_mat_i, 3));
       glUniform3fv(prg1.ul_m_camera, 1, glm::value_ptr(camera));
 
       for (int i = 0; i < lights.size(); ++i) {

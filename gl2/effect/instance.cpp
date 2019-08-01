@@ -189,7 +189,7 @@ class app0 : public app {
     spot_light.position = vec4(-30, 0, 0, 1);
     spot_light.diffuse = vec4(0, 0, 1, 1);
     spot_light.specular = vec4(0, 0, 1, 1);
-    spot_light.spot_direction = vec3(vec3(0) - spot_light.position.xyz());
+    spot_light.spot_direction = vec3(vec3(0) - vec3(spot_light.position));
     spot_light.spot_cutoff = 30;
     spot_light.spot_cos_cutoff = std::cos(spot_light.spot_cutoff);
     spot_light.spot_exponent = 3;

@@ -1,4 +1,5 @@
 let &viminfofile = getcwd() . '/.viminfo'
+set path+=~/journey/gl4/glc/include
 call misc#proj#loadMap('c')
 let g:mycppBuildDir = './build/gcc/Debug'
 let g:cdefProjName = 'GL2'

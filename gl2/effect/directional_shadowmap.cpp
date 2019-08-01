@@ -119,7 +119,7 @@ struct render_program : public zxd::program {
     GLdouble left = -right;
 
     light_p_mat = glm::ortho(left, right, -light_top, light_top, light_near, light_far);
-    light_v_mat = glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+    light_v_mat = glm::lookAt(vec3(lights[0].position), vec3(0, 0, 0), vec3(0, 0, 1));
 
     light_bsvp_mat = glm::translate(vec3(0.5, 0.5, 0.5)) *
                      glm::scale(vec3(0.5, 0.5, 0.5)) * light_p_mat * light_v_mat;
@@ -161,7 +161,7 @@ struct use_program : public zxd::program {
     glBindTexture(GL_TEXTURE_2D, shadow_map);
 
     if (camera_at_light)
-      v_mat = glm::lookAt(lights[0].position.xyz(), vec3(0, 0, 0), vec3(0, 0, 1));
+      v_mat = glm::lookAt(vec3(lights[0].position), vec3(0, 0, 0), vec3(0, 0, 1));
     else
       v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
 

@@ -34,34 +34,55 @@ GLuint pingpong_tex[2];
 
 quad quad0;
 
-struct filter_brightess_program : public quad_base {
+struct filter_brightess_program : public zxd::program {
   GLint ul_threshold;
+  GLint ul_quad_map;
 
-  virtual void do_attach_shaders() {
-    attach(
-      GL_FRAGMENT_SHADER, "shader2/filter_brightness.fs.glsl");
+  virtual void attach_shaders() {
+    attach(GL_VERTEX_SHADER, "shader2/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader2/filter_brightness.fs.glsl");
   }
 
-  virtual void do_update_uniforms() { glUniform1f(ul_threshold, threshold); }
+  virtual void update_uniforms(GLuint tex_index = 0) {
+    glUniform1i(ul_quad_map, tex_index);
+    glUniform1f(ul_threshold, threshold);
+  }
 
-  virtual void do_bind_uniform_locations() {
+  virtual void bind_uniform_locations() {
     uniform_location(&ul_threshold, "threshold");
+    uniform_location(&ul_quad_map, "quad_map");
+  }
+  virtual void bind_attrib_locations()
+  {
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   }
 } filter_prg;
 
-struct gaussion_blur_program : public quad_base {
+struct gaussion_blur_program : public zxd::program {
   GLint ul_horizontal;
+  GLint ul_quad_map;
   GLint horizontal;
 
-  virtual void do_attach_shaders() {
-    attach(
-      GL_FRAGMENT_SHADER, "shader2/gaussian_blur_0_1_0.5_4.fs.glsl");
+  virtual void attach_shaders() {
+    attach(GL_VERTEX_SHADER, "shader2/quad.vs.glsl");
+    attach(GL_FRAGMENT_SHADER, "shader2/gaussian_blur_0_1_0.5_4.fs.glsl");
   }
 
-  virtual void do_update_uniforms() { glUniform1i(ul_horizontal, horizontal); }
+  virtual void update_uniforms(GLuint tex_index = 0) {
+    glUniform1i(ul_horizontal, horizontal);
+    glUniform1i(ul_quad_map, tex_index);
+  }
 
-  virtual void do_bind_uniform_locations() {
+  virtual void bind_uniform_locations() {
     uniform_location(&ul_horizontal, "horizontal");
+    uniform_location(&ul_quad_map, "quad_map");
+  }
+
+  virtual void bind_attrib_locations()
+  {
+    bind_attrib_location(0, "vertex");
+    bind_attrib_location(1, "texcoord");
   }
 } blur_prg;
 

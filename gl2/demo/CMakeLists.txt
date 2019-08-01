@@ -101,11 +101,8 @@ foreach(DEMO ${DEMOES})
     add_executable(${DEMO} ${CMAKE_CURRENT_SOURCE_DIR}/${DEMO}.cpp)
     set_target_properties(${DEMO} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
     target_link_libraries(${DEMO}
-        ${OPENGL_gl_LIBRARY}
-        ${OPENGL_glu_LIBRARY}
-        ${GLUT_LIBRARIES}
-        m
-        common
+        PRIVATE
+            gl21app
         )
 endforeach()
 

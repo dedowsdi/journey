@@ -1,16 +1,34 @@
 /*
  * changed from superbible.
  */
-#include "glad/glad.h"
-#include "glad/glad_glx.h"
+
+#include <glmath.h>
+#include <glad/glad_glx.h>
 #ifndef GL_VERSION_3_0
 #include <GL/glu.h>
 #endif
+#include <common.h>
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
-#include <string>
-#include "glm.h"
-#include "common.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/norm.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/transform.hpp>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_access.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/random.hpp>
+#include <glm/gtc/noise.hpp>
+
+
+#ifndef BUFFER_OFFSET
+#define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
+#endif
 
 namespace zxd {
 
@@ -60,7 +78,7 @@ protected:
   GLdouble m_current_time;
   GLdouble m_delta_time;
 
-  GLdouble m_adtx;
+  GLdouble m_adtx; // accumulated delta x
   GLdouble m_adty;
 
   std::string m_input;

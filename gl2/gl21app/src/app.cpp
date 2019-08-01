@@ -188,7 +188,7 @@ void app::update_camera() {
 
     dir = glm::normalize(dir);
     m_camera_translation += dir * static_cast<GLfloat>(m_delta_time);
-    (*m_v_mat)[3] = vec4(m_start_v_mat[3].xyz() + m_camera_translation, 1);
+    (*m_v_mat)[3] = vec4(vec3(m_start_v_mat[3]) + m_camera_translation, 1);
   }
 }
 
@@ -323,7 +323,7 @@ void app::keyboard(unsigned char key, int x, int y) {
   switch (key) {
     case '1': {
       if (m_v_mat) {
-        GLfloat distance = glm::length((*m_v_mat)[3].xyz());
+        GLfloat distance = glm::length(vec3((*m_v_mat)[3]));
         GLfloat factor = glutGetModifiers() & GLUT_KEY_CTRL_L ? -1.0f : 1.0f;
         *m_v_mat = glm::lookAt(glm::vec3(0.0f, -distance * factor, 0.0f),
           glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -331,7 +331,7 @@ void app::keyboard(unsigned char key, int x, int y) {
     } break;
     case '3': {
       if (m_v_mat) {
-        GLfloat distance = glm::length((*m_v_mat)[3].xyz());
+        GLfloat distance = glm::length(vec3((*m_v_mat)[3]));
         GLfloat factor = glutGetModifiers() & GLUT_KEY_CTRL_L ? -1.0f : 1.0f;
         *m_v_mat = glm::lookAt(glm::vec3(-distance * factor, 0.0f, 0.0f),
           glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -340,7 +340,7 @@ void app::keyboard(unsigned char key, int x, int y) {
 
     case '7': {
       if (m_v_mat) {
-        GLfloat distance = glm::length((*m_v_mat)[3].xyz());
+        GLfloat distance = glm::length(vec3((*m_v_mat)[3]));
         GLfloat factor = glutGetModifiers() & GLUT_KEY_CTRL_L ? -1.0f : 1.0f;
         *m_v_mat = glm::lookAt(glm::vec3(0.0f, 0.0f, -distance * factor),
           glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -437,7 +437,7 @@ void app::passive_motion(int x, int y) {
       glm::rotate(static_cast<GLfloat>(-m_adty) * 0.002f, vec3(1, 0, 0)) *
       m_start_v_mat;
 
-    (*m_v_mat)[3] = vec4(m_start_v_mat[3].xyz() + m_camera_translation, 1);
+    (*m_v_mat)[3] = vec4(vec3(m_start_v_mat[3]) + m_camera_translation, 1);
 
     glutWarpPointer(m_info.wnd_width / 2.0, m_info.wnd_height / 2.0);
   }
@@ -458,7 +458,7 @@ void app::motion(int x, int y) {
 
     // pitch camera, but reserve center
     if (dty != 0) {
-      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+      glm::vec3 translation = vec3(glm::column(*m_v_mat, 3));
 
       // translate world to camera
       (*m_v_mat)[3][0] = 0;
@@ -478,7 +478,7 @@ void app::motion(int x, int y) {
         0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
       mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
 
-      glm::vec3 translation = glm::column(*m_v_mat, 3).xyz();
+      glm::vec3 translation = vec3(glm::column(*m_v_mat, 3));
       // translate world to camera
       (*m_v_mat)[3][0] = 0;
       (*m_v_mat)[3][1] = 0;
