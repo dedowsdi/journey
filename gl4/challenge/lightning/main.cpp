@@ -161,8 +161,8 @@ void lightining_app::create_scene()
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     printf("incomplete frame buffer\n");
 
-  kci_blur_times = m_control.add_control<GLint>(GLFW_KEY_Q, blur_times, 1, 99, 1);
-  kci_bloom_exposure = m_control.add_control<GLfloat>(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
+  kci_blur_times = m_control.add<GLint>(GLFW_KEY_Q, blur_times, 1, 99, 1);
+  kci_bloom_exposure = m_control.add<GLfloat>(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
 
   // sphere lightning
   vec3_vector sphere_point = sphere::get_sphere_points( outer_ball_radius,

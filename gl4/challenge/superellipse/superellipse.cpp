@@ -94,9 +94,9 @@ public:
 
     glfwSetWindowPos(m_wnd, 1024, 100);
 
-    a = m_control.add_control<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1);
-    b = m_control.add_control<GLfloat>(GLFW_KEY_W, 1, -10000, 10000, 0.1);
-    n = m_control.add_control<GLfloat>(GLFW_KEY_E, 2, -10000, 10000, 0.1);
+    a = m_control.add<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1);
+    b = m_control.add<GLfloat>(GLFW_KEY_W, 1, -10000, 10000, 0.1);
+    n = m_control.add<GLfloat>(GLFW_KEY_E, 2, -10000, 10000, 0.1);
   }
 
   virtual void update()

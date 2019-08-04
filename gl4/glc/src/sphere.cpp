@@ -90,7 +90,7 @@ vec3_vector sphere::get_sphere_points(GLfloat radius, GLuint slices, GLuint stac
 {
   vec3_vector sphere_point;
   sphere_point.reserve((stacks + 1) * (slices + 1));
-  GLfloat phi_step = glm::pi<GLfloat>() / stacks;
+  GLfloat phi_step = zxd::fpi / stacks;
   GLfloat theta_step = f2pi / slices;
   for (int i = 0; i <= stacks; ++i)
   {

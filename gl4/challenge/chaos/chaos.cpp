@@ -122,15 +122,15 @@ void chaos_app::create_scene()
   prg.init();
 
   auto callback = std::bind(std::mem_fn(&chaos_app::reset_polygon), this, std::placeholders::_1);
-  kci_draw_per_frame = m_control.add_control(GLFW_KEY_Q, draw_per_frame , 1, 10000, 10, callback);
-  kci_edges = m_control.add_control(GLFW_KEY_W, edges, 3, 1000, 1, callback);
-  kci_ratio = m_control.add_control<GLfloat>(GLFW_KEY_E, ratio, -100, 100, 0.05, callback);
-  kci_alpha = m_control.add_control<GLfloat>(GLFW_KEY_R, alpha, 0, 1, 0.02, callback);
-  kci_pick = m_control.add_control(GLFW_KEY_U, pick, 0, 2, 1, callback);
-  kci_draw_method = m_control.add_control(GLFW_KEY_I, draw_method, 0, 2, 1, callback);
-  kci_point_power = m_control.add_control<GLfloat>(GLFW_KEY_O, point_power, -100, 100, 0.1, callback);
-  kci_length_power = m_control.add_control<GLfloat>(GLFW_KEY_P, length_power, -100, 100, 0.1, callback);
-  kci_radius = m_control.add_control<GLfloat>(GLFW_KEY_A, pick_radius, 1, 1000, 1, callback);
+  kci_draw_per_frame = m_control.add(GLFW_KEY_Q, draw_per_frame , 1, 10000, 10, callback);
+  kci_edges = m_control.add(GLFW_KEY_W, edges, 3, 1000, 1, callback);
+  kci_ratio = m_control.add<GLfloat>(GLFW_KEY_E, ratio, -100, 100, 0.05, callback);
+  kci_alpha = m_control.add<GLfloat>(GLFW_KEY_R, alpha, 0, 1, 0.02, callback);
+  kci_pick = m_control.add(GLFW_KEY_U, pick, 0, 2, 1, callback);
+  kci_draw_method = m_control.add(GLFW_KEY_I, draw_method, 0, 2, 1, callback);
+  kci_point_power = m_control.add<GLfloat>(GLFW_KEY_O, point_power, -100, 100, 0.1, callback);
+  kci_length_power = m_control.add<GLfloat>(GLFW_KEY_P, length_power, -100, 100, 0.1, callback);
+  kci_radius = m_control.add<GLfloat>(GLFW_KEY_A, pick_radius, 1, 1000, 1, callback);
 
   reset_polygon();
 }

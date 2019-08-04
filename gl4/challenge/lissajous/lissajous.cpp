@@ -70,10 +70,10 @@ public:
     p_mat = zxd::rect_ortho((cols+1)*radius, (rows+1)*radius, wnd_aspect());
 
     auto callback = std::bind(std::mem_fn(&lissajous_app::reset_pattern), this, std::placeholders::_1);
-    kci_lissa_type = m_control.add_control<GLint>(GLFW_KEY_Q, lissa_type, 0, 1, 1, callback);
-    kci_rose_n = m_control.add_control<GLint>(GLFW_KEY_W, rose_n, 1, 100, 1, callback);
-    kci_rose_d = m_control.add_control<GLint>(GLFW_KEY_E, rose_d, 1, 100, 1, callback);
-    kci_rose_offset = m_control.add_control<GLfloat>(GLFW_KEY_R, rose_offset, 0, 100, 0.1, callback);
+    kci_lissa_type = m_control.add<GLint>(GLFW_KEY_Q, lissa_type, 0, 1, 1, callback);
+    kci_rose_n = m_control.add<GLint>(GLFW_KEY_W, rose_n, 1, 100, 1, callback);
+    kci_rose_d = m_control.add<GLint>(GLFW_KEY_E, rose_d, 1, 100, 1, callback);
+    kci_rose_offset = m_control.add<GLfloat>(GLFW_KEY_R, rose_offset, 0, 100, 0.1, callback);
     reset_pattern(0);
   }
 

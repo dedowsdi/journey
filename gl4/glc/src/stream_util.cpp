@@ -143,7 +143,7 @@ std::string get_resource(const std::string& name)
   if (p.is_absolute())
     return name;
 
-  std::vector<std::string> resources = {"."};
+  std::vector<std::string> resources = {"./data"};
   char* resource_list = std::getenv("GL_FILE_PATH");
   if(resource_list != NULL)
   {

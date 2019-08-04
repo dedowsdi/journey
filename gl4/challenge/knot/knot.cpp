@@ -75,9 +75,9 @@ public:
     prg.bind_lighting_uniform_locations(lights, lm, mtl);
 
     auto callback = std::bind(std::mem_fn(&knot_app::reset_knot), this, std::placeholders::_1);
-    kci_slices = m_control.add_control(GLFW_KEY_Q, 1000, 10, 1000000, 10, callback);
-    kci_num_faces = m_control.add_control(GLFW_KEY_W, 6, 3, 256, 1, callback);
-    kci_extrude_radius = m_control.add_control<GLfloat>(GLFW_KEY_E, 3, 0.01, 100, 1, callback);
+    kci_slices = m_control.add(GLFW_KEY_Q, 1000, 10, 1000000, 10, callback);
+    kci_num_faces = m_control.add(GLFW_KEY_W, 6, 3, 256, 1, callback);
+    kci_extrude_radius = m_control.add<GLfloat>(GLFW_KEY_E, 3, 0.01, 100, 1, callback);
 
     reset_knot();
   }

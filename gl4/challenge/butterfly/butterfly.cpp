@@ -123,7 +123,7 @@ public:
     m_butterfly.slice(1024);
     m_butterfly.build_mesh();
 
-    color = m_control.add_control(GLFW_KEY_Q, vec4(1), vec4(0), vec4(1), vec4(0.1));
+    color = m_control.add(GLFW_KEY_Q, vec4(1), vec4(0), vec4(1), vec4(0.1));
   }
 
   virtual void update()

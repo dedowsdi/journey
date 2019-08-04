@@ -212,12 +212,12 @@ void reaction_diffusion_app::create_scene()
     speed      = kci_speed->get_float();
   };
 
-  kci_da = m_control.add_control<GLfloat>(GLFW_KEY_Q, da, -10, 10, 0.1, update_value);
-  kci_db = m_control.add_control<GLfloat>(GLFW_KEY_W, db, -10, 10, 0.1, update_value);
-  kci_feed = m_control.add_control<GLfloat>(GLFW_KEY_E, feed, -10, 10, 0.001, update_value);
-  kci_kill = m_control.add_control<GLfloat>(GLFW_KEY_R, kill, -10, 10, 0.001, update_value);
-  kci_delta_time = m_control.add_control<GLfloat>(GLFW_KEY_U, delta_time, -10, 10, 0.1, update_value);
-  kci_speed = m_control.add_control<GLfloat>(GLFW_KEY_I, speed, 1, 50, 1, update_value);
+  kci_da = m_control.add<GLfloat>(GLFW_KEY_Q, da, -10, 10, 0.1, update_value);
+  kci_db = m_control.add<GLfloat>(GLFW_KEY_W, db, -10, 10, 0.1, update_value);
+  kci_feed = m_control.add<GLfloat>(GLFW_KEY_E, feed, -10, 10, 0.001, update_value);
+  kci_kill = m_control.add<GLfloat>(GLFW_KEY_R, kill, -10, 10, 0.001, update_value);
+  kci_delta_time = m_control.add<GLfloat>(GLFW_KEY_U, delta_time, -10, 10, 0.1, update_value);
+  kci_speed = m_control.add<GLfloat>(GLFW_KEY_I, speed, 1, 50, 1, update_value);
 
   circle0.type(circle::FILL);
   circle0.slice(256);

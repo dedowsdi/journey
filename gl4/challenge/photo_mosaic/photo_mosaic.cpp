@@ -281,8 +281,8 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
     auto kci_callback = std::bind(std::mem_fn(&photo_mosaic_app::update_mosaic), this, std::placeholders::_1);
-    kci_rows = m_control.add_control<GLint>(GLFW_KEY_Q, img.getHeight()/20, 1, 10000, 1, kci_callback);
-    kci_cols = m_control.add_control<GLint>(GLFW_KEY_W, img.getWidth()/20, 1, 10000, 1, kci_callback);
+    kci_rows = m_control.add<GLint>(GLFW_KEY_Q, img.getHeight()/20, 1, 10000, 1, kci_callback);
+    kci_cols = m_control.add<GLint>(GLFW_KEY_W, img.getWidth()/20, 1, 10000, 1, kci_callback);
 
 
     prg.init();

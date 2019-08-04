@@ -30,6 +30,9 @@ GLenum gl_polygon_mode_from_string(const char* s);
 const char* gl_cull_face_mode_to_string(GLenum e);
 GLenum gl_cull_face_mode_from_string(const char* s);
 
+const char* gl_hint_to_string(GLenum e);
+GLenum gl_hint_from_string( char* s);
+
 #ifndef GL_VERSION_3_0
 
 const char* gl_tex_env_mode_to_string(GLenum e);

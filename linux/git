@@ -75,7 +75,7 @@ get reset --hard ...                            remove commits
 ------------------------------------------------------------
 revert
 
-git revert HEAD                                 cancel last commit
+git revert HEAD                                 cancel last commit with new commit
 ------------------------------------------------------------
 git clean
 git clean -fd                    remove unstaged files and directories

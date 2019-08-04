@@ -180,18 +180,18 @@ void tessellate_app::create_scene()
     isoline.add_primitive_set(new draw_arrays(GL_PATCHES, 0, 4));
   }
 
-  kci_outer0 = m_control.add_control<GLfloat>(GLFW_KEY_Q, tess_level_outer[0], 1, 100, 0.5);
-  kci_outer1 = m_control.add_control<GLfloat>(GLFW_KEY_W, tess_level_outer[1], 1, 100, 0.5);
-  kci_outer2 = m_control.add_control<GLfloat>(GLFW_KEY_E, tess_level_outer[2], 1, 100, 0.5);
-  kci_outer3 = m_control.add_control<GLfloat>(GLFW_KEY_R, tess_level_outer[3], 1, 100, 0.5);
+  kci_outer0 = m_control.add<GLfloat>(GLFW_KEY_Q, tess_level_outer[0], 1, 100, 0.5);
+  kci_outer1 = m_control.add<GLfloat>(GLFW_KEY_W, tess_level_outer[1], 1, 100, 0.5);
+  kci_outer2 = m_control.add<GLfloat>(GLFW_KEY_E, tess_level_outer[2], 1, 100, 0.5);
+  kci_outer3 = m_control.add<GLfloat>(GLFW_KEY_R, tess_level_outer[3], 1, 100, 0.5);
 
-  kci_inner0 = m_control.add_control<GLfloat>(GLFW_KEY_U, tess_level_inner[0], 1, 100, 0.5);
-  kci_inner1 = m_control.add_control<GLfloat>(GLFW_KEY_I, tess_level_inner[1], 1, 100, 0.5);
+  kci_inner0 = m_control.add<GLfloat>(GLFW_KEY_U, tess_level_inner[0], 1, 100, 0.5);
+  kci_inner1 = m_control.add<GLfloat>(GLFW_KEY_I, tess_level_inner[1], 1, 100, 0.5);
 
-  kci_primitive_type = m_control.add_control(GLFW_KEY_A, 0, 0, 2, 1, reload_program);
-  kci_winding = m_control.add_control(GLFW_KEY_S, 0, 0, 1, 1, reload_program);
-  kci_spacing = m_control.add_control(GLFW_KEY_D, 0, 0, 2, 1, reload_program);
-  kci_point_mode = m_control.add_control(GLFW_KEY_F, 0, 0, 1, 1, reload_program);
+  kci_primitive_type = m_control.add(GLFW_KEY_A, 0, 0, 2, 1, reload_program);
+  kci_winding = m_control.add(GLFW_KEY_S, 0, 0, 1, 1, reload_program);
+  kci_spacing = m_control.add(GLFW_KEY_D, 0, 0, 2, 1, reload_program);
+  kci_point_mode = m_control.add(GLFW_KEY_F, 0, 0, 1, 1, reload_program);
 
   reload_program();
 }

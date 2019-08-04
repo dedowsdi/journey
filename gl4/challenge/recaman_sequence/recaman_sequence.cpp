@@ -203,8 +203,8 @@ public:
     blur_tex.ping(create_texture());
     blur_tex.pong(create_texture());
 
-    kci_blur_times = m_control.add_control(GLFW_KEY_Q, blur_times, 1, 99, 1);
-    kci_bloom_exposure = m_control.add_control<GLfloat>(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
+    kci_blur_times = m_control.add(GLFW_KEY_Q, blur_times, 1, 99, 1);
+    kci_bloom_exposure = m_control.add<GLfloat>(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
   }
 
   virtual void update() 

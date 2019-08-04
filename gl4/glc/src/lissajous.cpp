@@ -1,8 +1,9 @@
 #include "lissajous.h"
 
+#include "glmath.h"
+
 namespace zxd
 {
-
 //--------------------------------------------------------------------
 void lissajous::build_vertex()
 {

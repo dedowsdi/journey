@@ -47,13 +47,13 @@ public:
     p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     auto callback = std::bind(std::mem_fn(&supershape_app::update_shape), this, std::placeholders::_1);
-    n1 = m_control.add_control<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1, callback);
-    n2 = m_control.add_control<GLfloat>(GLFW_KEY_W, 1, -10000, 10000, 0.1, callback);
-    n3 = m_control.add_control<GLfloat>(GLFW_KEY_E, 1, -10000, 10000, 0.1, callback);
-    m = m_control.add_control<GLfloat>(GLFW_KEY_R, 0, -10000, 10000, 0.1, callback);
-    a = m_control.add_control<GLfloat>(GLFW_KEY_U, 1, -10000, 10000, 0.1, callback);
-    b = m_control.add_control<GLfloat>(GLFW_KEY_I, 1, -10000, 10000, 0.1, callback);
-    slice = m_control.add_control<GLint>(GLFW_KEY_O, 64, -10000, 10000, 1, callback);
+    n1 = m_control.add<GLfloat>(GLFW_KEY_Q, 1, -10000, 10000, 0.1, callback);
+    n2 = m_control.add<GLfloat>(GLFW_KEY_W, 1, -10000, 10000, 0.1, callback);
+    n3 = m_control.add<GLfloat>(GLFW_KEY_E, 1, -10000, 10000, 0.1, callback);
+    m = m_control.add<GLfloat>(GLFW_KEY_R, 0, -10000, 10000, 0.1, callback);
+    a = m_control.add<GLfloat>(GLFW_KEY_U, 1, -10000, 10000, 0.1, callback);
+    b = m_control.add<GLfloat>(GLFW_KEY_I, 1, -10000, 10000, 0.1, callback);
+    slice = m_control.add<GLint>(GLFW_KEY_O, 64, -10000, 10000, 1, callback);
     update_shape(0);
   }
 

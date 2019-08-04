@@ -2,7 +2,7 @@
 --language-force=c++
 --sort=foldcase
 --links=no
---fields=KsSi
+--fields=KsSil
 --excmd=number
 --c++-kinds=+p
 --c-kinds=+p

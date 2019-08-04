@@ -167,9 +167,9 @@ public:
     //flow_fields.reserve(FF_ROW * FF_COL);
     flow_fields.resize(FF_ROW * FF_COL);
 
-    xoff_step = m_control.add_control<GLfloat>(GLFW_KEY_W, 0.05, -10000, 10000, 0.01);
-    yoff_step = m_control.add_control<GLfloat>(GLFW_KEY_E, 0.05, -10000, 10000, 0.01);
-    zoff_step = m_control.add_control<GLfloat>(GLFW_KEY_R, 0.002, -10000, 10000, 0.002);
+    xoff_step = m_control.add<GLfloat>(GLFW_KEY_W, 0.05, -10000, 10000, 0.01);
+    yoff_step = m_control.add<GLfloat>(GLFW_KEY_E, 0.05, -10000, 10000, 0.01);
+    zoff_step = m_control.add<GLfloat>(GLFW_KEY_R, 0.002, -10000, 10000, 0.002);
 
     particles.resize(NUM_PARTICLE);
 

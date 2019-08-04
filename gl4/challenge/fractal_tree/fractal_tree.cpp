@@ -198,12 +198,12 @@ public:
     p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
     auto update_callback = std::bind(std::mem_fn(&fractal_tree_app::update_tree), this, std::placeholders::_1);
-    trunk_len = m_control.add_control<GLfloat>(GLFW_KEY_Q, 200, 10, 400, 10, update_callback);
-    min_branch_len = m_control.add_control<GLfloat>(GLFW_KEY_W, 2, 0.1, 10, 0.5, update_callback);
-    left_angle_min = m_control.add_control<GLfloat>(GLFW_KEY_U, fpi4, -10000, 10000, 0.1, update_callback);
-    left_angle_max = m_control.add_control<GLfloat>(GLFW_KEY_I, fpi4, -10000, 10000, 0.1, update_callback);
-    right_angle_min = m_control.add_control<GLfloat>(GLFW_KEY_O, -fpi4, -10000, 10000, 0.1, update_callback);
-    right_angle_max = m_control.add_control<GLfloat>(GLFW_KEY_P, -fpi4, -10000, 10000, 0.1, update_callback);
+    trunk_len = m_control.add<GLfloat>(GLFW_KEY_Q, 200, 10, 400, 10, update_callback);
+    min_branch_len = m_control.add<GLfloat>(GLFW_KEY_W, 2, 0.1, 10, 0.5, update_callback);
+    left_angle_min = m_control.add<GLfloat>(GLFW_KEY_U, fpi4, -10000, 10000, 0.1, update_callback);
+    left_angle_max = m_control.add<GLfloat>(GLFW_KEY_I, fpi4, -10000, 10000, 0.1, update_callback);
+    right_angle_min = m_control.add<GLfloat>(GLFW_KEY_O, -fpi4, -10000, 10000, 0.1, update_callback);
+    right_angle_max = m_control.add<GLfloat>(GLFW_KEY_P, -fpi4, -10000, 10000, 0.1, update_callback);
 
     m_tree.transform(glm::translate(vec3(WIDTH * 0.5 , 0, 0)));
     update_tree(0);

@@ -28,13 +28,10 @@ option(BUILD_SHARED_LIBS "build shared instead of static" OFF)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread")
 
-IF(CMAKE_C_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool")
-ENDIF()
 
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstandalone-debug -pthread -Wall -Wno-unused-function -Wno-switch-bool -Wno-missing-braces -Wno-writable-strings -Wno-reorder")
-
 ENDIF()
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -55,7 +52,6 @@ FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(Freetype REQUIRED)
 PKG_CHECK_MODULES(GLFW3 REQUIRED glfw3)
 pkg_get_variable(GLFW3_REQUIRES glfw3 Requires.private)
-message("--------------${GLFW3_REQUIRES}")
 
 findLibraryRequird(FIP_LIBS freeimageplus)
 findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)

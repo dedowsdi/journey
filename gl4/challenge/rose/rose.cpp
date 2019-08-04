@@ -50,13 +50,13 @@ public:
     set_camera_mode(CM_ORTHO);
 
     auto callback = std::bind(std::mem_fn(&app_name::update_rose), this, std::placeholders::_1);
-    kci_n = m_control.add_control(GLFW_KEY_Q, 1, 1, 1000, 1, callback);
-    kci_d = m_control.add_control(GLFW_KEY_W, 1, 1, 1000, 1, callback);
-    kci_slice = m_control.add_control(GLFW_KEY_E, 1024, 1, 1000, 1, callback);
-    kci_line_width = m_control.add_control<GLfloat>(GLFW_KEY_R, 1, 1, 50, 1, callback);
-    kci_start = m_control.add_control<GLfloat>(GLFW_KEY_U, 0, 0, 1, 0.01, callback);
-    kci_end = m_control.add_control<GLfloat>(GLFW_KEY_I, 1, 0, 1, 0.01, callback);
-    kci_offset = m_control.add_control<GLfloat>(GLFW_KEY_O, 0, -999, 999, 0.1, callback);
+    kci_n = m_control.add(GLFW_KEY_Q, 1, 1, 1000, 1, callback);
+    kci_d = m_control.add(GLFW_KEY_W, 1, 1, 1000, 1, callback);
+    kci_slice = m_control.add(GLFW_KEY_E, 1024, 1, 1000, 1, callback);
+    kci_line_width = m_control.add<GLfloat>(GLFW_KEY_R, 1, 1, 50, 1, callback);
+    kci_start = m_control.add<GLfloat>(GLFW_KEY_U, 0, 0, 1, 0.01, callback);
+    kci_end = m_control.add<GLfloat>(GLFW_KEY_I, 1, 0, 1, 0.01, callback);
+    kci_offset = m_control.add<GLfloat>(GLFW_KEY_O, 0, -999, 999, 0.1, callback);
 
     update_rose(0);
   }

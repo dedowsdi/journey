@@ -37,6 +37,7 @@ protected:
 
   void bind_uniform_locations()
   {
+    glEnable(GL_PROGRAM_POINT_SIZE);
     uniform_location(&ul_vp_mat, "vp_mat");
     uniform_location(&ul_m_mat, "m_mat");
     uniform_location(&ul_diffuse_map, "diffuse_map");
@@ -182,7 +183,6 @@ void text_starfield::create_scene()
   m_font_aspect_ratio = static_cast<GLfloat>(bt->height()) / bt->max_advance();
   codepoints = bt->code_points();
 
-  
   p_mat = glm::perspective<GLfloat>(45, wnd_aspect(), 1.0, 1000);
   v_mat = translate(vec3(0, 0, -1));
 

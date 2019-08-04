@@ -111,18 +111,18 @@ public:
     auto index_callback = std::bind(std::mem_fn(&fractal_spirograph_app::rotate_index),
         this, std::placeholders::_1);
 
-    kci_circle_index = m_control.add_control(GLFW_KEY_Q, circle_index, 0, 1000, 1, index_callback);
-    kci_radius_scale = m_control.add_control<GLfloat>(GLFW_KEY_W, radius_scale, 0.01, 100, 0.1, callback);
-    kci_origin_scale = m_control.add_control<GLfloat>(GLFW_KEY_E, origin_scale, -100, 100, 1, callback);
-    kci_angular_scale = m_control.add_control<GLfloat>(GLFW_KEY_R, angular_scale, -1000, 1000, 1, callback);
-    kci_resolution = m_control.add_control(GLFW_KEY_U, 10, 1, 10000, 1,
+    kci_circle_index = m_control.add(GLFW_KEY_Q, circle_index, 0, 1000, 1, index_callback);
+    kci_radius_scale = m_control.add<GLfloat>(GLFW_KEY_W, radius_scale, 0.01, 100, 0.1, callback);
+    kci_origin_scale = m_control.add<GLfloat>(GLFW_KEY_E, origin_scale, -100, 100, 1, callback);
+    kci_angular_scale = m_control.add<GLfloat>(GLFW_KEY_R, angular_scale, -1000, 1000, 1, callback);
+    kci_resolution = m_control.add(GLFW_KEY_U, 10, 1, 10000, 1,
         [this](auto* kci){this->restart();});
-    kci_rose_n = m_control.add_control(GLFW_KEY_J, 1, 1, 1000, 1, callback);
-    kci_rose_d = m_control.add_control(GLFW_KEY_K, 1, 1, 1000, 1, callback);
-    kci_rose_offset = m_control.add_control<GLfloat>(GLFW_KEY_L, 0, -1000, 1000, 0.1, callback);
-    kci_lissa_type = m_control.add_control(GLFW_KEY_H, 0, 0, 1, 1, callback);
-    kci_xscale = m_control.add_control<GLint>(GLFW_KEY_N, 1, 1, 100, 1, callback);
-    kci_yscale = m_control.add_control<GLint>(GLFW_KEY_M, 1, 1, 100, 1, callback);
+    kci_rose_n = m_control.add(GLFW_KEY_J, 1, 1, 1000, 1, callback);
+    kci_rose_d = m_control.add(GLFW_KEY_K, 1, 1, 1000, 1, callback);
+    kci_rose_offset = m_control.add<GLfloat>(GLFW_KEY_L, 0, -1000, 1000, 0.1, callback);
+    kci_lissa_type = m_control.add(GLFW_KEY_H, 0, 0, 1, 1, callback);
+    kci_xscale = m_control.add<GLint>(GLFW_KEY_N, 1, 1, 100, 1, callback);
+    kci_yscale = m_control.add<GLint>(GLFW_KEY_M, 1, 1, 100, 1, callback);
 
     resize_buffer();
     reset_graph();

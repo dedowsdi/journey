@@ -205,9 +205,9 @@ public:
 
     glGenFramebuffers(1, &fbo);
 
-    kci_ripple_dampen = m_control.add_control<GLfloat>(GLFW_KEY_Q, ripple_dampen, 0, 10, 0.01);
-    kci_ripple_start = m_control.add_control<GLfloat>(GLFW_KEY_W, ripple_start, 0, 500, 1);
-    kci_ripple_frame = m_control.add_control<GLint>(GLFW_KEY_E, ripple_frame, 1, 60, 1);
+    kci_ripple_dampen = m_control.add<GLfloat>(GLFW_KEY_Q, ripple_dampen, 0, 10, 0.01);
+    kci_ripple_start = m_control.add<GLfloat>(GLFW_KEY_W, ripple_start, 0, 500, 1);
+    kci_ripple_frame = m_control.add<GLint>(GLFW_KEY_E, ripple_frame, 1, 60, 1);
   }
 
   virtual void update() 

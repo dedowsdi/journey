@@ -238,7 +238,7 @@ void turtle_app::create_scene() {
     this->reset_pattern();
   };
 
-  kci_pattern = m_control.add_control<GLint>(GLFW_KEY_Q, 0, 0, patterns.size() - 1, 1, 
+  kci_pattern = m_control.add<GLint>(GLFW_KEY_Q, 0, 0, patterns.size() - 1, 1, 
       [callback](const kci* k)
       {
         const auto& pattern = patterns[kci_pattern->get_int()];
@@ -247,11 +247,11 @@ void turtle_app::create_scene() {
         kci_scale_per_iteartion->set<GLfloat>(pattern.scale);
         callback(k);
       });
-  kci_n = m_control.add_control<GLint>(GLFW_KEY_W, 2, 0, 99, 1, callback);
-  kci_degree = m_control.add_control<GLfloat>(GLFW_KEY_E, 90, 0, 360, 1, callback);
-  kci_scale_per_iteartion = m_control.add_control<GLfloat>(GLFW_KEY_R, 4, 1, 99, 1, callback);
-  kci_debug_count = m_control.add_control<GLint>(GLFW_KEY_U, 2, 0, 10000, 2);
-  kci_lsystem_step = m_control.add_control<GLint>(GLFW_KEY_S, 1, 0, 10000, 1, 
+  kci_n = m_control.add<GLint>(GLFW_KEY_W, 2, 0, 99, 1, callback);
+  kci_degree = m_control.add<GLfloat>(GLFW_KEY_E, 90, 0, 360, 1, callback);
+  kci_scale_per_iteartion = m_control.add<GLfloat>(GLFW_KEY_R, 4, 1, 99, 1, callback);
+  kci_debug_count = m_control.add<GLint>(GLFW_KEY_U, 2, 0, 10000, 2);
+  kci_lsystem_step = m_control.add<GLint>(GLFW_KEY_S, 1, 0, 10000, 1, 
       [this](const kci* k)
       {
         this->step();

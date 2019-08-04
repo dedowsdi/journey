@@ -232,9 +232,9 @@ public:
     m_polygon.delta(0.25);
 
     auto callback = std::bind(std::mem_fn(&islamic_pattern_app::update_polygon), this, std::placeholders::_1);
-    kci_theta = m_control.add_control<GLfloat>(GLFW_KEY_Q, 60, 0, 90, 1, callback);
-    kci_delta = m_control.add_control<GLfloat>(GLFW_KEY_W, 0, 0, 1, 0.01, callback);
-    kci_sides = m_control.add_control(GLFW_KEY_E, 4, 4, 6, 2, callback);
+    kci_theta = m_control.add<GLfloat>(GLFW_KEY_Q, 60, 0, 90, 1, callback);
+    kci_delta = m_control.add<GLfloat>(GLFW_KEY_W, 0, 0, 1, 0.01, callback);
+    kci_sides = m_control.add(GLFW_KEY_E, 4, 4, 6, 2, callback);
 
     update_polygon(0);
   }

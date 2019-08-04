@@ -30,7 +30,27 @@ set(GLC_SRCS
     src/cycle_path.cpp
     src/fractal_spiral.cpp
     src/geometry_test.cpp
-    src/common_geometry.cpp
+    src/quad.cpp
+    src/sphere.cpp
+    src/cuboid.cpp
+    src/cone.cpp
+    src/cylinder.cpp
+    src/torus.cpp
+    src/xyplane.cpp
+    src/disk.cpp
+    src/points.cpp
+    src/bezier.cpp
+    src/nurb.cpp
+    src/beziersurface.cpp
+    src/nurbsurface.cpp
+    src/axes.cpp
+    src/line.cpp
+    src/super_shape_2d.cpp
+    src/super_shape_3d.cpp
+    src/circle.cpp
+    src/rose.cpp
+    src/capsule2d.cpp
+    src/lissajous.cpp
     src/teardrop.cpp
     src/turtle.cpp
     src/capsule3d.cpp

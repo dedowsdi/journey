@@ -235,7 +235,7 @@ public:
 
     auto callback = std::bind(std::mem_fn(&mandelbrot_set_app::reset_iteration),
         this, std::placeholders::_1);
-    kci_iterations = m_control.add_control<GLint>(GLFW_KEY_Q, iterations, 10, 100000000, 100, callback);
+    kci_iterations = m_control.add<GLint>(GLFW_KEY_Q, iterations, 10, 100000000, 100, callback);
     reset_iteration(0);
 
     reset_colors();

@@ -105,9 +105,9 @@ public:
 
     current = 1;
 
-    kci_dampen = m_control.add_control<GLfloat>(GLFW_KEY_Q, 0.99, 0, 10, 0.01);
-    kci_ripple_start = m_control.add_control<GLfloat>(GLFW_KEY_W, 1, 0, 500, 1);
-    kci_ripple_frame = m_control.add_control(GLFW_KEY_E, 2, 1, 60, 1);
+    kci_dampen = m_control.add<GLfloat>(GLFW_KEY_Q, 0.99, 0, 10, 0.01);
+    kci_ripple_start = m_control.add<GLfloat>(GLFW_KEY_W, 1, 0, 500, 1);
+    kci_ripple_frame = m_control.add(GLFW_KEY_E, 2, 1, 60, 1);
   }
 
   virtual void update()

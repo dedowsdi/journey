@@ -257,6 +257,33 @@ GLenum gl_cull_face_mode_from_string(const char* s)
   return 0;
 }
 
+
+//--------------------------------------------------------------------
+const char* gl_hint_to_string(GLenum e)
+{
+  switch (e)
+  {
+    case GL_DONT_CARE:
+      return "GL_DONT_CARE";
+    case GL_FASTEST:
+      return "GL_FASTEST";
+    case GL_NICEST:
+      return "GL_NICEST";
+    default:
+      return "";
+  }
+}
+
+//--------------------------------------------------------------------
+GLenum gl_hint_from_string( char* s)
+{
+  if (strcmp(s, "GL_DONT_CARE") == 0) return GL_DONT_CARE;
+  if (strcmp(s, "GL_FASTEST") == 0) return GL_FASTEST;
+  if (strcmp(s, "GL_NICEST") == 0) return GL_NICEST;
+  return 0;
+}
+
+
 #ifndef GL_VERSION_3_0
 
 //--------------------------------------------------------------------
