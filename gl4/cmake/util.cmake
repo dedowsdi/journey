@@ -8,10 +8,10 @@ macro(findLibraryRequird var filename)
 endmacro()
 
 macro(findPathRequird var filename)
-	# Cannot use ARGN directly with list() command.
-	# Copy to a variable first.
-	set (extra_macro_args ${ARGN})
-	# Did we get any optional args?
+    # Cannot use ARGN directly with list() command.
+    # Copy to a variable first.
+    set (extra_macro_args ${ARGN})
+    # Did we get any optional args?
     list(LENGTH extra_macro_args num_extra_args)
     if (${num_extra_args} GREATER 0)
         list(GET extra_macro_args 0 suffix)
