@@ -143,7 +143,7 @@ std::string get_resource(const std::string& name)
   if (p.is_absolute())
     return name;
 
-  std::vector<std::string> resources = {"./data"};
+  std::vector<std::string> resources = {".", "./data"};
   char* resource_list = std::getenv("GL_FILE_PATH");
   if(resource_list != NULL)
   {
@@ -159,7 +159,7 @@ std::string get_resource(const std::string& name)
     p.lexically_normal();
     p /= name;
     if(bfs::exists(p))
-      return p.string();
+      return bfs::canonical(p).string();
   }
 
   std::stringstream ss;
