@@ -1,19 +1,21 @@
 #version 430 core
 
-noperspective in float stipple_count;
+in vertex_data
+{
+  vec4 color;
+  noperspective float stipple_count;
+} fi;
 
-// there is not ushort in glsl, only lowerest 16 bits are used
-uniform uint pattern = 0xFFFF;
-uniform int factor = 1;
-uniform vec4 color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-
+layout(location = 2) uniform uint pattern;
+layout(location = 3) uniform float scale;
 
 out vec4 frag_color;
 
-void main() {
+void main()
+{
+  uint bit = uint(fi.stipple_count / scale) & 0xf;
+  if( (pattern & (1 << bit) ) == 0u )
+    discard;
 
-  uint bit = uint(round(stipple_count/factor)) & 0xf;
-  if ((pattern & (1U << bit)) == 0U) discard;
-
-  frag_color = color;
+  frag_color = fi.color;
 }

@@ -62,7 +62,19 @@ void json_cfg::reload()
 //--------------------------------------------------------------------
 bool json_cfg::modified_outside()
 {
-  return bfs::last_write_time(m_file) > m_last_write_time;
+  // sometimes boost failed to get last_write_time, a
+  // boost::filesystem::filesystem_error is thrown, it usually happens when you
+  // constantly write to this file in other process. I have no idea why would
+  // boost throw this kind of err.
+  try
+  {
+    return bfs::last_write_time(m_file) > m_last_write_time;
+  }
+  catch(std::exception& e)
+  {
+    std::cerr << e.what() << std::endl;
+    return false;
+  }
 }
 
 //--------------------------------------------------------------------

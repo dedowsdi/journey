@@ -2,7 +2,7 @@ set (PROJECTS
     helloworld
     geometry
     deferred
-    lines
+    line_stipple
     normalmap
     parallaxmap
     normalviewer
@@ -28,4 +28,13 @@ foreach(PROJECT ${PROJECTS})
         PRIVATE
             gl43app
         )
+
+    IF(EXISTS ${${PROJECT}_json_path})
+        add_custom_target(${PROJECT}_json COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${${PROJECT}_json_path}
+            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT}.json
+            )
+        add_dependencies(${PROJECT} ${PROJECT}_json)
+    ENDIF()
+
 endforeach()

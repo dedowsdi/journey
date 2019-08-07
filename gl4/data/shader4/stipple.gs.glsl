@@ -1,29 +1,39 @@
 #version 430 core
 
-// 
-// reset stiple counter for each line segment
-
 layout(lines) in;
-layout(line_strip, max_vertices = 1024) out;
+layout(line_strip, max_vertices = 2) out;
 
-uniform ivec4 viewport;
-noperspective out float stipple_count;
+in vertex_data
+{
+  vec4 color;
+} gi[];
 
-void main(void) {
+layout(location = 1) uniform ivec4 vp;
 
-  /*
-   * real viewport vertex should be :
-   * viewport.width * 0.5 * (gl_in[0].gl_Position.xy / gl_in[0].gl_Position.w + 1) , 
-   * but only length is needed, so +1 can be omitted, *0.5 can be applied later
-   */
-  vec2 vp_vertex0 =
-    viewport.z * gl_in[0].gl_Position.xy / gl_in[0].gl_Position.w;
-  vec2 vp_vertex1 =
-    viewport.z * gl_in[1].gl_Position.xy / gl_in[1].gl_Position.w;
-  gl_Position = gl_in[0].gl_Position;
-  stipple_count = 0.0;
+out vertex_data
+{
+  vec4 color;
+  noperspective float stipple_count;
+} go;
+
+void main(void)
+{
+  vec4 pos0 = gl_in[0].gl_Position;
+  vec4 pos1 = gl_in[1].gl_Position;
+
+  // clip to viewport
+  vec2 vpos0 = (pos0.xy/pos0.w + 1.0) * 0.5 * vp.zw;
+  vec2 vpos1 = (pos1.xy/pos1.w + 1.0) * 0.5 * vp.zw;
+
+  gl_Position = pos0;
+  go.color = gi[0].color;
+  go.stipple_count = 0;
   EmitVertex();
-  gl_Position = gl_in[1].gl_Position;
-  stipple_count = 0.5 * length(vp_vertex1 - vp_vertex0); //don't omit 0.5, ndc is [-1, 1]
+
+  gl_Position = pos1;
+  go.color = gi[1].color;
+  go.stipple_count = length(vpos1 - vpos0);
   EmitVertex();
+
+  EndPrimitive();
 }
