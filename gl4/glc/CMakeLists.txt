@@ -57,6 +57,7 @@ set(GLC_SRCS
     src/icosahedron.cpp
     src/freetype_text.cpp
     src/guard.cpp
+    src/jsoncfg.cpp
     )
 
 set(GLC glc${GLC_GL_VERSION})
@@ -78,6 +79,7 @@ target_include_directories(${GLC}
         ${FREETYPE_INCLUDE_DIR}
         ${FREETYPE_INCLUDE_DIR_ft2build}
         ${FIP_INCLUDE_DIR}
+        ${RAPIDJSON_INCLUDE_DIR}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utfcpp/source>
         $<INSTALL_INTERFACE:include/${GLC}>

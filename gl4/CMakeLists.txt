@@ -55,6 +55,7 @@ pkg_get_variable(GLFW3_REQUIRES glfw3 Requires.private)
 
 findLibraryRequird(FIP_LIBS freeimageplus)
 findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)
+findPathRequird(RAPIDJSON_INCLUDE_DIR rapidjson.h rapidjson)
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")
