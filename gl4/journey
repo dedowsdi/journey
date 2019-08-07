@@ -103,10 +103,18 @@ gl:
 2018.11.12
 DMA: direct memory access
 
---------------
-2018.11.17
+by default, gl_FragCoord starts at (0.5, 0.5),  this can be changed by layout
+qualifier.
 
-gl:
-  by default, gl_FragCoord starts at (0.5, 0.5),  this can be changed by layout
-  qualifier.
+Assume you have two point A, B in clip space, and another point C between them as:
+    C = A * (1 - t) + B * t ( xy part)
+    If you wan to get perspective correct vertex attribute for C, you must know that:
+        1/C_w = (1 - t) / A_w  + t / B_w
+        X_w is negative camera space z here.
+    With that in mind, you can get perspective correct vertex attribute for C as:
+        C_w * (A_x * (1-t) / A_w + B_x * t / B_w)
+    check https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/perspective-correct-interpolation-vertex-attributes for detail
+
+    The same rule applies for point D inside triangle ABC, you just have to replace t with barycentric coordinates:
+        D_w * (A_x * λ0 / A_w + B_x * λ1 / B_w * C_x * λ2 / C_w)
 
