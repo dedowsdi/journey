@@ -51,21 +51,21 @@ void key_control::handle(GLFWwindow *wnd, int key, int scancode, int action,
 std::shared_ptr<kci_template<bool>>
 key_control::add_bool(int key, bool init_value, key_control_callback callback)
 {
-  auto item = std::make_shared<kci_template<bool>>(key, init_value, false, true,
-                                                   true, 1, 1);
+  auto item =
+    std::make_shared<kci_template<bool>>(key, init_value, false, true, true);
   item->callback(callback);
   m_key_map[key] = item;
   return item;
 }
 
 //--------------------------------------------------------------------
-std::shared_ptr<kci_template<gl_cap_ctl>>
+std::shared_ptr<kci_template<gl_cap>>
 key_control::add_cap_ctl(int key, GLenum cap, GLuint index,
                          key_control_callback callback)
 {
-  auto ctl = gl_cap_ctl{cap, index};
+  auto ctl = gl_cap{cap, index};
   auto item =
-    std::make_shared<kci_template<gl_cap_ctl>>(key, ctl, ctl, ctl, ctl, 1, 1);
+    std::make_shared<kci_template<gl_cap>>(key, ctl, ctl, ctl, ctl);
   item->callback(callback);
   m_key_map[key] = item;
   return item;

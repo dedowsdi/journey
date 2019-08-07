@@ -18,7 +18,7 @@ class kci;
 using key_control_callback = std::function<void(const kci *kci)>;
 using kcip = std::shared_ptr<kci>;
 
-struct gl_cap_ctl
+struct gl_cap
 {
   GLenum cap;
   GLuint index;
@@ -42,7 +42,7 @@ struct gl_cap_ctl
 class kci
 {
 public:
-  kci(GLint key, GLfloat ctrl_scale, GLfloat alt_scale);
+  kci(GLint key, GLfloat ctrl_scale = 10, GLfloat alt_scale = 0.1);
   virtual ~kci(){};
 
   // any style get
@@ -76,7 +76,7 @@ public:
   GLfloat get_float() const { return get<GLfloat>(); };
   GLdouble get_double() const { return get<GLdouble>(); };
 
-  bool get_cap_enabled() const { return get<gl_cap_ctl>().is_enabled(); }
+  bool get_cap_enabled() const { return get<gl_cap>().is_enabled(); }
 
   // index is used for vector type
   void apply_step(GLfloat step_scale, GLuint index = 0);
@@ -106,107 +106,12 @@ private:
   key_control_callback m_callback;
 };
 
-// c++ doesn't allow partial specialize for function, this template is used to
-// do the apply job for all kinds of data
-template <typename T>
-struct kci_labor
-{
-  void apply_step(GLfloat step_scale, GLuint index, T &value,
-                  const T &min_value, const T &max_value, const T &step,
-                  bool loop)
-  {
-    value += step * step_scale;
-    if (!loop)
-      value = glm::clamp<T>(value, min_value, max_value);
-    else
-    {
-      if (value > max_value)
-        value = min_value;
-      if (value < min_value)
-        value = max_value;
-    }
-  }
-};
-
-template <typename T, glm::precision P>
-struct kci_labor<glm::tvec2<T, P>>
-{
-  using labor_type = glm::tvec2<T, P>;
-
-  void apply_step(GLfloat step_scale, GLuint index, labor_type &value,
-                  const labor_type &min_value, const labor_type &max_value,
-                  const labor_type &step, bool loop)
-  {
-    // no throw
-    if (index > 1)
-      return;
-    value[index] = glm::clamp(value[index] + step[index] * step_scale,
-                              min_value[index], max_value[index]);
-  }
-};
-
-template <typename T, glm::precision P>
-struct kci_labor<glm::tvec3<T, P>>
-{
-  using labor_type = glm::tvec3<T, P>;
-  void apply_step(GLfloat step_scale, GLuint index, labor_type &value,
-                  const labor_type &min_value, const labor_type &max_value,
-                  const labor_type &step, bool loop)
-  {
-    // no throw
-    if (index > 2)
-      return;
-    value[index] = glm::clamp(value[index] + step[index] * step_scale,
-                              min_value[index], max_value[index]);
-  }
-};
-
-template <typename T, glm::precision P>
-struct kci_labor<glm::tvec4<T, P>>
-{
-  using labor_type = glm::tvec4<T, P>;
-  void apply_step(GLfloat step_scale, GLuint index, labor_type &value,
-                  const labor_type &min_value, const labor_type &max_value,
-                  const labor_type &step, bool loop)
-  {
-    // no throw
-    if (index > 3)
-      return;
-    value[index] = glm::clamp(value[index] + step[index] * step_scale,
-                              min_value[index], max_value[index]);
-  }
-};
-
-template <>
-struct kci_labor<bool>
-{
-  using labor_type = bool;
-  void apply_step(GLfloat step_scale, GLuint index, labor_type &value,
-                  const labor_type &min_value, const labor_type &max_value,
-                  const labor_type &step, bool loop)
-  {
-    value = !value;
-  }
-};
-
-template <>
-struct kci_labor<gl_cap_ctl>
-{
-  using labor_type = gl_cap_ctl;
-  void apply_step(GLfloat step_scale, GLuint index, labor_type &value,
-                  const labor_type &min_value, const labor_type &max_value,
-                  const labor_type &step, bool loop)
-  {
-    value.toggle();
-  }
-};
-
 template <typename T>
 class kci_template : public kci
 {
 public:
   kci_template(int key, const T &value, const T &min_value, const T &max_value,
-               const T &step, GLfloat ctrl_scale, GLfloat alt_scale);
+               const T &step);
 
   const T &get() const { return m_value; }
   void set(const T &value) { m_value = value; }
@@ -230,7 +135,81 @@ private:
   T m_min_value;
   T m_max_value;
   T m_step;
-  kci_labor<T> m_labor;
+};
+
+struct kci_t_primitive_tag {};
+struct kci_t_vec_tag {};
+struct kci_t_bool_tag {};
+struct kci_t_cap_tag {};
+
+template <typename T>
+struct kci_type_traits
+{
+  using tag = kci_t_primitive_tag;
+};
+
+template <>
+struct kci_type_traits<bool>
+{
+  using tag = kci_t_bool_tag;
+};
+
+template <>
+struct kci_type_traits<gl_cap>
+{
+  using tag = kci_t_cap_tag;
+};
+
+template<glm::length_t L, typename T, glm::qualifier Q>
+struct kci_type_traits<glm::vec<L, T, Q>>
+{
+  using tag = kci_t_vec_tag;
+};
+
+template <typename T>
+void apply_step_imp(kci_template<T>& kci, GLfloat step_scale, GLint index,
+                    kci_t_primitive_tag)
+{
+  T value = kci.value() + step_scale * kci.step() ;
+  if (!kci.get_loop())
+    value = glm::clamp<T>(value, kci.min_value(), kci.max_value());
+  else
+  {
+    if (value > kci.max_value())
+      value = kci.min_value();
+    if (value < kci.min_value())
+      value = kci.max_value();
+  }
+  kci.value(value);
+}
+
+template <typename T>
+void apply_step_imp(kci_template<T>& kci, GLfloat step_scale, GLint index,
+                    kci_t_bool_tag)
+{
+  kci.value(!kci.value());
+}
+
+template <typename T>
+void apply_step_imp(kci_template<T>& kci, GLfloat step_scale, GLint index,
+                    kci_t_cap_tag)
+{
+  auto value = kci.value();
+  value.toggle();
+}
+
+template <typename T>
+void apply_step_imp(kci_template<T>& kci, GLfloat step_scale, GLint index,
+                    kci_t_vec_tag)
+{
+  // no throw
+  if (index > T::length())
+    return;
+
+  T value = kci.value();
+  value[index] = glm::clamp(value[index] + kci.step()[index] * step_scale,
+                            kci.min_value[index], kci.max_value[index]);
+  kci.value(value);
 };
 
 template <typename T>
@@ -283,12 +262,10 @@ void kci::step(const T &value)
 
 //--------------------------------------------------------------------
 template <typename T>
-kci_template<T>::kci_template(int key, const T &value, const T &min_value,
-                              const T &max_value, const T &step,
-                              GLfloat ctrl_scale /* = 0.1f*/,
-                              GLfloat alt_scale /* = 10.0f*/)
-    : kci(key, ctrl_scale, alt_scale), m_value(value), m_min_value(min_value),
-      m_max_value(max_value), m_step(step)
+kci_template<T>::kci_template(int key, const T& value, const T& min_value,
+                              const T& max_value, const T& step)
+    : kci(key), m_value(value), m_min_value(min_value), m_max_value(max_value),
+      m_step(step)
 {
 }
 
@@ -296,8 +273,7 @@ kci_template<T>::kci_template(int key, const T &value, const T &min_value,
 template <typename T>
 void kci_template<T>::do_apply_step(GLfloat step_scale, GLuint index)
 {
-  m_labor.apply_step(step_scale, index, m_value, m_min_value, m_max_value,
-                     m_step, get_loop());
+  apply_step_imp(*this, step_scale, index, typename kci_type_traits<T>::tag());
 }
 
 typedef std::map<int, std::shared_ptr<kci>> kci_map;
@@ -316,7 +292,7 @@ public:
   std::shared_ptr<kci_template<bool>>
   add_bool(int key, bool init_value, key_control_callback callback = nullptr);
 
-  std::shared_ptr<kci_template<gl_cap_ctl>>
+  std::shared_ptr<kci_template<gl_cap>>
   add_cap_ctl(int key, GLenum cap, GLuint index = -1,
               key_control_callback callback = nullptr);
 
@@ -333,13 +309,15 @@ private:
 //--------------------------------------------------------------------
 template <typename T>
 std::shared_ptr<kci_template<T>>
-key_control::add(int key, const T &init_value, const T &min_value,
-                 const T &max_value, const T &step,
+key_control::add(int key, const T& init_value, const T& min_value,
+                 const T& max_value, const T& step,
                  key_control_callback callback /* = nullptr*/,
                  GLfloat ctrl_scale /* = 0.1f*/, GLfloat alt_scale /* = 10.0f*/)
 {
-  auto item = std::make_shared<kci_template<T>>(
-    key, init_value, min_value, max_value, step, ctrl_scale, alt_scale);
+  auto item = std::make_shared<kci_template<T>>(key, init_value, min_value,
+                                                max_value, step);
+  item->ctrl_scale(ctrl_scale);
+  item->alt_scale(alt_scale);
   item->callback(callback);
   m_key_map[key] = item;
   return item;
