@@ -1,8 +1,10 @@
+#include <sstream>
+#include <algorithm>
+#include <numeric>
+
 #include "app.h"
 #include "bitmap_text.h"
-#include <sstream>
 #include "timer.h"
-#include "algorithm"
 
 #define WIDTH 800
 #define HEIGHT 800

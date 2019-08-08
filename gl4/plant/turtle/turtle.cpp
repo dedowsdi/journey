@@ -397,8 +397,10 @@ void turtle_app::reset_pattern()
   m_vertices = m_turtle.generate(m_geometry_text, mat4(1));
   m_geometry.build_line(GL_LINES, m_vertices.begin(), m_vertices.end());
 
-  kci_debug_count->max_value<GLint>(m_vertices.size());
-  kci_lsystem_step->max_value<GLint>(m_geometry_text.size());
+  std::static_pointer_cast<kci_template<GLint>>(kci_debug_count)
+    ->max_value(m_vertices.size());
+  std::static_pointer_cast<kci_template<GLint>>(kci_lsystem_step)
+    ->max_value(m_geometry_text.size());
   kci_debug_count->set<GLint>(0);
   kci_lsystem_step->set<GLint>(0);
   m_step_vertices = 0;
@@ -429,7 +431,8 @@ void turtle_app::step()
   kci_debug_count->set<GLint>(part0.size());
   m_last_step_vertices = part0.size() - m_step_vertices;
   m_step_vertices = part0.size();
-  kci_debug_count->max_value<GLint>(m_vertices.size());
+  std::static_pointer_cast<kci_template<GLint>>(kci_debug_count)
+    ->max_value(m_vertices.size());
 
   // set bound to next level
   auto n = kci_n->get_int() + 1;

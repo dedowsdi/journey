@@ -74,10 +74,18 @@ const char* gl_shader_type_to_string(GLenum e)
 {
   switch (e)
   {
-    case GL_FRAGMENT_SHADER:
-      return "GL_FRAGMENT_SHADER";
+    case GL_COMPUTE_SHADER:
+      return "GL_COMPUTE_SHADER";
     case GL_VERTEX_SHADER:
       return "GL_VERTEX_SHADER";
+    case GL_TESS_CONTROL_SHADER:
+      return "GL_TESS_CONTROL_SHADER";
+    case GL_TESS_EVALUATION_SHADER:
+      return "GL_TESS_EVALUATION_SHADER";
+    case GL_GEOMETRY_SHADER:
+      return "GL_GEOMETRY_SHADER";
+    case GL_FRAGMENT_SHADER:
+      return "GL_FRAGMENT_SHADER";
     default:
       return "";
   }
@@ -86,8 +94,18 @@ const char* gl_shader_type_to_string(GLenum e)
 //--------------------------------------------------------------------
 GLenum gl_shader_type_from_string(const char* s)
 {
-  if (strcmp(s, "GL_FRAGMENT_SHADER") == 0) return GL_FRAGMENT_SHADER;
-  if (strcmp(s, "GL_VERTEX_SHADER") == 0) return GL_VERTEX_SHADER;
+  if (strcmp(s, "GL_COMPUTE_SHADER") == 0)
+    return GL_COMPUTE_SHADER;
+  if (strcmp(s, "GL_VERTEX_SHADER") == 0)
+    return GL_VERTEX_SHADER;
+  if (strcmp(s, "GL_TESS_CONTROL_SHADER") == 0)
+    return GL_TESS_CONTROL_SHADER;
+  if (strcmp(s, "GL_TESS_EVALUATION_SHADER") == 0)
+    return GL_TESS_EVALUATION_SHADER;
+  if (strcmp(s, "GL_GEOMETRY_SHADER") == 0)
+    return GL_GEOMETRY_SHADER;
+  if (strcmp(s, "GL_FRAGMENT_SHADER") == 0)
+    return GL_FRAGMENT_SHADER;
   return 0;
 }
 
@@ -283,6 +301,29 @@ GLenum gl_hint_from_string( char* s)
   return 0;
 }
 
+//--------------------------------------------------------------------
+const char* gl_provoke_mode_to_string(GLenum e)
+{
+  switch (e)
+  {
+    case GL_FIRST_VERTEX_CONVENTION:
+      return "GL_FIRST_VERTEX_CONVENTION";
+    case GL_LAST_VERTEX_CONVENTION:
+      return "GL_LAST_VERTEX_CONVENTION";
+    default:
+      return "";
+  }
+}
+
+//--------------------------------------------------------------------
+GLenum gl_provoke_mode_from_string(char* s)
+{
+  if (strcmp(s, "GL_FIRST_VERTEX_CONVENTION") == 0)
+    return GL_FIRST_VERTEX_CONVENTION;
+  if (strcmp(s, "GL_LAST_VERTEX_CONVENTION") == 0)
+    return GL_LAST_VERTEX_CONVENTION;
+  return 0;
+}
 
 #ifndef GL_VERSION_3_0
 

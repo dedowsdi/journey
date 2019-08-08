@@ -13,6 +13,25 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
+void program::init()
+{
+  create_program();
+  attach_shaders();
+  bind_attrib_locations(); // bind must be called before link, different from get
+  link();
+  bind_uniform_locations();
+}
+
+//--------------------------------------------------------------------
+void program::reload()
+{
+  std::cout << "reloading shader " << m_name << std::endl;
+  clear();
+  init();
+}
+
+
+//--------------------------------------------------------------------
 void program::bind_attrib_location(GLuint index, const std::string& name)
 {
   glBindAttribLocation(object, index, name.c_str());
@@ -41,6 +60,21 @@ void program::link()
       std::cout << log << std::endl;
     }
   }
+
+  GLint num_shaders;
+  glGetProgramiv(object, GL_ATTACHED_SHADERS, &num_shaders);
+  constexpr GLsizei max_shaders = 64;
+  std::array<GLuint, max_shaders> shaders;
+  glGetAttachedShaders(object, max_shaders, &num_shaders, &shaders.front());
+
+  std::cout << "link ";
+  for (int i = 0; i < num_shaders; ++i)
+  {
+    GLint shader_type;
+    glGetShaderiv(shaders[i], GL_SHADER_TYPE, &shader_type);
+    std::cout << gl_shader_type_to_string(shader_type) << " ";
+  }
+  std::cout << std::endl;
 }
 
 //--------------------------------------------------------------------

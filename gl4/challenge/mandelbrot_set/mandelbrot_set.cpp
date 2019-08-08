@@ -1,14 +1,15 @@
 #define GLM_FORCE_SWIZZLE
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <numeric>
+
 #include "app.h"
 #include "bitmap_text.h"
 #include "quad.h"
 #include "string_util.h"
 #include "timer.h"
 #include "pingpong.h"
-
-#include <sstream>
-#include <algorithm>
-#include <iomanip>
 
 namespace zxd
 {

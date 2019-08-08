@@ -28,20 +28,9 @@ public:
   // to use this directly in gl procedure
   operator GLuint() { return object; }
 
-  virtual void init()
-  {
-    create_program();
-    attach_shaders();
-    bind_attrib_locations(); // bind must be called before link, different from get
-    link();
-    bind_uniform_locations();
-  }
+  virtual void init();
 
-  virtual void reload()
-  {
-    clear();
-    init();
-  }
+  virtual void reload();
 
   void bind_attrib_location(GLuint index, const std::string& name);
   virtual void bind_attrib_locations(){}

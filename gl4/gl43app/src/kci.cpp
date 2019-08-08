@@ -22,6 +22,20 @@ void kci::apply_step(GLfloat step_scale, GLuint index /* = 0*/)
 }
 
 //--------------------------------------------------------------------
+kci_template<gl_cap>::kci_template(int key, GLenum cap, GLuint index):
+  kci(key),
+  m_gl_cap{cap, index}
+{
+}
+
+//--------------------------------------------------------------------
+void kci_template<gl_cap>::do_apply_step(GLfloat step_scale, GLuint index) 
+{
+  m_gl_cap.toggle();
+}
+
+
+//--------------------------------------------------------------------
 void key_control::handle(GLFWwindow *wnd, int key, int scancode, int action,
                          int mods)
 {
@@ -60,12 +74,10 @@ key_control::add_bool(int key, bool init_value, key_control_callback callback)
 
 //--------------------------------------------------------------------
 std::shared_ptr<kci_template<gl_cap>>
-key_control::add_cap_ctl(int key, GLenum cap, GLuint index,
-                         key_control_callback callback)
+key_control::add_cap(int key, GLenum cap, GLuint index,
+                     key_control_callback callback)
 {
-  auto ctl = gl_cap{cap, index};
-  auto item =
-    std::make_shared<kci_template<gl_cap>>(key, ctl, ctl, ctl, ctl);
+  auto item = std::make_shared<kci_template<gl_cap>>(key, cap, index);
   item->callback(callback);
   m_key_map[key] = item;
   return item;

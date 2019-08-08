@@ -22,6 +22,7 @@
 //
 #include <sstream>
 #include <algorithm>
+#include <numeric>
 
 #include "app.h"
 #include "color.h"

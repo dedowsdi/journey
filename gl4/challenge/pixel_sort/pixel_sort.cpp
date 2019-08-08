@@ -1,13 +1,15 @@
-#include <color.h>
+#include <algorithm>
+#include <sstream>
+#include <numeric>
+
 #include "app.h"
+#include <color.h>
 #include "bitmap_text.h"
 #include "texutil.h"
 #include "quad.h"
 #include "common_program.h"
 #include "functor.h"
 
-#include <algorithm>
-#include <sstream>
 
 #define MAX_WIDTH 1280
 #define MAX_HEIGHT 640

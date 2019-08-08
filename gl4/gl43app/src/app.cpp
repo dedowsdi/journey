@@ -467,6 +467,7 @@ void app::glfw_key(
           break;
         case GLFW_KEY_ESCAPE:
           stop_reading();
+          break;
         default:
           break;
       }
@@ -502,6 +503,10 @@ void app::glfw_key(
 
       case GLFW_KEY_F10:
         ++m_update_count;
+        break;
+
+      case GLFW_KEY_F6:
+        reload_shaders();
         break;
 
       case GLFW_KEY_SPACE:

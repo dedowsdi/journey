@@ -144,6 +144,7 @@ protected:
   virtual void update_time();
   virtual void update_fps();
   virtual void update_camera();
+  virtual void reload_shaders() {}
 
   void rotate_camera_mouse_move(GLdouble x, GLdouble y);
 
