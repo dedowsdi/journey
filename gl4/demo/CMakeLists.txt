@@ -17,6 +17,7 @@ set (PROJECTS
     prefix_sum_1d
     tessellate
     teapot
+    flat
     )
 
 foreach(PROJECT ${PROJECTS})
