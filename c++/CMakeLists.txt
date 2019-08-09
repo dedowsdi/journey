@@ -40,11 +40,9 @@ set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it'
 FIND_PACKAGE(PkgConfig REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS program_options filesystem unit_test_framework)
-findPathRequird(cpp_include iostream c++/5)
 message(${Boost_LIBRARIES})
 
 include_directories(
-    ${cpp_include}
     ${CMAKE_SOURCE_DIR}/common/include
     ${Boost_INCLUDE_DIRS}
     )
