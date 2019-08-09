@@ -1,4 +1,5 @@
 #include "a.h"
+#include <iostream>
 
 //--------------------------------------------------------------------
 template<typename T>
@@ -10,12 +11,21 @@ void A<T>::foo()
 template<typename T>
 void foo()
 {
+
 }
 
-// notify compiler to compile these template with specific type.
+// specialization
+template<>
+void foo<float>()
+{
+  std::cout << "specialized foo" << std::endl;
+}
+
+// explicit instantiation
 template class A<int>;
 
-void define_template_function(){
-  foo<int>();
-}
+// declare, instantiated somewhere else
+extern template void foo<int>();
 
+// explicit instantiation
+template void foo<int>();
