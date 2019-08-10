@@ -6,7 +6,6 @@
  *
  * # this is comment
  * #
- * #
  *
  * # name of  space, following lines wil be
  * model   
@@ -36,7 +35,6 @@
  *    matrix plain 16 float
  */
 
-#define GLM_FORCE_SWIZZLE
 #include "stream_util.h"
 #include <iostream>
 #include <string>
@@ -75,10 +73,11 @@ mat4 get_transform(GLuint start, GLuint count)
   if(start+count > mats.size())
       throw std::runtime_error("start+count overflow");
 
-  mat4 m;
+  mat4 m(1);
   for(auto iter = mats.begin() + start; iter != mats.end() && count > 0; ++iter, --count)
   {
     m = m * *iter ;
+    mat4 identity(1);
   }
 
   return m;
@@ -104,6 +103,7 @@ struct print_matrix
   {
     std::cout << "--------------------------------------------------" << std::endl;;
     mat4 m = get_transform(start, count);
+    std::cout << mats[0] << std::endl;
     std::cout << get_mat_name(start, count) << std::endl << std::endl;
 
     std::string::size_type w = 1;
@@ -114,8 +114,8 @@ struct print_matrix
         w = glm::max(w, string_util::to(m[i][j]).length());
       }
     }
-    
-    w += 1;
+
+    w += 10;
 
     mat4 identity(1);
     // print column major row by row
@@ -124,7 +124,9 @@ struct print_matrix
       for (int j = 0; j < 4; j++)
       {
         if(m[j][i] != identity[j][i])
-          std::cout << string_util::bash_inverse << std::setw(w) << m[j][i] << string_util::bash_reset;
+          std::cout << string_util::bash_inverse << std::setw(w) << m[j][i]
+                    << string_util::bash_reset;
+          // std::cout << std::setw(w) << m[j][i];
         else
           std::cout << std::setw(w) << m[j][i];
       }
@@ -192,6 +194,7 @@ void assert_true(bool b, const std::string& msg)
   if(!b)
     throw std::runtime_error(msg);
 }
+
 void assert_element(ELEMENT s0, ELEMENT s1, const std::string& msg)
 {
   assert_true(s0 == s1, msg);
@@ -202,24 +205,20 @@ void assert_element_false(ELEMENT s0, ELEMENT s1, const std::string& msg)
   assert_true(s0 != s1, msg);
 }
 
-  // replace pi with actual pi, pi2 with half pi ......
-void replace_contents()
+// replace pi with actual pi, pi2 with half pi ......
+void replace_pi()
 {
-  int dnms[] = {16, 8, 4, 2};
+  std::array<int, 4> denom = {16, 8, 4, 2};
 
-  for (int i = 0; i < 4; ++i) 
+  for (auto i = 0u; i < denom.size(); ++i)
   {
-    std::stringstream ss;
-    ss << "pi" << dnms[i];
-    std::string pattern = ss.str();
-
-    ss.str("");
-    ss.clear();
-    ss << glm::pi<GLfloat>() * dnms[i];
-
-    file_content = string_util::replace_string(file_content, "pi" + string_util::to(dnms[i]), string_util::to(glm::pi<GLfloat>() / dnms[i]));
+    file_content = string_util::replace_string(
+      file_content, "pi" + string_util::to(denom[i]),
+      string_util::to(glm::pi<GLfloat>() / denom[i]));
   }
-  file_content = string_util::replace_string(file_content, "pi", string_util::to(glm::pi<GLfloat>()));
+
+  file_content = string_util::replace_string(
+    file_content, "pi", string_util::to(glm::pi<GLfloat>()));
 }
 
 bool is_comment(const std::string& trimed_string)
@@ -235,38 +234,36 @@ mat4 read_mat4(std::istream& is)
 
   //    matrix identity
   if(word == "identity")
-  {
     return glm::mat4(1);
-  }
 
-  //    matrix scale vec3
+  // matrix scale vec3
   if(word == "scale")
   {
     vec3 v = stream_util::read_vec3(is);
-    std::cout << v[0] << " " << v[1] << " " << v[2] << " " << std::endl;
+    // std::cout << v[0] << " " << v[1] << " " << v[2] << " " << std::endl;
     return glm::scale(v);
   }
 
-  //    matrix rotate angle vec3
+  // matrix rotate angle vec3
   if(word == "rotate")
   {
     vec4 v = stream_util::read_vec4(is);
-    return glm::rotate(v.x, v.yzw());
+    return glm::rotate(v.x, vec3(v.y, v.z, v.w));
   }
 
-  //    matrix translate vec3
+  // matrix translate vec3
   if(word == "translate")
   {
     vec3 v = stream_util::read_vec3(is);
     return glm::translate(v);
   }
 
-  //    matrix ortho left right bottom top near far
+  // matrix ortho left right bottom top near far
   if(word == "ortho")
   {
     vec3 v0 = stream_util::read_vec3(is);
     vec3 v1 = stream_util::read_vec3(is);
-    return glm::ortho(v0.x, v0.y, v0.z, v1.z, v1.y, v1.z);
+    return glm::ortho(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z);
   }
 
   //    matrix perspective flovy aspect_ratio near far
@@ -279,10 +276,10 @@ mat4 read_mat4(std::istream& is)
   //    matrix lookat vec3 vec3 vec3
   if(word == "lookat")
   {
-    vec3 v0 = stream_util::read_vec3(is);
-    vec3 v1 = stream_util::read_vec3(is);
-    vec3 v2 = stream_util::read_vec3(is);
-    return glm::lookAt(v0, v1, v2);
+    vec3 eye = stream_util::read_vec3(is);
+    vec3 center = stream_util::read_vec3(is);
+    vec3 up = stream_util::read_vec3(is);
+    return glm::lookAt(eye, center, up);
   }
 
   if(word == "plain")
@@ -293,7 +290,7 @@ mat4 read_mat4(std::istream& is)
   throw std::runtime_error("unknow matrix type : " + word);
 }
 
-ELEMENT to(const std::string& s)
+ELEMENT to_element(const std::string& s)
 {
   if(s == "space")
     return SPACE;
@@ -340,7 +337,7 @@ void add_print_vector(std::istream& is)
 
 void add_print_item(std::istream& is)
 {
-  ELEMENT elem = to(read_word(is));
+  ELEMENT elem = to_element(read_word(is));
   assert_true(elem == PRINT_MATRIX || elem == PRINT_VECTOR, 
       "error, only pm or pv can follow PRINT, PRINT_MATRIX or PRINT_VECTOR");
   if(elem == PRINT_MATRIX)
@@ -351,13 +348,16 @@ void add_print_item(std::istream& is)
 
 int main(int argc, char *argv[])
 {
+
+  // set data file as $MVP_MATRIX_FILE or value 1st arg
   if(argc == 1)
   {
-    // set data file as MVP_MATRIX_FILE
     char* c = std::getenv("MVP_MATRIX_FILE");
     if(c == 0)
     {
-      std::cout << "empty MVP_MATRIX_FILE, pls provide matrix file or specify MVP_MATRIX_FILE" << std::endl;
+      std::cout << "empty enviroment variable MVP_MATRIX_FILE, pls provide "
+                   "matrix file or specify MVP_MATRIX_FILE"
+                << std::endl;
       return 0 ;
     }
     else
@@ -379,15 +379,15 @@ int main(int argc, char *argv[])
 
   ELEMENT elem = INITIAL;
   file_content = stream_util::read_resource(file_path);
-  replace_contents();
-  std::stringstream ifs(file_content);
+  replace_pi();
+  std::stringstream is(file_content);
   std::string line;
-  mat4 m;
+  mat4 m(1);
 
-  while(std::getline(ifs, line))
+  while(std::getline(is, line))
   {
     line = string_util::trim(line);
-    // skip blank and comment
+
     if(line.empty() || is_comment(line))
       continue;
 
@@ -395,24 +395,25 @@ int main(int argc, char *argv[])
 
     if(elem == INITIAL)
     {
-      elem = to(read_word(ss));
+      elem = to_element(read_word(ss));
       assert_element(elem, SPACE, "error, 1st non comment or blank line should be space");
       add_space(ss);
     }
     else if(elem == SPACE)
     {
       // read next space
-      elem = to(read_word(ss));
+      elem = to_element(read_word(ss));
       assert_element(elem, MATRIX,"error, at least 1 matrix should follow space");
       if(elem == MATRIX)
       {
         m = m * read_mat4(ss);
+        std::cout << m << std::endl;
       }
     }
     else if(elem == MATRIX)
     {
       // accumulate current matrix
-      elem = to(read_word(ss));
+      elem = to_element(read_word(ss));
       if(elem == MATRIX)
       {
         m = m * read_mat4(ss);
@@ -426,6 +427,7 @@ int main(int argc, char *argv[])
       else if(elem == PRINT)
       {
         mats.push_back(m);
+        std::cout << m << std::endl;
         m = mat4(1);
       }
       else
@@ -443,15 +445,11 @@ int main(int argc, char *argv[])
 
   std::cout << "finish reading, start printing" << std::endl;
 
-  std::for_each(pms.begin(), pms.end(),[&](decltype(*pms.begin()) v)
-      {
-    v.print();
-  });
+  std::for_each(pms.begin(), pms.end(),
+                [&](decltype(*pms.begin()) v) { v.print(); });
 
-  std::for_each(pvs.begin(), pvs.end(),[&](decltype(*pvs.begin()) v)
-      {
-    v.print();
-  });
+  std::for_each(pvs.begin(), pvs.end(),
+                [&](decltype(*pvs.begin()) v) { v.print(); });
 
   return 0;
 }
