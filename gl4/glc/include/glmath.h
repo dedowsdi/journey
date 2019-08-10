@@ -108,8 +108,8 @@ glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
 
 glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius = 0.8f);
 
-glm::mat4 compute_window_mat(
-  GLint x, GLint y, GLint width, GLint height, GLfloat n = -1, GLfloat f = 1);
+glm::mat4 compute_window_mat(GLint x, GLint y, GLint width, GLint height,
+                             GLfloat depth_near = 0, GLfloat depth_far = 1);
 
 glm::mat4 compute_window_mat_i(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);

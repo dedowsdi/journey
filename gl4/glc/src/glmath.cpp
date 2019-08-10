@@ -315,20 +315,21 @@ glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/)
 }
 
 //--------------------------------------------------------------------
-glm::mat4 compute_window_mat(
-  GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f)
+glm::mat4 compute_window_mat(GLint x, GLint y, GLint width, GLint height,
+                             GLfloat depth_near, GLfloat depth_far)
 {
   glm::mat4 m;
 
-  //m = glm::translate(vec3(1)) * glm::scale(vec3(width*0.5, height*0.5, 0.5f))
-    //* glm::translate(vec3(x, y, 0));
+  // m = glm::translate(vec3(x, y, depth_near)) * glm::scale(vec3(width*0.5,
+  // height*0.5, 0.5f * (depth_far - depth_near)))
+  //* glm::translate(vec3(1));
 
   m[0][0] = width / 2.0;
   m[1][1] = height / 2.0;
-  m[2][2] = (f - n) / 2.0;
+  m[2][2] = (depth_far - depth_near) / 2.0;
   m[3][0] = x + m[0][0];
   m[3][1] = y + m[1][1];
-  m[3][2] = (f + n) / 2.0;
+  m[3][2] = (depth_far + depth_near) / 2.0;
 
   return m;
 }
