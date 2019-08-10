@@ -24,8 +24,5 @@ void foo<float>()
 // explicit instantiation
 template class A<int>;
 
-// declare, instantiated somewhere else
-extern template void foo<int>();
-
 // explicit instantiation
 template void foo<int>();
