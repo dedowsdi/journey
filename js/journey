@@ -1,0 +1,4 @@
+install node with nvm
+    nvm ls-remote
+    nvm install v10.16.2
+    nvm use 10.16
