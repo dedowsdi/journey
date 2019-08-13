@@ -9,12 +9,23 @@ namespace zxd
 
 class cuboid : public geometry_base
 {
-protected:
-  glm::vec3 m_half_diag;
-
 public:
-  cuboid(const glm::vec3& half_diag) : m_half_diag(half_diag) {}
-  cuboid(GLfloat size = 1) : m_half_diag(0.5 * size, 0.5 * size, 0.5 * size) {}
+
+  enum class type
+  {
+    CT_8,
+    CT_24
+  };
+
+  cuboid(const glm::vec3 &half_diag, type _type = type::CT_24)
+      : m_type(_type), m_half_diag(half_diag)
+  {
+  }
+
+  cuboid(GLfloat size = 1, type _type = type::CT_24)
+      : m_type(_type), m_half_diag(0.5 * size, 0.5 * size, 0.5 * size)
+  {
+  }
 
   void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.
@@ -23,6 +34,15 @@ public:
 
   const glm::vec3& half_diag() const { return m_half_diag; }
   void half_diag(const glm::vec3& v){ m_half_diag = v; }
+
+  type get_type() const { return m_type; }
+  void set_type(type v){ m_type = v; }
+
+private:
+
+  type m_type;
+  glm::vec3 m_half_diag;
+
 };
 }
 

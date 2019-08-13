@@ -57,6 +57,11 @@ GLuint geometry_base::num_vertices() { return attrib_array(0)->num_elements(); }
 void geometry_base::draw()
 {
   bind_vao();
+  if (m_elements)
+  {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements->buffer());
+  }
+
   for (int i = 0; i < m_primitive_sets.size(); ++i)
   {
     m_primitive_sets[i]->draw();

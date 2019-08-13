@@ -31,6 +31,14 @@ public:
   geometry_base(){}
   virtual ~geometry_base() {}
 
+  template <typename T>
+  std::shared_ptr<T> make_array(GLuint index)
+  {
+    auto arr = std::make_shared<T>();
+    attrib_array(index, arr);
+    return arr;
+  }
+
   void attrib_array(GLuint index, array_ptr _array);
   array_ptr attrib_array(GLuint index) const;
   float_array_ptr attrib_float_array(GLuint index) const;
