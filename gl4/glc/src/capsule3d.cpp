@@ -19,7 +19,7 @@ void capsule3d::build_vertex()
   auto vertices = std::make_shared<vec3_array>();
   attrib_array(0, vertices);
 
-  vec3_vector sphere_points = sphere::get_sphere_points(m_radius, m_sphere_slice, m_sphere_stack);
+  vec3_vector sphere_points = sphere::create_points(m_radius, m_sphere_slice, m_sphere_stack);
 
   GLint stack_size = m_sphere_slice + 1;
   // create sphere stack by stack along z

@@ -1,6 +1,7 @@
 #include "sphere.h"
 
 #include <memory>
+#include <algorithm>
 
 namespace zxd
 {
@@ -8,115 +9,107 @@ namespace zxd
 //--------------------------------------------------------------------
 void sphere::build_vertex()
 {
+  vec3_vector sphere_points = create_points(m_radius, m_slice, m_stack);
 
-  GLuint circle_size = m_slice + 1;
-  GLuint strip_size = circle_size * 2;
+  auto vertices = make_array<vec3_array>(0);
+  vertices->assign(sphere_points.begin(), sphere_points.end());
 
-  vec3_array& vertices = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve((m_stack * strip_size));
+  m_elements = std::make_shared<uint_array>();
+  auto elements = std::static_pointer_cast<uint_array>(m_elements);
 
-  vec3_vector sphere_points = get_sphere_points(m_radius, m_slice, m_stack);
-  GLint stack_size = m_slice + 1;
-  // create sphere stack by stack along z
-  // build triangle strip as
+  // reserve extra space for primitive restart index
+  elements->reserve(m_stack * 2 * (m_slice + 2));
+
+  // create sphere stack by stack along z, from up to down
+  // build triangle strip (front face) as
   //    0 2
   //    1 3
-  // pole strip will not be created as triangle fan, as it mess up texture
   for (int i = 0; i < m_stack; ++i)
   {
-    GLint stack_start = stack_size * i;
-    GLuint next_stack_start = stack_start + stack_size;
+    auto stack0 = (m_slice + 1) * i;
+    auto stack1 = stack0 + m_slice + 1;
 
     for (int j = 0; j <= m_slice; j++)
     {
-      // loop last stack in reverse order
-      vertices.push_back(sphere_points[stack_start + j]);
-      vertices.push_back(sphere_points[next_stack_start + j]);
+      elements->push_back(stack0 + j);
+      elements->push_back(stack1 + j);
     }
+    elements->push_back(-1);
   }
 
   m_primitive_sets.clear();
-  for (int i = 0; i < m_stack; ++i)
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+  add_primitive_set(
+    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
 }
 
 //--------------------------------------------------------------------
 void sphere::build_normal()
 {
-  vec3_array& normals = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&normals));
-  const vec3_array& vertices = *attrib_vec3_array(0);
+  auto normals = make_array<vec3_array>(num_arrays());
+  auto vertices = attrib_vec3_array(0);
 
-  normals.reserve(num_vertices());
-
-  for (int i = 0; i < num_vertices(); ++i)
-  {
-    normals.push_back(glm::normalize(vertices[i]));
-  }
+  std::transform(vertices->begin(), vertices->end(),
+    std::back_inserter(*normals),
+    [](auto &pos) -> vec3 { return normalize(pos); });
 }
 
 //--------------------------------------------------------------------
 void sphere::build_texcoord()
 {
+  auto texcoords = make_array<vec2_array>(num_arrays());
+  texcoords->reserve(num_vertices());
+
   // t ranges from 0.0 at z = - radius to 1.0 at z = radius (t increases
   // linearly along longitudinal lines), and s ranges from 0.0 at the +y axis,
   // to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x axis,
   // and back to 1.0 at the +y axis
-  //
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
-
-  for (int i = 0; i < m_stack; ++i)
+  for (int i = 0; i <= m_stack; ++i)
   {
-    GLfloat t0 = 1 - static_cast<GLfloat>(i) / m_stack;
-    GLfloat t1 = 1 - static_cast<GLfloat>(i + 1) / m_stack;
-
+    GLfloat t = 1 - static_cast<GLfloat>(i) / m_stack;
     for (int j = 0; j <= m_slice; j++)
     {
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
-
-      texcoords.push_back(glm::vec2(s, t0));
-      texcoords.push_back(glm::vec2(s, t1));
+      texcoords->push_back(vec2(s, t));
     }
   }
 
-  assert(texcoords.size() == num_vertices());
+  assert(texcoords->size() == num_vertices());
 }
 
 //--------------------------------------------------------------------
-vec3_vector sphere::get_sphere_points(GLfloat radius, GLuint slices, GLuint stacks)
+vec3_vector sphere::create_points(GLfloat radius, GLuint slices, GLuint stacks)
 {
+  // use iso convension:
+  //    θ : polar angle
+  //    φ : azimuthal angle
+
   vec3_vector sphere_point;
   sphere_point.reserve((stacks + 1) * (slices + 1));
-  GLfloat phi_step = zxd::fpi / stacks;
-  GLfloat theta_step = f2pi / slices;
+
+  GLfloat theta_step = zxd::fpi / stacks;
+  GLfloat phi_step = f2pi / slices;
+
   for (int i = 0; i <= stacks; ++i)
   {
-    GLfloat phi = i * phi_step;
-
-    GLfloat sin_phi = std::sin(phi);
-    GLfloat cos_phi = std::cos(phi);
-
-    GLfloat r_times_sin_phi = radius * sin_phi;
-    GLfloat r_times_cos_phi = radius * cos_phi;
+    GLfloat theta = i * theta_step;
+    GLfloat sin_theta = std::sin(theta);
+    GLfloat cos_theta = std::cos(theta);
 
     for (int j = 0; j <= slices; j++)
     {
-      // loop last stack in reverse order
-      GLfloat theta = theta_step * j;
-      if(j == slices) theta = 0; // avoid precision problem
-
-      GLfloat cos_theta = std::cos(theta);
-      GLfloat sin_theta = std::sin(theta);
-
-      sphere_point.push_back(vec3(r_times_sin_phi * cos_theta,
-            r_times_sin_phi * sin_theta, r_times_cos_phi));
+      GLfloat phi = j == slices ? 0 : phi_step * j;
+      sphere_point.push_back(
+        radius * vec3(sin_theta * cos(phi), sin_theta * sin(phi), cos_theta));
     }
   }
 
   return sphere_point;
+}
+
+//--------------------------------------------------------------------
+void sphere::on_draw()
+{
+  glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
 }
 
 }

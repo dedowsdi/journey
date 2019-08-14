@@ -165,7 +165,7 @@ void lightining_app::create_scene()
   kci_bloom_exposure = m_control.add<GLfloat>(GLFW_KEY_W, bloom_exposure, 1, 99, 0.1);
 
   // sphere lightning
-  vec3_vector sphere_point = sphere::get_sphere_points( outer_ball_radius,
+  vec3_vector sphere_point = sphere::create_points( outer_ball_radius,
       outer_ball_slices, outer_ball_stacks);
   sphere_lines.reserve((outer_ball_stacks - 1) * (outer_ball_slices*2) 
       + outer_ball_slices * (outer_ball_stacks * 2));

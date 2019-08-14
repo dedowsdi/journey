@@ -56,6 +56,8 @@ GLuint geometry_base::num_vertices() { return attrib_array(0)->num_elements(); }
 //--------------------------------------------------------------------
 void geometry_base::draw()
 {
+  on_draw();
+
   bind_vao();
   if (m_elements)
   {
