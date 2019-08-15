@@ -28,6 +28,13 @@ public:
     return arr;
   }
 
+  template <typename T>
+  std::shared_ptr<T> make_element()
+  {
+    m_elements = std::make_shared<T>();
+    return std::static_pointer_cast<T>(m_elements);
+  }
+
   void attrib_array(GLuint index, array_ptr _array);
   array_ptr attrib_array(GLuint index) const;
   float_array_ptr attrib_float_array(GLuint index) const;

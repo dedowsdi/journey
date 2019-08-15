@@ -7,32 +7,14 @@
 namespace zxd
 {
 
-/*
- * build cylinder with two triangle fans and a bunch of triangle strips
- */
 class cylinder : public geometry_base
 {
-protected:
-  GLfloat m_base;
-  GLfloat m_top;
-  GLfloat m_height;
-  GLuint m_slice;  // longitiude
-  GLuint m_stack;  // latitude
-
 public:
-  cylinder() : m_base(1), m_top(1), m_height(1), m_slice(16), m_stack(16) {}
-  cylinder(
-    GLfloat base, GLfloat top, GLfloat height, GLuint slice, GLuint stack)
-      : m_base(base),
-        m_top(top),
-        m_height(height),
-        m_slice(slice),
-        m_stack(stack) {}
 
-  void build_vertex();
-  // as i'm using strip and fan, normal should be vertex normal.
-  void build_normal();
-  void build_texcoord();
+  cylinder();
+
+  cylinder(
+    GLfloat base, GLfloat top, GLfloat height, GLuint slice, GLuint stack);
 
   GLuint slice() const { return m_slice; }
   void slice(GLuint v) { m_slice = v; }
@@ -48,6 +30,20 @@ public:
 
   GLfloat top() const { return m_top; }
   void top(GLfloat v) { m_top = v; }
+
+private:
+
+  void build_vertex() override;
+  void build_normal() override;
+  void build_texcoord() override;
+  void on_draw() override;
+
+  GLfloat m_base;
+  GLfloat m_top;
+  GLfloat m_height;
+  GLuint m_slice;
+  GLuint m_stack;
+
 };
 }
 

@@ -380,6 +380,11 @@ public:
     GLint cull_face;
     glGetIntegerv(GL_CULL_FACE_MODE, &cull_face);
 
+    if (!m_display_help)
+    {
+      return;
+    }
+
     GLint polygon_mode;
     glGetIntegerv(GL_POLYGON_MODE, &polygon_mode);
     std::stringstream ss;
@@ -398,13 +403,6 @@ public:
       capability_guard<GL_CULL_FACE> cull_face(GL_FALSE);
       m_text.print(ss.str(), 10, 492);
     }
-  }
-
-  virtual void glfw_resize(GLFWwindow *wnd, int w, int h)
-  {
-    (void)wnd;
-    m_info.wnd_width = w;
-    m_info.wnd_width = h;
   }
 
   virtual void glfw_key(
