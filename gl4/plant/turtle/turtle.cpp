@@ -443,7 +443,7 @@ void turtle_app::step()
 
 void turtle_app::update_bound(const vec3_vector& vertices)
 {
-  auto corners = geometry_util::bounding_box(vertices.begin(), vertices.end());
+  auto corners = bounding_box(vertices.begin(), vertices.end());
 
   auto w = corners.second.x - corners.first.x;
   auto h = corners.second.y - corners.first.y;

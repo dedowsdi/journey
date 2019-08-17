@@ -32,8 +32,6 @@ private:
   void build_normal() override;
   void build_texcoord() override;
 
-  void on_draw() override;
-
   GLfloat m_radius;
   GLuint m_slice;  // longitiude
   GLuint m_stack;  // latitude

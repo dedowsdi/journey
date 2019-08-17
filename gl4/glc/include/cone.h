@@ -33,8 +33,6 @@ private:
   void build_normal() override;
   void build_texcoord() override;
 
-  void on_draw() override;
-
   GLfloat m_radius;
   GLfloat m_height;
   GLuint m_slice;  // longitiude

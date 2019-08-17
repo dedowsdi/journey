@@ -6,6 +6,12 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
+bezier_surface::bezier_surface(GLfloat ubegin, GLfloat uend, GLfloat vbegin,
+  GLfloat vend, GLuint upartition, GLuint vpartition)
+    : m_ubegin(ubegin), m_uend(uend), m_vbegin(vbegin), m_vend(vend),
+      m_upartition(upartition), m_vpartition(vpartition){};
+
+//--------------------------------------------------------------------
 void bezier_surface::build_vertex()
 {
   vec3_array& vertices = *(new vec3_array());

@@ -10,11 +10,8 @@ namespace zxd
 class cylinder : public geometry_base
 {
 public:
-
-  cylinder();
-
-  cylinder(
-    GLfloat base, GLfloat top, GLfloat height, GLuint slice, GLuint stack);
+  cylinder(GLfloat base = 1, GLfloat top = 1, GLfloat height = 1,
+    GLuint slice = 16, GLuint stack = 16);
 
   GLuint slice() const { return m_slice; }
   void slice(GLuint v) { m_slice = v; }
@@ -36,7 +33,6 @@ private:
   void build_vertex() override;
   void build_normal() override;
   void build_texcoord() override;
-  void on_draw() override;
 
   GLfloat m_base;
   GLfloat m_top;

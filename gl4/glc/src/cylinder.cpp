@@ -3,14 +3,10 @@
 #include <algorithm>
 
 #include "common.h"
+#include "geometry_util.h"
 
 namespace zxd
 {
-
-cylinder::cylinder()
-    : m_base(1), m_top(1), m_height(1), m_slice(16), m_stack(16)
-{
-}
 
 cylinder::cylinder(
   GLfloat base, GLfloat top, GLfloat height, GLuint slice, GLuint stack)
@@ -24,8 +20,9 @@ void cylinder::build_vertex()
                                // create vertices
 
   auto vertices = make_array<vec3_array>(0);
+  auto num_vertices = 2 * (m_slice + 2) + (m_stack + 1) * (m_slice + 1);
 
-  vertices->reserve(2 * (m_slice + 2) + m_stack * 2 * (m_slice + 1));
+  vertices->reserve(num_vertices);
 
   GLfloat step_angle = f2pi / m_slice;
 
@@ -62,20 +59,16 @@ void cylinder::build_vertex()
     }
   }
 
+  assert(vertices->size() == num_vertices);
+
                          // create elements for stacks
 
   auto elements = make_element<uint_array>();
-  for (auto i = 0u; i < m_stack; ++i)
-  {
-    auto stack0 = 2 * (m_slice + 2) + (m_slice + 1) * i;
-    auto stack1 = stack0 + m_slice + 1;
-    for (auto j = 0u; j <= m_slice; ++j)
-    {
-      elements->push_back(stack0 + j);
-      elements->push_back(stack1 + j);
-    }
-    elements->push_back(-1);
-  }
+
+  auto num_elements = m_stack * 2 * (m_slice + 1) + m_stack;
+  elements->reserve(num_elements);
+  build_strip_elements(*elements, m_stack, m_slice, 2 * (m_slice + 2));
+  assert(elements->size() == num_elements);
 
   m_primitive_sets.clear();
 
@@ -93,16 +86,10 @@ void cylinder::build_normal()
   normals->reserve(vertices->size());
 
   // normals for top
-  for (int i = 0; i < m_slice + 2; ++i)
-  {
-    normals->push_back(vec3(0, 0, 1));
-  }
+  normals->insert(normals->end(), m_slice + 2, vec3(0, 0, 1));
 
   // normals for bottom
-  for (int i = 0; i < m_slice + 2; ++i)
-  {
-    normals->push_back(vec3(0, 0, -1));
-  }
+  normals->insert(normals->end(), m_slice + 2, vec3(0, 0, -1));
 
   vec3 apex(0, 0, m_height);
 
@@ -119,7 +106,6 @@ void cylinder::build_normal()
   auto stack_start = 2 * (m_slice + 2);
   for (int i = 1; i <= m_stack; ++i)
   {
-    // no reallocate will happen here
     normals->insert(normals->end(), normals->begin() + stack_start,
       normals->begin() + stack_start + m_slice + 1);
   }
@@ -149,22 +135,10 @@ void cylinder::build_texcoord()
     texcoords->push_back(vec2(s, 0));
   }
 
-  for (int i = 0; i <= m_stack; ++i)
-  {
-    GLfloat t = static_cast<GLfloat>(i) / m_stack;
-    for (int j = 0; j <= m_slice; j++)
-    {
-      GLfloat s = static_cast<GLfloat>(j) / m_slice;
-      texcoords->push_back(vec2(s, t));
-    }
-  }
+  // cylinder texcoords
+  build_strip_texcoords(*texcoords, m_stack, m_slice, 1, 0);
 
   assert(texcoords->size() == num_vertices());
-}
-
-void cylinder::on_draw()
-{
-  glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
 }
 
 }

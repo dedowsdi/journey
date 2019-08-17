@@ -1,4 +1,3 @@
-// http://www.songho.ca/opengl/gl_sphere.html
 #include "icosahedron.h"
 
 #include <algorithm>
@@ -142,7 +141,7 @@ void icosahedron::build_minimun_mesh()
   for (int i = 0; i < m_subdivisions; ++i)
   {
     auto old_size = vertices.size();
-    geometry_util::subdivide(elements->get_vector(), vertices.get_vector());
+    subdivide(elements->get_vector(), vertices.get_vector());
     std::for_each(vertices.begin() + old_size, vertices.end(), 
         [this](vec3& v)->void
         {
@@ -261,7 +260,7 @@ void icosahedron::build_paper_unwrapper_mesh()
   for (int i = 0; i < m_subdivisions; ++i)
   {
     GLuint old_size = vertices.num_elements();
-    geometry_util::subdivide(elements->get_vector(), vertices.get_vector(),
+    subdivide(elements->get_vector(), vertices.get_vector(),
         include_texcoord() ? &attrib_vec2_array(2)->get_vector() : nullptr);
 
     std::for_each(vertices.begin() + old_size, vertices.end(), 

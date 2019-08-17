@@ -52,11 +52,6 @@ public:
 
   void clear();
   virtual void build_mesh();
-  virtual void build_vertex() {}
-  virtual void build_color() {}
-  virtual void build_normal() {}
-  virtual void build_texcoord() {}
-  virtual void build_tangent() {}
 
   GLuint vao() const { return m_vao; }
   bool is_inited() const { return m_vao != -1;}
@@ -90,7 +85,12 @@ public:
   void elements(array_ptr v){ m_elements = v; }
 
 private:
-  virtual void on_draw() {}
+  virtual void on_draw(){}
+  virtual void build_vertex() {}
+  virtual void build_color() {}
+  virtual void build_normal() {}
+  virtual void build_texcoord() {}
+  virtual void build_tangent() {}
 
 protected:
   GLuint m_vao = -1;
@@ -102,7 +102,6 @@ protected:
   GLboolean m_include_texcoord = GL_FALSE;
   GLboolean m_include_tangent = GL_FALSE;
   primitive_set_vector m_primitive_sets;
-
 
 };
 }

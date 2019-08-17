@@ -7,12 +7,11 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-teardrop::teardrop() 
-: m_radius(1), m_slice(16), m_stack(16), m_xy_scale(0.5) {}
-
-//--------------------------------------------------------------------
-teardrop::teardrop(GLfloat radius, GLuint slice, GLuint stack, GLfloat xy_scale/* = 0.5f*/)
-: m_radius(radius), m_slice(slice), m_stack(stack), m_xy_scale(xy_scale) {}
+teardrop::teardrop(
+  GLfloat radius, GLuint slice, GLuint stack, GLfloat xy_scale /* = 0.5f*/)
+    : m_radius(radius), m_slice(slice), m_stack(stack), m_xy_scale(xy_scale)
+{
+}
 
 //--------------------------------------------------------------------
 void teardrop::build_vertex()
@@ -63,7 +62,7 @@ void teardrop::build_normal()
   //{
   //normals.push_back(glm::normalize(vertices[i]));
   //}
-  geometry_util::smooth(*this, 1);
+  smooth(*this, 1);
 }
 
 //--------------------------------------------------------------------

@@ -1,4 +1,8 @@
 #include "capsule3d.h"
+
+#include <algorithm>
+#include <functional>
+
 #include "sphere.h"
 #include "geometry_util.h"
 
@@ -8,139 +12,124 @@ namespace zxd
 //--------------------------------------------------------------------
 void capsule3d::build_vertex()
 {
-
   if(m_sphere_slice & 1)
     m_sphere_slice += 1;
   if(m_sphere_stack & 1)
     m_sphere_stack += 1;
-  if(m_cylinder_stack & 1)
-    m_cylinder_stack += 1;
 
-  auto vertices = std::make_shared<vec3_array>();
-  attrib_array(0, vertices);
+                               // create vertices
 
-  vec3_vector sphere_points = sphere::create_points(m_radius, m_sphere_slice, m_sphere_stack);
+  auto vertices = make_array<vec3_array>(0);
+  auto num_vertices = (m_sphere_stack + 2) * (m_sphere_slice + 1) +
+                      (m_cylinder_stack + 1) * (m_sphere_slice + 1);
+  vertices->reserve(num_vertices);
 
-  GLint stack_size = m_sphere_slice + 1;
-  // create sphere stack by stack along z
-  // build triangle strip as
-  //    0 2
-  //    1 3
-  // pole strip will not be created as triangle fan, as it mess up texture
-  vec3 offset = vec3(0, 0, m_height * 0.5f - m_radius);
-  GLuint equator = m_sphere_stack/2;
-  
-  // sphere in both ends
-  for (int i = 0; i < m_sphere_stack; ++i)
+  auto normals = std::make_shared<vec3_array>();
+  normals->reserve(num_vertices);
+
+  const vec3_vector sphere_points =
+    sphere::create_points(m_radius, m_sphere_slice, m_sphere_stack);
+
+  auto half_sphere_points = (m_sphere_stack / 2 + 1) * (m_sphere_slice + 1);
+  vec3 origin = vec3(0, 0, m_height * 0.5f - m_radius);
+
+  // top half sphere
+  std::transform(sphere_points.begin(),
+    sphere_points.begin() + half_sphere_points, std::back_inserter(*vertices),
+    std::bind(std::plus<vec3>(), origin, std::placeholders::_1));
+
+  // bottom half sphere
+  std::transform(sphere_points.end() - half_sphere_points, sphere_points.end(),
+    std::back_inserter(*vertices),
+    std::bind(std::plus<vec3>(), -origin, std::placeholders::_1));
+
+  // cylinder
+  auto height_step = origin.z * 2.0f / m_cylinder_stack;
+  for (auto i = 0u; i <= m_cylinder_stack; ++i) 
   {
-    GLint stack_start = stack_size * i;
-    GLuint next_stack_start = stack_start + stack_size;
-
-    GLfloat sign = i >= equator ? -1 : 1;
-    vec3 real_offset = offset * sign;
-
-    for (int j = 0; j <= m_sphere_slice; j++)
-    {
-      // loop last stack in reverse order
-      vertices->push_back(real_offset + sphere_points[stack_start + j]);
-      vertices->push_back(real_offset + sphere_points[next_stack_start + j]);
-    }
+    std::transform(
+      sphere_points.begin() + (half_sphere_points - m_sphere_slice - 1),
+      sphere_points.begin() + half_sphere_points, std::back_inserter(*vertices),
+      std::bind(std::plus<vec3>(), origin - vec3(0, 0, height_step * i),
+        std::placeholders::_1));
   }
 
-  vec3_vector bottom;
-  vec3_vector up;
+  auto norm = [](const auto& v) -> vec3 { return normalize(v); };
 
-  bottom.reserve(m_sphere_slice + 1);
-  up.reserve(m_sphere_slice + 1);
+  // top half sphere normals
+  std::transform(sphere_points.begin(),
+    sphere_points.begin() + half_sphere_points, std::back_inserter(*normals),
+    norm);
 
-  for (int i = 0; i <= m_sphere_slice; ++i)
+  // bottom half sphere normals
+  std::transform(sphere_points.end() - half_sphere_points, sphere_points.end(),
+    std::back_inserter(*normals), norm);
+
+  // cylinder normals
+  for (auto i = 0u; i <= m_cylinder_stack; ++i)
   {
-    const vec3& v = sphere_points[equator * stack_size + i];
-    up.push_back(v + offset);
-    bottom.push_back(v - offset);
+    std::transform(
+      sphere_points.begin() + (half_sphere_points - m_sphere_slice - 1),
+      sphere_points.begin() + half_sphere_points, std::back_inserter(*normals),
+      norm);
   }
 
-  // cylinder center
-  GLfloat step = 1.0f / m_cylinder_stack;
-  for (int i = 0; i < m_cylinder_stack; ++i) 
+  if (include_normal())
   {
-    for (int j = 0; j <= m_sphere_slice; j++)
-    {
-      vertices->push_back(mix(up[j], bottom[j], step * i));
-      vertices->push_back(mix(up[j], bottom[j], step * (i+1)));
-    }
+    attrib_array(num_arrays(), normals);
   }
+
+  assert(vertices->size() == num_vertices);
+  assert(normals->size() == num_vertices);
+
+                              // create elemenets
+
+  auto elements = make_element<uint_array>();
+  auto num_elements =
+    (m_sphere_stack + m_cylinder_stack) * 2 * (m_sphere_slice + 1) +
+    m_sphere_stack + m_cylinder_stack;
+  elements->reserve(num_elements);
+
+  // top half sphere
+  build_strip_elements(*elements, m_sphere_stack / 2, m_sphere_slice);
+
+  // bottom half sphere
+  build_strip_elements(
+    *elements, m_sphere_stack / 2, m_sphere_slice, half_sphere_points);
+
+  // cylinder
+  build_strip_elements(
+    *elements, m_cylinder_stack, m_sphere_slice, half_sphere_points * 2);
+
+  assert(elements->size() == num_elements);
 
   m_primitive_sets.clear();
-  GLuint circle_size = m_sphere_slice + 1;
-  GLuint strip_size = circle_size * 2;
-  assert(vertices->size() == strip_size * (m_sphere_stack + m_cylinder_stack));
-  for (int i = 0; i < m_sphere_stack + m_cylinder_stack; ++i)
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+  add_primitive_set(
+    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
 }
 
 //--------------------------------------------------------------------
-void capsule3d::build_normal()
-{
-  geometry_util::smooth(*this, 1);
-}
-
 void capsule3d::build_texcoord()
 {
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
+  auto texcoords = make_array<vec2_array>(num_arrays());
+  texcoords->reserve(num_vertices());
 
-  GLfloat cylinder_end_t = m_radius / m_height;
-  GLfloat cylinder_start_t = 1 - cylinder_end_t;
+  GLfloat bot_origin_t = m_radius / m_height;
+  GLfloat top_origin_t = 1 - bot_origin_t;
 
-  // texcoords for sphere, the one with max z has t = 1
-  GLuint equator = m_sphere_stack/2;
-  GLfloat step = 1.0f / equator;
-  for (int i = 0; i < m_sphere_stack ; ++i)
-  {
+  // top half sphere
+  build_strip_texcoords(
+    *texcoords, m_sphere_stack/2, m_sphere_slice, 1.0, top_origin_t);
 
-    GLfloat t0, t1;
-
-    if(i < equator)
-    {
-      t0 = mix(1.0f, cylinder_start_t, i * step);
-      t1 = mix(1.0f, cylinder_start_t, (i+1) * step);
-    }
-    else
-    {
-      t0 = mix(cylinder_end_t, 0.0f, (i - equator) * step);
-      t1 = mix(cylinder_end_t, 0.0f, (i+1 - equator) * step);
-    }
-
-    for (int j = 0; j <= m_sphere_slice; j++)
-    {
-      GLfloat s = static_cast<GLfloat>(j) / m_sphere_slice;
-
-      texcoords.push_back(glm::vec2(s, t0));
-      texcoords.push_back(glm::vec2(s, t1));
-    }
-  }
+  // bottom half sphere
+  build_strip_texcoords(
+    *texcoords, m_sphere_stack/2, m_sphere_slice, bot_origin_t, 0);
 
   // texcoords for cylinder
-  step = 1.0f / m_cylinder_stack;
-  for (int i = 0; i < m_cylinder_stack ; ++i)
-  {
-    GLfloat t0 = mix(cylinder_start_t, cylinder_end_t, i * step);
-    GLfloat t1 = mix(cylinder_start_t, cylinder_end_t, (i+1) * step);
+  build_strip_texcoords(
+    *texcoords, m_cylinder_stack, m_sphere_slice, top_origin_t, bot_origin_t);
 
-    for (int j = 0; j <= m_sphere_slice; j++)
-    {
-      GLfloat s = static_cast<GLfloat>(j) / m_sphere_slice;
-
-      texcoords.push_back(glm::vec2(s, t0));
-      texcoords.push_back(glm::vec2(s, t1));
-
-    }
-  }
-
-  assert(texcoords.size() == num_vertices());
+  assert(texcoords->size() == num_vertices());
 }
-
 
 }

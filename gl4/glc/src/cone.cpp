@@ -1,7 +1,9 @@
 #include "cone.h"
 
-#include "common.h"
 #include <algorithm>
+
+#include "common.h"
+#include "geometry_util.h"
 
 namespace zxd
 {
@@ -14,7 +16,8 @@ void cone::build_vertex()
   auto radius_step = m_radius / m_stack;
 
   auto vertices = make_array<vec3_array>(0);
-  vertices->reserve(m_slice + 2 + (m_stack + 1) * (m_slice + 1));
+  auto num_vertices = m_slice + 2 + (m_stack + 1) * (m_slice + 1);
+  vertices->reserve(num_vertices);
 
   // create bottom as triangle fan in cw order
   vertices->push_back(vec3(0));
@@ -35,20 +38,16 @@ void cone::build_vertex()
       [=](const auto &pos) -> vec3 { return vec3(pos.x * r, pos.y * r, h); });
   }
 
+  assert(vertices->size() == num_vertices);
+
   // create elements for stacks
-  auto element = make_element<uint_array>();
-  element->reserve(m_stack * 2 * (m_slice + 2));
-  for (auto i = 0u; i < m_stack; ++i)
-  {
-    auto stack0 = m_slice + 2 + (m_slice + 1) * i;
-    auto stack1 = stack0 + m_slice + 1;
-    for (auto j = 0u; j <= m_slice; ++j)
-    {
-      element->push_back(stack0 + j);
-      element->push_back(stack1 + j);
-    }
-    element->push_back(-1);
-  }
+  m_elements = std::make_shared<uint_array>();
+  auto elements = std::static_pointer_cast<uint_array>(m_elements);
+
+  auto num_elements = m_stack * 2 * (m_slice + 1) + m_stack;
+  elements->reserve(num_elements);
+  build_strip_elements(*elements, m_stack, m_slice, m_slice + 2);
+  assert(elements->size() == num_elements);
 
   m_primitive_sets.clear();
   add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, m_slice+2));
@@ -108,25 +107,9 @@ void cone::build_texcoord()
     texcoords->push_back(glm::vec2(s, 0));
   }
 
-  for (int i = 0; i <= m_stack; ++i)
-  {
-    GLfloat t = static_cast<GLfloat>(i) / m_stack;
-
-    for (int j = 0; j <= m_slice; j++)
-    {
-      // loop last stack in reverse order
-      GLfloat s = static_cast<GLfloat>(j) / m_slice;
-      texcoords->push_back(glm::vec2(s, t));
-    }
-  }
+  build_strip_texcoords(*texcoords, m_stack, m_slice, 1, 0);
 
   assert(texcoords->size() == num_vertices());
-}
-
-//--------------------------------------------------------------------
-void cone::on_draw()
-{
-  glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
 }
 
 }

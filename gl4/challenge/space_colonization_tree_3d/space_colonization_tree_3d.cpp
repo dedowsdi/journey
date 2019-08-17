@@ -360,7 +360,7 @@ public:
     remove_primitive_sets(0, get_num_primitive_set());
     add_primitive_set(new draw_arrays(GL_TRIANGLES, 0, vertices->size()));
 
-    geometry_util::smooth(*this, 1);
+    smooth(*this, 1);
 
     std::cout << "generate " << vertices->size() << " vertices" << std::endl;
   }

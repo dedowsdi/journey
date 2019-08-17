@@ -17,15 +17,9 @@ public:
     CT_24
   };
 
-  cuboid(const glm::vec3 &half_diag, type _type = type::CT_24)
-      : m_type(_type), m_half_diag(half_diag)
-  {
-  }
+  cuboid(const glm::vec3 &half_diag, type _type = type::CT_24);
 
-  cuboid(GLfloat size = 1, type _type = type::CT_24)
-      : m_type(_type), m_half_diag(0.5 * size, 0.5 * size, 0.5 * size)
-  {
-  }
+  cuboid(GLfloat size = 1, type _type = type::CT_24);
 
   void build_vertex();
   // as i'm using strip and fan, normal should be vertex normal.

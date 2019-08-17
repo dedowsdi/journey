@@ -428,7 +428,7 @@ void plant1_5_app::step()
 void plant1_5_app::update_bound(const vec3_vector& vertices)
 {
   // include entire bounding sphere into scene
-  auto corners = geometry_util::bounding_box(vertices.begin(), vertices.end());
+  auto corners = bounding_box(vertices.begin(), vertices.end());
   auto center = (corners.first + corners.second) * 0.5f;
   auto r = glm::length(corners.second - corners.first) * 0.5f;
   GLfloat d = r / sin(fpi8) * (wnd_aspect() > 1.0f ? 1.0f : 1.0f/wnd_aspect()) ;

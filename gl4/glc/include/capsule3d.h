@@ -26,11 +26,11 @@ public:
   GLfloat height() const { return m_height; }
   void height(GLfloat v){ m_height = v; }
 
+private:
+
   void build_vertex() override;
-  void build_normal() override;
   void build_texcoord() override;
 
-private:
   GLfloat m_radius = 0.25f;
   GLfloat m_height= 1.0f; // total height
   GLuint m_sphere_slice = 8;  // longitiude

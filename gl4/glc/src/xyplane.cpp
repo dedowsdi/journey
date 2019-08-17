@@ -1,83 +1,68 @@
 #include "xyplane.h"
 
+#include "geometry_util.h"
+
 namespace zxd
 {
 
 //--------------------------------------------------------------------
+xyplane::xyplane(GLfloat width, GLfloat height, GLuint slice)
+    : m_width(width), m_height(height), m_slice(slice), m_left(-width * 0.5),
+      m_bottom(-height * 0.5)
+{
+}
+
+//--------------------------------------------------------------------
+xyplane::xyplane(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, GLuint slice)
+    : xyplane(x1 - x0, y1 - y0, slice)
+{
+}
+
+//--------------------------------------------------------------------
 void xyplane::build_vertex()
 {
-  vec2_array& vertices = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve((m_slice + 1) * (m_slice + 1));
+  auto vertices = make_array<vec2_array>(0);
+  auto num_vertices = (m_slice + 1) * (m_slice + 1);
+  vertices->reserve(num_vertices);
 
-  // build plane as triangle strip
-  GLfloat xstep = m_width / m_slice;
-  GLfloat ystep = m_height / m_slice;
+  auto xstep = m_width / m_slice;
+  auto ystep = m_height / m_slice;
 
-  // build triangle strip as:
-  //  0 2
-  //  1 3
-  for (int i = 0; i < m_slice; ++i) {  // row
-
-    GLfloat y1 = m_bottom + ystep * i;
-    GLfloat y0 = y1 + ystep;
-
-    for (int j = 0; j <= m_slice; ++j) {  // col
-      GLfloat x = m_left + xstep * j;
-
-      glm::vec2 v0(x, y0);
-      glm::vec2 v1(x, y1);
-      vertices.push_back(v0);
-      vertices.push_back(v1);
+  for (auto i = 0u; i <= m_slice; ++i)
+  {
+    auto y = m_bottom + m_height - ystep * i;
+    for (auto j = 0u; j <= m_slice; ++j)
+    {
+      auto x = m_left + xstep * j;
+      vertices->push_back(vec2(x, y));
     }
   }
 
+  assert(vertices->size() == num_vertices);
+
+  auto elements = make_element<uint_array>();
+  build_strip_elements(*elements, m_slice, m_slice);
+
   m_primitive_sets.clear();
-  GLuint row_size = (m_slice + 1) * 2;
-  GLuint next = 0;
-  for (int i = 0; i < m_slice; ++i, next += row_size)
-  {
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, row_size));
-  }
+
+  add_primitive_set(
+    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
 }
 
 //--------------------------------------------------------------------
 void xyplane::build_normal()
 {
-  vec3_array& normals = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&normals));
-  normals.reserve(num_vertices());
-
-  for (int i = 0; i < num_vertices(); ++i)
-  {
-    normals.push_back(vec3(0, 0, 1));
-  }
-
-  assert(normals.size() == num_vertices());
+  auto normals = make_array<vec3_array>(num_arrays());
+  normals->resize(num_vertices(), vec3(0, 0, 1));
 }
 
 //--------------------------------------------------------------------
 void xyplane::build_texcoord()
 {
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
-
-  for (int i = 0; i < m_slice; ++i) {  // row
-
-    GLfloat t0 = static_cast<GLfloat>(i) / m_slice;
-    GLfloat t1 = static_cast<GLfloat>(i + 1) / m_slice;
-
-    for (int j = 0; j <= m_slice; ++j) {  // col
-      GLfloat s = static_cast<GLfloat>(j) / m_slice;
-
-      glm::vec2 tex0(s, t0);
-      glm::vec2 tex1(s, t1);
-      texcoords.push_back(tex0);
-      texcoords.push_back(tex1);
-    }
-  }
-  assert(texcoords.size() == num_vertices());
+  auto texcoords = make_array<vec2_array>(num_arrays());
+  texcoords->reserve(num_vertices());
+  build_strip_texcoords(*texcoords, m_slice, m_slice, 1, 0);
+  assert(texcoords->size() == num_vertices());
 }
 
 }

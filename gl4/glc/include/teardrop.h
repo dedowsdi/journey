@@ -13,19 +13,11 @@ namespace zxd
 // x,y in (-xy_scale*2, xy_scale*2)
 class teardrop : public geometry_base
 {
-protected:
-  GLfloat m_radius;
-  GLfloat m_xy_scale;
-  GLuint m_slice;  // longitiude
-  GLuint m_stack;  // latitude
 
 public:
-  teardrop();
-  teardrop(GLfloat radius, GLuint slice, GLuint stack, GLfloat xy_scale = 0.5f);
 
-  void build_vertex();
-  void build_normal();
-  void build_texcoord();
+  teardrop(GLfloat radius = 1, GLuint slice = 16, GLuint stack = 16,
+    GLfloat xy_scale = 0.5f);
 
   GLfloat xy_scale() const { return m_xy_scale; }
   void xy_scale(GLfloat v){ m_xy_scale = v; }
@@ -40,6 +32,18 @@ public:
   void stack(GLuint v) { m_stack = v; }
 
   static vec3_vector get_points(GLfloat radius, GLuint slices, GLuint stacks, GLfloat xy_scale = 0.5);
+
+private:
+
+  void build_vertex() override;
+  void build_normal() override;
+  void build_texcoord() override;
+
+  GLfloat m_radius;
+  GLfloat m_xy_scale;
+  GLuint m_slice;  // longitiude
+  GLuint m_stack;  // latitude
+
 };
 }
 

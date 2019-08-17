@@ -62,6 +62,7 @@ void geometry_base::draw()
   if (m_elements)
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elements->buffer());
+    glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
   }
 
   for (int i = 0; i < m_primitive_sets.size(); ++i)
@@ -189,7 +190,7 @@ void geometry_base::accept(primitive_functor& pf) const
   {
     item->accept(pf);
   }
-  
+
 }
 
 //--------------------------------------------------------------------

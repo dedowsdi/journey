@@ -16,7 +16,7 @@ void super_shape_3d::build_vertex()
     build_torus_vertex();
 
   if(m_include_normal)
-    geometry_util::smooth(*this, 1);
+    smooth(*this, 1);
 }
 
 //--------------------------------------------------------------------

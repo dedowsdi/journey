@@ -2,35 +2,39 @@
 #define GL_GLC_STATEUTIL_H
 #include "glad/glad.h"
 
-template <GLenum type>
-class capability_guard
+class cap_guard
 {
-protected:
-  GLboolean m_old;
-
 public:
-  capability_guard(GLboolean b)
+  cap_guard(GLenum cap, GLboolean b):
+    m_cap(cap)
   {
-    m_old = glIsEnabled(type);
+    m_old = glIsEnabled(cap);
     if (b)
     {
-      glEnable(type);
-    } else
+      glEnable(cap);
+    }
+    else
     {
-      glDisable(type);
+      glDisable(cap);
     }
   }
 
-  ~capability_guard()
+  ~cap_guard()
   {
     if (m_old)
     {
-      glEnable(type);
-    } else
+      glEnable(m_cap);
+    }
+    else
     {
-      glDisable(type);
+      glDisable(m_cap);
     }
   }
+
+private:
+  GLboolean m_old;
+  GLenum m_cap;
+
 };
 
 #endif /* GL_GLC_STATEUTIL_H */

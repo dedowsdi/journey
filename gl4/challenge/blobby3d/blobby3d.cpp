@@ -101,7 +101,7 @@ void blobby3d_app::create_scene()
   m_sphere.include_normal(true);
   m_sphere.subdivisions(4);
   m_sphere.build_mesh();
-  auto vertices = geometry_util::vec3_vector_to_vec4_vector(m_sphere.attrib_vec3_array(0)->get_vector());
+  auto vertices = vec3_vector_to_vec4_vector(m_sphere.attrib_vec3_array(0)->get_vector());
   m_mesh_buffer = m_sphere.attrib_array(0)->buffer();
 
   glGenBuffers(1, &m_mesh_buffer);
@@ -123,7 +123,7 @@ void blobby3d_app::display()
   glDispatchCompute(ceil(num_vertices * 3 / 64.0), 1, 1);
   // TODO avoid sync
   m_sphere.attrib_array(0)->read_buffer();
-  geometry_util::smooth(m_sphere);
+  smooth(m_sphere);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

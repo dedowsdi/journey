@@ -147,7 +147,7 @@ public:
     unit_circle.start(fpi);
     unit_circle.end(0);
     unit_circle.build_mesh();
-    vec3_vector unit_vertices = geometry_util::vec2_vector_to_vec3_vector(
+    vec3_vector unit_vertices = vec2_vector_to_vec3_vector(
         unit_circle.attrib_vec2_array(0)->get_vector());
 
     auto vertices = std::make_shared<vec2_array>();
@@ -177,7 +177,7 @@ public:
 
       mat4 m = glm::scale(glm::translate(vec3(center, 0, 0)), scale);
 
-      auto transformed_vertices = geometry_util::transform(unit_vertices, m);
+      auto transformed_vertices = transform(unit_vertices, m);
       for (int i = 0; i < transformed_vertices.size(); ++i)
       {
         vertices->push_back(vec2(transformed_vertices[i]));

@@ -1,102 +1,70 @@
 #include "disk.h"
+
+#include <algorithm>
+
 #include "glmath.h"
+#include "geometry_util.h"
 
 namespace zxd
 {
 
 //--------------------------------------------------------------------
+disk::disk(GLfloat inner, GLfloat outer, GLuint slice, GLuint loop,
+  GLfloat start, GLfloat sweep)
+    : m_inner(inner), m_outer(outer), m_slice(slice), m_loop(loop),
+      m_start(start), m_sweep(sweep)
+{
+}
+
+//--------------------------------------------------------------------
 void disk::build_vertex()
 {
-  GLuint cv_ring = (m_slice + 1) * 2;
-  GLuint cv_disk =
-    m_inner == 0 ? cv_ring * (m_loop - 1) + m_slice + 2 : cv_ring * m_loop;
-  vec3_array& vertices = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve(cv_disk);
+  auto vertices = make_array<vec3_array>(0);
+  auto num_vertices = (m_loop + 1) * (m_slice + 1);
+  vertices->reserve(num_vertices);
 
   GLfloat theta_step = m_sweep / m_slice;
   GLfloat radius_step = (m_outer - m_inner) / m_loop;
-  GLuint li = 0;
 
-  // if inner is 0, build innder circle with tirangle fan
-  if (m_inner == 0)
+  for (auto i = 0u; i <= m_loop; ++i)
   {
-    vertices.push_back(vec3(0));
-    GLfloat radius = radius_step;
-
-    for (int i = 0; i <= m_slice; ++i)
+    GLfloat radius = m_inner + radius_step * i;
+    for (auto j = 0; j <= m_slice; ++j)
     {
-      GLfloat theta = m_start + theta_step * i;
-      GLfloat ct = std::cos(theta);
-      GLfloat st = std::sin(theta);
-
-      vertices.push_back(vec3(radius * ct, radius * st, 0));
-    }
-
-    ++li;
-  }
-
-  // build out rings with triangle strip
-  for (; li < m_loop; ++li)
-  {
-    GLfloat radius0 = m_inner + radius_step * li;
-    GLfloat radius1 = m_inner + radius_step * (li + 1);
-
-    for (int i = 0; i <= m_slice; ++i)
-    {
-      GLfloat theta = m_start + theta_step * i;
-      GLfloat ct = std::cos(theta);
-      GLfloat st = std::sin(theta);
-
-      vertices.push_back(vec3(radius0 * ct, radius0 * st, 0));
-      vertices.push_back(vec3(radius1 * ct, radius1 * st, 0));
+      GLfloat theta =
+        m_sweep == f2pi && j == m_slice ? 0 : m_start + theta_step * j;
+      vertices->push_back(vec3(radius * cos(theta), radius * sin(theta), 0));
     }
   }
+
+  assert(vertices->size() == num_vertices);
+
+  auto elements = make_element<uint_array>();
+  auto num_elemnets = m_loop * 2 * (m_slice + 2);
+  build_strip_elements(*elements, m_loop, m_slice);
 
   m_primitive_sets.clear();
-  GLint cv_fan = m_slice + 2;
-  li = 0;
-  GLuint next = 0;
-
-  if (m_inner == 0)
-  {
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, cv_fan));
-    ++li;
-    next += cv_fan;
-  }
-
-  for (; li < m_loop; ++li)
-  {
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, next, cv_ring));
-    next += cv_ring;
-  }
+  add_primitive_set(
+    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
 }
 
 //--------------------------------------------------------------------
 void disk::build_normal()
 {
-  vec3_array& normals = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&normals));
-  normals.reserve(num_vertices());
-  for (int i = 0; i < num_vertices(); ++i)
-  {
-    normals.push_back(vec3(0, 0, 1));
-  }
+  auto normals = make_array<vec3_array>(num_arrays());
+  normals->resize(num_vertices(), vec3(0, 0, 1));
 }
 
 //--------------------------------------------------------------------
 void disk::build_texcoord()
 {
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
-  const vec3_array& vertices = *attrib_vec3_array(0);
+  auto texcoords = make_array<vec2_array>(num_arrays());
+  texcoords->reserve(num_vertices());
+  auto vertices = attrib_vec3_array(0);
 
-  for (int i = 0; i < num_vertices(); ++i)
-  {
-    const vec3& vertex = vertices[i];
-    texcoords.push_back(vec2(vertex) * 0.5f / m_outer + 0.5f);
-  }
+  std::transform(vertices->begin(), vertices->end(),
+    std::back_inserter(*texcoords),
+    [this](const auto& v) -> vec2 { return vec2(v) * 0.5f / m_outer + 0.5f; });
 }
 
 }

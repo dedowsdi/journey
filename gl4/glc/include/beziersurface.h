@@ -6,24 +6,10 @@ namespace zxd
 {
 class bezier_surface : public geometry_base
 {
-protected:
-  GLfloat m_ubegin;
-  GLfloat m_uend;
-  GLfloat m_vbegin;
-  GLfloat m_vend;
-  GLuint m_upartition;
-  GLuint m_vpartition;
-
-  vec3_vector2 m_ctrl_points;  // col major
 
 public:
-  bezier_surface()
-      : m_ubegin(0),
-        m_uend(1),
-        m_vbegin(0),
-        m_vend(1),
-        m_upartition(20),
-        m_vpartition(20){};
+  bezier_surface(GLfloat ubegin = 0, GLfloat uend = 1, GLfloat vbegin = 0,
+    GLfloat vend = 1, GLuint upartition = 20, GLuint vpartition = 20);
 
   virtual void build_vertex();
 
@@ -71,6 +57,17 @@ public:
 
   const vec3_vector2& ctrl_points() const { return m_ctrl_points; }
   void ctrl_points(const vec3_vector2& v) { m_ctrl_points = v; }
+
+private:
+  GLfloat m_ubegin;
+  GLfloat m_uend;
+  GLfloat m_vbegin;
+  GLfloat m_vend;
+  GLuint m_upartition;
+  GLuint m_vpartition;
+
+  vec3_vector2 m_ctrl_points;  // col major
+
 };
 }
 

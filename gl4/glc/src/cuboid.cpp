@@ -6,7 +6,14 @@
 namespace zxd
 {
 
-void add_quad(vec3_array &vertices, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+cuboid::cuboid(const glm::vec3& half_diag, type _type)
+    : m_type(_type), m_half_diag(half_diag)
+{
+}
+
+cuboid::cuboid(GLfloat size, type _type) : cuboid(vec3(size * 0.5f), _type) {}
+
+void add_quad(vec3_array& vertices, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
   vertices.push_back(vertices[v0]);
   vertices.push_back(vertices[v1]);
@@ -110,22 +117,23 @@ void cuboid::build_vertex()
 //--------------------------------------------------------------------
 void cuboid::build_normal()
 {
-  auto normal = make_array<vec3_array>(num_arrays());
+  auto normals = make_array<vec3_array>(num_arrays());
   auto vertices = attrib_vec3_array(0);
+  normals->reserve(vertices->size());
   if (m_type == type::CT_8)
   {
     std::transform(vertices->begin(), vertices->end(),
-        std::back_inserter(*normal),
+        std::back_inserter(*normals),
         [](const auto &vertex) -> vec3 { return normalize(vertex); });
   }
   else
   {
-    for (unsigned i = 0; i < 4; ++i) normal->push_back(vec3( 0,  0,  1));
-    for (unsigned i = 0; i < 4; ++i) normal->push_back(vec3( 0,  0, -1));
-    for (unsigned i = 0; i < 4; ++i) normal->push_back(vec3( 0, -1,  0));
-    for (unsigned i = 0; i < 4; ++i) normal->push_back(vec3( 0,  1,  0));
-    for (unsigned i = 0; i < 4; ++i) normal->push_back(vec3( 1,  0,  1));
-    for (unsigned i = 0; i < 4; ++i) normal->push_back(vec3(-1,  0,  1));
+    normals->insert(normals->end(), 4, vec3( 0,  0,  1));
+    normals->insert(normals->end(), 4, vec3( 0,  0, -1));
+    normals->insert(normals->end(), 4, vec3( 0, -1,  0));
+    normals->insert(normals->end(), 4, vec3( 0,  1,  0));
+    normals->insert(normals->end(), 4, vec3( 1,  0,  1));
+    normals->insert(normals->end(), 4, vec3(-1,  0,  1));
   }
 }
 
@@ -138,17 +146,16 @@ void cuboid::build_texcoord()
       "CT_24 should be selected if you want to add texcoord to a cuboid");
   }
 
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
+  auto texcoords = make_array<vec2_array>(num_arrays());
+  texcoords->reserve(num_vertices());
 
   // only care about front orientation
-  for (int i = 0; i < 6; ++i)
+  for (auto i = 0u; i < 6; ++i)
   {
-    texcoords.push_back(glm::vec2(0, 1));
-    texcoords.push_back(glm::vec2(0, 0));
-    texcoords.push_back(glm::vec2(1, 0));
-    texcoords.push_back(glm::vec2(1, 1));
+    texcoords->push_back(glm::vec2(0, 1));
+    texcoords->push_back(glm::vec2(0, 0));
+    texcoords->push_back(glm::vec2(1, 0));
+    texcoords->push_back(glm::vec2(1, 1));
   }
 }
 

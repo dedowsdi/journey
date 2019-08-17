@@ -12,7 +12,7 @@
 #include "geometry.h"
 #include "triangle_functor.h"
 
-namespace geometry_util
+namespace zxd
 {
 
 struct less_vec3_ptr
@@ -377,5 +377,6 @@ void subdivide(uint_vector& triangle_indices, vec3_vector& vertices, vec2_vector
 
   triangle_indices.swap(res_indices);
 }
+
 
 }

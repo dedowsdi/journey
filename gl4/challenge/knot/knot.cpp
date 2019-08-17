@@ -147,7 +147,7 @@ public:
 
   void update_geometry(const vec3_vector& line_strip)
   {
-    vec3_vector vertices = geometry_util::extrude_along_line_strip(line_strip, extrude_radius, num_faces);
+    vec3_vector vertices = extrude_along_line_strip(line_strip, extrude_radius, num_faces);
 
     auto vertex_array = std::make_shared<vec3_array>();
     knot.attrib_array(0, vertex_array);
@@ -162,7 +162,7 @@ public:
       knot.add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
     }
 
-    geometry_util::smooth(knot);
+    smooth(knot);
   }
 
   virtual void update() {}
