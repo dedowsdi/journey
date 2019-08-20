@@ -41,8 +41,7 @@ void cone::build_vertex()
   assert(vertices->size() == num_vertices);
 
   // create elements for stacks
-  m_elements = std::make_shared<uint_array>();
-  auto elements = std::static_pointer_cast<uint_array>(m_elements);
+  auto elements = make_element<uint_array>();
 
   auto num_elements = m_stack * 2 * (m_slice + 1) + m_stack;
   elements->reserve(num_elements);

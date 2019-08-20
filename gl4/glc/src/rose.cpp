@@ -5,6 +5,13 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
+rose::rose(GLuint n, GLuint d):
+  m_n(n),
+  m_d(d)
+{
+}
+
+//--------------------------------------------------------------------
 void rose::build_vertex()
 {
   auto vertices = std::make_shared<vec2_array>();
@@ -43,7 +50,8 @@ void rose::build_vertex()
 }
 
 //--------------------------------------------------------------------
-glm::vec2 rose::get_rose(GLfloat radius, GLfloat angle, GLuint n_, GLuint d_, GLfloat offset)
+vec2 rose::get_rose(
+  GLfloat radius, GLfloat angle, GLuint n_, GLuint d_, GLfloat offset)
 {
   GLuint g = zxd::gcd(n_, d_);
   GLuint n = n_ / g;

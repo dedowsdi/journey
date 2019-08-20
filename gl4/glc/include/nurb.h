@@ -7,17 +7,10 @@
 namespace zxd
 {
 using namespace glm;
+
 // clamped b-spline
 class nurb : public geometry_base
 {
-protected:
-  vec4_vector m_ctrl_points;
-  float_vector m_knots;
-  GLuint m_degree;
-  unsigned int m_partitions;  // number of segments
-  GLfloat m_begin;
-  GLfloat m_end;
-
 public:
   nurb(v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree)
       : m_ctrl_points(cbeg, cend), m_knots(kbeg, kend), m_degree(degree) {}
@@ -28,9 +21,6 @@ public:
   GLuint n() { return m_ctrl_points.size() - 1; }
   GLuint p() { return m_degree; }
   bool valid() { return m() == n() + p() + 1; }
-
-  virtual void build_vertex();
-  virtual void build_texcoord();
 
   // get point by De Boor's algorithm
   glm::vec4 get(GLfloat u);
@@ -97,10 +87,20 @@ public:
   static float_vector coefficients(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u);
   static GLuint knot_span(fv_ci kbeg, fv_ci kend, GLuint p, GLfloat u);
 
-protected:
-  float_vector coefficients(GLfloat u);
+private:
 
+  float_vector coefficients(GLfloat u);
+  void build_vertex() override;
+  void build_texcoord() override;
   GLfloat knot_ratio(GLfloat t, GLuint i, GLuint r = 1);
+
+  vec4_vector m_ctrl_points;
+  float_vector m_knots;
+  GLuint m_degree;
+  unsigned int m_partitions;  // number of segments
+  GLfloat m_begin;
+  GLfloat m_end;
+
 };
 }
 

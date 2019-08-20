@@ -91,7 +91,7 @@ void icosahedron::build_minimun_mesh()
     vertices[down_index + i] = vec3(proj * cos(down_angle), proj * sin(down_angle), -z);
   }
 
-  auto elements = std::make_shared<uint_array>(GL_ELEMENT_ARRAY_BUFFER);
+  auto elements = make_element<uint_array>();
   elements->reserve(60);
 
   // 5 triangles on top
@@ -151,8 +151,7 @@ void icosahedron::build_minimun_mesh()
 
   std::cout << "icosahedron total vertices : " << vertices.size() << std::endl;
 
-  m_elements = elements;
-  auto ps = new draw_elements(GL_TRIANGLES, m_elements->num_elements(), GL_UNSIGNED_INT, 0);
+  auto ps = new draw_elements(GL_TRIANGLES, elements->size(), GL_UNSIGNED_INT, 0);
   ps->indices(&elements->front());
   add_primitive_set(ps);
 }
@@ -191,7 +190,7 @@ void icosahedron::build_paper_unwrapper_mesh()
     vertices[down_index + i] = vec3(proj * cos(down_angle), proj * sin(down_angle), -z);
   }
 
-  auto elements = std::make_shared<uint_array>(GL_ELEMENT_ARRAY_BUFFER);
+  auto elements = make_element<uint_array>();
   elements->reserve(60);
 
   // 5 triangles on top
@@ -270,8 +269,7 @@ void icosahedron::build_paper_unwrapper_mesh()
         });
   }
 
-  m_elements = elements;
-  add_primitive_set(new draw_elements(GL_TRIANGLES, m_elements->num_elements(), GL_UNSIGNED_INT, 0));
+  add_primitive_set(new draw_elements(GL_TRIANGLES, elements->size(), GL_UNSIGNED_INT, 0));
 }
 
 }

@@ -19,28 +19,22 @@ quad& get_nd_quad();
 
 class quad : public geometry_base
 {
-protected:
-  // cc order, starts from lb
-  vec3 m_v0;
-  vec3 m_v1;
-  vec3 m_v2;
-  vec3 m_v3;
-  vec2 m_tc0;
-  vec2 m_tc1;
+
 public:
   //quad(GLfloat size = 2) : m_width(size), m_height(size) {}
-  quad(const vec3& corner = vec3(-1,-1,0),
-      const vec3& edge0_vec = vec3(2, 0, 0),
-      const vec3& edge1_vec = vec3(0, 2, 0));
+  quad(const vec3& corner = vec3(-1, -1, 0),
+    const vec3& edge0_vec = vec3(2, 0, 0),
+    const vec3& edge1_vec = vec3(0, 2, 0));
 
   void setup(const vec3& corner, const vec3& edge0_vec, const vec3& edge1_vec,
-      const vec2& tc0 = vec2(0), const vec2& tc1 = vec2(1));
+    const vec2& tc0 = vec2(0), const vec2& tc1 = vec2(1));
+
   void setup(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1);
 
-  void build_vertex();
-  void build_normal();
-  void build_texcoord();
-  void build_tangent();
+  GLfloat left();
+  GLfloat right();
+  GLfloat bottom();
+  GLfloat top();
 
   const vec3& v0() const { return m_v0; }
   void v0(const vec3& v){ m_v0 = v; }
@@ -60,10 +54,20 @@ public:
   const vec2& tc1() const { return m_tc1; }
   void tc1(const vec2& v){ m_tc1 = v; }
 
-  GLfloat left();
-  GLfloat right();
-  GLfloat bottom();
-  GLfloat top();
+private:
+
+  // ccw order, starts from lb
+  vec3 m_v0;
+  vec3 m_v1;
+  vec3 m_v2;
+  vec3 m_v3;
+  vec2 m_tc0;
+  vec2 m_tc1;
+
+  void build_vertex();
+  void build_normal();
+  void build_texcoord();
+  void build_tangent();
 };
 
 class billboard_quad : public geometry_base

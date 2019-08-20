@@ -69,42 +69,6 @@ public:
     GLboolean double_buffer;
   };
 
-protected:
-  GLboolean m_display_help;
-  GLboolean m_pause; // pause update
-  GLint m_update_count; // update count during pause
-  GLboolean m_reading;
-  GLboolean m_camera_moving;
-  GLboolean m_shutdown;
-  GLboolean m_dirty_view; // will be true if camera rotated, it's child class's job to set it back to false.
-  GLboolean m_time_update = GL_FALSE;
-  GLuint m_move_dir;
-  GLuint m_swap_interval{1};
-  GLuint m_frame_number;
-  GLdouble m_fps;
-  GLdouble m_last_time;
-  GLdouble m_current_time;
-  GLdouble m_delta_time;
-  GLdouble m_camera_move_speed;
-  unsigned int x;
-
-  std::string m_input;
-  camera_mode m_camera_mode;
-  app_info m_info;
-  GLFWwindow *m_wnd;
-  vec3 m_world_center;
-  mat4 *m_v_mat;
-  mat4 *m_p_mat; // only used for orthogonal projection zoom
-
-  dvec2 m_last_cursor_position;   // used to rotate camera when mid button pressed
-  vec3 m_camera_translation;  // translation during CM_FREE mode
-
-  key_control m_control;
-
-  timer m_timer;
-  bitmap_text m_text;
-
-public:
   app();
 
   void init();
@@ -173,6 +137,40 @@ protected:
 
   GLdouble glfw_to_gl(GLdouble y);
   vec2 glfw_to_gl(vec2 p);
+
+  GLboolean m_display_help;
+  GLboolean m_pause; // pause update
+  GLint m_update_count; // update count during pause
+  GLboolean m_reading;
+  GLboolean m_camera_moving;
+  GLboolean m_shutdown;
+  GLboolean m_dirty_view; // will be true if camera rotated, it's child class's job to set it back to false.
+  GLboolean m_time_update = GL_FALSE;
+  GLuint m_move_dir;
+  GLuint m_swap_interval{1};
+  GLuint m_frame_number;
+  GLdouble m_fps;
+  GLdouble m_last_time;
+  GLdouble m_current_time;
+  GLdouble m_delta_time;
+  GLdouble m_camera_move_speed;
+  unsigned int x;
+
+  std::string m_input;
+  camera_mode m_camera_mode;
+  app_info m_info;
+  GLFWwindow *m_wnd;
+  vec3 m_world_center;
+  mat4 *m_v_mat;
+  mat4 *m_p_mat; // only used for orthogonal projection zoom
+
+  dvec2 m_last_cursor_position;   // used to rotate camera when mid button pressed
+  vec3 m_camera_translation;  // translation during CM_FREE mode
+
+  key_control m_control;
+
+  timer m_timer;
+  bitmap_text m_text;
 };
 }
 #endif /* ifndef GL4_COMMON_APP_H */

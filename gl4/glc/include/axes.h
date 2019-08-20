@@ -5,13 +5,15 @@
 
 namespace zxd
 {
+
 class axes : public geometry_base
 {
-public:
-  virtual void build_vertex();
-  virtual void build_color();
 
+private:
+  void build_vertex() override;
+  void build_color() override;
 };
+
 }
 
 #endif /* GL_GLC_AXES_H */

@@ -1,7 +1,10 @@
 #include "geometry.h"
-#include "string_util.h"
 
+#include <algorithm>
+
+#include "string_util.h"
 #include <glm/vec3.hpp>
+#include <glm/gtc/random.hpp>
 
 namespace zxd
 {
@@ -210,4 +213,12 @@ void geometry_base::clear()
   m_attributes.clear();
   m_elements.reset();
 }
+
+void geometry_base::build_color()
+{
+  auto colors = make_array<vec4_array>(num_arrays());
+  std::generate_n(std::back_inserter(*colors), num_vertices(),
+    []() -> vec4 { return vec4(linearRand(vec3(0), vec3(1)), 1); });
+}
+
 }

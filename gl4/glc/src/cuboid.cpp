@@ -87,8 +87,7 @@ void cuboid::build_vertex()
     add_quad(*vertices, 2, 1, 6, 5); //  --- left
   }
 
-  m_elements = std::make_shared<uint_array>();
-  auto elements = std::static_pointer_cast<uint_array>(m_elements);
+  auto elements = make_element<uint_array>();
   elements->reserve(36);
 
   add_quad(*elements, 0, 1, 2, 3);

@@ -6,8 +6,7 @@ namespace zxd
 //--------------------------------------------------------------------
 void circle::build_vertex()
 {
-  vec2_array_ptr vertices(new vec2_array());
-  attrib_array(0, vertices);
+  auto vertices = make_array<vec2_array>(0);
 
   if(m_type == FILL || m_type == PIE_LINE)
     vertices->push_back(vec2(0));

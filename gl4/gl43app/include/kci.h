@@ -84,6 +84,7 @@ public:
   GLint get_int() const { return get<GLint>(); }
   GLfloat get_float() const { return get<GLfloat>(); };
   GLdouble get_double() const { return get<GLdouble>(); };
+  GLint get_bool() const { return get<bool>(); }
 
   bool get_cap() const { return get<gl_cap>().is_enabled(); }
 

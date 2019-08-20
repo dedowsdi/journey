@@ -318,7 +318,7 @@ glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/)
 glm::mat4 compute_window_mat(GLint x, GLint y, GLint width, GLint height,
                              GLfloat depth_near, GLfloat depth_far)
 {
-  glm::mat4 m;
+  glm::mat4 m(1);
 
   // m = glm::translate(vec3(x, y, depth_near)) * glm::scale(vec3(width*0.5,
   // height*0.5, 0.5f * (depth_far - depth_near)))
@@ -338,7 +338,7 @@ glm::mat4 compute_window_mat(GLint x, GLint y, GLint width, GLint height,
 glm::mat4 compute_window_mat_i(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f)
 {
-  glm::mat4 m;
+  glm::mat4 m(1);
   m[0][0] = 2.0 / width;
   m[1][1] = 2.0 / height;
   m[2][2] = 2.0 / (f - n);

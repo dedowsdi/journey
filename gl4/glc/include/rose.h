@@ -8,16 +8,9 @@ namespace zxd
 class rose : public geometry_base
 {
 
-protected:
-  GLuint m_n = 1;
-  GLuint m_d = 1;
-  GLuint m_slice = 32;
-  GLfloat m_radius = 1;
-  GLfloat m_offset = 0;
-  GLfloat m_start = 0; // normalized
-  GLfloat m_end = 1; // normalized
 public:
-  void build_vertex();
+
+  rose(GLuint n = 1, GLuint d = 1);
 
   GLuint n() const { return m_n; }
   void n(GLuint v){ m_n = v; }
@@ -40,12 +33,23 @@ public:
   GLfloat end() const { return m_end; }
   void end(GLfloat v){ m_end = v; }
 
-  static glm::vec2 get_rose(GLfloat radius, GLfloat angle, GLuint n, GLuint d, GLfloat offset);
+  static vec2 get_rose(
+    GLfloat radius, GLfloat angle, GLuint n, GLuint d, GLfloat offset);
+
+private:
+
+  void build_vertex() override;
+
+  GLuint m_n = 1;
+  GLuint m_d = 1;
+  GLuint m_slice = 32;
+  GLfloat m_radius = 1;
+  GLfloat m_offset = 0;
+  GLfloat m_start = 0; // normalized
+  GLfloat m_end = 1; // normalized
 
 };
 
 }
-
-
 
 #endif /* GL_GLC_ROSE_H */

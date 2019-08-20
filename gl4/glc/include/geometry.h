@@ -16,7 +16,9 @@ typedef std::vector<array_ptr> array_vector;
 
 class geometry_base
 {
+
 public:
+
   geometry_base(){}
   virtual ~geometry_base() {}
 
@@ -84,15 +86,18 @@ public:
   array_ptr elements() const { return m_elements; }
   void elements(array_ptr v){ m_elements = v; }
 
+protected:
+  primitive_set_vector m_primitive_sets;
+
 private:
+
   virtual void on_draw(){}
   virtual void build_vertex() {}
-  virtual void build_color() {}
+  virtual void build_color();
   virtual void build_normal() {}
   virtual void build_texcoord() {}
   virtual void build_tangent() {}
 
-protected:
   GLuint m_vao = -1;
   array_vector m_attributes;
   array_ptr m_elements;
@@ -101,8 +106,6 @@ protected:
   GLboolean m_include_color = GL_FALSE;
   GLboolean m_include_texcoord = GL_FALSE;
   GLboolean m_include_tangent = GL_FALSE;
-  primitive_set_vector m_primitive_sets;
-
 };
 }
 

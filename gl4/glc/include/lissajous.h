@@ -7,26 +7,14 @@ namespace zxd
 
 class lissajous : public geometry_base
 {
+
 public:
+
   enum LISSA_TYPE
   {
     LT_CIRCLE = 0,
     LT_ROSE
   };
-protected:
-  GLuint m_xscale = 1;
-  GLuint m_yscale = 1;
-  GLfloat m_radius = 1;
-  GLuint m_slices = 64;
-  LISSA_TYPE m_type = LT_CIRCLE;
-
-  GLuint m_rose_n = 1;
-  GLuint m_rose_d = 1;
-  GLfloat m_rose_offset = 0;
-
-  void build_vertex();
-
-public:
 
   GLuint xscale() const { return m_xscale; }
   void xscale(GLfloat v){ m_xscale = v; }
@@ -58,8 +46,21 @@ public:
   GLfloat rose_offset() const { return m_rose_offset; }
   void rose_offset(GLfloat v){ m_rose_offset = v; }
 
+private:
+
+  void build_vertex();
+
+  GLuint m_xscale = 1;
+  GLuint m_yscale = 1;
+  GLfloat m_radius = 1;
+  GLuint m_slices = 64;
+  LISSA_TYPE m_type = LT_CIRCLE;
+
+  GLuint m_rose_n = 1;
+  GLuint m_rose_d = 1;
+  GLfloat m_rose_offset = 0;
+
 };
 }
-
 
 #endif /* GL_GLC_LISSAJOUS_H */

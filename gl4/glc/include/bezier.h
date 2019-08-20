@@ -11,13 +11,6 @@ namespace zxd
  */
 class bezier : public geometry_base
 {
-protected:
-  GLuint m_partitions;  // number of partitions
-  GLfloat m_begin;
-  GLfloat m_end;
-
-  vec3_vector m_ctrl_points;
-
 public:
   bezier() : m_partitions(20), m_begin(0), m_end(1) {}
 
@@ -75,6 +68,13 @@ public:
 private:
   // special function used to derivative
   glm::vec3 d(GLuint i, GLuint k);
+
+  GLuint m_partitions;  // number of partitions
+  GLfloat m_begin;
+  GLfloat m_end;
+
+  vec3_vector m_ctrl_points;
+
 };
 }
 

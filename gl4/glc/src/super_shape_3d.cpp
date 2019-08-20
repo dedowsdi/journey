@@ -15,7 +15,7 @@ void super_shape_3d::build_vertex()
   else
     build_torus_vertex();
 
-  if(m_include_normal)
+  if(include_normal())
     smooth(*this, 1);
 }
 
@@ -36,7 +36,7 @@ void super_shape_3d::build_sphere_vertex()
   vec2_vector point_texcoords;
 
   vec2_array_ptr texcoords(new vec2_array);
-  if(m_include_texcoord)
+  if(include_texcoord())
   {
     attrib_array(2, texcoords);
     point_texcoords.reserve(points.size());
@@ -63,7 +63,7 @@ void super_shape_3d::build_sphere_vertex()
     for (int j = 0; j <= m_slice; ++j)
     {
 
-      if(m_include_texcoord)
+      if(include_texcoord())
       {
         GLfloat s = j * s_step;
         point_texcoords.push_back(vec2(s, t));
@@ -101,7 +101,7 @@ void super_shape_3d::build_sphere_vertex()
       vertices->push_back(points[stack_start1 + j]);
       vertices->push_back(points[stack_start0 + j]);
 
-      if(m_include_texcoord)
+      if(include_texcoord())
       {
         texcoords->push_back(point_texcoords[stack_start1 + j]);
         texcoords->push_back(point_texcoords[stack_start0 + j]);
@@ -131,7 +131,7 @@ void super_shape_3d::build_torus_vertex()
   vec2_vector point_texcoords;
 
   vec2_array_ptr texcoords(new vec2_array);
-  if(m_include_texcoord)
+  if(include_texcoord())
   {
     attrib_array(2, texcoords);
     point_texcoords.reserve(points.size());
@@ -158,7 +158,7 @@ void super_shape_3d::build_torus_vertex()
     for (int j = 0; j <= side(); ++j)
     {
 
-      if(m_include_texcoord)
+      if(include_texcoord())
       {
         GLfloat s = j * s_step;
         point_texcoords.push_back(vec2(s, t));
@@ -195,7 +195,7 @@ void super_shape_3d::build_torus_vertex()
       vertices->push_back(points[ring_start0 + j]);
       vertices->push_back(points[ring_start1 + j]);
 
-      if(m_include_texcoord)
+      if(include_texcoord())
       {
         texcoords->push_back(point_texcoords[ring_start0 + j]);
         texcoords->push_back(point_texcoords[ring_start1 + j]);

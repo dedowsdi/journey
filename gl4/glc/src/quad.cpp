@@ -52,16 +52,16 @@ void draw_quad()
 }
 
 //--------------------------------------------------------------------
-quad::quad(const vec3& corner/* = vec3(-0.5,-0.5,0)*/,
-  const vec3& edge0_vec/* = vec3(1, 0, 0)*/,
-  const vec3& edge1_vec/* = vec3(1, 0, 0)*/)
+quad::quad(const vec3& corner /* = vec3(-0.5,-0.5,0)*/,
+  const vec3& edge0_vec /* = vec3(1, 0, 0)*/,
+  const vec3& edge1_vec /* = vec3(1, 0, 0)*/)
 {
   setup(corner, edge0_vec, edge1_vec);
 }
 
 //--------------------------------------------------------------------
-void quad::setup(const vec3& corner, const vec3& edge0_vec, const vec3& edge1_vec,
-  const vec2& tc0 , const vec2& tc1)
+void quad::setup(const vec3& corner, const vec3& edge0_vec,
+  const vec3& edge1_vec, const vec2& tc0, const vec2& tc1)
 {
   m_v0 = corner;
   m_v1 = corner + edge0_vec;

@@ -7,23 +7,15 @@ namespace zxd
 
 class circle : public geometry_base
 {
+
 public:
+
   enum CIRCLE_TYPE
   {
     FILL,
     LINE,
     PIE_LINE,
   };
-protected:
-  GLfloat m_radius = 1;
-  GLfloat m_start = 0;
-  GLfloat m_end = f2pi;
-  GLuint m_slice = 16;
-  CIRCLE_TYPE m_type = FILL;
-
-public:
-
-  virtual void build_vertex();
 
   GLfloat radius() const { return m_radius; }
   void radius(GLfloat v){ m_radius = v; }
@@ -39,6 +31,17 @@ public:
 
   GLfloat end() const { return m_end; }
   void end(GLfloat v){ m_end = v; }
+
+private:
+
+  virtual void build_vertex();
+
+  GLfloat m_radius = 1;
+  GLfloat m_start = 0;
+  GLfloat m_end = f2pi;
+  GLuint m_slice = 16;
+  CIRCLE_TYPE m_type = FILL;
+
 };
 
 }

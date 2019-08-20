@@ -14,7 +14,7 @@ ostream& operator<<(ostream& os, const vec2& v)
   static GLuint p = 6;
   os << left << fixed;
   // os << left;
-  os << setw(w) << setprecision(p) << v.x   // x
+  os << setw(w) << setprecision(p) << v.x << " "   // x
      << setw(w) << setprecision(p) << v.y;  // y
   return os;
 }
@@ -26,8 +26,8 @@ ostream& operator<<(ostream& os, const vec3& v)
   static GLuint p = 6;
   os << left << fixed;
   // os << left;
-  os << setw(w) << setprecision(p) << v.x   // x
-     << setw(w) << setprecision(p) << v.y   // y
+  os << setw(w) << setprecision(p) << v.x << " "   // x
+     << setw(w) << setprecision(p) << v.y << " "   // y
      << setw(w) << setprecision(p) << v.z;  // z
   return os;
 }
@@ -38,9 +38,9 @@ ostream& operator<<(ostream& os, const vec4& v)
   static GLuint w = 12;
   static GLuint p = 6;
   os << left << fixed;
-  os << setw(w) << setprecision(p) << v.x  // x
-     << setw(w) << setprecision(p) << v.y  // y
-     << setw(w) << setprecision(p) << v.z  // z
+  os << setw(w) << setprecision(p) << v.x << " "  // x
+     << setw(w) << setprecision(p) << v.y << " "  // y
+     << setw(w) << setprecision(p) << v.z << " "  // z
      << setw(w) << setprecision(p) << v.w;
   return os;
 }

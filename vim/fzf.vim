@@ -53,3 +53,10 @@ endfunction
 
 command! -nargs=+ -complete=file FF :call s:fzf_open_file(<q-args>)
 command! -nargs=0 -complete=file FS :call s:fzf()
+
+imap <c-f><c-k> <plug>(fzf-complete-word)
+imap <c-f><c-f> <plug>(fzf-complete-path)
+imap <c-f><c-j> <plug>(fzf-complete-file-ag)
+imap <c-f><c-l> <plug>(fzf-complete-line)
+
+finish

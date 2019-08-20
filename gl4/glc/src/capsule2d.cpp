@@ -6,8 +6,7 @@ namespace zxd
 //--------------------------------------------------------------------
 void capsule2d::build_vertex()
 {
-  vec2_array* vertices = new vec2_array;
-  attrib_array(0, array_ptr(vertices));
+  auto vertices = make_array<vec2_array>(0);
 
   GLfloat half_rect_width = m_width * 0.5 - m_radius;
   if(half_rect_width < 0)
