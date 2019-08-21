@@ -19,6 +19,7 @@ set (PROJECTS
     teapot
     flat
     trackball
+    triangle_random_point
     )
 
 foreach(PROJECT ${PROJECTS})
