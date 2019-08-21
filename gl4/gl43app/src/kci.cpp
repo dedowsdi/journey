@@ -82,4 +82,11 @@ key_control::add_cap(int key, GLenum cap, GLuint index,
   m_key_map[key] = item;
   return item;
 }
+
+//--------------------------------------------------------------------
+std::shared_ptr<kci_template<GLfloat>> key_control::add_normalized(
+  int key, GLfloat init_value, key_control_callback callback)
+{
+  return add<GLfloat>(key, init_value, 0.0f, 1.0f, 0.1f, callback);
+}
 }

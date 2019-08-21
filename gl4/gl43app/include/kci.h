@@ -302,6 +302,9 @@ public:
   add_enum(int key, std::initializer_list<T> l, int index = 0,
           key_control_callback callback = nullptr);
 
+  std::shared_ptr<kci_template<GLfloat>> add_normalized(
+    int key, GLfloat init_value = 0, key_control_callback callback = nullptr);
+
   GLuint index() const { return m_index; }
   void index(GLuint v) { m_index = v; }
 

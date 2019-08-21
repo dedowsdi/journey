@@ -14,9 +14,19 @@ mat4 p_mat;
 mat4 v_mat;
 
 std::shared_ptr<kci> target;
+std::shared_ptr<kci> radius;
 std::array<std::string, 3> targets{"scene", "cube0", "cube1"};
-vec2 trackball_center = vec2(width, height) * 0.5f;
-vec2 trackball_p0;
+vec2 mouse_p0;
+
+struct trackball
+{
+  GLfloat radius = 0.5 * width;
+  vec2 center;
+  mat4* target_mat;
+  mat4 target_to_view_mat;
+};
+
+trackball ball;
 
 struct node
 {
@@ -58,13 +68,34 @@ void app_trackball::init_info()
   m_info.wnd_height = height;
 }
 
+void updateTrackball(const kci* p)
+{
+  auto itarget = p->get_int_enum();
+  if (itarget == 0)
+  {
+    ball.center = vec2(width, height) * 0.5f;
+    ball.target_mat = &v_mat;
+    ball.target_to_view_mat = mat4(1);
+  }
+  else
+  {
+    auto& m_mat = itarget == 1 ? cube0.transform : cube1.transform;
+    auto mvpw =
+      compute_window_mat(0, 0, width, height) * p_mat * v_mat * m_mat;
+    auto pos = mvpw[3];
+    ball.center = vec2(pos / pos.w);
+    ball.target_mat = &m_mat;
+    ball.target_to_view_mat = v_mat;
+  }
+}
+
 void app_trackball::create_scene()
 {
   glEnable(GL_CULL_FACE);
   p_mat = perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);
   v_mat = lookAt(vec3(0, -16, 0), vec3(0), vec3(0, 0, 1));
 
-  auto cube_model = std::make_shared<cuboid>(2, cuboid::type::CT_8);
+  auto cube_model = std::make_shared<cuboid>(2, cuboid::type::CT_24);
   cube_model->include_color(true);
   cube_model->build_mesh();
 
@@ -83,22 +114,11 @@ void app_trackball::create_scene()
   prg.with_color = true;
   prg.init();
 
-  target = m_control.add_enum('Q', {0, 1, 2}, 0,
-    [](auto* kci) -> void {
-      auto itarget = kci->get_int_enum();
-      if (itarget == 0)
-      {
-        trackball_center = vec2(width, height) * 0.5f;
-      }
-      else
-      {
-        const auto& m_mat = itarget == 1 ? cube0.transform : cube1.transform;
-        auto mvpw =
-          compute_window_mat(0, 0, width, height) * p_mat * v_mat * m_mat;
-        auto pos = mvpw[3];
-        trackball_center = vec2(pos / pos.w);
-      }
-    });
+  target = m_control.add_enum('Q', {0, 1, 2}, 0, updateTrackball);
+  radius = m_control.add_normalized('W', 0.5, [](const auto* kci) -> void {
+    ball.radius = width * 0.5f * kci->get_float();
+  });
+  updateTrackball(target.get());
 }
 
 void app_trackball::update() {}
@@ -132,6 +152,7 @@ void app_trackball::display()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   std::stringstream ss;
   ss << "q : target : " << targets[itarget] << std::endl;
+  ss << "w : radius : " << radius->get_float() << std::endl;
   m_text.print(ss.str(), 10, m_info.wnd_height - 20);
 
   glDisable(GL_BLEND);
@@ -163,10 +184,11 @@ void app_trackball::glfw_mouse_button(GLFWwindow *wnd, int button, int action,
   app::glfw_mouse_button(wnd, button, action, mods);
   if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
   {
-    trackball_p0 = current_mouse_position();
+    mouse_p0 = current_mouse_position();
   }
 }
 
+// https://www.khronos.org/opengl/wiki/Object_Mouse_Trackball
 vec3 wnd2ball(const vec2& p, const vec2& center, GLfloat radius)
 {
   auto pos = p - center;
@@ -185,34 +207,20 @@ void app_trackball::glfw_mouse_move(GLFWwindow *wnd, double x, double y)
 
   auto p1 = current_mouse_position();
 
-  auto sp0 = wnd2ball(trackball_p0, trackball_center, width * 0.5f * 0.8f);
-  auto sp1 = wnd2ball(p1, trackball_center, width * 0.5f * 0.8f);
+  auto sp0 = wnd2ball(mouse_p0, ball.center, ball.radius);
+  auto sp1 = wnd2ball(p1, ball.center, ball.radius);
   auto ball_mat = rotate_to(normalize(sp0), normalize(sp1));
-  trackball_p0 = p1;
+  mouse_p0 = p1;
 
   auto itarget = target->get_int_enum();
 
-  auto v_r_mat = v_mat;
-  v_r_mat[3] = vec4(0, 0, 0, 1);
-
-  if (itarget == 0)
-  {
-    auto v_t_mat = mat4(1);
-    v_t_mat[3] = v_mat[3];
-    v_mat = v_t_mat * ball_mat * v_r_mat;
-  }
-  else
-  {
-    auto& m_mat = itarget == 1 ? cube0.transform : cube1.transform;
-
-    auto m_r_mat = m_mat;
-    m_r_mat[3] = vec4(0, 0, 0, 1);
-    auto m_t_mat = mat4(1);
-    m_t_mat[3] = m_mat[3];
-
-    auto mv_mat = v_r_mat * m_r_mat;
-    m_mat = m_mat * inverse(mv_mat) * ball_mat * mv_mat;
-  }
+  // ball_rot works on view space(no translation), to apply it on other space,
+  // we must transform to view space, apply rotation, then transform back. If
+  // you want to apply it to the entire scene, use v_mat as target_mat, 
+  // mat4(1) as target_to_vew_mat.
+  auto to_v_mat = ball.target_to_view_mat * *ball.target_mat;
+  to_v_mat[3] = vec4(0, 0, 0, 1);
+  *ball.target_mat *= inverse(to_v_mat) * ball_mat * to_v_mat;
 }
 
 }
