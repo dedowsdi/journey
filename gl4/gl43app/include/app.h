@@ -26,6 +26,7 @@
 #include "kci.h"
 #include "timer.h"
 #include "bitmap_text.h"
+#include "common_camman.h"
 
 #ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
@@ -44,12 +45,6 @@ public:
     CM_ARCBALL,
     CM_FREE,  // pitch, yaw, reserve camera position, no skiew
     CM_ORTHO  // ortho projection, scale only
-  };
-  enum move_dir {
-    MD_LEFT = 1 << 0,
-    MD_RIGHT = 1 << 1,
-    MD_FOWARD = 1 << 2,
-    MD_BACK = 1 << 3,
   };
 
   struct app_info {
@@ -81,11 +76,11 @@ public:
   GLfloat wnd_height() {return m_info.wnd_height;}
 
   mat4* get_v_mat() const { return m_v_mat; }
-  void set_v_mat(mat4 *v) { m_v_mat = v; }
-  void set_p_mat(mat4 *v) { m_p_mat = v; }
 
-  const vec3& world_center() const { return m_world_center; }
-  void world_center(const vec3& v){ m_world_center = v; }
+  // for backward compatibility, assume lookat world center;
+  void lookat(const vec3& eye, const vec3& center, const vec3& up, mat4* v_mat);
+  void set_v_mat(mat4 *v);
+  void set_p_mat(mat4 *v) { m_p_mat = v; }
 
   camera_mode get_camera_mode() const { return m_camera_mode; }
   void set_camera_mode(camera_mode v);
@@ -96,6 +91,7 @@ public:
   virtual bool is_shutdown(){ return m_shutdown == GL_TRUE;}
 
   void toggle_full_screen();
+  const mat4& get_view_mat() const;
 
 protected:
   virtual void init_info();
@@ -109,8 +105,6 @@ protected:
   virtual void update_fps();
   virtual void update_camera();
   virtual void reload_shaders() {}
-
-  void rotate_camera_mouse_move(GLdouble x, GLdouble y);
 
   virtual void loop();
   virtual void shutdown() {
@@ -140,14 +134,12 @@ protected:
 
   GLboolean m_display_help;
   GLboolean m_pause; // pause update
-  GLint m_update_count; // update count during pause
   GLboolean m_reading;
-  GLboolean m_camera_moving;
   GLboolean m_shutdown;
   GLboolean m_dirty_view; // will be true if camera rotated, it's child class's job to set it back to false.
-  GLboolean m_time_update = GL_FALSE;
-  GLuint m_move_dir;
-  GLuint m_swap_interval{1};
+  GLboolean m_time_update;
+  GLint m_update_count; // update count during pause
+  GLuint m_swap_interval;
   GLuint m_frame_number;
   GLdouble m_fps;
   GLdouble m_last_time;
@@ -160,9 +152,9 @@ protected:
   camera_mode m_camera_mode;
   app_info m_info;
   GLFWwindow *m_wnd;
-  vec3 m_world_center;
   mat4 *m_v_mat;
   mat4 *m_p_mat; // only used for orthogonal projection zoom
+  std::shared_ptr<camman> m_camman;
 
   dvec2 m_last_cursor_position;   // used to rotate camera when mid button pressed
   vec3 m_camera_translation;  // translation during CM_FREE mode
@@ -171,6 +163,14 @@ protected:
 
   timer m_timer;
   bitmap_text m_text;
+
+  struct orbit_camman_info
+  {
+    GLfloat distance = -1;
+    vec3 center;
+    mat4 rotation;
+  };
+  orbit_camman_info m_orbit_camman_info;
 };
 }
 #endif /* ifndef GL4_COMMON_APP_H */

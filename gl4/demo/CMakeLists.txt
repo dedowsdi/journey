@@ -20,6 +20,7 @@ set (PROJECTS
     flat
     trackball
     triangle_random_point
+    bounding_sphere
     )
 
 foreach(PROJECT ${PROJECTS})

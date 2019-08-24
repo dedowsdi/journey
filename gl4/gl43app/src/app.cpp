@@ -5,6 +5,7 @@
 
 #include "glm.h"
 #include "glenumstring.h"
+#include "common_camman.h"
 
 namespace zxd {
 
@@ -34,15 +35,14 @@ app::app()
     m_v_mat(0),
     m_p_mat(0),
     m_reading(GL_FALSE),
-    m_camera_moving(GL_FALSE),
-    m_move_dir(0),
     m_frame_number(0),
     m_fps(0),
     m_last_time(0),
     m_current_time(0),
     m_delta_time(0),
     m_camera_move_speed(1.5),
-    m_world_center(vec3(0))
+    m_swap_interval(1),
+    m_time_update(GL_FALSE)
   {}
 
 //--------------------------------------------------------------------
@@ -57,6 +57,8 @@ void app::init() {
   init_wnd();
   init_gl();
   m_text.init();
+
+  set_camera_mode(m_camera_mode);
 
   // manual resize
   glfw_resize(m_wnd, wnd_width(), wnd_height());
@@ -176,11 +178,11 @@ void app::init_wnd() {
   }
 
   glfwMakeContextCurrent(m_wnd);
+  if(!m_info.fullscreen)
+    glfwSetWindowPos(m_wnd, m_info.wm.x, m_info.wm.y);
 
   // set up call back
   glfwSetWindowUserPointer(m_wnd, this);
-  if(!m_info.fullscreen)
-    glfwSetWindowPos(m_wnd, m_info.wm.x, m_info.wm.y);
 
   auto resizeCallback = [](GLFWwindow *wnd, int w, int h) {
     auto pthis = static_cast<app *>(glfwGetWindowUserPointer(wnd));
@@ -246,103 +248,13 @@ void app::update_fps() {
 }
 
 //--------------------------------------------------------------------
-void app::update_camera() {
-  if (!m_v_mat) return;
-
-  if (m_camera_mode == CM_FREE && m_camera_moving == 1) {
-    vec3 dir(0);
-    if (m_move_dir & MD_LEFT) dir.x = 1;
-    if (m_move_dir & MD_RIGHT) dir.x = -1;
-    if (m_move_dir & MD_FOWARD) dir.z = 1;
-    if (m_move_dir & MD_BACK) dir.z = -1;
-
-    dir = glm::normalize(dir);
-
-    (*m_v_mat)[3] +=
-      vec4(dir * static_cast<GLfloat>(m_delta_time * m_camera_move_speed), 0);
-  }
-}
-
-//--------------------------------------------------------------------
-void app::rotate_camera_mouse_move(GLdouble x, GLdouble y)
+void app::update_camera()
 {
-  GLdouble dtx = x - m_last_cursor_position[0];
-  GLdouble dty = y - m_last_cursor_position[1];
-
-  if (!m_v_mat)
-    return;
-
-  if (m_camera_mode == CM_PITCH_YAW) {
-    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
-      return;
-
-    *m_v_mat = glm::translate(*m_v_mat, +m_world_center);
-
-    m_dirty_view = GL_TRUE;
-    // yaw world, assume z up
-    if (dtx != 0) {
-      *m_v_mat *= glm::rotate(static_cast<GLfloat>(dtx * 0.02), vec3(0, 0, 1));
-    }
-
-    // pitch camera, but reserve center
-    if (dty != 0) {
-      glm::vec3 translation = vec3(glm::column(*m_v_mat, 3));
-
-      // clear translation
-      set_col(*m_v_mat, 3, zp);
-
-      // rotate, translate world back
-      *m_v_mat = glm::translate(translation) *
-                 glm::rotate(static_cast<GLfloat>(-dty * 0.02), vec3(1, 0, 0)) *
-                 *m_v_mat;
-    }
-
-    *m_v_mat = glm::translate(*m_v_mat, -m_world_center);
-
-
-  } else if (m_camera_mode == CM_ARCBALL) {
-    if (glfwGetMouseButton(m_wnd, GLFW_MOUSE_BUTTON_MIDDLE) != GLFW_PRESS)
-      return;
-
-    m_dirty_view = GL_TRUE;
-    if (dtx != 0 || dty != 0) {
-      *m_v_mat = glm::translate(*m_v_mat, +m_world_center);
-      mat4 w_mat_i = zxd::compute_window_mat_i(
-        0, 0, wnd_width(), wnd_height(), 0, 1);
-      mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
-
-      glm::vec3 translation = vec3(glm::column(*m_v_mat, 3));
-
-      set_col(*m_v_mat, 3, zp);
-      *m_v_mat = glm::translate(translation) * m * *m_v_mat;
-      *m_v_mat = glm::translate(*m_v_mat, -m_world_center);
-    }
-  } else if (m_camera_mode == CM_FREE) {
-    // fix cursor
-    glfwSetCursorPos(m_wnd, wnd_width() / 2.0, wnd_height()/ 2.0);
-
-    dtx = x - 0.5 * wnd_width();
-    dty = y - 0.5 * wnd_height();
-
-    *m_v_mat = glm::rotate(static_cast<GLfloat>(-dty) * 0.002f, vec3(1, 0, 0)) *
-               glm::rotate(static_cast<GLfloat>(dtx) * 0.002f, vec3(0, 1, 0)) *
-               *m_v_mat;
-
-    vec3 forward = vec3(-glm::row(*m_v_mat, 2));
-    vec3 right = cross(forward, pza);
-    if (glm::length(right) < 0.00001f) {
-      return;
-    }
-    m_dirty_view = GL_TRUE;
-    right = glm::normalize(right);
-
-    vec3 fixed_up = normalize(cross(right, forward));
-
-    // reserve eye position, use old eye position to deduce new world
-    // translation, eye position is in world space, so it should be rotated
-    // first, then translate
-    *m_v_mat = glm::translate(
-      make_mat4_row(right, fixed_up, -forward), -eye_pos(*m_v_mat));
+  if (m_camman)
+  {
+    m_camman->update(m_delta_time);
+    if(m_v_mat)
+      *m_v_mat = m_camman->get_v_mat();
   }
 }
 
@@ -357,24 +269,85 @@ void app::run() {
 }
 
 //--------------------------------------------------------------------
+void app::lookat(
+  const vec3& eye, const vec3& center, const vec3& up, mat4* v_mat)
+{
+  m_v_mat = v_mat;
+  m_camman->lookat(eye, center, up);
+  *v_mat = m_camman->get_v_mat();
+}
+
+//--------------------------------------------------------------------
+void app::set_v_mat(mat4 *v)
+{
+  m_v_mat = v;
+  if (m_camman)
+  {
+
+    auto camman = std::dynamic_pointer_cast<orbit_camman>(m_camman);
+    if (camman)
+    {
+      camman->set_distance(-(*v)[3][2]);
+    }
+
+    m_camman->set_v_mat(*v);
+  }
+}
+
+//--------------------------------------------------------------------
 void app::set_camera_mode(camera_mode v) {
   static std::string modes[] = {"CM_PITCH_YAW", "CM_ARCBALL", "CM_FREE"};
+
+  // store original camera info
+  mat4 v_mat;
+  if (m_camman)
+  {
+    v_mat = m_camman->get_v_mat();
+    auto orbit_camera = std::dynamic_pointer_cast<orbit_camman>(m_camman);
+    if (orbit_camera)
+    {
+      m_orbit_camman_info.distance = orbit_camera->get_distance();
+      m_orbit_camman_info.rotation = orbit_camera->get_rotation();
+      m_orbit_camman_info.center = orbit_camera->get_center();
+    }
+  }
+
   m_camera_mode = v;
   std::cout << "current camera mode : " << modes[m_camera_mode] << std::endl;
 
-  if (m_camera_mode == CM_FREE) {
-    m_camera_translation = vec3(0);
+  switch (m_camera_mode)
+  {
+    case CM_FREE:
+      m_camman = std::make_shared<free_camman>();
+      m_camman->set_v_mat(v_mat);
+      break;
 
-    // hide, fix cursor
-    glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    glfwSetCursorPos(m_wnd, wnd_width() / 2.0, wnd_height()/ 2.0);
+    case CM_PITCH_YAW:
+      m_camman = std::make_shared<blend_camman>();
+      if (m_orbit_camman_info.distance != -1)
+      {
+        auto camman = std::static_pointer_cast<orbit_camman>(m_camman);
+        camman->set_distance(m_orbit_camman_info.distance);
+        camman->set_center(m_orbit_camman_info.center);
+        camman->set_rotation(m_orbit_camman_info.rotation);
+      }
+      break;
 
-    glfwGetCursorPos(
-      m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
-    m_last_cursor_position[1] = glfw_to_gl(m_last_cursor_position[1]);
-  } else {
-    glfwSetInputMode(m_wnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    case CM_ARCBALL:
+      m_camman = std::make_shared<trackball_camman>();
+      if (m_orbit_camman_info.distance != -1)
+      {
+        auto camman = std::static_pointer_cast<orbit_camman>(m_camman);
+        camman->set_distance(m_orbit_camman_info.distance);
+        camman->set_center(m_orbit_camman_info.center);
+        camman->set_rotation(m_orbit_camman_info.rotation);
+      }
+      break;
+
+    default:
+      break;
   }
+
 }
 
 //--------------------------------------------------------------------
@@ -405,6 +378,11 @@ void app::toggle_full_screen()
 
 }
 
+//--------------------------------------------------------------------
+const mat4& app::get_view_mat() const
+{
+  return m_camman->get_v_mat();
+}
 //--------------------------------------------------------------------
 void app::loop() {
   // TODO swap interval not working on my laptop gt635m
@@ -458,6 +436,10 @@ void app::glfw_key(
   (void)mods;
 
   m_control.handle(wnd, key, scancode, action, mods);
+  if(m_camman)
+  {
+    m_camman->on_key(wnd, key, scancode, action, mods);
+  }
 
   if (m_reading) {
     if (action == GLFW_PRESS) {
@@ -570,45 +552,8 @@ void app::glfw_key(
       case GLFW_KEY_F8:
         m_time_update ^= 1;
         break;
-      case GLFW_KEY_LEFT:
-        m_move_dir |= MD_LEFT;
-        m_camera_moving = 1;
-        break;
-
-      case GLFW_KEY_RIGHT:
-        m_move_dir |= MD_RIGHT;
-        m_camera_moving = 1;
-        break;
-
-      case GLFW_KEY_UP:
-        m_move_dir |= MD_FOWARD;
-        m_camera_moving = 1;
-        break;
-
-      case GLFW_KEY_DOWN:
-        m_move_dir |= MD_BACK;
-        m_camera_moving = 1;
-        break;
     }
   } else if (action == GLFW_RELEASE) {
-    switch (key) {
-      case GLFW_KEY_LEFT:
-        m_move_dir &= ~MD_LEFT;
-        m_camera_moving = m_move_dir == 0 ? 0 : 1;
-        break;
-      case GLFW_KEY_RIGHT:
-        m_move_dir &= ~MD_RIGHT;
-        m_camera_moving = m_move_dir == 0 ? 0 : 1;
-        break;
-      case GLFW_KEY_UP:
-        m_move_dir &= ~MD_FOWARD;
-        m_camera_moving = m_move_dir == 0 ? 0 : 1;
-        break;
-      case GLFW_KEY_DOWN:
-        m_move_dir &= ~MD_BACK;
-        m_camera_moving = m_move_dir == 0 ? 0 : 1;
-        break;
-    }
   }
 }
 
@@ -619,17 +564,30 @@ void app::glfw_mouse_button(GLFWwindow *wnd, int button, int action, int mods) {
       m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
     m_last_cursor_position[1] = glfw_to_gl(m_last_cursor_position[1]);
   //}
+    if(m_camman)
+      m_camman->on_mouse_button(wnd, button, action, mods);
 }
 
 //--------------------------------------------------------------------
-void app::glfw_mouse_move(GLFWwindow *wnd, double x, double y) {
-  y = glfw_to_gl(y);
-  rotate_camera_mouse_move(x, y);
-  m_last_cursor_position = vec2(x, y);
+void app::glfw_mouse_move(GLFWwindow* wnd, double x, double y)
+{
+  m_last_cursor_position = glfw_to_gl(vec2(x, y));
+  if(m_camman)
+  {
+    m_camman->on_mouse_move(wnd, x, y);
+  }
 }
 
 //--------------------------------------------------------------------
-void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
+void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset)
+{
+
+  if(m_camman)
+  {
+    m_camman->on_mouse_wheel(wnd, xoffset, yoffset);
+    if(m_v_mat)
+      *m_v_mat = m_camman->get_v_mat();
+  }
 
   GLfloat scale = 1 - 0.1 * yoffset;
   if(m_camera_mode == CM_ORTHO)
@@ -640,18 +598,7 @@ void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset) {
     (*m_p_mat)[0][0] /= scale;
     (*m_p_mat)[1][1] /= scale;
   }
-  else
-  {
-    if(!m_v_mat)
-      return;
 
-    m_dirty_view = true;
-    *m_v_mat = glm::translate(*m_v_mat, +m_world_center);
-    (*m_v_mat)[3][0] *= scale;
-    (*m_v_mat)[3][1] *= scale;
-    (*m_v_mat)[3][2] *= scale;
-    *m_v_mat = glm::translate(*m_v_mat, -m_world_center);
-  }
 }
 
 //--------------------------------------------------------------------

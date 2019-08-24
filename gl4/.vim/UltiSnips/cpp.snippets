@@ -1,8 +1,7 @@
 snippet gl4Main
-#include <sstream>
-
 #include "app.h"
-#include "bitmap_text.h"
+
+#include <sstream>
 
 namespace zxd {
 
@@ -46,6 +45,10 @@ public:
 
 	void glfw_key(
 		GLFWwindow *wnd, int key, int scancode, int action, int mods) override;
+	void glfw_mouse_button(GLFWwindow *wnd, int button, int action,
+		int mods) override;
+
+	void glfw_mouse_move(GLFWwindow *wnd, double x, double y) override;
 };
 
 void $1::init_info() {
@@ -79,21 +82,28 @@ void $1::display() {
 
 void $1::glfw_resize(GLFWwindow *wnd, int w, int h) {
 	app::glfw_resize(wnd, w, h);
-	m_text.reshape(m_info.wnd_width, m_info.wnd_height);
 }
 
 void $1::glfw_key(
 	GLFWwindow *wnd, int key, int scancode, int action, int mods) {
 	if (action == GLFW_PRESS) {
 		switch (key) {
-			case GLFW_KEY_ESCAPE:
-				glfwSetWindowShouldClose(m_wnd, GL_TRUE);
-				break;
 			default:
 				break;
 		}
 	}
 	app::glfw_key(wnd, key, scancode, action, mods);
+}
+
+void $1::glfw_mouse_button(GLFWwindow *wnd, int button, int action,
+                               int mods)
+{
+  app::glfw_mouse_button(wnd, button, action, mods);
+}
+
+void $1::glfw_mouse_move(GLFWwindow *wnd, double x, double y)
+{
+  app::glfw_mouse_move(wnd, x, y);
 }
 
 }

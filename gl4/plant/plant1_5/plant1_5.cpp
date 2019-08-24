@@ -21,6 +21,7 @@ namespace zxd {
 GLuint width = 720;
 GLuint height = 720;
 
+vec3 world_center;
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
@@ -201,7 +202,7 @@ void plant1_5_app::update()
   if(rotating)
   {
     rotate_mat *= rotate(0.01f, pza);
-    mat = v_mat * translate(m_world_center) * rotate_mat * translate(-m_world_center);
+    mat = v_mat * translate(world_center) * rotate_mat * translate(-world_center);
   }
   
   for (int i = 0; i < m_mats.size(); ++i) {
@@ -429,11 +430,11 @@ void plant1_5_app::update_bound(const vec3_vector& vertices)
 {
   // include entire bounding sphere into scene
   auto corners = bounding_box(vertices.begin(), vertices.end());
-  auto center = (corners.first + corners.second) * 0.5f;
+  world_center = (corners.first + corners.second) * 0.5f;
   auto r = glm::length(corners.second - corners.first) * 0.5f;
   GLfloat d = r / sin(fpi8) * (wnd_aspect() > 1.0f ? 1.0f : 1.0f/wnd_aspect()) ;
-  v_mat = zxd::isometric_projection(d*1.05f / sqrt(3.0f), center);
-  world_center(center);
+  auto l = d*1.05f/sqrt(3);
+  lookat(world_center + vec3(l, -l, l), world_center, vec3(0, 0, 1), &v_mat);
 
   // clamp near far
   //p_mat = glm::perspective(fpi4, wnd_aspect(), d - r - 0.001f, d+r + 0.001f);

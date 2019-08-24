@@ -58,6 +58,8 @@ set(GLC_SRCS
     src/freetype_text.cpp
     src/guard.cpp
     src/jsoncfg.cpp
+    src/camman.cpp
+    src/common_camman.cpp
     )
 
 set(GLC glc${GLC_GL_VERSION})

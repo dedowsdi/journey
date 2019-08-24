@@ -118,6 +118,12 @@ vec3 transform_vector(const mat4& m, const vec3& v)
 //--------------------------------------------------------------------
 mat4 rotate_to(const vec3& v0, const vec3& v1)
 {
+
+#ifdef _DEBUG
+  assert(abs(length(v0) - 1) < 0.00001);
+  assert(abs(length(v1) - 1) < 0.00001);
+#endif
+
   GLfloat cos = glm::dot(v0, v1);
   // the same direction
   if(std::abs(cos - 1) < 0.000001f) // is 0.00001 small enough?
