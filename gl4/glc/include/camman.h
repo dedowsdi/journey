@@ -27,6 +27,9 @@ public:
     GLFWwindow* wnd, double xoffset, double yoffset){};
   virtual void update(GLfloat dt){};
 
+  // Subclass such as orbit_camman use a cached value, it doesn't feel right to
+  // update base class member in child const memthod, so subclass must define
+  // it's own v_mat member.
   virtual const mat4& get_v_mat() const = 0;
   virtual void set_v_mat(const mat4& v_mat) = 0;
   virtual void lookat(const vec3& eye, const vec3& center, const vec3& up) = 0;
