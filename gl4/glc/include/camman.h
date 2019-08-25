@@ -16,7 +16,7 @@ class camman
 public:
 
   camman();
-  virtual ~camman(){}
+  virtual ~camman() = default;
 
   virtual void on_key(
     GLFWwindow* wnd, int key, int scancode, int action, int mods){};

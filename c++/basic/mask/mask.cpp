@@ -3,6 +3,8 @@
 #include <bitset>
 #include <algorithm>
 
+#define SWAP(a, b) { (a)^=(b); (b)^=(a); (a)^=(b); }
+
 int main(int argc, char *argv[]) {
   unsigned int number = 0b11001100;
 
@@ -60,5 +62,9 @@ int main(int argc, char *argv[]) {
             << std::endl
             << std::endl;
 
+  int a = 5;
+  int b = 3;
+  SWAP(a, b);
+  std::cout << "a : "  << a << ", b : " << b << std::endl;
   return 0;
 }
