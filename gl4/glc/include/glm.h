@@ -78,18 +78,14 @@ using v2v_ci = vec2_vector::const_iterator;
 using v3v_ci = vec3_vector::const_iterator;
 using v4v_ci = vec4_vector::const_iterator;
 
-}
+std::ostream& operator<<(std::ostream& os, const vec2& v);
+std::ostream& operator<<(std::ostream& os, const vec3& v);
+std::ostream& operator<<(std::ostream& os, const vec4& v);
+std::ostream& operator<<(std::ostream& os, const mat2& m);
+std::ostream& operator<<(std::ostream& os, const mat3& m);
+std::ostream& operator<<(std::ostream& os, const mat4& m);
+std::ostream& operator<<(std::ostream& os, const zxd::vec3_vector& v);
 
-namespace std
-{
-using namespace glm;
-ostream& operator<<(ostream& os, const vec2& v);
-ostream& operator<<(ostream& os, const vec3& v);
-ostream& operator<<(ostream& os, const vec4& v);
-ostream& operator<<(ostream& os, const mat2& m);
-ostream& operator<<(ostream& os, const mat3& m);
-ostream& operator<<(ostream& os, const mat4& m);
-ostream& operator<<(ostream& os, const zxd::vec3_vector& v);
 }
 
 #endif /* GL_GLC_GLM_H */

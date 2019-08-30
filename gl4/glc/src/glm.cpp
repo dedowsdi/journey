@@ -4,84 +4,84 @@
 
 #include <glm/gtc/matrix_access.hpp>
 
-namespace std
+namespace zxd
 {
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const vec2& v)
+std::ostream& operator<<(std::ostream& os, const vec2& v)
 {
   static GLuint w = 12;
   static GLuint p = 6;
-  os << left << fixed;
-  // os << left;
-  os << setw(w) << setprecision(p) << v.x << " "   // x
-     << setw(w) << setprecision(p) << v.y;  // y
+  os << std::left << std::fixed;
+  // os << std::left;
+  os << std::setw(w) << std::setprecision(p) << v.x << " "   // x
+     << std::setw(w) << std::setprecision(p) << v.y;  // y
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const vec3& v)
+std::ostream& operator<<(std::ostream& os, const vec3& v)
 {
   static GLuint w = 12;
   static GLuint p = 6;
-  os << left << fixed;
-  // os << left;
-  os << setw(w) << setprecision(p) << v.x << " "   // x
-     << setw(w) << setprecision(p) << v.y << " "   // y
-     << setw(w) << setprecision(p) << v.z;  // z
+  os << std::left << std::fixed;
+  // os << std::left;
+  os << std::setw(w) << std::setprecision(p) << v.x << " "   // x
+     << std::setw(w) << std::setprecision(p) << v.y << " "   // y
+     << std::setw(w) << std::setprecision(p) << v.z;  // z
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const vec4& v)
+std::ostream& operator<<(std::ostream& os, const vec4& v)
 {
   static GLuint w = 12;
   static GLuint p = 6;
-  os << left << fixed;
-  os << setw(w) << setprecision(p) << v.x << " "  // x
-     << setw(w) << setprecision(p) << v.y << " "  // y
-     << setw(w) << setprecision(p) << v.z << " "  // z
-     << setw(w) << setprecision(p) << v.w;
+  os << std::left << std::fixed;
+  os << std::setw(w) << std::setprecision(p) << v.x << " "  // x
+     << std::setw(w) << std::setprecision(p) << v.y << " "  // y
+     << std::setw(w) << std::setprecision(p) << v.z << " "  // z
+     << std::setw(w) << std::setprecision(p) << v.w;
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const mat2& m)
+std::ostream& operator<<(std::ostream& os, const mat2& m)
 {
   for (int i = 0; i < 2; ++i)
   {
-    os <<  row(m,i) << endl;
+    os <<  row(m,i) << std::endl;
   }
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const mat3& m)
+std::ostream& operator<<(std::ostream& os, const mat3& m)
 {
   for (int i = 0; i < 3; ++i)
   {
-    os <<  row(m,i) << endl;
+    os <<  row(m,i) << std::endl;
   }
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const mat4& m)
+std::ostream& operator<<(std::ostream& os, const mat4& m)
 {
   for (int i = 0; i < 4; ++i)
   {
-    os <<  row(m,i) << endl;
+    os <<  row(m,i) << std::endl;
   }
   return os;
 }
 
 //------------------------------------------------------------------------------
-ostream& operator<<(ostream& os, const zxd::vec3_vector& v)
+std::ostream& operator<<(std::ostream& os, const zxd::vec3_vector& v)
 {
   auto size = v.size();
   for (size_t i = 0; i < size; ++i)
   {
-    os <<  v[i] << endl;
+    os <<  v[i] << std::endl;
   }
   return os;
 }
