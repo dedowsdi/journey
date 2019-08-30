@@ -78,9 +78,22 @@ glm::mat4 read_mat(std::istream& is)
 }
 
 //--------------------------------------------------------------------
-std::string read_resource(const std::string &filepath)
+std::string read_resource(const std::string& filepath)
 {
   return read_file(get_resource(filepath));
+}
+
+//--------------------------------------------------------------------
+std::string read_shader_block(const std::string& filepath)
+{
+  auto content = read_resource(filepath);
+  std::string version = "#version";
+  if (content.size() >= version.size() &&
+      content.substr(0, version.size()) == version)
+  {
+    content.insert(0, "//");
+  }
+  return content;
 }
 
 //--------------------------------------------------------------------
@@ -164,8 +177,8 @@ std::string get_resource(const std::string& name)
 
   std::stringstream ss;
   ss << name << " not found in all resources : \n\t";
-  std::copy(resources.begin(), resources.end(), std::ostream_iterator<std::string>(ss, "\n\t"));
-
-  throw std::runtime_error(ss.str());
+  std::copy(resources.begin(), resources.end(),
+    std::ostream_iterator<std::string>(ss, "\n\t"));
+  throw std::runtime_error(std::string(ss.str()));
 }
 }

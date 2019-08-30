@@ -207,6 +207,22 @@ void geometry_base::bind_vao()
 }
 
 //--------------------------------------------------------------------
+void geometry_base::set_attrib_activity(GLuint index, bool b)
+{
+  if (index >= m_attributes.size())
+  {
+    std::stringstream ss;
+    ss << index << " overflow of " << m_attributes.size()  << std::endl;
+    throw std::overflow_error(ss.str());
+  }
+  bind_vao();
+  if(b)
+    glEnableVertexAttribArray(index);
+  else
+    glDisableVertexAttribArray(index);
+}
+
+//--------------------------------------------------------------------
 void geometry_base::clear()
 {
   m_primitive_sets.clear();

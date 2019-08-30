@@ -5,6 +5,7 @@
 #include <glm/fwd.hpp>
 #include <istream>
 #include <vector>
+#include <map>
 
 namespace stream_util
 {
@@ -14,10 +15,13 @@ namespace stream_util
   glm::vec2 read_vec2(std::istream& is);
   glm::mat4 read_mat(std::istream& is);
 
-  std::string read_resource(const std::string &filepath);
-  std::string read_file(const std::string &filepath);
+  std::string read_resource(const std::string& filepath);
+
+  // read shader, comment leading #version
+  std::string read_shader_block(const std::string& filepath);
+  std::string read_file(const std::string& filepath);
   // no space no linebreak
-  std::string read_string(const std::string &filepath);
+  std::string read_string(const std::string& filepath);
   std::string get_resource(const std::string& name);
 }
 

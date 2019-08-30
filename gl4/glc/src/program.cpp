@@ -4,13 +4,32 @@
 #include <algorithm>
 #include <functional>
 #include <sstream>
+#include <memory>
 
 #include "glenumstring.h"
 #include "common.h"
 #include "stream_util.h"
+#include "string_util.h"
 
 namespace zxd
 {
+
+//--------------------------------------------------------------------
+void add_shader_content(string_vector& v, const std::string& content)
+{
+  // commment leading version if current strings is not empty
+  if (!v.empty() && v.front().size() > 0)
+  {
+    std::string version = "#version";
+    if (content.size() > version.size() &&
+        content.substr(0, version.size()) == version)
+    {
+      v.push_back("//");
+    }
+  }
+
+  v.push_back(content);
+}
 
 //--------------------------------------------------------------------
 void program::init()
@@ -58,6 +77,7 @@ void program::link()
       char* log = static_cast<char*>(malloc(len + 1));
       glGetProgramInfoLog(object, len, 0, log);
       std::cout << log << std::endl;
+      print_shader_sources();
     }
   }
 
@@ -111,12 +131,11 @@ void program::uniform_location(GLint* location, const std::string& name)
 }
 
 //--------------------------------------------------------------------
-void program::attach(GLenum type, const std::string& file)
+void program::attach(GLenum type, const std::string& file,
+  const std::map<std::string, std::string>& replace_map)
 {
   string_vector sv;
-  sv.push_back(stream_util::read_resource(file));
-  if (!attach(type, sv))
-    std::cout << "faild to compile " << file << std::endl;
+  attach(type, sv, file, replace_map);
 }
 
 //--------------------------------------------------------------------
@@ -154,13 +173,55 @@ bool program::attach(GLenum type, const string_vector& source)
 }
 
 //--------------------------------------------------------------------
-void program::attach(
-  GLenum type, const string_vector &source, const std::string &file)
+void program::attach(GLenum type, const string_vector& source,
+  const std::string& file,
+  const std::map<std::string, std::string>& replace_map)
 {
   string_vector combined_source(source);
-  combined_source.push_back(stream_util::read_resource(file));
+  add_shader_content(combined_source, stream_util::read_resource(file));
+
+  for (auto& str : combined_source)
+  {
+    for (const auto& p : replace_map)
+      str = string_util::replace_string(str, p.first, p.second);
+  }
+
   if (!attach(type, combined_source))
-    std::cout << "failed to compile " << file << std::endl;
+  {
+    std::cout << "failed to compile " << file << " : " <<  std::endl;
+    std::cout << "******************************" << std::endl;
+    std::copy(combined_source.begin(), combined_source.end(),
+      std::ostream_iterator<std::string>(std::cout, ""));
+    std::cout << stream_util::read_resource(file) << std::endl;
+    std::cout << "******************************" << std::endl;
+  }
+}
+
+//--------------------------------------------------------------------
+void program::print_shader_sources()
+{
+  constexpr GLsizei max_shaders = 64;
+  std::array<GLuint, max_shaders> shaders;
+  GLsizei num_shaders;
+  glGetAttachedShaders(object, max_shaders, &num_shaders, &shaders.front());
+
+  std::cout << "============================================================"
+            << std::endl;
+  std::cout << "program shaders : " << std::endl;
+  for (int i = 0; i < num_shaders; ++i)
+  {
+    GLint shader_type;
+    glGetShaderiv(shaders[i], GL_SHADER_TYPE, &shader_type);
+    std::cout << gl_shader_type_to_string(shader_type) << "\n"
+              << "******************************\n" ;
+    GLint shader_length;
+    glGetShaderiv(shaders[i], GL_SHADER_SOURCE_LENGTH, &shader_length);
+    auto source = std::make_unique<GLchar>(shader_length+1);
+    glGetShaderSource(shaders[i], shader_length+1, 0, source.get());
+    std::cout << source.get() << std::endl;
+  }
+  std::cout << "============================================================"
+            << std::endl;
 }
 
 //--------------------------------------------------------------------

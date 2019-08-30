@@ -13,6 +13,7 @@ GL_ARB_instanced_arrays,\
 GL_EXT_packed_depth_stencil,\
 GL_EXT_gpu_shader4,\
 GL_ARB_imaging,\
+GL_ARB_ES3_compatibility,\
 
 glad --api glx=1.4 --spec=glx --out-path=. --generator c --extensions=\
 GLX_EXT_swap_control

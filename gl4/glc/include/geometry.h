@@ -51,6 +51,7 @@ public:
   virtual void draw();
 
   void bind_vao();
+  void set_attrib_activity(GLuint index, bool b);
 
   void clear();
   virtual void build_mesh();

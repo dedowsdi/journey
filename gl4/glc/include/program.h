@@ -5,12 +5,15 @@
 #include "glm.h"
 #include <string>
 #include <vector>
+#include <map>
 
 typedef std::vector<std::string> string_vector;
 typedef std::vector<const char*> cstring_vector;
 
 namespace zxd
 {
+
+void add_shader_content(string_vector& v, const std::string& content);
 
 class program
 {
@@ -46,10 +49,12 @@ public:
   GLint attrib_location(const std::string& name);
   void uniform_location(GLint* location, const std::string& name);
 
-  void attach(GLenum type, const std::string& file);
+  void attach(GLenum type, const std::string& file,
+    const std::map<std::string, std::string>& replace_map = {});
   bool attach(GLenum type, const string_vector& source);
-  void attach(
-    GLenum type, const string_vector& source, const std::string& file);
+  void attach(GLenum type, const string_vector& source, const std::string& file,
+    const std::map<std::string, std::string>& replace_map = {});
+  void print_shader_sources();
 
   std::string name() const { return m_name; }
   void name(std::string v) { m_name = v; }
@@ -74,6 +79,7 @@ public:
   void uniform4iv(const std::string& name, GLsizei count, const GLint* value);
   void uniform4i(
     const std::string& name, GLint v0, GLint v1, GLint v2, GLint v3);
+
 
 private:
   void create_program()

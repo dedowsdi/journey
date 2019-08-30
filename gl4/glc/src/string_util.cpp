@@ -49,6 +49,9 @@ std::string trim(const std::string& s, bool left/* = true*/, bool right/* = true
 //--------------------------------------------------------------------
 std::string replace_string(const std::string& s, const std::string& a, const std::string& b)
 {
+  if (a == b)
+    return s;
+
   std::string res(s);
   auto pos = res.find(a);
   while(pos != std::string::npos)

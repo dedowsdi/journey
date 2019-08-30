@@ -17,8 +17,8 @@ struct light_source {
 };
 
 struct light_model{
-  vec4 ambient;
   bool local_viewer; // only has meaning if lighting is in view space
+  vec4 ambient;
 };
 
 struct light_product {
@@ -41,45 +41,47 @@ void light(vec3 vertex, vec3 normal, vec3 v2e, light_source source,
   // skip blank light
   if (source.constant_attenuation == 0.0) return;
 
-  vec3 v2l = source.position.w == 0.0 ? source.position.xyz : source.position.xyz - vertex;
-  vec3 l = normalize(v2l);
+  vec3 v2l = source.position.w == 0.0
+               ? source.position.xyz
+               : source.position.xyz / source.position.w - vertex;
+  float dist = length(v2l);
+  vec3 l = v2l / dist;
   vec3 n = normal;
   vec3 v = v2e;
 
   // spot light effect
-  float spotEffect = 1.0;
-  if (source.position.w == 1.0 && source.spot_cutoff >= 0.0 &&
-      source.spot_cutoff <= 90.0) {
-    float nldotd = dot(-l, source.spot_direction);
-    if (nldotd < source.spot_cos_cutoff) return;
-    spotEffect = pow(clamp(nldotd, 0.0, 1.0), source.spot_exponent);
+  float spot_effect = 1.0;
+  if (source.position.w == 1.0 && source.spot_cutoff != 180.0) {
+    float nl_dot_d = dot(-l, source.spot_direction);
+    if (nl_dot_d < source.spot_cos_cutoff) return;
+    spot_effect = pow(clamp(nl_dot_d, 0.0, 1.0), source.spot_exponent);
   }
 
   // attenuation
   float atten = 1.0; 
   if(source.position.w == 1.0)
   {
-    float dist = length(v2l);
     atten = 1.0 / (source.constant_attenuation + source.linear_attenuation *
         dist + source.quadratic_attenuation * dist * dist);
   }
 
-  float visibility = atten * spotEffect;
+  float visibility = atten * spot_effect;
 
   // ambient
   product.ambient = visibility * source.ambient * mtl.ambient;
 
   // diffuse
   float ndotl = dot(n, l);
+
+  // should i comment this ? it cause specular beak in model edge sometimes
   if (ndotl <= 0.0) return;
-  ndotl = clamp(ndotl, 0.0, 1.0);
+
   product.diffuse = visibility * ndotl * source.diffuse * mtl.diffuse; 
 
   // specular
   vec3 h = normalize(l + v);
   float ndoth = dot(h, n);
   if(ndoth <= 0.0) return;
-  ndoth = clamp(ndoth, 0.0, 1.0);
 
   product.specular = visibility * pow(ndoth, mtl.shininess) * source.specular * mtl.specular;
 }

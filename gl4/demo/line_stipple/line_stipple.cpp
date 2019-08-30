@@ -14,7 +14,7 @@ auto scale = 1.0f;
 
 void reload_cfg()
 {
-  cfg.load("line_stipple.json");
+  cfg.load("line_stipple_data/line_stipple.json");
   glLineWidth(cfg.get_float("line_width"));
   if (cfg.get_bool("line_smooth"))
   {

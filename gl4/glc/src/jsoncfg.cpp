@@ -112,4 +112,35 @@ std::string json_cfg::get_string(const std::string& name) const
 {
   return get_value(name).GetString();
 }
+
+template <typename T>
+auto read_json_vec(const rapidjson::Value& v)
+{
+   assert(v.IsArray());
+   T res;
+   for (unsigned i = 0; i < T::length(); ++i)
+   {
+     res[i] = v[i].GetFloat();
+   }
+   return res;
+}
+
+//--------------------------------------------------------------------
+vec2 read_json_vec2(const rapidjson::Value& v)
+{
+  return read_json_vec<vec2>(v);
+}
+
+//--------------------------------------------------------------------
+vec3 read_json_vec3(const rapidjson::Value& v)
+{
+  return read_json_vec<vec3>(v);
+}
+
+//--------------------------------------------------------------------
+vec4 read_json_vec4(const rapidjson::Value& v)
+{
+  return read_json_vec<vec4>(v);
+}
+
 }

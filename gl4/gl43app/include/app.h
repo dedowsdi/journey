@@ -93,6 +93,8 @@ public:
   void toggle_full_screen();
   const mat4& get_view_mat() const;
 
+  virtual void reload_shaders() {}
+
 protected:
   virtual void init_info();
   virtual void init_gl();
@@ -104,7 +106,6 @@ protected:
   virtual void update_time();
   virtual void update_fps();
   virtual void update_camera();
-  virtual void reload_shaders() {}
 
   virtual void loop();
   virtual void shutdown() {

@@ -5,6 +5,7 @@
 #include <ctime>
 #include <memory>
 #include <rapidjson/fwd.h>
+#include "glm.h"
 
 namespace zxd
 {
@@ -34,6 +35,11 @@ private:
   std::string m_file;
   std::shared_ptr<rapidjson::Document> m_doc;
 };
+
+
+vec2 read_json_vec2(const rapidjson::Value& v);
+vec3 read_json_vec3(const rapidjson::Value& v);
+vec4 read_json_vec4(const rapidjson::Value& v);
 
 } /* zxd */
 

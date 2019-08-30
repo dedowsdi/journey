@@ -1,0 +1,46 @@
+{
+  "model":{
+    "ambient" : [0.2, 0.2, 0.2, 1],
+    "local_viewer" : true,
+    "color_control" : 0
+  },
+  "material":{
+    "ambient" : [0.2, 0.2, 0.2, 1],
+    "diffuse" : [0.8, 0.8, 0.8, 1],
+    "specular" : [0.8, 0.8, 0.8, 1],
+    "emission" : [0, 0, 0, 1],
+    "shininess" : 80
+  },
+  "lights" : [
+    {
+      "position" : [1, 0, 0, 0],
+      "ambient" : [0, 0, 0, 1],
+      "diffuse" : [1, 0, 0, 1],
+      "specular" : [1, 1, 1, 1],
+      "attenuation" : [1, 0, 0],
+      "spot_direction" : [0, 0, -1],
+      "spot_cutoff" : 180,
+      "spot_exponent" : 50
+    },
+    {
+      "position" : [0, 0, 5, 1],
+      "ambient" : [0, 0, 0, 1],
+      "diffuse" : [0, 1, 0, 1],
+      "specular" : [1, 1, 1, 1],
+      "attenuation" : [1, 0, 0],
+      "spot_direction" : [0, 0, -1],
+      "spot_cutoff" : 180,
+      "spot_exponent" : 50
+    },
+    {
+      "position" : [-5, 0, 0, 1],
+      "ambient" : [0, 0, 0, 1],
+      "diffuse" : [0, 0, 1, 1],
+      "specular" : [0, 0, 1, 1],
+      "attenuation" : [1, 0, 0],
+      "spot_direction" : [1, 0, 0],
+      "spot_cutoff" : 30,
+      "spot_exponent" : 3
+    }
+  ]
+}
