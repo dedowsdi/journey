@@ -9,6 +9,7 @@
 #include <cone.h>
 #include <stream_util.h>
 #include <common.h>
+#include <objman.h>
 
 namespace rj = rapidjson;
 
@@ -571,6 +572,11 @@ void classic_lighting_app::create_scene() {
 
   reload_cfg();
   reset_technique(technique.get());
+
+  auto p = compute_window_mat(0, 0, width, height) * p_mat * v_mat * m_mat *
+              vec4(0, 0, 0, 1);
+  auto wp = vec2(p) / p.w;
+  add_input_handler(std::make_shared<trackball_objman>(&m_mat, &v_mat, wp));
 }
 
 

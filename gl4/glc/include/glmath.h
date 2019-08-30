@@ -102,14 +102,13 @@ GLuint ilcm(GLuint a, GLuint b);
 // assume x [0, 1]
 GLfloat cubic_in_out(GLfloat x);
 
-// p0 and p1 is in window space
-glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
-  const glm::mat4& w_mat_i, GLfloat radius = 0.8f);
+vec3 wnd2ball(const vec2& p, const vec2& center, GLfloat radius);
 
-glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius = 0.8f);
+mat4 trackball_rotate(
+  const vec2& p0, const vec2& p1, const vec2& center, GLfloat ball_radius);
 
 glm::mat4 compute_window_mat(GLint x, GLint y, GLint width, GLint height,
-                             GLfloat depth_near = 0, GLfloat depth_far = 1);
+  GLfloat depth_near = 0, GLfloat depth_far = 1);
 
 glm::mat4 compute_window_mat_i(
   GLint x, GLint y, GLint width, GLint height, GLfloat n, GLfloat f);

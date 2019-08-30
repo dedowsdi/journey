@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 #include "glm.h"
 #include "glenumstring.h"
@@ -250,12 +251,21 @@ void app::update_fps() {
 //--------------------------------------------------------------------
 void app::update_camera()
 {
-  if (m_camman)
+  if (m_camman && m_v_mat)
   {
-    m_camman->update(m_delta_time);
-    if(m_v_mat)
-      *m_v_mat = m_camman->get_v_mat();
+    *m_v_mat = m_camman->get_v_mat();
   }
+}
+
+//--------------------------------------------------------------------
+void app::update_input_handlers()
+{
+  for (auto& handler : m_input_handlers)
+  {
+    handler->update(m_delta_time);
+  }
+
+  update_camera();
 }
 
 //--------------------------------------------------------------------
@@ -297,6 +307,8 @@ void app::set_v_mat(mat4 *v)
 //--------------------------------------------------------------------
 void app::set_camera_mode(camera_mode v) {
   static std::string modes[] = {"CM_PITCH_YAW", "CM_ARCBALL", "CM_FREE"};
+
+  remove_input_handler(m_camman);
 
   // store original camera info
   mat4 v_mat;
@@ -348,6 +360,7 @@ void app::set_camera_mode(camera_mode v) {
       break;
   }
 
+  add_input_handler(m_camman);
 }
 
 //--------------------------------------------------------------------
@@ -383,6 +396,27 @@ const mat4& app::get_view_mat() const
 {
   return m_camman->get_v_mat();
 }
+
+//--------------------------------------------------------------------
+void app::add_input_handler(const std::shared_ptr<glfw_handler>& handler)
+{
+  auto iter =
+    std::find(m_input_handlers.begin(), m_input_handlers.end(), handler);
+  if (iter != m_input_handlers.end())
+  {
+    std::cout << "duplicate input handler ignored" << std::endl;
+    return;
+  }
+  m_input_handlers.push_back(handler);
+}
+
+//--------------------------------------------------------------------
+void app::remove_input_handler(const std::shared_ptr<glfw_handler>& handler)
+{
+  m_input_handlers.erase(
+    std::remove(m_input_handlers.begin(), m_input_handlers.end(), handler),
+    m_input_handlers.end());
+}
 //--------------------------------------------------------------------
 void app::loop() {
   // TODO swap interval not working on my laptop gt635m
@@ -390,10 +424,10 @@ void app::loop() {
   while (!glfwWindowShouldClose(m_wnd)) {
     update_time();
     update_fps();
-    update_camera();
     // trigger resize for full screen, there are two resize events, don't know
     // why?
     glfwPollEvents();
+    update_input_handlers();
     if(!m_pause || m_update_count > 0)
     {
       if(m_time_update)
@@ -436,9 +470,9 @@ void app::glfw_key(
   (void)mods;
 
   m_control.handle(wnd, key, scancode, action, mods);
-  if(m_camman)
+  for (auto& handler : m_input_handlers)
   {
-    m_camman->on_key(wnd, key, scancode, action, mods);
+    handler->on_key(wnd, key, scancode, action, mods);
   }
 
   if (m_reading) {
@@ -564,17 +598,20 @@ void app::glfw_mouse_button(GLFWwindow *wnd, int button, int action, int mods) {
       m_wnd, &m_last_cursor_position[0], &m_last_cursor_position[1]);
     m_last_cursor_position[1] = glfw_to_gl(m_last_cursor_position[1]);
   //}
-    if(m_camman)
-      m_camman->on_mouse_button(wnd, button, action, mods);
+
+    for (auto& handler : m_input_handlers)
+    {
+      handler->on_mouse_button(wnd, button, action, mods);
+    }
 }
 
 //--------------------------------------------------------------------
 void app::glfw_mouse_move(GLFWwindow* wnd, double x, double y)
 {
   m_last_cursor_position = glfw_to_gl(vec2(x, y));
-  if(m_camman)
+  for (auto& handler : m_input_handlers)
   {
-    m_camman->on_mouse_move(wnd, x, y);
+    handler->on_mouse_move(wnd, x, y);
   }
 }
 
@@ -582,9 +619,13 @@ void app::glfw_mouse_move(GLFWwindow* wnd, double x, double y)
 void app::glfw_mouse_wheel(GLFWwindow *wnd, double xoffset, double yoffset)
 {
 
+  for (auto& handler : m_input_handlers)
+  {
+    handler->on_mouse_wheel(wnd, xoffset, yoffset);
+  }
+
   if(m_camman)
   {
-    m_camman->on_mouse_wheel(wnd, xoffset, yoffset);
     if(m_v_mat)
       *m_v_mat = m_camman->get_v_mat();
   }

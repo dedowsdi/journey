@@ -16,9 +16,8 @@ public:
     GLFWwindow* wnd, int key, int scancode, int action, int mods) override;
 
 private:
-
-  void perform_mouse_move(const vec2& p0, const vec2& p1) override;
-
+  void perform_mouse_move(
+    GLFWwindow* wnd, const vec2& p0, const vec2& p1) override;
 };
 
 class trackball_camman : public orbit_camman
@@ -27,8 +26,8 @@ public:
   trackball_camman();
 
 private:
-
-  void perform_mouse_move(const vec2& p0, const vec2& p1) override;
+  void perform_mouse_move(
+    GLFWwindow* wnd, const vec2& p0, const vec2& p1) override;
 
   GLfloat _ball_radius; // normalized
   vec2 _ball_center;
@@ -50,10 +49,15 @@ public:
 
   void on_key(
     GLFWwindow* wnd, int key, int scancode, int action, int mods) override;
+
   void on_mouse_move(GLFWwindow* wnd, double x, double y) override;
+
   void update(GLfloat dt) override;
+
   const mat4& get_v_mat() const override;
+
   void set_v_mat(const mat4& v_mat) override;
+
   void lookat(const vec3& eye, const vec3& center, const vec3& up) override;
 
 private:

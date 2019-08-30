@@ -19,52 +19,20 @@ orbit_camman::orbit_camman():
 }
 
 //--------------------------------------------------------------------
-vec2 glfw2gl(const vec2& pos)
-{
-  auto size = glfw_win_size();
-  return vec2(pos.x, size.y - 1 - pos.y);
-}
-
-//--------------------------------------------------------------------
-vec2 current_cursor_pos()
-{
-  auto wnd = glfwGetCurrentContext();
-  dvec2 pos;
-  glfwGetCursorPos(wnd, &pos.x, &pos.y);
-  return glfw2gl(pos);
-}
-
-//--------------------------------------------------------------------
-vec2 glfw_win_size()
-{
-  ivec2 size;
-  auto wnd = glfwGetCurrentContext();
-  glfwGetWindowSize(wnd, &size.x, &size.y);
-  return size;
-}
-
-//--------------------------------------------------------------------
 void orbit_camman::on_mouse_button(
   GLFWwindow* wnd, int button, int action, int mods)
 {
-  _last_cursor = current_cursor_pos();
+  if (button != _button)
+    return;
+
+  camman::on_mouse_button(wnd, button, action, mods);
 }
 
 //--------------------------------------------------------------------
 void orbit_camman::on_mouse_move(GLFWwindow* wnd, double x, double y)
 {
   if (glfwGetMouseButton(wnd, _button) != GLFW_PRESS) return;
-
-  auto cpos = current_cursor_pos();
-  perform_mouse_move(_last_cursor, cpos);
-  _last_cursor = cpos;
-}
-
-//--------------------------------------------------------------------
-void orbit_camman::on_mouse_wheel(
-  GLFWwindow* wnd, double xoffset, double yoffset)
-{
-  perform_mouse_wheel(vec2(xoffset, yoffset));
+  camman::on_mouse_move(wnd, x, y);
 }
 
 //--------------------------------------------------------------------
@@ -99,7 +67,7 @@ void orbit_camman::lookat(const vec3& eye, const vec3& center, const vec3& up)
 }
 
 //--------------------------------------------------------------------
-void orbit_camman::perform_mouse_wheel(const vec2& offset)
+void orbit_camman::perform_mouse_wheel(GLFWwindow* wnd, const vec2& offset)
 {
   GLfloat scale = 1 - get_wheel_scale() * offset.y;
   _distance *= scale;

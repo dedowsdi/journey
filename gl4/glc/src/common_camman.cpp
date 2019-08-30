@@ -43,7 +43,8 @@ void blend_camman::on_key(
   }
 }
 //--------------------------------------------------------------------
-void blend_camman::perform_mouse_move(const vec2& p0, const vec2& p1)
+void blend_camman::perform_mouse_move(
+  GLFWwindow* wnd, const vec2& p0, const vec2& p1)
 {
   // v_r_mat = pitch(-dy) * v_r_mat * yaw(dx)
   auto offset = p1 - p0;
@@ -58,29 +59,13 @@ trackball_camman::trackball_camman() : orbit_camman(), _ball_radius(0.6)
   _ball_center = vec2(glfw_win_size()) * 0.5f;
 }
 
-// https://www.khronos.org/opengl/wiki/Object_Mouse_Trackball
-vec3 wnd2ball(const vec2& p, const vec2& center, GLfloat radius)
-{
-  auto pos = p - center;
-  auto l2 = length2(pos);
-  auto r2 = radius * radius;
-  if (l2 <= r2 * 0.5f)
-    return vec3(pos, sqrt(r2 - l2));
-  else
-    return vec3(pos, r2 * 0.5f / sqrt(l2));
-}
-
 //--------------------------------------------------------------------
-void trackball_camman::perform_mouse_move(const vec2& p0, const vec2& p1)
+void trackball_camman::perform_mouse_move(
+  GLFWwindow* wnd, const vec2& p0, const vec2& p1)
 {
-  auto size = glfw_win_size();
-  auto r = std::min(size.x, size.y) * _ball_radius;
-
-  auto sp0 = wnd2ball(p0, _ball_center, r);
-  auto sp1 = wnd2ball(p1, _ball_center, r);
-  // auto ball_rot = rotate_to(sp0, sp1);
-  // set_rotation(rotate_to(sp1, sp0) * get_rotation());
-  set_rotation(get_rotation() * rotate_to(normalize(sp1), normalize(sp0)));
+  auto r = glfw_min_wh(wnd) * _ball_radius;
+  auto ball_rotate = trackball_rotate(p1, p0, _ball_center, r);
+  set_rotation(get_rotation() * ball_rotate);
 }
 
 //--------------------------------------------------------------------
@@ -165,7 +150,7 @@ void free_camman::on_mouse_move(GLFWwindow* wnd, double x, double y)
   auto p = glfw2gl(vec2(x, y));
 
   // fix cursor
-  auto center = glfw_win_size() * 0.5f;
+  auto center = glfw_win_size(wnd) * 0.5f;
   glfwSetCursorPos(wnd, center.x, center.y);
 
   vec2 offset = p - center;

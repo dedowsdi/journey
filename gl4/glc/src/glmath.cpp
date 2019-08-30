@@ -289,35 +289,24 @@ GLfloat cubic_in_out(GLfloat x)
 }
 
 //--------------------------------------------------------------------
-glm::mat4 arcball(const glm::vec2& p0, const glm::vec2& p1,
-  const glm::mat4& w_mat_i, GLfloat radius /* = 0.8*/)
+vec3 wnd2ball(const vec2& p, const vec2& center, GLfloat radius)
 {
-  glm::vec4 n0 = w_mat_i * glm::vec4(p0, 0, 1);
-  glm::vec4 n1 = w_mat_i * glm::vec4(p1, 0, 1);
-  glm::vec3 sp0 = ndc_tosphere(vec2(n0), radius);
-  glm::vec3 sp1 = ndc_tosphere(vec2(n1), radius);
-
-  GLfloat rp_radius = 1 / radius;
-
-  // get rotate axis in camera space
-  glm::vec3 axis = cross(sp0, sp1);
-
-  GLfloat theta = glm::orientedAngle(sp0 * rp_radius, sp1 * rp_radius, axis);
-
-  return glm::rotate(theta, axis);
+  auto pos = p - center;
+  auto l2 = length2(pos);
+  auto r2 = radius * radius;
+  if (l2 <= r2 * 0.5f)
+    return vec3(pos, sqrt(r2 - l2));
+  else
+    return vec3(pos, r2 * 0.5f / sqrt(l2));
 }
 
 //--------------------------------------------------------------------
-glm::vec3 ndc_tosphere(const glm::vec2& p, GLfloat radius /* = 0.8f*/)
+mat4 trackball_rotate(
+  const vec2& p0, const vec2& p1, const vec2& center, GLfloat radius)
 {
-  GLfloat l2 = glm::length2(p);
-  if (l2 >= radius * radius)
-  {
-    return glm::vec3(p * radius / glm::sqrt(l2), 0);
-  } else
-  {
-    return glm::vec3(p, glm::sqrt(radius * radius - l2));
-  }
+  auto sp0 = wnd2ball(p0, center, radius);
+  auto sp1 = wnd2ball(p1, center, radius);
+  return rotate_to(normalize(sp0), normalize(sp1));
 }
 
 //--------------------------------------------------------------------

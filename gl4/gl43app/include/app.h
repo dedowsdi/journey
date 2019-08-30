@@ -27,6 +27,7 @@
 #include "timer.h"
 #include "bitmap_text.h"
 #include "common_camman.h"
+#include "glfw_handler.h"
 
 #ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
@@ -95,6 +96,9 @@ public:
 
   virtual void reload_shaders() {}
 
+  void add_input_handler(const std::shared_ptr<glfw_handler>& handler);
+  void remove_input_handler(const std::shared_ptr<glfw_handler>& handler);
+
 protected:
   virtual void init_info();
   virtual void init_gl();
@@ -106,6 +110,7 @@ protected:
   virtual void update_time();
   virtual void update_fps();
   virtual void update_camera();
+  virtual void update_input_handlers();
 
   virtual void loop();
   virtual void shutdown() {
@@ -172,6 +177,9 @@ protected:
     mat4 rotation;
   };
   orbit_camman_info m_orbit_camman_info;
+
+  using glfw_handlers = std::vector<std::shared_ptr<glfw_handler>>;
+  glfw_handlers m_input_handlers;
 };
 }
 #endif /* ifndef GL4_COMMON_APP_H */

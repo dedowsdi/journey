@@ -60,6 +60,8 @@ set(GLC_SRCS
     src/jsoncfg.cpp
     src/camman.cpp
     src/common_camman.cpp
+    src/glfw_handler.cpp
+    src/objman.cpp
     )
 
 set(GLC glc${GLC_GL_VERSION})

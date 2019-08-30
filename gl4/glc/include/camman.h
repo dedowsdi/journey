@@ -2,30 +2,16 @@
 #define GLC_CAMMAN_H
 
 #include "glm.h"
-#include <GLFW/glfw3.h>
+#include "glfw_handler.h"
 
 namespace zxd
 {
 
-vec2 glfw2gl(const vec2& pos);
-vec2 current_cursor_pos();
-vec2 glfw_win_size();
-
-class camman
+class camman : public glfw_gl_handler
 {
 public:
 
   camman();
-  virtual ~camman() = default;
-
-  virtual void on_key(
-    GLFWwindow* wnd, int key, int scancode, int action, int mods){};
-  virtual void on_mouse_button(
-    GLFWwindow* wnd, int button, int action, int mods){};
-  virtual void on_mouse_move(GLFWwindow* wnd, double x, double y){};
-  virtual void on_mouse_wheel(
-    GLFWwindow* wnd, double xoffset, double yoffset){};
-  virtual void update(GLfloat dt){};
 
   // Subclass such as orbit_camman use a cached value, it doesn't feel right to
   // update base class member in child const memthod, so subclass must define
@@ -55,8 +41,8 @@ public:
   void on_mouse_button(
     GLFWwindow* wnd, int button, int action, int mods) override;
   void on_mouse_move(GLFWwindow* wnd, double x, double y) override;
-  void on_mouse_wheel(
-    GLFWwindow* wnd, double xoffset, double yoffset) override;
+
+  void perform_mouse_wheel(GLFWwindow* wnd, const vec2& offset) override;
 
   const mat4& get_v_mat() const override;
 
@@ -80,20 +66,14 @@ public:
   bool get_need_button() const { return _need_button; }
   void set_need_button(bool v){ _need_button = v; }
 
-protected:
-  const vec2& get_last_cursor() const { return _last_cursor; }
-
 private:
 
-  virtual void perform_mouse_move(const vec2& p0, const vec2& p1){};
-  virtual void perform_mouse_wheel(const vec2& offset);
   void dirty(){ _dirty = true;}
 
   int _button{GLFW_MOUSE_BUTTON_MIDDLE};
   mutable bool _dirty{true};
   bool _need_button{true};
   GLfloat _distance{-1};
-  vec2 _last_cursor{0};
   vec3 _center{0}; // world center
   mat4 _rotation{1};
   mutable mat4 _v_mat;
