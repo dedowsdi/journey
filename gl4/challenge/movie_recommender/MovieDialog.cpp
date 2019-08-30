@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QDoubleValidator>
 #include <algorithm>
+#include <cmath>
 
 class StrictDoubleValidator : public QDoubleValidator
 {
@@ -155,7 +156,7 @@ void MovieDialog::recommend()
       }
     }
     // add 1, so 0 map to 1, infinity map to 0
-    difference = 1/(1+ sqrt(difference));
+    difference = 1/(1+ std::sqrt(difference));
     similarUsers.push_back(qMakePair(userName, difference));
   }
 

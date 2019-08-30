@@ -6,7 +6,6 @@
 #include <exception>
 #include <iostream>
 #include <vector>
-#include <glm/fwd.hpp>
 
 #include "glm.h"
 
@@ -44,10 +43,12 @@ namespace string_util
   template<typename It>
   std::string join(It beg, It end, const std::string& seperator = ",");
 
-  glm::vec2 stovec2(const std::string& s);
-  glm::vec3 stovec3(const std::string& s);
-  glm::vec4 stovec4(const std::string& s);
-  glm::mat4 stomat4(const std::string& s);
+  glm::vec2 to_vec2(const std::string& s);
+  glm::vec3 to_vec3(const std::string& s);
+  glm::vec4 to_vec4(const std::string& s);
+
+  glm::mat4 to_mat4(const std::string& s);
+
   std::string uint32_to_utf8(uint32_t i);
 
 // \033 escape

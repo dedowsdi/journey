@@ -7,14 +7,19 @@
 #include <vector>
 #include <map>
 
+namespace zxd
+{
+
+template <glm::length_t L, typename T, glm::qualifier Q>
+std::istream& operator>>(std::istream& is, glm::vec<L, T, Q>& v);
+
+template <glm::length_t C, glm::length_t R, typename T, glm::qualifier Q>
+std::istream& operator>>(std::istream& is, glm::mat<C, R, T, Q>& v);
+
+}
+
 namespace stream_util
 {
-  std::vector<float> read_floats(std::istream& is, GLuint count = -1);
-  glm::vec4 read_vec4(std::istream& is);
-  glm::vec3 read_vec3(std::istream& is);
-  glm::vec2 read_vec2(std::istream& is);
-  glm::mat4 read_mat(std::istream& is);
-
   std::string read_resource(const std::string& filepath);
 
   // read shader, comment leading #version

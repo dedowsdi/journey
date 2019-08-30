@@ -10,14 +10,14 @@ find_package(X11 REQUIRED)
 target_link_libraries(gl43app
     PUBLIC
         glc43
-    PRIVATE
         ${GLFW3_LIBRARIES}
+        ${CMAKE_DL_LIBS}
     )
 
 IF(UNIX)
     # add pkg-config --print-requires-private glfw3
     target_link_libraries(gl43app
-        PRIVATE
+        PUBLIC
             X11 Xrandr Xinerama Xxf86vm Xcursor
         )
 ENDIF()

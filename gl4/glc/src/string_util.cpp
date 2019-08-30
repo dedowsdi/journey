@@ -93,32 +93,48 @@ std::vector<std::string> split_regex(const std::string& s, const std::string& pa
   return words;
 }
 
-//--------------------------------------------------------------------
-glm::vec2 stovec2(const std::string& s)
+template <typename T>
+T to_vec(const std::string& s)
 {
+  using namespace zxd;
   std::stringstream ss(s);
-  return stream_util::read_vec2(ss);
+  T v;
+  ss >> v;
+  return v;
+}
+
+template <typename T>
+T to_mat(const std::string& s)
+{
+  using namespace zxd;
+  std::stringstream ss(s);
+  T v;
+  ss >> v;
+  return v;
 }
 
 //--------------------------------------------------------------------
-glm::vec3 stovec3(const std::string& s)
+glm::vec2 to_vec2(const std::string& s)
 {
-  std::stringstream ss(s);
-  return stream_util::read_vec3(ss);
+  return to_vec<glm::vec2>(s);
 }
 
 //--------------------------------------------------------------------
-glm::vec4 stovec4(const std::string& s)
+glm::vec3 to_vec3(const std::string& s)
 {
-  std::stringstream ss(s);
-  return stream_util::read_vec4(ss);
+  return to_vec<glm::vec3>(s);
 }
 
 //--------------------------------------------------------------------
-glm::mat4 stomat4(const std::string& s)
+glm::vec4 to_vec4(const std::string& s)
 {
-  std::stringstream ss(s);
-  return stream_util::read_mat(ss);
+  return to_vec<glm::vec4>(s);
+}
+
+//--------------------------------------------------------------------
+glm::mat4 to_mat4(const std::string& s)
+{
+  return to_mat<glm::mat4>(s);
 }
 
 //--------------------------------------------------------------------

@@ -267,7 +267,8 @@ public:
       while(std::getline(ifs, line))
       {
         std::stringstream ss(line);
-        colors.push_back(stream_util::read_vec4(ss));
+        colors.push_back(vec4());
+        ss >> colors.back();
       }
 
       if(colors.size() != 5)

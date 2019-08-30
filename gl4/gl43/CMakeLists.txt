@@ -3,7 +3,6 @@ set(SRCS
     )
 
 add_library(gl43 ${SRCS})
-target_link_libraries(gl43 PRIVATE ${CMAKE_DL_LIBS})
 
 target_include_directories(gl43
     PUBLIC
@@ -13,7 +12,7 @@ target_include_directories(gl43
 
 target_link_libraries(gl43
     PUBLIC
-    OpenGL::GL
+        OpenGL::GL
     )
 
 # export build interface

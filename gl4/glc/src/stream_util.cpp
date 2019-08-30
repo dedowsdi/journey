@@ -13,69 +13,51 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
+namespace zxd
+{
+
+template <glm::length_t L, typename T, glm::qualifier Q>
+std::istream& operator>>(std::istream& is, glm::vec<L, T, Q>& v)
+{
+  for (auto i = 0; i < L; ++i)
+  {
+    is >> v[i];
+  }
+  if (is.fail())
+  {
+    throw std::runtime_error("failed to read vec" + std::to_string(L));
+  }
+  return is;
+}
+
+template std::istream& operator>>(std::istream&, glm::vec2&);
+template std::istream& operator>>(std::istream&, glm::vec3&);
+template std::istream& operator>>(std::istream&, glm::vec4&);
+
+template <glm::length_t C, glm::length_t R, typename T, glm::qualifier Q>
+std::istream& operator>>(std::istream& is, glm::mat<C, R, T, Q>& v)
+{
+  for (auto i = 0; i < C; ++i)
+  {
+    for (auto j = 0u; j < R; ++j)
+    {
+      is >> v[i][j];
+    }
+  }
+  if (is.fail())
+  {
+    throw std::runtime_error("failed to read vec" + std::to_string(R));
+  }
+  return is;
+}
+
+template std::istream& operator>>(std::istream&, glm::mat4&);
+
+}
+
 namespace stream_util
 {
 
-//--------------------------------------------------------------------
-std::vector<float> read_floats(std::istream& is, GLuint count)
-{
-  bool count_check = count != -1;
-  std::vector<float> floats;
-  GLfloat f;
-  while(count && is)
-  {
-    is >> f;
-    floats.push_back(f);
-    --count;
-  }
-
-  if(is.fail())
-  {
-    std::stringstream ss;
-    ss << "failed to read floats, missing " << count;
-    throw std::runtime_error(ss.str());
-  }
-
-  if(count_check && count != 0)
-  {
-    std::stringstream ss;
-    ss << "not enough float, missing " << count;
-    throw std::runtime_error(ss.str());
-  }
-
-  return floats;
-}
-
-//--------------------------------------------------------------------
-glm::vec4 read_vec4(std::istream& is)
-{
-  auto floats = read_floats(is, 4);
-  return glm::vec4(floats[0], floats[1], floats[2], floats[3]);
-}
-
-//--------------------------------------------------------------------
-glm::vec3 read_vec3(std::istream& is)
-{
-  auto floats = read_floats(is, 3);
-  return glm::vec3(floats[0], floats[1], floats[2]);
-}
-
-//--------------------------------------------------------------------
-glm::vec2 read_vec2(std::istream& is)
-{
-  auto floats = read_floats(is);
-  return glm::vec2(floats[0], floats[1]);
-}
-
-//--------------------------------------------------------------------
-glm::mat4 read_mat(std::istream& is)
-{
-  auto floats = read_floats(is, 16);
-  return glm::mat4(floats[0],  floats[1],  floats[2],  floats[3],
-                   floats[4],  floats[5],  floats[6],  floats[7],
-                   floats[8],  floats[9],  floats[10], floats[11],
-                   floats[12], floats[13], floats[14], floats[15]);
-}
 
 //--------------------------------------------------------------------
 std::string read_resource(const std::string& filepath)

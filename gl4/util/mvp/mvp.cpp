@@ -41,6 +41,7 @@
 #include <sstream>
 #include <fstream>
 #include "string_util.h"
+#include "stream_util.h"
 #include "glm.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -49,6 +50,7 @@
 #include <iomanip>
 
 using namespace glm;
+using namespace zxd;
 
 std::string file_path;
 std::string file_content;
@@ -239,7 +241,8 @@ mat4 read_mat4(std::istream& is)
   // matrix scale vec3
   if(word == "scale")
   {
-    vec3 v = stream_util::read_vec3(is);
+    vec3 v;
+    is >> v;
     // std::cout << v[0] << " " << v[1] << " " << v[2] << " " << std::endl;
     return glm::scale(v);
   }
@@ -247,44 +250,48 @@ mat4 read_mat4(std::istream& is)
   // matrix rotate angle vec3
   if(word == "rotate")
   {
-    vec4 v = stream_util::read_vec4(is);
+    vec4 v;
+    is >> v;
     return glm::rotate(v.x, vec3(v.y, v.z, v.w));
   }
 
   // matrix translate vec3
   if(word == "translate")
   {
-    vec3 v = stream_util::read_vec3(is);
+    vec3 v;
+    is >> v;
     return glm::translate(v);
   }
 
   // matrix ortho left right bottom top near far
   if(word == "ortho")
   {
-    vec3 v0 = stream_util::read_vec3(is);
-    vec3 v1 = stream_util::read_vec3(is);
+    vec3 v0, v1;
+    is >> v0 >> v1;
     return glm::ortho(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z);
   }
 
   //    matrix perspective flovy aspect_ratio near far
   if(word == "perspective")
   {
-    vec4 v = stream_util::read_vec4(is);
+    vec4 v;
+    is >> v;
     return glm::perspective(v.x, v.y, v.z, v.w);
   }
 
   //    matrix lookat vec3 vec3 vec3
   if(word == "lookat")
   {
-    vec3 eye = stream_util::read_vec3(is);
-    vec3 center = stream_util::read_vec3(is);
-    vec3 up = stream_util::read_vec3(is);
+    vec3 eye, center, up;
+    is >> eye >> center >> up;
     return glm::lookAt(eye, center, up);
   }
 
   if(word == "plain")
   {
-    return stream_util::read_mat(is);
+    mat4 m;
+    is >> m;
+    return m;
   }
 
   throw std::runtime_error("unknow matrix type : " + word);
@@ -327,9 +334,7 @@ void add_print_matrix(std::istream& is)
 void add_print_vector(std::istream& is)
 {
   print_vector pd;
-  is >> pd.start;
-  is >> pd.count;
-  pd.v = stream_util::read_vec4(is);
+  is >> pd.start >> pd.count >> pd.v;
   //if(is.fail())
     //throw std::runtime_error("failed to add print vector");
   pvs.push_back(pd);

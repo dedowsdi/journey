@@ -88,28 +88,28 @@ float dict_script::get(const std::string& key, float fallback/* = 0*/)
 glm::vec2 dict_script::get(const std::string& key, const glm::vec2& fallback/* = vec2(0)*/)
 {
   auto iter = m_dict.find(key);
-  return iter == m_dict.end() ? fallback : string_util::stovec2(iter->second);
+  return iter == m_dict.end() ? fallback : string_util::to_vec2(iter->second);
 }
 
 //--------------------------------------------------------------------
 glm::vec3 dict_script::get(const std::string& key, const glm::vec3& fallback/* = vec3(0)*/)
 {
   auto iter = m_dict.find(key);
-  return iter == m_dict.end() ? fallback : string_util::stovec3(iter->second);
+  return iter == m_dict.end() ? fallback : string_util::to_vec3(iter->second);
 }
 
 //--------------------------------------------------------------------
 glm::vec4 dict_script::get(const std::string& key, const glm::vec4& fallback/* = vec4(0)*/)
 {
   auto iter = m_dict.find(key);
-  return iter == m_dict.end() ? fallback : string_util::stovec4(iter->second);
+  return iter == m_dict.end() ? fallback : string_util::to_vec4(iter->second);
 }
 
 //--------------------------------------------------------------------
 glm::mat4 dict_script::get(const std::string& key, const glm::mat4& fallback/* = mat4(1)*/)
 {
   auto iter = m_dict.find(key);
-  return iter == m_dict.end() ? fallback : string_util::stomat4(iter->second);
+  return iter == m_dict.end() ? fallback : string_util::to_mat4(iter->second);
 }
 
 //--------------------------------------------------------------------
