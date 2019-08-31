@@ -1,4 +1,6 @@
-#version 430 core
+#ifndef LIGHT_COUNT
+#define LIGHT_COUNT 8
+#endif
 
 in vec4 vertex;
 in vec3 normal;
@@ -6,17 +8,16 @@ in vec3 tangent;
 in vec2 texcoord;
 
 uniform mat4 mvp_mat;
-uniform mat4 mv_mat;
 
 out vs_out{
-  vec3 v_vertex;
+  vec3 vertex; 
   vec2 texcoord;
   mat3 tbn;
 } vo;
 
 void main(void)
 {
-  vo.v_vertex = (mv_mat * vertex).xyz;
+  vo.vertex = vertex.xyz / vertex.w;
   vo.texcoord = texcoord;
 
   vec3 B = cross(normal, tangent);

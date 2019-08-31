@@ -8,12 +8,13 @@
 #include "quad.h"
 #include "texutil.h"
 #include "stream_util.h"
+#include "objman.h"
 
 namespace zxd
 {
 
 quad q;
-glm::mat4 m_mat;
+glm::mat4 m_mat(1);
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
@@ -24,16 +25,17 @@ struct use_normal_map_view_program : public zxd::program
   GLint ul_mv_mat;
   GLint ul_mvp_mat;
 
-  virtual void update_uniforms(const mat4 &m_mat)
+  virtual void update_uniforms(
+    const mat4& p_mat, const mat4& v_mat, const mat4& m_mat, GLuint tui)
   {
     mat4 mv_mat = v_mat * m_mat;
     mat4 mv_mat_it = glm::inverse(glm::transpose(mv_mat));
     mat4 mvp_mat = p_mat * mv_mat;
 
-
     glUniformMatrix4fv(ul_mv_mat_it, 1, 0, value_ptr(mv_mat_it));
     glUniformMatrix4fv(ul_mv_mat, 1, 0, value_ptr(mv_mat));
     glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+    glUniform1i(ul_normal_map, tui);
   }
   virtual void attach_shaders()
   {
@@ -63,29 +65,34 @@ struct use_normal_map_view_program : public zxd::program
   };
 } prg0;
 
-struct use_normal_map_tangent_progrm : public program
+struct use_normal_map_object_progrm : public program
 {
   GLint ul_normal_map;
   GLint ul_m_camera;
   GLint ul_mvp_mat;
 
-  virtual void update_uniforms(const mat4 &m_mat)
+  virtual void update_uniforms(
+    const mat4& p_mat, const mat4& v_mat, const mat4& m_mat, GLuint tui)
   {
     mat4 mv_mat = v_mat * m_mat;
-    // mat4 mv_mat_i = glm::inverse(mv_mat);
-    // mat4 m_mat_i = glm::inverse(m_mat);
     mat4 mvp_mat = p_mat * mv_mat;
-    glUniformMatrix4fv(ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
-  };
+    mat4 mv_mat_i = glm::inverse(mv_mat);
+    vec3 camera = vec3(glm::column(mv_mat_i, 3));
+
+    glUniformMatrix4fv(ul_mvp_mat, 1, 0, value_ptr(mvp_mat));
+    glUniform3fv(ul_m_camera, 1, value_ptr(camera));
+    glUniform1i(ul_normal_map, tui);
+  }
+
   virtual void attach_shaders()
   {
     string_vector sv;
     sv.push_back("#version 430 core\n #define LIGHT_COUNT 1\n");
-    attach(GL_VERTEX_SHADER, sv, "shader4/use_normalmap_tangent.vs.glsl");
+    attach(GL_VERTEX_SHADER, sv, "shader4/use_normalmap_model.vs.glsl");
     sv.push_back(stream_util::read_resource("shader4/blinn.frag"));
-    attach(GL_FRAGMENT_SHADER, sv, "shader4/use_normalmap_tangent.fs.glsl");
+    attach(GL_FRAGMENT_SHADER, sv, "shader4/use_normalmap_model.fs.glsl");
 
-    name("use_normalmap_tangent");
+    name("use_normalmap_model");
   }
   virtual void bind_uniform_locations()
   {
@@ -107,7 +114,7 @@ GLuint normal_map;
 std::vector<zxd::light_source> lights;
 zxd::light_model light_model;
 zxd::material material;
-GLint light_space = 0;  // 0 : view, 1 : tangent
+GLint light_space = 0;  // 0 : view, 1 : object
 
 class normal_map_app : public app
 {
@@ -171,6 +178,12 @@ public:
 
     set_v_mat(&v_mat);
 
+    auto mvpw_mat = compute_window_mat(0, 0, wnd_width(), wnd_height()) *
+                    p_mat * v_mat * m_mat;
+    auto pos = mvpw_mat[3];
+    auto wpos = vec2(pos) / pos.w;
+    auto handler = std::make_shared<trackball_objman>(&m_mat, &v_mat, wpos);
+    add_input_handler(handler);
   }
 
   virtual void display()
@@ -181,8 +194,7 @@ public:
     if (light_space == 0)
     {
       glUseProgram(prg0);
-      prg0.update_uniforms(mat4(1.0));
-      glUniform1i(prg0.ul_normal_map, 0);
+      prg0.update_uniforms(p_mat, v_mat, m_mat, 0);
 
       for (int i = 0; i < lights.size(); ++i)
       {
@@ -191,16 +203,9 @@ public:
     } else
     {
       glUseProgram(prg1);
-      prg1.update_uniforms(mat4(1.0));
-      glUniform1i(prg1.ul_normal_map, 0);
+      prg1.update_uniforms(p_mat, v_mat, m_mat, 0);
 
-      // get camera model position
-      mat4 mv_mat = v_mat * m_mat;
-      mat4 mv_mat_i = glm::inverse(mv_mat);
-      mat4 m_mat_i = glm::inverse(m_mat);
-      vec3 camera = vec3(glm::column(mv_mat_i, 3));
-      glUniform3fv(prg1.ul_m_camera, 1, glm::value_ptr(camera));
-
+      auto m_mat_i = inverse(m_mat);
       for (int i = 0; i < lights.size(); ++i)
       {
         lights[i].update_uniforms(m_mat_i);
@@ -219,7 +224,7 @@ public:
     glDisable(GL_SCISSOR_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::stringstream ss;
-    ss << "q : lighting space : " << (light_space == 0 ? "view" : "tangent")
+    ss << "q : lighting space : " << (light_space == 0 ? "view" : "object")
        << std::endl;
     ss << "w : local viewer " << static_cast<GLint>(light_model.local_viewer)
        << std::endl;

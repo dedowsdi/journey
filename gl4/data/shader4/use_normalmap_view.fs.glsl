@@ -6,10 +6,11 @@ in vs_out{
 } fi;
 
 uniform mat4 mv_mat_it;
+uniform sampler2D normal_map;
+
 uniform material mtl;
 uniform light_model lm;
 uniform light_source lights[LIGHT_COUNT];
-uniform sampler2D normal_map;
 
 out vec4 frag_color;
 
