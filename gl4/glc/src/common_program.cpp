@@ -70,14 +70,14 @@ void blinn_program::bind_uniform_locations()
 void blinn_program::bind_lighting_uniform_locations(
   light_vector& lights, light_model& lm, material& mtl)
 {
-  lm.bind_uniform_locations(object, "lm");
+  lm.bind_uniform_locations(get_object(), "lm");
   for (int i = 0; i < lights.size(); ++i)
   {
     std::stringstream ss;
     ss << "lights[" << i << "]";
-    lights[i].bind_uniform_locations(object, ss.str());
+    lights[i].bind_uniform_locations(get_object(), ss.str());
   }
-  mtl.bind_uniform_locations(object, "mtl");
+  mtl.bind_uniform_locations(get_object(), "mtl");
 }
 
 //--------------------------------------------------------------------

@@ -17,25 +17,19 @@ void add_shader_content(string_vector& v, const std::string& content);
 
 class program
 {
-public:
-  GLuint object;
-  // some popular matrix
-
-protected:
-  std::string m_name;
 
 public:
-  program() : object(-1) {}
-  virtual ~program() {}
+  program() : _object(-1) {}
+  virtual ~program() = default;
 
   // to use this directly in gl procedure
-  operator GLuint() { return object; }
+  operator GLuint() { return _object; }
 
   virtual void init();
 
   virtual void reload();
 
-  bool is_inited() { return object != -1; }
+  bool is_inited() { return _object != -1; }
 
   void link();
 
@@ -75,8 +69,10 @@ public:
   void uniform4i(
     const std::string& name, GLint v0, GLint v1, GLint v2, GLint v3);
 
-  std::string name() const { return m_name; }
-  void name(std::string v) { m_name = v; }
+  std::string name() const { return _name; }
+  void name(std::string v) { _name = v; }
+
+  GLuint get_object() const { return _object; }
 
 private:
 
@@ -85,6 +81,9 @@ private:
   virtual void bind_attrib_locations(){}
 
   void create_program();
+
+  GLuint _object;
+  std::string _name;
 
 };
 }

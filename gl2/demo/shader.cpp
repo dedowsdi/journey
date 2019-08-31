@@ -89,7 +89,7 @@ class app0 : public app {
 
   void display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
-    glUseProgram(prg0.object);
+    glUseProgram(prg0.get_object());
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 

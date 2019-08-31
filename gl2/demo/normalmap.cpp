@@ -201,13 +201,13 @@ class app0 : public app {
   }
 
   void bind_uniform_locations(zxd::program &prg) {
-    lm.bind_uniform_locations(prg.object, "lm");
+    lm.bind_uniform_locations(prg.get_object(), "lm");
     for (int i = 0; i < lights.size(); ++i) {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      lights[i].bind_uniform_locations(prg.object, ss.str());
+      lights[i].bind_uniform_locations(prg.get_object(), ss.str());
     }
-    mtl.bind_uniform_locations(prg.object, "mtl");
+    mtl.bind_uniform_locations(prg.get_object(), "mtl");
   }
 
   void create_scene(void) {

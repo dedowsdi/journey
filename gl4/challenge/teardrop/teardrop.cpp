@@ -354,14 +354,14 @@ void teardrop_app::create_scene()
   gprg.init();
   {
     const char* varyings[] = {"w_vertex"};
-    glTransformFeedbackVaryings(gprg.object, 1, varyings, GL_INTERLEAVED_ATTRIBS);
+    glTransformFeedbackVaryings(gprg.get_object(), 1, varyings, GL_INTERLEAVED_ATTRIBS);
     gprg.link();
   }
 
   pprg.init();
   {
     const char* varyings[] = {"pos_o", "vel_o"};
-    glTransformFeedbackVaryings(pprg.object, 2, varyings, GL_INTERLEAVED_ATTRIBS);
+    glTransformFeedbackVaryings(pprg.get_object(), 2, varyings, GL_INTERLEAVED_ATTRIBS);
     pprg.link();
   }
 

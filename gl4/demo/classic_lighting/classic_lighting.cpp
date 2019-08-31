@@ -329,13 +329,13 @@ public:
   void bind_uniform_locations(
     light_model& lm, material& mtl, std::vector<light_source>& lights)
   {
-    lm.bind_uniform_locations(object);
-    mtl.bind_uniform_locations(object);
+    lm.bind_uniform_locations(get_object());
+    mtl.bind_uniform_locations(get_object());
     for (auto i = 0u; i < lights.size(); ++i)
     {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      lights[i].bind_uniform_locations(object, ss.str());
+      lights[i].bind_uniform_locations(get_object(), ss.str());
     }
   }
 

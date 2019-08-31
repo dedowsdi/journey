@@ -44,7 +44,7 @@ void program::init()
 //--------------------------------------------------------------------
 void program::reload()
 {
-  std::cout << "reloading shader " << m_name << std::endl;
+  std::cout << "reloading shader " << _name << std::endl;
   clear();
   init();
 }
@@ -53,39 +53,39 @@ void program::reload()
 //--------------------------------------------------------------------
 void program::bind_attrib_location(GLuint index, const std::string& name)
 {
-  glBindAttribLocation(object, index, name.c_str());
+  glBindAttribLocation(_object, index, name.c_str());
 }
 
 //--------------------------------------------------------------------
 void program::link()
 {
-  glLinkProgram(object);
+  glLinkProgram(_object);
   GLint status;
-  glGetProgramiv(object, GL_LINK_STATUS, &status);
+  glGetProgramiv(_object, GL_LINK_STATUS, &status);
   if (!status)
   {
     GLint len;
-    glGetProgramiv(object, GL_INFO_LOG_LENGTH, &len);
+    glGetProgramiv(_object, GL_INFO_LOG_LENGTH, &len);
     if (len == 0)
     {
       std::stringstream ss;
-      ss << "program " << object << " : " << m_name
+      ss << "program " << _object << " : " << _name
          << " link failed, and has no log, good luck!" << std::endl;
       std::cout << ss.str() << std::endl;
     } else
     {
       char* log = static_cast<char*>(malloc(len + 1));
-      glGetProgramInfoLog(object, len, 0, log);
+      glGetProgramInfoLog(_object, len, 0, log);
       std::cout << log << std::endl;
       print_shader_sources();
     }
   }
 
   GLint num_shaders;
-  glGetProgramiv(object, GL_ATTACHED_SHADERS, &num_shaders);
+  glGetProgramiv(_object, GL_ATTACHED_SHADERS, &num_shaders);
   constexpr GLsizei max_shaders = 64;
   std::array<GLuint, max_shaders> shaders;
-  glGetAttachedShaders(object, max_shaders, &num_shaders, &shaders.front());
+  glGetAttachedShaders(_object, max_shaders, &num_shaders, &shaders.front());
 
   std::cout << "link ";
   for (int i = 0; i < num_shaders; ++i)
@@ -102,16 +102,16 @@ void program::use()
 {
   if(!is_inited())
     init();
-  glUseProgram(object);
+  glUseProgram(_object);
 }
 
 //--------------------------------------------------------------------
 GLint program::get_attrib_location(const std::string& name)
 {
-  GLint location = glGetAttribLocation(object, name.c_str());
+  GLint location = glGetAttribLocation(_object, name.c_str());
   if (location == -1)
   {
-    std::cout << object << " : " << m_name << " : "
+    std::cout << _object << " : " << _name << " : "
               << " failed to get attribute location : \"" << name << "\""
               << std::endl;
   }
@@ -121,10 +121,10 @@ GLint program::get_attrib_location(const std::string& name)
 //--------------------------------------------------------------------
 GLint program::get_uniform_location(const std::string& name)
 {
-  auto location = glGetUniformLocation(object, name.c_str());
+  auto location = glGetUniformLocation(_object, name.c_str());
   if (location == -1)
   {
-    std::cout << object << " : " << m_name
+    std::cout << _object << " : " << _name
               << " failed to get uniform location : \"" << name << "\""
               << std::endl;
   }
@@ -168,7 +168,7 @@ bool program::attach(GLenum type, const string_vector& source)
     free(log);
     return false;
   }
-  glAttachShader(object, sh);
+  glAttachShader(_object, sh);
   glDeleteShader(sh);
   return true;
 }
@@ -204,7 +204,7 @@ void program::print_shader_sources()
   constexpr GLsizei max_shaders = 64;
   std::array<GLuint, max_shaders> shaders;
   GLsizei num_shaders;
-  glGetAttachedShaders(object, max_shaders, &num_shaders, &shaders.front());
+  glGetAttachedShaders(_object, max_shaders, &num_shaders, &shaders.front());
 
   std::cout << "============================================================"
             << std::endl;
@@ -228,9 +228,9 @@ void program::print_shader_sources()
 //--------------------------------------------------------------------
 void program::clear()
 {
-  if (glIsProgram(object))
+  if (glIsProgram(_object))
   {
-    glDeleteProgram(object);
+    glDeleteProgram(_object);
   }
 }
 
@@ -341,6 +341,6 @@ void program::uniform4i(
   glUniform4i(get_uniform_location(name), v0, v1, v2, v3);
 }
 
-void program::create_program() { object = glCreateProgram(); }
+void program::create_program() { _object = glCreateProgram(); }
 
 }

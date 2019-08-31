@@ -240,14 +240,14 @@ public:
 
   virtual void bind_uniform_locations(zxd::program &program)
   {
-    light_model.bind_uniform_locations(program.object, "lm");
+    light_model.bind_uniform_locations(program.get_object(), "lm");
     for (int i = 0; i < lights.size(); ++i)
     {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      lights[i].bind_uniform_locations(program.object, ss.str());
+      lights[i].bind_uniform_locations(program.get_object(), ss.str());
     }
-    material.bind_uniform_locations(program.object, "mtl");
+    material.bind_uniform_locations(program.get_object(), "mtl");
   }
 
   virtual void glfw_key(

@@ -59,13 +59,13 @@ class app0 : public app {
         GL_FRAGMENT_SHADER, sv, "shader2/blinn.fs.glsl");
     }
     virtual void bind_uniform_locations() {
-      light_model.bind_uniform_locations(object, "lm");
+      light_model.bind_uniform_locations(get_object(), "lm");
       for (int i = 0; i < lights.size(); ++i) {
         std::stringstream ss;
         ss << "lights[" << i << "]";
-        lights[i].bind_uniform_locations(object, ss.str());
+        lights[i].bind_uniform_locations(get_object(), ss.str());
       }
-      material.bind_uniform_locations(object, "mtl");
+      material.bind_uniform_locations(get_object(), "mtl");
     }
 
     virtual void bind_attrib_locations() {

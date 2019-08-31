@@ -65,13 +65,13 @@ struct rim_program : public zxd::program {
       GL_FRAGMENT_SHADER, sv, "shader2/rim.fs.glsl");
   }
   virtual void bind_uniform_locations() {
-    lm.bind_uniform_locations(object, "lm");
+    lm.bind_uniform_locations(get_object(), "lm");
     for (int i = 0; i < lights.size(); ++i) {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      lights[i].bind_uniform_locations(object, ss.str());
+      lights[i].bind_uniform_locations(get_object(), ss.str());
     }
-    mtl.bind_uniform_locations(object, "mtl");
+    mtl.bind_uniform_locations(get_object(), "mtl");
 
     ul_mv_mat = get_uniform_location("mv_mat");
     ul_mv_mat_it = get_uniform_location("mv_mat_it");

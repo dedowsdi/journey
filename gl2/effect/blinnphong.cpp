@@ -30,7 +30,7 @@ blinn_program prg0;
 void render() {
   mat4 model = mat4(1.0f);
   if (use_program) {
-    glUseProgram(prg0.object);
+    glUseProgram(prg0.get_object());
     prg0.update_uniforms(model, v_mat, p_mat);
     prg0.update_lighting_uniforms(lights, lm, mtl, v_mat);
     sphere0.draw();

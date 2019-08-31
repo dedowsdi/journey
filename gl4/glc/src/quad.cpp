@@ -35,7 +35,7 @@ void draw_quad(GLuint tex, GLuint tui/* = 0*/)
   glActiveTexture(tui + GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, tex);
 
-  if (prg.object == -1)
+  if (prg.get_object() == -1)
   {
     prg.init();
   }

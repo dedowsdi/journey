@@ -178,7 +178,7 @@ class app0 : public app {
 
   void render() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glUseProgram(blinn_prg.object);
+    glUseProgram(blinn_prg.get_object());
     glBindTexture(GL_TEXTURE_2D, checker_tex);
 
     blinn_prg.tex_unit = 0;

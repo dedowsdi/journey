@@ -78,6 +78,8 @@ struct glinn_program : public zxd::program
   GLint ul_g_specular;
   GLint ul_g_shininess;
 
+  GLuint light_count;
+
   glinn_program() {}
 
   void update_uniforms()
@@ -92,14 +94,8 @@ struct glinn_program : public zxd::program
     glUniform1i(ul_g_depth, 7);
   }
 
-  virtual void reset(GLuint light_count)
+  void attach_shaders() override
   {
-    if (object != -1)
-    {
-      glDeleteProgram(object);
-    }
-
-    object = glCreateProgram();
     attach(GL_VERTEX_SHADER, "shader4/use_gbuffer.vs.glsl");
     string_vector sv;
     std::stringstream ss;
@@ -109,13 +105,9 @@ struct glinn_program : public zxd::program
     sv.push_back(stream_util::read_resource("shader4/blinn.frag"));
     attach(
       GL_FRAGMENT_SHADER, sv, "shader4/use_gbuffer.fs.glsl");
-
-    this->link();
-    bind_uniform_locations();
-    bind_attrib_locations();
   }
 
-  virtual void bind_uniform_locations()
+  void bind_uniform_locations() override
   {
     ul_g_vertex = get_uniform_location("g_vertex");
     ul_g_normal = get_uniform_location("g_normal");
@@ -164,7 +156,7 @@ protected:
   void render_gbuffer()
   {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(m_render_gbuffer_program.object);
+    glUseProgram(m_render_gbuffer_program.get_object());
 
     GLuint gbuffres[] = {mg_vertex, mg_normal, mg_emission, mg_ambient,
       mg_diffuse, mg_specular, mg_shininess, mg_depth};
@@ -187,7 +179,7 @@ protected:
   {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(m_glinn.object);
+    glUseProgram(m_glinn.get_object());
 
     m_glinn.update_uniforms();
 
@@ -381,7 +373,8 @@ public:
 
   void reset_light()
   {
-    m_glinn.reset(m_num_lights);
+    m_glinn.light_count = m_num_lights;
+    m_glinn.reload();
     m_lights.clear();
 
     for (int i = 0; i < m_num_lights; ++i)
@@ -397,11 +390,11 @@ public:
       light.quadratic_attenuation = 0.25;
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      light.bind_uniform_locations(m_glinn.object, ss.str());
+      light.bind_uniform_locations(m_glinn.get_object(), ss.str());
       m_lights.push_back(light);
     }
 
-    m_light_model.bind_uniform_locations(m_glinn.object, "lm");
+    m_light_model.bind_uniform_locations(m_glinn.get_object(), "lm");
   }
 
   virtual void display()

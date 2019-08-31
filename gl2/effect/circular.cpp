@@ -61,7 +61,7 @@ class app0 : public app {
   void display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(prg0.object);
+    glUseProgram(prg0.get_object());
     glUniform1f(prg0.ul_length_scale, length_scale);
     glUniform1f(prg0.ul_time_scale, time_scale);
     glUniform1i(prg0.ul_use_origin, follow_mouse);

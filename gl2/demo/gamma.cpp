@@ -129,7 +129,7 @@ class app0 : public app {
         if (current_program != 0) {
           glUseProgram(0);
         } else {
-          glUseProgram(prg0.object);
+          glUseProgram(prg0.get_object());
           glUniform1i(prg0.ul_iamge, 0);
         }
         break;

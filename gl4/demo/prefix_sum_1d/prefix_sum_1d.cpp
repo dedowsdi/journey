@@ -81,8 +81,8 @@ public:
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffers[1]);
     glBufferData(GL_SHADER_STORAGE_BUFFER, num_data *  4, 0, GL_DYNAMIC_COPY);
 
-    glShaderStorageBlockBinding(prg.object, 0, 0);
-    glShaderStorageBlockBinding(prg.object, 1, 1);
+    glShaderStorageBlockBinding(prg.get_object(), 0, 0);
+    glShaderStorageBlockBinding(prg.get_object(), 1, 1);
 
     prg.use();
 

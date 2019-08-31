@@ -5,7 +5,7 @@
  * which means you need to render 6 times to create the depth cubemap.
  *
  * depth component of result of perspective component isn't linear, it's
- * precision is very bad if object is not near the nearplane, so i store the
+ * precision is very bad if get_object() is not near the nearplane, so i store the
  * real linear depth in the depth map:
  *    depth = (z_distance - near_plane) / (far_plane - near_plane)
  *
@@ -193,13 +193,13 @@ struct use_program : public zxd::program {
     ul_near_plane = get_uniform_location("near_plane");
     ul_far_plane = get_uniform_location("far_plane");
 
-    lm.bind_uniform_locations(object, "lm");
+    lm.bind_uniform_locations(get_object(), "lm");
     for (int i = 0; i < lights.size(); ++i) {
       std::stringstream ss;
       ss << "lights[" << i << "]";
-      lights[i].bind_uniform_locations(object, ss.str());
+      lights[i].bind_uniform_locations(get_object(), ss.str());
     }
-    mtl.bind_uniform_locations(object, "mtl");
+    mtl.bind_uniform_locations(get_object(), "mtl");
   }
 
   virtual void bind_attrib_locations() {
@@ -243,7 +243,7 @@ class app0 : public app {
     glViewport(0, 0, shadow_width, shadow_height);
 
     glCullFace(GL_FRONT);
-    glUseProgram(render_prg.object);
+    glUseProgram(render_prg.get_object());
 
     // render 6 faces of cube map
     for (int i = 0; i < 6; ++i) {
@@ -268,7 +268,7 @@ class app0 : public app {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glCullFace(GL_BACK);
 
-    glUseProgram(use_prg.object);
+    glUseProgram(use_prg.get_object());
     use_prg.update_frame();
     glBindTexture(GL_TEXTURE_CUBE_MAP, depth_cube_map);
 
