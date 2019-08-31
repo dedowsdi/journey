@@ -34,9 +34,9 @@ struct program0 : public zxd::program
   }
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_v_mat, "v_mat");
-    uniform_location(&ul_vp_mat, "vp_mat");
-    uniform_location(&ul_diffuse_map, "diffuse_map");
+    ul_v_mat = get_uniform_location("v_mat");
+    ul_vp_mat = get_uniform_location("vp_mat");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
   }
 
   virtual void bind_attrib_locations()
@@ -59,9 +59,9 @@ struct program1 : public zxd::program
   }
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_vp_mat, "vp_mat");
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_camera_pos, "camera_pos");
+    ul_vp_mat = get_uniform_location("vp_mat");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_camera_pos = get_uniform_location("camera_pos");
   }
 
   virtual void bind_attrib_locations()
@@ -85,10 +85,10 @@ struct program2 : public zxd::program
   }
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_vp_mat, "vp_mat");
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_camera_pos, "camera_pos");
-    uniform_location(&ul_camera_up, "camera_up");
+    ul_vp_mat = get_uniform_location("vp_mat");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_camera_pos = get_uniform_location("camera_pos");
+    ul_camera_up = get_uniform_location("camera_up");
   }
 
   virtual void bind_attrib_locations()

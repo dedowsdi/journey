@@ -74,8 +74,8 @@ struct dot_program : public program
 
   void bind_uniform_locations() override
   {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_color, "color");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_color = get_uniform_location("color");
   }
 }prg;
 

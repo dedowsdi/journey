@@ -35,19 +35,17 @@ public:
 
   virtual void reload();
 
-  void bind_attrib_location(GLuint index, const std::string& name);
-  virtual void bind_attrib_locations(){}
-
   bool is_inited() { return object != -1; }
 
   void link();
+
   void use();
 
-  virtual void attach_shaders(){};
-  virtual void bind_uniform_locations(){};
+  void bind_attrib_location(GLuint index, const std::string& name);
 
-  GLint attrib_location(const std::string& name);
-  void uniform_location(GLint* location, const std::string& name);
+  GLint get_attrib_location(const std::string& name);
+
+  GLint get_uniform_location(const std::string& name);
 
   void attach(GLenum type, const std::string& file,
     const std::map<std::string, std::string>& replace_map = {});
@@ -55,9 +53,6 @@ public:
   void attach(GLenum type, const string_vector& source, const std::string& file,
     const std::map<std::string, std::string>& replace_map = {});
   void print_shader_sources();
-
-  std::string name() const { return m_name; }
-  void name(std::string v) { m_name = v; }
 
   void clear();
 
@@ -80,12 +75,16 @@ public:
   void uniform4i(
     const std::string& name, GLint v0, GLint v1, GLint v2, GLint v3);
 
+  std::string name() const { return m_name; }
+  void name(std::string v) { m_name = v; }
 
 private:
-  void create_program()
-  {
-    object = glCreateProgram();
-  }
+
+  virtual void attach_shaders(){};
+  virtual void bind_uniform_locations(){};
+  virtual void bind_attrib_locations(){}
+
+  void create_program();
 
 };
 }

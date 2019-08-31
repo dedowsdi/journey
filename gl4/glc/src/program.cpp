@@ -106,12 +106,12 @@ void program::use()
 }
 
 //--------------------------------------------------------------------
-GLint program::attrib_location(const std::string& name)
+GLint program::get_attrib_location(const std::string& name)
 {
   GLint location = glGetAttribLocation(object, name.c_str());
   if (location == -1)
   {
-    std::cout << object << " : " << m_name
+    std::cout << object << " : " << m_name << " : "
               << " failed to get attribute location : \"" << name << "\""
               << std::endl;
   }
@@ -119,15 +119,16 @@ GLint program::attrib_location(const std::string& name)
 }
 
 //--------------------------------------------------------------------
-void program::uniform_location(GLint* location, const std::string& name)
+GLint program::get_uniform_location(const std::string& name)
 {
-  *location = glGetUniformLocation(object, name.c_str());
-  if (*location == -1)
+  auto location = glGetUniformLocation(object, name.c_str());
+  if (location == -1)
   {
     std::cout << object << " : " << m_name
               << " failed to get uniform location : \"" << name << "\""
               << std::endl;
   }
+  return location;
 }
 
 //--------------------------------------------------------------------
@@ -236,188 +237,110 @@ void program::clear()
 //--------------------------------------------------------------------
 void program::uniform1f(const std::string &name, GLfloat v0)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform1f(location, v0);
-  }
+  glUniform1f(get_uniform_location(name), v0);
 }
 
 //--------------------------------------------------------------------
 void program::uniform2f(const std::string& name, GLfloat v0, GLfloat v1)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform2f(location, v0, v1);
-  }
+  glUniform2f(get_uniform_location(name), v0, v1);
 }
 
 //--------------------------------------------------------------------
 void program::uniform3f(
   const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform3f(location, v0, v1, v2);
-  }
+  glUniform3f(get_uniform_location(name), v0, v1, v2);
 }
 
 //--------------------------------------------------------------------
 void program::uniform4f(
   const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform4f(location, v0, v1, v2, v3);
-  }
+  glUniform4f(get_uniform_location(name), v0, v1, v2, v3);
 }
 
 //--------------------------------------------------------------------
 void program::uniform1i(const std::string& name, GLint v0)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform1i(location, v0);
-  }
+  glUniform1i(get_uniform_location(name), v0);
 }
 
 //--------------------------------------------------------------------
 void program::uniform2i(const std::string& name, GLint v0, GLint v1)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform2i(location, v0, v1);
-  }
+  glUniform2i(get_uniform_location(name), v0, v1);
 }
 
 //--------------------------------------------------------------------
 void program::uniform3i(const std::string& name, GLint v0, GLint v1, GLint v2)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform3i(location, v0, v1, v2);
-  }
+  glUniform3i(get_uniform_location(name), v0, v1, v2);
 }
 
 //--------------------------------------------------------------------
 void program::uniform1fv(
   const std::string& name, GLsizei count, const GLfloat* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform1fv(location, count, value);
-  }
+  glUniform1fv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform2fv(
   const std::string& name, GLsizei count, const GLfloat* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform2fv(location, count, value);
-  }
+  glUniform2fv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform3fv(
   const std::string& name, GLsizei count, const GLfloat* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform3fv(location, count, value);
-  }
+  glUniform3fv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform4fv(
   const std::string& name, GLsizei count, const GLfloat* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform4fv(location, count, value);
-  }
+  glUniform4fv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform1iv(
   const std::string& name, GLsizei count, const GLint* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform1iv(location, count, value);
-  }
+  glUniform1iv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform2iv(
   const std::string& name, GLsizei count, const GLint* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform2iv(location, count, value);
-  }
+  glUniform2iv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform3iv(
   const std::string& name, GLsizei count, const GLint* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform3iv(location, count, value);
-  }
+  glUniform3iv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform4iv(
   const std::string& name, GLsizei count, const GLint* value)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform4iv(location, count, value);
-  }
+  glUniform4iv(get_uniform_location(name), count, value);
 }
 
 //--------------------------------------------------------------------
 void program::uniform4i(
   const std::string& name, GLint v0, GLint v1, GLint v2, GLint v3)
 {
-  GLint location;
-  uniform_location(&location, name);
-  if (location != -1)
-  {
-    glUniform4i(location, v0, v1, v2, v3);
-  }
+  glUniform4i(get_uniform_location(name), v0, v1, v2, v3);
 }
+
+void program::create_program() { object = glCreateProgram(); }
 
 }

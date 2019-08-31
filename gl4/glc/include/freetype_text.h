@@ -39,9 +39,9 @@ struct freetype_text_program : public zxd::program
   }
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_text_color, "text_color");
-    uniform_location(&ul_font_map, "font_map");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_text_color = get_uniform_location("text_color");
+    ul_font_map = get_uniform_location("font_map");
   }
   virtual void bind_attrib_locations()
   {

@@ -29,8 +29,8 @@ struct threshold_program : public program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_quad_map, "quad_map");
-    uniform_location(&ul_threshold, "threshold");
+    ul_quad_map = get_uniform_location("quad_map");
+    ul_threshold = get_uniform_location("threshold");
   }
 
   virtual void bind_attrib_locations()

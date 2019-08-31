@@ -66,13 +66,12 @@ struct parallax_program : public program
 
   virtual void bind_uniform_locations()
   {
-    // uniform_location(&ul_eye, "eye");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_normal_map, "normal_map");
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_depth_map, "depth_map");
-    uniform_location(&ul_m_camera, "m_camera");
-    uniform_location(&ul_height_scale, "height_scale");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_normal_map = get_uniform_location("normal_map");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_depth_map = get_uniform_location("depth_map");
+    ul_m_camera = get_uniform_location("m_camera");
+    ul_height_scale = get_uniform_location("height_scale");
   }
   virtual void bind_attrib_locations()
   {

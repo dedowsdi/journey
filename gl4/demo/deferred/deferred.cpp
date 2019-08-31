@@ -55,10 +55,9 @@ struct render_gbuffer_program : public zxd::program
   }
   virtual void bind_uniform_locations()
   {
-    // uniform_location(&ul_eye, "eye");
-    uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location(&ul_mv_mat_it, "mv_mat_it");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
+    ul_mv_mat = get_uniform_location("mv_mat");
+    ul_mv_mat_it = get_uniform_location("mv_mat_it");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
   }
 
   virtual void bind_attrib_locations()
@@ -118,14 +117,14 @@ struct glinn_program : public zxd::program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_g_vertex, "g_vertex");
-    uniform_location(&ul_g_normal, "g_normal");
-    uniform_location(&ul_g_emission, "g_emission");
-    uniform_location(&ul_g_ambient, "g_ambient");
-    uniform_location(&ul_g_diffuse, "g_diffuse");
-    uniform_location(&ul_g_specular, "g_specular");
-    uniform_location(&ul_g_shininess, "g_shininess");
-    uniform_location(&ul_g_depth, "g_depth");
+    ul_g_vertex = get_uniform_location("g_vertex");
+    ul_g_normal = get_uniform_location("g_normal");
+    ul_g_emission = get_uniform_location("g_emission");
+    ul_g_ambient = get_uniform_location("g_ambient");
+    ul_g_diffuse = get_uniform_location("g_diffuse");
+    ul_g_specular = get_uniform_location("g_specular");
+    ul_g_shininess = get_uniform_location("g_shininess");
+    ul_g_depth = get_uniform_location("g_depth");
   }
 
   virtual void bind_attrib_locations(){};

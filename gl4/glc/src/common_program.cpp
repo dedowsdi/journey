@@ -55,15 +55,15 @@ void blinn_program::bind_uniform_locations()
 {
   if(!this->instance)
   {
-    uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location(&ul_mv_mat_it, "mv_mat_it");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
+    ul_mv_mat = get_uniform_location("mv_mat");
+    ul_mv_mat_it = get_uniform_location("mv_mat_it");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
   }
   if (with_texcoord)
   {
-    uniform_location(&ul_map, map_name);
+    ul_map = get_uniform_location(map_name);
   }
-  uniform_location(&ul_normal_scale, "normal_scale");
+  ul_normal_scale = get_uniform_location("normal_scale");
 }
 
 //--------------------------------------------------------------------
@@ -126,7 +126,7 @@ void quad_program::update_uniforms(GLuint tex_index /* = 0*/)
 //--------------------------------------------------------------------
 void quad_program::bind_uniform_locations()
 {
-  uniform_location(&ul_quad_map, quad_map_name);
+  ul_quad_map = get_uniform_location(quad_map_name);
 }
 
 //--------------------------------------------------------------------
@@ -146,7 +146,7 @@ void point_program::attach_shaders()
 //--------------------------------------------------------------------
 void point_program::bind_uniform_locations()
 {
-  uniform_location(&ul_mvp_mat, "mvp_mat");
+  ul_mvp_mat = get_uniform_location("mvp_mat");
 }
 
 //--------------------------------------------------------------------
@@ -195,12 +195,12 @@ void normal_viewer_program::attach_shaders()
 //--------------------------------------------------------------------
 void normal_viewer_program::bind_uniform_locations()
 {
-  uniform_location(&ul_p_mat, "p_mat");
-  uniform_location(&ul_mv_mat, "mv_mat");
-  uniform_location(&ul_mv_mat_it, "mv_mat_it");
+  ul_p_mat = get_uniform_location("p_mat");
+  ul_mv_mat = get_uniform_location("mv_mat");
+  ul_mv_mat_it = get_uniform_location("mv_mat_it");
 
-  uniform_location(&ul_normal_length, "normal_length");
-  uniform_location(&ul_color, "color");
+  ul_normal_length = get_uniform_location("normal_length");
+  ul_color = get_uniform_location("color");
 }
 
 //--------------------------------------------------------------------
@@ -220,7 +220,7 @@ void vertex_color_program::attach_shaders()
 //--------------------------------------------------------------------
 void vertex_color_program::bind_uniform_locations()
 {
-  uniform_location(&ul_mvp_mat, "mvp_mat");
+  ul_mvp_mat = get_uniform_location("mvp_mat");
 }
 
 //--------------------------------------------------------------------
@@ -246,9 +246,9 @@ void texture_animation_program::attach_shaders()
 //--------------------------------------------------------------------
 void texture_animation_program::bind_uniform_locations()
 {
-  uniform_location(&ul_mvp_mat, "mvp_mat");
-  uniform_location(&ul_diffuse_map, "diffuse_map");
-  uniform_location(&ul_tex_mat, "tex_mat");
+  ul_mvp_mat = get_uniform_location("mvp_mat");
+  ul_diffuse_map = get_uniform_location("diffuse_map");
+  ul_tex_mat = get_uniform_location("tex_mat");
 }
 
 //--------------------------------------------------------------------
@@ -286,14 +286,14 @@ void lightless_program::attach_shaders()
 //--------------------------------------------------------------------
 void lightless_program::bind_uniform_locations()
 {
-  uniform_location(&ul_mvp_mat, "mvp_mat");
+  ul_mvp_mat = get_uniform_location("mvp_mat");
   if(with_texcoord)
   {
-    uniform_location(&ul_diffuse_map, "diffuse_map");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
   }
   else if(!with_color)
   {
-    uniform_location(&ul_color, "color");
+    ul_color = get_uniform_location("color");
   }
 }
 
@@ -330,10 +330,10 @@ void billboard_program::attach_shaders()
 //--------------------------------------------------------------------
 void billboard_program::bind_uniform_locations()
 {
-  uniform_location(&ul_vp_mat, "vp_mat");
-  uniform_location(&ul_camera_pos, "camera_pos");
+  ul_vp_mat = get_uniform_location("vp_mat");
+  ul_camera_pos = get_uniform_location("camera_pos");
   if(use_camera_up)
-    uniform_location(&ul_camera_up, "camera_up");
+    ul_camera_up = get_uniform_location("camera_up");
 }
 
 //--------------------------------------------------------------------

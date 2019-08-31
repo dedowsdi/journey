@@ -51,9 +51,9 @@ public:
 
   void bind_uniform_locations() override
   {
-    uniform_location(&ul_buffer0, "buffer0");
-    uniform_location(&ul_buffer1, "buffer1");
-    uniform_location(&ul_dampen, "dampen");
+    ul_buffer0 = get_uniform_location("buffer0");
+    ul_buffer1 = get_uniform_location("buffer1");
+    ul_dampen = get_uniform_location("dampen");
   }
 
   void bind_attrib_locations() override

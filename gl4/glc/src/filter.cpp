@@ -28,7 +28,7 @@ protected:
   void bind_uniform_locations()
   {
     quad_program::bind_uniform_locations();
-    uniform_location(&ul_threshold, "threshold");
+    ul_threshold = get_uniform_location("threshold");
   }
 } filter_prg;
 
@@ -57,8 +57,8 @@ public:
   virtual void bind_uniform_locations()
   {
     quad_program::bind_uniform_locations();
-    uniform_location(&ul_horizontal, "horizontal");
-    uniform_location(&ul_weights, "weights");
+    ul_horizontal = get_uniform_location("horizontal");
+    ul_weights = get_uniform_location("weights");
   }
 
   void init()
@@ -97,9 +97,9 @@ struct bloom_program : public program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_exposure, "exposure");
-    uniform_location(&ul_hdr_map, "hdr_map");
-    uniform_location(&ul_brightness_map, "brightness_map");
+    ul_exposure = get_uniform_location("exposure");
+    ul_hdr_map = get_uniform_location("hdr_map");
+    ul_brightness_map = get_uniform_location("brightness_map");
   }
 
   virtual void bind_attrib_locations()

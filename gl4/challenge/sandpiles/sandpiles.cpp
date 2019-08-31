@@ -57,7 +57,7 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_diffuse_map, "diffuse_map");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
   }
 
   void bind_attrib_locations()
@@ -88,12 +88,12 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_color0, "color0");
-    uniform_location(&ul_color1, "color1");
-    uniform_location(&ul_color2, "color2");
-    uniform_location(&ul_color3, "color3");
-    uniform_location(&ul_color4, "color4");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_color0 = get_uniform_location("color0");
+    ul_color1 = get_uniform_location("color1");
+    ul_color2 = get_uniform_location("color2");
+    ul_color3 = get_uniform_location("color3");
+    ul_color4 = get_uniform_location("color4");
   }
 
   void bind_attrib_locations()

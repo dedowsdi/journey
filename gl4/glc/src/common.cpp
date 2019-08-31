@@ -11,13 +11,14 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-void uniform_location(GLint *loc, GLint program, const std::string &name)
+GLint get_uniform_location(GLint program, const std::string &name)
 {
-  *loc = glGetUniformLocation(program, name.c_str());
-  if (*loc == -1)
+  auto location = glGetUniformLocation(program, name.c_str());
+  if (location == -1)
   {
     printf("failed to get uniform location : %s\n", name.c_str());
   }
+  return location;
 }
 
 //--------------------------------------------------------------------

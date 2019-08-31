@@ -55,11 +55,14 @@ struct program0 : public program {
     attach(GL_FRAGMENT_SHADER, sv);
   }
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_iamge, "image");
-    uniform_location(&al_color, "color");
+    ul_iamge = get_uniform_location("image");
+    al_color = get_uniform_location("color");
   };
 
-  virtual void bind_attrib_locations() { al_color = attrib_location("color"); }
+  virtual void bind_attrib_locations()
+  {
+    al_color = get_attrib_location("color");
+  }
 } prg0;
 
 class app0 : public app {

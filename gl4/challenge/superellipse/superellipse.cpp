@@ -50,10 +50,10 @@ struct fs_program : public program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_resolution, "resolution");
-    uniform_location(&ul_a, "a");
-    uniform_location(&ul_b, "b");
-    uniform_location(&ul_n, "n");
+    ul_resolution = get_uniform_location("resolution");
+    ul_a = get_uniform_location("a");
+    ul_b = get_uniform_location("b");
+    ul_n = get_uniform_location("n");
   }
 
   virtual void bind_attrib_locations()

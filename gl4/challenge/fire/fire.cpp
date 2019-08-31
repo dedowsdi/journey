@@ -65,9 +65,9 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_fire_map, "fire_map");
-    uniform_location(&ul_cool_map, "cool_map");
-    uniform_location(&ul_time, "time");
+    ul_fire_map = get_uniform_location("fire_map");
+    ul_cool_map = get_uniform_location("cool_map");
+    ul_time = get_uniform_location("time");
   }
 
   void bind_attrib_locations()
@@ -93,7 +93,7 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_cool_map, "cool_map");
+    ul_cool_map = get_uniform_location("cool_map");
   }
 
   void bind_attrib_locations()
@@ -120,8 +120,8 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_time, "time");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_time = get_uniform_location("time");
   }
 
   void bind_attrib_locations()
@@ -148,8 +148,8 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_time, "time");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_time = get_uniform_location("time");
   }
 
   void bind_attrib_locations()

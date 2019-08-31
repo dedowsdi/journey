@@ -89,10 +89,10 @@ public:
 
   void bind_uniform_locations() override
   {
-    uniform_location(&ul_vp_mat, "vp_mat");
-    uniform_location(&ul_geometry_tbo, "geometry_tbo");
-    uniform_location(&ul_triangle_count, "triangle_count");
-    uniform_location(&ul_color, "color");
+    ul_vp_mat = get_uniform_location("vp_mat");
+    ul_geometry_tbo = get_uniform_location("geometry_tbo");
+    ul_triangle_count = get_uniform_location("triangle_count");
+    ul_color = get_uniform_location("color");
   }
 
 } pprg;

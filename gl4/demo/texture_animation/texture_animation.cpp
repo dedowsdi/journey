@@ -37,15 +37,15 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_tex_mat, "tex_mat");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_tex_mat = get_uniform_location("tex_mat");
   }
 
   void bind_attrib_locations()
   {
-    al_vertex = attrib_location("vertex");
-    al_texcoord = attrib_location("texcoord");
+    al_vertex = get_attrib_location("vertex");
+    al_texcoord = get_attrib_location("texcoord");
   }
 
 } prg;

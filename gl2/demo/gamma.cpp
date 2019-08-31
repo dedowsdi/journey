@@ -25,7 +25,7 @@ struct gamma_program : public program {
     attach(GL_FRAGMENT_SHADER, "shader2/gamma.fs.glsl");
   }
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_iamge, "image");
+    ul_iamge = get_uniform_location("image");
   };
 } prg0;
 

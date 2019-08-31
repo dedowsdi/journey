@@ -70,9 +70,9 @@ struct render_program : public zxd::program {
   render_program() {}
 
   void bind_uniform_locations() {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_near_plane, "near_plane");
-    uniform_location(&ul_far_plane, "far_plane");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_near_plane = get_uniform_location("near_plane");
+    ul_far_plane = get_uniform_location("far_plane");
   }
 
   void attach_shaders() {
@@ -182,16 +182,16 @@ struct use_program : public zxd::program {
   }
 
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_m_mat, "m_mat");
-    uniform_location(&ul_mv_mat_it, "mv_mat_it");
-    uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_bias, "bias");
-    uniform_location(&ul_w_light_pos, "w_light_pos");
-    uniform_location(&ul_depth_cube_map, "depth_cube_map");
-    uniform_location(&ul_bias, "bias");
-    uniform_location(&ul_near_plane, "near_plane");
-    uniform_location(&ul_far_plane, "far_plane");
+    ul_m_mat = get_uniform_location("m_mat");
+    ul_mv_mat_it = get_uniform_location("mv_mat_it");
+    ul_mv_mat = get_uniform_location("mv_mat");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_bias = get_uniform_location("bias");
+    ul_w_light_pos = get_uniform_location("w_light_pos");
+    ul_depth_cube_map = get_uniform_location("depth_cube_map");
+    ul_bias = get_uniform_location("bias");
+    ul_near_plane = get_uniform_location("near_plane");
+    ul_far_plane = get_uniform_location("far_plane");
 
     lm.bind_uniform_locations(object, "lm");
     for (int i = 0; i < lights.size(); ++i) {

@@ -143,8 +143,8 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_color, "color");
-    uniform_location(&ul_vp_mat, "vp_mat");
+    ul_color = get_uniform_location("color");
+    ul_vp_mat = get_uniform_location("vp_mat");
   }
 
   void bind_attrib_locations()

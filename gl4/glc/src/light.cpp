@@ -1,10 +1,22 @@
 #include "light.h"
 
-#include "common.h"
 #include "glmath.h"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace zxd
 {
+
+GLint get_uniform_location(GLuint program, const std::string& name)
+{
+  auto location = glGetUniformLocation(program, name.c_str());
+  if (location == -1)
+  {
+    std::cout << program << " : " << name
+              << " failed to get uniform location : \"" << name << "\""
+              << std::endl;
+  }
+  return location;
+}
 
 //--------------------------------------------------------------------
 light_source::light_source()
@@ -24,20 +36,20 @@ light_source::light_source()
 void light_source::bind_uniform_locations(
   GLuint program, const std::string& name)
 {
-  uniform_location(&ul_ambient, program, name + ".ambient");
-  uniform_location(&ul_diffuse, program, name + ".diffuse");
-  uniform_location(&ul_specular, program, name + ".specular");
-  uniform_location(&ul_position, program, name + ".position");
-  uniform_location(&ul_spot_direction, program, name + ".spot_direction");
-  uniform_location(&ul_spot_exponent, program, name + ".spot_exponent");
-  uniform_location(&ul_spot_cutoff, program, name + ".spot_cutoff");
-  uniform_location(&ul_spot_cos_cutoff, program, name + ".spot_cos_cutoff");
-  uniform_location(
-    &ul_constant_attenuation, program, name + ".constant_attenuation");
-  uniform_location(
-    &ul_linear_attenuation, program, name + ".linear_attenuation");
-  uniform_location(
-    &ul_quadratic_attenuation, program, name + ".quadratic_attenuation");
+  ul_ambient = get_uniform_location(program, name + ".ambient");
+  ul_diffuse = get_uniform_location(program, name + ".diffuse");
+  ul_specular = get_uniform_location(program, name + ".specular");
+  ul_position = get_uniform_location(program, name + ".position");
+  ul_spot_direction = get_uniform_location(program, name + ".spot_direction");
+  ul_spot_exponent = get_uniform_location(program, name + ".spot_exponent");
+  ul_spot_cutoff = get_uniform_location(program, name + ".spot_cutoff");
+  ul_spot_cos_cutoff = get_uniform_location(program, name + ".spot_cos_cutoff");
+  ul_constant_attenuation =
+    get_uniform_location(program, name + ".constant_attenuation");
+  ul_linear_attenuation =
+    get_uniform_location(program, name + ".linear_attenuation");
+  ul_quadratic_attenuation =
+    get_uniform_location(program, name + ".quadratic_attenuation");
 }
 
 //--------------------------------------------------------------------
@@ -112,11 +124,10 @@ void light_source::pipeline(GLuint index, const glm::mat4& v_mat)
 #endif
 
 //--------------------------------------------------------------------
-void light_model::bind_uniform_locations(
-  GLint program, const std::string& name)
+void light_model::bind_uniform_locations(GLint program, const std::string& name)
 {
-  uniform_location(&ul_ambient, program, name + ".ambient");
-  uniform_location(&ul_local_viewer, program, name + ".local_viewer");
+  ul_ambient = get_uniform_location(program, name + ".ambient");
+  ul_local_viewer = get_uniform_location(program, name + ".local_viewer");
 }
 
 //--------------------------------------------------------------------
@@ -146,11 +157,11 @@ material::material()
 //--------------------------------------------------------------------
 void material::bind_uniform_locations(GLuint program, const std::string& name)
 {
-  uniform_location(&ul_emission, program, name + ".emission");
-  uniform_location(&ul_ambient, program, name + ".ambient");
-  uniform_location(&ul_diffuse, program, name + ".diffuse");
-  uniform_location(&ul_specular, program, name + ".specular");
-  uniform_location(&ul_shininess, program, name + ".shininess");
+  ul_emission = get_uniform_location(program, name + ".emission");
+  ul_ambient = get_uniform_location(program, name + ".ambient");
+  ul_diffuse = get_uniform_location(program, name + ".diffuse");
+  ul_specular = get_uniform_location(program, name + ".specular");
+  ul_shininess = get_uniform_location(program, name + ".shininess");
 }
 
 //--------------------------------------------------------------------

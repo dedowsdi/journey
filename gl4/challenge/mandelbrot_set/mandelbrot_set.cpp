@@ -97,10 +97,10 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_rect, "rect");
-    uniform_location(&ul_resolution, "resolution");
+    ul_rect = get_uniform_location("rect");
+    ul_resolution = get_uniform_location("resolution");
     if(direct_draw)
-      uniform_location(&ul_colors, "colors");
+      ul_colors = get_uniform_location("colors");
   }
 
   void bind_attrib_locations()
@@ -133,10 +133,10 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_iteration_map, "iteration_map");
-    uniform_location(&ul_hue_buffer, "hue_buffer");
-    uniform_location(&ul_colors, "colors");
-    uniform_location(&ul_itotal, "itotal");
+    ul_iteration_map = get_uniform_location("iteration_map");
+    ul_hue_buffer = get_uniform_location("hue_buffer");
+    ul_colors = get_uniform_location("colors");
+    ul_itotal = get_uniform_location("itotal");
   }
 
   void bind_attrib_locations()

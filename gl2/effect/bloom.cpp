@@ -49,8 +49,8 @@ struct filter_brightess_program : public zxd::program {
   }
 
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_threshold, "threshold");
-    uniform_location(&ul_quad_map, "quad_map");
+    ul_threshold = get_uniform_location("threshold");
+    ul_quad_map = get_uniform_location("quad_map");
   }
   virtual void bind_attrib_locations()
   {
@@ -75,8 +75,8 @@ struct gaussion_blur_program : public zxd::program {
   }
 
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_horizontal, "horizontal");
-    uniform_location(&ul_quad_map, "quad_map");
+    ul_horizontal = get_uniform_location("horizontal");
+    ul_quad_map = get_uniform_location("quad_map");
   }
 
   virtual void bind_attrib_locations()
@@ -103,9 +103,9 @@ struct bloom_program : public program {
   }
 
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_exposure, "exposure");
-    uniform_location(&ul_hdr_map, "hdr_map");
-    uniform_location(&ul_brightness_map, "brightness_map");
+    ul_exposure = get_uniform_location("exposure");
+    ul_hdr_map = get_uniform_location("hdr_map");
+    ul_brightness_map = get_uniform_location("brightness_map");
   }
 
   virtual void bind_attrib_locations() {

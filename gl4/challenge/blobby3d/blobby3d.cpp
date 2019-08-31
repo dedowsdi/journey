@@ -29,7 +29,7 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_time, "time");
+    ul_time = get_uniform_location("time");
   }
 
 } prg;

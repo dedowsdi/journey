@@ -87,13 +87,13 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_da        ,  "da");
-    uniform_location(&ul_db        ,  "db");
-    uniform_location(&ul_feed      ,  "feed");
-    uniform_location(&ul_kill      ,  "kill");
-    uniform_location(&ul_delta_time,  "delta_time");
-    uniform_location(&ul_time,  "time");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_da         = get_uniform_location( "da");
+    ul_db         = get_uniform_location( "db");
+    ul_feed       = get_uniform_location( "feed");
+    ul_kill       = get_uniform_location( "kill");
+    ul_delta_time = get_uniform_location( "delta_time");
+    ul_time = get_uniform_location( "time");
   }
 
   void bind_attrib_locations()
@@ -119,7 +119,7 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_quad_map, "quad_map");
+    ul_quad_map = get_uniform_location("quad_map");
   }
 
   void bind_attrib_locations()

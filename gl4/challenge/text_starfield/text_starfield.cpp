@@ -38,10 +38,10 @@ protected:
   void bind_uniform_locations()
   {
     glEnable(GL_PROGRAM_POINT_SIZE);
-    uniform_location(&ul_vp_mat, "vp_mat");
-    uniform_location(&ul_m_mat, "m_mat");
-    uniform_location(&ul_diffuse_map, "diffuse_map");
-    uniform_location(&ul_color, "color");
+    ul_vp_mat = get_uniform_location("vp_mat");
+    ul_m_mat = get_uniform_location("m_mat");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
+    ul_color = get_uniform_location("color");
   }
 
   void bind_attrib_locations()

@@ -62,10 +62,9 @@ struct hdr_program : public zxd::program {
     attach(GL_FRAGMENT_SHADER, "shader2/hdr.fs.glsl");
   }
   virtual void bind_uniform_locations() {
-    // uniform_location(&ul_eye, "eye");
-    uniform_location(&ul_method, "method");
-    uniform_location(&ul_exposure, "exposure");
-    uniform_location(&ul_diffuse_map, "diffuse_map");
+    ul_method = get_uniform_location("method");
+    ul_exposure = get_uniform_location("exposure");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
   }
 
   virtual void bind_attrib_locations() {

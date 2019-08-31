@@ -49,11 +49,10 @@ struct use_normal_map_view_program : public zxd::program
   }
   virtual void bind_uniform_locations()
   {
-    // uniform_location(&ul_eye, "eye");
-    uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location(&ul_mv_mat_it, "mv_mat_it");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_normal_map, "normal_map");
+    ul_mv_mat = get_uniform_location("mv_mat");
+    ul_mv_mat_it = get_uniform_location("mv_mat_it");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_normal_map = get_uniform_location("normal_map");
   }
 
   virtual void bind_attrib_locations()
@@ -96,10 +95,9 @@ struct use_normal_map_object_progrm : public program
   }
   virtual void bind_uniform_locations()
   {
-    // uniform_location(&ul_eye, "eye");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_normal_map, "normal_map");
-    uniform_location(&ul_m_camera, "m_camera");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_normal_map = get_uniform_location("normal_map");
+    ul_m_camera = get_uniform_location("m_camera");
   }
   virtual void bind_attrib_locations()
   {

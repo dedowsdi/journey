@@ -10,6 +10,7 @@
 #include <common.h>
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
+#include <camman.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/vector_angle.hpp>
@@ -24,7 +25,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/random.hpp>
 #include <glm/gtc/noise.hpp>
-
 
 #ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)

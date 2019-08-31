@@ -33,12 +33,12 @@ struct sine_wave_program : public program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_quad_map, "quad_map");
-    uniform_location(&ul_time, "time");
-    uniform_location(&ul_amplitude,  "amplitude");
-    uniform_location(&ul_wave_period   ,  "wave_period");
-    uniform_location(&ul_period   ,  "period");
-    uniform_location(&ul_mode    ,  "mode");
+    ul_quad_map = get_uniform_location("quad_map");
+    ul_time = get_uniform_location("time");
+    ul_amplitude = get_uniform_location( "amplitude");
+    ul_wave_period    = get_uniform_location( "wave_period");
+    ul_period    = get_uniform_location( "period");
+    ul_mode     = get_uniform_location( "mode");
   }
 
   virtual void bind_attrib_locations()

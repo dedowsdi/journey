@@ -53,7 +53,7 @@
 namespace zxd
 {
 
-void uniform_location(GLint *loc, GLint program, const std::string &name);
+GLint get_uniform_location(GLint program, const std::string &name);
 
 void matrix_attrib_pointer(
   GLint index, GLuint divisor = 1, GLboolean normalize = GL_FALSE);

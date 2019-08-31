@@ -27,12 +27,12 @@ struct circular_program : public program {
     attach(GL_FRAGMENT_SHADER, "shader2/circular.fs.glsl");
   };
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_time, "time");
-    uniform_location(&ul_resolution, "resolution");
-    uniform_location(&ul_time_scale, "time_scale");
-    uniform_location(&ul_length_scale, "length_scale");
-    uniform_location(&ul_origin, "origin");
-    uniform_location(&ul_use_origin, "use_origin");
+    ul_time = get_uniform_location("time");
+    ul_resolution = get_uniform_location("resolution");
+    ul_time_scale = get_uniform_location("time_scale");
+    ul_length_scale = get_uniform_location("length_scale");
+    ul_origin = get_uniform_location("origin");
+    ul_use_origin = get_uniform_location("use_origin");
   };
   virtual void bind_attrib_locations() {
     bind_attrib_location(0, "vertex");

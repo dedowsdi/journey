@@ -47,11 +47,11 @@ struct gaussian_blur_program : public program {
   gaussian_blur_program() : radius(4) {}
 
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_mean, "mean");
-    uniform_location(&ul_deviation, "deviation");
-    uniform_location(&ul_gaussian_step, "gaussian_step");
-    uniform_location(&ul_horizontal, "horizontal");
-    uniform_location(&ul_quad_map, "quad_map");
+    ul_mean = get_uniform_location("mean");
+    ul_deviation = get_uniform_location("deviation");
+    ul_gaussian_step = get_uniform_location("gaussian_step");
+    ul_horizontal = get_uniform_location("horizontal");
+    ul_quad_map = get_uniform_location("quad_map");
   }
 
   virtual void attach_shaders() {

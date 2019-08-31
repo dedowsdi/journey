@@ -73,12 +73,11 @@ struct rim_program : public zxd::program {
     }
     mtl.bind_uniform_locations(object, "mtl");
 
-    // uniform_location(&ul_eye, "eye");
-    uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location(&ul_mv_mat_it, "mv_mat_it");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_rim_color, "rim_color");
-    uniform_location(&ul_rim_power, "rim_power");
+    ul_mv_mat = get_uniform_location("mv_mat");
+    ul_mv_mat_it = get_uniform_location("mv_mat_it");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_rim_color = get_uniform_location("rim_color");
+    ul_rim_power = get_uniform_location("rim_power");
   }
 
   virtual void bind_attrib_locations() {

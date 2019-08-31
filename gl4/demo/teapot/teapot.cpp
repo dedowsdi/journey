@@ -40,8 +40,8 @@ protected:
 
   void bind_uniform_locations()
   {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_color, "color");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_color = get_uniform_location("color");
   }
 
   void bind_attrib_locations()

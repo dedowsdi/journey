@@ -26,7 +26,7 @@ struct star_program : public zxd::program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_diffuse_map, "diffuse_map");
+    ul_diffuse_map = get_uniform_location("diffuse_map");
   }
 
   virtual void bind_attrib_locations()

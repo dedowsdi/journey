@@ -45,8 +45,8 @@ private:
 
   void bind_uniform_locations() override
   {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_font_map, "font_map");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_font_map = get_uniform_location("font_map");
   }
 
   void bind_attrib_locations() override

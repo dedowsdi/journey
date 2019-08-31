@@ -33,9 +33,9 @@ struct fs_program : public program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_resolution, "resolution");
-    uniform_location(&ul_time, "time");
-    uniform_location(&ul_mouse, "mouse");
+    ul_resolution = get_uniform_location("resolution");
+    ul_time = get_uniform_location("time");
+    ul_mouse = get_uniform_location("mouse");
   }
 
 } prg;

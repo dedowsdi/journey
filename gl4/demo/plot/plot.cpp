@@ -32,12 +32,12 @@ struct plot_program : public program
 
   virtual void bind_uniform_locations()
   {
-    uniform_location(&ul_resolution, "resolution");
-    uniform_location(&ul_mode, "mode");
-    uniform_location(&ul_exponent, "exponent");
-    uniform_location(&ul_line_width, "line_width");
-    uniform_location(&ul_translation, "translation");
-    uniform_location(&ul_stretch, "stretch");
+    ul_resolution = get_uniform_location("resolution");
+    ul_mode = get_uniform_location("mode");
+    ul_exponent = get_uniform_location("exponent");
+    ul_line_width = get_uniform_location("line_width");
+    ul_translation = get_uniform_location("translation");
+    ul_stretch = get_uniform_location("stretch");
   }
 
   virtual void bind_attrib_locations()

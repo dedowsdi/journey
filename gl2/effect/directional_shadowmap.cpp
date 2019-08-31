@@ -132,7 +132,7 @@ struct render_program : public zxd::program {
       GL_FRAGMENT_SHADER, "shader2/render_directional_shadowmap.fs.glsl");
   }
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_mvp_mat, "mvp_mat");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
   }
 
   virtual void bind_attrib_locations() {
@@ -204,14 +204,14 @@ struct use_program : public zxd::program {
       GL_FRAGMENT_SHADER, sv, "shader2/use_directional_shadowmap.fs.glsl");
   }
   virtual void bind_uniform_locations() {
-    uniform_location(&ul_light_mat, "light_mat");
-    uniform_location(&ul_mv_mat_it, "mv_mat_it");
-    uniform_location(&ul_mv_mat, "mv_mat");
-    uniform_location(&ul_mvp_mat, "mvp_mat");
-    uniform_location(&ul_bias, "bias");
-    uniform_location(&ul_depth_map, "depth_map");
-    uniform_location(&ul_shadow_map, "shadow_map");
-    uniform_location(&ul_use_sampler2_d_shadow, "use_sampler2_d_shadow");
+    ul_light_mat = get_uniform_location("light_mat");
+    ul_mv_mat_it = get_uniform_location("mv_mat_it");
+    ul_mv_mat = get_uniform_location("mv_mat");
+    ul_mvp_mat = get_uniform_location("mvp_mat");
+    ul_bias = get_uniform_location("bias");
+    ul_depth_map = get_uniform_location("depth_map");
+    ul_shadow_map = get_uniform_location("shadow_map");
+    ul_use_sampler2_d_shadow = get_uniform_location("use_sampler2_d_shadow");
 
     lm.bind_uniform_locations(object, "lm");
     for (int i = 0; i < lights.size(); ++i) {

@@ -474,9 +474,9 @@ void app::motion(int x, int y) {
     m_last_cursor_position[1] = y;
   } else if (m_camera_mode == CM_ARCBALL) {
     if (dtx != 0 || dty != 0) {
-      mat4 w_mat_i = zxd::compute_window_mat_i(
-        0, 0, m_info.wnd_width, m_info.wnd_height, 0, 1);
-      mat4 m = zxd::arcball(m_last_cursor_position, glm::vec2(x, y), w_mat_i);
+      mat4 m = zxd::trackball_rotate(m_last_cursor_position, vec2(x, y),
+        vec2(m_info.wnd_width, m_info.wnd_height) * 0.5f,
+        min(m_info.wnd_width, m_info.wnd_height) * 0.6f);
 
       glm::vec3 translation = vec3(glm::column(*m_v_mat, 3));
       // translate world to camera
