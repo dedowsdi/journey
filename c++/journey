@@ -335,3 +335,5 @@ Member functions of class templates are implicitly instantiated only when used.
 
 implicit type conversion functions are never considered during template argument
 deduction
+
+caller allocated out example : std::string, std::vector

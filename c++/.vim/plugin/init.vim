@@ -1,7 +1,7 @@
-call misc#proj#loadMap('c')
-let g:mycppBuildDir = "./build/gcc/Debug"
-let g:mycppDebugGui = 0
-let &makeprg = 'cd ' . g:mycppBuildDir . ' && make'
+call misc#proj#load_map('c')
+let g:mycpp_build_dir = "./build/gcc/Debug"
+let g:mycpp_debug_gui = 0
+let &makeprg = 'cd ' . g:mycpp_build_dir . ' && make'
 "executable make target and path
 "let g:mycppMakes = {}
 "class name prefix

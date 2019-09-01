@@ -1,0 +1,5 @@
+encrypt:
+openssl enc -in foo.bar -aes-256-cbc  -pass stdin > foo.bar.enc
+
+decript:
+openssl enc -in foo.bar.enc -d -aes-256-cbc  -pass stdin > foo.bar
