@@ -3,9 +3,9 @@ set nospell
 set tags+=/usr/local/source/glm/tags
 set path+=gl43/include,gl43app/include,glc/include
 let &viminfofile = getcwd() . '/.viminfo'
-call misc#proj#loadMap('c')
-let g:mycppBuildDir = './build/gcc/Debug'
-let g:cdefProjName = 'GL4'
+call misc#proj#load_map('c')
+let g:mycpp_build_dir = './build/gcc/Debug'
+let g:cdef_proj_name = 'GL4'
 
 "executable make target and path
 "let g:mycppMakes = {}

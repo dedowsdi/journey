@@ -46,12 +46,51 @@ std::istream& operator>>(std::istream& is, glm::mat<C, R, T, Q>& v)
   }
   if (is.fail())
   {
-    throw std::runtime_error("failed to read vec" + std::to_string(R));
+    throw std::runtime_error(
+      "failed to read mat" + std::to_string(C) + "x" + std::to_string(R));
   }
   return is;
 }
 
 template std::istream& operator>>(std::istream&, glm::mat4&);
+
+template <glm::length_t L, typename T, glm::qualifier Q>
+std::ostream& operator<<(std::ostream& os, const glm::vec<L, T, Q>& v)
+{
+  for (auto i = 0; i < L; ++i)
+  {
+    os << v[i];
+  }
+  if (os.fail())
+  {
+    throw std::runtime_error("failed to write vec" + std::to_string(L));
+  }
+  return os;
+}
+
+template std::ostream& operator<<(std::ostream&, const glm::vec2&);
+template std::ostream& operator<<(std::ostream&, const glm::vec3&);
+template std::ostream& operator<<(std::ostream&, const glm::vec4&);
+
+template <glm::length_t C, glm::length_t R, typename T, glm::qualifier Q>
+std::ostream& operator<<(std::ostream& os, const glm::mat<C, R, T, Q>& v)
+{
+  for (auto i = 0; i < C; ++i)
+  {
+    for (auto j = 0u; j < R; ++j)
+    {
+      os << v[i][j];
+    }
+  }
+  if (os.fail())
+  {
+    throw std::runtime_error(
+      "failed to write mat" + std::to_string(C) + "x" + std::to_string(R));
+  }
+  return os;
+}
+
+template std::ostream& operator<<(std::ostream&, const glm::mat4&);
 
 }
 

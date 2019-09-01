@@ -1,18 +1,18 @@
 #ifndef GL_GLC_GEOMETRY_H
 #define GL_GLC_GEOMETRY_H
 
-#include "gl.h"
+#include <vector>
 
-#include <glm/fwd.hpp>
+#include "glm.h"
 #include "array.h"
 #include "primitive_set.h"
 
 namespace zxd
 {
 
-class array;
-typedef std::shared_ptr<array> array_ptr;
-typedef std::vector<array_ptr> array_vector;
+using array_ptr = std::shared_ptr<array> ;
+using array_vector = std::vector<array_ptr>;
+using primitive_set_vector = std::vector<std::shared_ptr<primitive_set>>;
 
 class geometry_base
 {
@@ -76,7 +76,7 @@ public:
   void rebind(GLint array_index, GLint attrib_index);
 
   primitive_set* get_primitive_set(GLuint index);
-  GLuint get_num_primitive_set();
+  GLuint get_num_primitive_set() const;
   void add_primitive_set(primitive_set* ps);
   void clear_primitive_sets();
   void remove_primitive_sets(GLuint index, GLuint count);

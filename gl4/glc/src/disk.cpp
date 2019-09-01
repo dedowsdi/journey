@@ -4,6 +4,7 @@
 
 #include "glmath.h"
 #include "geometry_util.h"
+#include <glm/trigonometric.hpp>
 
 namespace zxd
 {

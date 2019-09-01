@@ -1,4 +1,7 @@
 #define GLM_FORCE_SWIZZLE
+#include <sstream>
+#include <list>
+
 #include "app.h"
 #include "bitmap_text.h"
 #include "common_program.h"
@@ -6,8 +9,6 @@
 #include "movable.h"
 #include "cone.h"
 #include "debugger.h"
-
-#include <sstream>
 
 #define WIDTH 800
 #define HEIGHT 800

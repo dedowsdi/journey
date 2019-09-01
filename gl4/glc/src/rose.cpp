@@ -1,5 +1,7 @@
 #include "rose.h"
+
 #include "glmath.h"
+#include <glm/common.hpp>
 
 namespace zxd
 {

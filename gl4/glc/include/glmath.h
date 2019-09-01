@@ -72,28 +72,6 @@ bool operator>(const vec3& lhs, const vec3& rhs);
 
 GLfloat max_abs_component(const vec3& v);
 
-//--------------------------------------------------------------------
-template <typename _It, typename _OutIt>
-void generate_face_normals(_It beg, _It end, _OutIt out)
-{
-  typedef decltype(*beg) value_type;
-  unsigned size = end - beg;
-  if (size % 3 != 0)
-  {
-    throw std::runtime_error("number of vertices should be multiple of 3");
-  }
-  for (_It iter = beg; iter != end;)
-  {
-    value_type& v0 = *iter++;
-    value_type& v1 = *iter++;
-    value_type& v2 = *iter++;
-    vec3 normal = face_normal(v0, v1, v2);
-    *out++ = normal;
-    *out++ = normal;
-    *out++ = normal;
-  }
-}
-
 GLuint gcd(GLuint a, GLuint b);
 GLuint lcm(GLuint a, GLuint b);
 // least common multiple of 1/a and 1/b

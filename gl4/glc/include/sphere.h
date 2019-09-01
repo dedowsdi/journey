@@ -2,7 +2,6 @@
 #define GL_GLC_SPHERE_H
 
 #include "geometry.h"
-#include "glm.h"
 
 namespace zxd
 {

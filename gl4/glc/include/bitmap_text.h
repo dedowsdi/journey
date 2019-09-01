@@ -2,11 +2,13 @@
 #define GL_GLC_BITMAP_TEXT_H
 
 #include <string>
+#include <vector>
 
 #include "glm.h"
 #include "program.h"
 #include <memory>
 #include <map>
+#include <glm/mat4x4.hpp>
 
 namespace zxd
 {

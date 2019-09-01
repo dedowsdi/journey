@@ -3,6 +3,7 @@
 #include <memory>
 #include <algorithm>
 
+#include <glm/geometric.hpp>
 #include "geometry_util.h"
 
 namespace zxd

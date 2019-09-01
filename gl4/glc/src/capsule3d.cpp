@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <functional>
 
+#include <glm/trigonometric.hpp>
+#include <glm/gtx/norm.hpp>
 #include "sphere.h"
 #include "geometry_util.h"
 

@@ -1,6 +1,8 @@
 #include "string_util.h"
 
 #include <regex>
+#include <iostream>
+#include <sstream>
 
 #include "stream_util.h"
 #include <glm/glm.hpp>

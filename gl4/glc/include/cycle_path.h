@@ -9,7 +9,8 @@ namespace zxd
 class cycle_path
 {
 public:
-  cycle_path(GLfloat a0, GLfloat b0, GLfloat c0, GLfloat a1, GLfloat b1, GLfloat c1);
+  cycle_path(
+    GLfloat a0, GLfloat b0, GLfloat c0, GLfloat a1, GLfloat b1, GLfloat c1);
 
   glm::vec2 get(GLfloat angle);
   glm::vec2 tangent(GLfloat angle);

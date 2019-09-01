@@ -1,6 +1,8 @@
 #include "lissajous.h"
 
 #include "glmath.h"
+#include <glm/common.hpp>
+#include <glm/gtx/norm.hpp>
 
 namespace zxd
 {

@@ -1,6 +1,8 @@
+#include <sstream>
+#include <list>
+
 #include "app.h"
 #include "bitmap_text.h"
-#include <sstream>
 #include "common_program.h"
 #include "sphere.h"
 

@@ -1,20 +1,20 @@
 #!/bin/bash
-buildType=${1:-Debug}
+build_type=${1:-Debug}
 compiler=${2:-gcc}
 
 cd "$(realpath "${BASH_SOURCE[0]%/*}")/.."
 
-sourceDir="$(pwd)"
-buildDir="build/$compiler/$buildType"
+source_dir="$(pwd)"
+build_dir="build/$compiler/$build_type"
 
 (
-cd "$buildDir" && \
+cd "$build_dir" && \
        cmake \
          -DBUILD_SHARED_LIBS:BOOLEAN=ON \
          -DCMAKE_CXX_FLAGS:STRING= \
-         -DCMAKE_BUILD_TYPE:STRING="$buildType" \
+         -DCMAKE_BUILD_TYPE:STRING="$build_type" \
          -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOLEAN=ON \
-         "$sourceDir"
+         "$source_dir"
 )
 
-ln -fs "$buildDir"/compile_commands.json compile_commands.json
+ln -fs "$build_dir"/compile_commands.json compile_commands.json

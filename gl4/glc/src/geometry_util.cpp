@@ -378,5 +378,25 @@ void subdivide(uint_vector& triangle_indices, vec3_vector& vertices, vec2_vector
   triangle_indices.swap(res_indices);
 }
 
+template <typename T>
+void build_strip_texcoords(
+  T& texcoords, GLuint stacks, GLuint slices, GLfloat t0, GLfloat t1)
+{
+  auto step = 1.0f / stacks;
+  for (auto i = 0u; i <= stacks; ++i)
+  {
+    auto t = mix(t0, t1, i * step);
+    for (auto j = 0u; j <= slices; j++)
+    {
+      GLfloat s = static_cast<GLfloat>(j) / slices;
+      texcoords.push_back(vec2(s, t));
+    }
+  }
+}
 
+template void build_strip_texcoords<vec2_array>(
+  vec2_array&, GLuint, GLuint, GLfloat, GLfloat);
+
+template void build_strip_texcoords<vec2_vector>(
+  vec2_vector&, GLuint, GLuint, GLfloat, GLfloat);
 }

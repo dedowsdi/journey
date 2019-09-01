@@ -1,5 +1,6 @@
 #include "beziersurface.h"
 
+#include <glm/gtx/norm.hpp>
 #include "bezier.h"
 
 namespace zxd

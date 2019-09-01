@@ -3,6 +3,8 @@
 #include <memory>
 
 #include "geometry_util.h"
+#include "stream_util.h"
+#include <glm/exponential.hpp>
 
 namespace zxd
 {

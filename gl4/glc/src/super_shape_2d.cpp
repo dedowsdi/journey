@@ -1,6 +1,8 @@
 #include "super_shape_2d.h"
 
 #include <glm/trigonometric.hpp>
+#include <glm/common.hpp>
+#include <glm/exponential.hpp>
 #include "glmath.h"
 
 namespace zxd

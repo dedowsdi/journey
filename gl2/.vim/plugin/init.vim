@@ -1,8 +1,8 @@
 let &viminfofile = getcwd() . '/.viminfo'
 set path+=~/journey/gl4/glc/include
-call misc#proj#loadMap('c')
-let g:mycppBuildDir = './build/gcc/Debug'
-let g:cdefProjName = 'GL2'
+call misc#proj#load_map('c')
+let g:mycpp_build_dir = './build/gcc/Debug'
+let g:cdef_proj_name = 'GL2'
 "executable make target and path
 "let g:mycppMakes = {}
 "class name prefix

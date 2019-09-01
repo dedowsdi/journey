@@ -1,20 +1,13 @@
 #ifndef GL_GLC_GEOMETRY_UTIL_H
 #define GL_GLC_GEOMETRY_UTIL_H
 
-#include <vector>
-#include <iterator>
-
 #include <glm.h>
 
 namespace zxd
 {
   class geometry_base;
-  struct itriangle;
-  using itriangle_list = std::list<itriangle>;
-}
-
-namespace zxd
-{
+  // struct itriangle;
+  // using itriangle_list = std::list<itriangle>;
 
   using uint_vector = std::vector<GLuint>;
   using vec2_vector = std::vector<vec2>;
@@ -49,12 +42,6 @@ namespace zxd
     vec2_vector* texcoords = nullptr);
 
   template <typename T>
-  struct normalize_inplace
-  {
-    void operator()(T& v) { v /= glm::length(v); }
-  };
-
-  template <typename T>
   void build_strip_elements(T& elements, GLuint stacks, GLuint slices,
     GLuint offset = 0, bool reverse = false)
   {
@@ -82,19 +69,7 @@ namespace zxd
 
   template <typename T>
   void build_strip_texcoords(
-    T& texcoords, GLuint stacks, GLuint slices, GLfloat t0, GLfloat t1)
-  {
-    auto step = 1.0f / stacks;
-    for (auto i = 0u; i <= stacks; ++i)
-    {
-      auto t = mix(t0, t1, i * step);
-      for (auto j = 0u; j <= slices; j++)
-      {
-        GLfloat s = static_cast<GLfloat>(j) / slices;
-        texcoords.push_back(vec2(s, t));
-      }
-    }
-  }
+    T& texcoords, GLuint stacks, GLuint slices, GLfloat t0, GLfloat t1);
 }
 
 #endif /* GL_GLC_GEOMETRY_UTIL_H */

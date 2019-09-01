@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <glm/trigonometric.hpp>
+#include <glm/gtx/norm.hpp>
 #include "functor.h"
 #include "geometry_util.h"
 

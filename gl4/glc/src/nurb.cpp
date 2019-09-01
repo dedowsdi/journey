@@ -1,5 +1,7 @@
 #include "nurb.h"
 
+#include <glm/gtx/norm.hpp>
+
 namespace zxd
 {
 

@@ -1,12 +1,11 @@
 #ifndef GL_GLC_PRIMITIVE_SET_H
 #define GL_GLC_PRIMITIVE_SET_H
 #include "glm.h"
-#include <memory>
-#include <vector>
-
 
 namespace zxd
 {
+
+using namespace glm;
 
 // changed from osg
 class primitive_functor
@@ -73,7 +72,6 @@ public:
   virtual void accept(primitive_index_functor& functor) const{};
 };
 
-typedef std::vector<std::shared_ptr<primitive_set>>  primitive_set_vector;
 
 class draw_arrays : public primitive_set
 {
@@ -121,9 +119,6 @@ public:
   virtual void accept(primitive_functor& functor) const;
 };
 
-
-
 }
-
 
 #endif /* GL_GLC_PRIMITIVE_SET_H */

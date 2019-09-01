@@ -1,5 +1,6 @@
 #include <sstream>
 #include <algorithm>
+#include <list>
 
 #include "app.h"
 #include "bitmap_text.h"
@@ -10,6 +11,8 @@
 
 namespace zxd
 {
+
+using vec2_list = std::list<vec2>;
 
 GLint spawn_per_frame = 5;
 GLuint max_circle = 5000;

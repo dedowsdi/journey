@@ -3,6 +3,7 @@
 
 // changed from osg
 #include "primitive_set.h"
+#include "glm.h"
 
 namespace zxd
 {

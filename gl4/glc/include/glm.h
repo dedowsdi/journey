@@ -2,19 +2,23 @@
 #define GL_GLC_GLM_H
 
 #include <vector>
-#include <list>
-#include <iostream>
-#include <utility>
-
-#define GLM_ENABLE_EXPERIMENTAL
-#define GLM_META_PROG_HELPERS
 
 #include "gl.h"
 
-#include <glm/mat4x4.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#define GLM_META_PROG_HELPERS
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/fwd.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+
+// mat4x4.hpp includes too many files.
+// #include <glm/mat4x4.hpp>
 
 namespace zxd
 {
+// The only global using!!!.
 using namespace glm;
 
 // no static, const variable in namespace has internal linkage
@@ -59,9 +63,6 @@ using float_vector = std::vector<GLfloat>;
 using vec2_vector = std::vector<vec2>;
 using vec3_vector = std::vector<vec3>;
 using vec4_vector = std::vector<vec4>;
-using vec2_list = std::list<vec2>;
-using vec3_list = std::list<vec3>;
-using vec4_list = std::list<vec4>;
 using uvec3_vector = std::vector<uvec3>;
 
 using float_vector2 = std::vector<std::vector<GLfloat> >;
@@ -77,14 +78,6 @@ using fv_ci = float_vector::const_iterator;
 using v2v_ci = vec2_vector::const_iterator;
 using v3v_ci = vec3_vector::const_iterator;
 using v4v_ci = vec4_vector::const_iterator;
-
-std::ostream& operator<<(std::ostream& os, const vec2& v);
-std::ostream& operator<<(std::ostream& os, const vec3& v);
-std::ostream& operator<<(std::ostream& os, const vec4& v);
-std::ostream& operator<<(std::ostream& os, const mat2& m);
-std::ostream& operator<<(std::ostream& os, const mat3& m);
-std::ostream& operator<<(std::ostream& os, const mat4& m);
-std::ostream& operator<<(std::ostream& os, const zxd::vec3_vector& v);
 
 }
 

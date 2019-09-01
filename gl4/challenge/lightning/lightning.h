@@ -1,6 +1,8 @@
 #ifndef LIGHTNING_H
 #define LIGHTNING_H
 
+#include <string>
+
 #include "gl.h"
 #include "pingpong.h"
 
@@ -14,11 +16,13 @@ struct vertex
 };
 
 // all in model space
-void create_billboards_along(std::vector<vertex>& billboards, const vec3_vector& lines, const vec3&
-    camera_pos, GLfloat bb_width = 2, GLint gap_slices = 6);
+void create_billboards_along(std::vector<vertex>& billboards,
+  const vec3_vector& lines, const vec3& camera_pos, GLfloat bb_width = 2,
+  GLint gap_slices = 6);
 
-void create_lightning(vec3_vector& lines, const vec3& start, const vec3& end, const std::string& pattern,
-    GLfloat max_jitter = 0.5f, GLfloat max_fork_angle = fpi4);
+void create_lightning(vec3_vector& lines, const vec3& start, const vec3& end,
+  const std::string& pattern, GLfloat max_jitter = 0.5f,
+  GLfloat max_fork_angle = fpi4);
 
 struct lightning
 {

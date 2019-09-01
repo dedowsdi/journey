@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "string_util.h"
+#include "primitive_set.h"
 #include <glm/vec3.hpp>
 #include <glm/gtc/random.hpp>
 
@@ -149,7 +150,7 @@ primitive_set* geometry_base::get_primitive_set(GLuint index)
 }
 
 //--------------------------------------------------------------------
-GLuint geometry_base::get_num_primitive_set()
+GLuint geometry_base::get_num_primitive_set() const
 {
   return m_primitive_sets.size();
 }

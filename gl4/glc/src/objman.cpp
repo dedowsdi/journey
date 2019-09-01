@@ -1,5 +1,6 @@
 #include "objman.h"
 
+#include <glm/mat4x4.hpp>
 #include "glmath.h"
 
 namespace zxd

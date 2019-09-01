@@ -1,5 +1,7 @@
 #include "circle.h"
 
+#include <glm/common.hpp>
+
 namespace zxd
 {
 

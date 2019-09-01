@@ -2,7 +2,6 @@
 #define GL_GLC_PROGRAM_H
 
 #include "gl.h"
-#include "glm.h"
 #include <string>
 #include <vector>
 #include <map>

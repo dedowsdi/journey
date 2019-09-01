@@ -2,7 +2,10 @@
 #define GL4_GLC_FRACTAL_SPIRAL_H
 
 #include "gl.h"
+#include "glm.h"
 #include "lissajous.h"
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 namespace zxd
 {

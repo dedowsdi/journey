@@ -1,7 +1,10 @@
 #include "teardrop.h"
-#include "geometry_util.h"
 
 #include <memory>
+
+#include <glm/trigonometric.hpp>
+#include "geometry_util.h"
+
 
 namespace zxd
 {

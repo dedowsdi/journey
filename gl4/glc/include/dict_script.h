@@ -5,8 +5,9 @@
 #include <string>
 #include <thread>
 #include <functional>
-#include "glm.h"
 #include <atomic>
+#include "glm.h"
+#include <glm/mat4x4.hpp>
 
 namespace zxd
 {

@@ -1,4 +1,7 @@
 #include "bezier.h"
+
+#include <glm/common.hpp>
+#include <glm/gtx/norm.hpp>
 #include "glmath.h"
 
 namespace zxd
