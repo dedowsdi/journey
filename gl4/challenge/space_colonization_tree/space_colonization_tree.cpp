@@ -317,7 +317,7 @@ public:
     m_tree.accept(m_leaves);
     m_tree.compile();
 
-    m_points.build_mesh(vertices);
+    m_points.set_vertices(vertices);
   }
 
   virtual void update()

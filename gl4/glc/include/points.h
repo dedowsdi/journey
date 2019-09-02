@@ -1,7 +1,6 @@
 #ifndef GL_GLC_POINTS_H
 #define GL_GLC_POINTS_H
 #include "geometry.h"
-#include "common_program.h"
 
 namespace zxd
 {
@@ -10,49 +9,29 @@ template <typename tvec>
 class points : public geometry_base
 {
 public:
-  void build_mesh(const std::vector<tvec>& points);
+  points(const std::vector<tvec>& points =  {});
+  points(const std::vector<tvec>&& points);
 
+  void set_vertices(const std::vector<tvec>& points);
+  void set_vertices(std::vector<tvec>&& points);
+
+  void build_vertex() override;
+
+private:
+
+  void rebuild();
+
+  std::vector<tvec> _points;
 };
 
-
-// draw points, it cretes buffer every time you called it, don't use it if
-// performance is an issue.
+// draw points, it cretes vertex and buffer every time you called it, don't use
+// it if performance is an issue.
 template <typename tvec>
-void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat)
-{
-  static point_program prg;
-  if (!prg.is_inited()) prg.init();
-
-  GLuint vao;
-  GLuint vbo;
-  glGenVertexArrays(1, &vao);
-  glGenBuffers(1, &vbo);
-
-  glBindVertexArray(vao);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(tvec),
-    value_ptr(points[0]), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, tvec::length(), GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(0);
-
-  prg.use();
-  prg.udpate_uniforms(mvp_mat);
-  glDrawArrays(GL_POINTS, 0, points.size());
-
-  // QUES : should i release vao and vbo?
-}
+void draw_points(const std::vector<tvec>& points, const mat4& mvp_mat);
 
 template <typename tvec>
 void draw_points(
-  const std::vector<std::vector<tvec>>& points, const mat4& mvp_mat)
-{
-  for (auto iter = points.begin(); iter != points.end(); ++iter)
-  {
-    draw_points(*iter, mvp_mat);
-  }
-}
-
+  const std::vector<std::vector<tvec>>& points, const mat4& mvp_mat);
 }
 
 #endif /* GL_GLC_POINTS_H */
