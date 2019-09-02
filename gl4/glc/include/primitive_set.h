@@ -98,7 +98,7 @@ protected:
   GLint m_offset;
   GLenum m_type;
   GLsizei m_count;
-  GLuint* m_indices;
+  const GLuint* m_indices;
 
 public:
   draw_elements(GLenum mode, GLint count, GLenum type, GLint offset, GLuint num_instance = 0);
@@ -113,8 +113,8 @@ public:
   GLint offset() const { return m_offset; }
   void offset(GLint v){ m_offset = v; }
 
-  GLuint* indices() const { return m_indices; }
-  void indices(GLuint* v){ m_indices = v; }
+  const GLuint* indices() const { return m_indices; }
+  void indices(const GLuint* v){ m_indices = v; }
 
   virtual void accept(primitive_functor& functor) const;
 };

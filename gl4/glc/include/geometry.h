@@ -39,7 +39,7 @@ public:
 
   void attrib_array(GLuint index, array_ptr _array);
   array_ptr attrib_array(GLuint index) const;
-  float_array_ptr attrib_float_array(GLuint index) const;
+  vec1_array_ptr attrib_vec1_array(GLuint index) const;
   vec2_array_ptr attrib_vec2_array(GLuint index) const;
   vec3_array_ptr attrib_vec3_array(GLuint index) const;
   vec4_array_ptr attrib_vec4_array(GLuint index) const;

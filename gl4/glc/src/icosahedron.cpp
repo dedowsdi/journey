@@ -4,6 +4,7 @@
 
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "functor.h"
 #include "geometry_util.h"
 
@@ -139,16 +140,13 @@ void icosahedron::build_minimun_mesh()
 
   for(auto& item : vertices)
     item *= m_radius;
-  
+
   for (int i = 0; i < m_subdivisions; ++i)
   {
     auto old_size = vertices.size();
     subdivide(elements->get_vector(), vertices.get_vector());
-    std::for_each(vertices.begin() + old_size, vertices.end(), 
-        [this](vec3& v)->void
-        {
-          v = glm::normalize(v) * m_radius;
-        });
+    std::for_each(vertices.begin() + old_size, vertices.end(),
+      [this](vec3& v) -> void { v = glm::normalize(v) * m_radius; });
   }
 
   std::cout << "icosahedron total vertices : " << vertices.size() << std::endl;
@@ -200,9 +198,9 @@ void icosahedron::build_paper_unwrapper_mesh()
   {
     auto i1 = up_index + i;
     auto i2 = i1 + 1;
-    elements->push_back(i);
-    elements->push_back(i1);
-    elements->push_back(i2);
+    elements->emplace_back(i);
+    elements->emplace_back(i1);
+    elements->emplace_back(i2);
   }
   
   // 10 triangles on center
@@ -212,17 +210,17 @@ void icosahedron::build_paper_unwrapper_mesh()
       auto i0 = up_index + i;
       auto i2 = i0 + 1;
       auto i1 = down_index + i;
-      elements->push_back(i0);
-      elements->push_back(i1);
-      elements->push_back(i2);
+      elements->emplace_back(i0);
+      elements->emplace_back(i1);
+      elements->emplace_back(i2);
     }
     {
       auto i0 = down_index + i;
       auto i2 = i0 + 1;
       auto i1 = up_index + 1 + i;
-      elements->push_back(i0);
-      elements->push_back(i2);
-      elements->push_back(i1);
+      elements->emplace_back(i0);
+      elements->emplace_back(i2);
+      elements->emplace_back(i1);
     }
   }
 
@@ -231,9 +229,9 @@ void icosahedron::build_paper_unwrapper_mesh()
   {
     auto i1 = down_index + i;
     auto i2 = i1 + 1;
-    elements->push_back(south_pole_index + i);
-    elements->push_back(i2);
-    elements->push_back(i1);
+    elements->emplace_back(south_pole_index + i);
+    elements->emplace_back(i2);
+    elements->emplace_back(i1);
   }
 
   if(this->include_texcoord())

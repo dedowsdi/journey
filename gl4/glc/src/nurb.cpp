@@ -31,12 +31,10 @@ void nurb::build_vertex()
 //--------------------------------------------------------------------
 void nurb::build_texcoord()
 {
-  float_array& texcoords = *(new float_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
+  auto texcoords = make_array<vec1_array>(num_vertices());
   for (int i = 0; i < num_vertices(); ++i)
   {
-    texcoords.push_back(static_cast<GLfloat>(i) / m_partitions);
+    texcoords->push_back(vec1(static_cast<GLfloat>(i) / m_partitions));
   }
 }
 

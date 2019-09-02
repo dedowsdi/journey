@@ -9,6 +9,7 @@
 #define GLM_META_PROG_HELPERS
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/fwd.hpp>
+#include <glm/ext/vector_uint1.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -60,6 +61,8 @@ using uint_vector = std::vector<GLuint>;
 using short_vector = std::vector<GLshort>;
 using ushort_vector = std::vector<GLushort>;
 using float_vector = std::vector<GLfloat>;
+using uvec1_vector = std::vector<uvec1>;
+using vec1_vector = std::vector<vec1>;
 using vec2_vector = std::vector<vec2>;
 using vec3_vector = std::vector<vec3>;
 using vec4_vector = std::vector<vec4>;

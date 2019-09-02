@@ -31,9 +31,9 @@ array_ptr geometry_base::attrib_array(GLuint index)  const
 }
 
 //--------------------------------------------------------------------
-float_array_ptr geometry_base::attrib_float_array(GLuint index) const
+vec1_array_ptr geometry_base::attrib_vec1_array(GLuint index)  const
 {
-  return std::static_pointer_cast<float_array>(attrib_array(index));
+  return std::static_pointer_cast<vec1_array>(attrib_array(index));
 }
 
 //--------------------------------------------------------------------
