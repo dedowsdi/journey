@@ -9,6 +9,11 @@
 namespace zxd
 {
 
+sphere::sphere(GLfloat radius, GLuint slice, GLuint stack)
+    : m_radius(radius), m_slice(slice), m_stack(stack)
+{
+}
+
 //--------------------------------------------------------------------
 void sphere::build_vertex()
 {

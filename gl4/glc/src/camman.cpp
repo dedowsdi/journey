@@ -8,17 +8,6 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-camman::camman()
-{
-}
-
-//--------------------------------------------------------------------
-orbit_camman::orbit_camman():
-  camman()
-{
-}
-
-//--------------------------------------------------------------------
 void orbit_camman::on_mouse_button(
   GLFWwindow* wnd, int button, int action, int mods)
 {
@@ -69,7 +58,7 @@ void orbit_camman::lookat(const vec3& eye, const vec3& center, const vec3& up)
 //--------------------------------------------------------------------
 void orbit_camman::perform_mouse_wheel(GLFWwindow* wnd, const vec2& offset)
 {
-  GLfloat scale = 1 - get_wheel_scale() * offset.y;
+  GLfloat scale = 1 - get_zoom_scale() * offset.y;
   _distance *= scale;
   dirty();
 }

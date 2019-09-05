@@ -10,7 +10,6 @@ namespace zxd
 class blend_camman : public orbit_camman
 {
 public:
-  blend_camman();
 
   void on_key(
     GLFWwindow* wnd, int key, int scancode, int action, int mods) override;
@@ -25,11 +24,17 @@ class trackball_camman : public orbit_camman
 public:
   trackball_camman();
 
+  GLfloat get_ball_radius() const { return _ball_radius; }
+  void set_ball_radius(GLfloat v){ _ball_radius = v; }
+
+  const vec2& get_ball_center() const { return _ball_center; }
+  void set_ball_center(const vec2& v){ _ball_center = v; }
+
 private:
   void perform_mouse_move(
     GLFWwindow* wnd, const vec2& p0, const vec2& p1) override;
 
-  GLfloat _ball_radius; // normalized
+  GLfloat _ball_radius{0.6}; // normalized
   vec2 _ball_center;
 
 };
@@ -60,10 +65,14 @@ public:
 
   void lookat(const vec3& eye, const vec3& center, const vec3& up) override;
 
+  GLfloat get_rotate_scale() const { return _rotate_scale; }
+  void set_rotate_scale(GLfloat v){ _rotate_scale = v; }
+
 private:
   bool _moving{false};
   GLuint _dir{0};
   GLfloat _move_speed{1};
+  GLfloat _rotate_scale{0.002};
   mat4 _v_mat{1};
 };
 }

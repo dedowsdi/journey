@@ -8,6 +8,11 @@
 namespace zxd
 {
 
+cone::cone(GLfloat radius, GLfloat height, GLuint slice, GLuint stack)
+    : m_radius(radius), m_height(height), m_slice(slice), m_stack(stack)
+{
+}
+
 //--------------------------------------------------------------------
 void cone::build_vertex()
 {

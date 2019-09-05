@@ -12,8 +12,6 @@ class camman : public glfw_gl_handler
 {
 public:
 
-  camman();
-
   // Subclass such as orbit_camman use a cached value, it doesn't feel right to
   // update base class member in child const memthod, so subclass must define
   // it's own v_mat member.
@@ -21,23 +19,12 @@ public:
   virtual void set_v_mat(const mat4& v_mat) = 0;
   virtual void lookat(const vec3& eye, const vec3& center, const vec3& up) = 0;
 
-  GLfloat get_move_scale() const { return _move_scale; }
-  void set_move_scale(GLfloat v){ _move_scale = v; }
-
-  GLfloat get_wheel_scale() const { return _wheel_scale; }
-  void set_wheel_scale(GLfloat v){ _wheel_scale = v; }
-
 private:
-
-  GLfloat _move_scale{0.02};
-  GLfloat _wheel_scale{0.1};
 };
 
 class orbit_camman : public camman
 {
 public:
-
-  orbit_camman();
 
   void on_mouse_button(
     GLFWwindow* wnd, int button, int action, int mods) override;
@@ -67,17 +54,25 @@ public:
   bool get_need_button() const { return _need_button; }
   void set_need_button(bool v){ _need_button = v; }
 
+  GLfloat get_rotate_scale() const { return _rotate_scale; }
+  void set_rotate_scale(GLfloat v){ _rotate_scale = v; }
+
+  GLfloat get_zoom_scale() const { return _zoom_scale; }
+  void set_zoom_scale(GLfloat v){ _zoom_scale = v; }
+
 private:
 
-  void dirty(){ _dirty = true;}
+  void dirty(){ _dirty = true; }
 
   int _button{GLFW_MOUSE_BUTTON_MIDDLE};
   mutable bool _dirty{true};
   bool _need_button{true};
   GLfloat _distance{-1};
+  GLfloat _rotate_scale{0.02};
+  GLfloat _zoom_scale{0.1};
   vec3 _center{0}; // world center
   mat4 _rotation{1};
-  mutable mat4 _v_mat;
+  mutable mat4 _v_mat{1};
 };
 
 }

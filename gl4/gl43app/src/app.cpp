@@ -293,13 +293,10 @@ void app::set_v_mat(mat4 *v)
   m_v_mat = v;
   if (m_camman)
   {
-
-    auto camman = std::dynamic_pointer_cast<orbit_camman>(m_camman);
-    if (camman)
+    if (auto camman = std::dynamic_pointer_cast<orbit_camman>(m_camman))
     {
       camman->set_distance(-(*v)[3][2]);
     }
-
     m_camman->set_v_mat(*v);
   }
 }
@@ -315,8 +312,7 @@ void app::set_camera_mode(camera_mode v) {
   if (m_camman)
   {
     v_mat = m_camman->get_v_mat();
-    auto orbit_camera = std::dynamic_pointer_cast<orbit_camman>(m_camman);
-    if (orbit_camera)
+    if (auto orbit_camera = std::dynamic_pointer_cast<orbit_camman>(m_camman))
     {
       m_orbit_camman_info.distance = orbit_camera->get_distance();
       m_orbit_camman_info.rotation = orbit_camera->get_rotation();

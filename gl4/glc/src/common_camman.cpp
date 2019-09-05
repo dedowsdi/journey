@@ -10,12 +10,6 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-blend_camman::blend_camman():
-  orbit_camman()
-{
-}
-
-//--------------------------------------------------------------------
 void blend_camman::on_key(
   GLFWwindow* wnd, int key, int scancode, int action, int mods)
 {
@@ -48,13 +42,13 @@ void blend_camman::perform_mouse_move(
 {
   // v_r_mat = pitch(-dy) * v_r_mat * yaw(dx)
   auto offset = p1 - p0;
-  auto yaw = rotate(-offset.x * get_move_scale(), vec3(0, 0, 1));
-  auto pitch = rotate(offset.y * get_move_scale(), vec3(1, 0, 0));
+  auto yaw = rotate(-offset.x * get_rotate_scale(), vec3(0, 0, 1));
+  auto pitch = rotate(offset.y * get_rotate_scale(), vec3(1, 0, 0));
   set_rotation(yaw * get_rotation() * pitch);
 }
 
 //--------------------------------------------------------------------
-trackball_camman::trackball_camman() : orbit_camman(), _ball_radius(0.6)
+trackball_camman::trackball_camman() : orbit_camman()
 {
   _ball_center = vec2(glfw_win_size()) * 0.5f;
 }
@@ -71,8 +65,6 @@ void trackball_camman::perform_mouse_move(
 //--------------------------------------------------------------------
 free_camman::free_camman() : camman()
 {
-  set_move_scale(0.002);
-  set_wheel_scale(0.01);
   auto wnd = glfwGetCurrentContext();
   auto size = glfw_win_size();
   // hide, fix cursor
@@ -155,8 +147,8 @@ void free_camman::on_mouse_move(GLFWwindow* wnd, double x, double y)
 
   vec2 offset = p - center;
   auto v_mat =
-    glm::rotate<GLfloat>(-offset.y * get_move_scale(), vec3(1, 0, 0)) *
-    glm::rotate<GLfloat>(offset.x * get_move_scale(), vec3(0, 1, 0)) *
+    glm::rotate<GLfloat>(-offset.y * get_rotate_scale(), vec3(1, 0, 0)) *
+    glm::rotate<GLfloat>(offset.x * get_rotate_scale(), vec3(0, 1, 0)) *
     get_v_mat();
 
   auto forward = vec3(-row(v_mat, 2));

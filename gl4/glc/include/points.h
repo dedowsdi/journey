@@ -9,15 +9,16 @@ template <typename tvec>
 class points : public geometry_base
 {
 public:
+
   points(const std::vector<tvec>& points =  {});
   points(const std::vector<tvec>&& points);
 
   void set_vertices(const std::vector<tvec>& points);
   void set_vertices(std::vector<tvec>&& points);
 
-  void build_vertex() override;
-
 private:
+
+  void build_vertex() override;
 
   void rebuild();
 

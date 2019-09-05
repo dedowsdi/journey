@@ -457,7 +457,7 @@ GLfloat triangle_area(const vec3& p0, const vec3& p1, const vec3& p2)
 //--------------------------------------------------------------------
 vec3 eye_pos(const mat4& v_mat)
 {
-  return vec3(-v_mat[3] * erase_translation(v_mat));
+  return vec3(-v_mat[3]) * mat3(v_mat);
 }
 
 }

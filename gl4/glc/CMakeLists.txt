@@ -62,6 +62,8 @@ set(GLC_SRCS
     src/common_camman.cpp
     src/glfw_handler.cpp
     src/objman.cpp
+    src/shader.cpp
+    src/exception.cpp
     )
 
 set(GLC glc${GLC_GL_VERSION})

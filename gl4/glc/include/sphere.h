@@ -10,9 +10,8 @@ class sphere : public geometry_base
 {
 
 public:
-  sphere() : m_radius(1), m_slice(16), m_stack(16) {}
-  sphere(GLfloat radius, GLuint slice, GLuint stack)
-      : m_radius(radius), m_slice(slice), m_stack(stack) {}
+  sphere() = default;
+  sphere(GLfloat radius, GLuint slice, GLuint stack);
 
   GLfloat radius() const { return m_radius; }
   void radius(GLfloat v) { m_radius = v; }
@@ -31,9 +30,9 @@ private:
   void build_normal() override;
   void build_texcoord() override;
 
-  GLfloat m_radius;
-  GLuint m_slice;  // longitiude
-  GLuint m_stack;  // latitude
+  GLfloat m_radius{1};
+  GLuint m_slice{16};  // longitiude
+  GLuint m_stack{16};  // latitude
 
 };
 }

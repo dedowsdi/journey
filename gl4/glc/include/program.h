@@ -4,7 +4,9 @@
 #include "gl.h"
 #include <string>
 #include <vector>
+#include <memory>
 #include <map>
+#include <functional>
 
 typedef std::vector<std::string> string_vector;
 typedef std::vector<const char*> cstring_vector;
@@ -12,12 +14,18 @@ typedef std::vector<const char*> cstring_vector;
 namespace zxd
 {
 
+class shader;
+using shader_map = std::map<GLenum, std::shared_ptr<shader>>;
+
 void add_shader_content(string_vector& v, const std::string& content);
 
 class program
 {
 
 public:
+
+  using load_callback = std::function<void(void)>;
+
   program() : _object(-1) {}
   virtual ~program() = default;
 
@@ -40,11 +48,19 @@ public:
 
   GLint get_uniform_location(const std::string& name);
 
+  void attach(GLenum type, const std::shared_ptr<shader>& s);
+
+  // deprecated, use shader instead
   void attach(GLenum type, const std::string& file,
     const std::map<std::string, std::string>& replace_map = {});
-  bool attach(GLenum type, const string_vector& source);
   void attach(GLenum type, const string_vector& source, const std::string& file,
     const std::map<std::string, std::string>& replace_map = {});
+  void attach(GLenum type, const string_vector& source);
+
+  GLint get_iv(GLenum pname) const;
+
+  std::string get_info_log() const;
+
   void print_shader_sources();
 
   void clear();
@@ -75,15 +91,19 @@ public:
 
 private:
 
+  std::string get_print_name();
+
   virtual void attach_shaders(){};
   virtual void bind_uniform_locations(){};
   virtual void bind_attrib_locations(){}
 
   void create_program();
 
-  GLuint _object;
+  GLuint _object{-1u};
   std::string _name;
 
+  load_callback _load_callback{nullptr};
+  shader_map _shaders;
 };
 }
 

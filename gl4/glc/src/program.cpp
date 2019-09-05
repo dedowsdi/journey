@@ -6,6 +6,7 @@
 #include <sstream>
 #include <memory>
 
+#include "shader.h"
 #include "glenumstring.h"
 #include "common.h"
 #include "stream_util.h"
@@ -36,6 +37,8 @@ void program::init()
 {
   create_program();
   attach_shaders();
+  if(_load_callback)
+    _load_callback();
   bind_attrib_locations(); // bind must be called before link, different from get
   link();
   bind_uniform_locations();
@@ -44,7 +47,7 @@ void program::init()
 //--------------------------------------------------------------------
 void program::reload()
 {
-  std::cout << "reloading shader " << _name << std::endl;
+  std::cout << "reloading program " << get_print_name() << std::endl;
   clear();
   init();
 }
@@ -59,40 +62,18 @@ void program::bind_attrib_location(GLuint index, const std::string& name)
 //--------------------------------------------------------------------
 void program::link()
 {
+  assert(get_iv(GL_ATTACHED_SHADERS) == _shaders.size());
   glLinkProgram(_object);
-  GLint status;
-  glGetProgramiv(_object, GL_LINK_STATUS, &status);
-  if (!status)
+
+  if (!get_iv(GL_LINK_STATUS))
   {
-    GLint len;
-    glGetProgramiv(_object, GL_INFO_LOG_LENGTH, &len);
-    if (len == 0)
-    {
-      std::stringstream ss;
-      ss << "program " << _object << " : " << _name
-         << " link failed, and has no log, good luck!" << std::endl;
-      std::cout << ss.str() << std::endl;
-    } else
-    {
-      char* log = static_cast<char*>(malloc(len + 1));
-      glGetProgramInfoLog(_object, len, 0, log);
-      std::cout << log << std::endl;
-      print_shader_sources();
-    }
+    std::cerr << get_info_log() << std::endl;
   }
 
-  GLint num_shaders;
-  glGetProgramiv(_object, GL_ATTACHED_SHADERS, &num_shaders);
-  constexpr GLsizei max_shaders = 64;
-  std::array<GLuint, max_shaders> shaders;
-  glGetAttachedShaders(_object, max_shaders, &num_shaders, &shaders.front());
-
-  std::cout << "link ";
-  for (int i = 0; i < num_shaders; ++i)
+  std::cout << get_print_name() <<  " link ";
+  for (const auto& item : _shaders)
   {
-    GLint shader_type;
-    glGetShaderiv(shaders[i], GL_SHADER_TYPE, &shader_type);
-    std::cout << gl_shader_type_to_string(shader_type) << " ";
+    std::cout << gl_shader_type_to_string(item.first);
   }
   std::cout << std::endl;
 }
@@ -111,9 +92,8 @@ GLint program::get_attrib_location(const std::string& name)
   GLint location = glGetAttribLocation(_object, name.c_str());
   if (location == -1)
   {
-    std::cout << _object << " : " << _name << " : "
-              << " failed to get attribute location : \"" << name << "\""
-              << std::endl;
+    std::cout << get_print_name() << " failed to get attribute location : \""
+              << name << "\"" << std::endl;
   }
   return location;
 }
@@ -140,37 +120,17 @@ void program::attach(GLenum type, const std::string& file,
 }
 
 //--------------------------------------------------------------------
-bool program::attach(GLenum type, const string_vector& source)
+void program::attach(GLenum type, const string_vector& source)
 {
-  GLuint sh;
-
-  sh = glCreateShader(type);
-
-  cstring_vector csv;
-  std::transform(source.begin(), source.end(), std::back_inserter(csv),
-    std::mem_fn(&std::string::c_str));
-
-  glShaderSource(sh, csv.size(), &csv[0], NULL);
-
-  glCompileShader(sh);
-
-  GLint compiled;
-  // check if compile failed
-  glGetShaderiv(sh, GL_COMPILE_STATUS, &compiled);
-  if (!compiled)
+  auto sh = std::make_shared<shader>(type);
+  std::stringstream ss;
+  for (const auto& s : source)
   {
-    GLsizei len;
-    glGetShaderiv(sh, GL_INFO_LOG_LENGTH, &len);
-
-    GLchar* log = (GLchar*)malloc(len + 1);
-    glGetShaderInfoLog(sh, len, &len, log);
-    printf("%s  compilation failed: %s", gl_shader_type_to_string(type), log);
-    free(log);
-    return false;
+    ss << s;
   }
-  glAttachShader(_object, sh);
-  glDeleteShader(sh);
-  return true;
+  sh->source(ss.str());
+  sh->compile();
+  attach(type, sh);
 }
 
 //--------------------------------------------------------------------
@@ -178,30 +138,65 @@ void program::attach(GLenum type, const string_vector& source,
   const std::string& file,
   const std::map<std::string, std::string>& replace_map)
 {
-  string_vector combined_source(source);
-  add_shader_content(combined_source, stream_util::read_resource(file));
 
-  for (auto& str : combined_source)
+  shader_source src;
+  for (const auto& s : source)
   {
-    for (const auto& p : replace_map)
-      str = string_util::replace_string(str, p.first, p.second);
+    src.add_string(s);
+  }
+  src.add_file(file);
+  src.replace_place_holder(replace_map);
+
+  string_vector sv{src.get_final_source()};
+
+  attach(type, sv);
+}
+
+//--------------------------------------------------------------------
+void program::attach(GLenum type, const std::shared_ptr<shader>& s)
+{
+  auto iter = _shaders.find(type);
+  if (iter != _shaders.end())
+  {
+    std::cerr << get_print_name() << " : replace "
+              << gl_shader_type_to_string(type) << std::endl;
   }
 
-  if (!attach(type, combined_source))
+  _shaders.insert(std::make_pair(type, s));
+  glAttachShader(_object, s->get_object());
+}
+
+
+//--------------------------------------------------------------------
+GLint program::get_iv(GLenum pname) const
+{
+  GLint v;
+  glGetProgramiv(_object, pname, &v);
+  return v;
+}
+
+//--------------------------------------------------------------------
+std::string program::get_info_log() const
+{
+  auto len = get_iv(GL_INFO_LOG_LENGTH);
+  if (len == 0)
   {
-    std::cout << "failed to compile " << file << " : " <<  std::endl;
-    std::cout << "******************************" << std::endl;
-    std::copy(combined_source.begin(), combined_source.end(),
-      std::ostream_iterator<std::string>(std::cout, ""));
-    std::cout << stream_util::read_resource(file) << std::endl;
-    std::cout << "******************************" << std::endl;
+    std::stringstream ss;
+    ss << " link failed, and has no log, good luck!" << std::endl;
+    return ss.str();
+  }
+  else
+  {
+    auto log = std::make_unique<char[]>(len + 1);
+    glGetProgramInfoLog(_object, len, 0, log.get());
+    return std::string(log.get());
   }
 }
 
 //--------------------------------------------------------------------
 void program::print_shader_sources()
 {
-  constexpr GLsizei max_shaders = 64;
+  constexpr GLsizei max_shaders = 16;
   std::array<GLuint, max_shaders> shaders;
   GLsizei num_shaders;
   glGetAttachedShaders(_object, max_shaders, &num_shaders, &shaders.front());
@@ -342,5 +337,13 @@ void program::uniform4i(
 }
 
 void program::create_program() { _object = glCreateProgram(); }
+
+//--------------------------------------------------------------------
+std::string program::get_print_name()
+{
+  std::stringstream ss;
+  ss << _object << "(" << _name << ")";
+  return ss.str();
+}
 
 }

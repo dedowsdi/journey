@@ -22,6 +22,7 @@
 #include "teardrop.h"
 #include "capsule3d.h"
 #include "icosahedron.h"
+#include "common_program.h"
 
 namespace zxd
 {
