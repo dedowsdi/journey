@@ -9,7 +9,6 @@ class line : public geometry_base
 {
 
 public:
-  using geometry_base::build_mesh; // avoid warning
 
   template <typename It>
   void build_line(GLenum mode, It beg, It end);
@@ -26,12 +25,13 @@ private:
 template <typename It>
 void line::build_line(GLenum mode, It beg, It end)
 {
+  set_vao(std::make_unique<vao>());
   clear_primitive_sets();
   using value_type = typename std::iterator_traits<It>::value_type;
-  auto vertices = std::make_shared<template_array<value_type>>();
+  auto vertices = std::make_unique<template_array<value_type>>();
   vertices->assign(beg, end);
-  attrib_array(0, vertices);
   m_mode = mode;
+  add_array_attrib(get_vao(), 0, std::move(vertices));
   create_primitive_set();
 }
 

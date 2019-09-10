@@ -162,14 +162,12 @@ class app0 : public app {
     v_mat = mat4(1.0);
     p_mat = mat4(1.0);
 
-    disk0.include_normal(true);
-    disk0.include_texcoord(true);
-    disk0.build_mesh();
+    disk0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+      attrib_semantic::texcoord});
     //disk0.bind(blinn_prg.al_vertex, blinn_prg.al_normal, blinn_prg.al_texcoord);
 
     hdr_prg.init();
-    quad0.include_texcoord(true);
-    quad0.build_mesh();
+    quad0.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
     //quad0.bind(hdr_prg.al_vertex, -1, hdr_prg.al_texcoord);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);

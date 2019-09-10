@@ -135,8 +135,7 @@ public:
 
     quad.rect(vec2(-0.5), vec2(0.5));
     quad.texcoord(vec2(0), m_flakes->sprite_size());
-    quad.include_texcoord(true);
-    quad.build_mesh();
+    quad.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     m_snows.reserve(num_flakes);
     for (int i = 0; i < num_flakes; ++i)
@@ -150,14 +149,12 @@ public:
       m_snows.push_back(s);
     }
 
-    draw_arrays* da = static_cast<draw_arrays*>(quad.get_primitive_set(0));
-    da->num_instance(num_flakes);
+    auto& da = static_cast<draw_arrays&>(quad.get_primitive_set(0));
+    da.num_instance(num_flakes);
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, m_snows.size() * 32, 0, GL_STREAM_DRAW);
-
-    quad.bind_vao();
 
     GLuint stride = 32;
     // translation

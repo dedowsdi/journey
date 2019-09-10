@@ -7,10 +7,9 @@ namespace zxd
 //--------------------------------------------------------------------
 void texmap_anim::init()
 {
-  m_quad.include_texcoord(GL_TRUE);
-  m_quad.build_mesh();
+  m_quad.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
-  m_cool_down = 1.0 / m_frame_rate; 
+  m_cool_down = 1.0 / m_frame_rate;
 
   GLfloat sx = 1.0 / m_num_col;
   GLfloat sy = 1.0 / m_num_row;

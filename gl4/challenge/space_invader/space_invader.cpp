@@ -27,105 +27,106 @@ lightless_program prg;
 glm::mat4 v_mat;
 glm::mat4 p_mat;
 
-class ship_geometry : public geometry_base
+class ship_geometry : public common_geometry
 {
 protected:
-  virtual void build_vertex()
+  vertex_build build_vertices() override
   { 
+    auto vertices = std::make_unique<vec2_array>();
 
-    vec2_array& vertices = *(new vec2_array());
-    attrib_array(num_arrays(), array_ptr(&vertices));
-
-    vertices.reserve(15);
+    vertices->reserve(15);
 
     // create polygon in griangle fan
-    vertices.push_back(vec2(0, 0));
+    vertices->push_back(vec2(0, 0));
 
-    vertices.push_back(vec2(0, 0.5));
-    vertices.push_back(vec2(-0.2, 0.4));
-    vertices.push_back(vec2(-0.2, 0));
-    vertices.push_back(vec2(-0.35, -0.15));
-    vertices.push_back(vec2(-0.2, -0.15));
-    vertices.push_back(vec2(-0.2, -0.3));
-    vertices.push_back(vec2(-0.1, -0.15));
+    vertices->push_back(vec2(0, 0.5));
+    vertices->push_back(vec2(-0.2, 0.4));
+    vertices->push_back(vec2(-0.2, 0));
+    vertices->push_back(vec2(-0.35, -0.15));
+    vertices->push_back(vec2(-0.2, -0.15));
+    vertices->push_back(vec2(-0.2, -0.3));
+    vertices->push_back(vec2(-0.1, -0.15));
     
     // mirror right part
     for (size_t i = 7; i > 0; --i)
     {
-      vertices.push_back(vertices[i] * vec2(-1, 1));
+      vertices->push_back(vertices->at(i) * vec2(-1, 1));
     }
 
-    m_primitive_sets.clear();
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices()));
+    clear_primitive_sets();
+    add_primitive_set(
+      std::make_unique<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+    return vertex_build{std::move(vertices)};
   }
 
 } ship_geometry0;
 
 // spined circle
-class invader_geomtry : public geometry_base
+class invader_geomtry : public common_geometry
 {
 protected:
-  virtual void build_vertex()
+  virtual vertex_build build_vertices()
   { 
-
-    vec2_array& vertices = *(new vec2_array());
-    attrib_array(num_arrays(), array_ptr(&vertices));
+    auto vertices = std::make_unique<vec2_array>();
 
     GLint num_spides = 10;
     GLfloat step_angle = f2pi / (num_spides * 2);
     GLfloat innder_radius = 0.15;
     GLfloat outer_radius = 0.45;
 
-    vertices.reserve(num_spides*2 + 1);
+    vertices->reserve(num_spides*2 + 1);
 
-    vertices.push_back(vec2(0));
+    vertices->push_back(vec2(0));
     for (int i = 0; i < (num_spides+1)*2; ++i) 
     {
       mat4 m = glm::rotate(step_angle * i, vec3(0, 0, 1));
       if(i & 1)
       {
         vec4 v = m * vec4(innder_radius, 0, 0, 1);
-        vertices.push_back(vec2(v));
+        vertices->push_back(vec2(v));
       }
       else if(glm::linearRand(0.0f, 1.0f) > 0.65f)
       {
         vec4 v = m * vec4(outer_radius, 0, 0, 1);
-        vertices.push_back(vec2(v));
+        vertices->push_back(vec2(v));
       }
     }
 
-    m_primitive_sets.clear();
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices()));
+    clear_primitive_sets();
+    add_primitive_set(
+      std::make_unique<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+    return vertex_build{std::move(vertices)};
   }
 
 } invader_geometry0;
 
-class bullet_geomtry : public geometry_base
+class bullet_geomtry : public common_geometry
 {
 protected:
-  virtual void build_vertex()
+  virtual vertex_build build_vertices()
   { 
 
-    vec2_array& vertices = *(new vec2_array());
-    attrib_array(num_arrays(), array_ptr(&vertices));
+    auto vertices = std::make_unique<vec2_array>();
 
     GLint num_segs = 12;
     GLfloat step_angle = f2pi / num_segs;
     GLfloat radius = 0.5;
 
-    vertices.reserve(num_segs+2);
+    vertices->reserve(num_segs+2);
 
-    vertices.push_back(vec2(0));
+    vertices->push_back(vec2(0));
 
     for (int i = 0; i < num_segs+1; ++i) 
     {
       mat4 m = glm::rotate(step_angle * i, vec3(0, 0, 1));
       vec4 v = m * vec4(radius, 0, 0, 1);
-      vertices.push_back(vec2(v));
+      vertices->push_back(vec2(v));
     }
 
-    m_primitive_sets.clear();
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, this->num_vertices()));
+    clear_primitive_sets();
+    add_primitive_set(
+      std::make_unique<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+    return vertex_build{std::move(vertices)};
   }
 
 
@@ -190,8 +191,6 @@ public:
 
   virtual void draw()
   {
-    m_geometry->bind_vao();
-
     glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * m_mat()));
     glUniform4fv(prg.ul_color, 1, glm::value_ptr(m_color));
 

@@ -154,7 +154,7 @@ void chaos_app::reset_polygon(const kci* kci)
   polygon.radius(radius);
   polygon.type(circle::LINE);
   polygon.build_mesh();
-  vertices = &polygon.attrib_vec2_array(0)->get_vector();
+  vertices = &polygon.get_attrib_vec2_array(0)->get_vector();
 
   selections.resize(edges);
   std::iota(selections.begin(), selections.end(), 0);

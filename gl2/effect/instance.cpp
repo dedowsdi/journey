@@ -106,7 +106,7 @@ class app0 : public app {
       mv_mat_its.push_back(mv_mat_it);
     }
 
-    glBindVertexArray(sphere0.vao());
+    sphere0.get_vao().bind();
 
     {
       GLuint buffer;
@@ -206,8 +206,7 @@ class app0 : public app {
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 50.0f);
     v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
 
-    sphere0.include_normal(true);
-    sphere0.build_mesh();
+    sphere0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
     sphere0.set_num_instance(num_instance);
 
     reset_mat_attribute();

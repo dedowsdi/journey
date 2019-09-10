@@ -148,15 +148,15 @@ public:
     unit_circle.end(0);
     unit_circle.build_mesh();
     vec3_vector unit_vertices = vec2_vector_to_vec3_vector(
-        unit_circle.attrib_vec2_array(0)->get_vector());
+        unit_circle.get_attrib_vec2_array(0)->get_vector());
 
-    auto vertices = std::make_shared<vec2_array>();
-    mesh.attrib_array(0, vertices);
+    auto vertices = std::make_unique<vec2_array>();
+    mesh.set_attrib_array(0, std::move(vertices));
     vertices->reserve((slices*1) * (sequence.size() - 1));
     // build mesh based on sequence
     
-    auto colors = std::make_shared<vec4_array>();
-    mesh.attrib_array(1, colors);
+    auto colors = std::make_unique<vec4_array>();
+    mesh.set_attrib_array(1, std::move(colors));
     colors->reserve(vertices->capacity());
 
     vec2 r = glm::linearRand(vec2(0), vec2(1000));
@@ -185,8 +185,7 @@ public:
       }
     }
 
-    mesh.bind_and_update_buffer();
-    mesh.add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, vertices->size()));
+    mesh.add_primitive_set(std::make_shared<draw_arrays>(GL_LINE_STRIP, 0, vertices->size()));
 
     prg.with_color = true;
     prg.init();
@@ -197,8 +196,7 @@ public:
     brightness_map = create_texture();
     diffuse_map = create_texture();
 
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     blur_tex.ping(create_texture());
     blur_tex.pong(create_texture());
@@ -215,8 +213,8 @@ public:
     draw_count += draw_step;
 
     draw_count = glm::min(mesh.num_vertices(), draw_count);
-    draw_arrays* da = static_cast<draw_arrays*>(mesh.get_primitive_set(0));
-    da->count(draw_count);
+    draw_arrays& da = static_cast<draw_arrays&>(mesh.get_primitive_set(0));
+    da.count(draw_count);
 
     GLint seq_idnex = zxd::ceil(static_cast<GLfloat>(draw_count)/(slices + 1));
     GLint n = sequence[seq_idnex];

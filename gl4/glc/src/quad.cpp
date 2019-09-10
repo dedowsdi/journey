@@ -15,8 +15,7 @@ quad& get_ndc_quad()
 {
   if(!ndc_quad.is_inited())
   {
-    ndc_quad.include_texcoord(true);
-    ndc_quad.build_mesh();
+    ndc_quad.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
   }
   return ndc_quad;
 }
@@ -26,10 +25,9 @@ void draw_quad(GLuint tex, GLuint tui/* = 0*/)
 {
   static quad q;
   static quad_program prg;
-  if (q.vao() == -1)
+  if (!q.is_inited())
   {
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
   }
 
   glActiveTexture(tui + GL_TEXTURE0);
@@ -81,58 +79,55 @@ void quad::setup(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1)
 }
 
 //--------------------------------------------------------------------
-void quad::build_vertex()
+common_geometry::vertex_build quad::build_vertices()
 {
-  vec3_array& vertices = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve(4);
+  auto vertices = std::make_unique<vec3_array>();
 
-  vertices.push_back(m_v0);
-  vertices.push_back(m_v1);
-  vertices.push_back(m_v2);
-  vertices.push_back(m_v3);
+  vertices->push_back(m_v0);
+  vertices->push_back(m_v1);
+  vertices->push_back(m_v2);
+  vertices->push_back(m_v3);
 
-  m_primitive_sets.clear();
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, 4));
+  clear_primitive_sets();
+  add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, 4));
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void quad::build_normal()
+array_uptr quad::build_normals(const array& vertices)
 {
-  vec3_array& normals = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&normals));
-  normals.reserve(4);
+  auto normals = std::make_unique<vec3_array>();
 
-  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
-  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
-  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
-  normals.push_back(vec3{0.0f, 0.0f, 1.0f});
+  normals->push_back(vec3{0.0f, 0.0f, 1.0f});
+  normals->push_back(vec3{0.0f, 0.0f, 1.0f});
+  normals->push_back(vec3{0.0f, 0.0f, 1.0f});
+  normals->push_back(vec3{0.0f, 0.0f, 1.0f});
+  return normals;
 }
 
 //--------------------------------------------------------------------
-void quad::build_texcoord()
+array_uptr quad::build_texcoords(const array& vertices)
 {
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(4);
+  auto texcoords = std::make_unique<vec2_array>();
 
-  texcoords.push_back(m_tc0);
-  texcoords.push_back(vec2(m_tc1.x, m_tc0.y));
-  texcoords.push_back(m_tc1);
-  texcoords.push_back(vec2(m_tc0.x, m_tc1.y));
+  texcoords->push_back(m_tc0);
+  texcoords->push_back(vec2(m_tc1.x, m_tc0.y));
+  texcoords->push_back(m_tc1);
+  texcoords->push_back(vec2(m_tc0.x, m_tc1.y));
+  return texcoords;
 }
 
 //--------------------------------------------------------------------
-void quad::build_tangent()
+array_uptr quad::build_tangents(const array& vertices)
 {
-  vec3_array& tangents = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&tangents));
-  tangents.reserve(4);
+  auto tangents = std::make_unique<vec3_array>();
 
-  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
-  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
-  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
-  tangents.push_back(vec3{1.0f, 0.0f, 0.0f});
+  tangents->push_back(vec3{1.0f, 0.0f, 0.0f});
+  tangents->push_back(vec3{1.0f, 0.0f, 0.0f});
+  tangents->push_back(vec3{1.0f, 0.0f, 0.0f});
+  tangents->push_back(vec3{1.0f, 0.0f, 0.0f});
+
+  return tangents;
 }
 
 //--------------------------------------------------------------------
@@ -174,28 +169,28 @@ void billboard_quad::texcoord(const vec2& tc0, const vec2& tc1)
 }
 
 //--------------------------------------------------------------------
-void billboard_quad::build_vertex()
+common_geometry::vertex_build billboard_quad::build_vertices()
 {
-  auto vertices = std::make_shared<vec2_array>();
-  attrib_array(0, vertices);
+  auto vertices = std::make_unique<vec2_array>();
   vertices->push_back(m_v0);
   vertices->push_back(vec2(m_v1.x, m_v0.y));
   vertices->push_back(m_v1);
   vertices->push_back(vec2(m_v0.x, m_v1.y));
 
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, 4));
+  add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, 4));
 
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void billboard_quad::build_texcoord()
+array_uptr billboard_quad::build_texcoords(const array& vertices)
 {
-  auto texcoords = std::make_shared<vec2_array>();
-  attrib_array(1, texcoords);
+  auto texcoords = std::make_unique<vec2_array>();
   texcoords->push_back(m_texcoord0);
   texcoords->push_back(vec2(m_texcoord1.x, m_texcoord0.y));
   texcoords->push_back(m_texcoord1);
   texcoords->push_back(vec2(m_texcoord0.x, m_texcoord1.y));
+  return texcoords;
 }
 
 

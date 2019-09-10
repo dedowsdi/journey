@@ -7,7 +7,7 @@ namespace zxd
 {
 
 // http://www.songho.ca/opengl/gl_sphere.html
-class icosahedron : public geometry_base
+class icosahedron : public common_geometry
 {
 public:
 
@@ -31,12 +31,11 @@ public:
 
 private:
 
-  void build_vertex() override;
-  void build_normal() override;
-  void build_texcoord() override;
+  vertex_build build_vertices() override;
+  array_uptr build_normals(const array& vertices) override;
 
-  void build_minimun_mesh();
-  void build_paper_unwrapper_mesh();
+  vertex_build build_minimun_mesh();
+  vertex_build build_paper_unwrapper_mesh();
 
   mesh_type m_mesh_type;
   GLfloat m_radius = 1;

@@ -1,6 +1,7 @@
 #include "super_shape_3d.h"
 
 #include <memory>
+#include <iostream>
 
 #include "geometry_util.h"
 #include "stream_util.h"
@@ -10,22 +11,18 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-void super_shape_3d::build_vertex()
+common_geometry::vertex_build super_shape_3d::build_vertices()
 {
   if(m_type == ST_SPHERE)
-    build_sphere_vertex();
+    return build_sphere_vertex();
   else
-    build_torus_vertex();
-
-  if(include_normal())
-    smooth(*this, 1);
+    return build_torus_vertex();
 }
 
 //--------------------------------------------------------------------
-void super_shape_3d::build_sphere_vertex()
+common_geometry::vertex_build super_shape_3d::build_sphere_vertex()
 {
-  vec3_array_ptr vertices(new vec3_array);
-  attrib_array(0, vertices); 
+  auto vertices = std::make_unique<vec3_array>();
   GLuint circle_size = m_slice + 1;
   GLuint strip_size = circle_size * 2;
   vertices->reserve(m_stack * strip_size);
@@ -37,10 +34,9 @@ void super_shape_3d::build_sphere_vertex()
   points.reserve((m_stack + 1) * (m_slice + 1));
   vec2_vector point_texcoords;
 
-  vec2_array_ptr texcoords(new vec2_array);
-  if(include_texcoord())
+  auto texcoords = std::make_unique<vec2_array>();
+  if(has_texcoord())
   {
-    attrib_array(2, texcoords);
     point_texcoords.reserve(points.size());
     texcoords->reserve(vertices->size());
   }
@@ -65,7 +61,7 @@ void super_shape_3d::build_sphere_vertex()
     for (int j = 0; j <= m_slice; ++j)
     {
 
-      if(include_texcoord())
+      if(has_texcoord())
       {
         GLfloat s = j * s_step;
         point_texcoords.push_back(vec2(s, t));
@@ -90,7 +86,7 @@ void super_shape_3d::build_sphere_vertex()
     }
   }
 
-  m_primitive_sets.clear();
+  clear_primitive_sets();
 
   // generate triangle strip phi by phi
   for (int i = 0; i < m_stack; ++i)
@@ -103,24 +99,30 @@ void super_shape_3d::build_sphere_vertex()
       vertices->push_back(points[stack_start1 + j]);
       vertices->push_back(points[stack_start0 + j]);
 
-      if(include_texcoord())
+      if(has_texcoord())
       {
         texcoords->push_back(point_texcoords[stack_start1 + j]);
         texcoords->push_back(point_texcoords[stack_start0 + j]);
       }
     }
-    m_primitive_sets.push_back( std::make_shared<draw_arrays>(
+    add_primitive_set( std::make_shared<draw_arrays>(
           GL_TRIANGLE_STRIP, strip_size * i, strip_size));
   }
 
-  std::cout << "create super sphere shape 3d in " << vertices->size() << " vertices" << std::endl;
+  std::cout << "create super sphere shape 3d in " << vertices->size()
+            << " vertices" << std::endl;
+
+  std::map<attrib_semantic, array_uptr> m;
+  m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
+  if (has_texcoord())
+    m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
+  return std::move(m);
 }
 
 //--------------------------------------------------------------------
-void super_shape_3d::build_torus_vertex()
+common_geometry::vertex_build super_shape_3d::build_torus_vertex()
 {
-  vec3_array_ptr vertices(new vec3_array);
-  attrib_array(0, vertices); 
+  auto vertices = std::make_unique<vec3_array>();
   GLuint circle_size = side() + 1;
   GLuint strip_size = circle_size * 2;
   vertices->reserve(strip_size * ring());
@@ -132,10 +134,9 @@ void super_shape_3d::build_torus_vertex()
   points.reserve((ring() + 1) * (side() + 1));
   vec2_vector point_texcoords;
 
-  vec2_array_ptr texcoords(new vec2_array);
-  if(include_texcoord())
+  auto texcoords = std::make_unique<vec2_array>();
+  if(has_texcoord())
   {
-    attrib_array(2, texcoords);
     point_texcoords.reserve(points.size());
     texcoords->reserve(vertices->size());
   }
@@ -160,7 +161,7 @@ void super_shape_3d::build_torus_vertex()
     for (int j = 0; j <= side(); ++j)
     {
 
-      if(include_texcoord())
+      if(has_texcoord())
       {
         GLfloat s = j * s_step;
         point_texcoords.push_back(vec2(s, t));
@@ -182,7 +183,7 @@ void super_shape_3d::build_torus_vertex()
     }
   }
 
-  m_primitive_sets.clear();
+  clear_primitive_sets();
 
   // generate triangle strip phi by phi
   for (int i = 0; i < ring(); ++i)
@@ -197,18 +198,23 @@ void super_shape_3d::build_torus_vertex()
       vertices->push_back(points[ring_start0 + j]);
       vertices->push_back(points[ring_start1 + j]);
 
-      if(include_texcoord())
+      if(has_texcoord())
       {
         texcoords->push_back(point_texcoords[ring_start0 + j]);
         texcoords->push_back(point_texcoords[ring_start1 + j]);
       }
     }
-    m_primitive_sets.push_back( std::make_shared<draw_arrays>(GL_TRIANGLE_STRIP, 
-          strip_size * i, strip_size));
+    add_primitive_set(std::make_shared<draw_arrays>(
+      GL_TRIANGLE_STRIP, strip_size * i, strip_size));
   }
 
+  std::cout << "create super torus shape 3d in " << vertices->size()
+            << " vertices" << std::endl;
 
-  std::cout << "create super torus shape 3d in " << vertices->size() << " vertices" << std::endl;
+  std::map<attrib_semantic, array_uptr> m;
+  if (has_texcoord())
+    m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
+  return std::move(m);
 }
 
 //--------------------------------------------------------------------
@@ -224,7 +230,8 @@ std::string super_shape_3d::shape_type_to_string(shape_type type)
 }
 
 //--------------------------------------------------------------------
-super_shape_3d::shape_type super_shape_3d::shape_type_from_string(const std::string& s)
+super_shape_3d::shape_type super_shape_3d::shape_type_from_string(
+  const std::string& s)
 {
   if(s == "sphere")
     return ST_SPHERE;

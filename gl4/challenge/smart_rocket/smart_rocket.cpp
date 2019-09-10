@@ -319,13 +319,13 @@ public:
     //dot_prg.init();
     p_mat = glm::ortho<GLfloat>(0, wnd_width(), 0, wnd_height());
 
-    vec3_array* vertices = new vec3_array;
+    auto vertices = std::make_unique<vec3_array>();
     vertices->push_back(vec3(-10, 5, 0));
     vertices->push_back(vec3(-10, -5, 0));
     vertices->push_back(vec3(10, 0, 0));
-    rocket_geometry.attrib_array(0, array_ptr(vertices));
-    rocket_geometry.bind_and_update_buffer();
-    rocket_geometry.add_primitive_set(new draw_arrays(GL_TRIANGLES, 0, 3));
+    rocket_geometry.set_attrib_array(0, std::move(vertices));
+    rocket_geometry.add_primitive_set(
+      std::make_shared<draw_arrays>(GL_TRIANGLES, 0, 3));
 
     obstacle.setup(vec3(150, 380, 0), vec3(500, 0, 0), vec3(0, 40, 0));
     obstacle.build_mesh();

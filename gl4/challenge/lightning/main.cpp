@@ -108,11 +108,10 @@ void lightining_app::create_scene()
 
 
   // scene
-  sphere0.include_normal(true);
   sphere0.radius(inner_ball_radius);
   sphere0.slice(64);
   sphere0.stack(64);
-  sphere0.build_mesh();
+  sphere0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
   // light
   light_source l0;

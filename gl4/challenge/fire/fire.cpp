@@ -194,8 +194,7 @@ public:
     cprg.init();
     wprg.init();
     hprg.init();
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     fire_map[0] = createTexture();
     fire_map[1] = createTexture();

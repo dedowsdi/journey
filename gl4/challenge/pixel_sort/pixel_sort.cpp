@@ -105,8 +105,7 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     sort_pixels();
 
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
   }
 
   void updatePixels()

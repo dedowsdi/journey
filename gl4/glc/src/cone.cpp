@@ -14,13 +14,13 @@ cone::cone(GLfloat radius, GLfloat height, GLuint slice, GLuint stack)
 }
 
 //--------------------------------------------------------------------
-void cone::build_vertex()
+common_geometry::vertex_build cone::build_vertices()
 {
   auto step_angle = f2pi / m_slice;
   auto height_step = m_height / m_stack;
   auto radius_step = m_radius / m_stack;
 
-  auto vertices = make_array<vec3_array>(0);
+  auto vertices = std::make_unique<vec3_array>();
   auto num_vertices = m_slice + 2 + (m_stack + 1) * (m_slice + 1);
   vertices->reserve(num_vertices);
 
@@ -46,25 +46,25 @@ void cone::build_vertex()
   assert(vertices->size() == num_vertices);
 
   // create elements for stacks
-  auto elements = make_element<uint_array>();
+  auto& elements = make_element<uint_array>();
 
   auto num_elements = m_stack * 2 * (m_slice + 1) + m_stack;
-  elements->reserve(num_elements);
-  build_strip_elements(*elements, m_stack, m_slice, m_slice + 2);
-  assert(elements->size() == num_elements);
+  elements.reserve(num_elements);
+  build_strip_elements(elements, m_stack, m_slice, m_slice + 2);
+  assert(elements.size() == num_elements);
 
-  m_primitive_sets.clear();
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, m_slice+2));
-  add_primitive_set(new draw_elements(
+  clear_primitive_sets();
+  add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, m_slice+2));
+  add_primitive_set(std::make_shared<draw_elements>(
     GL_TRIANGLE_STRIP, m_stack * 2 * (m_slice + 2), GL_UNSIGNED_INT, 0));
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void cone::build_normal()
+array_uptr cone::build_normals(const array& vertices)
 {
-  auto normals = make_array<vec3_array>(1);
-  normals->reserve(num_vertices());
-  auto vertices = attrib_vec3_array(0);
+  auto normals = std::make_unique<vec3_array>();
+  normals->reserve(vertices.size());
 
   GLuint num_vert_bottom = m_slice + 2;
 
@@ -76,12 +76,13 @@ void cone::build_normal()
 
   glm::vec3 apex(0, 0, m_height);
 
+  auto& v = static_cast<const vec3_array&>(vertices);
   // normals for 1st stack
   for (int i = 0; i <= m_slice; ++i)
   {
 
     // 1st circle is the same as apex, so we use last here.
-    const vec3& vertex = (*vertices)[vertices->size() - (m_slice + 1) + i];
+    const vec3& vertex = v[v.size() - (m_slice + 1) + i];
     vec3 outer = glm::cross(vertex, apex);
     vec3 normal = glm::cross(apex - vertex, outer);
     normals->push_back(normal);
@@ -94,14 +95,15 @@ void cone::build_normal()
       normals->begin() + num_vert_bottom + (m_slice + 1));
   }
 
-  assert(normals->size() == num_vertices());
+  assert(normals->size() == vertices.size());
+  return normals;
 }
 
 //--------------------------------------------------------------------
-void cone::build_texcoord()
+array_uptr cone::build_texcoords(const array& vertices)
 {
-  auto texcoords = make_array<vec2_array>(num_arrays());
-  texcoords->reserve(num_vertices());
+  auto texcoords = std::make_unique<vec2_array>();
+  texcoords->reserve(vertices.size());
 
   // bottom texcoords
   texcoords->push_back(glm::vec2(0, 0));
@@ -113,7 +115,8 @@ void cone::build_texcoord()
 
   build_strip_texcoords(*texcoords, m_stack, m_slice, 1, 0);
 
-  assert(texcoords->size() == num_vertices());
+  assert(texcoords->size() == vertices.size());
+  return texcoords;
 }
 
 }

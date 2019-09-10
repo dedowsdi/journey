@@ -9,7 +9,7 @@ namespace zxd
 using namespace glm;
 
 // clamped b-spline
-class nurb : public geometry_base
+class nurb
 {
 public:
   nurb(v4v_ci cbeg, v4v_ci cend, fv_ci kbeg, fv_ci kend, GLuint degree)
@@ -90,8 +90,6 @@ public:
 private:
 
   float_vector coefficients(GLfloat u);
-  void build_vertex() override;
-  void build_texcoord() override;
   GLfloat knot_ratio(GLfloat t, GLuint i, GLuint r = 1);
 
   vec4_vector m_ctrl_points;
@@ -101,6 +99,21 @@ private:
   GLfloat m_begin;
   GLfloat m_end;
 
+};
+
+class nurb_geom : public common_geometry
+{
+public:
+  nurb_geom(const nurb& shape);
+
+  const nurb& get_shape() const { return _shape; }
+  void set_shape(const nurb& v){ _shape = v; }
+
+private:
+  vertex_build build_vertices() override;
+  array_uptr build_texcoords(const array& vertices) override;
+
+  nurb _shape;
 };
 }
 

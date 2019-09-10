@@ -1,113 +1,149 @@
-#ifndef GL_GLC_GEOMETRY_H
-#define GL_GLC_GEOMETRY_H
+#ifndef GL4_GLC_GEOMETRY_H
+#define GL4_GLC_GEOMETRY_H
 
-#include <vector>
-
-#include "glm.h"
-#include "array.h"
-#include "primitive_set.h"
+#include <vao.h>
+#include <buffer.h>
+#include <primitive_set.h>
+#include <array.h>
 
 namespace zxd
 {
 
-using array_ptr = std::shared_ptr<array> ;
-using array_vector = std::vector<array_ptr>;
-using primitive_set_vector = std::vector<std::shared_ptr<primitive_set>>;
+using primitive_sets = std::vector<std::shared_ptr<primitive_set>>;
 
 class geometry_base
 {
-
 public:
 
-  geometry_base(){}
-  virtual ~geometry_base() {}
+  virtual ~geometry_base(){}
 
-  template <typename T>
-  std::shared_ptr<T> make_array(GLuint index)
-  {
-    auto arr = std::make_shared<T>();
-    attrib_array(index, arr);
-    return arr;
-  }
-
-  template <typename T>
-  std::shared_ptr<T> make_element()
-  {
-    m_elements = std::make_shared<T>();
-    return std::static_pointer_cast<T>(m_elements);
-  }
-
-  void attrib_array(GLuint index, array_ptr _array);
-  array_ptr attrib_array(GLuint index) const;
-  vec1_array_ptr attrib_vec1_array(GLuint index) const;
-  vec2_array_ptr attrib_vec2_array(GLuint index) const;
-  vec3_array_ptr attrib_vec3_array(GLuint index) const;
-  vec4_array_ptr attrib_vec4_array(GLuint index) const;
-
-  virtual GLuint num_vertices();
-
-  GLuint num_arrays() { return m_attributes.size(); }
-
-  virtual void draw();
-
-  void bind_vao();
-  void set_attrib_activity(GLuint index, bool b);
-
-  void clear();
-  virtual void build_mesh();
-
-  GLuint vao() const { return m_vao; }
-  bool is_inited() const { return m_vao != -1;}
-
-  GLboolean include_normal() const { return m_include_normal; }
-  void include_normal(GLboolean v){ m_include_normal = v; }
-
-  GLboolean include_color() const { return m_include_color; }
-  void include_color(GLboolean v){ m_include_color = v; }
-
-  GLboolean include_texcoord() const { return m_include_texcoord; }
-  void include_texcoord(GLboolean v){ m_include_texcoord = v; }
-
-  GLboolean include_tangent() const { return m_include_tangent; }
-  void include_tangent(GLboolean v){ m_include_tangent = v; }
-
-  void bind_and_update_buffer();
-  void bind_and_update_buffer(GLint index);
-  void rebind(GLint array_index, GLint attrib_index);
-
-  primitive_set* get_primitive_set(GLuint index);
-  GLuint get_num_primitive_set() const;
-  void add_primitive_set(primitive_set* ps);
-  void clear_primitive_sets();
-  void remove_primitive_sets(GLuint index, GLuint count);
+  void draw();
   void set_num_instance(GLuint count);
 
+  const vao& get_vao() const { return *_vao; }
+  vao& get_vao(){ return *_vao; }
+  void set_vao(std::shared_ptr<vao> vao_){ _vao = std::move(vao_); }
+  vao& get_or_create_vao();
+
+  bool is_inited() { return static_cast<bool>(_vao);}
+
+  template <typename T>
+  T& make_element()
+  {
+    _element_buffer = std::make_shared<buffer>();
+    auto elements = std::make_unique<T>();
+    _element_buffer->set_data(std::move(elements));
+    return *_element_buffer->get_data<std::unique_ptr<T>>();
+  }
+
+  const array* get_attrib_array(GLuint index) const;
+  const vec2_array* get_attrib_vec2_array(GLuint index) const;
+  const vec3_array* get_attrib_vec3_array(GLuint index) const;
+  const vec4_array* get_attrib_vec4_array(GLuint index) const;
+
+  array* get_attrib_array(GLuint index);
+  vec2_array* get_attrib_vec2_array(GLuint index);
+  vec3_array* get_attrib_vec3_array(GLuint index);
+  vec4_array* get_attrib_vec4_array(GLuint index);
+
+  void set_attrib_array(GLuint index, std::unique_ptr<array> a);
+
+  void set_element_array(std::unique_ptr<array> a);
+
+  GLuint num_vertices() const;
+
+  const primitive_set& get_primitive_set(GLuint index) const;
+  primitive_set& get_primitive_set(GLuint index);
+  GLuint get_num_primitive_set() const;
+  void add_primitive_set(std::shared_ptr<primitive_set> ps);
+  void clear_primitive_sets();
+  void remove_primitive_sets(GLuint index, GLuint count);
+
+  // only works for vec3_array
   virtual void accept(primitive_functor& pf) const;
 
-  array_ptr elements() const { return m_elements; }
-  void elements(array_ptr v){ m_elements = v; }
+  const std::shared_ptr<buffer>& get_element_buffer() const { return _element_buffer; }
+  std::shared_ptr<buffer>& get_element_buffer() { return _element_buffer; }
+  void set_element_buffer(const std::shared_ptr<buffer>& v){ _element_buffer = v; }
+
+  virtual void build() {};
 
 protected:
-  primitive_set_vector m_primitive_sets;
+  std::shared_ptr<vao> _vao;
 
 private:
 
-  virtual void on_draw(){}
-  virtual void build_vertex() {}
-  virtual void build_color();
-  virtual void build_normal() {}
-  virtual void build_texcoord() {}
-  virtual void build_tangent() {}
+  virtual void on_draw() {}
 
-  GLuint m_vao = -1;
-  array_vector m_attributes;
-  array_ptr m_elements;
+  std::shared_ptr<buffer> _element_buffer;
+  primitive_sets _primitive_sets;
 
-  GLboolean m_include_normal = GL_FALSE;
-  GLboolean m_include_color = GL_FALSE;
-  GLboolean m_include_texcoord = GL_FALSE;
-  GLboolean m_include_tangent = GL_FALSE;
 };
+
+enum class attrib_semantic
+{
+  vertex,
+  normal,
+  texcoord,
+  color,
+  tangent,
+};
+
+class common_geometry : public geometry_base
+{
+public:
+
+  enum class vertex_style
+  {
+    array_of_struct,
+    struct_of_array
+  };
+
+  common_geometry();
+
+  void build_mesh(
+    std::initializer_list<attrib_semantic> list = {attrib_semantic::vertex});
+
+  vertex_style get_vertex_style() const { return _vertex_style; }
+  void set_vertex_style(vertex_style v){ _vertex_style = v; }
+
+  bool has(attrib_semantic type);
+  bool has_vertex() { return has(attrib_semantic::vertex); }
+  bool has_normal() { return has(attrib_semantic::normal); }
+  bool has_texcoord() { return has(attrib_semantic::texcoord); }
+  bool has_color() { return has(attrib_semantic::color); }
+  bool has_tangent() { return has(attrib_semantic::tangent); }
+
+protected:
+  struct vertex_build
+  {
+    vertex_build()
+    {
+    }
+
+    vertex_build(array_uptr ptr)
+    {
+      am.insert(std::make_pair(attrib_semantic::vertex, std::move(ptr)));
+    }
+
+    vertex_build(std::map<attrib_semantic, array_uptr>&& m) : am(std::move(m)) {}
+
+    std::map<attrib_semantic, array_uptr> am;
+  };
+
+private:
+
+  virtual vertex_build build_vertices() { return array_uptr{}; };
+  virtual array_uptr build_normals(const array& vertices) { return array_uptr{}; };
+  virtual array_uptr build_texcoords(const array& vertices) { return array_uptr{}; };
+  virtual array_uptr build_colors(const array& vertices);
+  virtual array_uptr build_tangents(const array& vertices) { return array_uptr{}; };
+
+  vertex_style _vertex_style {vertex_style::struct_of_array};
+  std::vector<attrib_semantic> _attrib_semantics;
+
+};
+
 }
 
-#endif /* GL_GLC_GEOMETRY_H */
+#endif /* GL4_GLC_GEOMETRY_H */

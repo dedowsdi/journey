@@ -60,8 +60,7 @@ public:
 
     prg.init();
 
-    m_quad.include_texcoord(true);
-    m_quad.build_mesh();
+    m_quad.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

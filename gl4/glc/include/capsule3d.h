@@ -7,7 +7,7 @@ namespace zxd
 {
 
 // slice, stack must be even number
-class capsule3d : public geometry_base
+class capsule3d : public common_geometry
 {
 public:
 
@@ -28,8 +28,8 @@ public:
 
 private:
 
-  void build_vertex() override;
-  void build_texcoord() override;
+  vertex_build build_vertices() override;
+  array_uptr build_texcoords(const array& vertices) override;
 
   GLfloat m_radius = 0.25f;
   GLfloat m_height= 1.0f; // total height

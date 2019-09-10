@@ -145,8 +145,7 @@ class app0 : public app {
     v_mat = glm::lookAt(camera_pos, vec3(0, 0, 0), vec3(0, 0, 1));
     this->set_v_mat(&v_mat);
 
-    sphere0.include_normal(true);
-    sphere0.build_mesh();
+    sphere0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
   }
 
   void reshape(int w, int h) {

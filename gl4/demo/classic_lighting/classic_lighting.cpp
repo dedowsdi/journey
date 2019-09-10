@@ -514,25 +514,22 @@ void classic_lighting_app::create_scene() {
 
   // drawables
   auto sphere0 = std::make_shared<sphere>();
-  sphere0->include_normal(true);
-  sphere0->include_texcoord(true);
-  sphere0->slice(64);
-  sphere0->stack(64);
-  sphere0->build_mesh();
+  sphere0->slice(128);
+  sphere0->stack(128);
+  sphere0->build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+    attrib_semantic::texcoord});
 
   auto torus0 = std::make_shared<torus>();
-  torus0->include_normal(true);
-  torus0->include_texcoord(true);
-  torus0->rings(64);
-  torus0->sides(64);
-  torus0->build_mesh();
+  torus0->rings(128);
+  torus0->sides(128);
+  torus0->build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+    attrib_semantic::texcoord});
 
   auto cone0 = std::make_shared<cone>();
-  cone0->include_normal(true);
-  cone0->include_texcoord(true);
   cone0->slice(64);
   cone0->stack(64);
-  cone0->build_mesh();
+  cone0->build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+    attrib_semantic::texcoord});
 
   geometries.push_back(std::move(sphere0));
   geometries.push_back(std::move(torus0));
@@ -565,7 +562,7 @@ void classic_lighting_app::create_scene() {
   with_texture = m_control.add_bool('U', false, [this](auto) {
     for (auto& g : geometries)
     {
-      g->set_attrib_activity(2, with_texture->get_bool());
+      g->get_vao().set_attrib_activity(2,  with_texture->get_bool());
     }
     reload_shaders();
   });

@@ -5,7 +5,7 @@
 namespace zxd
 {
 
-class lissajous : public geometry_base
+class lissajous : public common_geometry
 {
 
 public:
@@ -48,7 +48,7 @@ public:
 
 private:
 
-  void build_vertex();
+  vertex_build build_vertices();
 
   GLuint m_xscale = 1;
   GLuint m_yscale = 1;

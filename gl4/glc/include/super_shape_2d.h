@@ -6,7 +6,7 @@ namespace zxd
 {
 
 // http://paulbourke.net/geometry/supershape/
-class super_shape_2d : public geometry_base
+class super_shape_2d : public common_geometry
 {
 protected:
   GLfloat m_n1 = 1;
@@ -44,7 +44,7 @@ public:
   GLuint num_slice() const { return m_num_slice; }
   void num_slice(GLuint v){ m_num_slice = v; }
 
-  virtual void build_vertex();
+  virtual vertex_build build_vertices();
 
 };
 

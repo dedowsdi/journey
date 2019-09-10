@@ -20,16 +20,16 @@ torus::torus(
 }
 
 //--------------------------------------------------------------------
-void torus::build_vertex()
+common_geometry::vertex_build torus::build_vertices()
 {
                                // build vertices
 
-  auto vertices = make_array<vec3_array>(0);
+  auto vertices = std::make_unique<vec3_array>();
   auto num_vertices = (m_rings + 1) * (m_sides + 1);
   vertices->reserve(num_vertices);
 
-  auto normals = std::make_shared<vec3_array>();
-  auto texcoords = std::make_shared<vec2_array>();
+  auto normals = std::make_unique<vec3_array>();
+  auto texcoords = std::make_unique<vec2_array>();
   normals->reserve(num_vertices);
   texcoords->reserve(num_vertices);
 
@@ -59,22 +59,23 @@ void torus::build_vertex()
   assert(normals->size() == num_vertices);
   assert(texcoords->size() == num_vertices);
 
-  if(include_normal())
-    attrib_array(num_arrays(), normals);
-  if(include_texcoord())
-    attrib_array(num_arrays(), texcoords);
-
-                               // build elements
-
-  auto elements = make_element<uint_array>();
+  // build elements
+  auto& elements = make_element<uint_array>();
   auto num_elements = m_rings * 2 * (m_sides + 1) + m_rings;
-  elements->reserve(num_elements);
-  build_strip_elements(*elements, m_rings, m_sides);
-  assert(elements->size() == num_elements);
+  elements.reserve(num_elements);
+  build_strip_elements(elements, m_rings, m_sides);
+  assert(elements.size() == num_elements);
 
-  m_primitive_sets.clear();
-  add_primitive_set(
-    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
+  clear_primitive_sets();
+  add_primitive_set(std::make_shared<draw_elements>(
+    GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
+
+  std::map<attrib_semantic, array_uptr> m;
+  m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
+  if (has_normal())
+    m.insert(std::make_pair(attrib_semantic::normal, std::move(normals)));
+  if (has_texcoord())
+    m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
+  return std::move(m);
 }
-
 }

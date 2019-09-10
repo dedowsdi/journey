@@ -124,8 +124,7 @@ public:
     prg.init();
     rprg.init();
 
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     tex.ping(createTexture());
     tex.pong(createTexture());

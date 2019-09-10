@@ -1,39 +1,13 @@
 #include "bezier.h"
 
+#include <iostream>
+
 #include <glm/common.hpp>
 #include <glm/gtx/norm.hpp>
 #include "glmath.h"
 
 namespace zxd
 {
-
-//--------------------------------------------------------------------
-void bezier::build_vertex()
-{
-  vec3_array& vertices = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve(m_partitions + 1);
-
-  float dt = (m_end - m_begin) / m_partitions;
-  for (uint i = 0; i <= m_partitions; ++i)
-  {
-    vertices.push_back(get(m_begin + dt * i));
-  }
-
-  m_primitive_sets.clear();
-  add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, num_vertices()));
-}
-
-//--------------------------------------------------------------------
-void bezier::build_texcoord()
-{
-  auto texcoords = make_array<vec1_array>(num_arrays());
-  texcoords->reserve(num_vertices());
-  for (int i = 0; i < num_vertices(); ++i)
-  {
-    texcoords->push_back(vec1(static_cast<GLfloat>(i) / m_partitions));
-  }
-}
 
 //--------------------------------------------------------------------
 glm::vec3 bezier::get(GLfloat t)
@@ -76,8 +50,6 @@ void bezier::elevate(bool positive /* = true*/)
   {
     GLuint r = n + 1;
     vec3_array& points = *(new vec3_array());
-    attrib_array(num_arrays(), array_ptr(&points));
-    points.reserve(r + 1);
     GLfloat rcp_nplus1 = 1.0 / r;
 
     for (unsigned int i = 1; i < r; ++i)
@@ -91,8 +63,6 @@ void bezier::elevate(bool positive /* = true*/)
     // entirely represent higher degree bezier
     GLuint r = n - 1;
     vec3_array& points = *(new vec3_array());
-    attrib_array(num_arrays(), array_ptr(&points));
-    points.reserve(r + 1);
     GLfloat rcpN = 1.0 / n;
 
     if (r >= 2)
@@ -282,4 +252,40 @@ glm::vec3 bezier::d(GLuint i, GLuint k)
   else
     return d(i + 1, k - 1) - d(i, k - 1);
 }
+
+//--------------------------------------------------------------------
+bezier_geom::bezier_geom(const bezier& shape):
+  _shape(shape)
+{
+}
+
+//--------------------------------------------------------------------
+common_geometry::vertex_build bezier_geom::build_vertices()
+{
+  auto vertices = std::make_unique<vec3_array>();
+
+  float dt = (_shape.end() - _shape.begin()) / _shape.partitions();
+  for (uint i = 0; i <= _shape.partitions(); ++i)
+  {
+    vertices->push_back(_shape.get(_shape.begin() + dt * i));
+  }
+
+  clear_primitive_sets();
+  add_primitive_set(
+    std::make_unique<draw_arrays>(GL_LINE_STRIP, 0, vertices->size()));
+  return vertex_build{std::move(vertices)};
+}
+
+//--------------------------------------------------------------------
+array_uptr bezier_geom::build_texcoords(const array& vertices)
+{
+  auto texcoords = std::make_unique<float_array>();
+  texcoords->reserve(vertices.size());
+  for (int i = 0; i < vertices.size(); ++i)
+  {
+    texcoords->push_back(static_cast<GLfloat>(i) / _shape.partitions());
+  }
+  return texcoords;
+}
+
 }

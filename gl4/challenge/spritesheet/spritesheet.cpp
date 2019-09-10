@@ -162,8 +162,7 @@ public:
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getWidth(), img.getHeight(), 0,
         GL_BGRA, GL_UNSIGNED_BYTE, img.accessPixels());
 
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     sheet.tex(tex);
     sheet.rows(4);
@@ -185,8 +184,7 @@ public:
       q.setup(0, 0, horse_size, horse_size);
       q.tc0(sprite_anim[i]);
       q.tc1(sprite_anim[i] + sheet.sprite_size());
-      q.include_texcoord(true);
-      q.build_mesh();
+      q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
       quads.push_back(q);
     }
 

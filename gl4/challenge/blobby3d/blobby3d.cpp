@@ -76,7 +76,6 @@ void blobby3d_app::create_scene()
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
 
-
   light_source l;
   l.position = vec4(0, 0, 1, 0);
   l.diffuse = vec4(1);
@@ -98,11 +97,11 @@ void blobby3d_app::create_scene()
   set_v_mat(&v_mat);
   bprg.bind_lighting_uniform_locations(lights, lm, mtl);
 
-  m_sphere.include_normal(true);
   m_sphere.subdivisions(4);
-  m_sphere.build_mesh();
-  auto vertices = vec3_vector_to_vec4_vector(m_sphere.attrib_vec3_array(0)->get_vector());
-  m_mesh_buffer = m_sphere.attrib_array(0)->buffer();
+  m_sphere.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
+  auto vertices =
+    vec3_vector_to_vec4_vector(m_sphere.get_attrib_vec3_array(0)->get_vector());
+  // m_mesh_buffer = m_sphere.get_vao().get_attrib(0).buf->get_object();
 
   glGenBuffers(1, &m_mesh_buffer);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_mesh_buffer);
@@ -114,15 +113,15 @@ void blobby3d_app::update() {}
 
 void blobby3d_app::display()
 {
-
   GLuint num_vertices = m_sphere.num_vertices();
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_mesh_buffer);
-  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_sphere.attrib_array(0)->buffer());
+  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1,
+    m_sphere.get_vao().get_attrib(0).buf->get_object());
   prg.use();
   glUniform1f(prg.ul_time, m_current_time);
   glDispatchCompute(ceil(num_vertices * 3 / 64.0), 1, 1);
   // TODO avoid sync
-  m_sphere.attrib_array(0)->read_buffer();
+  // m_sphere.get_attrib_array(0)->read_buffer();
   smooth(m_sphere);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

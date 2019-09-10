@@ -37,7 +37,7 @@ void points<tvec>::set_vertices(std::vector<tvec>&& points)
 
 //--------------------------------------------------------------------
 template<typename tvec>
-void points<tvec>::build_vertex() 
+void points<tvec>::build() 
 {
   rebuild();
 }
@@ -46,12 +46,13 @@ void points<tvec>::build_vertex()
 template<typename tvec>
 void points<tvec>::rebuild()
 {
-  auto vertices = make_array<template_array<tvec>>(0);
+  auto vertices = std::make_unique<template_array<tvec>>();
   vertices->insert(vertices->end(), _points.begin(), _points.end());
-  bind_and_update_buffer();
 
-  m_primitive_sets.clear();
-  add_primitive_set(new draw_arrays(GL_POINTS, 0, _points.size()));
+  set_vao(std::make_unique<vao>());
+  auto& vao0 = get_vao();
+
+  add_array_attrib(vao0, 0, std::move(vertices));
 }
 
 template class points<vec2>;

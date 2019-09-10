@@ -16,9 +16,9 @@ public:
   void set_vertices(const std::vector<tvec>& points);
   void set_vertices(std::vector<tvec>&& points);
 
-private:
+  void build() override;
 
-  void build_vertex() override;
+private:
 
   void rebuild();
 

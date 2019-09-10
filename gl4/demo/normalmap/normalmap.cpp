@@ -137,10 +137,8 @@ public:
     prg0.init();
     prg1.init();
 
-    q.include_normal(true);
-    q.include_texcoord(true);
-    q.include_tangent(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+      attrib_semantic::texcoord, attrib_semantic::tangent});
 
     fipImage normal_image = zxd::fipLoadResource("texture/bricks.bmp");
 

@@ -159,9 +159,8 @@ public:
 
     geometry.slice(32);
     geometry.stack(32);
-    geometry.include_normal(true);
-    geometry.include_texcoord(true);
-    geometry.build_mesh();
+    geometry.build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+      attrib_semantic::texcoord});
 
     glGenTextures(6, textures);
     for (size_t i = 0; i < 6; ++i) 

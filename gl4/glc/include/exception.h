@@ -28,6 +28,35 @@ public:
   using except_base::except_base;
 };
 
+class gl_not_found : public except_base
+{
+public:
+  using except_base::except_base;
+};
+
+class gl_illegal_vertex_specification : public except_base
+{
+public:
+  using except_base::except_base;
+};
+
+class gl_overflow : public except_base
+{
+public:
+  using except_base::except_base;
+};
+
+class gl_geometry_error : public except_base
+{
+public:
+  using except_base::except_base;
+};
+
+class gl_not_implemented : public except_base
+{
+public:
+  using except_base::except_base;
+};
 
 }
 

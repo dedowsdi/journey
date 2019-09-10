@@ -101,7 +101,8 @@ protected:
   const GLuint* m_indices;
 
 public:
-  draw_elements(GLenum mode, GLint count, GLenum type, GLint offset, GLuint num_instance = 0);
+  draw_elements(GLenum mode, GLint count, GLenum type, GLint offset,
+    GLuint num_instance = 0);
   virtual void draw();
 
   GLenum type() const { return m_type; }

@@ -123,8 +123,7 @@ protected:
 
     set_v_mat(&v_mat);
 
-    geometry.include_normal(true);
-    geometry.build_mesh();
+    geometry.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
     // additonal instance attribute
     glGenBuffers(1, &m_b_mv_mats);
     glGenBuffers(1, &m_b_mvp_mats);
@@ -208,7 +207,6 @@ protected:
 
   void reset_instance_attribute_buffers()
   {
-    geometry.bind_vao();
     glBindBuffer(GL_ARRAY_BUFFER, m_b_mv_mats);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * m_sponge.size(), 0, GL_DYNAMIC_DRAW);
     matrix_attrib_pointer(3);

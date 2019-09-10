@@ -139,9 +139,9 @@ void spiral_seed::reset(GLfloat angle)
     m_angle = m_rotate_angle = 0;
   }
 
-  m_lisa.clear();
+  // m_lisa.clear();
   m_lisa.slices(1024);
-  m_lisa.build_mesh();
+  m_lisa.build_mesh({attrib_semantic::vertex});
 
   if(m_child)
     m_child->reset(angle);

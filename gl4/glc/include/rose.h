@@ -5,7 +5,7 @@
 namespace zxd
 {
 
-class rose : public geometry_base
+class rose : public common_geometry
 {
 
 public:
@@ -38,7 +38,7 @@ public:
 
 private:
 
-  void build_vertex() override;
+  vertex_build build_vertices() override;
 
   GLuint m_n = 1;
   GLuint m_d = 1;

@@ -22,6 +22,7 @@
 #include "program.h"
 #include "light.h"
 #include "stream_util.h"
+#include <glmath.h>
 
 namespace zxd {
 

@@ -79,19 +79,18 @@ void teapot_app::create_scene()
 {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-
-  auto vertices = std::make_shared<vec3_array>();
+  auto vertices = std::make_unique<vec3_array>();
   auto vertex_ptr = reinterpret_cast<vec3*>(const_cast<float(*)[3]>(TeapotVertices)) ;
   vertices->assign(vertex_ptr, vertex_ptr + NumTeapotVertices);
-  teapot.attrib_array(0, vertices);
+  teapot.set_attrib_array(0, std::move(vertices));
 
-  auto elements = std::make_shared<uint_array>(GL_ELEMENT_ARRAY_BUFFER);
+  auto elements = std::make_unique<uint_array>();
   auto index_ptr = reinterpret_cast<GLuint*>(const_cast<int(*)[4][4]>(TeapotIndices)) ;
   elements->assign(index_ptr, index_ptr + NumTeapotIndices);
-  teapot.elements(elements);
+  teapot.set_element_array(std::move(elements));
 
-  teapot.add_primitive_set(new draw_elements(GL_PATCHES, NumTeapotVertices, GL_UNSIGNED_INT, 0));
-  teapot.bind_and_update_buffer();
+  teapot.add_primitive_set(std::make_shared<draw_elements>(
+    GL_PATCHES, NumTeapotVertices, GL_UNSIGNED_INT, 0));
 
   prg.init();
   p_mat = glm::perspective(fpi4, wnd_aspect(), 0.1f, 1000.0f);

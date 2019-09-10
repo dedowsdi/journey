@@ -6,12 +6,12 @@
 namespace zxd
 {
 
-class axes : public geometry_base
+class axes : public common_geometry
 {
 
 private:
-  void build_vertex() override;
-  void build_color() override;
+  vertex_build build_vertices() override;
+  array_uptr build_colors(const array& vertices) override;
 };
 
 }

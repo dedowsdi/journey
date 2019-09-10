@@ -321,8 +321,7 @@ public:
 
   void compile()
   {
-    vec3_array_ptr vertices(new vec3_array());
-    attrib_array(0, vertices);
+    auto vertices = std::make_unique<vec3_array>();
     vertices->reserve(m_branches.size() * NUM_CYLINDER_FACE * 6);
 
     // there will be gaps between branch and branch
@@ -353,12 +352,11 @@ public:
       }
     }
 
-    bind_vao();
-    vertices->bind(0);
-    vertices->update_buffer();
+    set_attrib_array(0, std::move(vertices));
 
     remove_primitive_sets(0, get_num_primitive_set());
-    add_primitive_set(new draw_arrays(GL_TRIANGLES, 0, vertices->size()));
+    add_primitive_set(
+      std::make_shared<draw_arrays>(GL_TRIANGLES, 0, vertices->size()));
 
     smooth(*this, 1);
 
@@ -367,8 +365,8 @@ public:
 
   void draw_branches(GLuint branch_count)
   {
-    draw_arrays* da = static_cast<draw_arrays*>(get_primitive_set(0));
-    da->count(branch_count * NUM_CYLINDER_FACE * 6);
+    draw_arrays& da = static_cast<draw_arrays&>(get_primitive_set(0));
+    da.count(branch_count * NUM_CYLINDER_FACE * 6);
     geometry_base::draw();
   }
 

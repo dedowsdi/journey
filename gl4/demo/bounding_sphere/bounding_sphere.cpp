@@ -188,7 +188,7 @@ void bounding_sphere_app::create_scene() {
     'W', 1000, 1000, 1000000, 1000, [](auto) -> void { reset(); });
 
   prg.init();
-  bounding_sphere.build_mesh();
+  bounding_sphere.build_mesh( { attrib_semantic::vertex } );
 
   reset();
 

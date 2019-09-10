@@ -11,7 +11,7 @@ namespace zxd
 
 // z in [-1, 1]
 // x,y in (-xy_scale*2, xy_scale*2)
-class teardrop : public geometry_base
+class teardrop : public common_geometry
 {
 
 public:
@@ -35,9 +35,8 @@ public:
 
 private:
 
-  void build_vertex() override;
-  void build_normal() override;
-  void build_texcoord() override;
+  vertex_build build_vertices() override;
+  array_uptr build_texcoords(const array& vertices) override;
 
   GLfloat m_radius;
   GLfloat m_xy_scale;

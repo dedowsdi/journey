@@ -6,9 +6,9 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-void capsule2d::build_vertex()
+common_geometry::vertex_build capsule2d::build_vertices()
 {
-  auto vertices = make_array<vec2_array>(0);
+  auto vertices = std::make_unique<vec2_array>();
 
   GLfloat half_rect_width = m_width * 0.5 - m_radius;
   if(half_rect_width < 0)
@@ -51,7 +51,8 @@ void capsule2d::build_vertex()
     vertices->push_back(vec2(half_rect_width, -m_radius));
   }
 
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, vertices->size()));
+  add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+  return vertex_build{std::move(vertices)};
 }
 
 }

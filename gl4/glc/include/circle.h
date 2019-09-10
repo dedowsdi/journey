@@ -5,7 +5,7 @@
 namespace zxd
 {
 
-class circle : public geometry_base
+class circle : public common_geometry
 {
 
 public:
@@ -34,7 +34,7 @@ public:
 
 private:
 
-  virtual void build_vertex();
+  virtual vertex_build build_vertices();
 
   GLfloat m_radius = 1;
   GLfloat m_start = 0;

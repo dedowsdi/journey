@@ -7,7 +7,7 @@
 namespace zxd
 {
 
-class cylinder : public geometry_base
+class cylinder : public common_geometry
 {
 public:
   cylinder(GLfloat base = 1, GLfloat top = 1, GLfloat height = 1,
@@ -30,9 +30,9 @@ public:
 
 private:
 
-  void build_vertex() override;
-  void build_normal() override;
-  void build_texcoord() override;
+  vertex_build build_vertices() override;
+  array_uptr build_normals(const array& vertices) override;
+  array_uptr build_texcoords(const array& vertices) override;
 
   GLfloat m_base;
   GLfloat m_top;

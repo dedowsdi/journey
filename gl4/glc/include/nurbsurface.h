@@ -4,7 +4,7 @@
 
 namespace zxd
 {
-class nurb_surface : public geometry_base
+class nurb_surface : public common_geometry
 {
 protected:
   GLfloat m_ubegin;
@@ -31,11 +31,11 @@ public:
         m_udegree(3),
         m_vdegree(3){};
 
-  virtual void build_vertex();
+  virtual vertex_build build_vertices();
 
-  virtual void build_normal();
+  virtual array_uptr build_normals(const array& vertices);
 
-  virtual void build_texcoord();
+  virtual array_uptr build_texcoords(const array& vertices);
 
   glm::vec4 get(GLfloat u, GLfloat v);
 

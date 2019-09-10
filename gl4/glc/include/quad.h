@@ -17,7 +17,7 @@ void draw_quad(GLuint tex, GLuint tui = 0);
 void draw_quad();
 quad& get_nd_quad();
 
-class quad : public geometry_base
+class quad : public common_geometry
 {
 
 public:
@@ -64,13 +64,13 @@ private:
   vec2 m_tc0;
   vec2 m_tc1;
 
-  void build_vertex();
-  void build_normal();
-  void build_texcoord();
-  void build_tangent();
+  vertex_build build_vertices();
+  array_uptr build_normals(const array& vertices);
+  array_uptr build_texcoords(const array& vertices);
+  array_uptr build_tangents(const array& vertices);
 };
 
-class billboard_quad : public geometry_base
+class billboard_quad : public common_geometry
 {
 protected:
   vec2 m_v0 = vec2(-5);
@@ -85,8 +85,8 @@ public:
   void texcoord(const vec2& tc0, const vec2& tc1);
 
 protected:
-  void build_vertex();
-  void build_texcoord();
+  vertex_build build_vertices();
+  array_uptr build_texcoords(const array& vertices);
 
 };
 

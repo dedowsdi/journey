@@ -221,8 +221,7 @@ public:
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
 
 
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     resize_textrure();
 

@@ -8,7 +8,7 @@ namespace zxd
 {
 
 // http://paulbourke.net/geometry/toroidal/
-class torus : public geometry_base
+class torus : public common_geometry
 {
 
 public:
@@ -29,7 +29,7 @@ public:
 
 private:
 
-  void build_vertex() override;
+  vertex_build build_vertices() override;
 
   GLfloat m_inner_radius;
   GLfloat m_outer_radius;

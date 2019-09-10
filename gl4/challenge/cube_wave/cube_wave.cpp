@@ -39,8 +39,7 @@ public:
 
 
     cube.half_diag(vec3(CUBE_SIZE*0.5));
-    cube.include_normal(true);
-    cube.build_mesh();
+    cube.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
     prg.init();
     p_mat = glm::perspective(fpi4, wnd_aspect(), 1.0f, 5000.0f);

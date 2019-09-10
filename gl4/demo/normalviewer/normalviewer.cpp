@@ -74,9 +74,7 @@ protected:
 
     set_v_mat(&v_mat);
 
-    torus.include_normal(true);
-    torus.build_mesh();
-
+    torus.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
   }
 
   virtual void display()

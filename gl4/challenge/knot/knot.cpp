@@ -149,17 +149,15 @@ public:
   {
     vec3_vector vertices = extrude_along_line_strip(line_strip, extrude_radius, num_faces);
 
-    auto vertex_array = std::make_shared<vec3_array>();
-    knot.attrib_array(0, vertex_array);
-    vertex_array->get_vector() = std::move(vertices);
-    knot.bind_and_update_buffer();
+    knot.set_attrib_array(0, std::make_unique<vec3_array>(vertices));
 
     knot.remove_primitive_sets(0, knot.get_num_primitive_set());
-    
-    GLuint strip_size = vertex_array->num_elements() / num_faces;;
+
+    GLuint strip_size = knot.num_vertices() / num_faces;;
     for (int i = 0; i < num_faces; ++i)
     {
-      knot.add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+      knot.add_primitive_set(std::make_shared<draw_arrays>(
+        GL_TRIANGLE_STRIP, strip_size * i, strip_size));
     }
 
     smooth(knot);

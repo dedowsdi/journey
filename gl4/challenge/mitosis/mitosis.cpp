@@ -150,8 +150,7 @@ public:
 
     geometry.slice(32);
     geometry.stack(32);
-    geometry.include_normal(true);
-    geometry.build_mesh();
+    geometry.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
     prg.init();
     v_mat = glm::lookAt(vec3(RADIUS*1.5, -RADIUS*1.5, RADIUS*1.5), vec3(0), vec3(0, 0, 1));

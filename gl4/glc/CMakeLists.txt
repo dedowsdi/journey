@@ -12,7 +12,6 @@ set(GLC_SRCS
     src/string_util.cpp
     src/stream_util.cpp
     src/texutil.cpp
-    src/array.cpp
     src/geometry.cpp
     src/texmap_anim.cpp
     src/dict_script.cpp
@@ -64,6 +63,8 @@ set(GLC_SRCS
     src/objman.cpp
     src/shader.cpp
     src/exception.cpp
+    src/vao.cpp
+    src/buffer.cpp
     )
 
 set(GLC glc${GLC_GL_VERSION})

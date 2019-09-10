@@ -12,7 +12,7 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-void capsule3d::build_vertex()
+common_geometry::vertex_build capsule3d::build_vertices()
 {
   if(m_sphere_slice & 1)
     m_sphere_slice += 1;
@@ -21,12 +21,12 @@ void capsule3d::build_vertex()
 
                                // create vertices
 
-  auto vertices = make_array<vec3_array>(0);
+  auto vertices = std::make_unique<vec3_array>();
   auto num_vertices = (m_sphere_stack + 2) * (m_sphere_slice + 1) +
                       (m_cylinder_stack + 1) * (m_sphere_slice + 1);
   vertices->reserve(num_vertices);
 
-  auto normals = std::make_shared<vec3_array>();
+  auto normals = std::make_unique<vec3_array>();
   normals->reserve(num_vertices);
 
   const vec3_vector sphere_points =
@@ -76,45 +76,49 @@ void capsule3d::build_vertex()
       norm);
   }
 
-  if (include_normal())
+  if (has_normal())
   {
-    attrib_array(num_arrays(), normals);
+    assert(vertices->size() == num_vertices);
+    assert(normals->size() == num_vertices);
   }
 
-  assert(vertices->size() == num_vertices);
-  assert(normals->size() == num_vertices);
+  // create elemenets
 
-                              // create elemenets
-
-  auto elements = make_element<uint_array>();
+  auto& elements = make_element<uint_array>();
   auto num_elements =
     (m_sphere_stack + m_cylinder_stack) * 2 * (m_sphere_slice + 1) +
     m_sphere_stack + m_cylinder_stack;
-  elements->reserve(num_elements);
+  elements.reserve(num_elements);
 
   // top half sphere
-  build_strip_elements(*elements, m_sphere_stack / 2, m_sphere_slice);
+  build_strip_elements(elements, m_sphere_stack / 2, m_sphere_slice);
 
   // bottom half sphere
   build_strip_elements(
-    *elements, m_sphere_stack / 2, m_sphere_slice, half_sphere_points);
+    elements, m_sphere_stack / 2, m_sphere_slice, half_sphere_points);
 
   // cylinder
   build_strip_elements(
-    *elements, m_cylinder_stack, m_sphere_slice, half_sphere_points * 2);
+    elements, m_cylinder_stack, m_sphere_slice, half_sphere_points * 2);
 
-  assert(elements->size() == num_elements);
+  assert(elements.size() == num_elements);
 
-  m_primitive_sets.clear();
-  add_primitive_set(
-    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
+  clear_primitive_sets();
+  add_primitive_set(std::make_shared<draw_elements>(
+    GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
+
+  std::map<attrib_semantic, array_uptr> m;
+  m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
+  if (has_normal())
+    m.insert(std::make_pair(attrib_semantic::normal, std::move(normals)));
+  return std::move(m);
 }
 
 //--------------------------------------------------------------------
-void capsule3d::build_texcoord()
+array_uptr capsule3d::build_texcoords(const array& vertices)
 {
-  auto texcoords = make_array<vec2_array>(num_arrays());
-  texcoords->reserve(num_vertices());
+  auto texcoords = std::make_unique<vec2_array>();
+  texcoords->reserve(vertices.size());
 
   GLfloat bot_origin_t = m_radius / m_height;
   GLfloat top_origin_t = 1 - bot_origin_t;
@@ -131,7 +135,8 @@ void capsule3d::build_texcoord()
   build_strip_texcoords(
     *texcoords, m_cylinder_stack, m_sphere_slice, top_origin_t, bot_origin_t);
 
-  assert(texcoords->size() == num_vertices());
+  assert(texcoords->size() == vertices.size());
+  return texcoords;
 }
 
 }

@@ -309,14 +309,13 @@ void teardrop_app::create_scene()
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   //glEnable(GL_DEPTH_TEST);
 
-
   m_drop.xy_scale(0.6);
   m_drop.slice(32);
   m_drop.stack(32);
-  m_drop.include_normal(true);
-  m_drop.build_mesh();
+  m_drop.build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+    attrib_semantic::texcoord});
 
-  auto vertices = m_drop.attrib_vec3_array(0);
+  // auto vertices = m_drop.get_attrib_vec3_array(0);
 
   light_source light;
   light.position = vec4(1, -1, 1, 0);

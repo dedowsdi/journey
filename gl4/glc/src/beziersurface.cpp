@@ -13,11 +13,9 @@ bezier_surface::bezier_surface(GLfloat ubegin, GLfloat uend, GLfloat vbegin,
       m_upartition(upartition), m_vpartition(vpartition){};
 
 //--------------------------------------------------------------------
-void bezier_surface::build_vertex()
+common_geometry::vertex_build bezier_surface::build_vertices()
 {
-  vec3_array& vertices = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
+  auto vertices = std::make_unique<vec3_array>();
 
   vec3_vector2 q2 = u_interim2();
 
@@ -35,26 +33,25 @@ void bezier_surface::build_vertex()
       GLfloat v = m_vbegin + vstep * j;
       glm::vec3 v0 = bezier::get(q0.begin(), q0.end(), v);
       glm::vec3 v1 = bezier::get(q1.begin(), q1.end(), v);
-      vertices.push_back(v1);
-      vertices.push_back(v0);
+      vertices->push_back(v1);
+      vertices->push_back(v0);
     }
   }
 
-  m_primitive_sets.clear();
+  clear_primitive_sets();
   GLuint strip_size = (m_vpartition + 1) * 2;
   for (GLuint i = 0; i < m_upartition; ++i)
   {
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+    add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
   }
 
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void bezier_surface::build_normal()
+array_uptr bezier_surface::build_normals(const array& vertices)
 {
-  vec3_array& normals = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&normals));
-  normals.reserve(num_vertices());
+  auto normals = std::make_unique<vec3_array>();
 
   // create triangle strip row by row
   GLfloat ustep = (m_uend - m_ubegin) / m_upartition;
@@ -80,18 +77,17 @@ void bezier_surface::build_normal()
       glm::vec3 front0 = bezier::tangent(vq.begin(), vq.end(), u0);
       glm::vec3 front1 = bezier::tangent(vq.begin(), vq.end(), u1);
 
-      normals.push_back(normalize(cross(right1, front1)));
-      normals.push_back(normalize(cross(right0, front0)));
+      normals->push_back(normalize(cross(right1, front1)));
+      normals->push_back(normalize(cross(right0, front0)));
     }
   }
+  return normals;
 }
 
 //--------------------------------------------------------------------
-void bezier_surface::build_texcoord()
+array_uptr bezier_surface::build_texcoords(const array& vertices)
 {
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
+  auto texcoords = std::make_unique<vec2_array>();
 
   for (GLuint i = 0; i < m_upartition; ++i)
   {
@@ -100,10 +96,11 @@ void bezier_surface::build_texcoord()
     for (int j = 0; j <= m_vpartition; ++j)
     {
       GLfloat x = static_cast<GLfloat>(j) / m_vpartition;
-      texcoords.push_back(vec2(x, y1));
-      texcoords.push_back(vec2(x, y0));
+      texcoords->push_back(vec2(x, y1));
+      texcoords->push_back(vec2(x, y0));
     }
   }
+  return texcoords;
 }
 
 //--------------------------------------------------------------------

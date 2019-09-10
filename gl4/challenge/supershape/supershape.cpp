@@ -85,7 +85,7 @@ public:
     glUniform4f(prg.ul_color, 1, 1, 1, 1);
     shape.draw();
     
-    debugger::draw_point(shape.attrib_vec2_array(0)->get_vector(), mvp_mat, 5, vec4(0,0,0,1));
+    debugger::draw_point(shape.get_attrib_vec2_array(0)->get_vector(), mvp_mat, 5, vec4(0,0,0,1));
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

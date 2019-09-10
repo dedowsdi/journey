@@ -7,7 +7,7 @@
 namespace zxd
 {
 
-class cuboid : public geometry_base
+class cuboid : public common_geometry
 {
 public:
 
@@ -21,11 +21,6 @@ public:
 
   cuboid(GLfloat size = 1, type _type = type::CT_24);
 
-  void build_vertex();
-  // as i'm using strip and fan, normal should be vertex normal.
-  void build_normal();
-  void build_texcoord();
-
   const glm::vec3& half_diag() const { return m_half_diag; }
   void half_diag(const glm::vec3& v){ m_half_diag = v; }
 
@@ -34,10 +29,15 @@ public:
 
 private:
 
+  vertex_build build_vertices() override;
+  array_uptr build_normals(const array& vertices) override;
+  array_uptr build_texcoords(const array& vertices) override;
+
   type m_type;
   glm::vec3 m_half_diag;
 
 };
+
 }
 
 #endif /* GL_GLC_CUBOID_H */

@@ -7,7 +7,7 @@
 namespace zxd
 {
 
-class xyplane : public geometry_base
+class xyplane : public common_geometry
 {
 
 public:
@@ -33,16 +33,15 @@ public:
 
 private:
 
-  void build_vertex() override;
-  void build_normal() override;
-  void build_texcoord() override;
+  vertex_build build_vertices() override;
+  array_uptr build_normals(const array& vertices) override;
+  array_uptr build_texcoords(const array& vertices) override;
 
   GLuint m_slice;
   GLfloat m_width;
   GLfloat m_height;
   GLfloat m_left;
   GLfloat m_bottom;
-
 
 };
 }

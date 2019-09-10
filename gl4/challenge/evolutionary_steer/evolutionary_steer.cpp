@@ -351,17 +351,15 @@ public:
     poison_bubble_mtl = poison_mtl;
     poison_bubble_mtl.specular = vec4(0);
 
-    sphere0.include_normal(true);
     sphere0.slice(16);
     sphere0.stack(16);
     sphere0.radius(1);
-    sphere0.build_mesh();
+    sphere0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
-    cone0.include_normal(true);
     cone0.slice(32);
     cone0.stack(16);
     cone0.height(5);
-    cone0.build_mesh();
+    cone0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
     for (int i = 0; i < num_food; ++i) 
       foods.emplace_back(glm::linearRand(vec3(-boundary), vec3(boundary)), food_nutrition);

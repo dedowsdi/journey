@@ -6,9 +6,9 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-void circle::build_vertex()
+common_geometry::vertex_build circle::build_vertices()
 {
-  auto vertices = make_array<vec2_array>(0);
+  auto vertices = std::make_unique<vec2_array>();
 
   if(m_type == FILL || m_type == PIE_LINE)
     vertices->push_back(vec2(0));
@@ -26,7 +26,8 @@ void circle::build_vertex()
     vertices->push_back(vec2(0));
 
   GLenum mode = m_type == FILL ? GL_TRIANGLE_FAN : GL_LINE_STRIP;
-  add_primitive_set(new draw_arrays(mode, 0, vertices->size()));
+  add_primitive_set(std::make_shared<draw_arrays>(mode, 0, vertices->size()));
+  return vertex_build{std::move(vertices)};
 }
 
 }

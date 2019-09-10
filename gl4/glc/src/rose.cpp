@@ -14,10 +14,9 @@ rose::rose(GLuint n, GLuint d):
 }
 
 //--------------------------------------------------------------------
-void rose::build_vertex()
+common_geometry::vertex_build rose::build_vertices()
 {
-  auto vertices = std::make_shared<vec2_array>();
-  attrib_array(0, vertices);
+  auto vertices = std::make_unique<vec2_array>();
 
   // simplify n and d
   GLuint g = zxd::gcd(m_n, m_d);
@@ -48,7 +47,8 @@ void rose::build_vertex()
     vertices->push_back(vec2(x,y) * scale);
   }
 
-  add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, vertices->size()));
+  add_primitive_set(std::make_shared<draw_arrays>(GL_LINE_STRIP, 0, vertices->size()));
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------

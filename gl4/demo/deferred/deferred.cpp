@@ -339,8 +339,7 @@ public:
     set_v_mat(&v_mat);
 
     // sphere and lights
-    m_sphere.include_normal(true);
-    m_sphere.build_mesh();
+    m_sphere.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
     resetsphere();
 

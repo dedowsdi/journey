@@ -167,16 +167,14 @@ void plant1_5_app::create_scene() {
 
   prg.bind_lighting_uniform_locations(lights, lm, mtl);
 
-  capsule.include_normal(true);
   capsule.sphere_slice(10);
   capsule.sphere_stack(10);
   capsule.radius(0.15f);
   // scale to cmake clender reach size 1
   capsule.height(1 + capsule.radius() * 2.0f);
-  capsule.build_mesh();
+  capsule.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
   glGenBuffers(3, instance_buffer);
-  capsule.bind_vao();
 
   glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MV_MAT]);
   matrix_attrib_pointer(3, 1, 0);
@@ -460,7 +458,7 @@ void plant1_5_app::update_uniforms()
   auto buffer_size = sizeof(mat4) * m_mats.size();
   
   for (int i = 0; i < capsule.get_num_primitive_set(); ++i) {
-    capsule.get_primitive_set(i)->num_instance(m_mats.size());
+    capsule.get_primitive_set(i).num_instance(m_mats.size());
   }
 
   glBindBuffer(GL_ARRAY_BUFFER, instance_buffer[MV_MAT]);

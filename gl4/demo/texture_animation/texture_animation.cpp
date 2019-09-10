@@ -73,8 +73,7 @@ public:
     prg.init();
     p_mat = glm::ortho<GLfloat>(-WIDTH*.5, WIDTH*.5, -HEIGHT*.5, HEIGHT*.5, -1, 1);
 
-    quad0.include_texcoord(GL_TRUE);
-    quad0.build_mesh();
+    quad0.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     fipImage fi = fipLoadResource("texture/explosion.jpg");
 

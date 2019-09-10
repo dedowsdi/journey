@@ -2,6 +2,7 @@
 #define GL_GLC_GLMATH_H
 
 #include "glm.h"
+#include <exception.h>
 
 namespace zxd
 {
@@ -109,6 +110,30 @@ GLfloat triangle_area(const vec3& p0, const vec3& p1, const vec3& p2);
 
 // get camera position in world space, no need to invert view matrix.
 vec3 eye_pos(const mat4& v_mat);
+
+//--------------------------------------------------------------------
+template <typename _It, typename _OutIt>
+void generate_face_normals(_It beg, _It end, _OutIt out)
+{
+  typedef decltype(*beg) value_type;
+  unsigned size = end - beg;
+  if (size % 3 != 0)
+  {
+    throw std::runtime_error("number of vertices should be multiple of 3");
+  }
+  for (_It iter = beg; iter != end;)
+  {
+    value_type& v0 = *iter++;
+    value_type& v1 = *iter++;
+    value_type& v2 = *iter++;
+    vec3 normal = face_normal(v0, v1, v2);
+    *out++ = normal;
+    *out++ = normal;
+    *out++ = normal;
+  }
+}
+
+
 }
 
 #endif /* GL_GLC_GLMATH_H */

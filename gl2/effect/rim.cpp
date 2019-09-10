@@ -158,8 +158,7 @@ class app0 : public app {
       glm::perspective(glm::radians(45.0f), wnd_aspect(), 0.1f, 30.0f);
     v_mat = glm::lookAt(vec3(0, 0, 3), vec3(0, 0, 0), vec3(0, 1, 0));
 
-    sphere0.include_normal(true);
-    sphere0.build_mesh();
+    sphere0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
   }
 
   void reshape(int w, int h) {

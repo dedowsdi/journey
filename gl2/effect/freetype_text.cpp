@@ -1,11 +1,13 @@
+#include <map>
+#include <sstream>
+#include <iostream>
+
 #include "glad/glad.h"
 #include "app.h"
 #include "program.h"
 #include "glm.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <map>
-#include <sstream>
 #include "glc_utf8.h"
 #include "stream_util.h"
 

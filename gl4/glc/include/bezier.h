@@ -9,13 +9,10 @@ namespace zxd
 /*
  * generally bezier class, degree >=1
  */
-class bezier : public geometry_base
+class bezier
 {
 public:
   bezier() : m_partitions(20), m_begin(0), m_end(1) {}
-
-  virtual void build_vertex();
-  virtual void build_texcoord();
 
   unsigned int degree() { return n(); }
   unsigned int n() { return m_ctrl_points.size() - 1; }
@@ -47,7 +44,7 @@ public:
   GLfloat end() const { return m_end; }
   void end(GLfloat v) { m_end = v; }
 
-  const vec3_vector& ctrl_points() { return m_ctrl_points; }
+  const vec3_vector& ctrl_points() const { return m_ctrl_points; }
   void ctrl_points(const vec3_vector& v) { m_ctrl_points = v; }
 
   static vec3_vector2 iterate_all(vec3_vector& ctrl_points, float t);
@@ -74,8 +71,23 @@ private:
   GLfloat m_end;
 
   vec3_vector m_ctrl_points;
-
 };
+
+class bezier_geom : public common_geometry
+{
+public:
+  bezier_geom(const bezier& shape);
+
+  const bezier& get_shape() const { return _shape; }
+  void set_shape(const bezier& v){ _shape = v; }
+
+private:
+  vertex_build build_vertices() override;
+  array_uptr build_texcoords(const array& vertices) override;
+
+  bezier _shape;
+};
+
 }
 
 #endif /* GL_GLC_BEZIER_H */

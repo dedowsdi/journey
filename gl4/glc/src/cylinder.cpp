@@ -15,11 +15,11 @@ cylinder::cylinder(
 }
 
 //--------------------------------------------------------------------
-void cylinder::build_vertex()
+common_geometry::vertex_build cylinder::build_vertices()
 {
                                // create vertices
 
-  auto vertices = make_array<vec3_array>(0);
+  auto vertices = std::make_unique<vec3_array>();
   auto num_vertices = 2 * (m_slice + 2) + (m_stack + 1) * (m_slice + 1);
 
   vertices->reserve(num_vertices);
@@ -63,27 +63,27 @@ void cylinder::build_vertex()
 
                          // create elements for stacks
 
-  auto elements = make_element<uint_array>();
+  auto& elements = make_element<uint_array>();
 
   auto num_elements = m_stack * 2 * (m_slice + 1) + m_stack;
-  elements->reserve(num_elements);
-  build_strip_elements(*elements, m_stack, m_slice, 2 * (m_slice + 2));
-  assert(elements->size() == num_elements);
+  elements.reserve(num_elements);
+  build_strip_elements(elements, m_stack, m_slice, 2 * (m_slice + 2));
+  assert(elements.size() == num_elements);
 
-  m_primitive_sets.clear();
+  clear_primitive_sets();
 
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, 0, m_slice + 2));
-  add_primitive_set(new draw_arrays(GL_TRIANGLE_FAN, m_slice + 2, m_slice + 2));
+  add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, m_slice + 2));
+  add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, m_slice + 2, m_slice + 2));
   add_primitive_set(
-    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
+    std::make_unique<draw_elements>(GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void cylinder::build_normal()
+array_uptr cylinder::build_normals(const array& vertices)
 {
-  auto normals = make_array<vec3_array>(num_arrays());
-  auto vertices = attrib_vec3_array(0);
-  normals->reserve(vertices->size());
+  auto normals = std::make_unique<vec3_array>();
+  normals->reserve(vertices.size());
 
   // normals for top
   normals->insert(normals->end(), m_slice + 2, vec3(0, 0, 1));
@@ -93,10 +93,11 @@ void cylinder::build_normal()
 
   vec3 apex(0, 0, m_height);
 
+  auto& v = static_cast<const vec3_array&>(vertices);
   // normals for 1st stack
   for (int i = 0; i <= m_slice; ++i)
   {
-    const vec3& vertex = (*vertices)[vertices->size() - (m_slice + 1) + i];
+    const vec3& vertex = v[v.size() - (m_slice + 1) + i];
     vec3 outer = cross(vertex, apex);
     vec3 normal = cross(apex - vertex, outer);
     normals->push_back(normal);
@@ -110,14 +111,15 @@ void cylinder::build_normal()
       normals->begin() + stack_start + m_slice + 1);
   }
 
-  assert(normals->size() == num_vertices());
+  assert(normals->size() == vertices.size());
+  return normals;
 }
 
 //--------------------------------------------------------------------
-void cylinder::build_texcoord()
+array_uptr cylinder::build_texcoords(const array& vertices)
 {
-  auto texcoords = make_array<vec2_array>(num_arrays());
-  texcoords->reserve(num_vertices());
+  auto texcoords = std::make_unique<vec2_array>();
+  texcoords->reserve(vertices.size());
 
   // top tex coords
   texcoords->push_back(vec2(0, 1));
@@ -138,7 +140,8 @@ void cylinder::build_texcoord()
   // cylinder texcoords
   build_strip_texcoords(*texcoords, m_stack, m_slice, 1, 0);
 
-  assert(texcoords->size() == num_vertices());
+  assert(texcoords->size() == vertices.size());
+  return texcoords;
 }
 
 }

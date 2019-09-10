@@ -5,7 +5,6 @@
 #include <glm/trigonometric.hpp>
 #include "geometry_util.h"
 
-
 namespace zxd
 {
 
@@ -17,17 +16,15 @@ teardrop::teardrop(
 }
 
 //--------------------------------------------------------------------
-void teardrop::build_vertex()
+common_geometry::vertex_build teardrop::build_vertices()
 {
-
   GLuint circle_size = m_slice + 1;
   GLuint strip_size = circle_size * 2;
 
-  vec3_array& vertices = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve((m_stack * strip_size));
+  auto vertices = std::make_unique<vec3_array>();
 
-  vec3_vector sphere_points = get_points(m_radius, m_slice, m_stack, m_xy_scale);
+  vec3_vector sphere_points =
+    get_points(m_radius, m_slice, m_stack, m_xy_scale);
   GLint stack_size = m_slice + 1;
   // create teardrop stack by stack along z
   // build triangle strip as
@@ -42,43 +39,27 @@ void teardrop::build_vertex()
     for (int j = 0; j <= m_slice; j++)
     {
       // loop last stack in reverse order
-      vertices.push_back(sphere_points[stack_start + j]);
-      vertices.push_back(sphere_points[next_stack_start + j]);
+      vertices->push_back(sphere_points[stack_start + j]);
+      vertices->push_back(sphere_points[next_stack_start + j]);
     }
   }
 
-  m_primitive_sets.clear();
+  clear_primitive_sets();
   for (int i = 0; i < m_stack; ++i)
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+    add_primitive_set(std::make_shared<draw_arrays>(
+      GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void teardrop::build_normal()
-{
-  //vec3_array& normals = *(new vec3_array());
-  //attrib_array(num_arrays(), array_ptr(&normals));
-  //const vec3_array& vertices = *attrib_vec3_array(0);
-
-  //normals.reserve(num_vertices());
-
-  //for (int i = 0; i < num_vertices(); ++i)
-  //{
-  //normals.push_back(glm::normalize(vertices[i]));
-  //}
-  smooth(*this, 1);
-}
-
-//--------------------------------------------------------------------
-void teardrop::build_texcoord()
+array_uptr teardrop::build_texcoords(const array& vertices)
 {
   // t ranges from 0.0 at z = - radius to 1.0 at z = radius (t increases
   // linearly along longitudinal lines), and s ranges from 0.0 at the +y axis,
   // to 0.25 at the +x axis, to 0.5 at the \-y axis, to 0.75 at the \-x axis,
   // and back to 1.0 at the +y axis
   //
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
+  auto texcoords = std::make_unique<vec2_array>();
 
   for (int i = 0; i < m_stack; ++i)
   {
@@ -89,16 +70,18 @@ void teardrop::build_texcoord()
     {
       GLfloat s = static_cast<GLfloat>(j) / m_slice;
 
-      texcoords.push_back(glm::vec2(s, t0));
-      texcoords.push_back(glm::vec2(s, t1));
+      texcoords->push_back(glm::vec2(s, t0));
+      texcoords->push_back(glm::vec2(s, t1));
     }
   }
 
-  assert(texcoords.size() == num_vertices());
+  assert(texcoords->size() == vertices.size());
+  return texcoords;
 }
 
 //--------------------------------------------------------------------
-vec3_vector teardrop::get_points(GLfloat radius, GLuint slices, GLuint stacks, GLfloat xy_scale)
+vec3_vector teardrop::get_points(
+  GLfloat radius, GLuint slices, GLuint stacks, GLfloat xy_scale)
 {
   vec3_vector points;
   points.reserve((stacks + 1) * (slices + 1));

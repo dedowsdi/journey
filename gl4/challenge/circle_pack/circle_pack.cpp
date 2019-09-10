@@ -147,15 +147,13 @@ public:
     std::cout << "collect " << black_pixels.size() << " black pixels" << std::endl;
 
     q.setup(0, 0, wnd_width(), wnd_height());
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     geometry.slice(64);
     geometry.type(circle::LINE);
     geometry.build_mesh();
 
     // create additonal instance attribute
-    geometry.bind_vao();
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     matrix_attrib_pointer(2);
@@ -245,7 +243,7 @@ public:
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, m_mats.size()*sizeof(mat4), glm::value_ptr(m_mats.front()), GL_DYNAMIC_DRAW);
 
-    geometry.get_primitive_set(0)->num_instance(m_circles.size());
+    geometry.get_primitive_set(0).num_instance(m_circles.size());
   }
 
   virtual void display()

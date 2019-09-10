@@ -5,7 +5,7 @@
 namespace zxd
 {
 
-class capsule2d : public geometry_base
+class capsule2d : public common_geometry
 {
 
 public:
@@ -30,7 +30,7 @@ public:
 
 private:
 
-  void build_vertex() override;
+  vertex_build build_vertices() override;
 
   GLfloat m_radius = 0.125;
   GLfloat m_width = 1; // total width

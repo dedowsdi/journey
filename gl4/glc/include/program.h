@@ -48,7 +48,7 @@ public:
 
   GLint get_uniform_location(const std::string& name);
 
-  void attach(GLenum type, const std::shared_ptr<shader>& s);
+  void attach(const std::shared_ptr<shader>& s);
 
   // deprecated, use shader instead
   void attach(GLenum type, const std::string& file,

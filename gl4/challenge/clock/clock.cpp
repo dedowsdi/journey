@@ -78,7 +78,7 @@ public:
 
   void draw()
   {
-    if(m_hour_arm.vao() == -1)
+    if(!m_hour_arm.is_inited())
       create_meshes();
 
     draw_circle();

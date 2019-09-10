@@ -34,7 +34,7 @@ GLenum polygon_mode = GL_LINE;
 bool show_normal = true;
 
 class supershape_app : public app
-  {
+{
 protected:
 
 public:
@@ -49,7 +49,6 @@ public:
   virtual void create_scene()
   {
     glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
-
 
     nv_prg.smooth_normal = GL_TRUE;
     nv_prg.init();
@@ -120,9 +119,8 @@ public:
     shape.theta_end(glm::radians(dict.get("theta_end", 180.0f)));
     shape.phi_start(glm::radians(dict.get("phi_start", -180.0f)));
     shape.phi_end(glm::radians(dict.get("phi_end", 180.0f)));
-    shape.include_texcoord(true);
-    shape.include_normal(true);
-    shape.build_mesh();
+    shape.build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+      attrib_semantic::texcoord});
   }
 
   virtual void update() 

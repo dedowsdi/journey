@@ -6,7 +6,7 @@
 namespace zxd
 {
 
-class super_shape_3d : public geometry_base
+class super_shape_3d : public common_geometry
 {
 public:
   enum shape_type
@@ -14,28 +14,6 @@ public:
     ST_SPHERE,
     ST_TORUS
   };
-
-protected:
-  shape_type m_type = ST_SPHERE;
-  GLfloat m_n1 = 1;
-  GLfloat m_n2 = 1;
-  GLfloat m_n3 = 1;
-  GLfloat m_m = 0;
-  GLfloat m_radius = 1;
-  GLfloat m_a = 1;
-  GLfloat m_b = 1;
-
-  GLuint m_slice = 32; // theta subdivisions or side
-  GLuint m_stack = 32; // phi subdivisions or ring
-  GLfloat m_theta_start = -zxd::fpi; // second loop angle, sphere will be build stack by stack
-  GLfloat m_theta_end = zxd::fpi;
-  GLfloat m_phi_start = -zxd::fpi2; // first loop angle, torus will be build tube by tube
-  GLfloat m_phi_end = zxd::fpi2;
-
-public:
-  virtual void build_vertex();
-  virtual void build_sphere_vertex();
-  virtual void build_torus_vertex();
 
   GLfloat n1() const { return m_n1; }
   void n1(GLfloat v){ m_n1 = v; }
@@ -88,13 +66,31 @@ public:
   static std::string shape_type_to_string(shape_type type);
   static shape_type shape_type_from_string(const std::string& s);
 
-protected:
+private:
   GLfloat supershape(GLfloat theta);
+
+  vertex_build build_vertices() override;
+  vertex_build build_sphere_vertex();
+  vertex_build build_torus_vertex();
+
+  shape_type m_type = ST_SPHERE;
+  GLfloat m_n1 = 1;
+  GLfloat m_n2 = 1;
+  GLfloat m_n3 = 1;
+  GLfloat m_m = 0;
+  GLfloat m_radius = 1;
+  GLfloat m_a = 1;
+  GLfloat m_b = 1;
+
+  GLuint m_slice = 32; // theta subdivisions or side
+  GLuint m_stack = 32; // phi subdivisions or ring
+  GLfloat m_theta_start = -zxd::fpi; // second loop angle, sphere will be build stack by stack
+  GLfloat m_theta_end = zxd::fpi;
+  GLfloat m_phi_start = -zxd::fpi2; // first loop angle, torus will be build tube by tube
+  GLfloat m_phi_end = zxd::fpi2;
 
 };
 
-
 }
-
 
 #endif /* GL_GLC_SUPER_SHAPE_3D_H */

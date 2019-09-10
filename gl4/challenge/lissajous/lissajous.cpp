@@ -104,7 +104,7 @@ public:
         lisa.rose_d(rose_d);
         lisa.rose_offset(rose_offset);
 
-        lisa.build_mesh();
+        lisa.build_mesh({attrib_semantic::vertex});
         lisas.push_back(lisa);
       }
     }

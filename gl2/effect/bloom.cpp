@@ -205,8 +205,7 @@ class app0 : public app {
     blur_prg.init();
     bloom_prg.init();
 
-    quad0.include_texcoord(true);
-    quad0.build_mesh();
+    quad0.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
   }
 
   void display(void) {

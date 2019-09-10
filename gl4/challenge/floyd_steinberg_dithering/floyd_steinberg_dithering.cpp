@@ -45,8 +45,7 @@ public:
     prg.with_texcoord = true;
     prg.init();
 
-    q.include_texcoord(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
     glGenTextures(1, &m_tex0);
     glBindTexture(GL_TEXTURE_2D, m_tex0);

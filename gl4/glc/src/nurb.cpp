@@ -1,42 +1,11 @@
 #include "nurb.h"
 
+#include <iostream>
+
 #include <glm/gtx/norm.hpp>
 
 namespace zxd
 {
-
-//--------------------------------------------------------------------
-void nurb::build_vertex()
-{
-  if (!valid())
-  {
-    std::cout << "invalid b spline. n : " << n() << ", p : " << m_degree
-              << ", m : " << m() << std::endl;
-  }
-
-  vec4_array& vertices = *(new vec4_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve(m_partitions + 1);
-
-  float dt = (m_end - m_begin) / m_partitions;
-  for (uint i = 0; i <= m_partitions; ++i)
-  {
-    vertices.push_back(get(m_begin + dt * i));
-  }
-
-  m_primitive_sets.clear();
-  add_primitive_set(new draw_arrays(GL_LINE_STRIP, 0, num_vertices()));
-}
-
-//--------------------------------------------------------------------
-void nurb::build_texcoord()
-{
-  auto texcoords = make_array<vec1_array>(num_vertices());
-  for (int i = 0; i < num_vertices(); ++i)
-  {
-    texcoords->push_back(vec1(static_cast<GLfloat>(i) / m_partitions));
-  }
-}
 
 
 //--------------------------------------------------------------------
@@ -474,4 +443,45 @@ GLfloat nurb::knot_ratio(GLfloat t, GLuint i, GLuint r /* = 1*/)
 {
   return (t - m_knots[i]) / (m_knots[i + m_degree - r + 1] - m_knots[i]);
 }
+
+//--------------------------------------------------------------------
+nurb_geom::nurb_geom(const nurb& shape):
+  _shape(shape)
+{
+}
+
+//--------------------------------------------------------------------
+common_geometry::vertex_build nurb_geom::build_vertices()
+{
+  if (!_shape.valid())
+  {
+    std::cout << "invalid b spline. n : " << _shape.n()
+              << ", p : " << _shape.degree() << ", m : " << _shape.m()
+              << std::endl;
+  }
+
+  auto vertices = std::make_unique<vec4_array>();
+
+  float dt = (_shape.end() - _shape.begin()) / _shape.partitions();
+  for (uint i = 0; i <= _shape.partitions(); ++i)
+  {
+    vertices->push_back(_shape.get(_shape.begin() + dt * i));
+  }
+
+  clear_primitive_sets();
+  add_primitive_set(std::make_shared<draw_arrays>(GL_LINE_STRIP, 0, vertices->size()));
+  return vertex_build{std::move(vertices)};
+}
+
+//--------------------------------------------------------------------
+array_uptr nurb_geom::build_texcoords(const array& vertices)
+{
+  auto texcoords = std::make_unique<float_array>();
+  for (int i = 0; i < vertices.size(); ++i)
+  {
+    texcoords->push_back(static_cast<GLfloat>(i) / _shape.partitions());
+  }
+  return texcoords;
+}
+
 }

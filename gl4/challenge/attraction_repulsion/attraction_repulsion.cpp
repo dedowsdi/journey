@@ -180,8 +180,8 @@ public:
 
     set_v_mat(&v_mat);
 
-    sphere_geometry.include_normal(true);
-    sphere_geometry.build_mesh();
+    sphere_geometry.build_mesh(
+      {attrib_semantic::vertex, attrib_semantic::normal});
 
     //prg.init();
     for (int i = 0; i < NUM_ATTRACTOR; ++i) 

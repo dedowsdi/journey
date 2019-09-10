@@ -17,6 +17,7 @@ namespace zxd
 
   // smooth_old of osg
   void smooth(zxd::geometry_base& gb, unsigned normal_attrib_index = 1);
+  vec3_vector get_smooth_normal(zxd::geometry_base& gb);
 
   vec3_vector create_circle(GLfloat radius, GLuint slices,
     const vec3& center = vec3(0), const vec3& normal = vec3(0, 0, 1));

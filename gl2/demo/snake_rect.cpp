@@ -1,5 +1,6 @@
 #include "app.h"
 #include "glm.h"
+#include <iostream>
 
 namespace zxd {
 

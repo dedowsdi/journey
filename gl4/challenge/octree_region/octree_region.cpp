@@ -123,8 +123,7 @@ public:
     }
     std::cout << "finish insert" << std::endl;
 
-    geometry.include_normal(true);
-    geometry.build_mesh();
+    geometry.build_mesh({attrib_semantic::vertex, attrib_semantic::normal});
 
     select_box.corner0(vec3(-10));
     select_box.corner1(vec3(10));

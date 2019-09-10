@@ -92,13 +92,13 @@ void turtle_app::create_scene() {
   set_p_mat(&p_mat);
   
   {
-    auto vertices = std::make_shared<vec3_array>();
+    auto vertices = std::make_unique<vec3_array>();
     vertices->push_back(vec3(0, 0.6, 0));
     vertices->push_back(vec3(-0.3, -0.4, 0));
     vertices->push_back(vec3(0.3, -0.4, 0));
-    m_turtle_geometry.attrib_array(0, vertices);
-    m_turtle_geometry.add_primitive_set(new draw_arrays(GL_TRIANGLES, 0, vertices->size()));
-    m_turtle_geometry.bind_and_update_buffer();
+    m_turtle_geometry.set_attrib_array(0, std::move(vertices));
+    m_turtle_geometry.add_primitive_set(
+      std::make_shared<draw_arrays>(GL_TRIANGLES, 0, vertices->size()));
   }
 
   {

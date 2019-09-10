@@ -7,11 +7,9 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-void nurb_surface::build_vertex()
+common_geometry::vertex_build nurb_surface::build_vertices()
 {
-  vec4_array& vertices = *(new vec4_array());
-  attrib_array(num_arrays(), array_ptr(&vertices));
-  vertices.reserve((m_upartition + 1) * (m_vpartition + 1));
+  auto vertices = std::make_unique<vec4_array>();
 
   vec4_vector2 q2 = u_interim2();
 
@@ -31,26 +29,25 @@ void nurb_surface::build_vertex()
         q0.begin(), q0.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
       glm::vec4 v1 = nurb::get(
         q1.begin(), q1.end(), m_vknots.begin(), m_vknots.end(), m_vdegree, v);
-      vertices.push_back(v1);
-      vertices.push_back(v0);
+      vertices->push_back(v1);
+      vertices->push_back(v0);
     }
   }
 
-  m_primitive_sets.clear();
+  clear_primitive_sets();
   GLuint strip_size = (m_vpartition + 1) * 2;
   for (GLuint i = 0; i < m_upartition; ++i)
   {
-    add_primitive_set(new draw_arrays(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
+    add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
   }
 
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void nurb_surface::build_normal()
+array_uptr nurb_surface::build_normals(const array& vertices)
 {
-  vec3_array& normals = *(new vec3_array());
-  attrib_array(num_arrays(), array_ptr(&normals));
-  normals.reserve(num_vertices());
+  auto normals = std::make_unique<vec3_array>();
 
   // create triangle strip row by row
   GLfloat ustep = (m_uend - m_ubegin) / m_upartition;
@@ -80,19 +77,18 @@ void nurb_surface::build_normal()
       glm::vec3 front1 = nurb::tangent(
         vq.begin(), vq.end(), m_uknots.begin(), m_uknots.end(), m_udegree, u1);
 
-      normals.push_back(normalize(cross(right1, front1)));
-      normals.push_back(normalize(cross(right0, front0)));
+      normals->push_back(normalize(cross(right1, front1)));
+      normals->push_back(normalize(cross(right0, front0)));
     }
   }
+  return normals;
 }
 
 //--------------------------------------------------------------------
-void nurb_surface::build_texcoord()
+array_uptr nurb_surface::build_texcoords(const array& vertices)
 {
   // QUES : even distribute ?.
-  vec2_array& texcoords = *(new vec2_array());
-  attrib_array(num_arrays(), array_ptr(&texcoords));
-  texcoords.reserve(num_vertices());
+  auto texcoords = std::make_unique<vec2_array>();
 
   for (GLuint i = 0; i < m_upartition; ++i)
   {
@@ -101,10 +97,11 @@ void nurb_surface::build_texcoord()
     for (int j = 0; j <= m_vpartition; ++j)
     {
       GLfloat x = static_cast<GLfloat>(j) / m_vpartition;
-      texcoords.push_back(vec2(x, y1));
-      texcoords.push_back(vec2(x, y0));
+      texcoords->push_back(vec2(x, y1));
+      texcoords->push_back(vec2(x, y0));
     }
   }
+  return texcoords;
 }
 
 //--------------------------------------------------------------------

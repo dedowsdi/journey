@@ -73,7 +73,7 @@ void program::link()
   std::cout << get_print_name() <<  " link ";
   for (const auto& item : _shaders)
   {
-    std::cout << gl_shader_type_to_string(item.first);
+    std::cout << gl_shader_type_to_string(item.first) << " ";
   }
   std::cout << std::endl;
 }
@@ -130,7 +130,7 @@ void program::attach(GLenum type, const string_vector& source)
   }
   sh->source(ss.str());
   sh->compile();
-  attach(type, sh);
+  attach(sh);
 }
 
 //--------------------------------------------------------------------
@@ -153,8 +153,9 @@ void program::attach(GLenum type, const string_vector& source,
 }
 
 //--------------------------------------------------------------------
-void program::attach(GLenum type, const std::shared_ptr<shader>& s)
+void program::attach(const std::shared_ptr<shader>& s)
 {
+  auto type = s->get_type();
   auto iter = _shaders.find(type);
   if (iter != _shaders.end())
   {

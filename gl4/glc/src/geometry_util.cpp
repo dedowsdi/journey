@@ -6,11 +6,14 @@
 #include <map>
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 #include <glm/gtx/transform.hpp>
 #include "glmath.h"
 #include "geometry.h"
 #include "triangle_functor.h"
+#include <vao.h>
+#include <exception.h>
 
 namespace zxd
 {
@@ -82,13 +85,20 @@ struct smooth_triangle_functor
 };
 
 //--------------------------------------------------------------------
-void smooth(zxd::geometry_base& geometry, unsigned normal_attrib_index)
+void smooth(zxd::geometry_base& geom, unsigned normal_attrib_index)
+{
+  auto normals = std::make_unique<vec3_array>(get_smooth_normal(geom));
+  add_array_attrib(geom.get_vao(), normal_attrib_index, std::move(normals));
+}
+
+//--------------------------------------------------------------------
+vec3_vector get_smooth_normal(zxd::geometry_base& geom)
 {
   // check if draw face exists
   bool found = false;
-  for (int i = 0; i < geometry.get_num_primitive_set(); ++i) 
+  for (int i = 0; i < geom.get_num_primitive_set(); ++i) 
   {
-    switch(geometry.get_primitive_set(i)->mode())
+    switch(geom.get_primitive_set(i).mode())
     {
       case(GL_TRIANGLES):
       case(GL_TRIANGLE_STRIP):
@@ -108,35 +118,26 @@ void smooth(zxd::geometry_base& geometry, unsigned normal_attrib_index)
   if(!found)
     std::cout << "no face to smooth" << std::endl;
 
-  auto vertices = geometry.attrib_vec3_array(0).get();
+  auto vertices = geom.get_attrib_vec3_array(0);
   if(!vertices || vertices->empty())
-    return;
+  {
+    throw gl_not_found("empty vec3 vertices");
+  }
 
   // init normals to 0
-  auto normals = new zxd::vec3_array();
-  geometry.attrib_array(normal_attrib_index, zxd::vec3_array_ptr(normals));
-  normals->reserve(vertices->size());
-  for (int i = 0; i < normals->capacity(); ++i)
-  {
-    normals->push_back(vec3(0));
-  }
+  vec3_vector normals(vertices->size(), vec3(0));
 
   zxd::triangle_functor<smooth_triangle_functor> tf;
-  tf.set(&vertices->front(), vertices->size(), &normals->front());
-  geometry.accept(tf);
+  tf.set(&vertices->front(), vertices->size(), &normals.front());
+  geom.accept(tf);
 
-  for (int i = 0; i < normals->size(); ++i)
+  for (int i = 0; i < normals.size(); ++i)
   {
-    normals->at(i) = normalize(normals->at(i));
-    //std::cout << normals->at(i);
+    normals.at(i) = normalize(normals.at(i));
   }
-  geometry.bind_vao();
-  normals->bind(normal_attrib_index);
-  normals->update_buffer();
 
-  //std::cout << "finish smooth" << std::endl;
+  return normals;
 }
-
 //--------------------------------------------------------------------
 vec3_vector create_circle(GLfloat radius, GLuint slices,
     const vec3& center, const vec3& normal)
@@ -337,7 +338,8 @@ inline void add_triangle_indices(uint_vector& indices, GLuint i0, GLuint i1, GLu
 }
 
 //--------------------------------------------------------------------
-void subdivide(uint_vector& triangle_indices, vec3_vector& vertices, vec2_vector* texcoords)
+void subdivide(
+  uint_vector& triangle_indices, vec3_vector& vertices, vec2_vector* texcoords)
 {
   vertices.reserve(vertices.size() * 2);
   if(texcoords)

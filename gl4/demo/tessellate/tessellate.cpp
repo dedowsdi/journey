@@ -141,33 +141,30 @@ void tessellate_app::create_scene()
   set_v_mat(&v_mat);
 
   {
-    auto vertices = std::make_shared<vec2_array>();
-    rect.attrib_array(0, vertices);
+    auto vertices = std::make_unique<vec2_array>();
     vec2 lb = vec2(0);
     vertices->push_back(lb + vec2(-1, -1));
     vertices->push_back(lb + vec2(1, -1));
     vertices->push_back(lb + vec2(1, 1));
     vertices->push_back(lb + vec2(-1, 1));
-    rect.bind_and_update_buffer();
+    rect.set_attrib_array(0, std::move(vertices));
 
-    rect.add_primitive_set(new draw_arrays(GL_PATCHES, 0, 4));
+    rect.add_primitive_set(std::make_shared<draw_arrays>(GL_PATCHES, 0, 4));
   }
 
   {
-    auto vertices = std::make_shared<vec2_array>();
-    triangle.attrib_array(0, vertices);
+    auto vertices = std::make_unique<vec2_array>();
     vec2 lb = vec2(0);
     vertices->push_back(lb + vec2(-1, -1));
     vertices->push_back(lb + vec2(1, -1));
     vertices->push_back(lb + vec2(0, 1));
-    triangle.bind_and_update_buffer();
+    triangle.set_attrib_array(0, std::move(vertices));
 
-    triangle.add_primitive_set(new draw_arrays(GL_PATCHES, 0, 3));
+    triangle.add_primitive_set(std::make_shared<draw_arrays>(GL_PATCHES, 0, 3));
   }
 
   {
-    auto vertices = std::make_shared<vec2_array>();
-    isoline.attrib_array(0, vertices);
+    auto vertices = std::make_unique<vec2_array>();
     vec2 lb = vec2(0);
     vertices->push_back(lb + vec2(-2, -1));
     vertices->push_back(lb + vec2(2, -1));
@@ -175,9 +172,9 @@ void tessellate_app::create_scene()
     vertices->push_back(lb + vec2(2, 0));
     vertices->push_back(lb + vec2(-2, 1));
     vertices->push_back(lb + vec2(2, 1));
-    isoline.bind_and_update_buffer();
+    isoline.set_attrib_array(0, std::move(vertices));
 
-    isoline.add_primitive_set(new draw_arrays(GL_PATCHES, 0, 4));
+    isoline.add_primitive_set(std::make_shared<draw_arrays>(GL_PATCHES, 0, 4));
   }
 
   kci_outer0 = m_control.add<GLfloat>(GLFW_KEY_Q, tess_level_outer[0], 1, 100, 0.5);

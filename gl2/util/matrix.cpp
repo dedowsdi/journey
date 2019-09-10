@@ -1,11 +1,13 @@
-#include "glm.h"
 #include <iostream>
 #include <istream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <algorithm>
+
 #include "common.h"
+#include "glm.h"
+#include <stream_util.h>
 
 using namespace glm;
 

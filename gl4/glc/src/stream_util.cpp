@@ -59,7 +59,7 @@ std::ostream& operator<<(std::ostream& os, const glm::vec<L, T, Q>& v)
 {
   for (auto i = 0; i < L; ++i)
   {
-    os << v[i];
+    os << v[i] << " ";
   }
   if (os.fail())
   {
@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& os, const glm::mat<C, R, T, Q>& v)
   {
     for (auto j = 0u; j < R; ++j)
     {
-      os << v[i][j];
+      os << v[i][j] << " ";
     }
   }
   if (os.fail())

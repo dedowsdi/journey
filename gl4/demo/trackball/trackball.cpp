@@ -96,8 +96,7 @@ void app_trackball::create_scene()
   v_mat = lookAt(vec3(0, -16, 0), vec3(0), vec3(0, 0, 1));
 
   auto cube_model = std::make_shared<cuboid>(2, cuboid::type::CT_24);
-  cube_model->include_color(true);
-  cube_model->build_mesh();
+  cube_model->build_mesh({attrib_semantic::vertex, attrib_semantic::color});
 
   cube0.drawable = cube_model;
   cube0.transform = translate(vec3(3, 0, 0));
@@ -106,8 +105,7 @@ void app_trackball::create_scene()
   cube1.transform = translate(vec3(-3, 0, 0));
 
   auto axes_model = std::make_shared<axes>();
-  axes_model->include_color(true);
-  axes_model->build_mesh();
+  axes_model->build_mesh({attrib_semantic::vertex, attrib_semantic::color});
 
   axes0.drawable = axes_model;
 

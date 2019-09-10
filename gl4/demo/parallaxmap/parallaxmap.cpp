@@ -116,10 +116,8 @@ public:
     v_mat = glm::lookAt(vec3(0, -5, 5), vec3(0.0f), vec3(0, 1, 0));
 
     // init quad
-    q.include_normal(true);
-    q.include_texcoord(true);
-    q.include_tangent(true);
-    q.build_mesh();
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+      attrib_semantic::texcoord, attrib_semantic::tangent});
 
     // load maps
     fipImage diffuse_image = zxd::fipLoadResource("texture/bricks2.jpg");

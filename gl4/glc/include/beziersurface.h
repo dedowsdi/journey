@@ -4,18 +4,18 @@
 
 namespace zxd
 {
-class bezier_surface : public geometry_base
+class bezier_surface : public common_geometry
 {
 
 public:
   bezier_surface(GLfloat ubegin = 0, GLfloat uend = 1, GLfloat vbegin = 0,
     GLfloat vend = 1, GLuint upartition = 20, GLuint vpartition = 20);
 
-  virtual void build_vertex();
+  virtual vertex_build build_vertices();
 
-  virtual void build_normal();
+  virtual array_uptr build_normals(const array& vertices);
 
-  virtual void build_texcoord();
+  virtual array_uptr build_texcoords(const array& vertices);
 
   glm::vec3 get(GLfloat u, GLfloat v);
 

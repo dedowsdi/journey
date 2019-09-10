@@ -19,9 +19,9 @@ xyplane::xyplane(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, GLuint slice)
 }
 
 //--------------------------------------------------------------------
-void xyplane::build_vertex()
+common_geometry::vertex_build xyplane::build_vertices()
 {
-  auto vertices = make_array<vec2_array>(0);
+  auto vertices = std::make_unique<vec2_array>();
   auto num_vertices = (m_slice + 1) * (m_slice + 1);
   vertices->reserve(num_vertices);
 
@@ -40,29 +40,32 @@ void xyplane::build_vertex()
 
   assert(vertices->size() == num_vertices);
 
-  auto elements = make_element<uint_array>();
-  build_strip_elements(*elements, m_slice, m_slice);
+  auto& elements = make_element<uint_array>();
+  build_strip_elements(elements, m_slice, m_slice);
 
-  m_primitive_sets.clear();
+  clear_primitive_sets();
 
-  add_primitive_set(
-    new draw_elements(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
+  add_primitive_set(std::make_shared<draw_elements>(
+    GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
+  return vertex_build{std::move(vertices)};
 }
 
 //--------------------------------------------------------------------
-void xyplane::build_normal()
+array_uptr xyplane::build_normals(const array& vertices)
 {
-  auto normals = make_array<vec3_array>(num_arrays());
-  normals->resize(num_vertices(), vec3(0, 0, 1));
+  auto normals = std::make_unique<vec3_array>();
+  normals->resize(vertices.size(), vec3(0, 0, 1));
+  return normals;
 }
 
 //--------------------------------------------------------------------
-void xyplane::build_texcoord()
+array_uptr xyplane::build_texcoords(const array& vertices)
 {
-  auto texcoords = make_array<vec2_array>(num_arrays());
-  texcoords->reserve(num_vertices());
+  auto texcoords = std::make_unique<vec2_array>();
+  texcoords->reserve(vertices.size());
   build_strip_texcoords(*texcoords, m_slice, m_slice, 1, 0);
-  assert(texcoords->size() == num_vertices());
+  assert(texcoords->size() == vertices.size());
+  return texcoords;
 }
 
 }

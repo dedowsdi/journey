@@ -167,9 +167,8 @@ template <typename T, typename... Args>
 std::shared_ptr<T> add_blinn_renderable(Args&&... args)
 {
   auto p = std::make_shared<T>(std::forward<Args>(args)...);
-  p->include_normal(true);
-  p->include_texcoord(true);
-  p->build_mesh();
+  p->build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+    attrib_semantic::texcoord});
 
   renderables.push_back(std::make_shared<blinn_renderable>(p));
   return p;
@@ -233,9 +232,7 @@ public:
     add_blinn_renderable<icosahedron>(
       1.5, 3, icosahedron::mesh_type::PAPER_UNWRAPPER);
 
-    main_axis.include_normal(true);
-    main_axis.include_color(true);
-    main_axis.build_mesh();
+    main_axis.build_mesh({attrib_semantic::vertex, attrib_semantic::color});
 
     {
       vec3_vector2 vv;
@@ -252,9 +249,8 @@ public:
 
       auto surf = std::make_shared<bezier_surface>();
       surf->ctrl_points(vv);
-      surf->include_normal(true);
-      surf->include_texcoord(true);
-      surf->build_mesh();
+      surf->build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+        attrib_semantic::texcoord});
 
       renderables.push_back(
         std::make_shared<nurb_surface_renderable<vec3_vector2>>(surf, &surf->ctrl_points()));
@@ -277,9 +273,8 @@ public:
       surf->uniform_knots();
       surf->udegree(3);
       surf->vdegree(3);
-      surf->include_normal(true);
-      surf->include_texcoord(true);
-      surf->build_mesh();
+      surf->build_mesh({attrib_semantic::vertex, attrib_semantic::normal,
+        attrib_semantic::texcoord});
 
       renderables.push_back(
         std::make_shared<nurb_surface_renderable<vec4_vector2>>(surf, &surf->ctrl_points()));
@@ -292,13 +287,13 @@ public:
       ctrl_points.push_back(vec3(-1, 0, 2));
       ctrl_points.push_back(vec3(0, 0, 3));
 
-      auto line = std::make_shared<bezier>();
-      line->ctrl_points(ctrl_points);
-      line->include_texcoord(true);
-      line->build_mesh();
+      bezier b;
+      b.ctrl_points(ctrl_points);
+      auto line = std::make_shared<bezier_geom>(b);
+      line->build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
-      renderables.push_back(
-        std::make_shared<nurb_renderable<vec3_vector>>(line, &line->ctrl_points()));
+      renderables.push_back(std::make_shared<nurb_renderable<vec3_vector>>(
+        line, &line->get_shape().ctrl_points()));
     }
 
     {
@@ -308,15 +303,15 @@ public:
       ctrl_points.push_back(vec4(-5, 0, 10, 5));
       ctrl_points.push_back(vec4(0, 0, 3, 1));
 
-      auto line = std::make_shared<nurb>();
-      line->degree(3);
-      line->ctrl_points(ctrl_points);
-      line->uniform_knots();
-      line->include_texcoord(true);
-      line->build_mesh();
+      nurb n;
+      n.degree(3);
+      n.ctrl_points(ctrl_points);
+      n.uniform_knots();
+      auto line = std::make_shared<nurb_geom>(n);
+      line->build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
 
-      renderables.push_back(
-        std::make_shared<nurb_renderable<vec4_vector>>(line, &line->ctrl_points()));
+      renderables.push_back(std::make_shared<nurb_renderable<vec4_vector>>(
+        line, &line->get_shape().ctrl_points()));
     }
 
     // texture
@@ -391,64 +386,72 @@ public:
   }
 
   virtual void glfw_key(
-    GLFWwindow *wnd, int key, int scancode, int action, int mods)
+    GLFWwindow* wnd, int key, int scancode, int action, int mods)
   {
     if (action == GLFW_PRESS)
     {
       switch (key)
       {
-        case GLFW_KEY_ESCAPE:
-          glfwSetWindowShouldClose(m_wnd, GL_TRUE);
-          break;
-        case GLFW_KEY_Q:
-          {
-          GLint polygon_mode;
-          glGetIntegerv(GL_POLYGON_MODE, &polygon_mode);
-          glPolygonMode(
-            GL_FRONT_AND_BACK, GL_POINT + (polygon_mode - GL_POINT + 1) % 3);
-        } break;
-        case GLFW_KEY_W:
-          {
-          if (glIsEnabled(GL_CULL_FACE))
-          {
-            glDisable(GL_CULL_FACE);
-          } else
-          {
-            glEnable(GL_CULL_FACE);
-          }
-        } break;
-        case GLFW_KEY_E:
-          {
-          if (glIsEnabled(GL_DEPTH_TEST))
-          {
-            glDisable(GL_DEPTH_TEST);
-          } else
-          {
-            glEnable(GL_DEPTH_TEST);
-          }
-        } break;
-        case GLFW_KEY_R:
-          {
-          GLint cull_face;
-          glGetIntegerv(GL_CULL_FACE_MODE, &cull_face);
-          if (cull_face == GL_FRONT)
-          {
-            glCullFace(GL_BACK);
-          } else if (cull_face == GL_BACK)
-          {
-            glCullFace(GL_FRONT_AND_BACK);
-          } else
-          {
-            glCullFace(GL_FRONT);
-          }
-        } break;
+      case GLFW_KEY_ESCAPE:
+        glfwSetWindowShouldClose(m_wnd, GL_TRUE);
+        break;
+      case GLFW_KEY_Q:
+      {
+        GLint polygon_mode;
+        glGetIntegerv(GL_POLYGON_MODE, &polygon_mode);
+        glPolygonMode(
+          GL_FRONT_AND_BACK, GL_POINT + (polygon_mode - GL_POINT + 1) % 3);
+      }
+      break;
+      case GLFW_KEY_W:
+      {
+        if (glIsEnabled(GL_CULL_FACE))
+        {
+          glDisable(GL_CULL_FACE);
+        }
+        else
+        {
+          glEnable(GL_CULL_FACE);
+        }
+      }
+      break;
+      case GLFW_KEY_E:
+      {
+        if (glIsEnabled(GL_DEPTH_TEST))
+        {
+          glDisable(GL_DEPTH_TEST);
+        }
+        else
+        {
+          glEnable(GL_DEPTH_TEST);
+        }
+      }
+      break;
+      case GLFW_KEY_R:
+      {
+        GLint cull_face;
+        glGetIntegerv(GL_CULL_FACE_MODE, &cull_face);
+        if (cull_face == GL_FRONT)
+        {
+          glCullFace(GL_BACK);
+        }
+        else if (cull_face == GL_BACK)
+        {
+          glCullFace(GL_FRONT_AND_BACK);
+        }
+        else
+        {
+          glCullFace(GL_FRONT);
+        }
+      }
+      break;
 
-        case GLFW_KEY_U:
-          render_normal ^= 1;
-          break;
+      case GLFW_KEY_U:
+        render_normal ^= 1;
+        break;
 
-        default:
-          break;
+      default:
+        break;
       }
     }
     app::glfw_key(wnd, key, scancode, action, mods);
