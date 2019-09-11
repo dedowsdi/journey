@@ -1,8 +1,8 @@
 #ifndef GL_GLC_XYPLANE_H
 #define GL_GLC_XYPLANE_H
 
-#include "geometry.h"
-#include "glm.h"
+#include <geometry.h>
+#include <glm.h>
 
 namespace zxd
 {

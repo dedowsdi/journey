@@ -1,5 +1,5 @@
-#include "debugger.h"
-#include "program.h"
+#include <debugger.h>
+#include <program.h>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 

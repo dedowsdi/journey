@@ -3,8 +3,8 @@
 
 #include <utility>
 
-#include "gl.h"
-#include "glm.h"
+#include <gl.h>
+#include <glm.h>
 
 namespace geometry_test
 {

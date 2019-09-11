@@ -1,12 +1,13 @@
 #ifndef GL_GLC_PROGRAM_H
 #define GL_GLC_PROGRAM_H
 
-#include "gl.h"
 #include <string>
 #include <vector>
 #include <memory>
 #include <map>
 #include <functional>
+
+#include <gl.h>
 
 typedef std::vector<std::string> string_vector;
 typedef std::vector<const char*> cstring_vector;
@@ -15,9 +16,6 @@ namespace zxd
 {
 
 class shader;
-using shader_map = std::map<GLenum, std::shared_ptr<shader>>;
-
-void add_shader_content(string_vector& v, const std::string& content);
 
 class program
 {
@@ -25,6 +23,7 @@ class program
 public:
 
   using load_callback = std::function<void(void)>;
+  using shader_map = std::map<GLenum, std::shared_ptr<shader>>;
 
   program() : _object(-1) {}
   virtual ~program() = default;
@@ -61,7 +60,7 @@ public:
 
   std::string get_info_log() const;
 
-  void print_shader_sources();
+  void print_shader_sources() const;
 
   void clear();
 
@@ -91,7 +90,7 @@ public:
 
 private:
 
-  std::string get_print_name();
+  std::string get_print_name() const;
 
   virtual void attach_shaders(){};
   virtual void bind_uniform_locations(){};

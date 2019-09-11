@@ -11,7 +11,7 @@
  *  always rect(it becomes round if antialiasing is enabled, either rgba or
  *  multisample).
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

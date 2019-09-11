@@ -1,6 +1,7 @@
-#include "vao.h"
+#include <vao.h>
 
 #include <utility>
+#include <iostream>
 
 #include <exception.h>
 #include <buffer.h>
@@ -38,7 +39,10 @@ vao::vao()
 vao::~vao()
 {
   if(_object != 0)
+  {
     glDeleteVertexArrays(1, &_object);
+    std::cout << "vao " << _object << " deleted"  << std::endl;
+  }
 }
 
 ////--------------------------------------------------------------------
@@ -69,7 +73,7 @@ void vao::bind()
 }
 
 //--------------------------------------------------------------------
-void vao::enable_vertex_attrib_array(GLuint idx)
+void vao::enable_attrib_array(GLuint idx)
 {
   auto& attrib = get_attrib(idx);
   attrib.enabled = GL_TRUE;
@@ -77,9 +81,8 @@ void vao::enable_vertex_attrib_array(GLuint idx)
 }
 
 //--------------------------------------------------------------------
-void vao::disable_vertex_attrib_array(GLuint idx)
+void vao::disable_attrib_array(GLuint idx)
 {
-
   auto& attrib = get_attrib(idx);
   attrib.enabled = GL_FALSE;
   glDisableVertexAttribArray(idx);
@@ -90,11 +93,11 @@ void vao::set_attrib_activity(GLuint idx, bool b)
 {
   if (b)
   {
-    enable_vertex_attrib_array(idx);
+    enable_attrib_array(idx);
   }
   else
   {
-    disable_vertex_attrib_array(idx);
+    disable_attrib_array(idx);
   }
 }
 

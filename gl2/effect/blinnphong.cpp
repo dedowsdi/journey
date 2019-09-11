@@ -1,10 +1,10 @@
 #include "glad/glad.h"
-#include "app.h"
-#include "program.h"
-#include "light.h"
+#include <app.h>
+#include <program.h>
+#include <light.h>
 #include <sstream>
-#include "sphere.h"
-#include "common_program.h"
+#include <sphere.h>
+#include <common_program.h>
 
 namespace zxd {
 

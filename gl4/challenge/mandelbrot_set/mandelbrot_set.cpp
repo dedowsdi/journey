@@ -4,12 +4,12 @@
 #include <iomanip>
 #include <numeric>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "quad.h"
-#include "string_util.h"
-#include "timer.h"
-#include "pingpong.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <quad.h>
+#include <string_util.h>
+#include <timer.h>
+#include <pingpong.h>
 
 namespace zxd
 {

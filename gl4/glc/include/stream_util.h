@@ -1,7 +1,7 @@
 #ifndef GL_GLC_STREAM_H
 #define GL_GLC_STREAM_H
 
-#include "gl.h"
+#include <gl.h>
 #include <glm/fwd.hpp>
 #include <istream>
 #include <ostream>

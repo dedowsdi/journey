@@ -1,7 +1,7 @@
 #ifndef GL4_GLC_COMMON_CAMMAN_H
 #define GL4_GLC_COMMON_CAMMAN_H
 
-#include "camman.h"
+#include <camman.h>
 
 namespace zxd
 {

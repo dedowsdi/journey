@@ -15,15 +15,15 @@
  *
  */
 
-#include "app.h"
+#include <app.h>
 
 #include <sstream>
 
-#include "bitmap_text.h"
-#include "common.h"
-#include "sphere.h"
-#include "light.h"
-#include "stream_util.h"
+#include <bitmap_text.h>
+#include <common.h>
+#include <sphere.h>
+#include <light.h>
+#include <stream_util.h>
 
 namespace zxd
 {

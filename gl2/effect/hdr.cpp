@@ -14,13 +14,13 @@
  *
  *  any function that result in [0,1] should work.
  */
-#include "app.h"
-#include "program.h"
-#include "light.h"
-#include "disk.h"
+#include <app.h>
+#include <program.h>
+#include <light.h>
+#include <disk.h>
 #include <sstream>
-#include "quad.h"
-#include "common_program.h"
+#include <quad.h>
+#include <common_program.h>
 
 namespace zxd {
 

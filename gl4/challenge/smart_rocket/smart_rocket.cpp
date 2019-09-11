@@ -1,11 +1,11 @@
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
 #include <algorithm>
-#include "common_program.h"
-#include "quad.h"
-#include "debugger.h"
-#include "string_util.h"
+#include <common_program.h>
+#include <quad.h>
+#include <debugger.h>
+#include <string_util.h>
 
 #define WIDTH 800
 #define HEIGHT 800

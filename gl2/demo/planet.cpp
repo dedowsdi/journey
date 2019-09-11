@@ -5,7 +5,7 @@
  *  interaction:  pressing the d and y keys (day and year)
  *  alters the rotation of the planet around the sun.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

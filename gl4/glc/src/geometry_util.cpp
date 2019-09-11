@@ -1,4 +1,4 @@
-#include "geometry_util.h"
+#include <geometry_util.h>
 
 #include <set>
 #include <numeric>
@@ -9,9 +9,9 @@
 #include <iostream>
 
 #include <glm/gtx/transform.hpp>
-#include "glmath.h"
-#include "geometry.h"
-#include "triangle_functor.h"
+#include <glmath.h>
+#include <geometry.h>
+#include <triangle_functor.h>
 #include <vao.h>
 #include <exception.h>
 

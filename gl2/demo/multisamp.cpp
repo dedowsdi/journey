@@ -9,7 +9,7 @@
  *  antialiasing is sometimes easier to see when objects are rendered over a
  *  contrasting background.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

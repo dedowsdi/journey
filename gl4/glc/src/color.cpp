@@ -1,4 +1,4 @@
-#include "color.h"
+#include <color.h>
 #include <glm/glm.hpp>
 
 namespace zxd

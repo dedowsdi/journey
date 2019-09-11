@@ -1,7 +1,7 @@
 #ifndef GL_GLC_LIGHT_H
 #define GL_GLC_LIGHT_H
 
-#include "glm.h"
+#include <glm.h>
 #include <string>
 
 namespace zxd

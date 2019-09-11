@@ -2,9 +2,9 @@
 #include <algorithm>
 #include <numeric>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "timer.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <timer.h>
 
 #define WIDTH 800
 #define HEIGHT 800

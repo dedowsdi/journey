@@ -1,6 +1,6 @@
 #ifndef GL_GLC_TEAPOT_H
 #define GL_GLC_TEAPOT_H
-#include "gl.h"
+#include <gl.h>
 
 namespace zxd
 {

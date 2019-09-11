@@ -1,6 +1,6 @@
-#include "nurbsurface.h"
+#include <nurbsurface.h>
 
-#include "nurb.h"
+#include <nurb.h>
 #include <glm/gtx/norm.hpp>
 
 namespace zxd

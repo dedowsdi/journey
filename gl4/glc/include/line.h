@@ -1,6 +1,7 @@
 #ifndef GL_GLC_LINE_H
 #define GL_GLC_LINE_H
-#include "geometry.h"
+#include <geometry.h>
+#include <vao.h>
 
 namespace zxd 
 {

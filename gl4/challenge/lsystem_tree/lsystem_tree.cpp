@@ -24,10 +24,10 @@
  *
  */
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "lsystem.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <lsystem.h>
 
 #include <algorithm>
 #include <mat_stack.h>

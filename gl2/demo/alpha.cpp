@@ -4,7 +4,7 @@
  *  to demonstrate the effect order has on alpha blending results.
  *  use the 't' key to toggle the order of drawing polygons.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

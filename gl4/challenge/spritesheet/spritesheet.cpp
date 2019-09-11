@@ -1,11 +1,11 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "spritesheet.h"
-#include "common_program.h"
-#include "texutil.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <spritesheet.h>
+#include <common_program.h>
+#include <texutil.h>
 #include <sstream>
-#include "quad.h"
-#include "pingpong.h"
+#include <quad.h>
+#include <pingpong.h>
 
 #define WIDTH 640
 #define HEIGHT 360

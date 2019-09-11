@@ -9,13 +9,15 @@
  * original dir + leaf-branch as new dir
  *
  */
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
 #include <list>
 #include <unordered_set>
 #include <unordered_map>
-#include "points.h"
+
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <vao.h>
+#include <points.h>
 
 #define WIDTH 800
 #define HEIGHT 800

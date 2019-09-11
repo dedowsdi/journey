@@ -35,14 +35,14 @@
  *    matrix plain 16 float
  */
 
-#include "stream_util.h"
+#include <stream_util.h>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "string_util.h"
-#include "stream_util.h"
-#include "glm.h"
+#include <string_util.h>
+#include <stream_util.h>
+#include <glm.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/vec_swizzle.hpp>

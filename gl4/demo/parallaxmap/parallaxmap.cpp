@@ -14,15 +14,15 @@
  * map.
  *
  */
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common.h"
-#include "light.h"
-#include "quad.h"
-#include "texutil.h"
-#include "program.h"
-#include "stream_util.h"
+#include <common.h>
+#include <light.h>
+#include <quad.h>
+#include <texutil.h>
+#include <program.h>
+#include <stream_util.h>
 
 namespace zxd
 {

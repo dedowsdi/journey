@@ -6,7 +6,7 @@
  *
  *  if you want to load compressed texture images, use glCompressedTexImage**
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

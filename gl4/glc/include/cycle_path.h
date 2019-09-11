@@ -1,7 +1,7 @@
 #ifndef GLC_CYCLE_PATH_H
 #define GLC_CYCLE_PATH_H
-#include "gl.h"
-#include "glm.h"
+#include <gl.h>
+#include <glm.h>
 
 namespace zxd
 {

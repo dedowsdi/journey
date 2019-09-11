@@ -1,10 +1,10 @@
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "cuboid.h"
-#include "common_program.h"
-#include "light.h"
-#include "common.h"
+#include <cuboid.h>
+#include <common_program.h>
+#include <light.h>
+#include <common.h>
 
 #define SPONGE_SIZE 100.0f
 #define USE_INSTANCE

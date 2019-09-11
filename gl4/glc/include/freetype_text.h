@@ -7,9 +7,9 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "gl.h"
-#include "program.h"
-#include "bitmap_text.h"
+#include <gl.h>
+#include <program.h>
+#include <bitmap_text.h>
 
 namespace zxd
 {

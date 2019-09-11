@@ -1,28 +1,28 @@
-#include "app.h"
+#include <app.h>
 
 #include <sstream>
 
-#include "sphere.h"
-#include "common.h"
-#include "light.h"
-#include "glenumstring.h"
-#include "cuboid.h"
-#include "cone.h"
-#include "stateutil.h"
-#include "cylinder.h"
-#include "torus.h"
-#include "xyplane.h"
-#include "disk.h"
-#include "bezier.h"
-#include "nurb.h"
-#include "beziersurface.h"
-#include "points.h"
-#include "nurbsurface.h"
-#include "axes.h"
-#include "teardrop.h"
-#include "capsule3d.h"
-#include "icosahedron.h"
-#include "common_program.h"
+#include <sphere.h>
+#include <common.h>
+#include <light.h>
+#include <glenumstring.h>
+#include <cuboid.h>
+#include <cone.h>
+#include <stateutil.h>
+#include <cylinder.h>
+#include <torus.h>
+#include <xyplane.h>
+#include <disk.h>
+#include <bezier.h>
+#include <nurb.h>
+#include <beziersurface.h>
+#include <points.h>
+#include <nurbsurface.h>
+#include <axes.h>
+#include <teardrop.h>
+#include <capsule3d.h>
+#include <icosahedron.h>
+#include <common_program.h>
 
 namespace zxd
 {

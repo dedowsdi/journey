@@ -2,9 +2,9 @@
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
 #include <stdlib.h>
-#include "common.h"
-#include "program.h"
-#include "glm.h"
+#include <common.h>
+#include <program.h>
+#include <glm.h>
 
 using namespace glm;
 

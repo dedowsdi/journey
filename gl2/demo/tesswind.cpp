@@ -5,7 +5,7 @@
  *  each with very different contours.  when the w key is pressed,
  *  the objects are drawn with a different winding rule.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

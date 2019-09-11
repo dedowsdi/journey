@@ -1,7 +1,7 @@
 #ifndef GL_GLC_BEZIER_H
 #define GL_GLC_BEZIER_H
 
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

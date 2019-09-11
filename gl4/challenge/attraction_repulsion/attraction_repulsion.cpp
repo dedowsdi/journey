@@ -1,10 +1,10 @@
 #include <sstream>
 #include <list>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "sphere.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <sphere.h>
 
 #define WIDTH 800
 #define HEIGHT 800

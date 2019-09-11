@@ -1,8 +1,8 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "dict_script.h"
-#include "stream_util.h"
-#include "common_program.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <dict_script.h>
+#include <stream_util.h>
+#include <common_program.h>
 
 #include <sstream>
 

@@ -2,7 +2,7 @@
  *  this program renders a lighted, filled bezier surface,
  *  using two-dimensional evaluators.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 // clang-format off

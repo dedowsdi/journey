@@ -9,7 +9,7 @@
 #include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <stdlib.h>
-#include "common.h"
+#include <common.h>
 
 void init(void) {
   GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};

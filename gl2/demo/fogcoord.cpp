@@ -15,7 +15,7 @@
  *  subtract from the fog coordinate values at one of the
  *  three vertices of the triangle.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd{
 

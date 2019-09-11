@@ -2,12 +2,12 @@
 #include <algorithm>
 #include <list>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "texutil.h"
-#include "quad.h"
-#include "circle.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <texutil.h>
+#include <quad.h>
+#include <circle.h>
 
 namespace zxd
 {

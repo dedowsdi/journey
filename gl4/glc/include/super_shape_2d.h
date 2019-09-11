@@ -1,6 +1,6 @@
 #ifndef GL_GLC_SUPER_SHAPE_2D_H
 #define GL_GLC_SUPER_SHAPE_2D_H
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

@@ -4,7 +4,7 @@
  *  use of the glHistogram() function.
  */
 
-#include "app.h"
+#include <app.h>
 #include "readimage.cpp"
 
 extern GLubyte* read_image(const char*, GLsizei*, GLsizei*);

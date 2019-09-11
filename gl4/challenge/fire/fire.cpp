@@ -1,11 +1,11 @@
 // https://web.archive.org/web/20160418004150/http://freespace.virgin.net/hugo.elias/models/m_fire.htm
 
 
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "quad.h"
-#include "texutil.h"
+#include <quad.h>
+#include <texutil.h>
 #define RECORD
 
 GLint width;

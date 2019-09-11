@@ -1,4 +1,4 @@
-#include "cycle_path.h"
+#include <cycle_path.h>
 #include <glm/glm.hpp>
 
 namespace zxd

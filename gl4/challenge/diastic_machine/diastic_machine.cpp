@@ -2,8 +2,8 @@
  * use every character and it's index in seed to find word in sentence.
  */
 #include <iostream>
-#include "string_util.h"
-#include "stream_util.h"
+#include <string_util.h>
+#include <stream_util.h>
 
 int main(int argc, char *argv[])
 {

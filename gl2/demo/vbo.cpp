@@ -7,7 +7,7 @@
  *  if you want to use texcoord or other vertex dates, you can place them in the
  *  same buffer as position or in a seperated buffer.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

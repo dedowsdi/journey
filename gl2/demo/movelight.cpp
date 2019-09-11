@@ -13,7 +13,7 @@
  *
  *  light position will be transformed by modelview matrix.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

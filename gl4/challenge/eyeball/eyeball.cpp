@@ -1,13 +1,13 @@
 #include <sstream>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "fractal_spiral.h"
-#include "debugger.h"
-#include "pingpong.h"
-#include "quad.h"
-#include "circle.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <fractal_spiral.h>
+#include <debugger.h>
+#include <pingpong.h>
+#include <quad.h>
+#include <circle.h>
 
 #define WIDTH 720
 #define HEIGHT 720

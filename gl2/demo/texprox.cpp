@@ -7,7 +7,7 @@
  *  note that texture proxies dont't care if there are still enough texture
  *  resources to be used.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

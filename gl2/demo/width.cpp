@@ -2,8 +2,8 @@
  * line with width >=1 will spread in both direction.
  * point with size >=1 whill spread in all direction
  */
-#include "app.h"
-#include "glm.h"
+#include <app.h>
+#include <glm.h>
 
 namespace zxd {
 

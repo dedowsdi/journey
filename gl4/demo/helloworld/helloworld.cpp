@@ -1,5 +1,5 @@
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 
 namespace zxd
 {

@@ -1,4 +1,4 @@
-#include "stream_util.h"
+#include <stream_util.h>
 
 #include <fstream>
 #include <sstream>
@@ -6,7 +6,7 @@
 #include <algorithm>
 
 #include <boost/filesystem.hpp>
-#include "string_util.h"
+#include <string_util.h>
 #include <glm/fwd.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>

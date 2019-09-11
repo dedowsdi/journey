@@ -6,7 +6,7 @@
  *
  *  you don't need to use the same r for 3d tex coord of primitives.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

@@ -1,4 +1,4 @@
-#include "primitive_set.h"
+#include <primitive_set.h>
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
 namespace zxd

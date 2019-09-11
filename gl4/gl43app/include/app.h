@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-#include "glmath.h"
+#include <glmath.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -25,11 +25,11 @@
 #include <glm/gtc/noise.hpp>
 
 #include "kci.h"
-#include "timer.h"
-#include "bitmap_text.h"
-#include "common_camman.h"
-#include "glfw_handler.h"
-#include "stream_util.h"
+#include <timer.h>
+#include <bitmap_text.h>
+#include <common_camman.h>
+#include <glfw_handler.h>
+#include <stream_util.h>
 
 #ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)

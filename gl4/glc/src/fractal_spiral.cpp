@@ -1,7 +1,7 @@
-#include "fractal_spiral.h"
+#include <fractal_spiral.h>
 
 #include <glm/gtx/norm.hpp>
-#include "glmath.h"
+#include <glmath.h>
 
 namespace zxd
 {

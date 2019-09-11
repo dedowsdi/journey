@@ -4,7 +4,7 @@
  *  model.  A sphere is drawn using a grey material characteristic.
  *  A single light source illuminates the object.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

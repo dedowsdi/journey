@@ -1,10 +1,10 @@
 /*
  * create a bunch of billboards, all in random position
  */
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common.h"
+#include <common.h>
 
 namespace zxd
 {

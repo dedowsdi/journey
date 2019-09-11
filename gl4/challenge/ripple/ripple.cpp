@@ -1,10 +1,10 @@
 // https://web.archive.org/web/20160116150939/http://freespace.virgin.net/hugo.elias/graphics/x_water.htm
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common_program.h"
-#include "quad.h"
-#include "pingpong.h"
+#include <common_program.h>
+#include <quad.h>
+#include <pingpong.h>
 
 #define WIDTH 800
 #define HEIGHT 800

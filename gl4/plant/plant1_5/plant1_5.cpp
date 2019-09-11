@@ -4,17 +4,17 @@
 #include <sstream>
 #include <algorithm>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "turtle.h"
-#include "common_program.h"
-#include "lsystem.h"
-#include "debugger.h"
-#include "geometry_util.h"
-#include "line.h"
-#include "capsule3d.h"
-#include "timer.h"
-#include "common.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <turtle.h>
+#include <common_program.h>
+#include <lsystem.h>
+#include <debugger.h>
+#include <geometry_util.h>
+#include <line.h>
+#include <capsule3d.h>
+#include <timer.h>
+#include <common.h>
 
 namespace zxd {
 

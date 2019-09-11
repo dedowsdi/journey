@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "gl.h"
+#include <gl.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #define GLM_META_PROG_HELPERS

@@ -23,8 +23,8 @@
  *    clamp_to_border : 2*2 array use border and texels at the edge.
  *
  */
-#include "app.h"
-#include "glenumstring.h"
+#include <app.h>
+#include <glenumstring.h>
 
 namespace zxd {
 /*	create checkerboard texture	*/

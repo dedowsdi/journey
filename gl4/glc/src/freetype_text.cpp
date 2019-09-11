@@ -1,14 +1,14 @@
-#include "freetype_text.h"
+#include <freetype_text.h>
 
 #include <sstream>
 #include <algorithm>
 
-#include "common.h"
-#include "texutil.h"
-#include "glc_utf8.h"
-#include "stream_util.h"
-#include "guard.h"
-#include "bitmap_text.h"
+#include <common.h>
+#include <texutil.h>
+#include <glc_utf8.h>
+#include <stream_util.h>
+#include <guard.h>
+#include <bitmap_text.h>
 
 namespace zxd
 {

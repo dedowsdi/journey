@@ -2,7 +2,7 @@
  *  use the accumulation buffer to do full-scene antialiasing
  *  on a scene with orthographic parallel projection.
  */
-#include "app.h"
+#include <app.h>
 #include "jitter.h"
 
 namespace zxd {

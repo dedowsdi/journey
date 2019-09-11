@@ -1,7 +1,7 @@
 #ifndef GL4_GLC_OBJMAN_H
 #define GL4_GLC_OBJMAN_H
 
-#include "glfw_handler.h"
+#include <glfw_handler.h>
 
 namespace zxd
 {

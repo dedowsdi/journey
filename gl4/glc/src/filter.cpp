@@ -1,13 +1,13 @@
-#include "filter.h"
+#include <filter.h>
 
 #include <sstream>
 #include <iostream>
 
-#include "glmath.h"
-#include "common_program.h"
-#include "quad.h"
-#include "pingpong.h"
-#include "string_util.h"
+#include <glmath.h>
+#include <common_program.h>
+#include <quad.h>
+#include <pingpong.h>
+#include <string_util.h>
 
 namespace zxd
 {

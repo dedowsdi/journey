@@ -1,7 +1,7 @@
 #ifndef GL_GLC_SUPER_SHAPE_3D_H
 #define GL_GLC_SUPER_SHAPE_3D_H
 
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

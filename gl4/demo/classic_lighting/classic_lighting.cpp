@@ -1,4 +1,4 @@
-#include "app.h"
+#include <app.h>
 
 #include <sstream>
 #include <jsoncfg.h>
@@ -10,6 +10,7 @@
 #include <stream_util.h>
 #include <common.h>
 #include <objman.h>
+#include <vao.h>
 
 namespace rj = rapidjson;
 

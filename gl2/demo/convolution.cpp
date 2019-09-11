@@ -3,7 +3,7 @@
  *  use various 2D convolutions filters to find edges in an image.
  *
  */
-#include "app.h"
+#include <app.h>
 #include "readimage.cpp"
 
 extern GLubyte* read_image(const char*, GLsizei*, GLsizei*);

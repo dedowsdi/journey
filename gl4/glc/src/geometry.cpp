@@ -1,8 +1,10 @@
-#include "geometry.h"
+#include <geometry.h>
 
 #include <iostream>
 #include <algorithm>
 
+#include <vao.h>
+#include <buffer.h>
 #include <exception.h>
 #include <buffer.h>
 #include <array.h>
@@ -49,26 +51,38 @@ vao& geometry_base::get_or_create_vao()
   return *_vao;
 }
 
+template <typename T>
+T& geometry_base::make_element()
+{
+  _element_buffer = std::make_shared<buffer>();
+  auto elements = std::make_unique<T>();
+  _element_buffer->set_data(std::move(elements));
+  return *_element_buffer->get_data<std::unique_ptr<T>>();
+}
+
+template uint_array& geometry_base::make_element<uint_array>();
+template ushort_array& geometry_base::make_element<ushort_array>();
+
 //--------------------------------------------------------------------
-const array* geometry_base::get_attrib_array(GLuint index)  const
+const array* geometry_base::get_attrib_array(GLuint index) const
 {
   return _vao->get_attrib(index).buf->get_data<std::unique_ptr<array>>().get();
 }
 
 //--------------------------------------------------------------------
-const vec2_array* geometry_base::get_attrib_vec2_array(GLuint index)  const
+const vec2_array* geometry_base::get_attrib_vec2_array(GLuint index) const
 {
   return dynamic_cast<const vec2_array*>(get_attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-const vec3_array* geometry_base::get_attrib_vec3_array(GLuint index)  const
+const vec3_array* geometry_base::get_attrib_vec3_array(GLuint index) const
 {
   return dynamic_cast<const vec3_array*>(get_attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-const vec4_array* geometry_base::get_attrib_vec4_array(GLuint index)  const
+const vec4_array* geometry_base::get_attrib_vec4_array(GLuint index) const
 {
   return dynamic_cast<const vec4_array*>(get_attrib_array(index));
 }
@@ -242,7 +256,7 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
   {
     ebuf->bind(GL_ELEMENT_ARRAY_BUFFER);
     auto& buf_data = ebuf->get_data<std::unique_ptr<array>>();
-    ebuf->buffer_data(buf_data->bytes(), buf_data->data(), GL_STATIC_DRAW);
+    ebuf->buffer_data(std::move(buf_data), GL_STATIC_DRAW);
   }
 
   auto num_vertices = vertices.size();

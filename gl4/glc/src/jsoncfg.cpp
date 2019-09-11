@@ -1,4 +1,4 @@
-#include "jsoncfg.h"
+#include <jsoncfg.h>
 
 #include <iostream>
 
@@ -6,7 +6,7 @@
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
 #include <boost/filesystem.hpp>
-#include "stream_util.h"
+#include <stream_util.h>
 
 namespace bfs = boost::filesystem;
 

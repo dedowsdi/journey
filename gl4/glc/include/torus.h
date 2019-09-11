@@ -1,8 +1,8 @@
 #ifndef GL_GLC_TORUS_H
 #define GL_GLC_TORUS_H
 
-#include "geometry.h"
-#include "glm.h"
+#include <geometry.h>
+#include <glm.h>
 
 namespace zxd
 {

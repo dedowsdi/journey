@@ -7,7 +7,7 @@
  *  the viewing volume is at the same position, each time.  in
  *  this case, the gold teapot remains in focus.
  */
-#include "app.h"
+#include <app.h>
 #include "jitter.h"
 
 namespace zxd {

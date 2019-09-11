@@ -10,10 +10,10 @@
  *  is also called two-pass gaussian blur.
  *
  */
-#include "app.h"
-#include "program.h"
-#include "common_program.h"
-#include "quad.h"
+#include <app.h>
+#include <program.h>
+#include <common_program.h>
+#include <quad.h>
 #include <sstream>
 
 namespace zxd {

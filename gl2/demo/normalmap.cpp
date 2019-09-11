@@ -18,10 +18,10 @@
  */
 #include <sstream>
 
-#include "app.h"
-#include "program.h"
-#include "light.h"
-#include "stream_util.h"
+#include <app.h>
+#include <program.h>
+#include <light.h>
+#include <stream_util.h>
 #include <glmath.h>
 
 namespace zxd {

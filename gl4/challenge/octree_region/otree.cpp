@@ -1,5 +1,5 @@
 #include "otree.h"
-#include "debugger.h"
+#include <debugger.h>
 
 namespace  zxd
 {

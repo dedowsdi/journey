@@ -1,8 +1,8 @@
 #ifndef SECRET_GARDEN_BUG_H
 #define SECRET_GARDEN_BUG_H value
 
-#include "gl.h"
-#include "glm.h"
+#include <gl.h>
+#include <glm.h>
 
 namespace zxd
 {

@@ -7,7 +7,7 @@
  *  in this program, there is a fixed density value, as well
  *  as fixed start and end values for the linear fog.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

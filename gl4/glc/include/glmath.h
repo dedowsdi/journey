@@ -1,7 +1,7 @@
 #ifndef GL_GLC_GLMATH_H
 #define GL_GLC_GLMATH_H
 
-#include "glm.h"
+#include <glm.h>
 #include <exception.h>
 
 namespace zxd

@@ -4,7 +4,7 @@
  *  objects are drawn using a grey material characteristic.
  *  A single light source illuminates the objects.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

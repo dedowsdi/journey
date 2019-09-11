@@ -4,17 +4,17 @@
  * as texture is transparent, you need to sort it every frame, so you need to
  * update buffer every frame, not sure it's a good way do do this.
  */
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common_program.h"
-#include "quad.h"
-#include "spritesheet.h"
-#include "texutil.h"
+#include <common_program.h>
+#include <quad.h>
+#include <spritesheet.h>
+#include <texutil.h>
 #include <algorithm>
 #include <chrono>
-#include "timer.h"
-#include "datautil.h"
+#include <timer.h>
+#include <datautil.h>
 
 #define WIDTH 800
 #define HEIGHT 800

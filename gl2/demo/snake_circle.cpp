@@ -2,8 +2,8 @@
  * issue:
  *  the circle line is jagged even i turn on multisample and line smooth
  */
-#include "app.h"
-#include "glm.h"
+#include <app.h>
+#include <glm.h>
 
 namespace zxd {
 

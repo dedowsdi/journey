@@ -1,7 +1,7 @@
 #ifndef GL_GLC_GLENUMSTRING_H
 #define GL_GLC_GLENUMSTRING_H
 
-#include "gl.h"
+#include <gl.h>
 
 const char* gl_tex_wrap_to_string(GLenum e);
 GLenum g_tex_wrapl_from_string(const char* s);

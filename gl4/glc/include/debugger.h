@@ -1,8 +1,8 @@
 #ifndef GL_GLC_DEBUGGER_H
 #define GL_GLC_DEBUGGER_H
-#include "glm.h"
+#include <glm.h>
 #include <glm/gtc/type_ptr.hpp>
-#include "common_program.h"
+#include <common_program.h>
 
 namespace debugger
 {

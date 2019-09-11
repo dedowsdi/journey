@@ -1,4 +1,4 @@
-#include "icosahedron.h"
+#include <icosahedron.h>
 
 #include <algorithm>
 #include <iostream>
@@ -6,8 +6,8 @@
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "functor.h"
-#include "geometry_util.h"
+#include <functor.h>
+#include <geometry_util.h>
 #include <exception.h>
 
 namespace zxd

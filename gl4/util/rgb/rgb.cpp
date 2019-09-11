@@ -1,11 +1,12 @@
-#include "app.h"
-#include "bitmap_text.h"
 #include <sstream>
-#include "common.h"
 #include <iomanip>
 #include <fstream>
 #include <algorithm>
 #include <stdexcept>
+
+#include <app.h>
+#include <bitmap_text.h>
+#include <common.h>
 using namespace glm;
 
 namespace zxd

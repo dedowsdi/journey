@@ -1,8 +1,8 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "sphere.h"
-#include "geometry_test.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <sphere.h>
+#include <geometry_test.h>
 #include <algorithm>
 
 #define WIDTH 800

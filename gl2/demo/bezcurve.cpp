@@ -4,7 +4,7 @@
  *  you can assign any float to u1 and u2,
  *  the real u is calculated by (u - u1) / (u2 - u1)
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

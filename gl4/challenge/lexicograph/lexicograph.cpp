@@ -27,8 +27,8 @@
  *
  */
 
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
 #include <iterator>
 #include <algorithm>

@@ -1,10 +1,10 @@
-#include "common_program.h"
+#include <common_program.h>
 
 #include <sstream>
 #include <glm/gtc/matrix_access.hpp>
 
-#include "common.h"
-#include "stream_util.h"
+#include <common.h>
+#include <stream_util.h>
 
 namespace zxd
 {

@@ -1,8 +1,8 @@
-#include "camman.h"
+#include <camman.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
-#include "glmath.h"
+#include <glmath.h>
 
 namespace zxd
 {

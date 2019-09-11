@@ -9,7 +9,7 @@
  *	 	vertex-array specification (if needed, through glClintActivateTexture)
  *
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

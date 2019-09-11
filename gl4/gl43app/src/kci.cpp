@@ -1,6 +1,6 @@
 #include "kci.h"
 #include <GLFW/glfw3.h>
-#include "glm.h"
+#include <glm.h>
 
 namespace zxd
 {

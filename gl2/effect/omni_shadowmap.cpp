@@ -17,12 +17,12 @@
 
 #include <sstream>
 
-#include "app.h"
-#include "program.h"
-#include "light.h"
-#include "sphere.h"
-#include "xyplane.h"
-#include "stream_util.h"
+#include <app.h>
+#include <program.h>
+#include <light.h>
+#include <sphere.h>
+#include <xyplane.h>
+#include <stream_util.h>
 
 namespace zxd {
 

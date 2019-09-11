@@ -7,7 +7,7 @@
  *  gluPerspective, glFrustum takes only positive near and far plane.
  *  glOrtho takes both positive and negative near and far plane.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

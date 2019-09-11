@@ -1,9 +1,9 @@
-#include "app.h"
+#include <app.h>
 
 #include <sstream>
 
-#include "bitmap_text.h"
-#include "common_program.h"
+#include <bitmap_text.h>
+#include <common_program.h>
 #include "bug.h"
 
 #define WIDTH 800

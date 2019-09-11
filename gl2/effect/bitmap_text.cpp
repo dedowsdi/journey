@@ -1,7 +1,7 @@
 #include "glad/glad.h"
-#include "app.h"
-#include "program.h"
-#include "texutil.h"
+#include <app.h>
+#include <program.h>
+#include <texutil.h>
 
 namespace zxd {
 

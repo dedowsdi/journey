@@ -4,7 +4,7 @@
  *  reads the mouse position and determines two 3D points
  *  from which it was transformed.  very little is displayed.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

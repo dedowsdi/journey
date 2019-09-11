@@ -1,12 +1,12 @@
 /*
  * http://paulbourke.net/geometry/knots/
  */
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common_program.h"
-#include "geometry.h"
-#include "geometry_util.h"
+#include <common_program.h>
+#include <geometry.h>
+#include <geometry_util.h>
 
 #define WIDTH 800
 #define HEIGHT 800

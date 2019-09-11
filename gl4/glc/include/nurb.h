@@ -2,7 +2,7 @@
 #define GL_GLC_NURB_H
 
 #include <algorithm>
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

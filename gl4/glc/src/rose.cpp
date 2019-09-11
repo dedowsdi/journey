@@ -1,6 +1,6 @@
-#include "rose.h"
+#include <rose.h>
 
-#include "glmath.h"
+#include <glmath.h>
 #include <glm/common.hpp>
 
 namespace zxd

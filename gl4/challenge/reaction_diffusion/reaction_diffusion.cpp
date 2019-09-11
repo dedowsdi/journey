@@ -1,15 +1,15 @@
 #include <limits>
 #include <sstream>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "quad.h"
-#include "common_program.h"
-#include "pingpong.h"
-#include "quad.h"
-#include "circle.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <quad.h>
+#include <common_program.h>
+#include <pingpong.h>
+#include <quad.h>
+#include <circle.h>
 #include "pacman.h"
-#include "cycle_path.h"
+#include <cycle_path.h>
 
 #define WIDTH 720
 #define HEIGHT 720

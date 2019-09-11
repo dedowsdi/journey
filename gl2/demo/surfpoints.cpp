@@ -19,7 +19,7 @@
  *      gluNurbsCallback(the_nurb, GLU_NURBS_NORMAL, normal_callback);
  *      gluNurbsCallback(the_nurb, GLU_NURBS_END, end_callback);
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

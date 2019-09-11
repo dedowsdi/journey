@@ -11,16 +11,16 @@
  * @TODO the lighting is wrong, normal must be wrong.
  *
  */
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
 #include <list>
 #include <unordered_set>
 #include <unordered_map>
-#include "points.h"
+#include <points.h>
 #include <algorithm>
-#include "geometry_util.h"
-#include "functor.h"
+#include <geometry_util.h>
+#include <functor.h>
 
 #define WIDTH 800
 #define HEIGHT 800

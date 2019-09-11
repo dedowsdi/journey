@@ -6,9 +6,9 @@
 #include <map>
 #include <memory>
 
-#include "gl.h"
-#include "mat_stack.h"
-#include "glm.h"
+#include <gl.h>
+#include <mat_stack.h>
+#include <glm.h>
 
 
 namespace zxd

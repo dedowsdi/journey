@@ -3,8 +3,8 @@
  *  demo of GL_TEXTURE_ENV_MODE
  *
  */
-#include "app.h"
-#include "glenumstring.h"
+#include <app.h>
+#include <glenumstring.h>
 
 namespace zxd {
 

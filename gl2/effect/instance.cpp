@@ -1,10 +1,11 @@
 #include <sstream>
 
-#include "app.h"
-#include "program.h"
-#include "light.h"
-#include "sphere.h"
-#include "stream_util.h"
+#include <app.h>
+#include <program.h>
+#include <light.h>
+#include <sphere.h>
+#include <stream_util.h>
+#include <vao.h>
 
 namespace zxd {
 

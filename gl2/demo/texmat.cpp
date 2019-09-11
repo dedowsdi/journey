@@ -2,7 +2,7 @@
  *  sprite.c
  *  this program demonstrates tex matrix
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

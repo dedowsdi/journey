@@ -6,12 +6,6 @@
 #include <map>
 
 #include <gl.h>
-#include <glm.h>
-
-namespace boost
-{
-class any;
-}
 
 namespace zxd
 {
@@ -38,7 +32,6 @@ struct vertex_attrib
   std::shared_ptr<buffer> buf;
 };
 
-
 class vao
 {
 public:
@@ -56,9 +49,9 @@ public:
 
   void bind();
 
-  void enable_vertex_attrib_array(GLuint idx);
+  void enable_attrib_array(GLuint idx);
 
-  void disable_vertex_attrib_array(GLuint idx);
+  void disable_attrib_array(GLuint idx);
 
   void set_attrib_activity(GLuint idx, bool b);
 
@@ -73,6 +66,8 @@ public:
   using attributes = std::map<GLuint, vertex_attrib>;
 
 private:
+
+
   GLuint _object;
   attributes _attribs;
 };

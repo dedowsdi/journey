@@ -3,13 +3,13 @@
 #include <iostream>
 
 #include "glad/glad.h"
-#include "app.h"
-#include "program.h"
-#include "glm.h"
+#include <app.h>
+#include <program.h>
+#include <glm.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "glc_utf8.h"
-#include "stream_util.h"
+#include <glc_utf8.h>
+#include <stream_util.h>
 
 namespace zxd {
 

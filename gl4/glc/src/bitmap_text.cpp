@@ -1,4 +1,4 @@
-#include "bitmap_text.h"
+#include <bitmap_text.h>
 
 #include <iostream>
 #include <fstream>
@@ -9,10 +9,10 @@
 #include FT_FREETYPE_H
 #include <glm/gtc/matrix_transform.hpp>
 #include "utf8.h"
-#include "texutil.h"
-#include "common.h"
-#include "stream_util.h"
-#include "glc_utf8.h"
+#include <texutil.h>
+#include <common.h>
+#include <stream_util.h>
+#include <glc_utf8.h>
 
 namespace zxd
 {

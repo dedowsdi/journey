@@ -1,10 +1,10 @@
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "quad.h"
-#include "pingpong.h"
+#include <quad.h>
+#include <pingpong.h>
 #include <fstream>
-#include "stream_util.h"
+#include <stream_util.h>
 
 #define WIDTH 951
 #define HEIGHT 951

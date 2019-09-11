@@ -9,10 +9,10 @@
  *    3. blend(add) hdr map and brightness map, tone map back to ldr.
  *
  */
-#include "app.h"
-#include "program.h"
-#include "common_program.h"
-#include "quad.h"
+#include <app.h>
+#include <program.h>
+#include <common_program.h>
+#include <quad.h>
 
 namespace zxd {
 

@@ -16,8 +16,8 @@
  * attribute of a set of attributes aliased to the same location.
  *
  */
-#include "app.h"
-#include "program.h"
+#include <app.h>
+#include <program.h>
 
 namespace zxd {
 

@@ -1,7 +1,7 @@
 #ifndef GL4_GLC_CAPSULE3D_H
 #define GL4_GLC_CAPSULE3D_H
 
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

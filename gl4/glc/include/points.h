@@ -1,6 +1,6 @@
 #ifndef GL_GLC_POINTS_H
 #define GL_GLC_POINTS_H
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

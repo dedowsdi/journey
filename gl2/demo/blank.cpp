@@ -2,7 +2,7 @@
  *  blank.c
  *  tmp program, always wipe clean after you experiment
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

@@ -1,9 +1,10 @@
 #ifndef GL4_GLC_BUFFER_H
 #define GL4_GLC_BUFFER_H
 
-#include <gl.h>
 #include <memory>
 #include <vector>
+
+#include <gl.h>
 
 namespace zxd
 {
@@ -95,6 +96,9 @@ public:
   }
 
   void buffer_data(std::unique_ptr<array> data, GLenum usage);
+
+  // update gl buffer to underlying array buffer
+  void update_array_gl_buffer(GLuint offset, GLuint size);
 
   GLuint get_object() const { return _object; }
 

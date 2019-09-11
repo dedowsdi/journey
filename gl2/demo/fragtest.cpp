@@ -11,7 +11,7 @@
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <GL/freeglut_ext.h>
-#include "common.h"
+#include <common.h>
 
 GLboolean enable_scissor = GL_FALSE, enable_alpha = GL_FALSE;
 

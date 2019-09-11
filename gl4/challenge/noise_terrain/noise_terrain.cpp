@@ -1,5 +1,5 @@
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 
 #define WIDTH 800
 #define HEIGHT 800

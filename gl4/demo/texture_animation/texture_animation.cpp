@@ -1,8 +1,8 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "quad.h"
-#include "texutil.h"
-#include "common.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <quad.h>
+#include <texutil.h>
+#include <common.h>
 
 #define WIDTH 800
 #define HEIGHT 800

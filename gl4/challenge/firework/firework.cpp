@@ -2,11 +2,11 @@
  * i'm useing point sprite as particle in this challenge. which means particle
  * will not sclae with camera distance.
  */
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <list>
 #include <sstream>
-#include "debugger.h"
+#include <debugger.h>
 
 #define WIDTH 800
 #define HEIGHT 800

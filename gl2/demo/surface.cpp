@@ -9,8 +9,8 @@
  *  change u step will change the surface slightly even the sample mothed is not
  *  domain distance.
  */
-#include "app.h"
-#include "glenumstring.h"
+#include <app.h>
+#include <glenumstring.h>
 
 namespace zxd {
 

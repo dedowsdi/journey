@@ -16,7 +16,7 @@
  *  processing line. glWindowPos works in window coordinates directly.
  *
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

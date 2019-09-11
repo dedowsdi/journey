@@ -1,10 +1,10 @@
 /*
  * stars fly to user.
  */
-#include "app.h"
-#include "texutil.h"
-#include "bitmap_text.h"
-#include "glm.h"
+#include <app.h>
+#include <texutil.h>
+#include <bitmap_text.h>
+#include <glm.h>
 #include <sstream>
 
 #define WIDTH 800

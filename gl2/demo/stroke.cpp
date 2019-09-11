@@ -6,7 +6,7 @@
  *  correspond to the ASCII values of the characters.
  *  use of glCallLists() is demonstrated.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

@@ -1,7 +1,7 @@
-#include "quad.h"
+#include <quad.h>
 
-#include "common.h"
-#include "common_program.h"
+#include <common.h>
+#include <common_program.h>
 
 namespace zxd
 {

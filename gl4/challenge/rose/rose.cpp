@@ -1,10 +1,10 @@
 // https://en.wikipedia.org/wiki/Rose_(mathematics)
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
 #include <sstream>
 #include <numeric>
-#include "rose.h"
+#include <rose.h>
 
 #define WIDTH 800
 #define HEIGHT 800

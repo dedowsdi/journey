@@ -3,10 +3,10 @@
  * is it a bad way to crate rain_drop with DrawArraysInstance?
  * may be it's better to create a total mesh.
  */
-#include "app.h"
-#include "program.h"
-#include "common.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <program.h>
+#include <common.h>
+#include <bitmap_text.h>
 #include <sstream>
 
 #define RAIN_COLOR (vec3(138, 43, 226)/255.0f)

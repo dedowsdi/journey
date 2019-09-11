@@ -11,7 +11,7 @@
  *  star.  also note that removing the tess_property for the
  *  star will make the interior unshaded (WINDING_ODD).
  */
-#include "app.h"
+#include <app.h>
 
 // empty CALLBACK makesure callback func works on both linux and windows
 #ifndef CALLBACK

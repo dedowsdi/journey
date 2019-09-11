@@ -10,7 +10,7 @@
  *  you can not call glPointSize betwen glBegin and glEnd, you need to use point
  *  parameter to do the job. it scale and fade point based on attenuation.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

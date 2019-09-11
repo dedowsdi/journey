@@ -5,7 +5,7 @@
  * button is pressed, all squares under the cursor position
  * have their color changed.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

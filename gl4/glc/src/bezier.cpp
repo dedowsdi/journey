@@ -1,10 +1,10 @@
-#include "bezier.h"
+#include <bezier.h>
 
 #include <iostream>
 
 #include <glm/common.hpp>
 #include <glm/gtx/norm.hpp>
-#include "glmath.h"
+#include <glmath.h>
 
 namespace zxd
 {

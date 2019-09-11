@@ -16,8 +16,8 @@
 #include "glad/glad.h"
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
-#include "common.h"
-#include "glenumstring.h"
+#include <common.h>
+#include <glenumstring.h>
 
 
 #define WINDOWS_WIDTH 512

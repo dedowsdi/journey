@@ -1,7 +1,7 @@
-#include "beziersurface.h"
+#include <beziersurface.h>
 
 #include <glm/gtx/norm.hpp>
-#include "bezier.h"
+#include <bezier.h>
 
 namespace zxd
 {

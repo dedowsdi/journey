@@ -1,5 +1,5 @@
-#include "geometry_test.h"
-#include "glm.h"
+#include <geometry_test.h>
+#include <glm.h>
 #include <glm/gtx/norm.hpp>
 
 namespace geometry_test

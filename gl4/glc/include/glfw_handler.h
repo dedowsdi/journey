@@ -1,7 +1,7 @@
 #ifndef GL4_GLC_GLFW_HANDLER_H
 #define GL4_GLC_GLFW_HANDLER_H
 
-#include "glm.h"
+#include <glm.h>
 #include <GLFW/glfw3.h>
 
 namespace zxd

@@ -1,10 +1,10 @@
-#include "app.h"
-#include "color.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <color.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common_program.h"
-#include "texutil.h"
-#include "quad.h"
+#include <common_program.h>
+#include <texutil.h>
+#include <quad.h>
 
 namespace zxd
 {

@@ -1,7 +1,7 @@
 /*
  * https://castle-engine.io/vrml_engine_doc/output/xsl/html/section.how_octree_works.html
  */
-#include "glm.h"
+#include <glm.h>
 #include <list>
 #include <array>
 #include <set>

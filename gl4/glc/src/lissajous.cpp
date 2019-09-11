@@ -1,6 +1,6 @@
-#include "lissajous.h"
+#include <lissajous.h>
 
-#include "glmath.h"
+#include <glmath.h>
 #include <glm/common.hpp>
 #include <glm/gtx/norm.hpp>
 

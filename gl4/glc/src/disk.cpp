@@ -1,9 +1,9 @@
-#include "disk.h"
+#include <disk.h>
 
 #include <algorithm>
 
-#include "glmath.h"
-#include "geometry_util.h"
+#include <glmath.h>
+#include <geometry_util.h>
 #include <glm/trigonometric.hpp>
 
 namespace zxd

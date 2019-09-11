@@ -1,9 +1,9 @@
-#include "teardrop.h"
+#include <teardrop.h>
 
 #include <memory>
 
 #include <glm/trigonometric.hpp>
-#include "geometry_util.h"
+#include <geometry_util.h>
 
 namespace zxd
 {

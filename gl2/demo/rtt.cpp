@@ -11,7 +11,7 @@
  * if you need to render both stencil and depth , attach a depth stencil
  * renderbuffer, then read depth component and stencil index.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

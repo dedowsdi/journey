@@ -6,7 +6,7 @@
 #include <memory>
 #include <functional>
 
-#include "gl.h"
+#include <gl.h>
 #include <glm/glm.hpp>
 
 struct GLFWwindow;

@@ -1,9 +1,9 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "super_shape_2d.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <super_shape_2d.h>
 #include <sstream>
-#include "debugger.h"
+#include <debugger.h>
 
 #define WIDTH 800
 #define HEIGHT 800

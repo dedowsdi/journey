@@ -1,10 +1,10 @@
-#include "super_shape_3d.h"
+#include <super_shape_3d.h>
 
 #include <memory>
 #include <iostream>
 
-#include "geometry_util.h"
-#include "stream_util.h"
+#include <geometry_util.h>
+#include <stream_util.h>
 #include <glm/exponential.hpp>
 
 namespace zxd

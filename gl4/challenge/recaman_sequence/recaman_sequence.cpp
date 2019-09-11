@@ -2,17 +2,17 @@
 #include <set>
 #include <memory>
 
-#include "app.h"
-#include "color.h"
-#include "bitmap_text.h"
-#include "geometry.h"
-#include "geometry_util.h"
-#include "circle.h"
-#include "debugger.h"
-#include "common_program.h"
-#include "pingpong.h"
-#include "quad.h"
-#include "filter.h"
+#include <app.h>
+#include <color.h>
+#include <bitmap_text.h>
+#include <geometry.h>
+#include <geometry_util.h>
+#include <circle.h>
+#include <debugger.h>
+#include <common_program.h>
+#include <pingpong.h>
+#include <quad.h>
+#include <filter.h>
 
 #define WIDTH 640
 #define HEIGHT 360

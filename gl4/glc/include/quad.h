@@ -1,10 +1,10 @@
 #ifndef GL_GLC_QUAD_H
 #define GL_GLC_QUAD_H
-#include "program.h"
-#include "glm.h"
+#include <program.h>
+#include <glm.h>
 #include <array>
-#include "common.h"
-#include "geometry.h"
+#include <common.h>
+#include <geometry.h>
 
 namespace zxd
 {

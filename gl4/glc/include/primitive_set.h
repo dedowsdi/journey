@@ -1,6 +1,6 @@
 #ifndef GL_GLC_PRIMITIVE_SET_H
 #define GL_GLC_PRIMITIVE_SET_H
-#include "glm.h"
+#include <glm.h>
 
 namespace zxd
 {

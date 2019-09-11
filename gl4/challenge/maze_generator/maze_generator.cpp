@@ -1,10 +1,12 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "quad.h"
-#include "line.h"
 #include <stack>
 #include <sstream>
+
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <quad.h>
+#include <line.h>
+#include <vao.h>
 
 #define WIDTH 800.0f
 #define HEIGHT 800.0f

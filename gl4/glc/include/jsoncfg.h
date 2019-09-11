@@ -5,7 +5,7 @@
 #include <ctime>
 #include <memory>
 #include <rapidjson/fwd.h>
-#include "glm.h"
+#include <glm.h>
 
 namespace zxd
 {

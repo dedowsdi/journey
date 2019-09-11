@@ -1,4 +1,4 @@
-#include "nurb.h"
+#include <nurb.h>
 
 #include <iostream>
 

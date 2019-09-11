@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include "glm.h"
+#include <glm.h>
 
 namespace string_util 
 {

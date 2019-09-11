@@ -1,4 +1,4 @@
-#include "lsystem.h"
+#include <lsystem.h>
 #include <sstream>
 
 namespace zxd

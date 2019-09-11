@@ -1,4 +1,4 @@
-#include "mat_stack.h"
+#include <mat_stack.h>
 
 #include <stdexcept>
 

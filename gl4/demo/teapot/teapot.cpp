@@ -1,12 +1,12 @@
-#include "app.h"
+#include <app.h>
 
 #include <sstream>
 
 #include <glm/gtc/type_ptr.hpp>
-#include "bitmap_text.h"
-#include "geometry.h"
+#include <bitmap_text.h>
+#include <geometry.h>
 #include "teapot.h"
-#include "program.h"
+#include <program.h>
 
 #define WIDTH 800
 #define HEIGHT 800

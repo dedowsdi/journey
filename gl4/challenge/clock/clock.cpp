@@ -1,10 +1,10 @@
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common_program.h"
-#include "capsule2d.h"
+#include <common_program.h>
+#include <capsule2d.h>
 #include <chrono>
-#include "circle.h"
+#include <circle.h>
 
 #define WIDTH 800
 #define HEIGHT 800

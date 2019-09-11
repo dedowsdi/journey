@@ -4,8 +4,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/random.hpp>
-#include "bitmap_text.h"
-#include "program.h"
+#include <bitmap_text.h>
+#include <program.h>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
 

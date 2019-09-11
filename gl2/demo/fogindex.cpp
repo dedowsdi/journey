@@ -3,7 +3,7 @@
  *  this program draws 5 wireframe spheres, each at
  *  a different z distance from the eye, in linear fog.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

@@ -1,7 +1,7 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "debugger.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <debugger.h>
 #include <sstream>
 
 #define WIDTH 800.0

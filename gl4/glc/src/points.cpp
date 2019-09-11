@@ -1,7 +1,8 @@
-#include "points.h"
+#include <points.h>
 
-#include "common_program.h"
+#include <common_program.h>
 #include "glm/gtc/type_ptr.hpp"
+#include <vao.h>
 
 namespace zxd
 {

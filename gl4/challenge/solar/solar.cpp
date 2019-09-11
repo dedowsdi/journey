@@ -1,8 +1,8 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "sphere.h"
-#include "texutil.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <sphere.h>
+#include <texutil.h>
 
 #define WIDTH 800
 #define HEIGHT 800

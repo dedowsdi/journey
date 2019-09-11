@@ -47,7 +47,7 @@
  *  is typed in the window, the lines are rotated in opposite
  *  directions.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

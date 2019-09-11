@@ -1,9 +1,9 @@
-#include "common.h"
+#include <common.h>
 
 #include <fstream>
 #include <sstream>
 
-#include "glenumstring.h"
+#include <glenumstring.h>
 
 using namespace glm;
 

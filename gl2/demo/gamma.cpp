@@ -7,8 +7,8 @@
  * internal_format is sRGB, opengl will apply pow(color, gamma) to it to
  * cancel gomma correction.
  */
-#include "app.h"
-#include "program.h"
+#include <app.h>
+#include <program.h>
 
 namespace zxd {
 

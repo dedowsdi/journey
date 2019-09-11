@@ -1,10 +1,10 @@
-#include "app.h"
-#include "bitmap_text.h"
-#include "geometry.h"
-#include "points.h"
-#include "texmap_anim.h"
-#include "texutil.h"
-#include "common_program.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <geometry.h>
+#include <points.h>
+#include <texmap_anim.h>
+#include <texutil.h>
+#include <common_program.h>
 
 #include <list>
 #include <sstream>

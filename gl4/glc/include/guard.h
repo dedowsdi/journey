@@ -2,7 +2,7 @@
 #define GL4_GLC_GUARD_H
 
 #include <iostream>
-#include "gl.h"
+#include <gl.h>
 #include <glm/vec4.hpp>
 
 namespace zxd

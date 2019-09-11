@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "gl.h"
-#include "pingpong.h"
+#include <gl.h>
+#include <pingpong.h>
 
 namespace zxd
 {

@@ -1,14 +1,14 @@
-#include "app.h"
+#include <app.h>
 
 #include <sstream>
 
-#include "bitmap_text.h"
-#include "common.h"
-#include "light.h"
-#include "quad.h"
-#include "texutil.h"
-#include "stream_util.h"
-#include "objman.h"
+#include <bitmap_text.h>
+#include <common.h>
+#include <light.h>
+#include <quad.h>
+#include <texutil.h>
+#include <stream_util.h>
+#include <objman.h>
 
 namespace zxd
 {

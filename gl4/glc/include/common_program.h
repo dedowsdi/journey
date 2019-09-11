@@ -1,8 +1,8 @@
 #ifndef GL_GLC_COMMON_PROGRAM_H
 #define GL_GLC_COMMON_PROGRAM_H
 
-#include "program.h"
-#include "light.h"
+#include <program.h>
+#include <light.h>
 
 namespace zxd
 {

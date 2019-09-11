@@ -1,1 +1,1 @@
-#include "triangle_functor.h"
+#include <triangle_functor.h>

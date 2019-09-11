@@ -1,13 +1,13 @@
 #include <sstream>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "common_program.h"
-#include "dict_script.h"
-#include "super_shape_3d.h"
-#include "glenumstring.h"
-#include "common.h"
-#include "stream_util.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <dict_script.h>
+#include <super_shape_3d.h>
+#include <glenumstring.h>
+#include <common.h>
+#include <stream_util.h>
 
 #define RADIUS 1
 

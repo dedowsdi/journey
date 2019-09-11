@@ -1,13 +1,13 @@
 /*
  * https://www.myphysicslab.com/pendulum/double-pendulum-en.html
  */
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common_program.h"
-#include "circle.h"
-#include "quad.h"
-#include "debugger.h"
+#include <common_program.h>
+#include <circle.h>
+#include <quad.h>
+#include <debugger.h>
 
 #define WIDTH 800
 #define HEIGHT 800

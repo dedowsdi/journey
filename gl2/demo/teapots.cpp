@@ -3,7 +3,7 @@
  *  this program demonstrates lots of material properties.
  *  A single light source illuminates the objects.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 GLuint teapot_list;

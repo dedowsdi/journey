@@ -11,7 +11,7 @@
  *
  *  image width should be 2^m or 2^m + 2 if it has border
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 /*	create checkerboard texture	*/

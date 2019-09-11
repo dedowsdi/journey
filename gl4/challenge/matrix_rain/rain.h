@@ -4,7 +4,7 @@
 #include <vector>
 #include <list>
 #include <memory>
-#include "glm.h"
+#include <glm.h>
 
 namespace zxd
 {

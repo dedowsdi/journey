@@ -1,7 +1,7 @@
 #ifndef GL4_GLC_SHADER_H
 #define GL4_GLC_SHADER_H
 
-#include "gl.h"
+#include <gl.h>
 #include <list>
 #include <string>
 #include <memory>

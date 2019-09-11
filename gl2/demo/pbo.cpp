@@ -2,7 +2,7 @@
  *  pboimage.c
  *  drawing, copying and zooming pixel data stored in a buffer object
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

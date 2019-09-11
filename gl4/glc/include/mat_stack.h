@@ -2,8 +2,8 @@
 #define GL_GLC_MAT_STACK_H
 
 #include <stack>
-#include "gl.h"
-#include "glm.h"
+#include <gl.h>
+#include <glm.h>
 
 namespace zxd
 {

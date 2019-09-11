@@ -3,7 +3,7 @@
  * this program demonstrates smooth shading.
  * A smooth shaded polygon is drawn in a 2-D projection.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

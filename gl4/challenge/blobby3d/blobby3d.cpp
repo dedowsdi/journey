@@ -1,10 +1,12 @@
 #include <sstream>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "icosahedron.h"
-#include "common_program.h"
-#include "geometry_util.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <icosahedron.h>
+#include <common_program.h>
+#include <geometry_util.h>
+#include <vao.h>
+#include <buffer.h>
 
 namespace zxd
 {
@@ -120,13 +122,15 @@ void blobby3d_app::display()
   prg.use();
   glUniform1f(prg.ul_time, m_current_time);
   glDispatchCompute(ceil(num_vertices * 3 / 64.0), 1, 1);
-  // TODO avoid sync
-  // m_sphere.get_attrib_array(0)->read_buffer();
-  smooth(m_sphere);
+
+  auto smooth_normals = get_smooth_normal(m_sphere);
+  auto& buf = m_sphere.get_vao().get_attrib(1).buf;
+  auto& normals = buf->get_data<std::unique_ptr<vec3_array>>();
+  *normals = std::move(smooth_normals);
+  buf->update_array_gl_buffer(0, normals->bytes());
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  //prg.use();
   bprg.use();
   bprg.update_uniforms(mat4(1), v_mat, p_mat);
   bprg.update_lighting_uniforms(lights, lm, mtl, v_mat);

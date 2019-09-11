@@ -2,7 +2,7 @@
  *  this program demonstrates using glBindTexture() by
  *  creating and managing two textures.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

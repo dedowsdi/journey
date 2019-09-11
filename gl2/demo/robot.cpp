@@ -5,7 +5,7 @@
  * interaction:  pressing the s and e keys (shoulder and elbow)
  * alters the rotation of the robot arm.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

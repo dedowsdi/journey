@@ -5,14 +5,14 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "glc_utf8.h"
-#include "app.h"
-#include "bitmap_text.h"
-#include "freetype_text.h"
-#include "stream_util.h"
-#include "string_util.h"
+#include <glc_utf8.h>
+#include <app.h>
+#include <bitmap_text.h>
+#include <freetype_text.h>
+#include <stream_util.h>
+#include <string_util.h>
 #include "rain.h"
-#include "bitmap_text.h"
+#include <bitmap_text.h>
 
 namespace zxd
 {

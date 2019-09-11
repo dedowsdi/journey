@@ -1,6 +1,6 @@
 #ifndef GL_GLC_FILTER_H
 #define GL_GLC_FILTER_H
-#include "gl.h"
+#include <gl.h>
 #include <memory>
 
 namespace zxd

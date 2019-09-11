@@ -1,15 +1,15 @@
 #include <sstream>
 #include <memory>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "circle.h"
-#include "common_program.h"
-#include "debugger.h"
-#include "quad.h"
-#include "rose.h"
-#include "lissajous.h"
-#include "fractal_spiral.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <circle.h>
+#include <common_program.h>
+#include <debugger.h>
+#include <quad.h>
+#include <rose.h>
+#include <lissajous.h>
+#include <fractal_spiral.h>
 
 namespace zxd
 {

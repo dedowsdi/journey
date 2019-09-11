@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/noise.hpp>
 
-#include "color.h"
+#include <color.h>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*)0 + bytes)
 

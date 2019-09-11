@@ -1,5 +1,5 @@
 #ifndef REACTION_DIFFUISON_PACMAN_H
-#include "circle.h"
+#include <circle.h>
 
 namespace zxd
 {

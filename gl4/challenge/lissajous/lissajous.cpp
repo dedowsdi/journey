@@ -1,9 +1,9 @@
-#include "app.h"
-#include "bitmap_text.h"
+#include <app.h>
+#include <bitmap_text.h>
 #include <sstream>
-#include "common_program.h"
-#include "lissajous.h"
-#include "debugger.h"
+#include <common_program.h>
+#include <lissajous.h>
+#include <debugger.h>
 
 #define WIDTH 720
 #define HEIGHT 720

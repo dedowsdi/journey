@@ -1,4 +1,4 @@
-#include "pingpong.h"
+#include <pingpong.h>
 
 #include <stdexcept>
 

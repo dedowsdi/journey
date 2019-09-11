@@ -5,8 +5,8 @@
 #include <sstream>
 #include <algorithm>
 
-#include "common.h"
-#include "glm.h"
+#include <common.h>
+#include <glm.h>
 #include <stream_util.h>
 
 using namespace glm;

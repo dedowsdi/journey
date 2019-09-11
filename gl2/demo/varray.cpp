@@ -7,7 +7,7 @@
  *
  *  if you enable some array, but don't use it, you will be screwed!
  */
-#include "app.h"
+#include <app.h>
 
 #define POINTER 1
 #define INTERLEAVED 2

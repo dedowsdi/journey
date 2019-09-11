@@ -1,6 +1,6 @@
 #ifndef GL_GLC_CAPSULE2_H
 #define GL_GLC_CAPSULE2_H
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

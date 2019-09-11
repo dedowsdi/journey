@@ -1,4 +1,4 @@
-#include "glmath.h"
+#include <glmath.h>
 
 #include <stdexcept>
 #include <iostream>

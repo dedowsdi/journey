@@ -3,8 +3,8 @@
 
 // http://paulbourke.net/geometry/teardrop/   θ, φ swapped
 
-#include "geometry.h"
-#include "glm.h"
+#include <geometry.h>
+#include <glm.h>
 
 namespace zxd
 {

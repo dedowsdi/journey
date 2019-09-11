@@ -3,7 +3,7 @@
  *  on a scene with perspective projection, using the special
  *  routines acc_frustum() and acc_perspective().
  */
-#include "app.h"
+#include <app.h>
 #include "jitter.h"
 
 namespace zxd {

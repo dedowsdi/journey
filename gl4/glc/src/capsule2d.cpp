@@ -1,4 +1,4 @@
-#include "capsule2d.h"
+#include <capsule2d.h>
 
 #include <glm/common.hpp>
 

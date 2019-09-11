@@ -1,4 +1,4 @@
-#include "program.h"
+#include <program.h>
 
 #include <iostream>
 #include <algorithm>
@@ -6,31 +6,14 @@
 #include <sstream>
 #include <memory>
 
-#include "shader.h"
-#include "glenumstring.h"
-#include "common.h"
-#include "stream_util.h"
-#include "string_util.h"
+#include <shader.h>
+#include <glenumstring.h>
+#include <common.h>
+#include <stream_util.h>
+#include <string_util.h>
 
 namespace zxd
 {
-
-//--------------------------------------------------------------------
-void add_shader_content(string_vector& v, const std::string& content)
-{
-  // commment leading version if current strings is not empty
-  if (!v.empty() && v.front().size() > 0)
-  {
-    std::string version = "#version";
-    if (content.size() > version.size() &&
-        content.substr(0, version.size()) == version)
-    {
-      v.push_back("//");
-    }
-  }
-
-  v.push_back(content);
-}
 
 //--------------------------------------------------------------------
 void program::init()
@@ -52,7 +35,6 @@ void program::reload()
   init();
 }
 
-
 //--------------------------------------------------------------------
 void program::bind_attrib_location(GLuint index, const std::string& name)
 {
@@ -68,6 +50,7 @@ void program::link()
   if (!get_iv(GL_LINK_STATUS))
   {
     std::cerr << get_info_log() << std::endl;
+    print_shader_sources();
   }
 
   std::cout << get_print_name() <<  " link ";
@@ -195,30 +178,18 @@ std::string program::get_info_log() const
 }
 
 //--------------------------------------------------------------------
-void program::print_shader_sources()
+void program::print_shader_sources() const
 {
-  constexpr GLsizei max_shaders = 16;
-  std::array<GLuint, max_shaders> shaders;
-  GLsizei num_shaders;
-  glGetAttachedShaders(_object, max_shaders, &num_shaders, &shaders.front());
-
-  std::cout << "============================================================"
-            << std::endl;
-  std::cout << "program shaders : " << std::endl;
-  for (int i = 0; i < num_shaders; ++i)
+  for (const auto& s : _shaders)
   {
-    GLint shader_type;
-    glGetShaderiv(shaders[i], GL_SHADER_TYPE, &shader_type);
-    std::cout << gl_shader_type_to_string(shader_type) << "\n"
-              << "******************************\n" ;
-    GLint shader_length;
-    glGetShaderiv(shaders[i], GL_SHADER_SOURCE_LENGTH, &shader_length);
-    auto source = std::make_unique<GLchar>(shader_length+1);
-    glGetShaderSource(shaders[i], shader_length+1, 0, source.get());
-    std::cout << source.get() << std::endl;
+    std::cout << "============================================================"
+              << std::endl;
+    std::cout << "program shaders : "
+              << gl_shader_type_to_string(s.second->get_iv(GL_SHADER_TYPE))
+              << std::endl
+              << std::endl;
+    std::cout << s.second->get_source() << std::endl;
   }
-  std::cout << "============================================================"
-            << std::endl;
 }
 
 //--------------------------------------------------------------------
@@ -340,7 +311,7 @@ void program::uniform4i(
 void program::create_program() { _object = glCreateProgram(); }
 
 //--------------------------------------------------------------------
-std::string program::get_print_name()
+std::string program::get_print_name() const
 {
   std::stringstream ss;
   ss << _object << "(" << _name << ")";

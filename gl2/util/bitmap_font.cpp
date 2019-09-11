@@ -4,17 +4,16 @@
 #include <fstream>
 #include <iomanip>
 
-#include "glad/glad.h"
-#include "app.h"
-#include "freetype_text.h"
-#include "quad.h"
-#include "texutil.h"
-#include "bitmap_text.h"
-#include "string_util.h"
-#include "program.h"
-#include "common_program.h"
-#include "stream_util.h"
-#include "glc_utf8.h"
+#include <app.h>
+#include <freetype_text.h>
+#include <quad.h>
+#include <texutil.h>
+#include <bitmap_text.h>
+#include <string_util.h>
+#include <program.h>
+#include <common_program.h>
+#include <stream_util.h>
+#include <glc_utf8.h>
 
 namespace zxd {
 

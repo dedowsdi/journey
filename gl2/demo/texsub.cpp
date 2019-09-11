@@ -3,7 +3,7 @@
  *  two rectangles.  this program clamps the texture, if
  *  the texture coordinates fall outside 0.0 and 1.0.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

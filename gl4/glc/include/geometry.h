@@ -1,13 +1,17 @@
 #ifndef GL4_GLC_GEOMETRY_H
 #define GL4_GLC_GEOMETRY_H
 
-#include <vao.h>
-#include <buffer.h>
+#include <map>
+#include <memory>
+
 #include <primitive_set.h>
 #include <array.h>
 
 namespace zxd
 {
+
+class vao;
+class buffer;
 
 using primitive_sets = std::vector<std::shared_ptr<primitive_set>>;
 
@@ -15,7 +19,7 @@ class geometry_base
 {
 public:
 
-  virtual ~geometry_base(){}
+  virtual ~geometry_base() = default;
 
   void draw();
   void set_num_instance(GLuint count);
@@ -28,13 +32,7 @@ public:
   bool is_inited() { return static_cast<bool>(_vao);}
 
   template <typename T>
-  T& make_element()
-  {
-    _element_buffer = std::make_shared<buffer>();
-    auto elements = std::make_unique<T>();
-    _element_buffer->set_data(std::move(elements));
-    return *_element_buffer->get_data<std::unique_ptr<T>>();
-  }
+  T& make_element();
 
   const array* get_attrib_array(GLuint index) const;
   const vec2_array* get_attrib_vec2_array(GLuint index) const;

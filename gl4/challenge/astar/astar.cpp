@@ -6,17 +6,19 @@
  * admissible (or optimal) if we do not use a closed set. If a closed set is
  * used, then h must also be monotonic (or consistent) for A* to be optimal.
  */
-#include "app.h"
-#include "bitmap_text.h"
-#include <sstream>
-#include "common_program.h"
 #include <set>
 #include <queue>
 #include <map>
-#include <cfloat>
-#include "quad.h"
-#include "string_util.h"
 #include <algorithm>
+#include <cfloat>
+#include <sstream>
+
+#include <app.h>
+#include <bitmap_text.h>
+#include <common_program.h>
+#include <quad.h>
+#include <string_util.h>
+#include <vao.h>
 
 #define WIDTH 800
 #define HEIGHT 800

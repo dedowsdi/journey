@@ -8,7 +8,7 @@
  *  or point polygon mode, and enable GL_POLYGON_OFFSET_FILL,
  *  GL_POLYGON_OFFSET_LINE or GL_POLYGON_OFFSET_POINT
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

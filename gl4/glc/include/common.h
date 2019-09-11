@@ -1,6 +1,6 @@
 #ifndef GL_GLC_COMMON_H
 #define GL_GLC_COMMON_H
-#include "gl.h"
+#include <gl.h>
 #ifndef GL_VERSION_3_0
 //#include <GL/glu.h>
 #endif
@@ -8,7 +8,7 @@
 #include <vector>
 #include <iterator>
 
-#include "glm.h"
+#include <glm.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #ifndef BUFFER_OFFSET

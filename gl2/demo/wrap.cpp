@@ -9,7 +9,7 @@
  *  if running this program on open_g_l 1.0, texture objects are
  *  not used.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

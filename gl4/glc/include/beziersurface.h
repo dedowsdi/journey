@@ -1,6 +1,6 @@
 #ifndef GL_GLC_BEZIERSURFACE_H
 #define GL_GLC_BEZIERSURFACE_H
-#include "geometry.h"
+#include <geometry.h>
 
 namespace zxd
 {

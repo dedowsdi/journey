@@ -2,8 +2,8 @@
 #define GL_GLC_TRIANGLE_FUNCTOR_H
 
 // changed from osg
-#include "primitive_set.h"
-#include "glm.h"
+#include <primitive_set.h>
+#include <glm.h>
 
 namespace zxd
 {

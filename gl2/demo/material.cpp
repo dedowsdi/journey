@@ -4,7 +4,7 @@
  * several objects are drawn using different material characteristics.
  * A single light source illuminates the objects.
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

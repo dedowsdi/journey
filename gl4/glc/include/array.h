@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "glm.h"
-#include "mixinvector.h"
+#include <glm.h>
+#include <mixinvector.h>
 #include <glm_traits.h>
 
 #ifndef BUFFER_OFFSET
@@ -64,7 +64,9 @@ public:
   };
 };
 
+using char_array = template_array<GLchar>;
 using uint_array = template_array<uint>;
+using ushort_array = template_array<ushort>;
 using uvec1_array = template_array<uvec1>;
 using vec1_array = template_array<vec1>;
 using float_array = template_array<float>;

@@ -1,4 +1,4 @@
-#include "app.h"
+#include <app.h>
 
 #define draw_one_line(x1, y1, x2, y2) \
   glBegin(GL_LINES);                  \

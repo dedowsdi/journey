@@ -1,4 +1,4 @@
-#include "buffer.h"
+#include <buffer.h>
 
 #include <iostream>
 
@@ -33,6 +33,7 @@ void buffer::bind(GLenum target)
 //--------------------------------------------------------------------
 void buffer::buffer_data(GLsizei size, const GLvoid* data, GLenum usage)
 {
+  bind(_target);
   glBufferData(_target, size, data, usage);
   _size = size;
   _usage = usage;
@@ -48,8 +49,23 @@ void buffer::buffer_data(std::unique_ptr<array> data, GLenum usage)
 }
 
 //--------------------------------------------------------------------
+void buffer::update_array_gl_buffer(GLuint offset, GLuint size)
+{
+  auto& data = get_data<std::unique_ptr<array>>();
+  if (offset + size > _size)
+  {
+    buffer_data(std::move(data), _usage);
+  }
+  else
+  {
+    buffer_sub_data(offset, size, data->data());
+  }
+}
+
+//--------------------------------------------------------------------
 void buffer::buffer_sub_data(GLint offset, GLsizei size, const GLvoid* data)
 {
+  bind(_target);
   glBufferSubData(_target, offset, size, data);
 }
 

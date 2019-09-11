@@ -1,7 +1,7 @@
 #ifndef GL4_GLC_COLOR_H
 #define GL4_GLC_COLOR_H
 
-#include "glm.h"
+#include <glm.h>
 
 namespace zxd
 {

@@ -7,7 +7,7 @@
 #include "glad/glad.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "common.h"
+#include <common.h>
 
 // from big endian to small endian
 static unsigned int byte_to_u_int32(const unsigned char buf[4]) {

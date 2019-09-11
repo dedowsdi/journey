@@ -3,7 +3,7 @@
  *  determine the minimum and maximum values of a group of pixels.
  *  this demonstrates use of the glMinmax() call.
  */
-#include "app.h"
+#include <app.h>
 #include "readimage.cpp"
 extern GLubyte* read_image(const char*, GLsizei*, GLsizei*);
 

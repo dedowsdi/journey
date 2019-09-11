@@ -4,13 +4,13 @@
 #include <iomanip>
 #include <algorithm>
 
-#include "app.h"
-#include "bitmap_text.h"
-#include "teardrop.h"
-#include "common_program.h"
-#include "stream_util.h"
-#include "geometry_test.h"
-#include "pingpong.h"
+#include <app.h>
+#include <bitmap_text.h>
+#include <teardrop.h>
+#include <common_program.h>
+#include <stream_util.h>
+#include <geometry_test.h>
+#include <pingpong.h>
 
 #define WIDTH 720
 #define HEIGHT 720

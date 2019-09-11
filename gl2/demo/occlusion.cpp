@@ -7,7 +7,7 @@
  * nothing drawn, you can throw away your renderable.
  *
  */
-#include "app.h"
+#include <app.h>
 
 namespace zxd {
 

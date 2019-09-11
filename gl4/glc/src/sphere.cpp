@@ -1,10 +1,10 @@
-#include "sphere.h"
+#include <sphere.h>
 
 #include <memory>
 #include <algorithm>
 
 #include <glm/geometric.hpp>
-#include "geometry_util.h"
+#include <geometry_util.h>
 
 namespace zxd
 {

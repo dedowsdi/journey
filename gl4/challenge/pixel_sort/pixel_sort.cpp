@@ -2,13 +2,13 @@
 #include <sstream>
 #include <numeric>
 
-#include "app.h"
+#include <app.h>
 #include <color.h>
-#include "bitmap_text.h"
-#include "texutil.h"
-#include "quad.h"
-#include "common_program.h"
-#include "functor.h"
+#include <bitmap_text.h>
+#include <texutil.h>
+#include <quad.h>
+#include <common_program.h>
+#include <functor.h>
 
 
 #define MAX_WIDTH 1280
