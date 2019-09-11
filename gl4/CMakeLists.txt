@@ -53,6 +53,10 @@ FIND_PACKAGE(Freetype REQUIRED)
 PKG_CHECK_MODULES(GLFW3 REQUIRED glfw3)
 pkg_get_variable(GLFW3_REQUIRES glfw3 Requires.private)
 
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /opt/Qt5.7.0/5.7/gcc_64)
+find_package(Qt5Widgets CONFIG REQUIRED)
+
+
 findLibraryRequird(FIP_LIBS freeimageplus)
 findPathRequird(FIP_INCLUDE_DIR FreeImagePlus.h)
 findPathRequird(RAPIDJSON_INCLUDE_DIR rapidjson.h rapidjson)
