@@ -61,12 +61,12 @@ public:
   GLuint get_object() const { return _object; }
 
   const vertex_attrib& get_attrib(GLuint index) const;
-  vertex_attrib& get_attrib(GLuint index);
 
   using attributes = std::map<GLuint, vertex_attrib>;
 
 private:
 
+  vertex_attrib& get_attrib_pri(GLuint index);
 
   GLuint _object;
   attributes _attribs;

@@ -75,7 +75,7 @@ void vao::bind()
 //--------------------------------------------------------------------
 void vao::enable_attrib_array(GLuint idx)
 {
-  auto& attrib = get_attrib(idx);
+  auto& attrib = get_attrib_pri(idx);
   attrib.enabled = GL_TRUE;
   glEnableVertexAttribArray(idx);
 }
@@ -83,7 +83,7 @@ void vao::enable_attrib_array(GLuint idx)
 //--------------------------------------------------------------------
 void vao::disable_attrib_array(GLuint idx)
 {
-  auto& attrib = get_attrib(idx);
+  auto& attrib = get_attrib_pri(idx);
   attrib.enabled = GL_FALSE;
   glDisableVertexAttribArray(idx);
 }
@@ -120,7 +120,7 @@ const vertex_attrib& vao::get_attrib(GLuint index) const
 }
 
 //--------------------------------------------------------------------
-vertex_attrib& vao::get_attrib(GLuint index)
+vertex_attrib& vao::get_attrib_pri(GLuint index)
 {
   auto iter = _attribs.find(index);
   if (iter == _attribs.end())
