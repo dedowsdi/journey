@@ -1,6 +1,5 @@
 #!/bin/bash
-vim=nvim
 
-#export CC=/usr/bin/clang
-#export CXX=/usr/bin/clang++
-$vim -S "./.vim/init.vim"
+export OSG_LIBRARY_PATH='/usr/local/osg/gl2/lib/osgPlugins-3.7.0'
+export OSG_SHADER_PIPELINE=OFF
+vim

@@ -15,4 +15,9 @@ set(COMMON_SRCS
 )
 
 add_library(common SHARED ${COMMON_SRCS})
+target_include_directories(common
+    PUBLIC
+    include
+    )
+
 #target_link_libraries(common ${EXTRA_LIBS})

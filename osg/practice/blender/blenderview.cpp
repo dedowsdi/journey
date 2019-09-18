@@ -99,7 +99,7 @@ BlenderView::BlenderView(osg::GraphicsContext* gc, ViewType type)
   mMiniAxes->setLabel(true);
   mMiniAxes->setLineWidth(1.5f);
 
-  mMiniAxes->bindInverseView(_camera);
+  mMiniAxes->bind(_camera);
 
   mHudCamera->addChild(mMiniAxes);
   mHudCamera->addChild(textLeaf);

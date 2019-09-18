@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>32</x>
-      <y>96</y>
+      <x>16</x>
+      <y>112</y>
       <w>168</w>
       <h>40</h>
     </coordinates>
@@ -17,8 +17,8 @@ void playAnimation()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>32</x>
-      <y>48</y>
+      <x>16</x>
+      <y>64</y>
       <w>168</w>
       <h>24</h>
     </coordinates>
@@ -28,8 +28,8 @@ void playAnimation()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>32</x>
-      <y>0</y>
+      <x>16</x>
+      <y>16</y>
       <w>168</w>
       <h>24</h>
     </coordinates>
@@ -40,8 +40,8 @@ void playAnimation()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>104</x>
-      <y>64</y>
+      <x>88</x>
+      <y>80</y>
       <w>24</w>
       <h>48</h>
     </coordinates>
@@ -51,8 +51,8 @@ void playAnimation()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>104</x>
-      <y>16</y>
+      <x>88</x>
+      <y>32</y>
       <w>24</w>
       <h>48</h>
     </coordinates>
@@ -62,35 +62,40 @@ void playAnimation()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>72</x>
+      <x>16</x>
       <y>200</y>
-      <w>80</w>
-      <h>24</h>
+      <w>136</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>Animation
-</panel_attributes>
+--
+update(time, priority)
+--
+_playMode</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>104</x>
-      <y>128</y>
+      <x>88</x>
+      <y>144</y>
       <w>24</w>
-      <h>88</h>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>384</x>
-      <y>152</y>
+      <x>400</x>
+      <y>168</y>
       <w>216</w>
-      <h>48</h>
+      <h>88</h>
     </coordinates>
     <panel_attributes>Channel
+--
+/update(time, weight, priority)/
 --
 _targetname
 _name</panel_attributes>
@@ -100,24 +105,25 @@ _name</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>704</x>
-      <y>320</y>
-      <w>80</w>
-      <h>24</h>
+      <y>328</y>
+      <w>160</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>Sampler
-</panel_attributes>
+--
+/getKeyfrmameContainer()/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>424</x>
-      <y>400</y>
+      <x>488</x>
+      <y>424</y>
       <w>192</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>&lt;KeyFrameType&gt;
-KeyFrameContainer
+TemplateKeyFrameContainer
 
 </panel_attributes>
     <additional_attributes/>
@@ -125,13 +131,15 @@ KeyFrameContainer
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>264</x>
-      <y>472</y>
+      <x>248</x>
+      <y>488</y>
       <w>112</w>
-      <h>32</h>
+      <h>40</h>
     </coordinates>
-    <panel_attributes>&lt;KeyFrameType&gt;
-KeyFrame
+    <panel_attributes>KeyFrame
+--
+_time
+
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -139,29 +147,40 @@ KeyFrame
     <id>Relation</id>
     <coordinates>
       <x>144</x>
-      <y>168</y>
-      <w>256</w>
-      <h>56</h>
+      <y>184</y>
+      <w>272</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;50.0;300.0;10.0</additional_attributes>
+    <additional_attributes>10.0;30.0;320.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>496</x>
-      <y>256</y>
+      <x>488</x>
+      <y>304</y>
       <w>24</w>
-      <h>64</h>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>496</x>
-      <y>360</y>
+      <x>560</x>
+      <y>392</y>
+      <w>24</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>552</x>
+      <y>448</y>
       <w>24</w>
       <h>56</h>
     </coordinates>
@@ -169,21 +188,10 @@ KeyFrame
     <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>488</x>
-      <y>424</y>
-      <w>24</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
-  </element>
-  <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>304</y>
+      <x>376</x>
+      <y>336</y>
       <w>256</w>
       <h>64</h>
     </coordinates>
@@ -196,8 +204,8 @@ getValueAt(time, result)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>224</y>
+      <x>400</x>
+      <y>272</y>
       <w>216</w>
       <h>40</h>
     </coordinates>
@@ -208,30 +216,30 @@ TemplateChannel</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>512</x>
-      <y>192</y>
+      <x>528</x>
+      <y>248</y>
       <w>24</w>
-      <h>48</h>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>640</x>
-      <y>320</y>
-      <w>80</w>
-      <h>24</h>
+      <x>624</x>
+      <y>344</y>
+      <w>96</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+    <additional_attributes>10.0;20.0;100.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>24</x>
-      <y>472</y>
+      <x>8</x>
+      <y>488</y>
       <w>216</w>
       <h>24</h>
     </coordinates>
@@ -241,19 +249,21 @@ TemplateChannel</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>24</x>
+      <x>16</x>
       <y>432</y>
       <w>216</w>
-      <h>24</h>
+      <h>48</h>
     </coordinates>
-    <panel_attributes>TemplateLinearInterpolator</panel_attributes>
+    <panel_attributes>TemplateLinearInterpolator
+--
+getValue(keyframes, time, result)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>64</x>
-      <y>312</y>
+      <x>40</x>
+      <y>368</y>
       <w>216</w>
       <h>40</h>
     </coordinates>
@@ -265,65 +275,67 @@ TemplateInterpolatorBase
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>344</y>
-      <w>72</w>
+      <x>112</x>
+      <y>400</y>
+      <w>56</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>128</x>
+      <y>400</y>
+      <w>40</w>
       <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>70.0;10.0;10.0;110.0</additional_attributes>
+    <additional_attributes>30.0;10.0;10.0;110.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>144</x>
-      <y>344</y>
-      <w>48</w>
-      <h>144</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>40.0;10.0;10.0;160.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>272</x>
-      <y>320</y>
-      <w>136</w>
-      <h>24</h>
+      <x>248</x>
+      <y>352</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>160.0;10.0;10.0;40.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>448</x>
-      <y>472</y>
+      <x>512</x>
+      <y>488</y>
       <w>136</w>
-      <h>40</h>
+      <h>56</h>
     </coordinates>
     <panel_attributes>&lt;KeyFrameType&gt;
 TemplateKeyFrame
+--
+_value
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>368</x>
-      <y>480</y>
-      <w>96</w>
+      <x>352</x>
+      <y>496</y>
+      <w>176</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>200.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>24</x>
-      <y>512</y>
+      <x>8</x>
+      <y>528</y>
       <w>216</w>
       <h>24</h>
     </coordinates>
@@ -333,41 +345,43 @@ TemplateKeyFrame
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>344</y>
-      <w>32</w>
-      <h>184</h>
+      <x>144</x>
+      <y>400</y>
+      <w>24</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>20.0;10.0;10.0;210.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>256</x>
-      <y>408</y>
-      <w>128</w>
-      <h>24</h>
+      <x>240</x>
+      <y>424</y>
+      <w>184</w>
+      <h>40</h>
     </coordinates>
-    <panel_attributes>KeyFrameContainer</panel_attributes>
+    <panel_attributes>KeyFrameContainer
+--
+/linearInterpolationDeduplicate()/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>376</x>
-      <y>408</y>
-      <w>64</w>
+      <x>416</x>
+      <y>432</y>
+      <w>88</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>96</x>
-      <y>640</y>
+      <x>80</x>
+      <y>656</y>
       <w>240</w>
       <h>24</h>
     </coordinates>
@@ -378,8 +392,8 @@ TemplateKeyFrame
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>96</x>
-      <y>576</y>
+      <x>80</x>
+      <y>592</y>
       <w>240</w>
       <h>24</h>
     </coordinates>
@@ -390,8 +404,8 @@ TemplateKeyFrame
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>96</x>
-      <y>776</y>
+      <x>80</x>
+      <y>792</y>
       <w>240</w>
       <h>24</h>
     </coordinates>
@@ -401,8 +415,8 @@ TemplateKeyFrame
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>96</x>
-      <y>704</y>
+      <x>80</x>
+      <y>720</y>
       <w>240</w>
       <h>24</h>
     </coordinates>
@@ -412,8 +426,8 @@ TemplateKeyFrame
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>184</x>
-      <y>592</y>
+      <x>168</x>
+      <y>608</y>
       <w>24</w>
       <h>64</h>
     </coordinates>
@@ -423,8 +437,8 @@ TemplateKeyFrame
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>184</x>
-      <y>656</y>
+      <x>168</x>
+      <y>672</y>
       <w>24</w>
       <h>64</h>
     </coordinates>
@@ -434,8 +448,8 @@ TemplateKeyFrame
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>184</x>
-      <y>720</y>
+      <x>168</x>
+      <y>736</y>
       <w>24</w>
       <h>72</h>
     </coordinates>
@@ -445,31 +459,36 @@ TemplateKeyFrame
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>240</x>
-      <y>8</y>
+      <x>224</x>
+      <y>24</y>
       <w>176</w>
-      <h>24</h>
+      <h>48</h>
     </coordinates>
-    <panel_attributes>AnimationUpdateCallbackBase</panel_attributes>
+    <panel_attributes>AnimationUpdateCallbackBase
+--
+/link(channel)/
+/link(animation)/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>248</x>
-      <y>64</y>
+      <x>224</x>
+      <y>96</y>
       <w>168</w>
-      <h>32</h>
+      <h>56</h>
     </coordinates>
     <panel_attributes>&lt;CallbackType&gt;
-AnimationUpdateCallback</panel_attributes>
+AnimationUpdateCallback
+--
+getName()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>0</y>
+      <x>464</x>
+      <y>16</y>
       <w>168</w>
       <h>32</h>
     </coordinates>
@@ -480,30 +499,30 @@ UpdateMatrixTransform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>320</x>
-      <y>24</y>
+      <x>296</x>
+      <y>64</y>
       <w>24</w>
-      <h>56</h>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>408</x>
-      <y>8</y>
-      <w>88</w>
-      <h>88</h>
+      <x>384</x>
+      <y>24</y>
+      <w>96</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;90.0;90.0;10.0</additional_attributes>
+    <additional_attributes>10.0;110.0;100.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>40</y>
+      <x>464</x>
+      <y>56</y>
       <w>168</w>
       <h>32</h>
     </coordinates>
@@ -514,8 +533,8 @@ UpdateMaterial</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>80</y>
+      <x>464</x>
+      <y>96</y>
       <w>168</w>
       <h>32</h>
     </coordinates>
@@ -526,52 +545,59 @@ UpdateUniform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>408</x>
-      <y>48</y>
-      <w>88</w>
+      <x>384</x>
+      <y>64</y>
+      <w>96</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;100.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>384</x>
+      <y>104</y>
+      <w>96</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>664</x>
+      <y>24</y>
+      <w>168</w>
       <h>48</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;40.0;90.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>408</x>
-      <y>72</y>
-      <w>88</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;90.0;30.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>680</x>
-      <y>8</y>
-      <w>168</w>
-      <h>24</h>
-    </coordinates>
-    <panel_attributes>StackedTransform</panel_attributes>
+    <panel_attributes>StackedTransform
+--
+update(t)
+getMatrix()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>680</x>
-      <y>120</y>
+      <x>664</x>
+      <y>96</y>
       <w>168</w>
-      <h>24</h>
+      <h>72</h>
     </coordinates>
-    <panel_attributes>StackedTransformElement</panel_attributes>
+    <panel_attributes>StackedTransformElement
+--
+/applyToMatrix()/
+/getAsMatrix()/
+/udpate(t)/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>640</x>
-      <y>8</y>
+      <x>624</x>
+      <y>24</y>
       <w>56</w>
       <h>24</h>
     </coordinates>
@@ -581,37 +607,285 @@ UpdateUniform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>760</x>
-      <y>24</y>
+      <x>744</x>
+      <y>64</y>
       <w>24</w>
-      <h>112</h>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>312</x>
-      <y>88</y>
-      <w>136</w>
-      <h>80</h>
+      <x>608</x>
+      <y>176</y>
+      <w>336</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
-m1=
-m2=target</panel_attributes>
-    <additional_attributes>150.0;80.0;10.0;10.0</additional_attributes>
+link</panel_attributes>
+    <additional_attributes>10.0;30.0;400.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>592</x>
-      <y>128</y>
+      <x>280</x>
+      <y>560</y>
+      <w>104</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;60.0;110.0;60.0;110.0;10.0;10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>728</x>
+      <y>424</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>MixinVector</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>432</y>
+      <w>72</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>936</x>
+      <y>32</y>
       <w>104</w>
       <h>56</h>
     </coordinates>
-    <panel_attributes>lt=-&gt;
-m2=data user</panel_attributes>
-    <additional_attributes>10.0;50.0;110.0;10.0</additional_attributes>
+    <panel_attributes>Target
+--
+_weight
+_priorityWeight</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>928</x>
+      <y>112</y>
+      <w>160</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>&lt;TargetType&gt;
+TemplateTarget
+--
+udpate(weight, val, priority)
+lerp(t, a, b)
+--
+_target</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>976</x>
+      <y>80</y>
+      <w>24</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>824</x>
+      <y>144</y>
+      <w>120</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>880</x>
+      <y>240</y>
+      <w>432</w>
+      <h>256</h>
+    </coordinates>
+    <panel_attributes>The overall animation is control by BasicAnimationManager, it's derived
+from NodeCallback, it's usually added to root as update callback. This
+manager contains a list animation layer, each layer consists of a priority
+and an animation. Animation is updated from high priority to low.
+
+AnimatinUpdateCallback is used to use the animation result, it uses CRTP
+pattern, the T is usually Callback and it's derived classes.
+
+AnimationManagerBase use a LinkVisitor to link animation and 
+AnimationUpdateCallback, you must specify animation channel targetname
+to AnimationUpdateCallback name to link them. 
+
+Animation consists of channels, each channel is linked to a target, eg:
+TemplateChannel&lt;Vec3LinearSampler&gt; -link- TemplateTarget&lt;Vec3&gt;. The
+target is usualy an element to be used by the AnimationUpdateCallback.
+The element name must be the same as channel name.
+Channel also contains a sampler.
+
+A sampler consists of keyframes and a interpolator.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>176</x>
+      <y>216</y>
+      <w>216</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>AnimationManagerBase
+--
+link(subgraph)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>144</x>
+      <y>216</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>40.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>128</x>
+      <y>296</y>
+      <w>224</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>BasicAnimationManager
+--
+playAnimation(anim, priority, weight)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>264</y>
+      <w>24</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>176</x>
+      <y>32</y>
+      <w>64</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>60.0;230.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>960</x>
+      <y>656</y>
+      <w>216</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>ControlPoints
+--
+getMatrix(matrix)
+getInverse(matrix)
+--
+
+_position
+_rotation
+_scale
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>712</x>
+      <y>656</y>
+      <w>144</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>AnimationPath
+--
+getMatrix(t, matrix)
+getInverse(t, matrix)
+getInterpolatedControlPoint(t, cp)
+--
+_loopMode
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>848</x>
+      <y>680</y>
+      <w>128</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>488</x>
+      <y>664</y>
+      <w>144</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>AnimationPathCallback
+--
+_pivotPoint
+_useInverseMatrix</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>672</y>
+      <w>104</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>264</x>
+      <y>608</y>
+      <w>240</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;280.0;90.0</additional_attributes>
   </element>
 </diagram>

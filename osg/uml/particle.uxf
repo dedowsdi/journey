@@ -465,7 +465,7 @@ emitParticles(dt)</panel_attributes>
     <coordinates>
       <x>99</x>
       <y>63</y>
-      <w>387</w>
+      <w>396</w>
       <h>126</h>
     </coordinates>
     <panel_attributes>Adding only the osg::Geode node to an osg::Transform will

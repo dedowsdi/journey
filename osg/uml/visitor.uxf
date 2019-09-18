@@ -5,7 +5,7 @@
     <id>UMLClass</id>
     <coordinates>
       <x>930</x>
-      <y>50</y>
+      <y>160</y>
       <w>330</w>
       <h>240</h>
     </coordinates>
@@ -22,6 +22,7 @@ apply(drawable)
 _visitorType
 _traversalMode
 _traversalMask
+_nodeMaskOverride
 _nodePath
 </panel_attributes>
     <additional_attributes/>
@@ -29,8 +30,8 @@ _nodePath
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>930</x>
-      <y>380</y>
+      <x>520</x>
+      <y>290</y>
       <w>180</w>
       <h>210</h>
     </coordinates>
@@ -38,26 +39,31 @@ _nodePath
 --
 accept(nv)
 asend(nv)
-traverse(nv)</panel_attributes>
+traverse(nv)
+--
+_updateCallback
+_eventCallback
+_cullCallback</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>60</x>
-      <y>0</y>
+      <x>0</x>
+      <y>10</y>
       <w>480</w>
-      <h>360</h>
+      <h>310</h>
     </coordinates>
     <panel_attributes>Node accept visitor:
   check mask,
   visitor push node path
-  visitor apply node
-    traverse node
-      node traverse
-        loop children to accept
-       node ascend
-         loop parents to accept
+      visitor apply node
+          traverse node
+        	     if traverse parent
+        	        node ascend, loop parents to accept
+              else
+                 nodetraverse, loop children to accept
+              
   visitor pop node path
 
 Parent node always before child node in NodePath, no matter
@@ -70,22 +76,22 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1000</x>
-      <y>280</y>
-      <w>70</w>
-      <h>120</h>
+      <x>610</x>
+      <y>250</y>
+      <w>340</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 accept</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>320.0;10.0;10.0;40.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>590</y>
-      <w>280</w>
-      <h>210</h>
+      <x>160</x>
+      <y>650</y>
+      <w>200</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>Callback
 --
@@ -97,24 +103,242 @@ traverse(object, data)
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>610</x>
-      <y>510</y>
-      <w>250</w>
-      <h>240</h>
+      <x>220</x>
+      <y>610</y>
+      <w>90</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0;230.0;10.0;230.0;220.0;150.0;220.0</additional_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0;70.0;10.0;70.0;40.0</additional_attributes>
   </element>
   <element>
-    <id>UMLNote</id>
+    <id>UMLClass</id>
     <coordinates>
-      <x>40</x>
-      <y>440</y>
-      <w>390</w>
-      <h>190</h>
+      <x>620</x>
+      <y>670</y>
+      <w>180</w>
+      <h>60</h>
     </coordinates>
-    <panel_attributes>Callback also accepts node visitor?
-bg=blue</panel_attributes>
+    <panel_attributes>StateSet
+--
+runUpdateCallback(nv)</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>680</y>
+      <w>290</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>270.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>580</x>
+      <y>780</y>
+      <w>180</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Uniform
+--
+_udpateCallback
+_eventCallback</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>310</x>
+      <y>770</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>UniformCallback</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>280</x>
+      <y>560</y>
+      <w>200</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>StateAttributeCallback</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>310</x>
+      <y>580</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>230</x>
+      <y>720</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;120.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>770</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>140.0;20.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>430</x>
+      <y>640</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>StateAttribute</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>580</x>
+      <y>640</y>
+      <w>80</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>60.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>660</x>
+      <y>720</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>30.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>460</x>
+      <y>580</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>870</x>
+      <y>550</y>
+      <w>270</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>UpdateVisitor
+--
+#handleCallbackAndTraverse(node)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1030</x>
+      <y>390</y>
+      <w>30</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>690</x>
+      <y>600</y>
+      <w>340</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>10.0;70.0;320.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>180</x>
+      <y>410</y>
+      <w>360</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>340.0;10.0;10.0;10.0;10.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>540</x>
+      <y>130</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>Drawable</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>580</x>
+      <y>150</y>
+      <w>30</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>540</x>
+      <y>20</y>
+      <w>110</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>DrawCallback</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>570</x>
+      <y>40</y>
+      <w>30</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>

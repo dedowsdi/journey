@@ -337,3 +337,9 @@ implicit type conversion functions are never considered during template argument
 deduction
 
 caller allocated out example : std::string, std::vector
+
+find default search directory list for your version of CPP:
+  cpp -v /dev/null -o /dev/null
+
+In a class template, nonvirtual functions are only instantiated if they’re used
+– but virtual functions are instantiated every time

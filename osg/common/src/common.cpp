@@ -89,18 +89,19 @@ osg::Camera* createRTTCamera(
 }
 
 osg::Camera* createHudCamera(double left, double right, double bottom,
-  double top, double near, double far) {
-  osg::ref_ptr<osg::Camera> camera = new osg::Camera();
+  double top, double near, double far)
+{
+  auto camera = new osg::Camera();
 
   camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
-  camera->setAllowEventFocus(false);  // no event
+  camera->setAllowEventFocus(false);
   camera->setClearMask(GL_DEPTH_BUFFER_BIT);
   camera->setRenderOrder(osg::Camera::POST_RENDER);
   camera->setProjectionMatrix(
     osg::Matrix::ortho(left, right, bottom, top, near, far));
   camera->setViewMatrix(osg::Matrix::identity());
 
-  return camera.release();
+  return camera;
 }
 
 //------------------------------------------------------------------------------
@@ -166,8 +167,9 @@ osg::Geode* createScreenQuad(float width, float height, float scale) {
 }
 
 osgText::Text* createText(
-  const osg::Vec3& pos, const std::string& content, float size) {
-  osg::ref_ptr<osgText::Text> text = new osgText::Text;
+  const osg::Vec3& pos, const std::string& content, float size)
+{
+  auto text = new osgText::Text;
 
   text->setDataVariance(osg::Object::DYNAMIC);
   text->setFont(g_font.get());
@@ -175,7 +177,7 @@ osgText::Text* createText(
   text->setAxisAlignment(osgText::TextBase::XY_PLANE);
   text->setPosition(pos);
   text->setText(content);
-  return text.release();
+  return text;
 }
 
 extern osgText::Text* createText(osg::ref_ptr<osgText::Font> font,

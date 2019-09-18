@@ -1,70 +1,58 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.8)
+
+# old policy for FindOpenGL
+cmake_policy(SET CMP0072 OLD)
+
 project (osg)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;/usr/local/source/OpenSceneGraph/CMakeModules;${CMAKE_MODULE_PATH}")
-set(CMAKE_PREFIX_PATH /usr/local/lib64)
 include(util)
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSOURCE=\\\"${CMAKE_CURRENT_SOURCE_DIR}\\\""  )
 
 if( CMAKE_BUILD_TYPE STREQUAL ""  )
     set( CMAKE_BUILD_TYPE Debug CACHE STRING "One of: Debug Release
     RelWithDebInfo MinSizeRel." FORCE  )
 endif()
 
-#flag
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wall -Wno-unused-local-typedef -Wno-overloaded-virtual -Wno-inconsistent-missing-override -Wno-switch-bool -Wno-int-to-void-pointer-cast -Wno-unused-function -Wno-reorder -Wno-sign-compare")
-#SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -v")
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -D_DEBUG"  )
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSOURCE=\\\"${CMAKE_CURRENT_SOURCE_DIR}\\\""  )
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 #this variable will be used at findOSG
-set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it's cached")
+# set(CMAKE_DEBUG_POSTFIX d CACHE STRING "i need to get this at build file, so it's cached")
+set(CMAKE_DEBUG_POSTFIX d)
 
-#becareful cmake prebuilt find## use smallcase
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 FIND_PACKAGE(PkgConfig REQUIRED)
-FIND_PACKAGE(OSG REQUIRED)
-find_package(Qt4  REQUIRED QtGui QtXml QtUiTools QtOpenGL)
-#FIND_PACKAGE(OSGDB REQUIRED)
-#FIND_PACKAGE(OSGUTIL REQUIRED)
-#FIND_PACKAGE(OSGVIEWER REQUIRED)
-#FIND_PACKAGE(OPENTHREADS REQUIRED)
 
-#PKG_CHECK_MODULES(OPENTHREADS REQUIRED openthreads)
-#PKG_CHECK_MODULES(osg REQUIRED)
-#PKG_CHECK_MODULES(osgDB REQUIRED)
-#PKG_CHECK_MODULES(osgUtil REQUIRED)
-#PKG_CHECK_MODULES(osgViewer REQUIRED)
-#message(0 ${OPENTHREADS_INCLUDE_DIR})
-#message(0 ${OSG_INCLUDE_DIR})
-#message(0 ${OSGDB_INCLUDE_DIR})
-#message(0 ${OSGUTIL_INCLUDE_DIR})
-#message(0 ${OSGVIEWER_INCLUDE_DIR})
-
+FIND_PACKAGE(OpenSceneGraph CONFIG REQUIRED
+    COMPONENTS osgViewer osgAnimation osgParticle
+    )
+find_package(Qt5 CONFIG REQUIRED
+    COMPONENTS Gui Xml UiTools OpenGL)
 FIND_PACKAGE(OpenGL REQUIRED)
 
-include_directories(
-    #${OPENTHREADS_INCLUDE_DIR}
-    ${OSG_INCLUDE_DIR}
-    ${QT_HEADERS_DIR}
-    ${QT_QTCORE_INCLUDE_DIR}
-    ${QT_QTGUI_INCLUDE_DIR}
-    ${QT_QTOPENGL_INCLUDE_DIR}
-    common/include
-    )
+#include_directories(
+#    #${OPENTHREADS_INCLUDE_DIR}
+#    ${OSG_INCLUDE_DIR}
+#    ${QT_HEADERS_DIR}
+#    ${QT_QTCORE_INCLUDE_DIR}
+#    ${QT_QTGUI_INCLUDE_DIR}
+#    ${QT_QTOPENGL_INCLUDE_DIR}
+#    common/include
+#    )
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")
 ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 #copy data faile
-FILE(COPY data/spline.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-FILE(COPY data/bezier.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-FILE(COPY data/nurb.txt DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-FILE(COPY data/animation.gif DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 FILE(COPY data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 add_subdirectory(common)

@@ -8,6 +8,7 @@ set(SRC
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # include qt generated files
 set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTOUIC ON)
 
 add_executable(movie_recommender ${SRC})
 target_link_libraries(movie_recommender Qt5::Widgets)

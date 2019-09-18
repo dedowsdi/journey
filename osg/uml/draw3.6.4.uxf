@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>460</x>
+      <y>640</y>
+      <w>280</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>Geometry
+--
+drawImplemention()
+drawVertexArraysImplemention()
+drawPrimitiveImplemention()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>970</x>
+      <y>80</y>
+      <w>100</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>State
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1230</x>
+      <y>100</y>
+      <w>230</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>AttributeDispatchers
+--
+void activateNormalArray(array);
+void activateVertexAttribArray(index, array)
+dispatch(primitive_index)
+--
+_activeDispatchList</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>870</x>
+      <y>230</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>VertexArrayState</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>940</x>
+      <y>150</y>
+      <w>80</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1060</x>
+      <y>110</y>
+      <w>190</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1210</x>
+      <y>280</y>
+      <w>210</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>AttributeDipatcherMap</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1290</x>
+      <y>190</y>
+      <w>30</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1190</x>
+      <y>400</y>
+      <w>240</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>AttributeDispatch
+--
+void assign(array)
+void operator(uint pos)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1290</x>
+      <y>300</y>
+      <w>30</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>950</x>
+      <y>570</y>
+      <w>240</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>TemplateAttributeDispatch</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1240</x>
+      <y>570</y>
+      <w>260</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>TemplateTargetAttributeDispatch</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1060</x>
+      <y>460</y>
+      <w>230</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>210.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1290</x>
+      <y>460</y>
+      <w>80</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>510</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>AttributeDispatchers is used to dispatch legacy vertex attribute
+to opengl.eg: dispatch data in Vec3Array through glColor3f.
+
+It's mainly used for OVERALL binding and PER_PRIMITIVE_SET binding,
+if an array binding is OVERALL, it's dispatched immediately
+during activation.
+If an array binding is PER_PRIMITIVE_SET, it's added to
+_activeDispatchList to be dispatched later per primitive set at
+Geometry::drawPrimitiveImplemention().
+
+It uses function object AttributeDispatch and it's derived class
+TemplateAttributeDispatch and TemplateTargetAttributeDispatch
+to dispatch the array data to opengl eventually.
+
+AttributeDispatchMap stores AttributeDispatch for all kinds of
+needed arrayType. AttributeDispatchers build maps for 
+normal,color, secondary color, fog color and a vector of extra
+vertex attribute .at init, and looks for the related dispatch
+by arrayType for each kind of array through these maps.
+
+
+
+
+
+
+
+bg=blue
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>670</x>
+      <y>330</y>
+      <w>450</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>ArrayDispatch
+--
+/enable_and_dispatch(state, array)/
+/enable_and_dispatch(state, array, buffer)/
+/enable_and_dispatch(state, size, type, stride, ptr, normalized)/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>370</y>
+      <w>510</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>VertexArrayState handles PER_VERTEX binding. It's perpuse is to setup 
+vertex array by calling gl*pointeror glVertexAttribPointer
+eventually through derived classes of ArrayDispatch.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>890</x>
+      <y>250</y>
+      <w>80</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>470</x>
+      <y>520</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>VertexArrayDispatch</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>440</y>
+      <w>300</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>280.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>660</x>
+      <y>520</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>NormalArrayDispatch</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>710</x>
+      <y>440</y>
+      <w>170</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>860</x>
+      <y>520</y>
+      <w>190</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>VertexAttribArrayDispatch</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>890</x>
+      <y>440</y>
+      <w>70</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;80.0</additional_attributes>
+  </element>
+</diagram>

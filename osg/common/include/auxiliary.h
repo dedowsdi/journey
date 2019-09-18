@@ -58,13 +58,6 @@ class Axes : public osg::MatrixTransform {
     virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
   };
 
-private:
-  osg::ref_ptr<osg::Geometry> mAxes;
-  osg::ref_ptr<osg::AutoTransform> mLabelX;
-  osg::ref_ptr<osg::AutoTransform> mLabelY;
-  osg::ref_ptr<osg::AutoTransform> mLabelZ;
-  osg::ref_ptr<AxesCallback> mCallback;
-
 public:
   Axes();
   void setLabel(bool b);
@@ -72,12 +65,19 @@ public:
   void setLineWidth(GLfloat w);
   GLfloat getLineWidth();
 
-  void bindInverseView(osg::Camera* camera);
-  void unbindInverseView();
+  void bind(osg::Camera* camera);
+  void unbind();
 
 private:
+
   osg::ref_ptr<osg::AutoTransform> createLabel(
     const osg::Vec3& v, const std::string& label);
+
+  osg::ref_ptr<osg::Geometry> mAxes;
+  osg::ref_ptr<osg::AutoTransform> mLabelX;
+  osg::ref_ptr<osg::AutoTransform> mLabelY;
+  osg::ref_ptr<osg::AutoTransform> mLabelZ;
+  osg::ref_ptr<AxesCallback> mCallback;
 };
 
 /*

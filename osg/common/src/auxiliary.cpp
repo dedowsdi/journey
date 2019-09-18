@@ -157,7 +157,7 @@ GLfloat Axes::getLineWidth() {
 }
 
 //--------------------------------------------------------------------
-void Axes::bindInverseView(osg::Camera* camera)
+void Axes::bind(osg::Camera* camera)
 {
   if (!mCallback.valid()){
     mCallback = new Axes::AxesCallback();
@@ -168,26 +168,26 @@ void Axes::bindInverseView(osg::Camera* camera)
 }
 
 //--------------------------------------------------------------------
-void Axes::unbindInverseView()
+void Axes::unbind()
 {
   removeUpdateCallback(mCallback);
 }
 
 //------------------------------------------------------------------------------
 osg::ref_ptr<osg::AutoTransform> Axes::createLabel(
-  const osg::Vec3& v, const std::string& label) {
+  const osg::Vec3& v, const std::string& label)
+{
   static osg::ref_ptr<osgText::Font> font = osgText::readFontFile("arial.ttf");
 
-  osg::ref_ptr<osg::AutoTransform> at = new osg::AutoTransform();
+  auto at = new osg::AutoTransform();
   at->setPosition(v);
   at->setAutoRotateMode(osg::AutoTransform::ROTATE_TO_SCREEN);
 
-  osg::ref_ptr<osgText::Text> text =
-    zxd::createText(font, osg::Vec3(), label, 0.35f);
+  auto text = zxd::createText(font, osg::Vec3(), label, 0.35f);
   text->setColor(osg::Vec4(v, 1.0f));
   // text->setAutoRotateToScreen(true);
 
-  osg::ref_ptr<osg::Geode> leaf = new osg::Geode();
+  auto leaf = new osg::Geode();
   leaf->addDrawable(text);
 
   at->addChild(leaf);
@@ -200,8 +200,8 @@ Cursor::Cursor() {
 
   mCursor = new osg::Geometry;
 
-  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
-  osg::ref_ptr<osg::Vec4Array> colors = new osg::Vec4Array();
+  auto vertices = new osg::Vec3Array();
+  auto colors = new osg::Vec4Array();
 
   // create arrow
   vertices->push_back(osg::Vec3());
