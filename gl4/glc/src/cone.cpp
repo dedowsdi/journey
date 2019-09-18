@@ -113,7 +113,7 @@ array_uptr cone::build_texcoords(const array& vertices)
     texcoords->push_back(glm::vec2(s, 0));
   }
 
-  build_strip_texcoords(*texcoords, m_stack, m_slice, 1, 0);
+  build_strip_texcoords(*texcoords, m_stack, m_slice, vec2(0, 1), vec2(1, 0));
 
   assert(texcoords->size() == vertices.size());
   return texcoords;

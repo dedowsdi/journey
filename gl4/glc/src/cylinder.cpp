@@ -138,7 +138,7 @@ array_uptr cylinder::build_texcoords(const array& vertices)
   }
 
   // cylinder texcoords
-  build_strip_texcoords(*texcoords, m_stack, m_slice, 1, 0);
+  build_strip_texcoords(*texcoords, m_stack, m_slice, vec2(0, 1), vec2(1, 0));
 
   assert(texcoords->size() == vertices.size());
   return texcoords;

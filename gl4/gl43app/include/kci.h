@@ -227,7 +227,7 @@ void apply_step_imp(kci_template<T>& kci, GLfloat step_scale, GLint index,
                     kci_t_vec_tag)
 {
   // no throw
-  if (index > T::length())
+  if (index > T::length() || index < 0)
     return;
 
   auto value = kci.get();
@@ -305,13 +305,13 @@ public:
   std::shared_ptr<kci_template<GLfloat>> add_normalized(
     int key, GLfloat init_value = 0, key_control_callback callback = nullptr);
 
-  GLuint index() const { return m_index; }
-  void index(GLuint v) { m_index = v; }
+  GLint index() const { return m_index; }
+  void index(GLint v) { m_index = glm::max(0, v); }
 
 private:
   void handle(GLFWwindow* wnd, int key, int scancode, int action, int mods);
 
-  GLuint m_index = 0; // index for vec type
+  GLint m_index = 0; // index for vec type
   kci_map m_key_map;
 };
 

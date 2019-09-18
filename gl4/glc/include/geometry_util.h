@@ -69,8 +69,8 @@ namespace zxd
   }
 
   template <typename T>
-  void build_strip_texcoords(
-    T& texcoords, GLuint stacks, GLuint slices, GLfloat t0, GLfloat t1);
+  void build_strip_texcoords(T& texcoords, GLuint stacks, GLuint slices,
+    const vec2& texcoord0, const vec2& texcoord1);
 }
 
 #endif /* GL_GLC_GEOMETRY_UTIL_H */

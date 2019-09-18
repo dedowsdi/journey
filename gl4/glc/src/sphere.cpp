@@ -58,7 +58,7 @@ array_uptr sphere::build_texcoords(const array& vertices)
   // linearly along longitudinal lines), and s ranges from 0.0 at the +x axis,
   // to 0.25 at the +y axis, to 0.5 at the -x axis, to 75 at the -y axis,
   // and back to 1.0 at the +x axis
-  build_strip_texcoords(*texcoords, m_stack, m_slice, 1, 0);
+  build_strip_texcoords(*texcoords, m_stack, m_slice, vec2(0, 1), vec2(1, 0));
 
   assert(texcoords->size() == vertices.size());
   return texcoords;

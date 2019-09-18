@@ -1,6 +1,5 @@
 set (DEMOES
     log
-    tessellate
     lod
     infoVisitor
     cubicBezier
@@ -8,27 +7,19 @@ set (DEMOES
     rtt
     imageSequence
     timerEvent
-    pick
     windowMode
     revolution
     serializer
     billboardTree
-    shadow
     threadHelloWorld
     threadSwitch
     occludeCull
     shareTexture
     terrain
-    fourView
     trackerManipulator
-    movie
     gimbal
     euler
-    gridfloor
-    axes
-    cursor
     fixVerticalUp
-    texture
     )
 
 foreach(PROJECT ${DEMOES})
@@ -42,6 +33,7 @@ foreach(PROJECT ${DEMOES})
             osg3::osgViewer
             osg3::osgAnimation
             osg3::osgParticle
+            osg3::osgShadow
         )
 
     # copy project_data to target file dir.

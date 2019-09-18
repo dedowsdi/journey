@@ -125,15 +125,15 @@ array_uptr capsule3d::build_texcoords(const array& vertices)
 
   // top half sphere
   build_strip_texcoords(
-    *texcoords, m_sphere_stack/2, m_sphere_slice, 1.0, top_origin_t);
+    *texcoords, m_sphere_stack/2, m_sphere_slice, vec2(0, 1.0), vec2(1, top_origin_t));
 
   // bottom half sphere
   build_strip_texcoords(
-    *texcoords, m_sphere_stack/2, m_sphere_slice, bot_origin_t, 0);
+    *texcoords, m_sphere_stack/2, m_sphere_slice, vec2(0, bot_origin_t), vec2(1, 0));
 
   // texcoords for cylinder
   build_strip_texcoords(
-    *texcoords, m_cylinder_stack, m_sphere_slice, top_origin_t, bot_origin_t);
+    *texcoords, m_cylinder_stack, m_sphere_slice, vec2(0, top_origin_t), vec2(1, bot_origin_t));
 
   assert(texcoords->size() == vertices.size());
   return texcoords;

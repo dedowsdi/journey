@@ -22,6 +22,7 @@ set (PROJECTS
     triangle_random_point
     bounding_sphere
     classic_lighting
+    texture
     )
 
 foreach(PROJECT ${PROJECTS})

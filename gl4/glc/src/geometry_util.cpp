@@ -381,24 +381,25 @@ void subdivide(
 }
 
 template <typename T>
-void build_strip_texcoords(
-  T& texcoords, GLuint stacks, GLuint slices, GLfloat t0, GLfloat t1)
+void build_strip_texcoords(T& texcoords, GLuint stacks, GLuint slices,
+  const vec2& texcoord0, const vec2& texcoord1)
 {
-  auto step = 1.0f / stacks;
+  auto t_step = 1.0f / stacks;
+  auto s_step = 1.0f / slices;
   for (auto i = 0u; i <= stacks; ++i)
   {
-    auto t = mix(t0, t1, i * step);
+    auto t = mix(texcoord0.y, texcoord1.y, i * t_step);
     for (auto j = 0u; j <= slices; j++)
     {
-      GLfloat s = static_cast<GLfloat>(j) / slices;
+      auto s = mix(texcoord0.x, texcoord1.x, j * s_step);
       texcoords.push_back(vec2(s, t));
     }
   }
 }
 
 template void build_strip_texcoords<vec2_array>(
-  vec2_array&, GLuint, GLuint, GLfloat, GLfloat);
+  vec2_array&, GLuint, GLuint, const vec2&, const vec2&);
 
 template void build_strip_texcoords<vec2_vector>(
-  vec2_vector&, GLuint, GLuint, GLfloat, GLfloat);
+  vec2_vector&, GLuint, GLuint, const vec2&, const vec2&);
 }

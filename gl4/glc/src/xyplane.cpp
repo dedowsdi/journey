@@ -6,16 +6,24 @@ namespace zxd
 {
 
 //--------------------------------------------------------------------
-xyplane::xyplane(GLfloat width, GLfloat height, GLuint slice)
-    : m_width(width), m_height(height), m_slice(slice), m_left(-width * 0.5),
-      m_bottom(-height * 0.5)
+xyplane::xyplane(GLfloat width, GLfloat height, GLuint slice):
+  xyplane(-width * 0.5f, -height * 0.5f, width * 0.5f, height * 0.5f, slice)
 {
 }
 
 //--------------------------------------------------------------------
-xyplane::xyplane(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, GLuint slice)
-    : xyplane(x1 - x0, y1 - y0, slice)
+xyplane::xyplane(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1, GLuint slice):
+  m_point0(x0, y0),
+  m_point1(x1, y1),
+  m_slice(slice)
 {
+}
+
+//--------------------------------------------------------------------
+void xyplane::set_texcoord(const vec2& texcoord0, const vec2& texcoord1)
+{
+  m_texcoord0 = texcoord0;
+  m_texcoord1 = texcoord1;
 }
 
 //--------------------------------------------------------------------
@@ -25,15 +33,15 @@ common_geometry::vertex_build xyplane::build_vertices()
   auto num_vertices = (m_slice + 1) * (m_slice + 1);
   vertices->reserve(num_vertices);
 
-  auto xstep = m_width / m_slice;
-  auto ystep = m_height / m_slice;
+  auto xstep = (m_point1.x - m_point0.x) / m_slice;
+  auto ystep = (m_point1.y - m_point0.y) / m_slice;
 
   for (auto i = 0u; i <= m_slice; ++i)
   {
-    auto y = m_bottom + m_height - ystep * i;
+    auto y = m_point0.y + ystep * i;
     for (auto j = 0u; j <= m_slice; ++j)
     {
-      auto x = m_left + xstep * j;
+      auto x = m_point0.x  + xstep * j;
       vertices->push_back(vec2(x, y));
     }
   }
@@ -63,7 +71,7 @@ array_uptr xyplane::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
   texcoords->reserve(vertices.size());
-  build_strip_texcoords(*texcoords, m_slice, m_slice, 1, 0);
+  build_strip_texcoords(*texcoords, m_slice, m_slice, m_texcoord0, m_texcoord1);
   assert(texcoords->size() == vertices.size());
   return texcoords;
 }

@@ -19,17 +19,7 @@ public:
   GLuint slice() const { return m_slice; }
   void slice(GLuint v) { m_slice = v; }
 
-  GLfloat width() const { return m_width; }
-  void width(GLfloat v) { m_width = v; }
-
-  GLfloat height() const { return m_height; }
-  void height(GLfloat v) { m_height = v; }
-
-  GLfloat left() const { return m_left; }
-  void left(GLfloat v){ m_left = v; }
-
-  GLfloat bottom() const { return m_bottom; }
-  void bottom(GLfloat v){ m_bottom = v; }
+  void set_texcoord(const vec2& texcoord0, const vec2& texcoord1);
 
 private:
 
@@ -37,11 +27,11 @@ private:
   array_uptr build_normals(const array& vertices) override;
   array_uptr build_texcoords(const array& vertices) override;
 
-  GLuint m_slice;
-  GLfloat m_width;
-  GLfloat m_height;
-  GLfloat m_left;
-  GLfloat m_bottom;
+  GLuint m_slice{1};
+  vec2 m_point0{-1};
+  vec2 m_point1{1};
+  vec2 m_texcoord0{0};
+  vec2 m_texcoord1{1};
 
 };
 }
