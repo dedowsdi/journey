@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
   <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
@@ -38,12 +39,13 @@ _defineMap</panel_attributes>
       <x>798</x>
       <y>497</y>
       <w>105</w>
-      <h>49</h>
+      <h>63</h>
     </coordinates>
     <panel_attributes>StateSet
 --
 getModeList()
-getAttributeList()</panel_attributes>
+getAttributeList()
+setGlobalDefaults()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -412,12 +414,12 @@ bg=blue</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>728</x>
-      <y>539</y>
+      <y>553</y>
       <w>133</w>
-      <h>84</h>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;&gt;</panel_attributes>
-    <additional_attributes>170.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>170.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>

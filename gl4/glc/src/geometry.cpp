@@ -135,7 +135,7 @@ GLuint geometry_base::num_vertices() const
 const primitive_set& geometry_base::get_primitive_set(GLuint index) const
 {
   if(index >= _primitive_sets.size())
-    throw gl_overflow("primitive set index over flow");
+    throw gl_out_of_range("primitive set index over flow");
   return *_primitive_sets[index];
 }
 
@@ -143,7 +143,7 @@ const primitive_set& geometry_base::get_primitive_set(GLuint index) const
 primitive_set& geometry_base::get_primitive_set(GLuint index)
 {
   if(index >= _primitive_sets.size())
-    throw gl_overflow("primitive set index over flow");
+    throw gl_out_of_range("primitive set index over flow");
   return *_primitive_sets[index];
 }
 
@@ -170,7 +170,7 @@ void geometry_base::clear_primitive_sets()
 void geometry_base::remove_primitive_sets(GLuint index, GLuint count)
 {
   if (index + count > _primitive_sets.size())
-    throw gl_overflow("error, too many remove count");
+    throw gl_out_of_range("error, too many remove count");
   _primitive_sets.erase(
     _primitive_sets.begin() + index, _primitive_sets.begin() + index + count);
 }

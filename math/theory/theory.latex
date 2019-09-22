@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{ {./img/} }
+
+\begin{document}
+\title{math}
+\author{peanutandchestnut@gmail.com}
+\date{2019-09-22}
+\maketitle
+
+%\begin{abstract}
+%    abstract area
+%\end{abstract}
+
+\newpage
+
+\section{OpenSceneGraph}
+
+\subsection{linesegment intersection with triangle of OpenSceneGraph}
+
+
+Find barycentric coordinates r0, r1, r2 for F, get r as length of SF
+
+\includegraphics[width=10cm]{linesegment.png}
+
+\begin{align*}
+d &= \frac{SE}{||SE||}\\
+r0:r1:r2 &= V_{BCFS} : V_{CAFS} : V_{ABFS} \\
+V_{CAFS} &= \frac{CS \times CA \cdot SF }{3} = \frac{CS \times CA \cdot d * r }{3}\\
+V_{ABFS} &= \frac{AS \times AB \cdot SF }{3} = \frac{AS \times AB \cdot d * r }{3}\\
+V_{ABCS} &= \frac{AB \times AC \cdot SF }{3} = \frac{AB \times AC \cdot d * r }{3}\\
+r1 &= \frac{V_{CAFS}}{V_{ABCS}} = \frac{CS \times CA \cdot d }{AB \times AC \cdot d }\\
+r2 &= \frac{V_{ABFS}}{V_{ABCS}} = \frac{AS \times AB \cdot d }{AB \times AC \cdot d }\\
+r3 &= 1 - r1 - r2 \\
+r &= \frac{AB \times AC \cdot AS}{AB \times AC \cdot d}
+\end{align*}
+
+
+\end{document}

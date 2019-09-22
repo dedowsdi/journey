@@ -5,19 +5,15 @@ set (DEMOES
     cubicBezier
     compositeViewer
     rtt
-    imageSequence
     timerEvent
-    windowMode
     revolution
     serializer
     billboardTree
     threadHelloWorld
     threadSwitch
     occludeCull
-    shareTexture
     terrain
     trackerManipulator
-    gimbal
     euler
     fixVerticalUp
     )

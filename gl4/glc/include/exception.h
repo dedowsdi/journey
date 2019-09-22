@@ -40,7 +40,7 @@ public:
   using except_base::except_base;
 };
 
-class gl_overflow : public except_base
+class gl_out_of_range : public except_base
 {
 public:
   using except_base::except_base;

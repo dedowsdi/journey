@@ -318,8 +318,7 @@ glm::mat4 compute_window_mat(GLint x, GLint y, GLint width, GLint height,
   glm::mat4 m(1);
 
   // m = glm::translate(vec3(x, y, depth_near)) * glm::scale(vec3(width*0.5,
-  // height*0.5, 0.5f * (depth_far - depth_near)))
-  //* glm::translate(vec3(1));
+  // height*0.5, 0.5f * (depth_far - depth_near))) * glm::translate(vec3(1));
 
   m[0][0] = width / 2.0;
   m[1][1] = height / 2.0;

@@ -6,7 +6,11 @@ If you use light as an attribute, it will be local.
 there are 3 kins of billboard:
     point_rot_eye : look at camera from billboard, use camera up as up in lookat
     point_rot_world: rotate normal to center to eye, don't care about orientation
-    axial_rot : rotate around certain axis
+    axial_rot : restrict rotate around certain local axis
 billboard should be created in xz plane, use (0,-1,0) as normal
 
 If you want to change geometry data, make sure to set geometry data variance to dynamic.
+
+osg use row major matrix:
+    mvp_mat = m_mat * v_mat * p_mat;
+    mat[0] is the 1st row

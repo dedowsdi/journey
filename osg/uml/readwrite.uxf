@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>670</x>
+      <y>110</y>
+      <w>530</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Registry
+--
+_instance()_
+readNode(name, options	, buildKdTreeIfRequired)
+readNodeImplemention(name, options)
+readImplemention(readFunctor, cacheHint)
+read(readFunctor)
+findDataFile(fileName, options, caseSensitivity)
+getDataFilePathList()
+loadLibrary(fileName)
+createLibraryNameForFile(filename)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>230</x>
+      <y>150</y>
+      <w>180</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Options
+--
+
+--
+_objectCacheHint</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>200</x>
+      <y>340</y>
+      <w>250</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>ReadFileCallback
+--
+readNode(filename, options)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>380</x>
+      <y>190</y>
+      <w>310</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>290.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>250</y>
+      <w>30</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>440</y>
+      <w>270</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>ReadWriter
+--
+/readNode(filename, options)/
+/readNode(istream, options)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1200</x>
+      <y>310</y>
+      <w>180</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>ReadWriter::ReadResult
+--
+getNode()
+takeNode()
+--
+_status
+_object</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>590</x>
+      <y>430</y>
+      <w>180</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Registry::ReadFunctor
+--
+/doRead(rw)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>590</x>
+      <y>530</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>ReadNodeFunctor</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>660</x>
+      <y>470</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>900</x>
+      <y>290</y>
+      <w>190</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+load</panel_attributes>
+    <additional_attributes>170.0;150.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>950</x>
+      <y>580</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>OSGReadWriter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1020</x>
+      <y>500</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>400</x>
+      <y>160</y>
+      <w>290</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>270.0;10.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>120</x>
+      <y>40</y>
+      <w>330</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>ObjectCache
+--
+getRefFromObjectCache(filename, options)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>320</x>
+      <y>80</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>40</y>
+      <w>250</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>230.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>420</x>
+      <y>570</y>
+      <w>270</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>osgDB
+--
+_readNodeFile(filename)_
+_readNodeFile(filename, options)_</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
