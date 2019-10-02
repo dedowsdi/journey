@@ -104,8 +104,8 @@ _name</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>696</x>
-      <y>320</y>
+      <x>688</x>
+      <y>328</y>
       <w>160</w>
       <h>72</h>
     </coordinates>
@@ -228,12 +228,12 @@ TemplateChannel</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>616</x>
-      <y>336</y>
-      <w>96</w>
-      <h>32</h>
+      <y>344</y>
+      <w>88</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;100.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -986,5 +986,40 @@ SamplerMotionTemplate</panel_attributes>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>688</x>
+      <y>256</y>
+      <w>168</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>TemplateCompositeSampler</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>744</x>
+      <y>272</y>
+      <w>24</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>24</x>
+      <y>832</y>
+      <w>304</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Each CubicBezierKeyframe contains only 3 points, the 1st points
+is shared with previous keyframe as it's 4th point.
+bg=blue</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

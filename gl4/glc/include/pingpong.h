@@ -20,7 +20,7 @@ public:
 
   GLuint pong() const { return m_pong; }
   void pong(GLuint v){ m_pong = v; }
-  GLuint operator[](GLuint i);
+  GLuint& operator[](GLuint i);
 
   void set(GLuint r0, GLuint r1);
 

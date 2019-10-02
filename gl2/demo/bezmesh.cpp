@@ -30,7 +30,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "bezmesh";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -62,7 +62,7 @@ class app0 : public app {
     glRotatef(85.0, 1.0, 1.0, 1.0);
     glEvalMesh2(GL_FILL, 0, 20, 0, 20);
     glPopMatrix();
-    glFlush();
+    glutSwapBuffers();
   }
 
   void create_scene(void) {

@@ -23,6 +23,8 @@ set (PROJECTS
     bounding_sphere
     classic_lighting
     texture
+    rotation
+    depthoffield
     )
 
 foreach(PROJECT ${PROJECTS})

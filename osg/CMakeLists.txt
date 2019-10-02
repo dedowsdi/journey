@@ -32,7 +32,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 FIND_PACKAGE(PkgConfig REQUIRED)
 
 FIND_PACKAGE(OpenSceneGraph CONFIG REQUIRED
-    COMPONENTS osgViewer osgAnimation osgParticle osgFX osgShadow
+    COMPONENTS osgViewer osgAnimation osgParticle osgFX osgShadow osgWidget
     )
 find_package(Qt5 CONFIG REQUIRED
     COMPONENTS Gui Xml UiTools OpenGL)

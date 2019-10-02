@@ -13,11 +13,11 @@ pingpong::pingpong(GLuint r0, GLuint r1)
 }
 
 //--------------------------------------------------------------------
-GLuint pingpong::operator[](GLuint i)
+GLuint& pingpong::operator[](GLuint i)
 {
   if(i > 1)
     throw std::runtime_error("ping pong index overflow");
-  return i == 0 ? ping() : pong();
+  return i == 0 ? m_ping : m_pong;
 }
 
 //--------------------------------------------------------------------

@@ -343,3 +343,5 @@ find default search directory list for your version of CPP:
 
 In a class template, nonvirtual functions are only instantiated if they’re used
 – but virtual functions are instantiated every time
+
+virtual functions can be inline if you call them via object.

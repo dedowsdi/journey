@@ -45,9 +45,9 @@ void readControlPoints() {
   controlPoints->clear();
 
   // read control points and knots from spline.txt
-  std::ifstream ifs("bezier.txt");
+  std::ifstream ifs("data/bezier.txt");
   if (ifs.fail()) {
-    OSG_FATAL << "failed to read open spline.txt" << std::endl;
+    OSG_FATAL << "failed to read open bezier.txt" << std::endl;
     return;
   }
 

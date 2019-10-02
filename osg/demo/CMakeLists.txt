@@ -16,6 +16,7 @@ set (DEMOES
     trackerManipulator
     euler
     fixVerticalUp
+    hand
     )
 
 foreach(PROJECT ${DEMOES})

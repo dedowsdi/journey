@@ -118,3 +118,5 @@ Assume you have two point A, B in clip space, and another point C between them a
     The same rule applies for point D inside triangle ABC, you just have to replace t with barycentric coordinates:
         D_w * (A_x * λ0 / A_w + B_x * λ1 / B_w * C_x * λ2 / C_w)
 
+
+be very very careful when you add 2 vertices as vec4, it's w component will be added together, most of time it's not what you want!!!!!!.

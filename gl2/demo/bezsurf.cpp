@@ -6,7 +6,7 @@
  *  like sum from row to col or from col to row, it's like switch u, v dir,
  *  q(u,v) = p(v,u)
  *
- *  but the generated normal will if_rotate 180!!!, be very careful.
+ *  but the generated normal will rotate 180!!!, be very careful.
  *
  */
 #include <app.h>
@@ -34,7 +34,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "bezsurf";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -70,7 +70,8 @@ class app0 : public app {
       "eE : toggle if_rotate \n";
     glutBitmapString(GLUT_BITMAP_9_BY_15, info);
 
-    glFlush();
+    glutSwapBuffers();
+
   }
 
   void create_scene(void) {

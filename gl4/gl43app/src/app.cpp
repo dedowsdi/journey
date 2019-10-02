@@ -432,7 +432,7 @@ void app::loop() {
       update();
 
       if(m_time_update)
-        std::cout << "update : " << m_timer.time_miliseconds() << "ms" << std::endl;
+        std::cout << "update : " << m_timer.milliseconds() << "ms" << std::endl;
     }
     if(m_pause && m_update_count > 0) --m_update_count;
     display();

@@ -50,7 +50,7 @@ void readControlPoints() {
   osg::DoubleArray* knots = nurb->getKnots();
   knots->clear();
   // read control points and knots from nurb.txt
-  std::ifstream ifs("nurb.txt");
+  std::ifstream ifs("data/nurb.txt");
   if (ifs.fail()) {
     OSG_FATAL << "failed to read open nurb.txt" << std::endl;
     return;

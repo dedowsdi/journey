@@ -10,46 +10,43 @@
  * revolve curve along axis, only create side contours. close if degree * count
  * = 2 pi
  */
-osg::ref_ptr<osg::Geometry> revolution(const osg::ref_ptr<osg::Vec3Array> curve,
+osg::ref_ptr<osg::Geometry> revolution(const osg::Vec3Array& curve,
   GLfloat degree, const osg::Vec3& axis, GLuint  count) {
   // copy curve
-  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array(*curve);
+  osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array(curve);
 
   bool close = std::abs(degree * count - osg::PI*2) <= 0.001;
-  GLuint curveSize = curve->size();
+  GLuint curveSize = curve.size();
 
   // revolve
-  for (GLuint  i = 1; i <= count; ++i) {
+  for (GLuint i = 1; i < count; ++i)
+  {
     GLfloat d = i * degree;
-    if (i != count || !close) {
-      osg::Quat quat(d, axis);
-      for (GLuint  j = 0; j < curveSize; ++j) {
-        vertices->push_back(quat * curve->at(j));
-      }
-    }
+    osg::Quat quat(d, axis);
+    for (GLuint j = 0; j < curveSize; ++j)
+      vertices->push_back(quat * curve[j]);
   }
+
+  if (close)
+    vertices->insert(vertices->end(), curve.begin(), curve.end());
 
   // create geometry
   osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry();
   geometry->setVertexArray(vertices.get());
 
   // create quad strips circle by circle
-  for (GLuint row = 0; row < curveSize - 1; ++row) {
-    osg::ref_ptr<osg::DrawElementsUInt> elements = new osg::DrawElementsUInt(GL_QUAD_STRIP);
+  for (GLuint col = 0; col < count; ++col)
+  {
+    auto elements = new osg::DrawElementsUInt(GL_QUAD_STRIP);
     elements->reserve(2 * (count + 1));
-    for (GLuint col = 0; col < count; ++col) {
-      elements->push_back(curveSize * col + row + 1);
-      elements->push_back(curveSize * col + row);
-      if (close && col == count - 1) {
-        // close
-        elements->push_back(row + 1);
-        elements->push_back(row);
-      } else {
-        elements->push_back(curveSize * (col + 1) + row + 1);
-        elements->push_back(curveSize * (col + 1) + row);
-      }
+    auto start0 = col * curveSize + 1;
+    auto start1 = start0 + curveSize;
+    for (GLuint row = 0; row < curveSize - 1; ++row)
+    {
+      elements->push_back(start0 + row);
+      elements->push_back(start1 + row);
     }
-    geometry->addPrimitiveSet(elements.get());
+    geometry->addPrimitiveSet(elements);
   }
 
   // generate normal
@@ -77,7 +74,7 @@ int main(int argc, char* argv[]) {
   vertices->at(3).set(3, 0, 1.5);
 
   osg::ref_ptr<osg::Geometry> geometry =
-    revolution(vertices, degree, axis, count);
+    revolution(*vertices, degree, axis, count);
   osg::ref_ptr<osg::Geode> node = new osg::Geode();
   node->addDrawable(geometry.get());
 

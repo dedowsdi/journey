@@ -10,6 +10,30 @@
  *  note the combine_callback is needed for the self-intersecting
  *  star.  also note that removing the tess_property for the
  *  star will make the interior unshaded (WINDING_ODD).
+ *
+ *  tess winding number:
+ *
+ *  start from any point in a internal region, draw a ray to out side, when you
+ *      cross in   a ccw area, -1        
+ *      cross out  a ccw area, +1        
+ *      cross in   a  cw area, +1        
+ *      cross out  a  cw area, -1        
+ *
+ *          ^--------->|
+ *          |          |
+ *          |+1        |-1
+ *  --------|----------|------> 
+ *          |          |
+ *          |<---------v
+ *
+ *          |<---------^
+ *          |          |
+ *          |-1        |+1
+ *  --------|----------|------> 
+ *          |          |
+ *          V--------->|
+ *
+ *
  */
 #include <app.h>
 

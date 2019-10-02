@@ -17,5 +17,6 @@ foreach(DEMO ${DEMOES})
         common
         osg3::osgViewer
         osg3::osgFX
+        osg3::osgWidget
         )
 endforeach()

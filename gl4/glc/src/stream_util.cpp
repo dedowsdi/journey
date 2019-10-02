@@ -81,6 +81,7 @@ std::ostream& operator<<(std::ostream& os, const glm::mat<C, R, T, Q>& v)
     {
       os << v[i][j] << " ";
     }
+    os << "\n";
   }
   if (os.fail())
   {

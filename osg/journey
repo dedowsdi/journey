@@ -14,3 +14,10 @@ If you want to change geometry data, make sure to set geometry data variance to 
 osg use row major matrix:
     mvp_mat = m_mat * v_mat * p_mat;
     mat[0] is the 1st row
+
+osg Quat works in the same way as osg Matrix, except that it post multiply vec3:
+    q1 * q0 * v  // same as v * m1 * m0
+                 // same as (v * m1) * m0
+                 // same as q0 * (q1 * v0), be very very careful about this!!!!
+
+osg allow you to use vec3 as vec4, the w part is always considered as 0
