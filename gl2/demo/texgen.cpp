@@ -15,16 +15,15 @@
  *    s = object_plane∙obj_vertex
  *
  *  GL_EYE_LINEAR
- *    s = eye_plane*inv_mv(model_view when glTexGen called)∙eye_vertex
+ *    s = eye_plane_t * mv_mat_i(model_view when glTexGen called) * eye_vertex
  *
  *    you can set model_view to identity to generate tex in eyespace
  *    you can set model_view to view,
-   *      s = eye_plane * inv_view *  eye_vertex
- *          = eye_plane * world_vertex
+ *        s = eye_plane_t * inv_view *  eye_vertex
+ *          = eye_plane_t * world_vertex
  *        which means tex generated in world space
- *     don't set model_view to be the same as rederable model_view, it'll
- * degraded
- *     to object linear.
+ *    don't set model_view to be the same as rederable model_view, it'll
+ *    degraded to object linear.
  *
  */
 
@@ -50,7 +49,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "texgen";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
     m_info.wnd_width = 600;
     m_info.wnd_height = 600;
   }
@@ -132,7 +131,7 @@ class app0 : public app {
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_1D);
 
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

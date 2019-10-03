@@ -6,22 +6,22 @@
  *  in a skybox.
  *
  *  note:
- *    GL_NORMAL_MAP works on eye space, it use:
+ *    GL_NORMAL_MAP and GL_REFLECT_MAP works on eye space, it use:
  *      tex = inverse_transpose(model_view) * n
  *    no matter how you rotate your camera or object, the same
  *    normal in view space always retrieve the same color from cube map.
- *    if you want to get different image when you move your camera, you should
- *    reset cube map ?
- *
- *    object must has identity transform for cube env map to work?
- *
+ *   
+ *  To udpate cubemap after camera rotation, we should transfom normal or
+ *  reflection from view space to world space by set texture matrix to
+ *  v_mat_i_i_t = v_mat_t
+ *  
  */
 
 #include <app.h>
 
 namespace zxd {
 
-#define image_size 4
+#define image_size 16
 GLubyte image1[image_size][image_size][4];
 GLubyte image2[image_size][image_size][4];
 GLubyte image3[image_size][image_size][4];
@@ -30,7 +30,7 @@ GLubyte image5[image_size][image_size][4];
 GLubyte image6[image_size][image_size][4];
 
 GLdouble ztrans = -20;
-GLint yaw = 0, pitch = 0, yaw_obj = 0;  // yaw in world , pitch in view
+GLint yaw = 0, pitch = 0, yaw_obj = 0;
 
 GLuint vbo, ibo, tbo;
 GLint polygon_mode = GL_FILL;
@@ -39,14 +39,14 @@ GLuint skybox_size = 50;
 
 // clang-format off
   GLfloat vertices[][3] = {
-    {-1,-1,1},  {-1,-1,1},
-    {1,-1,1},   {1,-1,1},
-    {1,1,1},    {1,1,1},
-    {-1,1,1},   {-1,1,1},
-    {-1,-1,-1}, {-1,-1,-1},
-    {1,-1,-1},  {1,-1,-1},
-    {1,1,-1},   {1,1,-1},
-    {-1,1,-1},  {-1,1,-1}
+    {-1, -1, 1},
+    {1,  -1, 1},
+    {1,  1,  1},
+    {-1, 1,  1},
+    {-1, -1, -1},
+    {1,  -1, -1},
+    {1,  1,  -1},
+    {-1, 1,  -1},
   };
   GLubyte indices[][4] = {
     {0,1,2,3}, //front
@@ -128,6 +128,7 @@ class app0 : public app {
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE);
     glShadeModel(GL_SMOOTH);
 
     make_images();
@@ -160,38 +161,55 @@ class app0 : public app {
     glEnable(GL_TEXTURE_CUBE_MAP);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    glEnable(GL_AUTO_NORMAL);
     glEnable(GL_NORMALIZE);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
 
     create_sky_box();
   }
 
+  void transpose(float* matrix)
+  {
+    std::swap(matrix[1], matrix[4]);
+    std::swap(matrix[2], matrix[8]);
+    std::swap(matrix[3], matrix[12]);
+
+    std::swap(matrix[6], matrix[9]);
+    std::swap(matrix[7], matrix[13]);
+
+    std::swap(matrix[11], matrix[14]);
+  }
+
   void display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPolygonMode(GL_FRONT_AND_BACK, polygon_mode);
+
     glPushMatrix();
+    glLoadIdentity();
 
-    glTranslatef(0.0, 0.0, ztrans);
-    glRotatef(pitch, 1, 0, 0);
-    glRotatef(yaw, 0, 1, 0);
-
-    GLdouble model_view[16];
-    glGetDoublev(GL_MODELVIEW_MATRIX, model_view);
+    // camera transform : rot(pitch) * rot(yaw) * trans(0, 0, distance)
+    glTranslatef(0, 0, ztrans);
+    glRotatef(-yaw, 0, 1, 0);
+    glRotatef(-pitch, 1, 0, 0);
 
     // draw skybox
     glColor3f(1.0f, 1.0f, 1.0f);
     glDisable(GL_TEXTURE_GEN_S);
     glDisable(GL_TEXTURE_GEN_T);
     glDisable(GL_TEXTURE_GEN_R);
+
     glPushMatrix();
+    // some people prefer to erase skybox translation
+    glLoadIdentity();
+    glRotatef(-yaw, 0, 1, 0);
+    glRotatef(-pitch, 1, 0, 0);
+    
     glDisable(GL_LIGHTING);
     glScalef(skybox_size, skybox_size, skybox_size);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glVertexPointer(3, GL_FLOAT, 6 * 4, BUFFER_OFFSET(0));
-    // tex coord buffer
-    glTexCoordPointer(3, GL_FLOAT, 6 * 4, BUFFER_OFFSET(3 * 4));
+    glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0));
+    // use vertex as texcoord for sky box
+    glTexCoordPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0));
     glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, BUFFER_OFFSET(0));
     glEnable(GL_LIGHTING);
     glPopMatrix();
@@ -204,22 +222,28 @@ class app0 : public app {
     // draw scene
 
     glPushMatrix();
-    glRotatef(yaw_obj, 0, 1, 0);
+
+    // transform reflect or normal back to world space
+    // (v_mat_i)_i_t = v_t
+    GLfloat m[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, m);
+    m[12] = m[13] = m[14] = 0;
+    transpose(m);
 
     glMatrixMode(GL_TEXTURE);
     glPushMatrix();
-    /*glLoadTransposeMatrixd(model_view);*/
-    /*glRotatef(-yaw, 0, 1, 0);*/
-    /*glRotatef(-pitch, 1, 0, 0);*/
-    glutSolidSphere(5.0, 40, 20);
-    /*glutSolidTeapot(5);*/
-    /*glutSolidCube(5);*/
-    glPopMatrix();
+    glLoadMatrixf(m);
+
     glMatrixMode(GL_MODELVIEW);
+    glRotatef(yaw_obj, 0, 1, 0);
 
+    glutSolidSphere(5.0, 40, 20);
+
+    glMatrixMode(GL_TEXTURE);
     glPopMatrix();
 
-    // draw scene
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 
     glPopMatrix();
 
@@ -232,7 +256,7 @@ class app0 : public app {
       "w : use GL_REFLECTION_MAP to generate s,t,r\n"
       "eE : change skybox size\n"
       "rR : change camera distance\n"
-      "uU : yaw world\n"
+      "uU : yaw camera\n"
       "iI : pitch camera\n"
       "oO : yaw object\n"
       "pP : polygon mode\n";
