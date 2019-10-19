@@ -13,6 +13,8 @@ class quad;
 // draw single fullscreen 2d quad
 void draw_quad(GLuint tex, GLuint tui = 0);
 
+void draw_depth_quad(GLuint tex, GLuint tui = 0);
+
 // call draw, nothing else. you must build program context before call this
 void draw_quad();
 quad& get_nd_quad();

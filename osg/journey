@@ -15,9 +15,202 @@ osg use row major matrix:
     mvp_mat = m_mat * v_mat * p_mat;
     mat[0] is the 1st row
 
-osg Quat works in the same way as osg Matrix, except that it post multiply vec3:
+osg Quat works in the same way as osg Matrix, except that it post multiply vec4:
     q1 * q0 * v  // same as v * m1 * m0
                  // same as (v * m1) * m0
                  // same as q0 * (q1 * v0), be very very careful about this!!!!
 
-osg allow you to use vec3 as vec4, the w part is always considered as 0
+osg allow you to use vec3 as vec4, the w part is always considered as 1
+
+osg default global state:
+    GL_DEPTH_TEST : on
+    GL_BLEND_FUNC : GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+    
+
+
+known examples:
+osgclip
+osgscribe
+osgpick
+osganimationskinning
+osganimationmorph
+osg2cpp
+osggeometry
+osgmotionblur
+osgcallback
+osganimationnode
+osganimationsolid
+osgkeyboard
+osgtext
+osgtext3D
+osgtexture1D
+osghud
+osgblendequation
+osgsequence
+osgshape
+osguserdata
+osgtexture2D        what is anisotrophy, what is image subload?
+osgwindows
+osglight
+osgwidgetbox
+osgwidgetwindow
+osgwidgetlabel
+osgwidgetmenu
+osgwidgettable
+osgwidgetinput
+osgwidgetframe
+osgwidgetcanvas
+osganimationeasemotion
+osgparticle             what is fluid friction ?
+osgpoints
+osgpointsprite
+osgcamera
+osgbillboard
+osgoutline
+osgmultitexture
+osgautotransform
+osgcompositeviewer
+osgcopy
+osgoccluder
+osgdepthpartition
+osgspotlight
+osgcubemap
+osgimagesequence
+
+unknown examples:
+
+osganalysis
+osganimate
+osganimationhardware
+osganimationmakepath
+osganimationtimeline
+osganimationviewer
+osgatomiccounter
+osgautocapture
+osgbindlesstext
+osgblenddrawbuffers
+osgcatch
+osgcluster
+osgCMakeExample
+osgCMakeExampleModern
+osgcomputeshaders
+osgdatabaserevisions
+osgdeferred
+osgdepthpeeling
+osgdirectinput
+osgdistortion
+osgdrawinstanced
+osgemscripten
+osgfadetext
+osgfont
+osgforest
+osgfpdepth
+osgframerenderer
+osgfxbrowser
+osggameoflife
+osggeometryshaders
+osggpucull
+osggpx
+osggraphicscost
+osghangglide
+osgimpostor
+osgintersection
+osgkdtree
+osgkeyboardmouse
+osgkeystone
+osglauncher
+osglightpoint
+osglogicop
+osglogo
+osgmanipulator
+osgmemorytest
+osgmovie
+osgmultiplemovies
+osgmultiplerendertargets
+osgmultitexturecontrol
+osgmultitouch
+osgmultiviewpaging
+osgobjectcache
+osgocclusionquery
+osgoit
+osgoscdevice
+osgpackeddepthstencil
+osgpagedlod
+osgparametric
+osgparticleeffects
+osgparticleshader
+osgphotoalbum
+osgplanets
+osgposter
+osgprecipitation
+osgprerender
+osgprerendercubemap
+osgpresentation
+osgreflect
+osgrobot
+osgsampler
+osgscalarbar
+osgscreencapture
+osgshadercomposition
+osgshadergen
+osgshadermultiviewport
+osgshaderpipeline
+osgshaders
+osgshaderterrain
+osgshadow
+osgsharedarray
+osgsidebyside
+osgsimplegl3
+osgsimpleMDI
+osgsimpleshaders
+osgsimplifier
+osgsimulation
+osgslice
+osgspacewarp
+osgspheresegment
+osgSSBO
+osgstaticviewer
+osgstereoimage
+osgstereomatch
+osgteapot
+osgterrain
+osgtessellate
+osgtessellationshaders
+osgtexture2DArray
+osgtexture3D
+osgtexturecompression
+osgtexturerectangle
+osgthirdpersonview
+osgthreadedterrain
+osgtransferfunction
+osgtransformfeedback
+osguniformbuffer
+osgunittests
+osguserstats
+osgvertexattributes
+osgvertexprogram
+osgvirtualprogram
+osgvnc
+osgvolume
+osgwidgetaddremove
+osgwidgetmessagebox
+osgwidgetnotebook
+osgwidgetperformance
+osgwidgetprogress
+osgwidgetscrolled
+osgwidgetshader
+osgwidgetstyled
+
+not interested examples:
+osgviewerCocoa
+osgviewerFLTK
+osgviewerFOX
+osgviewerGTK
+osgviewerIPhone
+osgviewerMFC
+osgviewerSDL
+osgviewerWX
+osgAndroidExampleGLES1
+osgAndroidExampleGLES2
+osgAndroidExampleGLES3
+osgpdf

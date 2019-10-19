@@ -111,6 +111,26 @@ GLfloat triangle_area(const vec3& p0, const vec3& p1, const vec3& p2);
 // get camera position in world space, no need to invert view matrix.
 vec3 eye_pos(const mat4& v_mat);
 
+mat4 reflect_point(const vec3& p);
+// assume normalized
+mat4 reflect_plane(const vec4& p);
+
+// scale v in unit direction n by k
+template<length_t L, typename T, glm::qualifier Q>
+vec<L,T,Q> scale_vec_along(const vec<L,T,Q>& v, const vec<L,T,Q>& n, GLfloat k);
+
+// scale on unit direction n by k
+mat4 scale_along(const vec3& n, GLfloat k);
+
+// project on plane p
+mat4 project(const vec4& p);
+
+// reflect on plane p
+mat4 reflect(const vec4& p);
+
+// reflect camera by plane
+mat4 reflect(const mat4& v_mat, const vec4& p);
+
 //--------------------------------------------------------------------
 template <typename _It, typename _OutIt>
 void generate_face_normals(_It beg, _It end, _OutIt out)

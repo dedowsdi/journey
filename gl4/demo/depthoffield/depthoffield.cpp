@@ -12,10 +12,10 @@ namespace zxd {
 
 const GLint width = 800;
 const GLint height = 800;
-const GLint num_models = 100;
+const GLint num_models = 300;
 const GLfloat scene_radius = 30;
 const vec2 near_far = vec2(0.1f, 1000.0f);
-const vec2 field = vec2(5.0f, 10.0f); // start distance, range
+vec2 field = vec2(50.0f, 20.0f); // focus, radius
 
 mat4 p_mat;
 mat4 v_mat;
@@ -34,6 +34,9 @@ pingpong blur_map;
 GLuint depth_map;
 GLuint color_map;
 GLuint fbo;
+
+kcip focus;
+kcip radius;
 
 class depthinfield_program : public program
 {
@@ -160,11 +163,17 @@ void depth_of_field_app::create_scene()
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+  focus = m_control.add('Q', field.x, 1.0f, 1000.0f, 1.0f);
+  radius = m_control.add('W', field.y, 1.0f, 1000.0f, 1.0f);
 }
 
 void depth_of_field_app::update() {}
 
 void depth_of_field_app::display() {
+
+  field.x = focus->get_float();
+  field.y = radius->get_float();
+
   // render to color rex and depth tex
   glBindFramebuffer(GL_FRAMEBUFFER, fbo);
   glFramebufferTexture2D(
@@ -208,7 +217,8 @@ void depth_of_field_app::display() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   std::stringstream ss;
-  ss << "";
+  ss << "q : focus " << field.x << std::endl;
+  ss << "w : radius " << field.y << std::endl;
   m_text.print(ss.str(), 10, m_info.wnd_height - 20);
   glDisable(GL_BLEND);
 }

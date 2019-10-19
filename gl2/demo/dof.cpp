@@ -20,7 +20,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "dof";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_ACCUM | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_ACCUM | GLUT_DEPTH;
     m_info.wnd_width = 400;
     m_info.wnd_height = 400;
   }
@@ -30,7 +30,7 @@ class app0 : public app {
    *
    * pixdx and pixdy are anti-alias jitter in pixels.
    * set both equal to 0.0 for no anti-alias jitter.
-   * eyedx and eyedy are depth-of field jitter in pixels.
+   * eyedx and eyedy are depth-of field jitter (not in pixels)
    * set both equal to 0.0 for no depth of field effects.
    *
    * focus is distance from eye to plane in focus.
@@ -52,6 +52,7 @@ class app0 : public app {
     xwsize = right - left;
     ywsize = top - bottom;
 
+    // why must it be negative ?
     dx = -(pixdx * xwsize / (GLdouble)viewport[2] + eyedx * z_near / focus);
     dy = -(pixdy * ywsize / (GLdouble)viewport[3] + eyedy * z_near / focus);
 
@@ -182,7 +183,7 @@ class app0 : public app {
       glAccum(GL_ACCUM, 0.125);
     }
     glAccum(GL_RETURN, 1.0);
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

@@ -15,7 +15,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "accpersp";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB | GLUT_ACCUM | GLUT_DEPTH;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB | GLUT_ACCUM | GLUT_DEPTH;
     m_info.wnd_width = 250;
     m_info.wnd_height = 250;
   }
@@ -78,7 +78,8 @@ class app0 : public app {
 
     fov2 = ((fovy * PI_) / 180.0) / 2.0;
 
-    top = z_near / (cos(fov2) / sin(fov2));
+    // top = z_near / (cos(fov2) / sin(fov2));
+    top = z_near * tan(fov2);
     bottom = -top;
 
     right = top * aspect;
@@ -172,7 +173,7 @@ class app0 : public app {
     const GLubyte info[] = "q : accumulation size";
     glutBitmapString(GLUT_BITMAP_9_BY_15, info);
 
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

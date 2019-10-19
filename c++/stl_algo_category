@@ -34,7 +34,7 @@ search: 14
                                         2nd to check if item found.
                                         you can also use lower_bound:
                                             auto iter = lower_bound(..)
-                                            if(iter != end() && !(value < iter)
+                                            if( iter != end() && !(value < *iter) )
 
 transform   you can transform yourself if you want
 

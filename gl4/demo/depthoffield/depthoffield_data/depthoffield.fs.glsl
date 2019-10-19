@@ -26,6 +26,6 @@ void main(void)
   vec4 blur = texture(blur_map, fi.texcoord);
   float depth = texture(depth_map, fi.texcoord).x;
   float distance = -depth_to_eye_z(depth, near_far.x, near_far.y);
-  float blend = clamp((distance - field.x) / (field.y), 0.0f, 1.0f);
+  float blend = clamp(abs(distance - field.x) / (field.y), 0.0f, 1.0f);
   frag_color = color * (1 - blend) + blur * blend;
 }

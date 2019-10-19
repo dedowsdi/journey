@@ -17,7 +17,7 @@ class app0 : public app {
   void init_info() {
     app::init_info();
     m_info.title = "occlusion";
-    m_info.display_mode = GLUT_SINGLE | GLUT_RGB;
+    m_info.display_mode = GLUT_DOUBLE | GLUT_RGB;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -41,6 +41,8 @@ class app0 : public app {
     glDepthMask(GL_FALSE);
     glColorMask(0, 0, 0, 0);
 
+    // use GL_ANY_SAMPLES_PASSED or GL_ANY_SAMPLES_PASSED_CONSERVATIVE if you
+    // just want to know if samples passed.
     glBeginQuery(GL_SAMPLES_PASSED, queries[0]);
     glutSolidCube(5);
     glEndQuery(GL_SAMPLES_PASSED);
@@ -90,7 +92,7 @@ class app0 : public app {
     /*glGetIntegerv(GL_SCISSOR_BOX, box);*/
     /*printf("%d, %d, %d, %d\n", box[0],box[1],box[2],box[3]);*/
 
-    glFlush();
+    glutSwapBuffers();
   }
 
   void reshape(int w, int h) {

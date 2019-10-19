@@ -19,7 +19,7 @@ public:
 
   cuboid(const glm::vec3 &half_diag, type _type = type::CT_24);
 
-  cuboid(GLfloat size = 1, type _type = type::CT_24);
+  cuboid(GLfloat size = 2, type _type = type::CT_24);
 
   const glm::vec3& half_diag() const { return m_half_diag; }
   void half_diag(const glm::vec3& v){ m_half_diag = v; }

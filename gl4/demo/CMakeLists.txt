@@ -25,6 +25,7 @@ set (PROJECTS
     texture
     rotation
     depthoffield
+    mirror
     )
 
 foreach(PROJECT ${PROJECTS})

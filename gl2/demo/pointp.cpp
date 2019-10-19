@@ -9,6 +9,8 @@
  *
  *  you can not call glPointSize betwen glBegin and glEnd, you need to use point
  *  parameter to do the job. it scale and fade point based on attenuation.
+ *
+ *  vendor is free to ignore GL_POINT_FADE_THRESHOLD_SIZE
  */
 #include <app.h>
 
@@ -25,7 +27,7 @@ class app0 : public app {
     app::init_info();
     m_info.title = "pointp";
     m_info.display_mode =
-      GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE;
+      GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE;
     m_info.wnd_width = 500;
     m_info.wnd_height = 500;
   }
@@ -52,19 +54,17 @@ class app0 : public app {
 
     glEnable(GL_DEPTH_TEST);
     glPointSize(psize);
-    // enable point smooth to get round point
-    glEnable(GL_POINT_SMOOTH);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     glGetFloatv(GL_POINT_SIZE_MAX, pmax);
-
-    glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, linear);
-    glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, 2.0);
+    glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, quadratic);
   }
 
   void display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, 10.0f);
     glCallList(1);
 
     const unsigned char info[] =

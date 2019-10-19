@@ -37,6 +37,7 @@ void blinn_program::attach_shaders()
 #endif
   if (with_texcoord) sv.push_back("#define WITH_TEX\n");
   if (instance) sv.push_back("#define INSTANCE\n");
+  if (with_clipplane0) sv.push_back("#define WITH_CLIPPLANE0\n");
   attach(GL_VERTEX_SHADER, sv, shader_dir + "blinn.vs.glsl");
 
   sv.clear();
@@ -62,6 +63,10 @@ void blinn_program::bind_uniform_locations()
   if (with_texcoord)
   {
     ul_map = get_uniform_location(map_name);
+  }
+  if (with_clipplane0)
+  {
+    ul_clipplane0 = get_uniform_location("clipplane0");
   }
   ul_normal_scale = get_uniform_location("normal_scale");
 }
@@ -114,7 +119,7 @@ void blinn_program::bind_attrib_locations()
 void quad_program::attach_shaders()
 {
   attach(GL_VERTEX_SHADER, "shader4/quad.vs.glsl");
-  attach(GL_FRAGMENT_SHADER, "shader4/quad.fs.glsl");
+  attach(GL_FRAGMENT_SHADER, frag_shader);
 }
 
 //--------------------------------------------------------------------

@@ -44,6 +44,30 @@ void draw_quad(GLuint tex, GLuint tui/* = 0*/)
 }
 
 //--------------------------------------------------------------------
+void draw_depth_quad(GLuint tex, GLuint tui)
+{
+  static quad q;
+  static quad_program prg;
+  if (!q.is_inited())
+  {
+    q.build_mesh({attrib_semantic::vertex, attrib_semantic::texcoord});
+  }
+
+  glActiveTexture(tui + GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, tex);
+
+  if (prg.get_object() == -1)
+  {
+    prg.frag_shader = "shader4/depth.fs.glsl";
+    prg.init();
+  }
+
+  prg.use();
+  prg.update_uniforms(tui);
+  q.draw();
+}
+
+//--------------------------------------------------------------------
 void draw_quad()
 {
   get_ndc_quad().draw();

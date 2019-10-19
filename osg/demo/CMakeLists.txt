@@ -17,6 +17,7 @@ set (DEMOES
     euler
     fixVerticalUp
     hand
+    cubemap
     )
 
 foreach(PROJECT ${DEMOES})

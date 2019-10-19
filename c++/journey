@@ -345,3 +345,29 @@ In a class template, nonvirtual functions are only instantiated if they’re use
 – but virtual functions are instantiated every time
 
 virtual functions can be inline if you call them via object.
+
+find of multiset or multimap doesn't have to return the 1st one
+
+the elements with the same keys in unordered_map, unordered_set are guaranteed
+to be consecutive in the iteration order.
+
+unordered* use equality, they offer a method to access their comparator: key_eq.
+
+template<typename T>
+void foo(T const& t)
+  (T&) const& collaped to T&
+    to help understande it :
+      T& is non const reference to T, you can change it
+      (T&) const is reference T& that is const, the reference it self can't be
+      modified, but the target is still modifiable, that's why it collapsed to
+      T&
+  (T&&) const& also collaped to T&
+
+  be very very very careful about this.
+
+  From N4659 (2017-03-21) §11.3.2:
+  If a typedef-name (10.1.3, 17.1) or a decltype-specifier (10.1.7.2) denotes a
+  type TR that is a reference to a type T, an attempt to create the type “lvalue
+  reference to cv TR” creates the type “lvalue reference to T”, while an attempt
+  to create the type “rvalue reference to cv TR” creates the type TR. [ Note: This
+  rule is known as reference collapsing. —end note ]

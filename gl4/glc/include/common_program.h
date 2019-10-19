@@ -11,6 +11,7 @@ struct blinn_program : public zxd::program
 {
 
   GLboolean with_texcoord;
+  GLboolean with_clipplane0 = GL_FALSE;
   GLboolean instance;
   GLboolean legacy = GL_FALSE;
 
@@ -19,6 +20,7 @@ struct blinn_program : public zxd::program
   GLint ul_mv_mat;
   GLint ul_mvp_mat;
   GLint ul_mv_mat_it;
+  GLint ul_clipplane0;
 
   GLint tex_unit;
   GLint light_count = 1;
@@ -50,6 +52,7 @@ struct quad_program : public zxd::program
 {
   GLint ul_quad_map;
   std::string quad_map_name;
+  std::string frag_shader{"shader4/quad.fs.glsl"};
 
   quad_program() : quad_map_name("quad_map") {}
 

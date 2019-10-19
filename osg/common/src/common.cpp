@@ -4,6 +4,7 @@
 
 #include "common.h"
 #include <osg/Point>
+#include <stdexcept>
 
 namespace zxd {
 
@@ -26,6 +27,19 @@ osg::Vec2ui getScreenResolution(GLuint screenIdentifier /*= 0*/) {
   osg::Vec2ui v;
   getScreenResolution(v.x(), v.y(), screenIdentifier);
   return v;
+}
+
+//--------------------------------------------------------------------
+osg::Vec2i getWindowResolution(osgViewer::Viewer& viewer, GLint index)
+{
+  osgViewer::Viewer::Windows windows;
+  viewer.getWindows(windows);
+  if (index >= windows.size())
+  {
+    throw new std::out_of_range("wnd index out of range");
+  }
+  auto traits = windows[index]->getTraits();
+  return osg::Vec2i{traits->width, traits->height};
 }
 
 //------------------------------------------------------------------------------

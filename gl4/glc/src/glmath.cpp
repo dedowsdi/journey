@@ -19,6 +19,8 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
 
+#include <geometry_test.h>
+
 namespace zxd
 {
 
@@ -434,6 +436,81 @@ GLfloat triangle_area(const vec3& p0, const vec3& p1, const vec3& p2)
 vec3 eye_pos(const mat4& v_mat)
 {
   return vec3(-v_mat[3]) * mat3(v_mat);
+}
+
+//--------------------------------------------------------------------
+mat4 reflect_point(const vec3& p)
+{
+  // A' = p * 2 - A
+  // return translate(scale(translate(p), vec3(-1)), -p);
+  return scale(translate(p*2.0f), vec3(-1));
+}
+
+//--------------------------------------------------------------------
+mat4 reflect_plane(const vec4& p)
+{
+	//@TODO implement
+	throw new std::runtime_error("unimplemented ___FUNC___ called");
+}
+
+template<length_t L, typename T, glm::qualifier Q>
+vec<L,T,Q> scale_vec(const vec<L,T,Q>& v, const vec<L,T,Q>& n, GLfloat k)
+{
+  // v_on_n = v·n*n * k
+  // v_perp_n = v - v·n*n
+  return v + (k - 1.0f) * dot(v, n) * n;
+}
+
+template vec3 scale_vec(const vec3& v, const vec3& n, GLfloat k);
+template vec2 scale_vec(const vec2& v, const vec2& n, GLfloat k);
+
+//--------------------------------------------------------------------
+mat4 scale_along(const vec3& n, GLfloat k)
+{
+  GLfloat km1 = k - 1;
+  // based on apply scale_vec on e0, e1, e2
+  return mat4(
+      1 + km1 * n.x * n.x, km1 * n.x * n.y,     km1 * n.x * n.z,     0,
+      km1 * n.x * n.y,     1 + km1 * n.y * n.y, km1 * n.y * n.z,     0,
+      km1 * n.x * n.z,     km1 * n.y * n.z,     1 + km1 * n.z * n.z, 0,
+      0,                   0,                   0,                   1
+  );
+}
+
+//--------------------------------------------------------------------
+mat4 project(const vec4& p)
+{
+  vec3 n(p);
+  vec3 origin_to_plane = -p.w * n;
+  mat4 T = glm::translate(origin_to_plane);
+  mat4 T_i = glm::translate(-origin_to_plane);
+  mat4 A = scale_along(n, 0);
+  return T * A * T_i;
+}
+
+//--------------------------------------------------------------------
+mat4 reflect(const vec4& p)
+{
+  vec3 n(p);
+  vec3 origin_to_plane = -p.w * n;
+  mat4 T = glm::translate(origin_to_plane);
+  mat4 T_i = glm::translate(-origin_to_plane);
+  mat4 A = scale_along(n, -1);
+  return T * A * T_i;
+}
+
+//--------------------------------------------------------------------
+mat4 reflect(const mat4& v_mat, const vec4& p)
+{
+  auto m = reflect(p);
+  auto v_mat_i = glm::inverse(v_mat);
+  auto eye = vec3(v_mat_i[3]);
+  auto eye_dir = -vec3(v_mat_i[2]);
+  auto eye_up = vec3(v_mat_i[1]);
+  auto reflected_eye = vec3(m * vec4(eye, 1));
+  auto reflected_dir = vec3(m * vec4(eye_dir, 0));
+  auto reflected_up = vec3(m * vec4(eye_up, 0));
+  return lookAt(reflected_eye, reflected_eye + reflected_dir * 10.0f, reflected_up);
 }
 
 }

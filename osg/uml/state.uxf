@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.2">
-  <zoom_level>7</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>749</x>
-      <y>154</y>
-      <w>238</w>
-      <h>308</h>
+      <x>856</x>
+      <y>88</y>
+      <w>272</w>
+      <h>392</h>
     </coordinates>
     <panel_attributes>State
 --
@@ -25,6 +25,10 @@ pushModeList(modeMap, modeList)
 popModeList(modeMap, modeList)
 pushAttributeList(attributeMap, attributeList)
 popAttributeList(attributeMap, attributeList)
+setModeValidity(mode, valid)
+initializeExtensionProcs()
+initupModeDefineMaps()
+reset()
 --
 _stateStateStack
 _modeMap
@@ -36,25 +40,29 @@ _defineMap</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>798</x>
-      <y>497</y>
-      <w>105</w>
-      <h>63</h>
+      <x>912</x>
+      <y>520</y>
+      <w>120</w>
+      <h>136</h>
     </coordinates>
     <panel_attributes>StateSet
 --
 getModeList()
 getAttributeList()
-setGlobalDefaults()</panel_attributes>
+setGlobalDefaults()
+--
+_renderingHint
+_binMode
+_binNum</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>868</x>
-      <y>455</y>
-      <w>21</w>
-      <h>56</h>
+      <x>992</x>
+      <y>472</y>
+      <w>24</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -62,47 +70,37 @@ setGlobalDefaults()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>511</x>
-      <y>350</y>
-      <w>70</w>
-      <h>21</h>
+      <x>488</x>
+      <y>368</y>
+      <w>144</w>
+      <h>80</h>
     </coordinates>
-    <panel_attributes>ModeStack</panel_attributes>
+    <panel_attributes>ModeStack
+--
+valid
+changed
+last_applied_value
+global_default_value</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>448</x>
-      <y>406</y>
-      <w>105</w>
-      <h>21</h>
+      <x>512</x>
+      <y>464</y>
+      <w>120</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>AttributeStack</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>553</x>
-      <y>455</y>
-      <w>161</w>
-      <h>77</h>
-    </coordinates>
-    <panel_attributes>StateAttribute
---
-getTypeMemberPair()
-getMember()
-apply()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
       <x>0</x>
-      <y>609</y>
-      <w>322</w>
-      <h>315</h>
+      <y>696</y>
+      <w>368</w>
+      <h>360</h>
     </coordinates>
     <panel_attributes>CullVisitor tracks the current StateGraph node, When it finds a 
 StateSet in a node, it checks to see if the StateSet object
@@ -137,10 +135,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>630</x>
-      <y>350</y>
-      <w>70</w>
-      <h>21</h>
+      <x>720</x>
+      <y>400</y>
+      <w>80</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>ModeMap</panel_attributes>
     <additional_attributes/>
@@ -148,10 +146,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>595</x>
-      <y>406</y>
-      <w>105</w>
-      <h>21</h>
+      <x>680</x>
+      <y>464</y>
+      <w>120</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>AttributeMap</panel_attributes>
     <additional_attributes/>
@@ -159,21 +157,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>182</x>
-      <y>917</y>
-      <w>70</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>546</x>
-      <y>406</y>
-      <w>63</w>
-      <h>21</h>
+      <x>624</x>
+      <y>464</y>
+      <w>72</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -181,32 +168,32 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>693</x>
-      <y>350</y>
-      <w>70</w>
-      <h>21</h>
+      <x>792</x>
+      <y>336</y>
+      <w>80</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>80.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>693</x>
-      <y>406</y>
-      <w>70</w>
-      <h>21</h>
+      <x>792</x>
+      <y>400</y>
+      <w>80</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>80.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>833</x>
-      <y>651</y>
-      <w>224</w>
-      <h>126</h>
+      <x>952</x>
+      <y>744</y>
+      <w>256</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>RenderBin
 --
@@ -223,10 +210,10 @@ _sortMode
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>525</x>
-      <y>728</y>
-      <w>161</w>
-      <h>112</h>
+      <x>600</x>
+      <y>832</y>
+      <w>184</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>RenderLeaf
 --
@@ -240,10 +227,10 @@ _modelview</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>518</x>
-      <y>567</y>
-      <w>217</w>
-      <h>105</h>
+      <x>592</x>
+      <y>648</y>
+      <w>248</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>StateGraph
 --
@@ -258,10 +245,10 @@ _parent</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>637</x>
-      <y>546</y>
-      <w>161</w>
-      <h>49</h>
+      <x>728</x>
+      <y>624</y>
+      <w>184</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 graph</panel_attributes>
@@ -270,10 +257,10 @@ graph</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>588</x>
-      <y>665</y>
-      <w>21</w>
-      <h>77</h>
+      <x>672</x>
+      <y>760</y>
+      <w>24</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -281,10 +268,10 @@ graph</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>728</x>
-      <y>616</y>
-      <w>119</w>
-      <h>63</h>
+      <x>832</x>
+      <y>704</y>
+      <w>136</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>150.0;70.0;10.0;10.0</additional_attributes>
@@ -292,10 +279,10 @@ graph</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>588</x>
-      <y>658</y>
-      <w>259</w>
-      <h>84</h>
+      <x>672</x>
+      <y>752</y>
+      <w>296</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>350.0;10.0;10.0;100.0</additional_attributes>
@@ -303,10 +290,10 @@ graph</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1050</x>
-      <y>672</y>
-      <w>98</w>
-      <h>77</h>
+      <x>1200</x>
+      <y>768</y>
+      <w>112</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 graph</panel_attributes>
@@ -315,21 +302,21 @@ graph</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>917</x>
-      <y>455</y>
-      <w>21</w>
-      <h>210</h>
+      <x>1048</x>
+      <y>472</y>
+      <w>24</w>
+      <h>288</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;340.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1036</x>
-      <y>497</y>
-      <w>336</w>
-      <h>98</h>
+      <x>1184</x>
+      <y>568</y>
+      <w>384</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>CullVisitor
 --
@@ -341,21 +328,21 @@ popStateSet()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>707</x>
-      <y>504</y>
-      <w>105</w>
-      <h>21</h>
+      <x>808</x>
+      <y>528</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
+    <additional_attributes>10.0;70.0;130.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
       <x>0</x>
       <y>0</y>
-      <w>322</w>
-      <h>196</h>
+      <w>368</w>
+      <h>224</h>
     </coordinates>
     <panel_attributes>Osg build inner stacks for StateSet, and each mode.
 modestackes are stored in modemap, 
@@ -382,9 +369,9 @@ bg=blue</panel_attributes>
     <id>UMLNote</id>
     <coordinates>
       <x>0</x>
-      <y>196</y>
-      <w>322</w>
-      <h>252</h>
+      <y>224</y>
+      <w>368</w>
+      <h>288</h>
     </coordinates>
     <panel_attributes>
 RenderBin draw in following sequence:
@@ -413,21 +400,21 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>728</x>
-      <y>553</y>
-      <w>133</w>
-      <h>70</h>
+      <x>832</x>
+      <y>648</y>
+      <w>152</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;&gt;</panel_attributes>
-    <additional_attributes>170.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>170.0;10.0;10.0;60.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>833</x>
-      <y>826</y>
-      <w>224</w>
-      <h>112</h>
+      <x>952</x>
+      <y>944</y>
+      <w>256</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>RenderStage
 </panel_attributes>
@@ -437,9 +424,9 @@ bg=blue</panel_attributes>
     <id>UMLNote</id>
     <coordinates>
       <x>0</x>
-      <y>448</y>
-      <w>322</w>
-      <h>161</h>
+      <y>512</y>
+      <w>368</w>
+      <h>184</h>
     </coordinates>
     <panel_attributes>StateGraph represent a node in the StateSet tree, follow the
 tree from root to no will setup opengl state to render
@@ -462,10 +449,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>728</x>
-      <y>553</y>
-      <w>322</w>
-      <h>77</h>
+      <x>832</x>
+      <y>632</y>
+      <w>368</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>440.0;10.0;10.0;90.0</additional_attributes>
@@ -473,10 +460,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>938</x>
-      <y>567</y>
-      <w>112</w>
-      <h>98</h>
+      <x>1072</x>
+      <y>648</y>
+      <w>128</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>140.0;10.0;10.0;120.0</additional_attributes>
@@ -484,10 +471,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>945</x>
-      <y>770</y>
-      <w>21</w>
-      <h>70</h>
+      <x>1080</x>
+      <y>880</y>
+      <w>24</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -495,10 +482,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1050</x>
-      <y>588</y>
-      <w>182</w>
-      <h>315</h>
+      <x>1200</x>
+      <y>672</y>
+      <w>208</w>
+      <h>360</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>240.0;10.0;10.0;430.0</additional_attributes>
@@ -506,12 +493,79 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>574</x>
-      <y>350</y>
-      <w>70</w>
-      <h>21</h>
+      <x>624</x>
+      <y>400</y>
+      <w>112</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>632</x>
+      <y>520</y>
+      <w>184</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>StateAttribute
+--
+getTypeMemberPair()
+getMember()
+apply()
+getModeUsage()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>384</x>
+      <y>0</y>
+      <w>440</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Some mode has associated attribute, e.g. light, tex_gen.
+If you turn on mode without set up attribute, you get
+attribute set by other stateset, be very careful about
+this.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>384</x>
+      <y>120</y>
+      <w>440</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>Some attributes are transform related, they are called position
+attribute, some position attribute has a coresponding node:
+  LightSource : light
+  ClipNode : clip plane
+  TexGenNode : tex gen
+
+Note that position attribute are global!!!!!.
+RenderStage::drawImplemention apply them before drwing anything.
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>1056</y>
+      <w>496</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>There are sevral inital mode values in State::_modeMap
+
+GL_POINT_SPRITE_ARB : setup by setModeValidity in initizlizeExtensionProcs
+GL_SCISSOR_TEST : setup by applyMode in RenderStage::drawImplemention
+
+bg=blue</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

@@ -94,6 +94,7 @@ set (DEMOES
     snake_rect
     snake_circle
     width
+    motionblur
     )
 
 foreach(DEMO ${DEMOES})

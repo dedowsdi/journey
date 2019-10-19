@@ -152,3 +152,7 @@ To avoid submodule issue
 ------------------------------------------------------------
 git cat-file -p sha     get contents of files associated with this sha
 git ls-tree tree_sha    get blob sha of this tree (the same as git cat-file -p tree_sha ?)
+------------------------------------------------------------
+rebase
+
+rebase -i @~2       reorder last 2 commit interactively.

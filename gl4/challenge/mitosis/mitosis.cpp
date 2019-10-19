@@ -234,7 +234,7 @@ public:
       if(t > d2)
         continue;
 
-      GLfloat ray_distance2 = geometry_test::ray_point_distance2(iter->pos(), camera_pos, ray_dir);
+      GLfloat ray_distance2 = geometry_test::point_ray_distance2(iter->pos(), camera_pos, ray_dir);
       if(ray_distance2 != -1 && ray_distance2 <= iter->radius() * iter->radius())
       {
         it = iter;

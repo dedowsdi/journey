@@ -18,16 +18,23 @@
  */
 
 #include <app.h>
+#include <algorithm>
+#include <texutil.h>
+#include <array>
 
 namespace zxd {
 
 #define image_size 16
-GLubyte image1[image_size][image_size][4];
-GLubyte image2[image_size][image_size][4];
-GLubyte image3[image_size][image_size][4];
-GLubyte image4[image_size][image_size][4];
-GLubyte image5[image_size][image_size][4];
-GLubyte image6[image_size][image_size][4];
+
+// load http://www.custommapmakers.org/skyboxes.php style skybox
+std::string skybox_image;
+
+GLubyte image_x[image_size][image_size][4]; // red
+GLubyte image_y[image_size][image_size][4]; // green
+GLubyte image_z[image_size][image_size][4]; // blue
+GLubyte image_nx[image_size][image_size][4]; // yellow
+GLubyte image_ny[image_size][image_size][4]; // magenta
+GLubyte image_nz[image_size][image_size][4]; // cyan
 
 GLdouble ztrans = -20;
 GLint yaw = 0, pitch = 0, yaw_obj = 0;
@@ -36,6 +43,9 @@ GLuint vbo, ibo, tbo;
 GLint polygon_mode = GL_FILL;
 
 GLuint skybox_size = 50;
+GLfloat ball_size = 2.5f;
+
+bool swap_front_back = false;
 
 // clang-format off
   GLfloat vertices[][3] = {
@@ -67,41 +77,109 @@ class app0 : public app {
     m_info.wnd_height = 500;
   }
 
+  void reload_skybox()
+  {
+    if (skybox_image.empty())
+    {
+      create_manual_skybox();
+    }
+    else
+    {
+      load_skybox();
+    }
+  }
+
   void make_images(void) {
     int i, j, c;
+    GLfloat marker_size = 0.3f;
 
     for (i = 0; i < image_size; i++) {
       for (j = 0; j < image_size; j++) {
         c = ((((i & 0x1) == 0) ^ ((j & 0x1) == 0))) * 255;
-        image1[i][j][0] = (GLubyte)c;
-        image1[i][j][1] = (GLubyte)c;
-        image1[i][j][2] = (GLubyte)c;
-        image1[i][j][3] = (GLubyte)255;
+        // total black for s axis
+        if (i < image_size * marker_size && j <= image_size * (1 - marker_size))
+        {
+          c *= 0.0f;
+        }
 
-        image2[i][j][0] = (GLubyte)c;
-        image2[i][j][1] = (GLubyte)c;
-        image2[i][j][2] = (GLubyte)0;
-        image2[i][j][3] = (GLubyte)255;
+        // quater tone for t axis
+        if (j < image_size * marker_size && i <= image_size * (1 - marker_size))
+        {
+          c *= 0.25f;
+        }
 
-        image3[i][j][0] = (GLubyte)c;
-        image3[i][j][1] = (GLubyte)0;
-        image3[i][j][2] = (GLubyte)c;
-        image3[i][j][3] = (GLubyte)255;
+        image_x[i][j][0] = (GLubyte)c;
+        image_x[i][j][1] = (GLubyte)0;
+        image_x[i][j][2] = (GLubyte)0;
+        image_x[i][j][3] = (GLubyte)255;
 
-        image4[i][j][0] = (GLubyte)0;
-        image4[i][j][1] = (GLubyte)c;
-        image4[i][j][2] = (GLubyte)c;
-        image4[i][j][3] = (GLubyte)255;
+        image_y[i][j][0] = (GLubyte)0;
+        image_y[i][j][1] = (GLubyte)c;
+        image_y[i][j][2] = (GLubyte)0;
+        image_y[i][j][3] = (GLubyte)255;
 
-        image5[i][j][0] = (GLubyte)255;
-        image5[i][j][1] = (GLubyte)c;
-        image5[i][j][2] = (GLubyte)c;
-        image5[i][j][3] = (GLubyte)255;
+        image_z[i][j][0] = (GLubyte)0;
+        image_z[i][j][1] = (GLubyte)0;
+        image_z[i][j][2] = (GLubyte)c;
+        image_z[i][j][3] = (GLubyte)255;
 
-        image6[i][j][0] = (GLubyte)c;
-        image6[i][j][1] = (GLubyte)c;
-        image6[i][j][2] = (GLubyte)255;
-        image6[i][j][3] = (GLubyte)255;
+        image_nx[i][j][0] = (GLubyte)c;
+        image_nx[i][j][1] = (GLubyte)c;
+        image_nx[i][j][2] = (GLubyte)0;
+        image_nx[i][j][3] = (GLubyte)255;
+
+        image_ny[i][j][0] = (GLubyte)c;
+        image_ny[i][j][1] = (GLubyte)0;
+        image_ny[i][j][2] = (GLubyte)c;
+        image_ny[i][j][3] = (GLubyte)255;
+
+        image_nz[i][j][0] = (GLubyte)0;
+        image_nz[i][j][1] = (GLubyte)c;
+        image_nz[i][j][2] = (GLubyte)c;
+        image_nz[i][j][3] = (GLubyte)255;
+      }
+    }
+
+    // cube map use left top as origin by convention
+    flip_vertical(image_x[0][0], image_size, image_size, 4);
+    flip_vertical(image_nx[0][0], image_size, image_size, 4);
+    flip_vertical(image_y[0][0], image_size, image_size, 4);
+    flip_vertical(image_ny[0][0], image_size, image_size, 4);
+    flip_vertical(image_z[0][0], image_size, image_size, 4);
+    flip_vertical(image_nz[0][0], image_size, image_size, 4);
+
+    // flip_horizontal(image_x[0][0], image_size, image_size, 4);
+    // flip_horizontal(image_nx[0][0], image_size, image_size, 4);
+    // flip_horizontal(image_y[0][0], image_size, image_size, 4);
+    // flip_horizontal(image_ny[0][0], image_size, image_size, 4);
+    // flip_horizontal(image_z[0][0], image_size, image_size, 4);
+    // flip_horizontal(image_nz[0][0], image_size, image_size, 4);
+  }
+
+  void flip_vertical(GLubyte* img, GLint width, GLint height, GLuint pixel_size)
+  {
+    auto row_size = width * pixel_size;
+    auto total_size = row_size * height;
+    for (auto i = 0; i < height / 2; ++i)
+    {
+      auto r0 = img + row_size * i;
+      auto r1 = img + total_size - row_size * (i + 1);
+      std::swap_ranges(r0, r0 + row_size, r1);
+    }
+  }
+
+  void flip_horizontal(GLubyte* img, GLint width, GLint height, GLuint pixel_size)
+  {
+    auto row_size = width * pixel_size;
+    auto total_size = row_size * height;
+    for (auto i = 0; i < height; ++i)
+    {
+      auto r = img + row_size * i;
+      for (auto j = 0; j < width/2; ++j)
+      {
+        auto c0 = r + j * pixel_size;
+        auto c1 = r + (width - 1 - j) * pixel_size;
+        std::swap_ranges(c0, c0 + pixel_size, c1);
       }
     }
   }
@@ -122,6 +200,77 @@ class app0 : public app {
       GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
   }
 
+  void create_manual_skybox()
+  {
+    make_images();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, image_size,
+      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_x);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, image_size,
+      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_nx);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, image_size,
+      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_y);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, image_size,
+      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_ny);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, image_size,
+      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_z);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, image_size,
+      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_nz);
+  }
+
+  void load_skybox()
+  {
+    // http://www.custommapmakers.org/skyboxes.php use different naming
+    // convension? it's very confusing what's front, front(+z) for cubemap is back
+    // for skybox, some says one should name this files as
+    // basename_n?[xyz].suffix
+    std::array<std::string, 6> names = {
+      "ft",    // right
+      "bk",    // left
+      "up",    // up
+      "dn",    // down
+      "rt",    // front
+      "lf"     // back
+    };
+
+    if (swap_front_back)
+    {
+      // swap back, front, flip horizontal for left, right, front, back. flip
+      // vertical for top, bottom.
+      // 
+      // Another way is to rotate cube by 180(swap back and front, left and
+      // right, rotate top and bottom by 180), although everything still look
+      // flipped horizontally.
+      // 
+      // The best way is probably to do this outside of application
+      std::swap(names[4], names[5]);
+    }
+
+    for (auto i = 0; i < 6; ++i)
+    {
+      std::string fname = skybox_image + "_" + names[i] + ".tga";
+      auto img = fipLoadResource32(fname);
+      // cube map use left top as origin by convention
+      img.flipVertical();
+
+      if (swap_front_back)
+      {
+        if (i == 2 || i == 3)
+        {
+          img.flipVertical();
+        }
+        else
+        {
+          img.flipHorizontal();
+        }
+      }
+
+      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, img.getWidth(),
+        img.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, img.accessPixels());
+    }
+  }
+
   void create_scene(void) {
     /*glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
     GLfloat diffuse[4] = {1.0, 1.0, 1.0, 1.0};
@@ -131,25 +280,13 @@ class app0 : public app {
     glEnable(GL_NORMALIZE);
     glShadeModel(GL_SMOOTH);
 
-    make_images();
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, image_size,
-      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image1);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, image_size,
-      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image4);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, image_size,
-      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image2);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, image_size,
-      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image5);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, image_size,
-      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image3);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, image_size,
-      image_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, image6);
+
+    reload_skybox();
 
     // generate s,t,r texture, use normal in view space as texcoord
     glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
@@ -199,9 +336,9 @@ class app0 : public app {
 
     glPushMatrix();
     // some people prefer to erase skybox translation
-    glLoadIdentity();
-    glRotatef(-yaw, 0, 1, 0);
-    glRotatef(-pitch, 1, 0, 0);
+    // glLoadIdentity();
+    // glRotatef(-yaw, 0, 1, 0);
+    // glRotatef(-pitch, 1, 0, 0);
     
     glDisable(GL_LIGHTING);
     glScalef(skybox_size, skybox_size, skybox_size);
@@ -237,7 +374,7 @@ class app0 : public app {
     glMatrixMode(GL_MODELVIEW);
     glRotatef(yaw_obj, 0, 1, 0);
 
-    glutSolidSphere(5.0, 40, 20);
+    glutSolidSphere(ball_size, 32, 32);
 
     glMatrixMode(GL_TEXTURE);
     glPopMatrix();
@@ -259,7 +396,9 @@ class app0 : public app {
       "uU : yaw camera\n"
       "iI : pitch camera\n"
       "oO : yaw object\n"
-      "pP : polygon mode\n";
+      "pP : polygon mode\n"
+      "jJ : change ball size\n"
+      "k  : swap front and back\n";
     glutBitmapString(GLUT_BITMAP_9_BY_15, info);
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_CUBE_MAP);
@@ -301,10 +440,10 @@ class app0 : public app {
         }
         break;
       case 'r':
-        ztrans = ztrans - 0.2;
+        ztrans = ztrans * 1.1;
         break;
       case 'R':
-        ztrans = ztrans + 0.2;
+        ztrans = ztrans * 0.9;
         break;
       case 'u':
         yaw += 5;
@@ -327,6 +466,17 @@ class app0 : public app {
       case 'p': {
         polygon_mode = GL_POINT + (polygon_mode + 1 - GL_POINT) % 3;
       } break;
+      case 'j':
+        ball_size += 0.1;
+        break;
+      case 'J':
+        if (ball_size > 0.5) {
+          ball_size -= 0.1;
+        }
+        break;
+      case 'k':
+        swap_front_back ^= 1;
+        reload_skybox();
       default:
         break;
     }
@@ -334,6 +484,12 @@ class app0 : public app {
 };
 }
 int main(int argc, char** argv) {
+
+  if (argc >= 2)
+  {
+    zxd::skybox_image = argv[1];
+  }
+
   zxd::app0 _app0;
   _app0.run(argc, argv);
   return 0;

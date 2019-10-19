@@ -134,10 +134,9 @@ array_uptr cuboid::build_normals(const array& vertices)
     normals->insert(normals->end(), 4, vec3( 0,  0, -1));
     normals->insert(normals->end(), 4, vec3( 0, -1,  0));
     normals->insert(normals->end(), 4, vec3( 0,  1,  0));
-    normals->insert(normals->end(), 4, vec3( 1,  0,  1));
-    normals->insert(normals->end(), 4, vec3(-1,  0,  1));
+    normals->insert(normals->end(), 4, vec3( 1,  0,  0));
+    normals->insert(normals->end(), 4, vec3(-1,  0,  0));
   }
-  return normals;
   return normals;
 }
 

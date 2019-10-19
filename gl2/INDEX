@@ -107,6 +107,7 @@ Chapter 10: The Framebuffer
 	accpersp.c	(1.0)
 	accanti.c	(1.0)
 	dof.c		(1.0)
+        motionblur.cpp
     rtt.cpp
 
 Chapter 11: Tessellators and Quadrics

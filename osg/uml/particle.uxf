@@ -4,16 +4,17 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>369</x>
+      <x>324</x>
       <y>333</y>
-      <w>153</w>
+      <w>198</w>
       <h>90</h>
     </coordinates>
     <panel_attributes>ParticleSystem
 --
 _def_ptemp
 --
-update(dt, nv)</panel_attributes>
+update(dt, nv)
+setDefaultAttributes(tex, emissive, lighting)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -87,7 +88,7 @@ traverse(nv)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>126</x>
+      <x>90</x>
       <y>324</y>
       <w>153</w>
       <h>135</h>
@@ -119,8 +120,8 @@ _mass
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>999</x>
-      <y>594</y>
+      <x>1053</x>
+      <y>585</y>
       <w>171</w>
       <h>45</h>
     </coordinates>
@@ -132,8 +133,8 @@ _rate_range</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1215</x>
-      <y>576</y>
+      <x>1278</x>
+      <y>567</y>
       <w>171</w>
       <h>63</h>
     </coordinates>
@@ -146,23 +147,23 @@ _rate_range</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>954</x>
-      <y>594</y>
-      <w>63</w>
+      <y>585</y>
+      <w>117</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1161</x>
-      <y>603</y>
-      <w>72</w>
+      <x>1215</x>
+      <y>594</y>
+      <w>81</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -181,13 +182,15 @@ _referenceFrame</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>594</x>
-      <y>576</y>
+      <y>549</y>
       <w>171</w>
-      <h>45</h>
+      <h>63</h>
     </coordinates>
     <panel_attributes>/Emitter/
 --
-/emitParticles(dt)/</panel_attributes>
+/emitParticles(dt)/
+--
+_ptemp</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -196,10 +199,10 @@ _referenceFrame</panel_attributes>
       <x>522</x>
       <y>522</y>
       <w>90</w>
-      <h>90</h>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;80.0;50.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -218,12 +221,12 @@ emitParticles(dt)</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>666</x>
-      <y>612</y>
+      <y>603</y>
       <w>27</w>
-      <h>72</h>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -324,13 +327,17 @@ emitParticles(dt)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1098</x>
-      <y>684</y>
+      <x>1080</x>
+      <y>648</y>
       <w>153</w>
-      <h>27</h>
+      <h>90</h>
     </coordinates>
     <panel_attributes>/RadialShooter/
-</panel_attributes>
+--
+_speed_range
+_rot_spped_range
+_theta_range
+_phi_range</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -338,11 +345,11 @@ emitParticles(dt)</panel_attributes>
     <coordinates>
       <x>990</x>
       <y>684</y>
-      <w>126</w>
+      <w>108</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;120.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -481,13 +488,13 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>270</x>
+      <x>234</x>
       <y>351</y>
-      <w>117</w>
+      <w>108</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>110.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -499,5 +506,27 @@ bg=blue</panel_attributes>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>90.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>81</x>
+      <y>855</y>
+      <w>180</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>FluridFrictionOperator</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>162</x>
+      <y>810</y>
+      <w>189</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>190.0;10.0;10.0;50.0</additional_attributes>
   </element>
 </diagram>

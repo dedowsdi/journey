@@ -8,6 +8,7 @@
 #include <osgText/Text>
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Vec3>
+#include <osgViewer/Viewer>
 
 namespace zxd {
 
@@ -17,6 +18,7 @@ typedef std::vector<osg::ref_ptr<osg::Vec4Array>> Vec4ArrayVec;
 void getScreenResolution(
   GLuint& width, GLuint& height, GLuint screenIdentifier = 0);
 osg::Vec2ui getScreenResolution(GLuint screenIdentifier = 0);
+osg::Vec2i getWindowResolution(osgViewer::Viewer& viewer, GLint index = 0);
 
 GLdouble getAspectRatio(osg::GraphicsContext* gc);
 GLdouble getScreenAspectRatio();

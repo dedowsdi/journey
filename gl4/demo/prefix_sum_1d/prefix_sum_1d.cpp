@@ -69,7 +69,7 @@ public:
     std::vector<GLfloat> result;
     result.reserve(num_data);
     std::partial_sum(input_data.begin(), input_data.end(), std::back_inserter(result));
-    std::cout << "cpu took " << clock.time_miliseconds() << "ms to partial sum "
+    std::cout << "cpu took " << clock.milliseconds() << "ms to partial sum "
               << num_data << " floats" << std::endl;;
 
     prg.init();
@@ -94,7 +94,7 @@ public:
     glDispatchCompute(1024, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BUFFER_BINDING);
     glFinish();
-    std::cout << "gpu took " << clock.time_miliseconds() << "ms to partial sum "
+    std::cout << "gpu took " << clock.milliseconds() << "ms to partial sum "
               << num_data << " floats" << std::endl;;
 
     glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, buffers[1], 0, num_data * 4);

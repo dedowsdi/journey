@@ -32,11 +32,29 @@ inline bool is_aboutd( GLdouble t0, GLdouble t1, double epsilon = 0.000001)
   return d < fepsilon && d > fnepsilon;
 }
 
-GLfloat line_point_distance2(const vec3& point, const vec3& line_point, const vec3& line_direction);
-GLfloat line_point_distance(const vec3& point, const vec3& line_point, const vec3& line_direction);
+// all assume ld normalized
+vec3 point_line_projection(const vec3& p, const vec3& lp, const vec3& ld);
+GLfloat point_line_distance2(const vec3& p, const vec3& lp, const vec3& ld);
+GLfloat point_line_distance(const vec3& p, const vec3& lp, const vec3& ld);
+vec3 point_line_reflect(const vec3& p, const vec3& lp, const vec3& ld);
+
+// all assume plane normal normalized
+vec3 point_plane_projection(const vec3& po, const vec4& pl);
+vec3 point_plane_reflect(const vec3& po, const vec4& pl);
+
+vec3 point_point_reflect(const vec3& reference_point, const vec3& reflect_point);
+
+struct pli_res
+{
+  bool intersect;
+  GLfloat coefficient;
+  vec3 point;
+};
+pli_res plane_line_intersect(const vec3& lp, const vec3& ld, const vec4& pl, GLfloat epsilon = 0.000002f);
+
 // return -1 if point resides in negative direction
-GLfloat ray_point_distance2(const vec3& point, const vec3& ray_start, const vec3& line_direction);
-GLfloat ray_point_distance(const vec3& point, const vec3& ray_start, const vec3& line_direction);
+GLfloat point_ray_distance2(const vec3& p, const vec3& ray_start, const vec3& ld);
+GLfloat point_ray_distance(const vec3& p, const vec3& ray_start, const vec3& ld);
 
 GLfloat line_line_distance(const vec3& p0, const vec3& d0, const vec3& p1, const vec3& d1);
 
@@ -44,7 +62,7 @@ bool is_point_in_triangle(const vec3& p, const vec3& c0, const vec3& c1, const v
 
 // ld and pn need not be normalized
 // result.first is true if there are one and only one intersection
-bool_vec3_pair intersect_line_plane(const vec3& lp, const vec3& ld, const vec4& plane);
+bool_vec3_pair line_plane_intersect(const vec3& lp, const vec3& ld, const vec4& plane);
 
 struct line_relation
 {
@@ -55,7 +73,7 @@ struct line_relation
   vec3 sk1;
 };
 
-line_relation intersect_line_line(const vec3& p0, const vec3& d0, const vec3& p1, const vec3& d1);
+line_relation line_line_intersect(const vec3& p0, const vec3& d0, const vec3& p1, const vec3& d1);
 
 bool parallel(const vec3& v0, const vec3& v1);
 

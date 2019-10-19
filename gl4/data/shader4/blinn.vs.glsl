@@ -1,4 +1,4 @@
-//#version 430 core
+#version 430 core
 
 in vec4 vertex;
 in vec3 normal;
@@ -17,6 +17,10 @@ uniform mat4 mv_mat_it;
 #endif
 uniform float normal_scale = 1.0f; // set this to -1 if you need back face lighting
 
+#ifdef WITH_CLIPPLANE0
+uniform vec4 clipplane0 = vec4(0);
+#endif
+
 out vs_out{
   vec3 v_vertex; // view space
   vec3 v_normal; // view space
@@ -32,5 +36,10 @@ void main(void)
 #ifdef WITH_TEX
   vo.texcoord = texcoord;
 #endif
+
+#ifdef WITH_CLIPPLANE0
+  gl_ClipDistance[0] = dot(clipplane0, vec4(vo.v_vertex, 1));
+#endif
+
   gl_Position = mvp_mat * vertex;
 }
