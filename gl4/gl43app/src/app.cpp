@@ -3,10 +3,12 @@
 #include <stdexcept>
 #include <iostream>
 #include <algorithm>
+#include <iomanip>
 
 #include <glm.h>
 #include <glenumstring.h>
 #include <common_camman.h>
+#include <texutil.h>
 
 namespace zxd {
 
@@ -31,6 +33,7 @@ app::app()
   :
     m_pause(false),
     m_display_help(true),
+    m_save_image(false),
     m_update_count(0),
     m_camera_mode(CM_PITCH_YAW),
     m_v_mat(0),
@@ -521,6 +524,10 @@ void app::glfw_key(
         reload_shaders();
         break;
 
+      case GLFW_KEY_F4:
+        m_save_image = true;
+        break;
+
       case GLFW_KEY_SPACE:
         if(mods & GLFW_MOD_CONTROL)
           toggle_full_screen();
@@ -647,6 +654,28 @@ void app::glfw_char(GLFWwindow *wnd, unsigned int codepoint) {
 
 //--------------------------------------------------------------------
 void app::glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods) {}
+
+//--------------------------------------------------------------------
+void app::save_colorbuffer(const std::string& name,  GLenum internal_format)
+{
+  GLuint tex;
+  glGenTextures(1, &tex);
+  glBindTexture(GL_TEXTURE_2D, tex);
+
+  GLint viewport[4];
+  glGetIntegerv(GL_VIEWPORT, viewport);
+
+  glCopyTexImage2D(GL_TEXTURE_2D, 0, internal_format, 0, 0, viewport[2], viewport[3], 0);
+
+  using clock = std::chrono::system_clock;
+  auto now = clock::to_time_t(clock::now());
+  auto time_string = std::put_time(std::localtime(&now), "%Y%m%d_%H%M%S");
+  std::stringstream ss;
+  ss << time_string << "_" << name;
+
+  zxd::save_texture(ss.str(), GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, 32);
+  std::cout << "saving " << ss.str() << std::endl;
+}
 
 //--------------------------------------------------------------------
 vec2 app::current_mouse_position()

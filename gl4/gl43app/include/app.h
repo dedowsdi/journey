@@ -130,6 +130,8 @@ protected:
   virtual void glfw_char(GLFWwindow *wnd, unsigned int codepoint);
   virtual void glfw_charmod(GLFWwindow *wnd, unsigned int codepoint, int mods);
 
+  void save_colorbuffer(const std::string& name, GLenum internal_format = GL_RGBA);
+
   vec2 current_mouse_position();
 
   // screen to whaterver. 
@@ -141,6 +143,7 @@ protected:
   vec2 glfw_to_gl(vec2 p);
 
   GLboolean m_display_help;
+  GLboolean m_save_image;
   GLboolean m_pause; // pause update
   GLboolean m_reading;
   GLboolean m_shutdown;

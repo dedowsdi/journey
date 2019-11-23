@@ -13,6 +13,23 @@
 #include <iostream>
 #include <string>
 
+// a crtp help class:
+// can be used like this:
+//      template<typename T>
+//      class crtp : public crtp_base<T, crtp>
+// 
+template <typename T, template<class> class DerivedPhantom>
+struct crtp_base
+{
+    T& underlying() { return static_cast<T&>(*this); }
+    T const& underlying() const { return static_cast<T const&>(*this); }
+private:
+    // only derived child cal call it.
+    crtp_base(){}
+    friend DerivedPhantom<T>;
+};
+
+
 template <typename T>
 struct counter {
   static int objects_created;
@@ -108,5 +125,6 @@ int main(int argc, char *argv[]) {
     x.function0();
     float f = x.get_something();
   }
+
   return 0; 
 }

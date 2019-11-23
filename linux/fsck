@@ -1,0 +1,5 @@
+filesystem is check every 30 system reboot. If it fails, use a usb to enter trying system, and do
+
+fsck -f /dev/...
+
+for all used filesystems.

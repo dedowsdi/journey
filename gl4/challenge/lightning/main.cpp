@@ -13,8 +13,8 @@
 
 #include <sstream>
 
-#define WIDTH 640
-#define HEIGHT 640
+#define WIDTH 512
+#define HEIGHT 512
 
 namespace zxd
 {
@@ -36,8 +36,8 @@ pingpong blur_tex;
 
 GLfloat inner_ball_radius = 20;
 GLfloat outer_ball_radius = 80;
-GLuint outer_ball_slices = 24;
-GLuint outer_ball_stacks = 24;
+GLuint outer_ball_slices = 16;
+GLuint outer_ball_stacks = 16;
 GLfloat sphere_billboard_width = 1;
 GLfloat unstable_billboard_width = 2;
 GLfloat inner_billboard_width = 1.5;
@@ -262,7 +262,7 @@ void lightining_app::display()
   blinn_prg.update_uniforms(m_mat, v_mat, p_mat);
   blinn_prg.update_lighting_uniforms(lights, lm, mtl, v_mat);
 
-  sphere0.draw();
+  // sphere0.draw();
   //debugger::draw_line(GL_LINES, sphere_lines, blinn_prg.mvp_mat);
 
   // blit depth buffer to mfbo
@@ -307,6 +307,18 @@ void lightining_app::display()
   glEnable(GL_BLEND);
   glBlendEquation(GL_FUNC_ADD);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  if (m_save_image)
+  {
+    save_colorbuffer("lightning.png");
+    m_save_image = false;
+  }
+
+  if (!m_display_help)
+  {
+    return;
+  }
+
   std::stringstream ss;
   if(verbose)
   {

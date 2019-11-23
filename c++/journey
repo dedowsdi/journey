@@ -371,3 +371,16 @@ void foo(T const& t)
   reference to cv TR” creates the type “lvalue reference to T”, while an attempt
   to create the type “rvalue reference to cv TR” creates the type TR. [ Note: This
   rule is known as reference collapsing. —end note ]
+
+void foo(){...}
+decltype(foo) f = foo; // won't compile, you can't assign function, you can only assign function pointer
+decltype(foo)* f = foo; // ok
+decltype(&foo) f = foo; // ok too
+
+don't override ||,&&,and ',', if you override them, they become normal function,
+the order of evaluation become unspecified(until c++17). built in || and && also have a
+short-circuit to skip the right part, the override one doesn't.
+
+arithmetic operators do not accept types smaller than int as arguments, and
+integral promotions are automatically applied after lvalue-to-rvalue conversion,
+if applicable.
