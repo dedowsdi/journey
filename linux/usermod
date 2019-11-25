@@ -1,0 +1,6 @@
+append user to other group:
+    sudo usermod -a -G group0,group1
+
+find out group users:
+    # not sure if there are other commands to do this
+    cat /etc/group | grep groupname

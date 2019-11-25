@@ -1,0 +1,2 @@
+remove user from group
+    sudo gpasswd -d username groupname
