@@ -3,9 +3,9 @@ gcc
     like -ab, you must use -a -b, they are totally different
 
 library:
-    libname.so.major.minor.rleasenumber         actural name
-    libname.so.major                            so name
-    libname.so                                  linker name
+    libname.so.major.minor.rleasenumber         realname,  actural name, VERSION propertiy in cmake
+    libname.so.version                          soname, link to realname, so VERSION in cmake
+    libname.so                                  linker name, link to soname
 
     when a new version of a shared library is released in order to fix bugs in
     a previous version, only the release number is incremented.
@@ -18,11 +18,36 @@ library:
     existing applications cannot call those functions, the major number is
     updated and the minor and release numbers are reset.
 
+link:
+    You you use absolute library path directly without using -l.
+    -l:libname.so will libname.so literally.
+    use -L together with -l. You can also use ev LIBRARY_PATH
+    -rpath will embed library runpath (DT_RUNPATH) into output file. You can also use. If it's not specified and LD_RUN_PATH is not empty, LD_RUN_PATH is embeded.
+    -rpath is not recursive!, if you -rpath path0 -lx, but x relies on y, x won't search y from path0, be careful about this. You may use $ORIGIN to refer to the path of the object file.
+
+    All of them are stored in .dynamic, .dynstr, .dynsym section of elf
+
+    see man ld.so for specific link order
+
+check library dependence:
+    ldd a.out
+
+check dynamic section:
+    readelf -d *.so
+    objdump -p *.so
+    objdump -sj .dynamic *.so
+
+print object specific info:
+    objdump -p *.so
+
+print section list:
+    objdump -h *.so
+    readelf -S *.so
+    readelf -e *.so (-e is same as -hlS)
+
 library dependences:
     ldd exe
     ldd might need to execute part of program to find dependencies
-    use objdump if you don't trust the program
-
     objdump -p /path/to/program | grep NEEDED    the same as above
 
 runtime library:
@@ -34,3 +59,15 @@ static library:
 
 symbol:
     nm name.so                           //get symbols of shared library
+    obmdump -t a.out
+
+get output file format:
+    file a.out
+
+check if debug build(with debug_info):
+    objdump -h a.out | grep debug
+    file a.out (with debug_info)
+    gdb *.so
+
+discard symbols from output(see man strip):
+    strip 

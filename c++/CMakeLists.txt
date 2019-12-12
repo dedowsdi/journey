@@ -26,6 +26,7 @@ IF(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # use drawf debug format for gdb, use -g3 to include macro
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gdwarf -g3")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf -g3 -D_COMPILER_GCC")
+
     set(CXX_COMPILER "GCC")
 ENDIF()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread -Wall -DDEBUG -D_DEBUG")
@@ -64,3 +65,4 @@ add_subdirectory(macro)
 add_subdirectory(boost)
 add_subdirectory(quiz)
 add_subdirectory(idiom)
+add_subdirectory(task)

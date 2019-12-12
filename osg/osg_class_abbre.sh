@@ -1,7 +1,7 @@
 #!/bin/bash
 OSG_HOME=/usr/local/source/osg3.6_gl2/include/
 
-ctags -f - --excmd=number --sort=no --fields=Ks --kinds-c++=sc --language-force=c++ \
+ctags -R -f - --excmd=number --sort=no --fields=Ks --kinds-c++=sc --language-force=c++ \
     ${OSG_HOME}osg/* \
     ${OSG_HOME}osgAnimation/* \
     ${OSG_HOME}osgDB/* \

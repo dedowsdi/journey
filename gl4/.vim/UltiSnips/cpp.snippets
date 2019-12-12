@@ -3,7 +3,8 @@ snippet gl4Main
 
 #include <sstream>
 
-namespace zxd {
+namespace zxd
+{
 
 const GLint width = 800;
 const GLint height = 800;
@@ -51,20 +52,23 @@ public:
 	void glfw_mouse_move(GLFWwindow *wnd, double x, double y) override;
 };
 
-void $1::init_info() {
+void $1::init_info()
+{
 	app::init_info();
 	m_info.title = "$1";
 	m_info.wnd_width = width;
 	m_info.wnd_height = height;
 }
 
-void $1::create_scene() {
+void $1::create_scene()
+{
 	prg.init();
 }
 
 void $1::update() {}
 
-void $1::display() {
+void $1::display()
+{
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	prg.use();
@@ -80,14 +84,18 @@ void $1::display() {
 	glDisable(GL_BLEND);
 }
 
-void $1::glfw_resize(GLFWwindow *wnd, int w, int h) {
+void $1::glfw_resize(GLFWwindow *wnd, int w, int h)
+{
 	app::glfw_resize(wnd, w, h);
 }
 
 void $1::glfw_key(
-	GLFWwindow *wnd, int key, int scancode, int action, int mods) {
-	if (action == GLFW_PRESS) {
-		switch (key) {
+	GLFWwindow *wnd, int key, int scancode, int action, int mods)
+{
+	if (action == GLFW_PRESS)
+	{
+		switch (key)
+		{
 			default:
 				break;
 		}
@@ -98,17 +106,18 @@ void $1::glfw_key(
 void $1::glfw_mouse_button(GLFWwindow *wnd, int button, int action,
                                int mods)
 {
-  app::glfw_mouse_button(wnd, button, action, mods);
+	app::glfw_mouse_button(wnd, button, action, mods);
 }
 
 void $1::glfw_mouse_move(GLFWwindow *wnd, double x, double y)
 {
-  app::glfw_mouse_move(wnd, x, y);
+	app::glfw_mouse_move(wnd, x, y);
 }
 
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	zxd::$1 app;
 	app.run();
 }

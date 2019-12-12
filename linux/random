@@ -1,0 +1,2 @@
+random 6 alnum:
+    head /dev/urandom | tr -cd '0-9a-zA-Z' | head -c 6

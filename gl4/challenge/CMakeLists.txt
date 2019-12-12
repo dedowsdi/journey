@@ -67,6 +67,7 @@ set (PROJECTS
     matrix_rain
     blobby3d
     text_starfield
+    headshot
     )
 
 foreach(PROJECT ${PROJECTS})

@@ -535,10 +535,12 @@ void app::glfw_key(
 
       case GLFW_KEY_LEFT_BRACKET:
         m_control.index(m_control.index() - 1);
+        std::cout << "kci index : " << m_control.index() << std::endl;
         break;
 
       case GLFW_KEY_RIGHT_BRACKET:
         m_control.index(m_control.index() + 1);
+        std::cout << "kci index : " << m_control.index() << std::endl;
         break;
       case GLFW_KEY_H:
         m_display_help ^= 1;

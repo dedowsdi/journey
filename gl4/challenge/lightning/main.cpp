@@ -62,7 +62,7 @@ material mtl;
 blinn_program blinn_prg;
 
 mat4 m_mat;
-std::vector<lightning> lightnings;
+std::vector<std::unique_ptr<lightning>> lightnings;
 
 kcip kci_blur_times;
 kcip kci_bloom_exposure;
@@ -103,9 +103,6 @@ void lightining_app::create_scene()
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-  glfwSetWindowPos(m_wnd, 100, 100);
-
 
   // scene
   sphere0.radius(inner_ball_radius);
@@ -188,10 +185,24 @@ void lightining_app::create_scene()
     }
   }
 
-  lightnings.push_back(lightning("jjj",  sphere_lines, sphere_billboard_width, 0.5f, fpi4));
+  // unstable
+  {
+    auto l = std::make_unique<lightning>("jjj",  sphere_lines);
+    l->set_billboard_width(sphere_billboard_width);
+    l->set_max_jitter(0.5f);
+    l->set_max_fork_angle(fpi4);
+    lightnings.push_back(std::move(l));
+  }
+
   // pole lightning
-  lightnings.push_back(lightning("jjjjj", {vec3(0, 0, outer_ball_radius), vec3(0, 0, -outer_ball_radius)},
-        pole_billboard_width, 0.15f, fpi4));
+  auto pole = std::make_unique<lightning>("jjjjj",
+    std::vector<vec3>(
+      {vec3(0, 0, outer_ball_radius), vec3(0, 0, -outer_ball_radius)}));
+  pole->set_billboard_width(pole_billboard_width);
+  pole->set_max_jitter(0.15f);
+  pole->set_max_fork_angle(fpi4);
+  lightnings.push_back(std::move(pole));
+
   unstable_start = lightnings.size();
 }
 
@@ -218,8 +229,13 @@ void lightining_app::update()
     for (int i = 0; i < subdivides; ++i)
       pattern.push_back(glm::linearRand(0.0f, 1.0f) < 0.5f ? 'f' : 'j');
 
-    lightnings.push_back(lightning(pattern, {vec3(0), point}, unstable_billboard_width, 0.5f, fpi2));
-    lightnings.back().set_use_cpu(use_cpu);
+    auto l =
+      std::make_unique<lightning>(pattern, std::vector<vec3>({vec3(0), point}));
+    l->set_billboard_width(unstable_billboard_width);
+    l->set_max_jitter(0.5f);
+    l->set_max_fork_angle(fpi2);
+    l->set_use_cpu(use_cpu);
+    lightnings.push_back(std::move(l));
   }
 
   // inner lightning
@@ -238,15 +254,19 @@ void lightining_app::update()
     GLfloat jitter_angle = glm::linearRand(0.0f, fpi16);
     vec3 target_dir = dir * cos(jitter_angle)  + zxd::random_orthogonal(dir) * sin(jitter_angle) ;
 
-    lightnings.push_back(lightning("fjjj",
-          {dir * inner_ball_radius * 1.02f, target_dir * outer_ball_radius},
-          inner_billboard_width, 0.5f, fpi4));
-    lightnings.back().set_use_cpu(use_cpu);
+    auto l = std::make_unique<lightning>("fjjj",
+      std::vector<vec3>(
+        {dir * inner_ball_radius * 1.02f, target_dir * outer_ball_radius}));
+    l->set_billboard_width(inner_billboard_width);
+    l->set_max_jitter(0.5f);
+    l->set_max_fork_angle(fpi4);
+    l->set_use_cpu(use_cpu);
+    lightnings.push_back(std::move(l));
   }
 
   vec3 camera_pos = zxd::eye_pos(v_mat * m_mat);
   for(auto& seed : lightnings)
-    seed.update_buffer(camera_pos);
+    seed->update_buffer(camera_pos);
 
 }
 
@@ -276,7 +296,7 @@ void lightining_app::display()
 
   mat4 mvp_mat = p_mat * v_mat * m_mat;
   for(auto& seed : lightnings)
-    seed.draw(mvp_mat);
+    seed->draw(mvp_mat);
 
   glDisable(GL_BLEND);
 
@@ -348,13 +368,13 @@ void lightining_app::glfw_key(
         break;
       case GLFW_KEY_P:
         for(auto& item : lightnings)
-          item.debug_print_billboards(zxd::eye_pos(v_mat * m_mat));
+          item->debug_print_billboards(zxd::eye_pos(v_mat * m_mat));
 
         break;
       case GLFW_KEY_U:
         use_cpu ^= 1;
         for(auto& seed : lightnings)
-          seed.set_use_cpu(use_cpu);
+          seed->set_use_cpu(use_cpu);
 
         break;
       default:

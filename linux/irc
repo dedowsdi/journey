@@ -1,0 +1,58 @@
+# add server
+    /server add freenode chat.freenode.net
+
+# connect server
+    /connect freenode
+
+# register nickname to freenode
+    /msg NickServ REGISTER password youremail@example.com
+
+# identify
+    /msg /NickServ IDENTIFY username password
+
+# configure SASL to avoid identify(weechat)
+    /set irc.server.freenode.sasl_mechanism PLAIN
+    /set irc.server.freenode.sasl_username <nickname>
+    /set irc.server.freenode.sasl_password <password>
+    /save
+
+# configure default nick
+    /set irc.server_default.sasl_mechanism PLAIN
+    /set irc.server_default.sasl_username deodwsdi
+    /set irc.server_default.nicks r3m
+
+# auto connect server
+    /set irc.server.freenode.autoconnect on
+
+# auto join channel
+    /set irc.server.freenode.autojoin "#channel1,#channel2"
+
+# add alternative nickname to freenode
+    /nick xexowsxi
+    /msg /NickServ IDENTIFY username password
+    /msg NickServ GROUP
+
+# find channel
+    /list --re pattern
+
+# join channel
+    /join #vim
+
+# leave channel
+    /part
+
+# filter join/part/quit message
+    /set irc.look.smart_filter on
+    /filter add irc_smart * irc_smart_filter *
+
+# send private msg
+    /msg username text
+
+# send private msg and open a new buffer
+    /query username text
+
+# close a private buffer
+    /close
+
+# search channel in freenode
+    /mst alis list *wildpattern*

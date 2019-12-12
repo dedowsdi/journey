@@ -1,0 +1,11 @@
+check https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh for detail
+
+generate rsa type key, use 2048 bits, use email as comment
+    ssh-keygen -t rsa -b 2048 -C "peanutandchestnut@gmail.com"
+
+start ssh-agent in background
+    eval "$(ssh-agent -s)"
+
+add private key to ssh-agent
+    ssh-add ~/.ssh/id_rsa
+

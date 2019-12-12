@@ -1,0 +1,21 @@
+# create a new archieve
+tar -cf name.tar /dir
+
+# use gzip to compress a director
+tar -czf name.tar.gz /dir
+
+# add file to existing tar
+tar -rvf name.tar.gz fname
+
+# extract. no need to specifiy z
+tar -xf name.tar.gz
+
+# extract into specific dir
+tar -xf name.tar.gz -C target_dir
+
+# extract part of files
+tar -xf name.tar.gz pattern0 pattern1 ...
+
+# list content
+tar -tvf name.tar.gz
+

@@ -15,9 +15,9 @@ namespace zxd
 
 //--------------------------------------------------------------------
 void create_billboards_along(std::vector<vertex>& billboards, const vec3_vector& lines, const vec3&
-    camera_pos, GLfloat bb_width/* = 2*/, GLint gap_slices/* = 6*/)
+    _camera_pos, GLfloat bb_width/* = 2*/, GLint gap_slices/* = 6*/)
 {
-  //billboards.reserve(lines.size() * (gap_slices*3 + 6) / 2);
+  //_billboards.reserve(lines.size() * (gap_slices*3 + 6) / 2);
 
   GLfloat radius = bb_width * 0.5f;
 
@@ -30,7 +30,7 @@ void create_billboards_along(std::vector<vertex>& billboards, const vec3_vector&
     const vec3& lv1 = lines[i++];
 
     vec3 v01 = glm::normalize(lv1 - lv0);
-    vec3 ev = camera_pos - 0.5f*(lv0+lv1);
+    vec3 ev = _camera_pos - 0.5f*(lv0+lv1);
     // constrain billoboards rotate to v01 only; after rototation, side should
     // be perp to both ev and v01
     vec3 side = radius * glm::normalize(glm::cross(v01, ev));
@@ -81,8 +81,8 @@ void create_billboards_along(std::vector<vertex>& billboards, const vec3_vector&
 }
 
 //--------------------------------------------------------------------
-void create_lightning(vec3_vector& lines, const vec3& start, const vec3& end, const std::string& pattern,
-    GLfloat max_jitter/* = 0.5f*/, GLfloat max_fork_angle/* = fpi4*/)
+void create_lightning(vec3_vector& lines, const vec3& start, const vec3& end, const std::string& _pattern,
+    GLfloat _max_jitter/* = 0.5f*/, GLfloat _max_fork_angle/* = fpi4*/)
 {
   // first segment
   lines.push_back(start);
@@ -91,7 +91,7 @@ void create_lightning(vec3_vector& lines, const vec3& start, const vec3& end, co
 
   vec3 global_dir = glm::normalize(end - start);
 
-  for(auto c : pattern)
+  for(auto c : _pattern)
   {
     if(c != 'j' && c != 'f')
       continue;
@@ -106,7 +106,7 @@ void create_lightning(vec3_vector& lines, const vec3& start, const vec3& end, co
       vec3 v2 = (v0 + v1) * 0.5f;
       vec3 v01 = v1 - v0;
 
-      v2 += zxd::random_orthogonal(glm::normalize(v01)) * glm::linearRand(0.0f, max_jitter) * l;
+      v2 += zxd::random_orthogonal(glm::normalize(v01)) * glm::linearRand(0.0f, _max_jitter) * l;
 
       // insert 2 center lines
       iter = lines.insert(iter, v2);
@@ -118,7 +118,7 @@ void create_lightning(vec3_vector& lines, const vec3& start, const vec3& end, co
       {
         // fork len should be the same as normal segment
         GLfloat seg_len = glm::distance(v0, v2);
-        GLfloat theta = glm::linearRand(-max_fork_angle, max_fork_angle);
+        GLfloat theta = glm::linearRand(-_max_fork_angle, _max_fork_angle);
         vec3 v3 = v2 + zxd::rotate_in_cone(global_dir, theta) * seg_len;
         iter = lines.insert(iter, v2);
         iter = lines.insert(iter, v3);
@@ -157,69 +157,91 @@ struct lightining_cpu_program : public program
 }render_billboard_prg;
 
 //--------------------------------------------------------------------
-lightning::lightning(const std::string& pattern_, const vec3_vector& vertices_, GLfloat billboard_width_,
-    GLfloat max_jitter/* = 0.5f*/, GLfloat max_fork_angle/* = fpi4*/) :
-  pattern(pattern_),
-  vertices(vertices_),
-  billboard_width(billboard_width_),
-  max_jitter(max_jitter),
-  max_fork_angle(max_fork_angle),
-  use_cpu(false),
-  cpu_buffer(-1)
+lightning::lightning(const std::string& pattern_, const vec3_vector& vertices_) :
+  _pattern(pattern_),
+  _vertices(vertices_)
 {
-  glGenVertexArrays(1, &vao);
-  glGenBuffers(2, buffer.pointer());
+  glGenVertexArrays(1, &_vao);
+  glGenBuffers(2, _buffer.pointer());
   update_vertex_count();
+}
+
+//--------------------------------------------------------------------
+lightning::~lightning()
+{
+  if (_vao != 0)
+  {
+    glDeleteVertexArrays(1, &_vao);
+  }
+
+  return;
+
+  if(_cpu_buffer != 0)
+  {
+    glDeleteBuffers(1, &_cpu_buffer);
+  }
+
+  if (_buffer.ping())
+  {
+    auto buf = _buffer.ping();
+    glDeleteBuffers(1, &buf);
+  }
+
+  if (_buffer.pong())
+  {
+    auto buf = _buffer.pong();
+    glDeleteBuffers(1, &buf);
+  }
 }
 
 //--------------------------------------------------------------------
 void lightning::update_vertex_count()
 {
-  vertex_count = vertices.size();
-  for(auto c : pattern)
+  _vertex_count = _vertices.size();
+  for(auto c : _pattern)
   {
     if(c == 'j')
-      vertex_count *= 2;
+      _vertex_count *= 2;
     else if(c == 'f')
-      vertex_count *= 3;
+      _vertex_count *= 3;
   }
 
-  if(vertex_count * sizeof(vec3) > buffer_size)
+  if(_vertex_count * sizeof(vec3) > _buffer_size)
   {
-    glBindBuffer(GL_ARRAY_BUFFER, buffer.ping());
-    glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof(vec3), 0, GL_STREAM_COPY);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer.pong());
-    glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof(vec3), 0, GL_STREAM_COPY);
-    buffer_size = vertex_count * sizeof(vec3);
+    glBindBuffer(GL_ARRAY_BUFFER, _buffer.ping());
+    glBufferData(GL_ARRAY_BUFFER, _vertex_count * sizeof(vec3), 0, GL_STREAM_COPY);
+    glBindBuffer(GL_ARRAY_BUFFER, _buffer.pong());
+    glBufferData(GL_ARRAY_BUFFER, _vertex_count * sizeof(vec3), 0, GL_STREAM_COPY);
+    _buffer_size = _vertex_count * sizeof(vec3);
   }
 }
 
 //--------------------------------------------------------------------
 void lightning::update_buffer(const vec3& camera_pos_)
 {
-  camera_pos = camera_pos_;
+  _camera_pos = camera_pos_;
   if(use_cpu)
   {
-    billboards.clear();
-    for (int i = 0; i < vertices.size(); i+=2)
+    _billboards.clear();
+    for (int i = 0; i < _vertices.size(); i+=2)
     {
       vec3_vector lsystem_lines;
-      lsystem_lines.reserve(pow(3, pattern.size()) * vertices.size());
-      create_lightning(lsystem_lines, vertices[i], vertices[i+1], pattern, max_jitter, max_fork_angle);
-      create_billboards_along(billboards, lsystem_lines, camera_pos, billboard_width);
+      lsystem_lines.reserve(pow(3, _pattern.size()) * _vertices.size());
+      create_lightning(lsystem_lines, _vertices[i], _vertices[i+1], _pattern, _max_jitter, _max_fork_angle);
+      create_billboards_along(_billboards, lsystem_lines, _camera_pos, _billboard_width);
     }
 
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, cpu_buffer);
-    glBufferData(GL_ARRAY_BUFFER, billboards.size() * sizeof(vertex),
-      &billboards.front(), GL_DYNAMIC_DRAW);
+    glBindVertexArray(_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, _cpu_buffer);
+    glBufferData(GL_ARRAY_BUFFER, _billboards.size() * sizeof(vertex),
+      &_billboards.front(), GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(sizeof(vec3)));
     glEnableVertexAttribArray(1);
-    //std::cout << billboards.size() << std::endl;
+    //std::cout << _billboards.size() << std::endl;
 
     return;
   }
@@ -234,32 +256,32 @@ void lightning::update_buffer(const vec3& camera_pos_)
 
   update_vertex_count();
   glEnable(GL_RASTERIZER_DISCARD);
-  GLuint num_vertices = vertices.size();
+  GLuint num_vertices = _vertices.size();
 
-  glBindVertexArray(vao);
+  glBindVertexArray(_vao);
   lsystem_prg.use();
-  for (int i = 0; i < pattern.size(); ++i) 
+  for (int i = 0; i < _pattern.size(); ++i) 
   {
-    buffer.swap();
+    _buffer.swap();
 
-    char c = pattern[i];
+    char c = _pattern[i];
     if(c != 'j' && c != 'f')
       continue;
 
-    glBindBuffer(GL_ARRAY_BUFFER, buffer.ping());
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer.pong());
+    glBindBuffer(GL_ARRAY_BUFFER, _buffer.ping());
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, _buffer.pong());
 
     if(i == 0)
     {
-      glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(vec3), 
-          glm::value_ptr(vertices.front()));
+      glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(vec3), 
+          glm::value_ptr(_vertices.front()));
     }
     glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(0);
 
     glUniform1i(0, c == 'j' ? 0 : 1);
-    glUniform1f(1, max_jitter);
-    glUniform1f(2, max_fork_angle);
+    glUniform1f(1, _max_jitter);
+    glUniform1f(2, _max_fork_angle);
     glUniform1f(3, glm::linearRand(0.0f, 10.0f));
     glBeginTransformFeedback(GL_LINES);
     glDrawArrays(GL_LINES, 0, num_vertices);
@@ -277,9 +299,16 @@ void lightning::update_buffer(const vec3& camera_pos_)
     //std::cout << "-----------------------" << std::endl;
   }
 
-  glBindVertexArray(vao);
-  glBindBuffer(GL_ARRAY_BUFFER, buffer.pong());
-  glVertexAttribPointer(0, 3, GL_FLOAT, 1, 0, BUFFER_OFFSET(0));
+  glBindVertexArray(_vao);
+  glBindBuffer(GL_ARRAY_BUFFER, _buffer.pong());
+  if (_pattern.empty())
+  {
+    glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(vec3),
+      glm::value_ptr(_vertices.front()));
+    glEnableVertexAttribArray(0);
+  }
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, BUFFER_OFFSET(0));
 
   glDisable(GL_RASTERIZER_DISCARD);
 }
@@ -299,11 +328,11 @@ void lightning::draw(const mat4& mvp_mat)
 
     render_billboard_prg.use();
     glUniformMatrix4fv(0, 1, 0, glm::value_ptr(mvp_mat));
-    glUniform4fv(4, 1, glm::value_ptr(color0));
-    glUniform4fv(5, 1, glm::value_ptr(color1));
+    glUniform4fv(4, 1, glm::value_ptr(_color0));
+    glUniform4fv(5, 1, glm::value_ptr(_color1));
 
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, billboards.size());
+    glBindVertexArray(_vao);
+    glDrawArrays(GL_TRIANGLES, 0, _billboards.size());
     return;
   }
 
@@ -311,15 +340,16 @@ void lightning::draw(const mat4& mvp_mat)
     billboard_prg.init();
 
   billboard_prg.use();
-  glUniform1f(0, billboard_width);
+  glUniform1f(0, _billboard_width);
   glUniform1i(1, 6);
-  glUniform3fv(2, 1, glm::value_ptr(camera_pos));
+  glUniform3fv(2, 1, glm::value_ptr(_camera_pos));
   glUniformMatrix4fv(3, 1, 0, glm::value_ptr(mvp_mat));
-  glUniform4fv(4, 1, glm::value_ptr(color0));
-  glUniform4fv(5, 1, glm::value_ptr(color1));
+  glUniform4fv(4, 1, glm::value_ptr(_color0));
+  glUniform4fv(5, 1, glm::value_ptr(_color1));
 
-  glBindVertexArray(vao);
-  glDrawArrays(GL_LINES, 0, vertex_count);
+  glBindVertexArray(_vao);
+  glDrawArrays(GL_LINES, 0, _vertex_count);
+  glDisable(GL_BLEND);
 }
 
 //--------------------------------------------------------------------
@@ -328,13 +358,12 @@ void lightning::set_use_cpu(bool b)
   use_cpu = b;
   if(use_cpu)
   {
-    if(cpu_buffer == -1)
-      glGenBuffers(1, &cpu_buffer);
-
+    if(_cpu_buffer == 0)
+      glGenBuffers(1, &_cpu_buffer);
   }
   else
   {
-    glBindVertexArray(vao);
+    glBindVertexArray(_vao);
     glDisableVertexAttribArray(1);
   }
 }
@@ -342,9 +371,9 @@ void lightning::set_use_cpu(bool b)
 //--------------------------------------------------------------------
 void lightning::debug_print_billboards(const vec3& camrea_pos_)
 {
-  std::cout << "camera pos" << camera_pos << std::endl;
+  std::cout << "camera pos" << _camera_pos << std::endl;
   int i = 0;
-  for(auto& item : billboards)
+  for(auto& item : _billboards)
   {
     if(i++ % 3 == 0)
       std::cout  << "triangle " << i/3 << std::endl;

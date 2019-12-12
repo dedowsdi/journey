@@ -1,0 +1,29 @@
+specify result file name:
+    wget --tries=200 url -O name
+    tries defaults to 20
+
+continue download
+    wget -c url
+    It only make sense if there exists an interrupted download.
+
+background download
+    wget -b
+    log to wget-log
+
+get download list from a file
+    wget -i urls
+
+download a whole site
+    wget --mirror -p --convert-lins -P local_dir url
+
+log to a file instead of stdout or stderr
+    wget -o wget.log url
+
+download all png files
+    wget -r -A.png url
+
+download all but png files
+    wget --reject url
+
+download ftp
+    wget --ftp-user=bala --ftp-password=ala url

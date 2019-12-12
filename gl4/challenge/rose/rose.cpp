@@ -52,7 +52,7 @@ public:
     auto callback = std::bind(std::mem_fn(&app_name::update_rose), this, std::placeholders::_1);
     kci_n = m_control.add(GLFW_KEY_Q, 1, 1, 1000, 1, callback);
     kci_d = m_control.add(GLFW_KEY_W, 1, 1, 1000, 1, callback);
-    kci_slice = m_control.add(GLFW_KEY_E, 1024, 1, 1000, 1, callback);
+    kci_slice = m_control.add(GLFW_KEY_E, 128, 1, 4096, 1, callback);
     kci_line_width = m_control.add<GLfloat>(GLFW_KEY_R, 1, 1, 50, 1, callback);
     kci_start = m_control.add<GLfloat>(GLFW_KEY_U, 0, 0, 1, 0.01, callback);
     kci_end = m_control.add<GLfloat>(GLFW_KEY_I, 1, 0, 1, 0.01, callback);
@@ -65,30 +65,29 @@ public:
   {
     glLineWidth(kci_line_width->get_float());
     m_rose.radius(1);
-    m_rose.slice(128);
     m_rose.n(kci_n->get_int());
     m_rose.d(kci_d->get_int());
     m_rose.start(kci_start->get_float());
     m_rose.end(kci_end->get_float());
     m_rose.slice(kci_slice->get_int());
     m_rose.offset(kci_offset->get_float());
-    m_rose.build_mesh();
+    m_rose.build_mesh( { attrib_semantic::vertex } );
 
-    //const auto& vertices = m_rose.vertices();
-    //vec2 min_ext = vec2(-500);
-    //vec2 max_ext = vec2(500);
-    //for (int i = 0; i < vertices.size(); ++i)
-    //{
-      //const vec2& v = vertices[i];
-      //if(min_ext.x > v.x) min_ext.x = v.x;
-      //if(min_ext.y > v.y) min_ext.y = v.y;
-      //if(max_ext.x < v.x) max_ext.x = v.x;
-      //if(max_ext.y < v.y) max_ext.y = v.y;
-    //}
-    //min_ext *= 1.05;
-    //max_ext *= 1.05;
+    // const auto& vertices = m_rose.vertices();
+    // vec2 min_ext = vec2(-500);
+    // vec2 max_ext = vec2(500);
+    // for (int i = 0; i < vertices.size(); ++i)
+    // {
+    //   const vec2& v = vertices[i];
+    //   if(min_ext.x > v.x) min_ext.x = v.x;
+    //   if(min_ext.y > v.y) min_ext.y = v.y;
+    //   if(max_ext.x < v.x) max_ext.x = v.x;
+    //   if(max_ext.y < v.y) max_ext.y = v.y;
+    // }
+    // min_ext *= 1.05;
+    // max_ext *= 1.05;
 
-    //prg.fix2d_camera(min_ext.x, max_ext.x, min_ext.y, max_ext.y);
+    p_mat = zxd::rect_ortho(1.2, 1.2, 1.0f);
   }
 
   virtual void update() {}
@@ -98,7 +97,7 @@ public:
     glClear(GL_COLOR_BUFFER_BIT);
 
     prg.use();
-    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat * v_mat));
+    glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(p_mat));
     glUniform4f(prg.ul_color, 1,1,1,1);
     m_rose.draw();
 

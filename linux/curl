@@ -1,0 +1,9 @@
+download to specified file path, create directory if necessary
+    curl --create-dir -L url -o fname
+
+use tail as file name
+    curl -O url
+
+continue download
+    curl -O -C - url
+

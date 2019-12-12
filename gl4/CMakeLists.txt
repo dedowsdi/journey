@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 # old policy for FindOpenGL
-cmake_policy(SET CMP0072 OLD)
+# cmake_policy(SET CMP0072 OLD)
 
 project (gl4 VERSION 0.0 LANGUAGES C CXX)
 
