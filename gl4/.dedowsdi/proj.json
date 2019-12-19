@@ -1,0 +1,780 @@
+{
+  "bitmap_font": {
+    "args": "data/font/DejaVuSansMono.ttf 15 256",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file bitmap_font.cpp --line 136": null
+      }
+    }
+  },
+  "hello": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file hello.cpp --line 54": 1,
+        "breakpoint set --file hello.cpp --line 55": 1,
+        "breakpoint set --file hello.cpp --line 23": 1,
+        "breakpoint set --file hello.cpp --line 14": 1,
+        "breakpoint set --file hello.cpp --line 12": 1,
+        "breakpoint set --file hello.cpp --line 53": 1,
+        "breakpoint set --file hello.cpp --line 32": 1
+      }
+    }
+  },
+  "all": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file normalmap.cpp --line 83": null
+      }
+    }
+  },
+  "bitmap_text": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "directional_shadowmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "omni_shadowmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "outline": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "helloworld": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file helloworld.cpp --line 23": null
+      }
+    },
+    "gdb": {
+      "breakpoint": {},
+      "manual": []
+    },
+    "breakpoint": [
+      {
+        "file": "app.cpp",
+        "line": 317
+      }
+    ]
+  },
+  "geometry": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file geometry.cpp --line 299": null
+      }
+    },
+    "breakpoint": [
+      {
+        "file": "geometry_util.cpp",
+        "line": 354
+      }
+    ]
+  },
+  "deferred": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file app.cpp --line 201": null
+      }
+    }
+  },
+  "lines": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file app.cpp --line 187": null
+      }
+    }
+  },
+  "normalmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file blinn.frag --line 94": null
+      }
+    },
+    "breakpoint": [
+      {
+        "file": "normalmap.cpp",
+        "line": 190
+      }
+    ]
+  },
+  "rgb": {
+    "args": "data/rgb.txt",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file rgb.cpp --line 42": null
+      }
+    },
+    "gdb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "parallaxmap": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "normalviewer": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file app.cpp --line 20": null
+      }
+    }
+  },
+  "billboard": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file billboard.cpp --line 187": null
+      }
+    }
+  },
+  "particle": {
+    "args": "",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file particle.cpp --line 215": null
+      }
+    },
+    "breakpoint": [
+      {
+        "file": "particle.cpp",
+        "line": 200
+      }
+    ]
+  },
+  "__default__": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    },
+    "gdb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "sinewave": {
+    "breakpoint": [
+      {
+        "file": "sinewave.cpp",
+        "line": 57
+      }
+    ],
+    "manual": []
+  },
+  "floodfill": {
+    "breakpoint": [
+      {
+        "file": "floodfill.cpp",
+        "line": 35
+      }
+    ],
+    "manual": []
+  },
+  "threshold": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "plot": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "fs": {
+    "breakpoint": [
+      {
+        "file": "fs.cpp",
+        "line": 71
+      }
+    ],
+    "manual": [],
+    "exe_args": "../../../../data/shader4/blobby.fs.glsl"
+  },
+  "rebuild_cache": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "starfield": {
+    "breakpoint": [
+      {
+        "file": "starfield.cpp",
+        "line": 122
+      }
+    ],
+    "manual": []
+  },
+  "menger_sponge_fractal": {
+    "breakpoint": [
+      {
+        "file": "common_program.cpp",
+        "line": 87
+      }
+    ],
+    "manual": []
+  },
+  "snake": {
+    "breakpoint": [
+      {
+        "file": "snake.cpp",
+        "line": 273
+      }
+    ],
+    "manual": []
+  },
+  "purple_rain": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "space_invader": {
+    "breakpoint": [
+      {
+        "file": "space_invader.cpp",
+        "line": 109
+      }
+    ],
+    "manual": []
+  },
+  "texture_animation": {
+    "breakpoint": [
+      {
+        "file": "texture_animation.cpp",
+        "line": 90
+      }
+    ],
+    "manual": []
+  },
+  "mitosis": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "solar": {
+    "breakpoint": [
+      {
+        "file": "solar.cpp",
+        "line": 140
+      },
+      {
+        "file": "solar.cpp",
+        "line": 42
+      }
+    ],
+    "manual": []
+  },
+  "maze_generator": {
+    "breakpoint": [
+      {
+        "file": "maze_generator.cpp",
+        "line": 57
+      },
+      {
+        "file": "maze_generator.cpp",
+        "line": 339
+      }
+    ],
+    "manual": []
+  },
+  "mvp": {
+    "breakpoint": [
+      {
+        "file": "stream_util.cpp",
+        "line": 25
+      }
+    ],
+    "manual": []
+  },
+  "noise_terrain": {
+    "breakpoint": [
+      {
+        "file": "noise_terrain.cpp",
+        "line": 130
+      }
+    ],
+    "manual": []
+  },
+  "lorenz_system": {
+    "breakpoint": [
+      {
+        "file": "dict_script.cpp",
+        "line": 77
+      }
+    ],
+    "manual": []
+  },
+  "reaction_diffusion": {
+    "breakpoint": [
+      {
+        "file": "pacman.cpp",
+        "line": 32
+      }
+    ],
+    "manual": []
+  },
+  "fractal_tree": {
+    "breakpoint": [
+      {
+        "file": "fractal_tree.cpp",
+        "line": 35
+      }
+    ],
+    "manual": []
+  },
+  "lsystem_tree": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "space_colonization_tree": {
+    "breakpoint": [
+      {
+        "file": "space_colonization_tree.cpp",
+        "line": 196
+      }
+    ],
+    "manual": []
+  },
+  "space_colonization_tree_3d": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "superellipse": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "supershape": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "flow_field": {
+    "breakpoint": [
+      {
+        "file": "debugger.cpp",
+        "line": 105
+      }
+    ],
+    "manual": []
+  },
+  "supershape3d": {
+    "breakpoint": [
+      {
+        "file": "super_shape_3d.cpp",
+        "line": 164
+      }
+    ],
+    "manual": []
+  },
+  "firework": {
+    "breakpoint": [
+      {
+        "file": "firework.cpp",
+        "line": 216
+      }
+    ],
+    "manual": []
+  },
+  "poisson_disk_sample": {
+    "breakpoint": [
+      {
+        "file": "stream_util.cpp",
+        "line": 109
+      }
+    ],
+    "manual": []
+  },
+  "diffusion_limited": {
+    "breakpoint": [
+      {
+        "file": "diffusion_limited.cpp",
+        "line": 239
+      }
+    ],
+    "manual": []
+  },
+  "lexicograph": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "diastic_machine": {
+    "breakpoint": [
+      {
+        "file": "diastic_machine.cpp",
+        "line": 22
+      }
+    ],
+    "manual": [],
+    "exe_args": "apple data/shader/blinn.frag"
+  },
+  "pixel_sort": {
+    "breakpoint": [
+      {
+        "file": "pixel_sort.cpp",
+        "line": 73
+      }
+    ],
+    "manual": [],
+    "exe_args": "data/texture/sunflower.png"
+  },
+  "photo_mosaic": {
+    "breakpoint": [
+      {
+        "file": "photo_mosaic.cpp",
+        "line": 347
+      }
+    ],
+    "manual": [],
+    "exe_args": "texture/sunflower.png"
+  },
+  "circle_pack": {
+    "breakpoint": [
+      {
+        "file": "common_program.cpp",
+        "line": 260
+      }
+    ],
+    "manual": []
+  },
+  "astar": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "levy_flight": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "islamic_pattern": {
+    "breakpoint": [
+      {
+        "file": "islamic_pattern.cpp",
+        "line": 43
+      }
+    ],
+    "manual": []
+  },
+  "rose": {
+    "breakpoint": [
+      {
+        "file": "rose.cpp",
+        "line": 58
+      }
+    ],
+    "manual": []
+  },
+  "attraction_repulsion": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "butterfly": {
+    "breakpoint": [
+      {
+        "file": "butterfly.cpp",
+        "line": 63
+      }
+    ],
+    "manual": []
+  },
+  "fractal_spirograph": {
+    "breakpoint": [
+      {
+        "file": "fractal_spirograph.cpp",
+        "line": 404
+      }
+    ],
+    "manual": []
+  },
+  "forward_kinematics": {
+    "breakpoint": [
+      {
+        "file": "forward_kinematics.cpp",
+        "line": 54
+      }
+    ],
+    "manual": []
+  },
+  "inverse_kinematics": {
+    "breakpoint": [
+      {
+        "file": "inverse_kinematics.cpp",
+        "line": 205
+      }
+    ],
+    "manual": []
+  },
+  "shakespeare_monkey": {
+    "breakpoint": [
+      {
+        "file": "shakespeare_monkey.cpp",
+        "line": 169
+      }
+    ],
+    "manual": []
+  },
+  "smart_rocket": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "bloop": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "clock": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "movie_recommender": {
+    "breakpoint": [
+      {
+        "file": "MovieDialog.cpp",
+        "line": 157
+      }
+    ],
+    "manual": []
+  },
+  "recursion": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "cube_wave": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "knot": {
+    "breakpoint": [
+      {
+        "file": "knot.cpp",
+        "line": 140
+      }
+    ],
+    "manual": []
+  },
+  "snow": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "floyd_steinberg_dithering": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "double_pendulum": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "octree": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "octree_region": {
+    "breakpoint": [
+      {
+        "file": "octree_region.cpp",
+        "line": 106
+      }
+    ],
+    "manual": []
+  },
+  "octree_point": {
+    "breakpoint": [
+      {
+        "file": "octree_region.cpp",
+        "line": 165
+      }
+    ],
+    "manual": []
+  },
+  "ripple": {
+    "breakpoint": [
+      {
+        "file": "ripple.cpp",
+        "line": 127
+      }
+    ],
+    "manual": []
+  },
+  "fire": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "sandpiles": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "barnsley_fern": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "recaman_sequence": {
+    "breakpoint": [
+      {
+        "file": "recaman_sequence.cpp",
+        "line": 289
+      }
+    ],
+    "manual": []
+  },
+  "spritesheet": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "hypercube": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "lissajous": {
+    "breakpoint": [
+      {
+        "file": "lissajous.cpp",
+        "line": 85
+      }
+    ],
+    "manual": []
+  },
+  "seven_segment": {
+    "breakpoint": [
+      {
+        "file": "seven_segment.cpp",
+        "line": 45
+      }
+    ],
+    "manual": []
+  },
+  "mandelbrot_set": {
+    "breakpoint": [
+      {
+        "file": "mandelbrot_set.cpp",
+        "line": 293
+      }
+    ],
+    "manual": []
+  },
+  "prefix_sum_1d": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "evolutionary_steer": {
+    "breakpoint": [
+      {
+        "file": "evolutionary_steer.cpp",
+        "line": 162
+      }
+    ],
+    "manual": []
+  },
+  "lightning": {
+    "breakpoint": [
+      {
+        "file": "lightning.cpp",
+        "line": 204
+      }
+    ],
+    "manual": []
+  },
+  "tessellate": {
+    "breakpoint": [
+      {
+        "file": "tessellate.cpp",
+        "line": 59
+      }
+    ],
+    "manual": []
+  },
+  "teapot": {
+    "breakpoint": [
+      {
+        "file": "geometry.cpp",
+        "line": 99
+      }
+    ],
+    "manual": []
+  },
+  "chaos": {
+    "breakpoint": [
+      {
+        "file": "chaos.cpp",
+        "line": 135
+      }
+    ],
+    "manual": []
+  },
+  "secret_garden": {
+    "breakpoint": [
+      {
+        "file": "secret_garden.cpp",
+        "line": 133
+      }
+    ],
+    "manual": []
+  },
+  "eyeball": {
+    "breakpoint": [
+      {
+        "file": "eyeball.cpp",
+        "line": 173
+      }
+    ],
+    "manual": []
+  },
+  "glc": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "teardrop": {
+    "breakpoint": [
+      {
+        "file": "teardrop.cpp",
+        "line": 138
+      }
+    ],
+    "manual": []
+  },
+  "turtle": {
+    "breakpoint": [
+      {
+        "file": "turtle.cpp",
+        "line": 216
+      }
+    ],
+    "manual": []
+  },
+  "mylogo": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "plant1_5": {
+    "breakpoint": [
+      {
+        "file": "plant1_5.cpp",
+        "line": 201
+      }
+    ],
+    "manual": []
+  },
+  "matrix_rain": {
+    "breakpoint": [
+      {
+        "file": "rain.cpp",
+        "line": 106
+      }
+    ],
+    "manual": []
+  },
+  "blobby3d": {
+    "breakpoint": [],
+    "manual": []
+  }
+}

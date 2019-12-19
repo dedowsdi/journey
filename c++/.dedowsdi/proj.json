@@ -1,0 +1,447 @@
+{
+  "all": {
+    "exe_args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "tmp": {
+    "exe_args": "",
+    "lldb": {
+      "breakpoint": {}
+    },
+    "gdb": {
+      "breakpoint": {
+        "b tmp.cpp:37": null
+      },
+      "manual": []
+    }
+  },
+  "template_sep_def": {
+    "exe_args": "",
+    "lldb": {
+      "breakpoint": {}
+    }
+  },
+  "crtp": {
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file crtp.cpp --line 27": null
+      }
+    }
+  },
+  "boost_program_options": {
+    "exe_args": "9000 -f 1.0 -s abcd -v1 2 3 4 -v5 --bool -ba -bb -bc -bd -be -bf -bg -cdata/config_options --B 9",
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file boost_program_options.cpp --line 102": null
+      },
+      "manual": []
+    }
+  },
+  "boost_filesystem": {
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file operations.hpp --line 691": null,
+        "breakpoint set --file operations.hpp --line 697": 1,
+        "breakpoint set --file operations.hpp --line 693": 1,
+        "breakpoint set --file operations.hpp --line 689": 1
+      },
+      "manual": []
+    }
+  },
+  "boost_iostreams": {
+    "lldb": {
+      "breakpoint": {
+        "breakpoint set --file boost_iostreams.cpp --line 56": null
+      },
+      "manual": []
+    }
+  },
+  "using": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "__default__": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    },
+    "gdb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "mask": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "array": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "binary_search": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "local_class": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "conversion": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "type2type": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "int2type": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "pointer_traits": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "mem_fn": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "type_traits": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "type_list": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "parameter_pack": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "gen_scatter_hierachy": {
+    "lldb": {
+      "breakpoint": {},
+      "manual": []
+    }
+  },
+  "chrono": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "gaussian": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": "0.1 10 -b"
+  },
+  "sizeof": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "number_file": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": "1 10000000 int_r1m --type random --count 1000000"
+  },
+  "insert_sort": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": "f100 f100_sorted"
+  },
+  "stl_sort": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "adl": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "copy_elision": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "copy_swap": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "float": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "quiz0": {
+    "breakpoint": [
+      {
+        "file": "quiz0.cpp",
+        "line": 14
+      }
+    ],
+    "manual": []
+  },
+  "init": {
+    "breakpoint": [
+      {
+        "file": "init.cpp",
+        "line": 96
+      }
+    ],
+    "manual": []
+  },
+  "lifetime": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "radix_sort": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": "int_r1m"
+  },
+  "forward": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "enum_hack": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "reference": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "variable_template": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "template_type_deduction": {
+    "breakpoint": [
+      {
+        "file": "common.h",
+        "line": 197
+      }
+    ],
+    "manual": []
+  },
+  "dependent_name": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "exception": {
+    "breakpoint": [
+      {
+        "file": "exception.cpp",
+        "line": 60
+      }
+    ],
+    "manual": []
+  },
+  "raii": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "nvl": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "test": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "unicode": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "int_convert": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "stream": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "count_sort": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "counter": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "singleton": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "singleton_base": {
+    "breakpoint": [
+      {
+        "file": "main.cpp",
+        "line": 7
+      }
+    ],
+    "manual": []
+  },
+  "double_dispatch": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "virtual_function_table": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "visitor": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "recursive_descent_parser": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirite_tutorial0": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "phoenix_tutorial0": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "phoenix_tutorial1": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirite_tutorial1": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirite_tutorial2": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirite_tutorial3": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "roman_numeral": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirit_string": {
+    "breakpoint": [
+      {
+        "file": "spirit_string.cpp",
+        "line": 17
+      }
+    ],
+    "manual": []
+  },
+  "spirit_tutorial0": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirit_employee": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "observer": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirit_tutorial1": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirit_tutorial2": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirit_mini_xml": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "interpreter": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirit_arithmatic": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "manual_test_case": {
+    "breakpoint": [
+      {
+        "file": "manual_test_case.cpp",
+        "line": 32
+      }
+    ],
+    "manual": [],
+    "exe_args": ""
+  },
+  "test_fibonacci": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "test_dataset": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "random": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "test_template": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "test_testsuit": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "test_decorator": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": ""
+  },
+  "test_fixture": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": "--log_level=message"
+  },
+  "compositor": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "spirit_arithmetic": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": "--log_level=message"
+  },
+  "mixin": {
+    "breakpoint": [],
+    "manual": [],
+    "exe_args": ""
+  }
+}

@@ -1,11 +1,10 @@
-set wildignore+=*/utfcpp/*,utfcpp
-set nospell
 set tags+=/usr/local/source/glm/tags
 set path+=gl43/include,gl43app/include,glc/include
-let &viminfofile = getcwd() . '/.viminfo'
+set wildignore+=*/utfcpp/*,utfcpp
+
+let g:cdef_proj_name = 'GL2'
+
 call misc#proj#load_map('c')
-let g:mycpp_build_dir = './build/gcc/Debug'
-let g:cdef_proj_name = 'GL4'
 
 "executable make target and path
 "let g:mycppMakes = {}

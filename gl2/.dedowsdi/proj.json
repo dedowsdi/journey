@@ -1,0 +1,239 @@
+{
+  "__default__": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "hello": {
+    "breakpoint": [
+      {
+        "file": "hello.cpp",
+        "line": 23
+      }
+    ],
+    "manual": []
+  },
+  "double": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "lines": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "polys": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "varray": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "edgeflag": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "snake": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "all": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "snake_rect": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "sprite": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "snake_circle": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "aargb": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "width": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "cube": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "model": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "geometry": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "clip": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "planet": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "robot": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "unproject": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "smooth": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "light": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "movelight": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "colormat": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "combiner": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "texenv": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "texmat": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "convolution": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "bloom": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "pbo": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "bezsurf": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "bezcurve": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "bezmesh": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "shadowmap": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "texgen": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "bitmap_font": {
+    "breakpoint": [
+      {
+        "file": "bitmap_font.cpp",
+        "line": 85
+      }
+    ],
+    "manual": [],
+    "exe_args": "font/DejaVuSansMono.ttf  bitmap_content"
+  },
+  "freetype_text": {
+    "breakpoint": [
+      {
+        "file": "bitmap_font.cpp",
+        "line": 71
+      }
+    ],
+    "manual": []
+  },
+  "bitmap_text": {
+    "breakpoint": [
+      {
+        "file": "freetype_text.cpp",
+        "line": 238
+      }
+    ],
+    "manual": [],
+    "exe_args": "data/font/wts11.ttf matrix_rain"
+  },
+  "font": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "normalmap": {
+    "breakpoint": [
+      {
+        "file": "normalmap.cpp",
+        "line": 290
+      }
+    ],
+    "manual": []
+  },
+  "hdr": {
+    "breakpoint": [
+      {
+        "file": "common_program.cpp",
+        "line": 29
+      }
+    ],
+    "manual": []
+  },
+  "rim": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "circular": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "gaussian_blur": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "directional_shadowmap": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "blinnphong": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "omni_shadowmap": {
+    "breakpoint": [],
+    "manual": []
+  },
+  "instance": {
+    "breakpoint": [
+      {
+        "file": "instance.cpp",
+        "line": 84
+      }
+    ],
+    "manual": []
+  },
+  "trim": {
+    "breakpoint": [],
+    "manual": []
+  }
+}
