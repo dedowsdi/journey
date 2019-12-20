@@ -70,6 +70,7 @@ ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 #generate cfg file
 
 add_subdirectory(gl43)
+add_subdirectory(gl43d)
 SET(GLC_GL_VERSION 43)
 add_subdirectory(glc)
 add_subdirectory(gl43app)

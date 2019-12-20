@@ -72,9 +72,19 @@ add_library(${GLC} ${GLC_SRCS})
 
 find_package(Boost 1.58 REQUIRED COMPONENTS filesystem)
 
+IF(CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(GLAD_GL_LIB gl43d)
+ELSE()
+    set(GLAD_GL_LIB gl43)
+ENDIF()
+
 target_link_libraries(${GLC}
     PUBLIC
-        gl${GLC_GL_VERSION}
+
+        # You can not use generator expression here, as generator expression is evaluated by make, but you need cmake target dependence here
+        # gl${GLC_GL_VERSION}$<$<CONFIG:Debug>:d>
+
+        ${GLAD_GL_LIB}
         ${FREETYPE_LIBRARIES}
         ${FIP_LIBS}
         ${Boost_LIBRARIES}
@@ -103,6 +113,11 @@ write_basic_package_version_file(
 
 # export build interface
 export(TARGETS ${GLC} NAMESPACE zxd:: FILE ${GLC}Targets.cmake)
+IF(CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(USED_GL_LIB gl43d)
+ELSE()
+    set(USED_GL_LIB gl43)
+ENDIF()
 configure_file(glcConfig.cmake.in ${GLC}Config.cmake @ONLY)
 
 # add to user package registry

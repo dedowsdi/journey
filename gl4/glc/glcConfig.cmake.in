@@ -6,7 +6,7 @@ include(CMakeFindDependencyMacro)
 # Same syntax as find_package
 # find_dependency(gl43 REQUIRED)
 find_dependency(OpenGL REQUIRED)
-find_dependency(gl@GLC_GL_VERSION@ REQUIRED)
+find_dependency(@USED_GL_LIB@ REQUIRED)
 
 # Any extra setup
 

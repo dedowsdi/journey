@@ -138,6 +138,7 @@ void app::debug_message_control() {
   GLuint ids1[] = {131186};
   glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE,
     sizeof(ids1) / sizeof(GLuint), ids1, GL_FALSE);
+
 }
 
 //--------------------------------------------------------------------
