@@ -140,7 +140,7 @@ class app0 : public app {
       }
     }
 
-    // cube map use left top as origin by convention
+    // cube map use left top as origin by convention !!!!!!!
     flip_vertical(image_x[0][0], image_size, image_size, 4);
     flip_vertical(image_nx[0][0], image_size, image_size, 4);
     flip_vertical(image_y[0][0], image_size, image_size, 4);

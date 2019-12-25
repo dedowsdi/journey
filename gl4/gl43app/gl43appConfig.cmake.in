@@ -3,10 +3,7 @@ include(CMakeFindDependencyMacro)
 # Capturing values from configure (optional)
 # set(my-config-var @my-config-var@)
 
-# Same syntax as find_package
-find_dependency(glc43 REQUIRED)
-
-# Any extra setup
+find_dependency(OpenGL REQUIRED)
 
 # Add the targets file
 include("${CMAKE_CURRENT_LIST_DIR}/gl43appTargets.cmake")

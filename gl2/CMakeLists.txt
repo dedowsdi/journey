@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 # old policy for FindOpenGL
-cmake_policy(SET CMP0072 OLD)
+#jpg cmake_policy(SET CMP0072 OLD)
 
 project (gl2 VERSION 0.0 LANGUAGES C CXX)
 
@@ -74,9 +74,6 @@ IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 #generate cfg file
-add_subdirectory(gl21)
-SET(GLC_GL_VERSION 21)
-add_subdirectory(glc)
 add_subdirectory(gl21app)
 add_subdirectory(demo)
 add_subdirectory(effect)
