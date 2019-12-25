@@ -1,6 +1,8 @@
 #include <cuboid.h>
 
 #include <algorithm>
+#include <iostream>
+
 #include <stream_util.h>
 #include <common.h>
 
@@ -59,7 +61,7 @@ common_geometry::vertex_build cuboid::build_vertices()
   // there is a tetrahedron between 0 2 4 6, it's 6 edges is also the shared
   // edge in each of the 6 faces
 
-  auto vertices = std::make_unique<vec3_array>();
+  auto vertices = std::make_shared<vec3_array>();
   auto num_vertices = m_type == type::CT_8 ? 8 : 24;
 
   vertices->reserve(num_vertices);
@@ -88,37 +90,36 @@ common_geometry::vertex_build cuboid::build_vertices()
     add_quad(*vertices, 2, 1, 6, 5); //  --- left
   }
 
-  auto& elements = make_element<uint_array>();
-  elements.reserve(36);
+  auto elements = make_element<uint_array>();
+  elements->reserve(36);
 
-  add_quad(elements, 0, 1, 2, 3);
-  add_quad(elements, 4, 5, 6, 7);
+  add_quad(*elements, 0, 1, 2, 3);
+  add_quad(*elements, 4, 5, 6, 7);
 
   if (m_type == type::CT_24)
   {
-    add_quad(elements, 8, 9, 10, 11);
-    add_quad(elements, 12, 13, 14, 15);
-    add_quad(elements, 16, 17, 18, 19);
-    add_quad(elements, 20, 21, 22, 23);
+    add_quad(*elements, 8, 9, 10, 11);
+    add_quad(*elements, 12, 13, 14, 15);
+    add_quad(*elements, 16, 17, 18, 19);
+    add_quad(*elements, 20, 21, 22, 23);
   }
   else
   {
-    add_quad(elements, 2, 5, 4, 3);
-    add_quad(elements, 0, 7, 6, 1);
-    add_quad(elements, 4, 7, 0, 3);
-    add_quad(elements, 2, 1, 6, 5);
+    add_quad(*elements, 2, 5, 4, 3);
+    add_quad(*elements, 0, 7, 6, 1);
+    add_quad(*elements, 4, 7, 0, 3);
+    add_quad(*elements, 2, 1, 6, 5);
   }
 
   clear_primitive_sets();
   add_primitive_set(std::make_shared<draw_elements>(
-    GL_TRIANGLES, elements.size(), GL_UNSIGNED_INT, 0));
+    GL_TRIANGLES, elements->size(), GL_UNSIGNED_INT, 0));
 
-  return vertex_build{std::move(vertices)};
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr cuboid::build_normals(const array& vertices)
+array_ptr cuboid::build_normals(const array& vertices)
 {
   auto normals = std::make_unique<vec3_array>();
   normals->reserve(vertices.size());
@@ -141,7 +142,7 @@ array_uptr cuboid::build_normals(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr cuboid::build_texcoords(const array& vertices)
+array_ptr cuboid::build_texcoords(const array& vertices)
 {
   if (m_type != type::CT_24)
   {
@@ -160,7 +161,6 @@ array_uptr cuboid::build_texcoords(const array& vertices)
     texcoords->push_back(glm::vec2(1, 0));
     texcoords->push_back(glm::vec2(1, 1));
   }
-  return texcoords;
   return texcoords;
 }
 

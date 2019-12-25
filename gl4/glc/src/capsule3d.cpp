@@ -84,11 +84,11 @@ common_geometry::vertex_build capsule3d::build_vertices()
 
   // create elemenets
 
-  auto& elements = make_element<uint_array>();
+  auto elements = make_element<uint_array>();
   auto num_elements =
     (m_sphere_stack + m_cylinder_stack) * 2 * (m_sphere_slice + 1) +
     m_sphere_stack + m_cylinder_stack;
-  elements.reserve(num_elements);
+  elements->reserve(num_elements);
 
   // top half sphere
   build_strip_elements(elements, m_sphere_stack / 2, m_sphere_slice);
@@ -101,21 +101,21 @@ common_geometry::vertex_build capsule3d::build_vertices()
   build_strip_elements(
     elements, m_cylinder_stack, m_sphere_slice, half_sphere_points * 2);
 
-  assert(elements.size() == num_elements);
+  assert(elements->size() == num_elements);
 
   clear_primitive_sets();
   add_primitive_set(std::make_shared<draw_elements>(
-    GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
+    GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
 
-  std::map<attrib_semantic, array_uptr> m;
+  std::map<attrib_semantic, array_ptr> m;
   m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
   if (has_normal())
     m.insert(std::make_pair(attrib_semantic::normal, std::move(normals)));
-  return std::move(m);
+  return m;
 }
 
 //--------------------------------------------------------------------
-array_uptr capsule3d::build_texcoords(const array& vertices)
+array_ptr capsule3d::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
   texcoords->reserve(vertices.size());

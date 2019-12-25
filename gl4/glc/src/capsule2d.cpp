@@ -8,7 +8,7 @@ namespace zxd
 //--------------------------------------------------------------------
 common_geometry::vertex_build capsule2d::build_vertices()
 {
-  auto vertices = std::make_unique<vec2_array>();
+  auto vertices = std::make_shared<vec2_array>();
 
   GLfloat half_rect_width = m_width * 0.5 - m_radius;
   if(half_rect_width < 0)
@@ -52,7 +52,7 @@ common_geometry::vertex_build capsule2d::build_vertices()
   }
 
   add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 }

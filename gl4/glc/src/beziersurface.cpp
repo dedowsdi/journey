@@ -15,7 +15,7 @@ bezier_surface::bezier_surface(GLfloat ubegin, GLfloat uend, GLfloat vbegin,
 //--------------------------------------------------------------------
 common_geometry::vertex_build bezier_surface::build_vertices()
 {
-  auto vertices = std::make_unique<vec3_array>();
+  auto vertices = std::make_shared<vec3_array>();
 
   vec3_vector2 q2 = u_interim2();
 
@@ -45,11 +45,11 @@ common_geometry::vertex_build bezier_surface::build_vertices()
     add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
   }
 
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr bezier_surface::build_normals(const array& vertices)
+array_ptr bezier_surface::build_normals(const array& vertices)
 {
   auto normals = std::make_unique<vec3_array>();
 
@@ -85,7 +85,7 @@ array_uptr bezier_surface::build_normals(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr bezier_surface::build_texcoords(const array& vertices)
+array_ptr bezier_surface::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
 

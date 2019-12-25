@@ -16,6 +16,7 @@ class buffer;
 struct vertex_attrib
 {
   vertex_attrib() = default;
+  ~vertex_attrib();
   vertex_attrib(
     GLuint index_, GLuint size_, GLenum type, std::shared_ptr<buffer> buf_);
 
@@ -72,17 +73,9 @@ private:
   attributes _attribs;
 };
 
-// stride 0 style built in type or glm vertex array.
-template <typename T>
-void add_vector_attrib(vao& o, GLuint index, const std::vector<T>& vertices,
+void add_array_attrib(vao& o, GLuint index, std::shared_ptr<array> vertices,
   GLenum usage = GL_STATIC_DRAW);
 
-void add_array_attrib(vao& o, GLuint index, std::unique_ptr<array> vertices,
-  GLenum usage = GL_STATIC_DRAW);
-
-// note that only pointer is stored as buffer_data, no ownership change.
-void add_array_attrib(vao& o, GLuint index, const array& vertices,
-  GLenum usage = GL_STATIC_DRAW);
 }
 
 #endif /* GL4_GLC_VAO_H */

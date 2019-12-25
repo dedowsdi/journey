@@ -9,7 +9,7 @@ namespace zxd
 //--------------------------------------------------------------------
 common_geometry::vertex_build lissajous::build_vertices()
 {
-  auto vertices = std::make_unique<vec2_array>();
+  auto vertices = std::make_shared<vec2_array>();
 
   vertices->reserve(m_slices + 1);
 
@@ -20,7 +20,7 @@ common_geometry::vertex_build lissajous::build_vertices()
   }
 
   add_primitive_set(std::make_shared<draw_arrays>(GL_LINE_STRIP, 0, vertices->size()));
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 

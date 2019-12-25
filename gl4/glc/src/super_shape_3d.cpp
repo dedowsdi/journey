@@ -112,11 +112,11 @@ common_geometry::vertex_build super_shape_3d::build_sphere_vertex()
   std::cout << "create super sphere shape 3d in " << vertices->size()
             << " vertices" << std::endl;
 
-  std::map<attrib_semantic, array_uptr> m;
+  std::map<attrib_semantic, array_ptr> m;
   m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
   if (has_texcoord())
     m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
-  return std::move(m);
+  return m;
 }
 
 //--------------------------------------------------------------------
@@ -211,10 +211,10 @@ common_geometry::vertex_build super_shape_3d::build_torus_vertex()
   std::cout << "create super torus shape 3d in " << vertices->size()
             << " vertices" << std::endl;
 
-  std::map<attrib_semantic, array_uptr> m;
+  std::map<attrib_semantic, array_ptr> m;
   if (has_texcoord())
     m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
-  return std::move(m);
+  return m;
 }
 
 //--------------------------------------------------------------------

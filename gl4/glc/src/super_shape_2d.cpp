@@ -15,7 +15,7 @@ common_geometry::vertex_build super_shape_2d::build_vertices()
   if(m_a == 0 || m_b == 0)
     throw std::runtime_error("a or b can not be 0 in supershape2d");
 
-  auto vertices = std::make_unique<vec2_array>();
+  auto vertices = std::make_shared<vec2_array>();
   vertices->reserve(m_num_slice + 2);
 
   vertices->push_back(vec2(0));
@@ -34,8 +34,8 @@ common_geometry::vertex_build super_shape_2d::build_vertices()
 
   clear_primitive_sets();
   add_primitive_set(
-    std::make_unique<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
-  return vertex_build{std::move(vertices)};
+    std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+  return vertex_build{vertices};
 }
 
 }

@@ -67,9 +67,9 @@ private:
   vec2 m_tc1;
 
   vertex_build build_vertices();
-  array_uptr build_normals(const array& vertices);
-  array_uptr build_texcoords(const array& vertices);
-  array_uptr build_tangents(const array& vertices);
+  array_ptr build_normals(const array& vertices);
+  array_ptr build_texcoords(const array& vertices);
+  array_ptr build_tangents(const array& vertices);
 };
 
 class billboard_quad : public common_geometry
@@ -88,7 +88,7 @@ public:
 
 protected:
   vertex_build build_vertices();
-  array_uptr build_texcoords(const array& vertices);
+  array_ptr build_texcoords(const array& vertices);
 
 };
 

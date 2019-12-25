@@ -24,8 +24,8 @@ public:
 private:
 
   vertex_build build_vertices() override;
-  array_uptr build_normals(const array& vertices) override;
-  array_uptr build_texcoords(const array& vertices) override;
+  array_ptr build_normals(const array& vertices) override;
+  array_ptr build_texcoords(const array& vertices) override;
 
   GLuint m_slice{1};
   vec2 m_point0{-1};

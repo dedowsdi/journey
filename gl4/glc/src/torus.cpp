@@ -60,22 +60,22 @@ common_geometry::vertex_build torus::build_vertices()
   assert(texcoords->size() == num_vertices);
 
   // build elements
-  auto& elements = make_element<uint_array>();
+  auto elements = make_element<uint_array>();
   auto num_elements = m_rings * 2 * (m_sides + 1) + m_rings;
-  elements.reserve(num_elements);
+  elements->reserve(num_elements);
   build_strip_elements(elements, m_rings, m_sides);
-  assert(elements.size() == num_elements);
+  assert(elements->size() == num_elements);
 
   clear_primitive_sets();
   add_primitive_set(std::make_shared<draw_elements>(
-    GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
+    GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
 
-  std::map<attrib_semantic, array_uptr> m;
+  std::map<attrib_semantic, array_ptr> m;
   m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
   if (has_normal())
     m.insert(std::make_pair(attrib_semantic::normal, std::move(normals)));
   if (has_texcoord())
     m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
-  return std::move(m);
+  return m;
 }
 }

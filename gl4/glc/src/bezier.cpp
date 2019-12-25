@@ -262,7 +262,7 @@ bezier_geom::bezier_geom(const bezier& shape):
 //--------------------------------------------------------------------
 common_geometry::vertex_build bezier_geom::build_vertices()
 {
-  auto vertices = std::make_unique<vec3_array>();
+  auto vertices = std::make_shared<vec3_array>();
 
   float dt = (_shape.end() - _shape.begin()) / _shape.partitions();
   for (uint i = 0; i <= _shape.partitions(); ++i)
@@ -272,12 +272,12 @@ common_geometry::vertex_build bezier_geom::build_vertices()
 
   clear_primitive_sets();
   add_primitive_set(
-    std::make_unique<draw_arrays>(GL_LINE_STRIP, 0, vertices->size()));
-  return vertex_build{std::move(vertices)};
+    std::make_shared<draw_arrays>(GL_LINE_STRIP, 0, vertices->size()));
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr bezier_geom::build_texcoords(const array& vertices)
+array_ptr bezier_geom::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<float_array>();
   texcoords->reserve(vertices.size());

@@ -55,16 +55,16 @@ namespace zxd
       {
         if (reverse)
         {
-          elements.push_back(stack1 + j);
-          elements.push_back(stack0 + j);
+          elements->push_back(stack1 + j);
+          elements->push_back(stack0 + j);
         }
         else
         {
-          elements.push_back(stack0 + j);
-          elements.push_back(stack1 + j);
+          elements->push_back(stack0 + j);
+          elements->push_back(stack1 + j);
         }
       }
-      elements.push_back(-1);
+      elements->push_back(-1);
     }
   }
 

@@ -15,6 +15,9 @@
 namespace zxd
 {
 
+  vertex_attrib::~vertex_attrib()
+  {
+  }
 //--------------------------------------------------------------------
 vertex_attrib::vertex_attrib(
   GLuint index_, GLuint size_, GLenum type, std::shared_ptr<buffer> buf_)
@@ -41,7 +44,6 @@ vao::~vao()
   if(_object != 0)
   {
     glDeleteVertexArrays(1, &_object);
-    std::cout << "vao " << _object << " deleted"  << std::endl;
   }
 }
 
@@ -131,47 +133,18 @@ vertex_attrib& vao::get_attrib_pri(GLuint index)
 }
 
 //--------------------------------------------------------------------
-template <typename T>
-void add_vector_attrib(
-  vao& o, GLuint index, const std::vector<T>& vertices, GLenum usage)
-{
-  o.bind();
-  auto buf = std::make_shared<buffer>();
-  buf->bind(GL_ARRAY_BUFFER);
-  buf->buffer_data(vertices, usage);
-
-  vertex_attrib attrib(index, glm_type_components<T>, glm_type_enum<T>, buf);
-  o.attrib_pointer(attrib);
-}
-
-//--------------------------------------------------------------------
 void add_array_attrib(
-  vao& o, GLuint index, std::unique_ptr<array> vertices, GLenum usage)
+  vao& o, GLuint index, std::shared_ptr<array> vertices, GLenum usage)
 {
-  o.bind();
-  auto buf = std::make_shared<buffer>();
-  buf->bind(GL_ARRAY_BUFFER);
+    o.bind();
+    auto buf = std::make_shared<buffer>();
+    buf->bind( GL_ARRAY_BUFFER );
 
-  vertex_attrib attrib(index, vertices->element_size(), vertices->gltype(), buf);
-  o.attrib_pointer(attrib);
+    vertex_attrib attrib(
+        index, vertices->element_size(), vertices->gltype(), buf );
+    o.attrib_pointer( attrib );
 
-  buf->buffer_data(vertices->bytes(), vertices->data(), usage);
-  buf->set_data<std::unique_ptr<array>>(std::move(vertices));
-}
-
-//--------------------------------------------------------------------
-void add_array_attrib(vao& o, GLuint index, const array& vertices,
-  GLenum usage)
-{
-  o.bind();
-  auto buf = std::make_shared<buffer>();
-  buf->bind(GL_ARRAY_BUFFER);
-
-  vertex_attrib attrib(index, vertices.element_size(), vertices.gltype(), buf);
-  o.attrib_pointer(attrib);
-
-  buf->buffer_data(vertices.bytes(), vertices.data(), usage);
-  buf->set_data<const array*>(&vertices);
+    buf->buffer_data( vertices, usage );
 }
 
 }

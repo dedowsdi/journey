@@ -15,7 +15,6 @@ glm::mat4 v_mat;
 glm::mat4 p_mat;
 glm::mat4 vp_mat;
 
-lightless_program prg;
 GLuint rows = 10;
 GLuint cols = 10;
 GLfloat radius = 1;
@@ -40,11 +39,12 @@ kcip kci_rose_offset;
 vec2_vector dots;
 vec2_vector lines;
 
-std::vector<lissajous> lisas;
 
 class lissajous_app : public app
 {
 protected:
+  lightless_program _prg;
+  std::vector<lissajous> _lisas;
 
 public:
 
@@ -66,7 +66,7 @@ public:
     glfwSetWindowPos(m_wnd, 100, 100);
 
 
-    prg.init();
+    _prg.init();
     p_mat = zxd::rect_ortho((cols+1)*radius, (rows+1)*radius, wnd_aspect());
 
     auto callback = std::bind(std::mem_fn(&lissajous_app::reset_pattern), this, std::placeholders::_1);
@@ -90,7 +90,7 @@ public:
     rose_d = kci_rose_d->get_int();
     rose_offset = kci_rose_offset->get_float();
 
-    lisas.clear();
+    _lisas.clear();
     for (int y = 0; y < rows; ++y) 
     {
       for (int x = 0; x < cols; ++x) 
@@ -105,7 +105,7 @@ public:
         lisa.rose_offset(rose_offset);
 
         lisa.build_mesh({attrib_semantic::vertex});
-        lisas.push_back(lisa);
+        _lisas.push_back(lisa);
       }
     }
 
@@ -115,8 +115,8 @@ public:
   {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    prg.use();
-    glUniform4fv(prg.ul_color, 1, glm::value_ptr(base_color));
+    _prg.use();
+    glUniform4fv(_prg.ul_color, 1, glm::value_ptr(base_color));
     GLfloat t = m_current_time * 0.5f;
 
     glEnable(GL_BLEND);
@@ -128,13 +128,13 @@ public:
     {
       vec2 pos = lt + vec2(i, 0) * radius * 2.0f;
       mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
-      glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
-      lisas[0].draw();
+      glUniformMatrix4fv(_prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
+      _lisas[0].draw();
 
       if(i == 0)
         continue;
 
-      vec2 dot = lisas[0].get_at_angle(t*i) * scale + pos;
+      vec2 dot = _lisas[0].get_at_angle(t*i) * scale + pos;
       dots.push_back(dot);
       lines.push_back(dot);
       lines.push_back(dot + vec2(0, -2 * radius * (rows + 1)));
@@ -144,20 +144,20 @@ public:
     {
       vec2 pos = lt + vec2(0, -i) * radius * 2.0f;
       mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
-      glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
-      lisas[0].draw();
+      glUniformMatrix4fv(_prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
+      _lisas[0].draw();
 
       if(i == 0)
         continue;
 
-      vec2 dot = lisas[0].get_at_angle(t * i) * scale + pos;
+      vec2 dot = _lisas[0].get_at_angle(t * i) * scale + pos;
       dots.push_back(dot);
       lines.push_back(dot);
       lines.push_back(dot + vec2(2 * radius * (rows + 1), 0));
     }
 
     // draw lissajous
-    glUniform4fv(prg.ul_color, 1, glm::value_ptr(lissa_color));
+    glUniform4fv(_prg.ul_color, 1, glm::value_ptr(lissa_color));
     lt += vec2(radius, -radius) * 2.0f;
     for (int y = 0; y < rows; ++y) 
     {
@@ -165,9 +165,9 @@ public:
       {
         vec2 pos = lt + vec2(x, - y) * radius * 2.0f;
         mat4 mvp_mat = glm::scale(glm::translate(p_mat, vec3(pos, 0)), vec3(scale,scale,1));
-        glUniformMatrix4fv(prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
+        glUniformMatrix4fv(_prg.ul_mvp_mat, 1, 0, glm::value_ptr(mvp_mat));
       
-        lissajous& lisa = lisas[y * cols + x];
+        lissajous& lisa = _lisas[y * cols + x];
         lisa.draw();
         dots.push_back(lisa.get_at_angle(t) * scale + pos);
       }

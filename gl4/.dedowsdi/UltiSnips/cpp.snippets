@@ -29,10 +29,11 @@ protected:
 	{
 	}
 
-} prg;
+};
 
 class ${1:app_name} : public app {
 private:
+	${2} _prg;
 
 public:
 	void init_info() override;
@@ -62,7 +63,7 @@ void $1::init_info()
 
 void $1::create_scene()
 {
-	prg.init();
+	_prg.init();
 }
 
 void $1::update() {}
@@ -71,7 +72,7 @@ void $1::display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	prg.use();
+	_prg.use();
 
 	if(!m_display_help)
 		return;

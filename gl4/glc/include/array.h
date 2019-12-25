@@ -75,10 +75,15 @@ using vec3_array = template_array<vec3>;
 using vec4_array = template_array<vec4>;
 
 using array_uptr = std::unique_ptr<array>;
+using array_ptr = std::shared_ptr<array>;
 using vec1_array_uptr = std::unique_ptr<vec1_array>;
 using vec2_array_uptr = std::unique_ptr<vec2_array>;
 using vec3_array_uptr = std::unique_ptr<vec3_array>;
 using vec4_array_uptr = std::unique_ptr<vec4_array>;
+using vec1_array_ptr = std::shared_ptr<vec1_array>;
+using vec2_array_ptr = std::shared_ptr<vec2_array>;
+using vec3_array_ptr = std::shared_ptr<vec3_array>;
+using vec4_array_ptr = std::shared_ptr<vec4_array>;
 }
 
 #endif /* GL4_GLC_ARRAY_H */

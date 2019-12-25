@@ -31,7 +31,7 @@ common_geometry::vertex_build icosahedron::build_vertices()
 }
 
 //--------------------------------------------------------------------
-array_uptr icosahedron::build_normals(const array& vertices)
+array_ptr icosahedron::build_normals(const array& vertices)
 {
   auto normals =
     std::make_unique<vec3_array>(static_cast<const vec3_array&>(vertices));
@@ -72,17 +72,17 @@ common_geometry::vertex_build icosahedron::build_minimun_mesh()
     vertices->at(down_index + i) = vec3(proj * cos(down_angle), proj * sin(down_angle), -z);
   }
 
-  auto& elements = make_element<uint_array>();
-  elements.reserve(60);
+  auto elements = make_element<uint_array>();
+  elements->reserve(60);
 
   // 5 triangles on top
   for (int i = 0; i < 5; ++i)
   {
     auto i1 = up_index + i;
     auto i2 = i == 4 ? up_index : i1 + 1;
-    elements.push_back(0);
-    elements.push_back(i1);
-    elements.push_back(i2);
+    elements->push_back(0);
+    elements->push_back(i1);
+    elements->push_back(i2);
   }
   
   // 10 triangles on center
@@ -92,17 +92,17 @@ common_geometry::vertex_build icosahedron::build_minimun_mesh()
       auto i0 = up_index + i;
       auto i2 = i == 4 ? up_index : i0 + 1;
       auto i1 = down_index + i;
-      elements.push_back(i0);
-      elements.push_back(i1);
-      elements.push_back(i2);
+      elements->push_back(i0);
+      elements->push_back(i1);
+      elements->push_back(i2);
     }
     {
       auto i0 = down_index + i;
       auto i2 = i == 4 ? down_index : i0 + 1;
       auto i1 = i == 4 ? up_index : up_index + 1 + i;
-      elements.push_back(i0);
-      elements.push_back(i2);
-      elements.push_back(i1);
+      elements->push_back(i0);
+      elements->push_back(i2);
+      elements->push_back(i1);
     }
   }
 
@@ -111,9 +111,9 @@ common_geometry::vertex_build icosahedron::build_minimun_mesh()
   {
     auto i1 = down_index + i;
     auto i2 = i == 4 ? down_index : i1 + 1;
-    elements.push_back(south_pole_index);
-    elements.push_back(i2);
-    elements.push_back(i1);
+    elements->push_back(south_pole_index);
+    elements->push_back(i2);
+    elements->push_back(i1);
   }
 
   for(auto& item : *vertices)
@@ -122,7 +122,7 @@ common_geometry::vertex_build icosahedron::build_minimun_mesh()
   for (int i = 0; i < m_subdivisions; ++i)
   {
     auto old_size = vertices->size();
-    subdivide(elements.get_vector(), vertices->get_vector());
+    subdivide(elements->get_vector(), vertices->get_vector());
     std::for_each(vertices->begin() + old_size, vertices->end(),
       [this](vec3& v) -> void { v = glm::normalize(v) * m_radius; });
   }
@@ -145,15 +145,15 @@ common_geometry::vertex_build icosahedron::build_minimun_mesh()
   std::cout << "icosahedron total vertices : " << vertices->size() << std::endl;
 
   auto ps = std::make_unique<draw_elements>(
-    GL_TRIANGLES, elements.size(), GL_UNSIGNED_INT, 0);
-  ps->indices(&elements.front());
+    GL_TRIANGLES, elements->size(), GL_UNSIGNED_INT, 0);
+  ps->indices(&elements->front());
   add_primitive_set(std::move(ps));
 
-  std::map<attrib_semantic, array_uptr> m;
+  std::map<attrib_semantic, array_ptr> m;
   m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
   if (has_normal())
     m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
-  return std::move(m);
+  return m;
 }
 
 //--------------------------------------------------------------------
@@ -189,17 +189,17 @@ common_geometry::vertex_build icosahedron::build_paper_unwrapper_mesh()
     vertices->at(down_index + i) = vec3(proj * cos(down_angle), proj * sin(down_angle), -z);
   }
 
-  auto& elements = make_element<uint_array>();
-  elements.reserve(60);
+  auto elements = make_element<uint_array>();
+  elements->reserve(60);
 
   // 5 triangles on top
   for (int i = 0; i < 5; ++i)
   {
     auto i1 = up_index + i;
     auto i2 = i1 + 1;
-    elements.emplace_back(i);
-    elements.emplace_back(i1);
-    elements.emplace_back(i2);
+    elements->emplace_back(i);
+    elements->emplace_back(i1);
+    elements->emplace_back(i2);
   }
   
   // 10 triangles on center
@@ -209,17 +209,17 @@ common_geometry::vertex_build icosahedron::build_paper_unwrapper_mesh()
       auto i0 = up_index + i;
       auto i2 = i0 + 1;
       auto i1 = down_index + i;
-      elements.emplace_back(i0);
-      elements.emplace_back(i1);
-      elements.emplace_back(i2);
+      elements->emplace_back(i0);
+      elements->emplace_back(i1);
+      elements->emplace_back(i2);
     }
     {
       auto i0 = down_index + i;
       auto i2 = i0 + 1;
       auto i1 = up_index + 1 + i;
-      elements.emplace_back(i0);
-      elements.emplace_back(i2);
-      elements.emplace_back(i1);
+      elements->emplace_back(i0);
+      elements->emplace_back(i2);
+      elements->emplace_back(i1);
     }
   }
 
@@ -228,9 +228,9 @@ common_geometry::vertex_build icosahedron::build_paper_unwrapper_mesh()
   {
     auto i1 = down_index + i;
     auto i2 = i1 + 1;
-    elements.emplace_back(south_pole_index + i);
-    elements.emplace_back(i2);
-    elements.emplace_back(i1);
+    elements->emplace_back(south_pole_index + i);
+    elements->emplace_back(i2);
+    elements->emplace_back(i1);
   }
 
   std::unique_ptr<vec2_array> texcoords;
@@ -258,7 +258,7 @@ common_geometry::vertex_build icosahedron::build_paper_unwrapper_mesh()
   for (int i = 0; i < m_subdivisions; ++i)
   {
     GLuint old_size = vertices->size();
-    subdivide(elements.get_vector(), vertices->get_vector(),
+    subdivide(elements->get_vector(), vertices->get_vector(),
       texcoords ? &texcoords->get_vector() : nullptr);
 
     std::for_each(vertices->begin() + old_size, vertices->end(), 
@@ -269,13 +269,13 @@ common_geometry::vertex_build icosahedron::build_paper_unwrapper_mesh()
   }
 
   add_primitive_set(std::make_shared<draw_elements>(
-    GL_TRIANGLES, elements.size(), GL_UNSIGNED_INT, 0));
+    GL_TRIANGLES, elements->size(), GL_UNSIGNED_INT, 0));
 
-  std::map<attrib_semantic, array_uptr> m;
+  std::map<attrib_semantic, array_ptr> m;
   m.insert(std::make_pair(attrib_semantic::vertex, std::move(vertices)));
   if (has_normal())
     m.insert(std::make_pair(attrib_semantic::texcoord, std::move(texcoords)));
-  return std::move(m);
+  return m;
 }
 
 }

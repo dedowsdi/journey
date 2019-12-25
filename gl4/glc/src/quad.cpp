@@ -105,7 +105,7 @@ void quad::setup(GLfloat x0, GLfloat y0, GLfloat x1, GLfloat y1)
 //--------------------------------------------------------------------
 common_geometry::vertex_build quad::build_vertices()
 {
-  auto vertices = std::make_unique<vec3_array>();
+  auto vertices = std::make_shared<vec3_array>();
 
   vertices->push_back(m_v0);
   vertices->push_back(m_v1);
@@ -114,11 +114,11 @@ common_geometry::vertex_build quad::build_vertices()
 
   clear_primitive_sets();
   add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, 4));
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr quad::build_normals(const array& vertices)
+array_ptr quad::build_normals(const array& vertices)
 {
   auto normals = std::make_unique<vec3_array>();
 
@@ -130,7 +130,7 @@ array_uptr quad::build_normals(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr quad::build_texcoords(const array& vertices)
+array_ptr quad::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
 
@@ -142,7 +142,7 @@ array_uptr quad::build_texcoords(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr quad::build_tangents(const array& vertices)
+array_ptr quad::build_tangents(const array& vertices)
 {
   auto tangents = std::make_unique<vec3_array>();
 
@@ -195,7 +195,7 @@ void billboard_quad::texcoord(const vec2& tc0, const vec2& tc1)
 //--------------------------------------------------------------------
 common_geometry::vertex_build billboard_quad::build_vertices()
 {
-  auto vertices = std::make_unique<vec2_array>();
+  auto vertices = std::make_shared<vec2_array>();
   vertices->push_back(m_v0);
   vertices->push_back(vec2(m_v1.x, m_v0.y));
   vertices->push_back(m_v1);
@@ -203,11 +203,11 @@ common_geometry::vertex_build billboard_quad::build_vertices()
 
   add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, 4));
 
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr billboard_quad::build_texcoords(const array& vertices)
+array_ptr billboard_quad::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
   texcoords->push_back(m_texcoord0);

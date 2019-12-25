@@ -19,26 +19,26 @@ common_geometry::vertex_build sphere::build_vertices()
 {
   vec3_vector sphere_points = create_points(m_radius, m_slice, m_stack);
 
-  auto vertices = std::make_unique<vec3_array>();
+  auto vertices = std::make_shared<vec3_array>();
   vertices->assign(sphere_points.begin(), sphere_points.end());
 
-  auto& elements = make_element<uint_array>();
+  auto elements = make_element<uint_array>();
 
   // reserve extra space for primitive restart index
   auto num_elements = m_stack * 2 * (m_slice + 1) + m_stack;
-  elements.reserve(num_elements);
+  elements->reserve(num_elements);
   build_strip_elements(elements, m_stack, m_slice);
 
-  assert(elements.size() == num_elements);
+  assert(elements->size() == num_elements);
 
   clear_primitive_sets();
   add_primitive_set(std::make_shared<draw_elements>(
-    GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
-  return vertex_build(std::move(vertices));
+    GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
+  return vertex_build(vertices);
 }
 
 //--------------------------------------------------------------------
-array_uptr sphere::build_normals(const array& vertices)
+array_ptr sphere::build_normals(const array& vertices)
 {
   auto normals = std::make_unique<vec3_array>();
   auto& v = static_cast<const vec3_array&>(vertices);
@@ -49,7 +49,7 @@ array_uptr sphere::build_normals(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr sphere::build_texcoords(const array& vertices)
+array_ptr sphere::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
   texcoords->reserve(vertices.size());

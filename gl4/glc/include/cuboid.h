@@ -30,8 +30,8 @@ public:
 private:
 
   vertex_build build_vertices() override;
-  array_uptr build_normals(const array& vertices) override;
-  array_uptr build_texcoords(const array& vertices) override;
+  array_ptr build_normals(const array& vertices) override;
+  array_ptr build_texcoords(const array& vertices) override;
 
   type m_type;
   glm::vec3 m_half_diag;

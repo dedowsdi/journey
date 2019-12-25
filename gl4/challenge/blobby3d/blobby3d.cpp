@@ -125,8 +125,9 @@ void blobby3d_app::display()
 
   auto smooth_normals = get_smooth_normal(m_sphere);
   auto& buf = m_sphere.get_vao().get_attrib(1).buf;
-  auto& normals = buf->get_data<std::unique_ptr<vec3_array>>();
+  auto normals = std::dynamic_pointer_cast<vec3_array>(buf->get_data());
   *normals = std::move(smooth_normals);
+
   buf->update_array_gl_buffer(0, normals->bytes());
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

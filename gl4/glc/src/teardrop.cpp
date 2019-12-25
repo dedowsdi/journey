@@ -21,7 +21,7 @@ common_geometry::vertex_build teardrop::build_vertices()
   GLuint circle_size = m_slice + 1;
   GLuint strip_size = circle_size * 2;
 
-  auto vertices = std::make_unique<vec3_array>();
+  auto vertices = std::make_shared<vec3_array>();
 
   vec3_vector sphere_points =
     get_points(m_radius, m_slice, m_stack, m_xy_scale);
@@ -48,11 +48,11 @@ common_geometry::vertex_build teardrop::build_vertices()
   for (int i = 0; i < m_stack; ++i)
     add_primitive_set(std::make_shared<draw_arrays>(
       GL_TRIANGLE_STRIP, strip_size * i, strip_size));
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr teardrop::build_texcoords(const array& vertices)
+array_ptr teardrop::build_texcoords(const array& vertices)
 {
   // t ranges from 0.0 at z = - radius to 1.0 at z = radius (t increases
   // linearly along longitudinal lines), and s ranges from 0.0 at the +y axis,

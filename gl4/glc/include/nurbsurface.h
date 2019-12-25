@@ -33,9 +33,9 @@ public:
 
   virtual vertex_build build_vertices();
 
-  virtual array_uptr build_normals(const array& vertices);
+  virtual array_ptr build_normals(const array& vertices);
 
-  virtual array_uptr build_texcoords(const array& vertices);
+  virtual array_ptr build_texcoords(const array& vertices);
 
   glm::vec4 get(GLfloat u, GLfloat v);
 

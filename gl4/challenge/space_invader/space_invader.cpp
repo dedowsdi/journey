@@ -32,7 +32,7 @@ class ship_geometry : public common_geometry
 protected:
   vertex_build build_vertices() override
   { 
-    auto vertices = std::make_unique<vec2_array>();
+    auto vertices = std::make_shared<vec2_array>();
 
     vertices->reserve(15);
 
@@ -55,8 +55,8 @@ protected:
 
     clear_primitive_sets();
     add_primitive_set(
-      std::make_unique<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
-    return vertex_build{std::move(vertices)};
+      std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+    return vertex_build{vertices};
   }
 
 } ship_geometry0;
@@ -67,7 +67,7 @@ class invader_geomtry : public common_geometry
 protected:
   virtual vertex_build build_vertices()
   { 
-    auto vertices = std::make_unique<vec2_array>();
+    auto vertices = std::make_shared<vec2_array>();
 
     GLint num_spides = 10;
     GLfloat step_angle = f2pi / (num_spides * 2);
@@ -94,8 +94,8 @@ protected:
 
     clear_primitive_sets();
     add_primitive_set(
-      std::make_unique<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
-    return vertex_build{std::move(vertices)};
+      std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+    return vertex_build{vertices};
   }
 
 } invader_geometry0;
@@ -106,7 +106,7 @@ protected:
   virtual vertex_build build_vertices()
   { 
 
-    auto vertices = std::make_unique<vec2_array>();
+    auto vertices = std::make_shared<vec2_array>();
 
     GLint num_segs = 12;
     GLfloat step_angle = f2pi / num_segs;
@@ -125,8 +125,8 @@ protected:
 
     clear_primitive_sets();
     add_primitive_set(
-      std::make_unique<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
-    return vertex_build{std::move(vertices)};
+      std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, vertices->size()));
+    return vertex_build{vertices};
   }
 
 

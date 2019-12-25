@@ -83,7 +83,7 @@ public:
 
 private:
   vertex_build build_vertices() override;
-  array_uptr build_texcoords(const array& vertices) override;
+  array_ptr build_texcoords(const array& vertices) override;
 
   bezier _shape;
 };

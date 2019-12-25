@@ -29,7 +29,7 @@ public:
 private:
 
   vertex_build build_vertices() override;
-  array_uptr build_texcoords(const array& vertices) override;
+  array_ptr build_texcoords(const array& vertices) override;
 
   GLfloat m_radius = 0.25f;
   GLfloat m_height= 1.0f; // total height

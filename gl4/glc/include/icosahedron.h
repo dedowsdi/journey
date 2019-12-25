@@ -32,7 +32,7 @@ public:
 private:
 
   vertex_build build_vertices() override;
-  array_uptr build_normals(const array& vertices) override;
+  array_ptr build_normals(const array& vertices) override;
 
   vertex_build build_minimun_mesh();
   vertex_build build_paper_unwrapper_mesh();

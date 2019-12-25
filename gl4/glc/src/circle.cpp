@@ -8,7 +8,7 @@ namespace zxd
 //--------------------------------------------------------------------
 common_geometry::vertex_build circle::build_vertices()
 {
-  auto vertices = std::make_unique<vec2_array>();
+  auto vertices = std::make_shared<vec2_array>();
 
   if(m_type == FILL || m_type == PIE_LINE)
     vertices->push_back(vec2(0));
@@ -27,7 +27,7 @@ common_geometry::vertex_build circle::build_vertices()
 
   GLenum mode = m_type == FILL ? GL_TRIANGLE_FAN : GL_LINE_STRIP;
   add_primitive_set(std::make_shared<draw_arrays>(mode, 0, vertices->size()));
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 }

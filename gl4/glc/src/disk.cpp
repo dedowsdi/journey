@@ -20,7 +20,7 @@ disk::disk(GLfloat inner, GLfloat outer, GLuint slice, GLuint loop,
 //--------------------------------------------------------------------
 common_geometry::vertex_build disk::build_vertices()
 {
-  auto vertices = std::make_unique<vec2_array>();
+  auto vertices = std::make_shared<vec2_array>();
   auto num_vertices = (m_loop + 1) * (m_slice + 1);
   vertices->reserve(num_vertices);
 
@@ -40,18 +40,18 @@ common_geometry::vertex_build disk::build_vertices()
 
   assert(vertices->size() == num_vertices);
 
-  auto& elements = make_element<uint_array>();
+  auto elements = make_element<uint_array>();
   auto num_elemnets = m_loop * 2 * (m_slice + 2);
   build_strip_elements(elements, m_loop, m_slice);
 
   clear_primitive_sets();
   add_primitive_set(
-    std::make_unique<draw_elements>(GL_TRIANGLE_STRIP, elements.size(), GL_UNSIGNED_INT, 0));
-  return vertex_build{std::move(vertices)};
+    std::make_shared<draw_elements>(GL_TRIANGLE_STRIP, elements->size(), GL_UNSIGNED_INT, 0));
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr disk::build_normals(const array& vertices)
+array_ptr disk::build_normals(const array& vertices)
 {
   auto normals = std::make_unique<vec3_array>();
   normals->resize(vertices.size(), vec3(0, 0, 1));
@@ -59,7 +59,7 @@ array_uptr disk::build_normals(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr disk::build_texcoords(const array& vertices)
+array_ptr disk::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
   texcoords->reserve(vertices.size());

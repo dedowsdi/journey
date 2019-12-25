@@ -32,17 +32,17 @@ public:
   bool is_inited() { return static_cast<bool>(_vao);}
 
   template <typename T>
-  T& make_element();
+  std::shared_ptr<T> make_element();
 
-  const array* get_attrib_array(GLuint index) const;
-  const vec2_array* get_attrib_vec2_array(GLuint index) const;
-  const vec3_array* get_attrib_vec3_array(GLuint index) const;
-  const vec4_array* get_attrib_vec4_array(GLuint index) const;
+  array_ptr get_attrib_array(GLuint index) const;
+  vec2_array_ptr get_attrib_vec2_array(GLuint index) const;
+  vec3_array_ptr get_attrib_vec3_array(GLuint index) const;
+  vec4_array_ptr get_attrib_vec4_array(GLuint index) const;
 
-  array* get_attrib_array(GLuint index);
-  vec2_array* get_attrib_vec2_array(GLuint index);
-  vec3_array* get_attrib_vec3_array(GLuint index);
-  vec4_array* get_attrib_vec4_array(GLuint index);
+  array_ptr get_attrib_array(GLuint index);
+  vec2_array_ptr get_attrib_vec2_array(GLuint index);
+  vec3_array_ptr get_attrib_vec3_array(GLuint index);
+  vec4_array_ptr get_attrib_vec4_array(GLuint index);
 
   void set_attrib_array(GLuint index, std::unique_ptr<array> a);
 
@@ -119,23 +119,23 @@ protected:
     {
     }
 
-    vertex_build(array_uptr ptr)
+    vertex_build(array_ptr ptr)
     {
-      am.insert(std::make_pair(attrib_semantic::vertex, std::move(ptr)));
+      am.insert(std::make_pair(attrib_semantic::vertex, ptr));
     }
 
-    vertex_build(std::map<attrib_semantic, array_uptr>&& m) : am(std::move(m)) {}
+    vertex_build(std::map<attrib_semantic, array_ptr>&& m) : am(std::move(m)) {}
 
-    std::map<attrib_semantic, array_uptr> am;
+    std::map<attrib_semantic, array_ptr> am;
   };
 
 private:
 
-  virtual vertex_build build_vertices() { return array_uptr{}; };
-  virtual array_uptr build_normals(const array& vertices) { return array_uptr{}; };
-  virtual array_uptr build_texcoords(const array& vertices) { return array_uptr{}; };
-  virtual array_uptr build_colors(const array& vertices);
-  virtual array_uptr build_tangents(const array& vertices) { return array_uptr{}; };
+  virtual vertex_build build_vertices() { return array_ptr{}; };
+  virtual array_ptr build_normals(const array& vertices) { return array_uptr{}; };
+  virtual array_ptr build_texcoords(const array& vertices) { return array_uptr{}; };
+  virtual array_ptr build_colors(const array& vertices);
+  virtual array_ptr build_tangents(const array& vertices) { return array_uptr{}; };
 
   vertex_style _vertex_style {vertex_style::struct_of_array};
   std::vector<attrib_semantic> _attrib_semantics;

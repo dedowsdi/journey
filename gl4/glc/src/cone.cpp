@@ -20,7 +20,7 @@ common_geometry::vertex_build cone::build_vertices()
   auto height_step = m_height / m_stack;
   auto radius_step = m_radius / m_stack;
 
-  auto vertices = std::make_unique<vec3_array>();
+  auto vertices = std::make_shared<vec3_array>();
   auto num_vertices = m_slice + 2 + (m_stack + 1) * (m_slice + 1);
   vertices->reserve(num_vertices);
 
@@ -46,22 +46,22 @@ common_geometry::vertex_build cone::build_vertices()
   assert(vertices->size() == num_vertices);
 
   // create elements for stacks
-  auto& elements = make_element<uint_array>();
+  auto elements = make_element<uint_array>();
 
   auto num_elements = m_stack * 2 * (m_slice + 1) + m_stack;
-  elements.reserve(num_elements);
+  elements->reserve(num_elements);
   build_strip_elements(elements, m_stack, m_slice, m_slice + 2);
-  assert(elements.size() == num_elements);
+  assert(elements->size() == num_elements);
 
   clear_primitive_sets();
   add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_FAN, 0, m_slice+2));
   add_primitive_set(std::make_shared<draw_elements>(
     GL_TRIANGLE_STRIP, m_stack * 2 * (m_slice + 2), GL_UNSIGNED_INT, 0));
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr cone::build_normals(const array& vertices)
+array_ptr cone::build_normals(const array& vertices)
 {
   auto normals = std::make_unique<vec3_array>();
   normals->reserve(vertices.size());
@@ -100,7 +100,7 @@ array_uptr cone::build_normals(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr cone::build_texcoords(const array& vertices)
+array_ptr cone::build_texcoords(const array& vertices)
 {
   auto texcoords = std::make_unique<vec2_array>();
   texcoords->reserve(vertices.size());

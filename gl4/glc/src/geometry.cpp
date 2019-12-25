@@ -52,63 +52,63 @@ vao& geometry_base::get_or_create_vao()
 }
 
 template <typename T>
-T& geometry_base::make_element()
+std::shared_ptr<T> geometry_base::make_element()
 {
   _element_buffer = std::make_shared<buffer>();
-  auto elements = std::make_unique<T>();
-  _element_buffer->set_data(std::move(elements));
-  return *_element_buffer->get_data<std::unique_ptr<T>>();
+  auto elements = std::make_shared<T>();
+  _element_buffer->set_data(elements);
+  return elements;
 }
 
-template uint_array& geometry_base::make_element<uint_array>();
-template ushort_array& geometry_base::make_element<ushort_array>();
+template std::shared_ptr<uint_array> geometry_base::make_element<uint_array>();
+template std::shared_ptr<ushort_array> geometry_base::make_element<ushort_array>();
 
 //--------------------------------------------------------------------
-const array* geometry_base::get_attrib_array(GLuint index) const
+array_ptr geometry_base::get_attrib_array(GLuint index) const
 {
-  return _vao->get_attrib(index).buf->get_data<std::unique_ptr<array>>().get();
-}
-
-//--------------------------------------------------------------------
-const vec2_array* geometry_base::get_attrib_vec2_array(GLuint index) const
-{
-  return dynamic_cast<const vec2_array*>(get_attrib_array(index));
+  return _vao->get_attrib(index).buf->get_data();
 }
 
 //--------------------------------------------------------------------
-const vec3_array* geometry_base::get_attrib_vec3_array(GLuint index) const
+vec2_array_ptr geometry_base::get_attrib_vec2_array(GLuint index) const
 {
-  return dynamic_cast<const vec3_array*>(get_attrib_array(index));
+  return std::dynamic_pointer_cast<vec2_array>(get_attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-const vec4_array* geometry_base::get_attrib_vec4_array(GLuint index) const
+vec3_array_ptr geometry_base::get_attrib_vec3_array(GLuint index) const
 {
-  return dynamic_cast<const vec4_array*>(get_attrib_array(index));
+  return std::dynamic_pointer_cast<vec3_array>(get_attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-array* geometry_base::get_attrib_array(GLuint index)
+vec4_array_ptr geometry_base::get_attrib_vec4_array(GLuint index) const
 {
-  return _vao->get_attrib(index).buf->get_data<std::unique_ptr<array>>().get();
+  return std::dynamic_pointer_cast<vec4_array>(get_attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec2_array* geometry_base::get_attrib_vec2_array(GLuint index)
+array_ptr geometry_base::get_attrib_array(GLuint index)
 {
-  return dynamic_cast<vec2_array*>(get_attrib_array(index));
+  return _vao->get_attrib(index).buf->get_data();
 }
 
 //--------------------------------------------------------------------
-vec3_array* geometry_base::get_attrib_vec3_array(GLuint index)
+vec2_array_ptr geometry_base::get_attrib_vec2_array(GLuint index)
 {
-  return dynamic_cast<vec3_array*>(get_attrib_array(index));
+  return std::dynamic_pointer_cast<vec2_array>(get_attrib_array(index));
 }
 
 //--------------------------------------------------------------------
-vec4_array* geometry_base::get_attrib_vec4_array(GLuint index)
+vec3_array_ptr geometry_base::get_attrib_vec3_array(GLuint index)
 {
-  return dynamic_cast<vec4_array*>(get_attrib_array(index));
+  return std::dynamic_pointer_cast<vec3_array>(get_attrib_array(index));
+}
+
+//--------------------------------------------------------------------
+vec4_array_ptr geometry_base::get_attrib_vec4_array(GLuint index)
+{
+  return std::dynamic_pointer_cast<vec4_array>(get_attrib_array(index));
 }
 
 //--------------------------------------------------------------------
@@ -178,7 +178,7 @@ void geometry_base::remove_primitive_sets(GLuint index, GLuint count)
 //--------------------------------------------------------------------
 void geometry_base::accept(primitive_functor& pf) const
 {
-  auto a = _vao->get_attrib(0).buf->get_data<std::unique_ptr<array>>().get();
+  auto a = _vao->get_attrib(0).buf->get_data().get();
   auto vertices = get_attrib_vec3_array(0);
 
   pf.set_vertex_array( vertices->size(), &vertices->front());
@@ -209,10 +209,10 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
 
   auto am = build_vertices().am;
 
-  auto& vertices = *am[attrib_semantic::vertex];
+  auto vertices = am[attrib_semantic::vertex];
   if (has_normal() && am.find(attrib_semantic::normal) == am.end())
   {
-    if (auto arr = build_normals(vertices))
+    if (auto arr = build_normals(*vertices))
     {
       am.insert(std::make_pair(attrib_semantic::normal, std::move(arr)));
     }
@@ -221,7 +221,7 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
       // create smooth normal if it doesn't exists
       add_array_attrib(*_vao, 0, vertices);
       auto normals = std::make_unique<vec3_array>(get_smooth_normal(*this));
-      assert(vertices.size() == normals->size());
+      assert(vertices->size() == normals->size());
       am.insert(std::make_pair(attrib_semantic::normal, std::move(normals)));
       std::cout << "smoothing normals for geometry " << this <<  std::endl;
     }
@@ -229,7 +229,7 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
 
   if (has_texcoord() && am.find(attrib_semantic::texcoord) == am.end())
   {
-    auto arr = build_texcoords(vertices);
+    auto arr = build_texcoords(*vertices);
     if (!arr)
       throw gl_geometry_error("missing texcoords");
     am.insert(std::make_pair(attrib_semantic::texcoord, std::move(arr)));
@@ -237,7 +237,7 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
 
   if (has_color() && am.find(attrib_semantic::color) == am.end())
   {
-    auto arr = build_colors(vertices);
+    auto arr = build_colors(*vertices);
     if (!arr)
       throw gl_geometry_error("missing colorss");
     am.insert(std::make_pair(attrib_semantic::color, std::move(arr)));
@@ -245,7 +245,7 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
 
   if (has_tangent() && am.find(attrib_semantic::tangent) == am.end())
   {
-    auto arr = build_tangents(vertices);
+    auto arr = build_tangents(*vertices);
     if (!arr)
       throw gl_geometry_error("missing tangentss");
     am.insert(std::make_pair(attrib_semantic::tangent, std::move(arr)));
@@ -255,11 +255,11 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
   if (ebuf)
   {
     ebuf->bind(GL_ELEMENT_ARRAY_BUFFER);
-    auto& buf_data = ebuf->get_data<std::unique_ptr<array>>();
-    ebuf->buffer_data(std::move(buf_data), GL_STATIC_DRAW);
+    auto buf_data = ebuf->get_data();
+    ebuf->buffer_data(buf_data, GL_STATIC_DRAW);
   }
 
-  auto num_vertices = vertices.size();
+  auto num_vertices = vertices->size();
 
   if (_vertex_style == vertex_style::struct_of_array)
   {
@@ -286,13 +286,14 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
     // populate buffer
     auto buf = std::make_shared<buffer>();
     buf->bind(GL_ARRAY_BUFFER);
-    auto data = std::make_unique<GLchar[]>(total_bytes);
-    auto p = data.get();
+    auto data = std::make_shared<char_array>();
+    data->resize(total_bytes);
+    auto p = &data->front();
     for (auto i = 0; i < num_vertices; ++i)
     {
       for (auto j = 0; j < _attrib_semantics.size(); ++j)
       {
-        const auto& array = am[_attrib_semantics[j]];
+        auto array = am[_attrib_semantics[j]];
         auto elem = static_cast<const GLchar*>(array->data()) +
                     array->element_bytes() * i;
         std::copy(elem, elem + array->element_bytes(), p);
@@ -311,10 +312,10 @@ void common_geometry::build_mesh(std::initializer_list<attrib_semantic> list)
       _vao->attrib_pointer(attrib);
     }
 
-    assert(p - data.get() == total_bytes);
+    assert(p - &data->front() == total_bytes);
 
-    buf->buffer_data(total_bytes, data.get(), GL_STATIC_DRAW);
-    buf->set_data(std::move(data));
+    buf->buffer_data(data, GL_STATIC_DRAW);
+    // buf->set_data(data);
   }
 }
 
@@ -326,7 +327,7 @@ bool common_geometry::has(attrib_semantic type)
 }
 
 //--------------------------------------------------------------------
-array_uptr common_geometry::build_colors(const array& vertices)
+array_ptr common_geometry::build_colors(const array& vertices)
 {
   auto colors = std::make_unique<vec4_array>();
   std::generate_n(std::back_inserter(*colors), vertices.size(),

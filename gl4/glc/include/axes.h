@@ -11,7 +11,7 @@ class axes : public common_geometry
 
 private:
   vertex_build build_vertices() override;
-  array_uptr build_colors(const array& vertices) override;
+  array_ptr build_colors(const array& vertices) override;
 };
 
 }

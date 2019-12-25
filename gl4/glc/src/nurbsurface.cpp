@@ -9,7 +9,7 @@ namespace zxd
 //--------------------------------------------------------------------
 common_geometry::vertex_build nurb_surface::build_vertices()
 {
-  auto vertices = std::make_unique<vec4_array>();
+  auto vertices = std::make_shared<vec4_array>();
 
   vec4_vector2 q2 = u_interim2();
 
@@ -41,11 +41,11 @@ common_geometry::vertex_build nurb_surface::build_vertices()
     add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLE_STRIP, strip_size * i, strip_size));
   }
 
-  return vertex_build{std::move(vertices)};
+  return vertex_build{vertices};
 }
 
 //--------------------------------------------------------------------
-array_uptr nurb_surface::build_normals(const array& vertices)
+array_ptr nurb_surface::build_normals(const array& vertices)
 {
   auto normals = std::make_unique<vec3_array>();
 
@@ -85,7 +85,7 @@ array_uptr nurb_surface::build_normals(const array& vertices)
 }
 
 //--------------------------------------------------------------------
-array_uptr nurb_surface::build_texcoords(const array& vertices)
+array_ptr nurb_surface::build_texcoords(const array& vertices)
 {
   // QUES : even distribute ?.
   auto texcoords = std::make_unique<vec2_array>();
