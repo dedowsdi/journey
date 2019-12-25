@@ -21,7 +21,7 @@
 osg::Matrix getCubeStartRotate()
 {
   // rotate posz to posy
-  return osg::Matrix::rotate(-osg::PI_2f, osg::X_AXIS);
+  return osg::Matrix::rotate(osg::PI_2f, osg::X_AXIS);
 }
 
 osg::TextureCubeMap* readCubeMap()
@@ -29,10 +29,19 @@ osg::TextureCubeMap* readCubeMap()
   auto cubemap = new osg::TextureCubeMap;
   std::array<std::string, 6> names = {"posx", "negx", "posy", "negy", "posz", "negz"};
 
-  for (unsigned i = 0; i < 6; ++i)
+  // flip vertical to follow cubemap convention.
+  //
+  // osg examples didn't do this, it just rotate along x by 90 to flip it, but
+  // the result is weird for cubemap:
+  //    -z for conventional z (toward user)
+  //    +z for conventional -z
+  //    -y for conventional y
+  //    +y for conventional y
+  for ( unsigned i = 0; i < 6; ++i )
   {
-    cubemap->setImage(osg::TextureCubeMap::POSITIVE_X + i,
-      osgDB::readImageFile("Cubemap_snow/" + names[i] + ".jpg"));
+      auto img = osgDB::readImageFile( "Cubemap_axis/" + names[i] + ".png" );
+      img->flipVertical();
+      cubemap->setImage( osg::TextureCubeMap::POSITIVE_X + i, img);
   }
 
   cubemap->setFilter(osg::Texture::MIN_FILTER, osg::Texture::LINEAR);
@@ -89,7 +98,7 @@ osg::Node* createSkyBox()
   ss->setTextureAttributeAndModes(0, cubemap);
 
   auto texmat = new osg::TexMat;
-  texmat->setMatrix(osg::Matrix::inverse(osg::Matrix::rotate(-osg::PI_2f, osg::X_AXIS)));
+  texmat->setMatrix(osg::Matrix::inverse(osg::Matrix::rotate(osg::PI_2f, osg::X_AXIS)));
   ss->setTextureAttribute(0, texmat);
 
   // miminize depth
@@ -146,8 +155,8 @@ osg::Node* createBall()
   // ss->setTextureAttribute(0, texmat);
 
   auto program = new osg::Program;
-  auto vs = osgDB::readShaderFile(osg::Shader::VERTEX, "shader/cubemap/cubemap.vs.glsl");
-  auto fs = osgDB::readShaderFile(osg::Shader::FRAGMENT, "shader/cubemap/cubemap.fs.glsl");
+  auto vs = osgDB::readShaderFile(osg::Shader::VERTEX, "data/shader/cubemap/cubemap.vs.glsl");
+  auto fs = osgDB::readShaderFile(osg::Shader::FRAGMENT, "data/shader/cubemap/cubemap.fs.glsl");
   program->addShader(vs);
   program->addShader(fs);
 

@@ -28,10 +28,7 @@ foreach(PROJECT ${DEMOES})
     target_link_libraries(${PROJECT}
         PRIVATE
             common
-            osg3::osgViewer
-            osg3::osgAnimation
-            osg3::osgParticle
-            osg3::osgShadow
+            ${OPENSCENEGRAPH_LIBRARIES}
         )
 
     # copy project_data to target file dir.

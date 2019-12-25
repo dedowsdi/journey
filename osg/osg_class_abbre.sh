@@ -195,3 +195,5 @@ echo ':iab <buffer>' owb     osgWidget::Browser
 echo ':iab <buffer>' owc     osgWidget::Canvas
 echo ':iab <buffer>' ownw    osgWidget::NullWidget
 echo ':iab <buffer>' oww     osgWidget::Window
+echo ':iab <buffer>' oggea   osgGA::GUIEventAdapter
+echo ':iab <buffer>' oggaa   osgGA::GUIActionAdapter

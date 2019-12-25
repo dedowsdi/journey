@@ -1,11 +1,11 @@
 cmake_minimum_required (VERSION 3.8)
 
 # old policy for FindOpenGL
-cmake_policy(SET CMP0072 OLD)
+# cmake_policy(SET CMP0072 OLD)
 
 project (osg)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;/usr/local/source/OpenSceneGraph/CMakeModules;${CMAKE_MODULE_PATH}")
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(util)
 
 if( CMAKE_BUILD_TYPE STREQUAL ""  )
@@ -31,22 +31,33 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 FIND_PACKAGE(PkgConfig REQUIRED)
 
-FIND_PACKAGE(OpenSceneGraph CONFIG REQUIRED
-    COMPONENTS osgViewer osgAnimation osgParticle osgFX osgShadow osgWidget
+# FIND_PACKAGE(OpenThreads)
+# FIND_PACKAGE(osg)
+# FIND_PACKAGE(osgDB)
+# FIND_PACKAGE(osgUtil)
+# FIND_PACKAGE(osgGA)
+# FIND_PACKAGE(osgViewer)
+
+FIND_PACKAGE(Fontconfig REQUIRED)
+FIND_PACKAGE(OpenSceneGraph REQUIRED COMPONENTS
+    osgViewer
+    osgAnimation
+    osgParticle
+    osgFX
+    osgShadow
+    osgWidget
+    osgDB
+    osgUtil
+    osgText
+    osgGA
     )
-find_package(Qt5 CONFIG REQUIRED
+
+INCLUDE_DIRECTORIES(${OPENSCENEGRAPH_INCLUDE_DIRS})
+
+FIND_PACKAGE(Qt5 CONFIG REQUIRED
     COMPONENTS Gui Xml UiTools OpenGL)
 FIND_PACKAGE(OpenGL REQUIRED)
-
-#include_directories(
-#    #${OPENTHREADS_INCLUDE_DIR}
-#    ${OSG_INCLUDE_DIR}
-#    ${QT_HEADERS_DIR}
-#    ${QT_QTCORE_INCLUDE_DIR}
-#    ${QT_QTGUI_INCLUDE_DIR}
-#    ${QT_QTOPENGL_INCLUDE_DIR}
-#    common/include
-#    )
+FIND_PACKAGE(Bullet)
 
 IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX")
@@ -61,3 +72,7 @@ add_subdirectory(demo)
 add_subdirectory(practice)
 add_subdirectory(local)
 add_subdirectory(challenge)
+
+IF(${BULLET_FOUND})
+    ADD_SUBDIRECTORY(bullet)
+ENDIF()

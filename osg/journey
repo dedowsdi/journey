@@ -26,9 +26,8 @@ osg default global state:
     GL_DEPTH_TEST : on
     GL_BLEND_FUNC : GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
 
-
 window:
-osghud
+osghud  create hud camera, snap image before post render.
 osgcompositeviewer
 osgsidebyside
 osgcompositeviewer

@@ -15,8 +15,6 @@ foreach(DEMO ${DEMOES})
     set_target_properties(${DEMO} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
     target_link_libraries(${DEMO}
         common
-        osg3::osgViewer
-        osg3::osgFX
-        osg3::osgWidget
+        ${OPENSCENEGRAPH_LIBRARIES}
         )
 endforeach()

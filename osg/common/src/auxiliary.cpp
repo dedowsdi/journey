@@ -421,7 +421,10 @@ void LineSegmentNode::setStartPosition(const osg::Vec3& v) {
   vertices->at(0) = v;
   vertices->dirty();
   mGeometry->dirtyBound();
+
+#ifdef OSG_DEPRECATED_GEOMETRY
   mGeometry->dirtyDisplayList();
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -431,7 +434,9 @@ void LineSegmentNode::setEndPosition(const osg::Vec3& v) {
   vertices->at(1) = v;
   vertices->dirty();
   mGeometry->dirtyBound();
+#ifdef OSG_DEPRECATED_GEOMETRY
   mGeometry->dirtyDisplayList();
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -499,6 +504,8 @@ void DirectionArrow::setColor(const osg::Vec4& color) {
   osg::Vec4Array* colors =
     static_cast<osg::Vec4Array*>(mGeometry->getColorArray());
   (*colors)[0] = color;
+#ifdef OSG_DEPRECATED_GEOMETRY
   mGeometry->dirtyDisplayList();
+#endif
 }
 }
