@@ -14,7 +14,7 @@ get download list from a file
     wget -i urls
 
 download a whole site
-    wget --mirror -p --convert-lins -P local_dir url
+    wget --mirror -p --convert-links -P local_dir url
 
 log to a file instead of stdout or stderr
     wget -o wget.log url

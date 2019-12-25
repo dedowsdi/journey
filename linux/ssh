@@ -9,3 +9,5 @@ start ssh-agent in background
 add private key to ssh-agent
     ssh-add ~/.ssh/id_rsa
 
+test
+    ssh -vT url

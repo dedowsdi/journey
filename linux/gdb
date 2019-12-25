@@ -1,0 +1,2 @@
+set breakpoint at functions that doesn't have debug symbol:
+    b *funcname

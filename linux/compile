@@ -29,6 +29,17 @@ link:
 
     see man ld.so for specific link order
 
+preload:
+    It's possible to hijack dynamic linked symbols:
+        LD_PRELOAD=a.so b.out
+
+    It relies on dl(CMAKE_DL_LIBS) library. This works on c++ class method too,
+    although you must avoid in-class definition in a.so. You can also get
+    original function with dlsym(RTLD_NEXT, "mangled name"), you can get
+    mangled name with readelf -s. If b.out doesn't link to any so, but you want
+    to allow other so to interpose symbols in b.out, you need to pass
+    --export-dynamic to ld.
+
 check library dependence:
     ldd a.out
 
