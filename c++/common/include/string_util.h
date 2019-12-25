@@ -8,6 +8,8 @@
 #include <climits>
 #include <cstring>
 #include <cmath>
+#include <vector>
+#include <iterator>
 
 namespace zxd {
 
@@ -113,6 +115,39 @@ public:
     }
     return t;
   }
+
+std::vector<std::string> split(const std::string& s, const std::string& tokens)
+{
+    std::vector<std::string> res;
+    auto index = 0;
+    auto pos = s.find_first_of(tokens, index);
+
+    while (pos != std::string::npos)
+    {
+        res.push_back(s.substr(index, pos - index));
+        index = pos + 1;
+        pos = s.find_first_of(tokens, index);
+    }
+    res.push_back(s.substr(index));
+
+    return res;
+}
+
+template <typename It>
+std::string join(It beg, It end, const std::string& token)
+{
+    if (beg == end)
+        return "";
+
+    std::ostringstream ss;
+    auto lastSecond = beg;
+    std::advance(lastSecond, std::distance(beg, end) - 1);
+    std::copy(
+        beg, lastSecond, std::ostream_iterator<std::string>( ss, token.c_str() ) );
+    ss << *lastSecond;
+    return ss.str();
+}
+
 };
 }
 

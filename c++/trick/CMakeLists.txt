@@ -18,3 +18,5 @@ foreach(PROJECT ${PROJECTS})
     set_target_properties(${PROJECT} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
     target_link_libraries(${PROJECT} ${COMMON_LIBS} ${Boost_LIBRARIES})
 endforeach()
+
+add_subdirectory(preload)

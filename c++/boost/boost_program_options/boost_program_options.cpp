@@ -42,11 +42,15 @@ public:
   std::string s;
 };
 
+namespace zxd
+{
 // you must at least provide >> operator for custom type if you don't provide
 // validate
 istream& operator>>(std::istream& is, A& a){
   is >> a.s;
   return is;
+}
+
 }
 
 class B{
@@ -103,8 +107,6 @@ int main(int argc, char *argv[])
 {
   options _options;
 
-  // variables_map store values of options
-  po::variables_map vm;
   //options_description contans all allowed option_description
   po::options_description generic("generic options");
 
@@ -155,6 +157,14 @@ int main(int argc, char *argv[])
   //po::store(po::parse_command_line(argc, argv, desc), vm);
   
   po::parsed_options parsed = po::command_line_parser(argc, argv).options(cmdline_options).positional(pod).run();
+
+  // to support negative number, use the po::parse_command_line, disable short
+  // auto parsedOptions = po::parse_command_line( argc, argv, generic,
+  //     po::command_line_style::unix_style ^
+  //         po::command_line_style::allow_short );
+
+  // variables_map store values of options
+  po::variables_map vm;
   po::store(parsed, vm);
   notify(vm);
 
