@@ -12,6 +12,13 @@
 
 namespace zxd {
 
+void clearGlfw()
+{
+  // glfwDestroyWindow(wnd); // can i get wnd here?
+  std::cout << "byebye" << std::endl;
+  glfwTerminate();
+}
+
 //--------------------------------------------------------------------
 void glfw_error_callback(int error, const char *description) {
   std::cout << description << std::endl;
@@ -228,6 +235,9 @@ void app::init_wnd() {
   glfwSetCharCallback(m_wnd, charCallback);
   glfwSetCharModsCallback(m_wnd, charmodeCallback);
   std::cout << "init wnd finished" << std::endl;
+
+  // make sure window is not closed before clear up.
+  atexit(clearGlfw);
 }
 
 //--------------------------------------------------------------------
@@ -448,8 +458,10 @@ void app::loop() {
     ++m_frame_number;
   }
   shutdown();
-  glfwDestroyWindow(m_wnd);
-  glfwTerminate();
+
+  // this delete OpenGL context, you can't call gl procedure after this.
+  // glfwDestroyWindow(m_wnd);
+  // glfwTerminate();
 }
 
 //--------------------------------------------------------------------
