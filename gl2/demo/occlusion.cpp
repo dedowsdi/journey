@@ -52,7 +52,7 @@ class app0 : public app {
 
     glGetQueryObjectiv(queries[0], GL_QUERY_RESULT, &num_samples);
     glGetQueryObjectiv(queries[0], GL_QUERY_RESULT_AVAILABLE, &available);
-    printf("num_samples : %d, available : %s \n", num_samples,
+    printf("query 0 : num_samples : %d, available : %s \n", num_samples,
       available ? "true" : "false");
 
     // if querry successed draw our renderable
@@ -74,7 +74,7 @@ class app0 : public app {
 
     glGetQueryObjectiv(queries[1], GL_QUERY_RESULT, &num_samples);
     glGetQueryObjectiv(queries[1], GL_QUERY_RESULT_AVAILABLE, &available);
-    printf("num_samples : %d, available : %s \n", num_samples,
+    printf("query 1 : num_samples : %d, available : %s \n", num_samples,
       available ? "true" : "false");
 
     // if querry successed draw our renderable

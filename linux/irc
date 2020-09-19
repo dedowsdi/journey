@@ -5,7 +5,7 @@
     /connect freenode
 
 # register nickname to freenode
-    /msg NickServ REGISTER password youremail@example.com
+    # /msg NickServ REGISTER password youremail@example.com
 
 # identify
     /msg /NickServ IDENTIFY username password
@@ -19,13 +19,14 @@
 # configure default nick
     /set irc.server_default.sasl_mechanism PLAIN
     /set irc.server_default.sasl_username deodwsdi
-    /set irc.server_default.nicks r3m
+    /set irc.server_default.nicks dedowsdi
 
 # auto connect server
     /set irc.server.freenode.autoconnect on
 
 # auto join channel
     /set irc.server.freenode.autojoin "#channel1,#channel2"
+    /set irc.server.freenode.autojoin #vim,##linux,##OpenGL,#ubuntu,#bash,#zsh,#cplusplus.com,#weechat,#osg,#openscenegraph,#bulletphysics,#git
 
 # add alternative nickname to freenode
     /nick xexowsxi
@@ -55,4 +56,29 @@
     /close
 
 # search channel in freenode
-    /mst alis list *wildpattern*
+    /msg alis list *wildpattern*
+
+# change weechat color in solarized theme:
+    /set weechat.bar.status.color_bg 8
+    /set weechat.bar.title.color_bg 8
+    /set buflist.format.buffer_current "${color:,8}${format_buffer}"
+    /set weechat.color.chat_buffer 12
+    /set weechat.color.chat_channel 2
+    /set weechat.color.chat_nick_self 2
+    /set weechat.color.chat_prefix_action 2
+    /set weechat.color.status_name 2
+
+# run a bunch of weechat commands:
+# create a buffer by /join #cmdbuffer
+# put all your command in ~/.weechatrc, note /exec doesn't expand ~
+    /exec -oc cat /home/dedowsdi/.weechatrc
+
+# plugins
+/script install iset  # iset is replaced by fset in weechat2.0+
+
+# options
+/iset
+use =value to filter by value, see help /iset for detail
+
+# keys
+f9-f10 scroll top bar

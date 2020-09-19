@@ -14,6 +14,8 @@ public:
     return std::pow(e, -0.5 * std::pow((x - mean) * rd, 2)) * rd * r;
   }
 };
+
+bool isPowOfTwo( int i ) { return i > 0 && ( i & ( i - 1 ) ) == 0; }
 }
 
 #endif /* ZMATH_H */

@@ -1,0 +1,11 @@
+trace specific system calls
+    strace -e openat,close ls     #same as -e trace=openat,close
+
+trcace into forked process?
+    strace -f command_that_fork
+
+trcace into forked process, separate output into slog.pid
+    strace -oslog -ff command_that_fork
+
+summary, profile
+    strace -c ls

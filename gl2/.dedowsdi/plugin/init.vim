@@ -1,5 +1,5 @@
 set path+=~/journey/gl4/glc/include
-call misc#proj#load_map('c')
+Proj c
 let g:cdef_proj_name = 'GL2'
 
 "executable make target and path

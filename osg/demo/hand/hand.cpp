@@ -22,6 +22,7 @@
 #include <osg/Point>
 #include <osgUtil/PrintVisitor>
 #include <osgAnimation/RigGeometry>
+#include <osgAnimation/RigTransformHardware>
 
 GLfloat linearRand(GLfloat min = 0.0f, GLfloat max = 1.0f)
 {
@@ -35,8 +36,8 @@ osgAnimation::Bone* createBone(
   const std::string& name, const osg::Matrix& m, osgAnimation::Bone* parent)
 {
   auto update = new osgAnimation::UpdateBone(name);
-  update->getStackedTransforms().push_back(new osgAnimation::StackedTranslateElement("translate", m.getTrans()));
-  update->getStackedTransforms().push_back(new osgAnimation::StackedQuaternionElement("start", m.getRotate()));
+  update->getStackedTransforms().push_back(new osgAnimation::StackedTranslateElement("init_translation", m.getTrans()));
+  update->getStackedTransforms().push_back(new osgAnimation::StackedQuaternionElement("init_rotation", m.getRotate()));
   update->getStackedTransforms().push_back(new osgAnimation::StackedQuaternionElement("quat", osg::Quat{}));
 
   auto bone = new osgAnimation::Bone(name);
@@ -227,6 +228,7 @@ public:
         auto len = dir.length();
         dir.normalize();
 
+        // translate to bone0, rotate z axis to dir
         auto m =  osg::Matrix::rotate(osg::Z_AXIS, dir) * osg::Matrix::translate(pos0);
 
         auto vertexSetStart = vertices->size();
@@ -315,13 +317,26 @@ int main(int argc, char* argv[])
   geometry->setVertexArray(vertices);
 
   auto skin = new osgAnimation::RigGeometry;
+  skin->setRigTransformImplementation(new osgAnimation::RigTransformHardware);
   skin->setSourceGeometry(geometry);
   skin->setSkeleton(skeleton);
   skin->setInfluenceMap(new osgAnimation::VertexInfluenceMap());
-  auto leaf = new osg::Geode;
-  leaf->addDrawable(skin);
-  root->addChild(leaf);
-  
+  // auto leaf = new osg::Geode;
+  // leaf->addDrawable(skin);
+  // root->addChild(leaf);
+
+  auto tf = new osg::MatrixTransform;
+  // root->addChild(tf);
+  // tf->setMatrix(osg::Matrix::translate(osg::Vec3(10, 10, 10)));
+  skeleton->addChild(tf);
+  // tf->setMatrix(osg::Matrix::translate(osg::Vec3(10, 10, 10)));
+  skeleton->setMatrix(osg::Matrix::translate(osg::Vec3(10, 10, 10)));
+  {
+      auto leaf = new osg::Geode;
+      tf->addChild(leaf);
+      leaf->addDrawable(skin);
+  }
+
   SkinVisitor sv;
   sv.set_skin(skin);
   wrist->accept(sv);

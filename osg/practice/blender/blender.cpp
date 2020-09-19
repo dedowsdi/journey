@@ -200,16 +200,20 @@ void Blender::reputPivotAxes() {
 //------------------------------------------------------------------------------
 osg::GraphicsContext* Blender::createGraphicsContext() {
   // create graphics context
-  osg::ref_ptr<osg::GraphicsContext::Traits> traits =
-    new osg::GraphicsContext::Traits();
 
   GLuint width = 800, height = 600;
   osg::GraphicsContext::WindowingSystemInterface* wsi =
     osg::GraphicsContext::getWindowingSystemInterface();
   if (!wsi) OSG_FATAL << "failed to get window system interface " << std::endl;
-  wsi->getScreenResolution(
-    osg::GraphicsContext::ScreenIdentifier(0), width, height);
 
+  osg::GraphicsContext::ScreenIdentifier main_screen_id;
+  
+  main_screen_id.readDISPLAY();
+  main_screen_id.setUndefinedScreenDetailsToDefaultScreen();
+  wsi->getScreenResolution(main_screen_id, width, height);
+
+  osg::ref_ptr<osg::GraphicsContext::Traits> traits =
+    new osg::GraphicsContext::Traits();
   traits->x = 0;
   traits->y = 0;
   traits->width = width;
@@ -217,10 +221,12 @@ osg::GraphicsContext* Blender::createGraphicsContext() {
   traits->doubleBuffer = true;
   traits->sharedContext = 0;
   traits->windowDecoration = false;
+  traits->readDISPLAY();
+  traits->setUndefinedScreenDetailsToDefaultScreen();
 
   osg::GraphicsContext* gc =
     osg::GraphicsContext::createGraphicsContext(traits);
-  if (!gc) OSG_FATAL << "failed to creaate graphics context " << std::endl;
+  if (!gc) OSG_FATAL << "failed to create graphics context " << std::endl;
 
   return gc;
 }
@@ -302,7 +308,6 @@ zxd::GridFloor* Blender::createOrthoGridFloor(
   gridfloor->setGridColor(osg::Vec4(0.25f, 0.35f, 0.35f, 1.0f));
   gridfloor->setSubdivisionColor(osg::Vec4(0.4f, 0.4f, 0.4f, 1.0f));
   gridfloor->rebuild();
-
 
   gridfloor->setNodeMask(~getSelectMask());
 

@@ -1,0 +1,3 @@
+change title color:
+    vim ~/.config/gtk-3.0/gtk.css
+    setsid gnome-shell --replace

@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.2">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
   <zoom_level>10</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>510</x>
+      <x>530</x>
       <y>120</y>
-      <w>170</w>
+      <w>230</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>GraphicsObject</panel_attributes>
@@ -60,10 +59,12 @@ _contectID</panel_attributes>
     <coordinates>
       <x>520</x>
       <y>220</y>
-      <w>150</w>
-      <h>30</h>
+      <w>250</w>
+      <h>70</h>
     </coordinates>
-    <panel_attributes>GLBufferObject</panel_attributes>
+    <panel_attributes>GLBufferObject
+--
+GLsizeiptr getOffset(i)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -104,17 +105,23 @@ _contectID</panel_attributes>
     <coordinates>
       <x>960</x>
       <y>390</y>
-      <w>100</w>
-      <h>30</h>
+      <w>190</w>
+      <h>110</h>
     </coordinates>
-    <panel_attributes>BufferData</panel_attributes>
+    <panel_attributes>BufferData
+--
+void setBufferObject(obj)
+void* getDataPointer()
+--
+_bufferIndex
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>340</x>
-      <y>300</y>
+      <x>330</x>
+      <y>320</y>
       <w>180</w>
       <h>80</h>
     </coordinates>
@@ -129,19 +136,19 @@ _size
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>480</x>
-      <y>240</y>
-      <w>70</w>
-      <h>80</h>
+      <x>470</x>
+      <y>280</y>
+      <w>80</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>50.0;10.0;10.0;60.0</additional_attributes>
+    <additional_attributes>60.0;10.0;10.0;40.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>970</x>
-      <y>490</y>
+      <y>560</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -152,29 +159,7 @@ _size
     <id>Relation</id>
     <coordinates>
       <x>1000</x>
-      <y>410</y>
-      <w>30</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>960</x>
-      <y>580</y>
-      <w>110</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>ImageStream</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1000</x>
-      <y>510</y>
+      <y>490</y>
       <w>30</w>
       <h>90</h>
     </coordinates>
@@ -185,7 +170,29 @@ _size
     <id>UMLClass</id>
     <coordinates>
       <x>960</x>
-      <y>670</y>
+      <y>630</y>
+      <w>110</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>ImageStream</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1000</x>
+      <y>580</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>960</x>
+      <y>720</y>
       <w>130</w>
       <h>30</h>
     </coordinates>
@@ -196,7 +203,7 @@ _size
     <id>Relation</id>
     <coordinates>
       <x>1010</x>
-      <y>600</y>
+      <y>650</y>
       <w>30</w>
       <h>90</h>
     </coordinates>
@@ -208,16 +215,18 @@ _size
     <coordinates>
       <x>550</x>
       <y>390</y>
-      <w>100</w>
-      <h>30</h>
+      <w>180</w>
+      <h>60</h>
     </coordinates>
-    <panel_attributes>BufferObject</panel_attributes>
+    <panel_attributes>BufferObject
+--
+int addBufferData(bd)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>420</x>
+      <x>410</x>
       <y>530</y>
       <w>150</w>
       <h>30</h>
@@ -228,19 +237,19 @@ _size
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>470</x>
-      <y>410</y>
-      <w>160</w>
-      <h>140</h>
+      <x>460</x>
+      <y>440</y>
+      <w>170</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>140.0;10.0;10.0;120.0</additional_attributes>
+    <additional_attributes>150.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>610</x>
-      <y>540</y>
+      <x>620</x>
+      <y>530</y>
       <w>150</w>
       <h>30</h>
     </coordinates>
@@ -251,54 +260,54 @@ _size
     <id>Relation</id>
     <coordinates>
       <x>620</x>
-      <y>410</y>
-      <w>70</w>
-      <h>150</h>
+      <y>440</y>
+      <w>80</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;50.0;130.0</additional_attributes>
+    <additional_attributes>10.0;10.0;60.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>510</x>
-      <y>360</y>
-      <w>60</w>
-      <h>60</h>
+      <x>500</x>
+      <y>380</y>
+      <w>70</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>40.0;40.0;10.0;10.0</additional_attributes>
+    <additional_attributes>50.0;20.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>620</x>
-      <y>240</y>
+      <y>280</y>
       <w>30</w>
-      <h>170</h>
+      <h>130</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 m2=n</panel_attributes>
-    <additional_attributes>10.0;150.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>640</x>
+      <x>720</x>
       <y>390</y>
-      <w>340</w>
+      <w>260</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 m2=1
 m1=n</panel_attributes>
-    <additional_attributes>320.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>240.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1120</x>
-      <y>490</y>
+      <x>1160</x>
+      <y>540</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -308,12 +317,71 @@ m1=n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1030</x>
-      <y>410</y>
-      <w>150</w>
+      <x>1140</x>
+      <y>460</y>
+      <w>80</w>
       <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;130.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;60.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>900</x>
+      <y>240</y>
+      <w>210</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>GLBufferObject::BufferEntry</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1020</x>
+      <y>260</y>
+      <w>30</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=
+m1=</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>250</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m2=1
+m1=n</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>890</x>
+      <y>120</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>TextureObject</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>750</x>
+      <y>120</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
   </element>
 </diagram>

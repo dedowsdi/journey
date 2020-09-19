@@ -109,6 +109,14 @@ find symbolic link points to a regular file under provided dir(might be a symbol
 
     (a,b,aac)
 
+-atime use floor, -amin use ceil
+
+find modified today:
+    find -mtime 0
+
+find modified in last minute:
+    find -mmin 1   # it's 1, not 0, be careful
+
 You can interpret -daystart -ctime=x as last modified x midnight ago.
 I think -daystart measure time from next midnight instead of now
 

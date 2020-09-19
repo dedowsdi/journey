@@ -1,17 +1,12 @@
-list process that has the same tty as current one
-ps
+# posix use System V Unix style
+ps -..
 
-list process that has tty
-ps a
-
-list process that has tty in forest, add extra PPID column
-ps af -O ppid
-
-list all process
-ps aux
+# BSD style, no hyphen
+ps ..
 
 list process by command name (full match)
 ps -C vim
 
 list process by process id, show pid, pgid, ppid, stat, cmd only
 ps -123 -o pid,pgid,ppid,stat,cmd
+

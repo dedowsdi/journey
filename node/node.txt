@@ -1,0 +1,13 @@
+                                                                  *nvm-insall*
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+
+                                                          *nvm-select-version*
+nvm ls
+nvm ls-remote
+nvm install v10.20.1
+nvm use 10.20.1
+
+                                                                    *nvm-bash*
+nvm load itself at end of your bash, you should comment it, it's very slow.
+
+vim:set et sw=4 ts=8 filetype=help:

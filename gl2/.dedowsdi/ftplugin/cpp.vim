@@ -1,2 +1,1 @@
-call abbre#opengl()
-call abbre#cpp()
+Abbre opengl cpp

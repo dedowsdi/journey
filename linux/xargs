@@ -14,3 +14,5 @@ handle filename with whitespace
 rename .sh file
     ls * | xargs -I{} bash -c 'mv {} ${0#.sh}' {}
     be very careful that {} is literal string, not variable, don't use it with parameter expansion
+
+-I implies -x -L 1

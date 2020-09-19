@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>190</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>View::Slave</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>10</x>
+      <y>10</y>
+      <w>620</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Slave is not node, it doesn't belong to scene graph. The cull traversal is specially handled at SceneView::cullStage.
+You must explicitly setup graphics context, viewport for slave. By default slave use graph of main camera.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

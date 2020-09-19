@@ -1,2 +1,7 @@
 set breakpoint at functions that doesn't have debug symbol:
     b *funcname
+
+You might need to disable apport to get core dump to work:
+    echo "enable=0" >>/etc/default/apport
+    systemctl stop apport.service
+    ulimit -c unlimited

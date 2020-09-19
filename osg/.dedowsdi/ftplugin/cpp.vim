@@ -1,4 +1,2 @@
-call abbre#osg()
-call abbre#opengl()
-call abbre#cpp()
-call abbre#bullet()
+Abbre opengl cpp osg bullet
+setlocal textwidth=92

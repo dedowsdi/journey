@@ -1,0 +1,2 @@
+add_executable(rt_basic_sphere rt_basic_sphere.cpp)
+target_link_libraries(rt_basic_sphere common)

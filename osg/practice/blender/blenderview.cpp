@@ -54,7 +54,7 @@ void BlenderViewBase::setViewport(float x, float y, float width, float height) {
   vertices->at(1) = osg::Vec3(x + width, y, 0);
   vertices->at(2) = osg::Vec3(x + width, y + height, 0);
   vertices->at(3) = osg::Vec3(x, y + height, 0);
-  mGmBorder->dirtyDisplayList();
+  // mGmBorder->dirtyDisplayList();
   mGmBorder->dirtyBound();
   vertices->dirty();
 

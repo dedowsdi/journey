@@ -1,37 +1,42 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.2">
-  <zoom_level>8</zoom_level>
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>11</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>8</x>
-      <y>104</y>
-      <w>168</w>
-      <h>40</h>
+      <x>913</x>
+      <y>308</y>
+      <w>352</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>BasicAnimationManager
 --
-void playAnimation()</panel_attributes>
+void playAnimation()
+_animationsPlaying : {priority : [Animation]}</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>8</x>
-      <y>56</y>
-      <w>168</w>
-      <h>24</h>
+      <x>1034</x>
+      <y>143</y>
+      <w>242</w>
+      <h>99</h>
     </coordinates>
-    <panel_attributes>AnimationManagerBase</panel_attributes>
+    <panel_attributes>AnimationManagerBase
+--
+update(simulationTime)
+--
+_animations
+_targets</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>8</x>
-      <y>8</y>
-      <w>168</w>
-      <h>24</h>
+      <x>1045</x>
+      <y>33</y>
+      <w>231</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>NodeCallback
 </panel_attributes>
@@ -40,58 +45,61 @@ void playAnimation()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>80</x>
-      <y>72</y>
-      <w>24</w>
-      <h>48</h>
+      <x>1133</x>
+      <y>231</y>
+      <w>33</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>80</x>
-      <y>24</y>
-      <w>24</w>
-      <h>48</h>
+      <x>1144</x>
+      <y>55</y>
+      <w>33</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>8</x>
-      <y>192</y>
-      <w>136</w>
-      <h>72</h>
+      <x>924</x>
+      <y>440</y>
+      <w>220</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>Animation
 --
 update(time, priority)
 --
-_playMode</panel_attributes>
+_playMode
+_originalDuration
+_duration
+_weight</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>80</x>
-      <y>136</y>
-      <w>24</w>
-      <h>72</h>
+      <x>1056</x>
+      <y>385</y>
+      <w>33</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>160</y>
-      <w>216</w>
-      <h>88</h>
+      <x>1540</x>
+      <y>396</y>
+      <w>297</w>
+      <h>121</h>
     </coordinates>
     <panel_attributes>Channel
 --
@@ -104,10 +112,10 @@ _name</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>688</x>
-      <y>328</y>
-      <w>160</w>
-      <h>72</h>
+      <x>1947</x>
+      <y>627</y>
+      <w>220</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>Sampler
 --
@@ -117,10 +125,10 @@ _name</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>416</y>
-      <w>192</w>
-      <h>32</h>
+      <x>1661</x>
+      <y>748</y>
+      <w>264</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>&lt;KeyFrameType&gt;
 TemplateKeyFrameContainer
@@ -131,10 +139,10 @@ TemplateKeyFrameContainer
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>240</x>
-      <y>480</y>
-      <w>112</w>
-      <h>40</h>
+      <x>1331</x>
+      <y>836</y>
+      <w>154</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>KeyFrame
 --
@@ -146,21 +154,21 @@ _time
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>136</x>
-      <y>176</y>
-      <w>272</w>
-      <h>40</h>
+      <x>1133</x>
+      <y>418</y>
+      <w>429</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;30.0;320.0;10.0</additional_attributes>
+    <additional_attributes>10.0;30.0;370.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>480</x>
-      <y>296</y>
-      <w>24</w>
-      <h>48</h>
+      <x>1661</x>
+      <y>583</y>
+      <w>33</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
@@ -168,10 +176,10 @@ _time
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>552</x>
-      <y>384</y>
-      <w>24</w>
-      <h>48</h>
+      <x>1760</x>
+      <y>704</y>
+      <w>33</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
@@ -179,10 +187,10 @@ _time
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>544</x>
-      <y>440</y>
-      <w>24</w>
-      <h>56</h>
+      <x>1749</x>
+      <y>781</y>
+      <w>33</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
@@ -190,10 +198,10 @@ _time
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>368</x>
-      <y>328</y>
-      <w>256</w>
-      <h>64</h>
+      <x>1507</x>
+      <y>627</y>
+      <w>352</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>&lt;InterpolatorType&gt;
 TemplateSampler
@@ -204,10 +212,10 @@ getValueAt(time, result)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>264</y>
-      <w>216</w>
-      <h>40</h>
+      <x>1540</x>
+      <y>539</y>
+      <w>297</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>&lt;SamplerType&gt;
 TemplateChannel</panel_attributes>
@@ -216,10 +224,10 @@ TemplateChannel</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>520</x>
-      <y>240</y>
-      <w>24</w>
-      <h>40</h>
+      <x>1716</x>
+      <y>506</y>
+      <w>33</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
@@ -227,10 +235,10 @@ TemplateChannel</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>616</x>
-      <y>344</y>
-      <w>88</w>
-      <h>24</h>
+      <x>1848</x>
+      <y>649</y>
+      <w>121</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
@@ -238,10 +246,10 @@ TemplateChannel</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>480</y>
-      <w>216</w>
-      <h>24</h>
+      <x>1001</x>
+      <y>836</y>
+      <w>297</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>TemplateStepInterpolator</panel_attributes>
     <additional_attributes/>
@@ -249,10 +257,10 @@ TemplateChannel</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>8</x>
-      <y>424</y>
-      <w>216</w>
-      <h>48</h>
+      <x>1012</x>
+      <y>759</y>
+      <w>297</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>TemplateLinearInterpolator
 --
@@ -262,10 +270,10 @@ getValue(keyframes, time, result)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>32</x>
-      <y>360</y>
-      <w>216</w>
-      <h>40</h>
+      <x>1045</x>
+      <y>671</y>
+      <w>297</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>&lt;UsingType, KeyFrameType&gt;
 TemplateInterpolatorBase
@@ -275,10 +283,10 @@ TemplateInterpolatorBase
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>104</x>
-      <y>392</y>
-      <w>56</w>
-      <h>48</h>
+      <x>1144</x>
+      <y>715</y>
+      <w>77</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>50.0;10.0;10.0;40.0</additional_attributes>
@@ -286,10 +294,10 @@ TemplateInterpolatorBase
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>392</y>
-      <w>40</w>
-      <h>104</h>
+      <x>1166</x>
+      <y>715</y>
+      <w>55</w>
+      <h>143</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>30.0;10.0;10.0;110.0</additional_attributes>
@@ -297,10 +305,10 @@ TemplateInterpolatorBase
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>344</y>
-      <w>144</w>
-      <h>48</h>
+      <x>1331</x>
+      <y>649</y>
+      <w>198</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>160.0;10.0;10.0;40.0</additional_attributes>
@@ -308,10 +316,10 @@ TemplateInterpolatorBase
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>480</y>
-      <w>136</w>
-      <h>56</h>
+      <x>1694</x>
+      <y>836</y>
+      <w>187</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>&lt;KeyFrameType&gt;
 TemplateKeyFrame
@@ -323,10 +331,10 @@ _value
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>344</x>
-      <y>488</y>
-      <w>176</w>
-      <h>24</h>
+      <x>1474</x>
+      <y>847</y>
+      <w>242</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>200.0;10.0;10.0;10.0</additional_attributes>
@@ -334,10 +342,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>520</y>
-      <w>216</w>
-      <h>24</h>
+      <x>1001</x>
+      <y>891</y>
+      <w>297</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>TemplateCubicBezierInterpolator</panel_attributes>
     <additional_attributes/>
@@ -345,10 +353,10 @@ _value
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>136</x>
-      <y>392</y>
-      <w>24</w>
-      <h>144</h>
+      <x>1188</x>
+      <y>715</y>
+      <w>33</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
@@ -356,10 +364,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>232</x>
-      <y>416</y>
-      <w>184</w>
-      <h>40</h>
+      <x>1320</x>
+      <y>748</y>
+      <w>253</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>KeyFrameContainer
 --
@@ -369,10 +377,10 @@ _value
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>408</x>
-      <y>424</y>
-      <w>88</w>
-      <h>24</h>
+      <x>1562</x>
+      <y>759</y>
+      <w>121</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
@@ -380,10 +388,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>72</x>
-      <y>648</y>
-      <w>240</w>
-      <h>24</h>
+      <x>1100</x>
+      <y>1067</y>
+      <w>330</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>AnimationPathCallback
 </panel_attributes>
@@ -392,10 +400,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>72</x>
-      <y>584</y>
-      <w>240</w>
-      <h>24</h>
+      <x>1100</x>
+      <y>979</y>
+      <w>330</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>NodeCallback
 </panel_attributes>
@@ -404,10 +412,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>72</x>
-      <y>784</y>
-      <w>240</w>
-      <h>24</h>
+      <x>1100</x>
+      <y>1254</y>
+      <w>330</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>ControlPoint</panel_attributes>
     <additional_attributes/>
@@ -415,10 +423,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>72</x>
-      <y>712</y>
-      <w>240</w>
-      <h>24</h>
+      <x>1100</x>
+      <y>1155</y>
+      <w>330</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>AnimationPath</panel_attributes>
     <additional_attributes/>
@@ -426,10 +434,10 @@ _value
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>600</y>
-      <w>24</w>
-      <h>64</h>
+      <x>1221</x>
+      <y>1001</y>
+      <w>33</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -437,10 +445,10 @@ _value
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>664</y>
-      <w>24</w>
-      <h>64</h>
+      <x>1221</x>
+      <y>1089</y>
+      <w>33</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -448,10 +456,10 @@ _value
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>728</y>
-      <w>24</w>
-      <h>72</h>
+      <x>1221</x>
+      <y>1177</y>
+      <w>33</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -459,10 +467,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>216</x>
-      <y>16</y>
-      <w>176</w>
-      <h>48</h>
+      <x>1298</x>
+      <y>198</y>
+      <w>242</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>AnimationUpdateCallbackBase
 --
@@ -473,10 +481,10 @@ _value
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>216</x>
-      <y>88</y>
-      <w>168</w>
-      <h>56</h>
+      <x>1298</x>
+      <y>297</y>
+      <w>231</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>&lt;CallbackType&gt;
 AnimationUpdateCallback
@@ -487,10 +495,10 @@ getName()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>456</x>
-      <y>8</y>
-      <w>168</w>
-      <h>32</h>
+      <x>1628</x>
+      <y>187</y>
+      <w>231</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>&lt;NodeCallbacke&gt;
 UpdateMatrixTransform</panel_attributes>
@@ -499,10 +507,10 @@ UpdateMatrixTransform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>288</x>
-      <y>56</y>
-      <w>24</w>
-      <h>48</h>
+      <x>1397</x>
+      <y>253</y>
+      <w>33</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
@@ -510,10 +518,10 @@ UpdateMatrixTransform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>376</x>
-      <y>16</y>
-      <w>96</w>
-      <h>104</h>
+      <x>1518</x>
+      <y>198</y>
+      <w>132</w>
+      <h>143</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;110.0;100.0;10.0</additional_attributes>
@@ -521,10 +529,10 @@ UpdateMatrixTransform</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>456</x>
-      <y>48</y>
-      <w>168</w>
-      <h>32</h>
+      <x>1628</x>
+      <y>242</y>
+      <w>231</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>&lt;StateAttributeCallback&gt;
 UpdateMaterial</panel_attributes>
@@ -533,10 +541,10 @@ UpdateMaterial</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>456</x>
-      <y>88</y>
-      <w>168</w>
-      <h>32</h>
+      <x>1628</x>
+      <y>297</y>
+      <w>231</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>&lt;UniformCallback&gt;
 UpdateUniform</panel_attributes>
@@ -545,10 +553,10 @@ UpdateUniform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>376</x>
-      <y>56</y>
-      <w>96</w>
-      <h>64</h>
+      <x>1518</x>
+      <y>253</y>
+      <w>132</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;60.0;100.0;10.0</additional_attributes>
@@ -556,10 +564,10 @@ UpdateUniform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>376</x>
-      <y>96</y>
-      <w>96</w>
-      <h>24</h>
+      <x>1518</x>
+      <y>308</y>
+      <w>132</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
@@ -567,10 +575,10 @@ UpdateUniform</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>656</x>
-      <y>16</y>
-      <w>168</w>
-      <h>48</h>
+      <x>1903</x>
+      <y>198</y>
+      <w>231</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>StackedTransform
 --
@@ -581,10 +589,10 @@ getMatrix()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>656</x>
-      <y>88</y>
-      <w>168</w>
-      <h>72</h>
+      <x>1903</x>
+      <y>297</y>
+      <w>231</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>StackedTransformElement
 --
@@ -596,10 +604,10 @@ getMatrix()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>616</x>
-      <y>16</y>
-      <w>56</w>
-      <h>24</h>
+      <x>1848</x>
+      <y>198</y>
+      <w>77</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;</panel_attributes>
     <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
@@ -607,10 +615,10 @@ getMatrix()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>736</x>
-      <y>56</y>
-      <w>24</w>
-      <h>48</h>
+      <x>2013</x>
+      <y>253</y>
+      <w>33</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
@@ -618,10 +626,10 @@ getMatrix()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>600</x>
-      <y>168</y>
-      <w>336</w>
-      <h>40</h>
+      <x>1826</x>
+      <y>407</y>
+      <w>462</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 link</panel_attributes>
@@ -630,10 +638,10 @@ link</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>272</x>
-      <y>552</y>
-      <w>104</w>
-      <h>64</h>
+      <x>1375</x>
+      <y>935</y>
+      <w>143</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>50.0;60.0;110.0;60.0;110.0;10.0;10.0;10.0;10.0;40.0</additional_attributes>
@@ -641,10 +649,10 @@ link</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>720</x>
-      <y>416</y>
-      <w>80</w>
-      <h>24</h>
+      <x>1991</x>
+      <y>748</y>
+      <w>110</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>MixinVector</panel_attributes>
     <additional_attributes/>
@@ -652,10 +660,10 @@ link</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>664</x>
-      <y>424</y>
-      <w>72</w>
-      <h>24</h>
+      <x>1914</x>
+      <y>759</y>
+      <w>99</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -663,13 +671,14 @@ link</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>928</x>
-      <y>24</y>
-      <w>104</w>
-      <h>56</h>
+      <x>2277</x>
+      <y>165</y>
+      <w>143</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>Target
 --
+_lastPriority
 _weight
 _priorityWeight</panel_attributes>
     <additional_attributes/>
@@ -677,10 +686,10 @@ _priorityWeight</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
-      <y>104</y>
-      <w>160</w>
-      <h>112</h>
+      <x>2266</x>
+      <y>319</y>
+      <w>220</w>
+      <h>154</h>
     </coordinates>
     <panel_attributes>&lt;TargetType&gt;
 TemplateTarget
@@ -694,21 +703,21 @@ _target</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>968</x>
-      <y>72</y>
-      <w>24</w>
-      <h>48</h>
+      <x>2332</x>
+      <y>253</y>
+      <w>33</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>816</x>
-      <y>136</y>
-      <w>120</w>
-      <h>24</h>
+      <x>2123</x>
+      <y>363</y>
+      <w>165</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
@@ -716,15 +725,15 @@ _target</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>872</x>
-      <y>232</y>
-      <w>432</w>
-      <h>256</h>
+      <x>2189</x>
+      <y>495</y>
+      <w>638</w>
+      <h>616</h>
     </coordinates>
     <panel_attributes>The overall animation is control by BasicAnimationManager, it's derived
 from NodeCallback, it's usually added to root as update callback. This
 manager contains a list animation layer, each layer consists of a priority
-and an animation. Animation is updated from high priority to low.
+and an animation. Animation is updated from high priority to low. 
 
 AnimatinUpdateCallback is used to use the animation result, it uses CRTP
 pattern, the T is usually Callback and it's derived classes.
@@ -740,16 +749,32 @@ The element name must be the same as channel name.
 Channel also contains a sampler.
 
 A sampler consists of keyframes and a interpolator.
+
+A target might be updated multiple times by different channels from high priority to low:
+if it's first time:
+    update target value
+    update current priority weight
+else
+	      if priority changed
+	      	     //  update accumulated weight
+	          	_weight += _priorityWeight * (1.0 - _weight)
+	      end
+
+				    lerp accumulated value and current value as target value:	
+				    float t = (1.0 - _weight) * weight / _priorityWeight
+				    _target = mix(accumulatedValue, newValuw, t)
+endif
+
 bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>168</x>
-      <y>208</y>
-      <w>216</w>
-      <h>56</h>
+      <x>1232</x>
+      <y>462</y>
+      <w>297</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>AnimationManagerBase
 --
@@ -760,21 +785,21 @@ link(subgraph)
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>136</x>
-      <y>208</y>
-      <w>48</w>
-      <h>48</h>
+      <x>1133</x>
+      <y>495</y>
+      <w>121</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>40.0;10.0;10.0;40.0</additional_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>120</x>
-      <y>288</y>
-      <w>224</w>
-      <h>56</h>
+      <x>1166</x>
+      <y>572</y>
+      <w>308</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>BasicAnimationManager
 --
@@ -784,10 +809,10 @@ playAnimation(anim, priority, weight)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>256</y>
-      <w>24</w>
-      <h>48</h>
+      <x>1331</x>
+      <y>528</y>
+      <w>33</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
@@ -795,21 +820,21 @@ playAnimation(anim, priority, weight)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>168</x>
-      <y>24</y>
-      <w>64</w>
-      <h>200</h>
+      <x>1265</x>
+      <y>55</y>
+      <w>55</w>
+      <h>429</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
-    <additional_attributes>60.0;230.0;10.0;10.0</additional_attributes>
+    <additional_attributes>30.0;370.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
-      <y>608</y>
-      <w>216</w>
-      <h>104</h>
+      <x>2244</x>
+      <y>1133</y>
+      <w>297</w>
+      <h>143</h>
     </coordinates>
     <panel_attributes>ControlPoints
 --
@@ -826,10 +851,10 @@ _scale
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>672</x>
-      <y>608</y>
-      <w>144</w>
-      <h>104</h>
+      <x>1925</x>
+      <y>1012</y>
+      <w>198</w>
+      <h>143</h>
     </coordinates>
     <panel_attributes>AnimationPath
 --
@@ -844,21 +869,21 @@ _loopMode
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>808</x>
-      <y>632</y>
-      <w>128</w>
-      <h>24</h>
+      <x>2112</x>
+      <y>1045</y>
+      <w>154</w>
+      <h>154</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;120.0;120.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>448</x>
-      <y>616</y>
-      <w>144</w>
-      <h>56</h>
+      <x>1617</x>
+      <y>1023</y>
+      <w>198</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>AnimationPathCallback
 --
@@ -869,10 +894,10 @@ _useInverseMatrix</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>584</x>
-      <y>624</y>
-      <w>104</w>
-      <h>24</h>
+      <x>1804</x>
+      <y>1034</y>
+      <w>143</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
@@ -880,10 +905,10 @@ _useInverseMatrix</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>256</x>
-      <y>600</y>
-      <w>208</w>
-      <h>48</h>
+      <x>1353</x>
+      <y>1001</y>
+      <w>286</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;240.0;40.0</additional_attributes>
@@ -891,10 +916,10 @@ _useInverseMatrix</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>408</x>
-      <y>704</y>
-      <w>192</w>
-      <h>128</h>
+      <x>1562</x>
+      <y>1144</y>
+      <w>264</w>
+      <h>176</h>
     </coordinates>
     <panel_attributes>Motion
 --
@@ -911,10 +936,10 @@ _timeBehavior
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>680</x>
-      <y>720</y>
-      <w>160</w>
-      <h>32</h>
+      <x>1936</x>
+      <y>1166</y>
+      <w>220</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>&lt;Function&gt;
 MathMotionTemplate</panel_attributes>
@@ -923,10 +948,10 @@ MathMotionTemplate</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>592</x>
-      <y>728</y>
-      <w>104</w>
-      <h>40</h>
+      <x>1815</x>
+      <y>1177</y>
+      <w>143</w>
+      <h>55</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;30.0;110.0;10.0</additional_attributes>
@@ -934,10 +959,10 @@ MathMotionTemplate</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>680</x>
-      <y>768</y>
-      <w>160</w>
-      <h>32</h>
+      <x>1936</x>
+      <y>1232</y>
+      <w>220</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>&lt;Sampler&gt;
 SamplerMotionTemplate</panel_attributes>
@@ -946,10 +971,10 @@ SamplerMotionTemplate</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>592</x>
-      <y>768</y>
-      <w>104</w>
-      <h>32</h>
+      <x>1815</x>
+      <y>1232</y>
+      <w>143</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;110.0;20.0</additional_attributes>
@@ -957,10 +982,10 @@ SamplerMotionTemplate</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>448</x>
-      <y>864</y>
-      <w>112</w>
-      <h>24</h>
+      <x>1617</x>
+      <y>1364</y>
+      <w>154</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>CompositeMotion</panel_attributes>
     <additional_attributes/>
@@ -968,10 +993,10 @@ SamplerMotionTemplate</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>488</x>
-      <y>824</y>
-      <w>24</w>
-      <h>56</h>
+      <x>1672</x>
+      <y>1309</y>
+      <w>33</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
@@ -979,10 +1004,10 @@ SamplerMotionTemplate</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>528</x>
-      <y>824</y>
-      <w>24</w>
-      <h>56</h>
+      <x>1727</x>
+      <y>1309</y>
+      <w>33</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
@@ -990,10 +1015,10 @@ SamplerMotionTemplate</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>688</x>
-      <y>256</y>
-      <w>168</w>
-      <h>24</h>
+      <x>1947</x>
+      <y>528</y>
+      <w>231</w>
+      <h>33</h>
     </coordinates>
     <panel_attributes>TemplateCompositeSampler</panel_attributes>
     <additional_attributes/>
@@ -1001,10 +1026,10 @@ SamplerMotionTemplate</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>744</x>
-      <y>272</y>
-      <w>24</w>
-      <h>72</h>
+      <x>2024</x>
+      <y>550</y>
+      <w>33</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -1012,14 +1037,324 @@ SamplerMotionTemplate</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>24</x>
-      <y>832</y>
-      <w>304</w>
-      <h>56</h>
+      <x>1034</x>
+      <y>1320</y>
+      <w>418</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>Each CubicBezierKeyframe contains only 3 points, the 1st points
 is shared with previous keyframe as it's 4th point.
 bg=blue</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>715</x>
+      <y>231</y>
+      <w>264</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>TimelineAnimationManager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>968</x>
+      <y>143</y>
+      <w>88</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>440</x>
+      <y>308</y>
+      <w>429</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>TimeLine
+--
+addActionAt(frame, action, priority)
+isActive(activeAction)
+--
+_fps = 25
+_speed
+_evaluating
+_actions : {priority : [FrameAction]}
+_addActionOperations : [{priority, FrameAction}]
+_removeActionOperations: [FrameAction]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>748</x>
+      <y>253</y>
+      <w>33</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>407</x>
+      <y>0</y>
+      <w>528</w>
+      <h>209</h>
+    </coordinates>
+    <panel_attributes>Action
+--
+traverse(actionVisitor)
+evaluateFrame(frame, resultFrame&amp;, nbloop&amp;)
+--
+_framesCallback: {frame_number : callback}
+_numberFrames = 25
+_fps = 25
+_speed = 1.0
+_loop = 1
+_state = Stop</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>583</x>
+      <y>198</y>
+      <w>33</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>121</x>
+      <y>165</y>
+      <w>187</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>ActionStripAnimation</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>297</x>
+      <y>165</y>
+      <w>132</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>88</x>
+      <y>0</y>
+      <w>187</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>ActionBlendIn</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>88</x>
+      <y>66</y>
+      <w>187</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>ActionBlendOut</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>264</x>
+      <y>0</y>
+      <w>165</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>264</x>
+      <y>77</y>
+      <w>165</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>154</x>
+      <y>88</y>
+      <w>33</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>242</x>
+      <y>22</y>
+      <w>33</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>176</x>
+      <y>506</y>
+      <w>187</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>ActionAnimation
+--
+_animation</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>198</y>
+      <w>110</w>
+      <h>352</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;300.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>495</x>
+      <y>198</y>
+      <w>33</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>198</x>
+      <y>649</y>
+      <w>308</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>ActionVisitor
+--
+_stackFrameAction : [FrameAction]
+_stackTimeline : [TimeLine*]
+_currentLayer</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>374</x>
+      <y>847</y>
+      <w>308</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>UpdateActionVisitor
+--
+getLocalFrame()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>330</x>
+      <y>737</y>
+      <w>209</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>847</y>
+      <w>308</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>ClearActionVisitor</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>154</x>
+      <y>737</y>
+      <w>198</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>160.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>308</x>
+      <y>935</y>
+      <w>605</w>
+      <h>440</h>
+    </coordinates>
+    <panel_attributes>Timeline maintain animation frame stamps, it's different from frame in FrameStamp:
+	int nbframes = floor(delta_simulation_time * _fps * _speed)
+	_lastUpdate += nbframes / _fps
+	
+An action is active in a timeline if it's start frame is no less than current frame, and Action::evaluateFrame returns true(the looping have not finished.)
+
+Action is frame based, not animatio time based, it's frame number is:
+_numberFrame = floor(animation_duration * _fps),
+which means you will miss some animation in the end?
+why not use ceil?
+
+ActionAnimation update animation by zero based frame number:
+_animation-&gt;update(frame * 1.0/_fps, priority)
+The last frame is _numberFrame - 1, not _numberFrame, so you will always miss the ending.
+
+ActionBlendIn and ActionBlendOut control weight of animation in ActionAnimation.
+
+Each priority represent an animation layer.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>528</y>
+      <w>594</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;520.0;10.0</additional_attributes>
   </element>
 </diagram>

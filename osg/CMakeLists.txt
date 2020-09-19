@@ -72,6 +72,7 @@ add_subdirectory(demo)
 add_subdirectory(practice)
 add_subdirectory(local)
 add_subdirectory(challenge)
+add_subdirectory(ray_tracing)
 
 IF(${BULLET_FOUND})
     ADD_SUBDIRECTORY(bullet)

@@ -1,8 +1,31 @@
 operation:
-    o COMMAND=lantern                     # filter command
-    L                                     # locate 
-    k                                     # kill
+    oO  # filter command, ignore case only applied to value, not variable name.
+        # it's a substring test
+        # use !FILED=selection if you want to exclude it
+    =   # clear all filters
+    u   # filter by user
+
+    M   # sort by memory
+    P   # sort by cpu
+    N   # sort by process
+    T   # sort by time
+
+    L   # locate
+    k   # kill
+
+    Z   # config colors
+    W   # write configuration to ~/.toprc
+    B   # toggle bold
+
+    V   # forest view
+
+    L   # local string
+    &   # next match
 
 top -n 1                        # execute once and exit
 top -o %MEM                     # sort by %MEM
-top detail is hard to remember, htop is much more user friendly.
+
+head lines
+l : 1st line is load average, it's the same as uptime. Note that load average is not averaged, delete it by number of CPU is the real load average.
+t : task lines
+m : memory lines

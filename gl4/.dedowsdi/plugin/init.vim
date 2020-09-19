@@ -4,7 +4,7 @@ set wildignore+=*/utfcpp/*,utfcpp
 
 let g:cdef_proj_name = 'GL2'
 
-call misc#proj#load_map('c')
+Proj c
 
 "executable make target and path
 "let g:mycppMakes = {}

@@ -1,0 +1,4 @@
+print * 10 times (bash only)
+    printf "%0.s*" {1..10}
+    %0s specifies 0 length string, it's ignored if arg length is not 0
+0   %0.s specifies 0 length string, always truncate after 0.

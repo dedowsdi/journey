@@ -9,6 +9,10 @@ set (PROJECTS
     virtual_function_table
     hack_access_container
     ebo
+    overloaded_virtual
+    construct_on_first_use
+    named_constructor
+    virtual_constructor
     )
 
 foreach(PROJECT ${PROJECTS})

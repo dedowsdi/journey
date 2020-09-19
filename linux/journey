@@ -126,8 +126,8 @@ read cpu temperature and fan speed
 
 change login shell
     sudo -s
-    ch -s /bin/zsh root
-    ch -s /bin/zsh pntandcnt
+    chsh -s /bin/zsh root
+    chsh -s /bin/zsh pntandcnt
     note that you must log out and log in to make it work.
 
 kill all processes by name
@@ -176,6 +176,16 @@ get xterm color palette value
     ? : value of Pt, elicit instead of set
     \033\\ string terminator (0x9c)
     check http://www.talisman.org/~erlkonig/misc/xterm-control-sequences/ for more detail
+
+tty setting:
+    change font size:
+        sudo dpkg-reconfigure console-setup
+    change resolution:
+        edit /etc/default/grub
+            GRUB_CMDLINE_LINUX_DEFAULT="nomodeset"
+            GRUB_GFXMODE=1920x1080
+
+    tty has only 8 colors, the intensit bit (I guess) is used for unicode
 
 gnome setting:
     get profile list:

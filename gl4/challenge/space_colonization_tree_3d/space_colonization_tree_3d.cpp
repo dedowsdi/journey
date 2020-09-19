@@ -352,15 +352,15 @@ public:
       }
     }
 
+    auto size = vertices->size();
     set_attrib_array(0, std::move(vertices));
 
     remove_primitive_sets(0, get_num_primitive_set());
-    add_primitive_set(
-      std::make_shared<draw_arrays>(GL_TRIANGLES, 0, vertices->size()));
+    add_primitive_set(std::make_shared<draw_arrays>(GL_TRIANGLES, 0, size));
 
     smooth(*this, 1);
 
-    std::cout << "generate " << vertices->size() << " vertices" << std::endl;
+    std::cout << "generate " << size << " vertices" << std::endl;
   }
 
   void draw_branches(GLuint branch_count)

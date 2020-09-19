@@ -33,3 +33,18 @@ terrain image in bullet is upsize down with ogre,
     btScalar height = getRawHeightFieldValue(x, y);
     to
     btScalar height = getRawHeightFieldValue(x, m_heightStickLength - y - 1);
+
+activation state (see btDiscreteDynamicsWorld::updateActivationState):
+    normal collision object starts with ACTIVE_TAG.
+    Kinematic object starts with DISABLE_DEACTIVATION.
+    RigidBody wants to sleep if it's linear velocity and angular velocity is smaller than threshold for gDeactivationTime seconds or it's activation state is ISLAND_SLEEPING or WANTS_DEACTIVATION
+    Static or kinematic object sleep as ISLAND_SLEEPING if they want to sleep
+    Dynamic rigid body set angulaer and linear velocity to 0 if it want to sleep and their activation state is ISLAND_SLEEPING.
+    Dynamic rigid body change it's activation state to WANTS_DEACTIVATION if it wants to sleep and it's activation state is ACTIVE_TAG
+    An collision object is active if it's state is not ISLAND_SLEEPING and DISABLE_DEACTIVATION
+    Static rigid body use ISLAND_SLEEPING when it's added to dynamic world.
+
+If you want two object to collide:
+    maskOfA & groupOfB && maskOfB & groupOfA must be true
+
+btVector3 and btTransform default construct doesn't init them self to proper value, be careful.

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>567</x>
+      <y>549</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>Camera</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>558</x>
+      <y>288</y>
+      <w>153</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>GraphicsOperation</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>576</x>
+      <y>207</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>Operation</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>612</x>
+      <y>225</y>
+      <w>27</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>558</x>
+      <y>405</y>
+      <w>126</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Renderer
+--
+_drawQueue
+_availableQueue
+--
+cull()
+draw()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>603</x>
+      <y>306</y>
+      <w>27</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>801</x>
+      <y>270</y>
+      <w>261</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>RenderBin
+--
+draw()
+--
+_parent
+_stateGraphList : vector&lt;StateGraph&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1107</x>
+      <y>288</y>
+      <w>90</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>RenderLeaf
+--
+_dynamic</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>873</x>
+      <y>117</y>
+      <w>171</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>StateGraph
+--
+_parent</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>603</x>
+      <y>486</y>
+      <w>27</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>837</x>
+      <y>405</y>
+      <w>405</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>RenderStage
+--
+drawPreRenderStages(renderinfo, previous)
+drawPostRenderStages(renderinfo, previous, doCopyTexture)
+runCameraSetup(renderInfo)
+computeNumberOfDynamicRenderLeaves()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>675</x>
+      <y>405</y>
+      <w>54</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+m1=1
+m2=2</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>891</x>
+      <y>351</y>
+      <w>27</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>846</x>
+      <y>243</y>
+      <w>54</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0;40.0;10.0;40.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1053</x>
+      <y>288</y>
+      <w>72</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>900</x>
+      <y>162</y>
+      <w>27</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>837</x>
+      <y>81</y>
+      <w>162</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+{StateSet:StateGraph}</panel_attributes>
+    <additional_attributes>60.0;40.0;60.0;20.0;110.0;20.0;110.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>576</x>
+      <y>117</y>
+      <w>261</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>StateSet
+--
+setRenderBinDetails(bin, name, mode)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>729</x>
+      <y>162</y>
+      <w>90</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>80.0;130.0;10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>117</y>
+      <w>63</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1107</x>
+      <y>207</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>Drawable</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1143</x>
+      <y>225</y>
+      <w>27</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>18</x>
+      <y>0</y>
+      <w>540</w>
+      <h>621</h>
+    </coordinates>
+    <panel_attributes>RenderBins are populated during cull traversal, when a new StateSet Occurs, and it requires a detailed RenderBin, a new RenderBin is created (if it doesn't exist) as child of current RenderBin, the current RenderBin will get pushed to a stack, newly created RenderBin becomes the Current RenderBin.
+
+Drawables are wrapped in a RenderLeaf and added to current StateGraph, current state graph is added to current RenderBin.
+
+Prerender stages and Postrender stages are collected when CullVisitor applied to Camera.
+
+rtt are setup in RenderStage::runCameraSetup, you must at least set internal format for render target texture.
+
+The same stage will be rendered only once per frame. If you travel the same pre or post camera more than once, it's render stage will be reset before current traversal.
+
+Rtt:
+
+Rtt only works for pre or post render camera.
+
+WGL_ARB_render_texture
+FRAME_BUFFER_OBJECT 
+render to texture directly
+
+PIXEL_BUFFER_RTT
+use WGL_ARB_render_texture, use the same PBO for rendering and texturing, it's not implemented on X11(check PiexelBufferX11::bindPBufferToTextureImplementation)
+
+PIXEL_BUFFER
+same as FRAME_BUFFER when render to texture?
+
+FRAME_BUFFER
+glCopyTexImage2D after after rendering
+
+SEPARATE_WINDOW
+for debug purpose? Why are there 2 windows for 1 attachment?
+
+If attach target is iamge, glReadPixels is called
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>18</x>
+      <y>639</y>
+      <w>540</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>CullSetting are inherited, don't rely on default value, you must explicitly set
+local value to stop it from inheriting.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>567</x>
+      <y>639</y>
+      <w>324</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>CullSetting
+--
+inheritCullSetting(settings)
+applyMaskAction(maskbit)
+--
+_inheritanceMask
+_inheritanceMaskActionOnAttributeSetting</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>603</x>
+      <y>567</y>
+      <w>27</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>711</x>
+      <y>405</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>SceneView</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>792</x>
+      <y>405</y>
+      <w>63</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>18</x>
+      <y>720</y>
+      <w>540</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Renderer::cull() take front of available que, cull it, add it to draw queue.
+Renderer::draw() take front of draw que, draw it, add it to available queue.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>567</x>
+      <y>747</y>
+      <w>558</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Although FrameBufferObject is subclass of StateAttribute, it's never pushed into 
+attribute stack, so it never will be poped, be careful.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>567</x>
+      <y>819</y>
+      <w>549</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>The render order could be totally different from the node order as Their their StaetSet might contain RenderBIn details.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>18</x>
+      <y>810</y>
+      <w>540</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>A render leaf is dynamic if drawable is DYNAMIC or it's parent StateGraph is dynamic.
+
+A StateGraph is dynamic if it has a dynamic StateSet or it's decendent of a DYNAMIC StateGraph.
+
+osg won't update next frame until all dynamic drawable of current frame dispatched. Every time a dynamic RenderLeaf finishes, it call State::decrementDynamicObjectCount(), when it reach 0, a call back is called to release the block.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>567</x>
+      <y>891</y>
+      <w>558</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>StateGraph tree is build on map. But RenderBin store StateGraph in vector, which
+means the first pushed StateGraph will get render first.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

@@ -1,0 +1,2 @@
+# test port
+    nc -vz ip port

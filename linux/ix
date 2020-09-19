@@ -1,0 +1,26 @@
+install ix:
+    curl ix.io/client > ix
+    chmod +x ix
+    mv ix /usr/local/bin
+
+usage:
+    ix
+    ... | ix
+    ix file
+
+persistent the paste:
+    open ~/.netrc, add
+        machine ix.io
+          login dedowsdi
+          password dedowsdi123456
+    The authentication method is HTTP Basic Auth so don't use any important
+    password.
+
+    You can accest all your paste at
+    ix.io/user/dedowsdi
+
+update my paste:
+    ix -i ID ...
+
+delete my paste
+    ix -d ID

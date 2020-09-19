@@ -278,6 +278,7 @@ class app0 : public app {
     // it's properbally safer to make a copy for shadow map.
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, shadow_map);
+    // TODO use sub copy
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 0, 0, shadow_width,
       shadow_height, 0);
   }

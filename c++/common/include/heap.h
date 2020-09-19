@@ -8,22 +8,23 @@
 
 namespace zxd {
 
+// compare current and it's left, right children, swap and recursive into
+// swapped children if necessary.
 template <typename _It, typename CompareClass>
 inline void heapify(_It beg, _It end, _It cur, const CompareClass& cmp) {
   if (cur >= end) throw new std::out_of_range("index out of range");
 
+  // get left, right children
   unsigned i = cur - beg;
   _It l = beg + ((i << 1) + 1);
   _It r = l + 1;
 
-  _It it = l;
-
-  if (r < end) {
-    it = cmp(*r, *l) ? r : l;
-  }
+  _It it = r < end && cmp(*r, *l) ? r : l;
 
   if (it < end && cmp(*it, *cur)) {
     std::swap(*cur, *it);
+
+    // heapify down newly swapped value
     heapify(beg, end, it, cmp);
   }
 }

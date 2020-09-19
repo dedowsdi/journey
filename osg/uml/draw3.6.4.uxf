@@ -53,26 +53,27 @@ _activeDispatchList</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>747</x>
-      <y>162</y>
-      <w>162</w>
-      <h>54</h>
+      <x>729</x>
+      <y>171</y>
+      <w>225</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>VertexArrayState
 --
-assignAllDispatchers()</panel_attributes>
+assignAllDispatchers()
+bindVertexBufferobject(vbo)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>810</x>
+      <x>828</x>
       <y>126</y>
-      <w>45</w>
-      <h>54</h>
+      <w>27</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>30.0;10.0;10.0;40.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -217,8 +218,8 @@ bg=blue
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>576</x>
-      <y>279</y>
+      <x>603</x>
+      <y>315</y>
       <w>405</w>
       <h>108</h>
     </coordinates>
@@ -264,18 +265,18 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>774</x>
-      <y>207</y>
-      <w>63</w>
-      <h>90</h>
+      <x>801</x>
+      <y>270</y>
+      <w>27</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>50.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>423</x>
+      <x>468</x>
       <y>468</y>
       <w>162</w>
       <h>27</h>
@@ -286,18 +287,18 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>504</x>
-      <y>378</y>
-      <w>243</w>
-      <h>108</h>
+      <x>549</x>
+      <y>414</y>
+      <w>225</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>250.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>230.0;10.0;10.0;60.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>594</x>
+      <x>639</x>
       <y>468</y>
       <w>162</w>
       <h>27</h>
@@ -308,18 +309,18 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>639</x>
-      <y>378</y>
-      <w>126</w>
-      <h>108</h>
+      <x>684</x>
+      <y>414</y>
+      <w>108</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>120.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>100.0;10.0;10.0;60.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>774</x>
+      <x>810</x>
       <y>468</y>
       <w>171</w>
       <h>27</h>
@@ -330,13 +331,13 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>774</x>
-      <y>378</y>
-      <w>90</w>
-      <h>108</h>
+      <x>801</x>
+      <y>414</y>
+      <w>99</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;90.0;60.0</additional_attributes>
   </element>
   <element>
     <id>UMLNote</id>

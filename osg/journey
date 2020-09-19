@@ -26,11 +26,20 @@ osg default global state:
     GL_DEPTH_TEST : on
     GL_BLEND_FUNC : GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
 
+All attribute, uniform callback are handled by StateSet.
+
+setCullingActive is not recursive.
+
+osg::Texture2D::setImage(img) will change variance
+
+osg::Texture2D with image only compute texture width and height when it's applied (which calls osg::Texture::computRequiredTextureDimensions), you might need to use imgae::s() instead.
+
+/* osg::Texture2D only */ 
+
 window:
 osghud  create hud camera, snap image before post render.
 osgcompositeviewer
 osgsidebyside
-osgcompositeviewer
 osgcamera
 osgwindows
 
@@ -49,6 +58,7 @@ osgbillboard
 osgautotransform
 osgimagesequence
 osgpagedlod
+osgocclusionquery
 
 text:
 osgtext
@@ -60,6 +70,7 @@ osgtexture2D        what is anisotrophy, what is image subload?
 osgtexturecompression
 osgtexturerectangle
 osgmultitexture
+osgprerender
 
 interact:
 osgpick
@@ -84,6 +95,7 @@ osgparametric
 
 particle:
 osgparticle             what is fluid friction ?
+osgparticleeffects
 
 animation:
 osganimationeasemotion
@@ -92,6 +104,8 @@ osganimationmorph
 osganimationnode
 osganimationskinning
 osganimationsolid
+osganimationhardware
+osganimationtimeline
 
 technique:
 osgshadow
@@ -138,8 +152,6 @@ unknown examples:
 
 osganalysis
 osganimate
-osganimationhardware
-osganimationtimeline
 osganimationviewer
 osgatomiccounter
 osgautocapture
@@ -179,17 +191,14 @@ osgmultiplerendertargets
 osgmultitexturecontrol
 osgmultitouch
 osgmultiviewpaging
-osgocclusionquery
 osgoit
 osgoscdevice
 osgpackeddepthstencil
-osgparticleeffects
 osgparticleshader
 osgphotoalbum
 osgplanets
 osgposter
 osgprecipitation
-osgprerender
 osgprerendercubemap
 osgpresentation
 osgrobot

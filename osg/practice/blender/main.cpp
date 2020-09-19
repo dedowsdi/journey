@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
 
   // load object
   osg::ref_ptr<osg::Node> node = osgDB::readNodeFiles(ap);
-  if (!node) node = osgDB::readNodeFile("cessna.osg");
+  if (!node) node = osgDB::readNodeFile("cow.osgt");
 
   osg::ref_ptr<zxd::Blender> blender = zxd::Blender::instance();
 

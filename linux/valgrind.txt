@@ -1,0 +1,5 @@
+track uninitialized:
+    turn on --track-origins=yes , it's expensive don't turn it on by default
+
+trace data race:
+    --tool=helgrind

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.2">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
   <zoom_level>10</zoom_level>
   <element>
     <id>UMLClass</id>
@@ -66,7 +65,7 @@ _cullCallback</panel_attributes>
               
   visitor pop node path
 
-Parent node always before child node in NodePath, no matter
+Parent node always appear after child node in NodePath, no matter
 what traversal mode is used.
 
 By default, Visitor::apply(Node) call Visitor::apply(SuperNode)
@@ -278,10 +277,9 @@ _eventCallback</panel_attributes>
       <x>690</x>
       <y>600</y>
       <w>340</w>
-      <h>100</h>
+      <h>90</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=0..n</panel_attributes>
+    <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;70.0;320.0;10.0</additional_attributes>
   </element>
   <element>

@@ -1,3 +1,14 @@
+black screen debug:
+    1. make sure no error message in debug output.
+    2. make sure draw call happens, could be glCallList, glDraw*
+    3. make sure drawable is not clipped, you may use apitrace or othertool to
+       get mvpw_mat, test it with a point that you 100% sure shoulde be visible.
+    4. make sure vertex data is right, check the location, size, stride, offset.
+    5. make sure it pass depth test if it's enabled, make sure depth buffer is
+       cleared, also check current depth func.
+    6. make sure it's not clipped alway by clip planes.
+    7. make sure it pass stentil test if it's enabled.
+
 -----------
 2018.01.13:
 
@@ -25,7 +36,7 @@ it's totally legal to bind the same buffer to different target.
 -----------
 2018.01.30:
 
-normal achieved from normal texture still needs to be normalized:
+normal achieved from normal eexture still needs to be normalized:
 // be very careful about this!!, not easay to debug, totally nightmare
 vec3 t_normal = normalize(texture(normal_map, fi.texcoord).xyz * 2 - 1); 
 
@@ -120,3 +131,41 @@ Assume you have two point A, B in clip space, and another point C between them a
 
 
 be very very careful when you add 2 vertices as vec4, it's w component will be added together, most of time it's not what you want!!!!!!.
+
+never use the same texture for both input and output, that's a UB, a nightmare.
+
+-------------------
+Font rendering:
+
+font size
+Font height is often measured in pt(points), 72.272 points = 1inch = 2.54 cm
+
+For digital screen, dpi is the same as ppi.
+
+em square
+An imaginary square that is used to size and align glyphs, the glyph might extent beyond the square .
+
+FUnit
+true type font point locations are described in font unit, it's in [-16384, 16383]
+
+upem
+units per em square side.
+
+em square
+
+dpi
+Device resolution, dot per inch
+
+ppi
+Device resolution, pixel per inch
+
+converting FUnits to pixels:
+If a glyph feature is 550 FUnits in length, it's upem is 2048, your screen use
+dpi=72, pointSize is 18:
+
+The whole em square length is 72 * 18 / 72 = 18 pixels.
+This glyph feature length is 550.0 / 2048 * 18 = 4.83
+pixel size = dpi * (pointSize/72) * (glyph funits length)/upem
+ppem = dpi * pointSize / 72
+
+pixel_coordinate = em_coordinate * ppem /upem

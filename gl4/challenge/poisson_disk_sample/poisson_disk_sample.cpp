@@ -80,7 +80,7 @@ struct dot_program : public program
 }prg;
 
 // generate uniformly distributed sample in the input extent, no samples exists
-// in radius r of any sample.
+// in radius r of any other sample.
 std::vector<vec2> poisson_disk_sample2(const vec2& min_ext, const vec2& max_ext, GLfloat radius, GLubyte k = 30)
 {
   typedef std::vector<int> int_grid;
@@ -113,7 +113,7 @@ std::vector<vec2> poisson_disk_sample2(const vec2& min_ext, const vec2& max_ext,
 
   // step 2 : While the active list is not empty, choose a random active_index from it
   // (say i). Generate up to k points chosen uniformly from the spherical
-  // annulus between radius r and 2r around x i . For each point in turn, check
+  // annulus between radius r and 2r around x_i . For each point in turn, check
   // if it is within distance r of existing samples (using the background grid
   // to only test nearby samples). If a point is adequately far from existing
   // samples, emit it as the next sample and add it to the active list. If after

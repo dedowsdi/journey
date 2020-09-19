@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.2">
-  <zoom_level>10</zoom_level>
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>9</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>680</x>
-      <y>390</y>
-      <w>150</w>
-      <h>30</h>
+      <x>621</x>
+      <y>405</y>
+      <w>126</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>EventInterface</panel_attributes>
     <additional_attributes/>
@@ -15,10 +14,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>680</x>
-      <y>310</y>
-      <w>140</w>
-      <h>30</h>
+      <x>621</x>
+      <y>342</y>
+      <w>126</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>StyleInterface
 
@@ -28,10 +27,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>420</x>
-      <y>210</y>
-      <w>140</w>
-      <h>50</h>
+      <x>369</x>
+      <y>243</y>
+      <w>126</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>&lt;Widget&gt;
 UIObjectParent</panel_attributes>
@@ -40,68 +39,81 @@ UIObjectParent</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>420</x>
-      <y>330</y>
-      <w>170</w>
-      <h>90</h>
+      <x>369</x>
+      <y>333</y>
+      <w>171</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>Window
 --
 /addWidget(widget)/
-/resize(w, h)/</panel_attributes>
+/resize(w, h)/
+/resizeImplementation()/
+update()
+
+--
+_vAnchor
+_hAnchor</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>580</x>
-      <y>320</y>
-      <w>120</w>
-      <h>40</h>
+      <x>531</x>
+      <y>351</y>
+      <w>108</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>100.0;10.0;10.0;20.0</additional_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>470</x>
-      <y>250</y>
-      <w>30</w>
-      <h>100</h>
+      <x>414</x>
+      <y>279</y>
+      <w>27</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>580</x>
-      <y>340</y>
-      <w>120</w>
-      <h>90</h>
+      <x>531</x>
+      <y>414</y>
+      <w>108</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>100.0;70.0;10.0;10.0</additional_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
-      <y>330</y>
-      <w>100</w>
-      <h>30</h>
+      <x>819</x>
+      <y>351</y>
+      <w>135</w>
+      <h>144</h>
     </coordinates>
-    <panel_attributes>Widget</panel_attributes>
+    <panel_attributes>Widget
+--
+_layer
+_valign
+_halign
+_coordMode
+_canFill
+_pad*</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>180</x>
-      <y>330</y>
-      <w>160</w>
-      <h>30</h>
+      <x>153</x>
+      <y>351</y>
+      <w>144</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>MatrixTransform</panel_attributes>
     <additional_attributes/>
@@ -109,10 +121,21 @@ UIObjectParent</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>330</x>
-      <y>340</y>
-      <w>110</w>
-      <h>30</h>
+      <x>288</x>
+      <y>342</y>
+      <w>99</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;30.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>738</x>
+      <y>351</y>
+      <w>99</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
@@ -120,32 +143,21 @@ UIObjectParent</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>810</x>
-      <y>320</y>
-      <w>130</w>
-      <h>40</h>
+      <x>738</x>
+      <y>360</y>
+      <w>99</w>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;110.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>820</x>
-      <y>340</y>
-      <w>120</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;70.0;100.0;10.0</additional_attributes>
+    <additional_attributes>10.0;70.0;90.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
-      <y>200</y>
-      <w>100</w>
-      <h>30</h>
+      <x>819</x>
+      <y>234</y>
+      <w>90</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>Geometry</panel_attributes>
     <additional_attributes/>
@@ -153,10 +165,10 @@ UIObjectParent</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>220</y>
-      <w>30</w>
-      <h>130</h>
+      <x>855</x>
+      <y>252</y>
+      <w>27</w>
+      <h>117</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
@@ -164,46 +176,54 @@ UIObjectParent</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>320</x>
-      <y>490</y>
-      <w>100</w>
-      <h>30</h>
+      <x>252</x>
+      <y>531</y>
+      <w>99</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>Box</panel_attributes>
+    <panel_attributes>Box
+--
+_boxType
+_uniform</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>360</x>
-      <y>410</y>
-      <w>130</w>
-      <h>100</h>
+      <x>288</x>
+      <y>459</y>
+      <w>144</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>110.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>140.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1100</x>
-      <y>390</y>
-      <w>240</w>
-      <h>120</h>
+      <x>981</x>
+      <y>405</y>
+      <w>216</w>
+      <h>225</h>
     </coordinates>
     <panel_attributes>WindowManager
 --
 resizeAllWindows()
-createParentOrthoCamera()</panel_attributes>
+createParentOrthoCamera()
+windowXY(localX, localY)
+localXY(windowX, windowY)
+--
+_width
+_windowWidth</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1300</x>
-      <y>290</y>
-      <w>100</w>
-      <h>30</h>
+      <x>1116</x>
+      <y>297</y>
+      <w>90</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>Switch</panel_attributes>
     <additional_attributes/>
@@ -211,21 +231,21 @@ createParentOrthoCamera()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1220</x>
-      <y>310</y>
-      <w>150</w>
-      <h>100</h>
+      <x>1089</x>
+      <y>315</y>
+      <w>90</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>130.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>80.0;10.0;10.0;100.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1110</x>
-      <y>290</y>
-      <w>140</w>
-      <h>50</h>
+      <x>954</x>
+      <y>297</y>
+      <w>126</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>&lt;Window&gt;
 UIObjectParent</panel_attributes>
@@ -234,21 +254,21 @@ UIObjectParent</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1140</x>
-      <y>330</y>
-      <w>70</w>
-      <h>80</h>
+      <x>981</x>
+      <y>333</y>
+      <w>99</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;50.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;90.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
-      <y>450</y>
-      <w>100</w>
-      <h>30</h>
+      <x>819</x>
+      <y>576</y>
+      <w>90</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>Label</panel_attributes>
     <additional_attributes/>
@@ -256,10 +276,10 @@ UIObjectParent</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>350</y>
-      <w>30</w>
-      <h>120</h>
+      <x>855</x>
+      <y>486</y>
+      <w>27</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
@@ -267,10 +287,10 @@ UIObjectParent</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>460</x>
-      <y>490</y>
-      <w>100</w>
-      <h>30</h>
+      <x>396</x>
+      <y>531</y>
+      <w>90</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>Table</panel_attributes>
     <additional_attributes/>
@@ -278,21 +298,21 @@ UIObjectParent</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>490</x>
-      <y>410</y>
-      <w>40</w>
-      <h>100</h>
+      <x>423</x>
+      <y>459</y>
+      <w>45</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>20.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>30.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>40</x>
-      <y>90</y>
-      <w>370</w>
-      <h>70</h>
+      <x>27</x>
+      <y>171</y>
+      <w>351</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>Vertical alignment assume bottom as top.
 bg=blue</panel_attributes>
@@ -301,10 +321,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
-      <y>570</y>
-      <w>100</w>
-      <h>30</h>
+      <x>819</x>
+      <y>666</y>
+      <w>90</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>Input</panel_attributes>
     <additional_attributes/>
@@ -312,21 +332,21 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>470</y>
-      <w>30</w>
-      <h>120</h>
+      <x>855</x>
+      <y>594</y>
+      <w>27</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>580</x>
-      <y>490</y>
-      <w>100</w>
-      <h>30</h>
+      <x>522</x>
+      <y>531</y>
+      <w>90</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>Canvas</panel_attributes>
     <additional_attributes/>
@@ -334,12 +354,62 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>530</x>
-      <y>410</y>
-      <w>110</w>
-      <h>100</h>
+      <x>468</x>
+      <y>459</y>
+      <w>108</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;90.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;100.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>378</x>
+      <y>9</y>
+      <w>432</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>First drawable of first child is used as background in Window.
+
+Window scissor can be controlled by VisibilityMode.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>837</x>
+      <y>63</y>
+      <w>396</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>widget total width = width + padLeft + padRight
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>36</x>
+      <y>621</y>
+      <w>567</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>If uniform, box use max child widget width or height for all children.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>954</x>
+      <y>675</y>
+      <w>333</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>Ortho camera of WindowManager clear depth.
+bg=blue</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

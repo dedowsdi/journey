@@ -1,0 +1,2 @@
+get charset:
+    file -bi name

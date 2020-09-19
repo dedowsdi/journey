@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.2">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
   <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
@@ -429,15 +428,15 @@ bg=blue</panel_attributes>
       <h>184</h>
     </coordinates>
     <panel_attributes>StateGraph represent a node in the StateSet tree, follow the
-tree from root to no will setup opengl state to render
+tree from root to node will setup opengl state to render
 leaves  that use this graph, which means it also represent a
 specific opengl state.
 
 Note that current graph doesn't equal to current opengl state,
-unless you call State::apply().
+unless you call State::apply(dstate) or State::apply().
 
 During render of RenderLeaf, osg move state graph to parent
-graph of current graph, then call apply(StateSet) with 
+graph of current graph, then call apply(dstate) with 
 StateSet of current graph, which means if the last StateSet is
 not empty, it will be pushed into stack, applyed(), then poped
 out of stark.
@@ -536,7 +535,7 @@ bg=blue</panel_attributes>
     <id>UMLNote</id>
     <coordinates>
       <x>384</x>
-      <y>120</y>
+      <y>88</y>
       <w>440</w>
       <h>144</h>
     </coordinates>
@@ -555,8 +554,8 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>1056</y>
+      <x>392</x>
+      <y>992</y>
       <w>496</w>
       <h>168</h>
     </coordinates>
@@ -564,6 +563,13 @@ bg=blue</panel_attributes>
 
 GL_POINT_SPRITE_ARB : setup by setModeValidity in initizlizeExtensionProcs
 GL_SCISSOR_TEST : setup by applyMode in RenderStage::drawImplemention
+
+When camera is created in View::View, a global default state is also created
+for it, check Stateset::setGlobalDefault for it's value:
+   GL_DEPTH_TEST ON
+   GL_BLEND OFF
+   create a global blendfunc as SRC_ALPHA, ONE_MINS_SRC_ALPHA,
+   create a global material, set it's color mode to GL_DIFFUSE_AND_AMBIENT
 
 bg=blue</panel_attributes>
     <additional_attributes/>

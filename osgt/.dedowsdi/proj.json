@@ -1,0 +1,47 @@
+{
+  "asset": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "decal": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "list_install_components": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "install/strip": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "ufo": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "all (the default if no target is provided)": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "install/local": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "ntoy": {
+    "exe_args": "--geometry 16 --frag toy.frag",
+    "make_args": "-j 3",
+    "working_dir": ""
+  },
+  "install": {
+    "exe_args": "",
+    "make_args": "-j 3",
+    "working_dir": ""
+  }
+}

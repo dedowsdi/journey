@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>290</x>
+      <y>120</y>
+      <w>260</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>ShadowTechnique
+--
+init()
+update(visitor)
+cull(visitor)
+traverse(visitor)
+--
+/resizeGLObjectBuffers(maxSize)/
+/releaseGLObjects(state)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>680</x>
+      <y>140</y>
+      <w>170</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>ShadowedScene
+--
+traverse(nv)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>540</x>
+      <y>140</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>350</x>
+      <y>50</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>Object</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>380</x>
+      <y>70</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>340</x>
+      <y>350</y>
+      <w>160</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>ShadowMap
+--
+_camera
+_texture
+_stateset</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>380</x>
+      <y>250</y>
+      <w>30</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>710</x>
+      <y>40</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>Group</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>750</x>
+      <y>60</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>950</x>
+      <y>140</y>
+      <w>240</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>ShadowSettings
+--
+_receiveShadowTravelMask
+_castShadowTravelMask
+_computeNearFarModeOverride</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>140</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>620</x>
+      <y>290</y>
+      <w>330</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>ShadowTechnique::CameraCullCallback</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>190</y>
+      <w>30</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>490</y>
+      <w>610</w>
+      <h>390</h>
+    </coordinates>
+    <panel_attributes>ShadowMap contains a special StateSet, it includes:
+_texture (shadow texture)
+CullFace (cull front), override
+PolygonOffset(-1, -1), override
+texgen(s, t, r, q)
+a fragment only program
+
+It also includes a rtt camera to render shadow texture, it use a cull callback to traverse shadow scene as normal osg::Group.
+
+The core part of shadow map is the cull process:
+
+1. decorate all shadow receive children of shadow scene with _stateset. Does that one should not set custom program for shadow receive node?
+
+2. get light position and direction in world space, note that you can only use one light.
+
+3. setup camera view and projection matrix according to light type.
+
+4. travel all shadow cast children of shadow scene by camera cull callback.
+
+5. update texgen matrix.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

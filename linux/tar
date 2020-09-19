@@ -4,6 +4,9 @@ tar -cf name.tar /dir
 # use gzip to compress a director
 tar -czf name.tar.gz /dir
 
+# use gzip by suffix
+tar -caf name.tar.gz /dir
+
 # add file to existing tar
 tar -rvf name.tar.gz fname
 

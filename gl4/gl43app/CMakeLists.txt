@@ -75,12 +75,6 @@ add_library(gl43app ${SRC})
 find_package(X11 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem)
 
-target_link_libraries(gl43app
-    PUBLIC
-        ${GLFW3_LIBRARIES}
-        ${CMAKE_DL_LIBS}
-    )
-
 IF(UNIX)
     # add pkg-config --print-requires-private glfw3
     target_link_libraries(gl43app
@@ -91,12 +85,14 @@ ENDIF()
 
 target_link_libraries(gl43app
     PUBLIC
+        ${GLFW3_LIBRARIES}
         ${GLFW3_REQUIRES}
         ${GLAD_GL_LIB}
         OpenGL::GL
         ${FREETYPE_LIBRARIES}
         ${FIP_LIBS}
         ${Boost_LIBRARIES}
+        ${CMAKE_DL_LIBS}
     )
 
 target_include_directories(gl43app

@@ -22,7 +22,9 @@ link:
     You you use absolute library path directly without using -l.
     -l:libname.so will libname.so literally.
     use -L together with -l. You can also use ev LIBRARY_PATH
-    -rpath will embed library runpath (DT_RUNPATH) into output file. You can also use. If it's not specified and LD_RUN_PATH is not empty, LD_RUN_PATH is embeded.
+    -rpath will embed library runpath (DT_RUNPATH) into output file.  If -rpath
+    and -rpath-link not specified and LD_RUN_PATH is not empty, LD_RUN_PATH is
+    embeded.
     -rpath is not recursive!, if you -rpath path0 -lx, but x relies on y, x won't search y from path0, be careful about this. You may use $ORIGIN to refer to the path of the object file.
 
     All of them are stored in .dynamic, .dynstr, .dynsym section of elf

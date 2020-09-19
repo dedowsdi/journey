@@ -18,8 +18,14 @@ void getScreenResolution(
     return;
   }
 
+  osg::GraphicsContext::ScreenIdentifier main_screen_id;
+
+  main_screen_id.readDISPLAY();
+  main_screen_id.setUndefinedScreenDetailsToDefaultScreen();
+  wsi->getScreenResolution(main_screen_id, width, height);
+
   wsi->getScreenResolution(
-    osg::GraphicsContext::ScreenIdentifier(screenIdentifier), width, height);
+    osg::GraphicsContext::ScreenIdentifier(main_screen_id), width, height);
 }
 
 //------------------------------------------------------------------------------

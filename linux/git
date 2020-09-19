@@ -42,6 +42,9 @@ commit
 git commit --amend   Takes your staging area and uses it for the previous commit (change last commit)
                      If no new staging area, change message only.
 
+                     Save the file with blank contents will abort the amend.
+
+
 To change specific commit a0b0c0:
     method 1.
         git rebase --interactive 'a0b0c0^'
