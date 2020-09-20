@@ -15,7 +15,7 @@
 #define BLEND_FUNC BLEND_ADD
 
 // uncomment this to debug
-// #define DEBUG_DISTORTION
+#define DEBUG_DISTORTION
 
 uniform sampler2D diffuse_map;
 uniform vec2 resolution;
@@ -23,7 +23,7 @@ uniform vec2 resolution;
 uniform vec2 mouse_points[NUM_MOUSE_POINTS];
 
 // tweakable
-const float max_radius = 0.08;
+const float max_radius = 0.09;
 const float distortion_scale = 0.5;
 
 // When you drag mouse from A to B, three areas will be affected:

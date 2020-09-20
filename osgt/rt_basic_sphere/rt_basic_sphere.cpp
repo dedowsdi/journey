@@ -115,8 +115,8 @@ void Sphere::getSurfaceData(const osg::Vec3& Phit, osg::Vec3& Nhit, osg::Vec2& t
     // atan2 returns a value in the range [-pi, pi] and we need to remap it to range [0, 1]
     // acosf returns a value in the range [0, pi] and we also need to remap it to the range
     // [0, 1]
-    tex.x() = (1 + atan2(Nhit.y(), Nhit.x()) / M_PI) * 0.5;
-    tex.y() = acosf(Nhit.z()) / M_PI;
+    tex.x() = (1 + atan2(Nhit.y(), Nhit.x()) / osg::PIf) * 0.5;
+    tex.y() = acosf(Nhit.z()) / osg::PIf;
 }
 
 osg::Vec3 castRay(const osg::Vec3& orig, const osg::Vec3& dir,

@@ -5,3 +5,4 @@ build
 tmp.cpp
 cquery_cached_index
 .vscode
+vsbuild
